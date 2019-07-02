@@ -251,7 +251,7 @@ export function getWindowOptionsMenuItems() {
                 mainWindow.setMovable(false)
               }
 
-              mainWindow.center()
+              window.center(mainWindow)
             } else {
               if (!config.store.get('isMenuBarMode')) {
                 mainWindow.setMovable(

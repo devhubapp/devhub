@@ -79,7 +79,7 @@ export function createWindow() {
     if (config.store.get('isMenuBarMode')) {
       tray.alignWindowWithTray(win)
     } else if (config.store.get('lockOnCenter')) {
-      win.center()
+      center(win)
     }
   })
 
@@ -252,11 +252,21 @@ function updateBrowserWindowOptions() {
     tray.alignWindowWithTray(mainWindow)
   } else {
     if (config.store.get('lockOnCenter')) {
-      mainWindow.center()
+      center(mainWindow)
     }
 
     if (maximize) {
       mainWindow.maximize()
     }
   }
+}
+
+export function center(win: BrowserWindow) {
+  const windowBounds = win.getBounds()
+  const workArea = screen.getPrimaryDisplay().workArea
+
+  win.setPosition(
+    Math.round(workArea.x + workArea.width / 2 - windowBounds.width / 2),
+    Math.round(workArea.y + workArea.height / 2 - windowBounds.height / 2),
+  )
 }
