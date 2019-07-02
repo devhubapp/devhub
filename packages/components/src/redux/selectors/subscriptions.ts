@@ -1,14 +1,6 @@
 import _ from 'lodash'
 
-import {
-  ColumnSubscription,
-  EnhancedGitHubEvent,
-  EnhancedGitHubIssueOrPullRequest,
-  EnhancedGitHubNotification,
-  sortEvents,
-  sortIssuesOrPullRequests,
-  sortNotifications,
-} from '@devhub/core'
+import { ColumnSubscription, getItemsFromSubscriptions } from '@devhub/core'
 import { RootState } from '../types'
 import { createArraySelector } from './helpers'
 
@@ -26,7 +18,7 @@ export const subscriptionSelector = (state: RootState, id: string) =>
 export const subscriptionsArrSelector = createArraySelector(
   (state: RootState) => subscriptionIdsSelector(state),
   (state: RootState) => s(state).byId,
-  (ids, byId) =>
+  (ids, byId): ColumnSubscription[] =>
     byId && ids ? ids.map(id => byId[id]).filter(Boolean) : emptyArray,
 )
 
@@ -35,45 +27,8 @@ export const createSubscriptionsDataSelector = () =>
     (state: RootState, subscriptionIds: string[]) =>
       subscriptionIds
         .map(id => subscriptionSelector(state, id))
-        .filter(Boolean),
+        .filter(Boolean) as ColumnSubscription[],
     subscriptions => {
-      let items: ColumnSubscription['data']['items']
-
-      subscriptions.forEach(subscription => {
-        if (
-          !(
-            subscription &&
-            subscription.data &&
-            subscription.data.items &&
-            subscription.data.items.length
-          )
-        )
-          return
-
-        if (!items) {
-          items = subscription.data.items
-        } else if (subscription.data.items) {
-          items = [...items, ...subscription.data.items] as any
-        }
-      })
-
-      if (!(items && items.length)) return emptyArray
-
-      if (subscriptions[0] && subscriptions[0]!.type === 'activity') {
-        return sortEvents(items as EnhancedGitHubEvent[])
-      }
-
-      if (subscriptions[0] && subscriptions[0]!.type === 'issue_or_pr') {
-        return sortIssuesOrPullRequests(
-          items as EnhancedGitHubIssueOrPullRequest[],
-        )
-      }
-
-      if (subscriptions[0] && subscriptions[0]!.type === 'notifications') {
-        return sortNotifications(items as EnhancedGitHubNotification[])
-      }
-
-      console.error(`Unhandled subscription type: ${subscriptions[0]!.type}`)
-      return items
+      return getItemsFromSubscriptions(subscriptions)
     },
   )

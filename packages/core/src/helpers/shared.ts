@@ -7,7 +7,9 @@ import {
   ColumnFilters,
   ColumnSubscription,
   EnhancedGitHubEvent,
+  EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
+  EnhancedItem,
   GitHubEventAction,
   GitHubItemSubjectType,
   GitHubNotification,
@@ -25,6 +27,9 @@ import {
   issueOrPullRequestSubjectTypes,
   notificationReasons,
   notificationSubjectTypes,
+  sortEvents,
+  sortIssuesOrPullRequests,
+  sortNotifications,
 } from './github'
 
 export function capitalize(str: string) {
@@ -858,4 +863,46 @@ export function getFilterFromSearchQuery(
     filters.query = `${unknownKeyValueQueries} ${filters.query}`.trim()
 
   return filters
+}
+
+const _emptyItemsFromSubscriptions: EnhancedItem[] = []
+export function getItemsFromSubscriptions(subscriptions: ColumnSubscription[]) {
+  let items = _emptyItemsFromSubscriptions
+
+  if (!(subscriptions && subscriptions.length)) return items
+
+  subscriptions.forEach(subscription => {
+    if (
+      !(
+        subscription &&
+        subscription.data &&
+        subscription.data.items &&
+        subscription.data.items.length
+      )
+    )
+      return
+
+    if (!items) {
+      items = subscription.data.items
+    } else if (subscription.data.items) {
+      items = [...items, ...subscription.data.items] as any
+    }
+  })
+
+  if (!(items && items.length)) return items || _emptyItemsFromSubscriptions
+
+  if (subscriptions[0] && subscriptions[0]!.type === 'activity') {
+    return sortEvents(items as EnhancedGitHubEvent[])
+  }
+
+  if (subscriptions[0] && subscriptions[0]!.type === 'issue_or_pr') {
+    return sortIssuesOrPullRequests(items as EnhancedGitHubIssueOrPullRequest[])
+  }
+
+  if (subscriptions[0] && subscriptions[0]!.type === 'notifications') {
+    return sortNotifications(items as EnhancedGitHubNotification[])
+  }
+
+  console.error(`Unhandled subscription type: ${subscriptions[0]!.type}`)
+  return items
 }

@@ -1,4 +1,4 @@
-import { getColumnHeaderDetails } from '@devhub/core'
+import { Column, getColumnHeaderDetails } from '@devhub/core'
 import { RootState } from '../types'
 import { createArraySelector, createDeepEqualSelector } from './helpers'
 import { subscriptionSelector } from './subscriptions'
@@ -21,7 +21,7 @@ export const columnIdsSelector = (state: RootState) =>
 export const columnsArrSelector = createArraySelector(
   (state: RootState) => columnIdsSelector(state),
   (state: RootState) => s(state).byId,
-  (ids, byId) =>
+  (ids, byId): Column[] =>
     byId && ids ? ids.map(id => byId[id]).filter(Boolean) : emptyArray,
 )
 
