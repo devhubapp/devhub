@@ -399,9 +399,8 @@ export function getSearchQueryFromFilter(
       queries.push(`-${queryKey}:${_.sortBy(exclude).join(',')}`)
   }
 
-  if (type === 'notifications') {
-    const inbox =
-      notifications && notifications.participating ? 'participating' : 'all'
+  const inbox = getItemInbox(type, filters)
+  if (inbox !== 'all') {
     queries.push(`inbox:${inbox}`)
   }
 
@@ -905,4 +904,16 @@ export function getItemsFromSubscriptions(subscriptions: ColumnSubscription[]) {
 
   console.error(`Unhandled subscription type: ${subscriptions[0]!.type}`)
   return items
+}
+
+export function getItemInbox(type: Column['type'], filters: Column['filters']) {
+  if (type === 'notifications') {
+    const f = filters as NotificationColumnFilters
+
+    return f && f.notifications && f.notifications.participating
+      ? 'participating'
+      : 'all'
+  }
+
+  return 'all'
 }

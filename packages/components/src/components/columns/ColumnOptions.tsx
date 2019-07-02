@@ -11,6 +11,7 @@ import {
   filterRecordWithThisValueCount,
   getEventActionMetadata,
   getFilteredItems,
+  getItemInbox,
   getItemsFilterMetadata,
   getNotificationReasonMetadata,
   getOwnerAndRepoFormattedFilter,
@@ -259,13 +260,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
   const allItemsMetadata = getItemsFilterMetadata(column.type, allItems)
 
-  const inbox =
-    column.type === 'notifications' &&
-    column.filters &&
-    column.filters.notifications &&
-    column.filters.notifications.participating
-      ? 'participating'
-      : 'all'
+  const inbox = getItemInbox(column.type, column.filters)
 
   function getCheckboxRight(
     counterMetadataProps: Pick<

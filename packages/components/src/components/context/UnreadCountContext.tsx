@@ -3,6 +3,7 @@ import React, { useContext } from 'react'
 import {
   ColumnSubscription,
   getFilteredItems,
+  getItemInbox,
   getItemsFilterMetadata,
   getItemsFromSubscriptions,
 } from '@devhub/core'
@@ -47,13 +48,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       ),
     )
 
-    const inbox =
-      column.type === 'notifications' &&
-      column.filters &&
-      column.filters.notifications &&
-      column.filters.notifications.participating
-        ? 'participating'
-        : 'all'
+    const inbox = getItemInbox(column.type, column.filters)
 
     const columnUnreadCount = filteredItemsMetadata.inbox[inbox].unread
     return acc + columnUnreadCount

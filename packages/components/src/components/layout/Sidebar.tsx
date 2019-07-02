@@ -4,6 +4,7 @@ import { Image, StyleSheet, View, ViewStyle } from 'react-native'
 import {
   getFilteredItems,
   getGitHubURLForUser,
+  getItemInbox,
   getItemsFilterMetadata,
   ModalPayload,
 } from '@devhub/core'
@@ -623,13 +624,7 @@ const SidebarColumnItem = React.memo(
       ),
     )
 
-    const inbox =
-      column.type === 'notifications' &&
-      column.filters &&
-      column.filters.notifications &&
-      column.filters.notifications.participating
-        ? 'participating'
-        : 'all'
+    const inbox = getItemInbox(column.type, column.filters)
 
     const isUnread = filteredItemsMetadata.inbox[inbox].unread > 0
 
