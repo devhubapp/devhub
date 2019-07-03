@@ -16,6 +16,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { emitter } from '../../libs/emitter'
 import { FlatList } from '../../libs/flatlist'
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -676,6 +677,11 @@ const SidebarColumnItem = React.memo(
         tooltip={`${headerDetails.title} (${headerDetails.subtitle})`
           .toLowerCase()
           .trim()}
+        unreadIndicatorBackgroundThemeColor={
+          Platform.OS === 'web' && column.type === 'notifications'
+            ? 'red'
+            : undefined
+        }
       />
     )
   },

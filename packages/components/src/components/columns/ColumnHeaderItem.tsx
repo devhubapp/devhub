@@ -78,6 +78,9 @@ export interface ColumnHeaderItemProps {
   title?: string
   titleStyle?: StyleProp<TextStyle>
   tooltip: string | undefined
+  unreadIndicatorBackgroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string)
 }
 
 export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
@@ -116,6 +119,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     title,
     titleStyle,
     tooltip,
+    unreadIndicatorBackgroundThemeColor = 'primaryBackgroundColor',
   } = props
 
   const theme = useTheme()
@@ -136,6 +140,11 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       const hoverForegroundColor = getThemeColorOrItself(
         theme,
         hoverForegroundThemeColor,
+      )
+
+      const unreadIndicatorBackgroundColor = getThemeColorOrItself(
+        theme,
+        unreadIndicatorBackgroundThemeColor,
       )
 
       const isHovered = (_isHovered || forceHoverState) && !disabled
@@ -163,6 +172,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
             : foregroundColor || theme.foregroundColor,
         mutedForegroundColor: theme.foregroundColorMuted60,
         primaryBackgroundColor: theme.primaryBackgroundColor,
+        unreadIndicatorBackgroundColor,
       }
     },
     [
@@ -320,7 +330,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                     width: 12,
                     height: 12,
                     backgroundColor:
-                      springAnimatedStyles.primaryBackgroundColor,
+                      springAnimatedStyles.unreadIndicatorBackgroundColor,
                     borderColor:
                       springAnimatedStyles.backgroundColorWithoutTransparency,
                     borderWidth: 2,
