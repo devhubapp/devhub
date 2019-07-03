@@ -1,9 +1,4 @@
-import {
-  app,
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
-  screen,
-} from 'electron'
+import { app, BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
 import path from 'path'
 
 import * as config from './config'
@@ -13,6 +8,7 @@ import * as helpers from './helpers'
 import { __DEV__ } from './libs/electron-is-dev'
 import { WindowState, windowStateKeeper } from './libs/electron-window-state'
 import * as menu from './menu'
+import * as screen from './screen'
 import * as tray from './tray'
 
 let mainWindow: BrowserWindow
@@ -24,19 +20,20 @@ export function getMainWindow() {
 }
 
 export function init() {
+  const display = screen.getDisplayFromCursor()
+
   mainWindowState = windowStateKeeper({
-    defaultWidth: screen.getPrimaryDisplay().workAreaSize.width,
+    defaultWidth: display.workAreaSize.width,
     defaultHeight:
-      screen.getPrimaryDisplay().workAreaSize.height -
-      (process.platform === 'linux' ? 28 : 0),
-    file: 'main-window.json',
+      display.workAreaSize.height - (process.platform === 'linux' ? 28 : 0),
+    file: `main-window-display-${display.id}.json`,
     fullScreen: false,
   })
 
   menubarWindowState = windowStateKeeper({
     defaultWidth: 380,
     defaultHeight: 600,
-    file: 'menubar-window.json',
+    file: `menubar-window-display-${display.id}.json`,
     fullScreen: false,
   })
 
@@ -45,6 +42,7 @@ export function init() {
 }
 
 let mainWindowReadyToShowCount = 0
+let screenId: number
 export function createWindow() {
   const win = new BrowserWindow(getBrowserWindowOptions())
 
@@ -62,6 +60,7 @@ export function createWindow() {
   })
 
   win.on('show', () => {
+    screenId = screen.getDisplayFromWindow(win).id
     tray.updateTrayHightlightMode()
     updateBrowserWindowOptions()
   })
@@ -83,9 +82,21 @@ export function createWindow() {
     }
   })
 
+  win.on('move', () => {
+    screenId = screen.getDisplayFromWindow(win).id
+  })
+
   win.on('blur', () => {
+    const isSameDisplay = screen.getDisplayFromCursor().id === screenId
+
     setTimeout(() => {
-      if (config.store.get('isMenuBarMode') && !win.isDestroyed()) win.hide()
+      if (
+        isSameDisplay &&
+        config.store.get('isMenuBarMode') &&
+        !win.isDestroyed()
+      ) {
+        win.hide()
+      }
     }, 200)
   })
 
@@ -133,8 +144,8 @@ export function getBrowserWindowOptions() {
           center: false,
           frame: false,
           fullscreenable: false,
-          maxWidth: screen.getPrimaryDisplay().workAreaSize.width * 0.8,
-          maxHeight: screen.getPrimaryDisplay().workAreaSize.height * 0.8,
+          maxWidth: screen.getDisplayFromCursor().workAreaSize.width * 0.8,
+          maxHeight: screen.getDisplayFromCursor().workAreaSize.height * 0.8,
           movable: false,
           skipTaskbar: true,
         }
@@ -194,24 +205,26 @@ function updateBrowserWindowOptions() {
     Math.ceil(
       options.maxWidth ||
         (process.platform === 'darwin'
-          ? screen.getPrimaryDisplay().workAreaSize.width
+          ? screen.getDisplayFromCursor().workAreaSize.width
           : 0),
     ),
     Math.ceil(
       options.maxHeight ||
         (process.platform === 'darwin'
-          ? screen.getPrimaryDisplay().workAreaSize.height
+          ? screen.getDisplayFromCursor().workAreaSize.height
           : 0),
     ),
   )
 
   mainWindow.setMovable(options.movable !== false)
 
-  mainWindow.setPosition(
-    maximize ? screen.getPrimaryDisplay().workArea.x || 0 : options.x || 0,
-    maximize ? screen.getPrimaryDisplay().workArea.y || 0 : options.y || 0,
-    false,
-  )
+  if (!config.store.get('isMenuBarMode')) {
+    mainWindow.setPosition(
+      maximize ? screen.getDisplayFromCursor().workArea.x || 0 : options.x || 0,
+      maximize ? screen.getDisplayFromCursor().workArea.y || 0 : options.y || 0,
+      false,
+    )
+  }
 
   // Note: setSkipTaskbar was causing the app to freeze on linux
   if (process.platform === 'darwin' || process.platform === 'win32') {
@@ -222,8 +235,8 @@ function updateBrowserWindowOptions() {
     // Node: workAreaSize.heigth is wrong on linux, causing the app content to jump on window open
     if (process.platform !== 'linux') {
       mainWindow.setSize(
-        screen.getPrimaryDisplay().workAreaSize.width,
-        screen.getPrimaryDisplay().workAreaSize.height,
+        screen.getDisplayFromCursor().workAreaSize.width,
+        screen.getDisplayFromCursor().workAreaSize.height,
         false,
       )
     }
@@ -263,7 +276,7 @@ function updateBrowserWindowOptions() {
 
 export function center(win: BrowserWindow) {
   const windowBounds = win.getBounds()
-  const workArea = screen.getPrimaryDisplay().workArea
+  const workArea = screen.getDisplayFromCursor().workArea
 
   win.setPosition(
     Math.round(workArea.x + workArea.width / 2 - windowBounds.width / 2),

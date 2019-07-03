@@ -1,9 +1,10 @@
-import { app, BrowserWindow, nativeImage, screen, Tray } from 'electron'
+import { app, BrowserWindow, nativeImage, Tray } from 'electron'
 import path from 'path'
 
 import * as config from './config'
 import * as helpers from './helpers'
 import * as menu from './menu'
+import * as screen from './screen'
 import * as window from './window'
 
 const trayIcon = path.join(
@@ -37,13 +38,21 @@ export function createTray() {
 
   tray.on('click', () => {
     const mainWindow = window.getMainWindow()
+
     if (mainWindow.isFullScreen()) {
       showTrayContextPopup()
       return
     }
 
     if (mainWindow.isVisible() && !mainWindow.isMinimized()) {
-      if (mainWindow.isFocused() || process.platform !== 'darwin') {
+      const isSameDisplay =
+        screen.getDisplayFromCursor().id ===
+        screen.getDisplayFromWindow(mainWindow).id
+
+      if (
+        isSameDisplay &&
+        (mainWindow.isFocused() || process.platform !== 'darwin')
+      ) {
         if (config.store.get('isMenuBarMode')) {
           mainWindow.hide()
         } else {
@@ -54,6 +63,7 @@ export function createTray() {
       }
     }
 
+    alignWindowWithTray(mainWindow)
     helpers.showWindow(mainWindow)
   })
 
@@ -89,8 +99,8 @@ export function alignWindowWithTray(win: BrowserWindow) {
     return
   }
 
-  const screenSize = screen.getPrimaryDisplay().size
-  const workArea = screen.getPrimaryDisplay().workArea
+  const screenSize = screen.getDisplayFromCursor().size
+  const workArea = screen.getDisplayFromCursor().workArea
   const windowBounds = win.getBounds()
   const trayCenter = helpers.getCenterPosition(tray)
 
