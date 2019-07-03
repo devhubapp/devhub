@@ -34,7 +34,7 @@ export function ColumnOptionsInbox(props: ColumnOptionsInboxProps) {
       containerStyle={containerStyle}
       contentContainerStyle={contentContainerStyle}
       enableBackgroundHover={enableBackgroundHover}
-      hasChanged={inbox !== 'all'}
+      hasChanged={false}
       headerItemFixedIconSize={columnHeaderItemContentSize}
       iconName="inbox"
       isOpen={isOpen}

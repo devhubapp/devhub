@@ -352,7 +352,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               <ColumnOptionsRow
                 analyticsLabel="involves"
                 enableBackgroundHover={allowToggleCategories}
-                hasChanged
+                hasChanged={false}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 iconName="person"
                 isOpen={openedOptionCategories.has('involves')}

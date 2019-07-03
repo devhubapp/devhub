@@ -174,9 +174,6 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
           <ColumnHeaderItem
             analyticsLabel={undefined}
             fixedIconSize
-            foregroundThemeColor={
-              hasChanged ? 'primaryBackgroundColor' : 'foregroundColor'
-            }
             iconName={iconName}
             iconStyle={{ lineHeight: 22 }}
             noPadding
@@ -188,7 +185,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
           <Spacer width={contentPadding / 2} />
 
           <ThemedText
-            color={hasChanged ? 'primaryBackgroundColor' : 'foregroundColor'}
+            color="foregroundColor"
             numberOfLines={1}
             style={{ fontWeight: '500' }}
           >
@@ -197,15 +194,17 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
           <Spacer flex={1} minWidth={contentPadding / 2} />
 
-          {!!subtitle && (
+          {!!(subtitle || hasChanged) && (
             <ThemedText
               color={
-                hasChanged ? 'primaryBackgroundColor' : 'foregroundColorMuted60'
+                !subtitle && hasChanged
+                  ? 'primaryBackgroundColor'
+                  : 'foregroundColorMuted60'
               }
               numberOfLines={1}
-              style={{ fontSize: 12 }}
+              style={{ fontSize: subtitle ? 12 : 10 }}
             >
-              {subtitle}
+              {subtitle || '●'}
             </ThemedText>
           )}
 
