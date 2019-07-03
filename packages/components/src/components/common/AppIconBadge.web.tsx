@@ -12,11 +12,11 @@ export const AppIconBadge = React.memo((_props: AppIconBadgeProps) => {
     window.ipc.send('unread-counter', unreadCount)
   } else {
     const title = `${document.title || 'DevHub'}`
-    const titleWithoutBadge = title.replace(/ \([\d]+\+?\)$/, '')
+    const titleWithoutBadge = title.replace(/^\([\d]+\+?\) /, '')
 
-    document.title = `${titleWithoutBadge}${
-      unreadCount > 0 ? ` (${unreadCount})` : ''
-    }`
+    document.title = `${
+      unreadCount > 0 ? `(${unreadCount}) ` : ''
+    }${titleWithoutBadge}`
     updateFavicon(unreadCount > 0)
   }
 
