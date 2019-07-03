@@ -65,7 +65,6 @@
   },
   "dependencies": {
     "@devhub/core": "0.92.0",
-    "electron": "5.0.4",
     "electron-store": "4.0.0",
     "electron-updater": "4.0.14",
     "jsonfile": "5.0.0",
@@ -76,6 +75,7 @@
     "@types/electron-store": "3.2.0",
     "@types/jsonfile": "5.0.0",
     "@types/mkdirp": "0.5.2",
+    "electron": "5.0.4",
     "electron-builder": "20.44.4",
     "electron-devtools-installer": "2.2.4",
     "nodemon": "1.19.1",
