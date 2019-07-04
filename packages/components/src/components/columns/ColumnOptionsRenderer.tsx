@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { StyleSheet } from 'react-native'
 
 import { constants } from '@devhub/core'
-import { useSpring, useTransition } from 'react-spring/native'
+import { useTransition } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -13,6 +13,7 @@ import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
 import { fabSize } from '../common/FAB'
 import { Spacer } from '../common/Spacer'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
@@ -52,6 +53,8 @@ export const ColumnOptionsRenderer = React.memo(
     const { sizename } = useAppLayout()
     const { column, columnIndex } = useColumn(columnId)
 
+    const { enableSharedFiltersView } = useColumnFilters()
+
     const immediate = constants.DISABLE_ANIMATIONS
 
     const overlayTransition = useTransition<boolean, any>(
@@ -74,16 +77,35 @@ export const ColumnOptionsRenderer = React.memo(
       fixedWidth
     )
 
-    const absolutePositionAnimation = useSpring<any>(
-      !inlineMode && fixedPosition && fixedWidth
+    const absolutePositionTransitions = useTransition<boolean, any>(
+      isOpen || enableSharedFiltersView ? [true] : [],
+      isOpen
+        ? [
+            `column-options-renderer-${
+              enableSharedFiltersView ? 'shared' : columnId
+            }`,
+          ]
+        : [],
+      enableAbsolutePositionAnimation &&
+        (!inlineMode && fixedPosition && fixedWidth)
         ? {
             config: getDefaultReactSpringAnimationConfig(),
             immediate: constants.DISABLE_ANIMATIONS,
+            unique: true,
             from: {
               [fixedPosition]:
                 -fixedWidth - Platform.select({ default: 0, ios: 40 }),
             },
-            to: {
+            leave: {
+              [fixedPosition]:
+                -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+            },
+            enter: {
+              [fixedPosition]: isOpen
+                ? 0
+                : -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+            },
+            update: {
               [fixedPosition]: isOpen
                 ? 0
                 : -fixedWidth - Platform.select({ default: 0, ios: 40 }),
@@ -92,12 +114,21 @@ export const ColumnOptionsRenderer = React.memo(
         : {
             config: getDefaultReactSpringAnimationConfig(),
             immediate: constants.DISABLE_ANIMATIONS,
+            unique: true,
             from: { left: 0, right: 0 },
-            to: { left: 0, right: 0 },
+            leave: { left: 0, right: 0 },
+            enter: { left: 0, right: 0 },
+            update: { left: 0, right: 0 },
           },
     )
+    const absolutePositionTransition = absolutePositionTransitions[0] as
+      | typeof absolutePositionTransitions[0]
+      | undefined
 
     if (!column) return null
+
+    if (!(absolutePositionTransition && absolutePositionTransition.item))
+      return null
 
     const availableHeight =
       containerHeight -
@@ -105,10 +136,12 @@ export const ColumnOptionsRenderer = React.memo(
         ? fabSize + 2 * fabSpacing
         : 0)
 
+    const key = absolutePositionTransition.key || 'column-options-renderer'
     return (
-      <>
+      <Fragment key={`${key}-inner-container`}>
         {!!overlayTransition && !inlineMode && !!close && (
           <SpringAnimatedView
+            key={`${key}-overlay-container`}
             collapsable={false}
             style={[
               StyleSheet.absoluteFillObject,
@@ -149,29 +182,32 @@ export const ColumnOptionsRenderer = React.memo(
               right: 0,
               opacity:
                 enableAbsolutePositionAnimation &&
-                absolutePositionAnimation &&
+                absolutePositionTransition.props &&
                 fixedPosition &&
                 fixedWidth
                   ? fixedPosition === 'left' || fixedPosition === 'right'
-                    ? absolutePositionAnimation[fixedPosition].interpolate(
-                        (value: number) => (fixedWidth + value <= 0 ? 0 : 1),
+                    ? absolutePositionTransition.props[
+                        fixedPosition
+                      ].interpolate((value: number) =>
+                        fixedWidth + value <= 0 ? 0 : 1,
                       )
                     : 1
                   : 1,
               visibility:
                 enableAbsolutePositionAnimation &&
-                absolutePositionAnimation &&
+                absolutePositionTransition.props &&
                 fixedPosition &&
                 fixedWidth
                   ? fixedPosition === 'left' || fixedPosition === 'right'
-                    ? absolutePositionAnimation[fixedPosition].interpolate(
-                        (value: number) =>
-                          fixedWidth + value <= 0 ? 'hidden' : 'visible',
+                    ? absolutePositionTransition.props[
+                        fixedPosition
+                      ].interpolate((value: number) =>
+                        fixedWidth + value <= 0 ? 'hidden' : 'visible',
                       )
                     : 'visible'
                   : 'visible',
             },
-            enableAbsolutePositionAnimation && absolutePositionAnimation,
+            enableAbsolutePositionAnimation && absolutePositionTransition.props,
             !!fixedWidth && fixedPosition === 'left' && { right: undefined },
             !!fixedWidth && fixedPosition === 'right' && { left: undefined },
             !!fixedWidth && { width: fixedWidth },
@@ -184,10 +220,10 @@ export const ColumnOptionsRenderer = React.memo(
             // (only enabled for web desktop because this is causing bugs on ios safari)
             Platform.realOS === 'web' &&
             enableAbsolutePositionAnimation &&
-            absolutePositionAnimation &&
+            absolutePositionTransition.props &&
             fixedPosition &&
             fixedWidth
-              ? absolutePositionAnimation[fixedPosition].interpolate(
+              ? absolutePositionTransition.props[fixedPosition].interpolate(
                   (value: number) => (value < 0 ? 'none' : 'box-none'),
                 )
               : 'box-none'
@@ -233,7 +269,7 @@ export const ColumnOptionsRenderer = React.memo(
         </SpringAnimatedView>
 
         {!!inlineMode && <ColumnSeparator />}
-      </>
+      </Fragment>
     )
   },
 )

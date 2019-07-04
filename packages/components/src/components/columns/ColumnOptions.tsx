@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { Fragment, useRef, useState } from 'react'
+import React, { Fragment, useMemo, useRef, useState } from 'react'
 import { View } from 'react-native'
 
 import {
@@ -117,6 +117,10 @@ export type ColumnOptionCategory =
   | 'subject_types'
   | 'unread'
 
+const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
+  mergeSimilar: false,
+}
+
 export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   const {
     availableHeight,
@@ -127,11 +131,10 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     startWithFiltersExpanded,
   } = props
 
-  const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
-    mergeSimilar: false,
-  }
-
-  const { allItems } = useColumnData(column.id, getFilteredItemsOptions)
+  const { allItems, filteredItems } = useColumnData(
+    column.id,
+    getFilteredItemsOptions,
+  )
 
   const {
     allForcedOwners,
@@ -139,23 +142,29 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     ownerFilters,
     ownerFiltersWithRepos,
     repoFilters,
-  } = getOwnerAndRepoFormattedFilter(column.filters)
+  } = useMemo(() => getOwnerAndRepoFormattedFilter(column.filters), [
+    column.filters,
+  ])
 
-  const ownerOrRepoFilteredItemsMetadata = getItemsFilterMetadata(
-    column.type,
-    getFilteredItems(
-      column.type,
-      allItems,
-      {
-        ...column.filters,
-        owners: undefined,
-      },
-      getFilteredItemsOptions,
-    ),
-    {
-      forceIncludeTheseOwners: allForcedOwners,
-      forceIncludeTheseRepos: allForcedRepos,
-    },
+  const ownerOrRepoFilteredItemsMetadata = useMemo(
+    () =>
+      getItemsFilterMetadata(
+        column.type,
+        getFilteredItems(
+          column.type,
+          allItems,
+          {
+            ...column.filters,
+            owners: undefined,
+          },
+          getFilteredItemsOptions,
+        ),
+        {
+          forceIncludeTheseOwners: allForcedOwners,
+          forceIncludeTheseRepos: allForcedRepos,
+        },
+      ),
+    [column.type, allItems, column.filters, allForcedOwners, allForcedRepos],
   )
 
   const _owners = Object.keys(ownerOrRepoFilteredItemsMetadata.owners || {})
@@ -166,12 +175,19 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
       Object.keys(ownerOrRepoFilteredItemsMetadata.owners[_owners[0]].repos)
         .length >= 1)
 
-  const involvingUsers = _.sortBy(
-    Object.keys(
-      (column.filters &&
-        (column.filters as IssueOrPullRequestColumnFilters).involves) ||
-        {},
-    ),
+  const involvingUsers = useMemo(
+    () =>
+      _.sortBy(
+        Object.keys(
+          (column.filters &&
+            (column.filters as IssueOrPullRequestColumnFilters).involves) ||
+            {},
+        ),
+      ),
+    [
+      column.filters &&
+        (column.filters as IssueOrPullRequestColumnFilters).involves,
+    ],
   )
 
   const _shouldShowInvolvesFilter =
@@ -258,7 +274,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     })
   }
 
-  const allItemsMetadata = getItemsFilterMetadata(column.type, allItems)
+  const allItemsMetadata = useMemo(
+    () => getItemsFilterMetadata(column.type, allItems),
+    [column.type, allItems],
+  )
+
+  const filteredItemsMetadata = useMemo(
+    () => getItemsFilterMetadata(column.type, filteredItems),
+    [column.type, filteredItems],
+  )
 
   const inbox = getItemInbox(column.type, column.filters)
 
@@ -454,15 +478,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           (() => {
             const savedForLater = column.filters && column.filters.saved
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                { ...column.filters, saved: undefined },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     { ...column.filters, saved: undefined },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow
@@ -517,15 +541,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             const isReadChecked = isReadFilterChecked(column.filters)
             const isUnreadChecked = isUnreadFilterChecked(column.filters)
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                { ...column.filters, unread: undefined },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     { ...column.filters, unread: undefined },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow
@@ -646,15 +670,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
             const supportsOnlyOne = true // column.type === 'issue_or_pr'
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                { ...column.filters, state: undefined },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     { ...column.filters, state: undefined },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow
@@ -755,15 +779,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             const draft = column.filters && column.filters.draft
             const defaultBooleanValue = true
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                { ...column.filters, draft: undefined },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     { ...column.filters, draft: undefined },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow
@@ -819,15 +843,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             const bot = column.filters && column.filters.bot
             const defaultBooleanValue = true
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                { ...column.filters, bot: undefined },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     { ...column.filters, bot: undefined },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow
@@ -919,15 +943,15 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             //   defaultBooleanValue,
             // )
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                { ...column.filters, subjectTypes: undefined },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     { ...column.filters, subjectTypes: undefined },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow
@@ -1031,21 +1055,21 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             //   defaultBooleanValue,
             // )
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                {
-                  ...column.filters,
-                  notifications: {
-                    ...(column.filters && column.filters.notifications),
-                    reasons: undefined,
-                  },
-                },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     {
+            //       ...column.filters,
+            //       notifications: {
+            //         ...(column.filters && column.filters.notifications),
+            //         reasons: undefined,
+            //       },
+            //     },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow
@@ -1145,21 +1169,21 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             //   defaultBooleanValue,
             // )
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                {
-                  ...column.filters,
-                  activity: {
-                    ...(column.filters && column.filters.activity),
-                    actions: undefined,
-                  },
-                },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     {
+            //       ...column.filters,
+            //       activity: {
+            //         ...(column.filters && column.filters.activity),
+            //         actions: undefined,
+            //       },
+            //     },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow
@@ -1241,18 +1265,18 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
               column.filters && column.filters.private === true
             )
 
-            const filteredItemsMetadata = getItemsFilterMetadata(
-              column.type,
-              getFilteredItems(
-                column.type,
-                allItems,
-                {
-                  ...column.filters,
-                  private: undefined,
-                },
-                getFilteredItemsOptions,
-              ),
-            )
+            // const filteredItemsMetadata = getItemsFilterMetadata(
+            //   column.type,
+            //   getFilteredItems(
+            //     column.type,
+            //     allItems,
+            //     {
+            //       ...column.filters,
+            //       private: undefined,
+            //     },
+            //     getFilteredItemsOptions,
+            //   ),
+            // )
 
             return (
               <ColumnOptionsRow

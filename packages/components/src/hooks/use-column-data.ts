@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { EnhancedItem, getFilteredItems } from '@devhub/core'
 import * as selectors from '../redux/selectors'
@@ -20,27 +20,20 @@ export function useColumnData<ItemT extends EnhancedItem>(
     ),
   )
 
-  const subscriptionsDataSelectorRef = useRef(
-    selectors.createSubscriptionsDataSelector(),
+  const subscriptionsDataSelector = useMemo(
+    selectors.createSubscriptionsDataSelector,
+    [],
   )
 
   const column = useReduxState(
     useCallback(state => selectors.columnSelector(state, columnId), [columnId]),
   )
 
-  useEffect(() => {
-    subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-  }, [column && column.subscriptionIds && column.subscriptionIds.join(',')])
-
   const allItems = useReduxState(
     useCallback(
       state => {
         if (!column) return []
-
-        return subscriptionsDataSelectorRef.current(
-          state,
-          column.subscriptionIds,
-        )
+        return subscriptionsDataSelector(state, column.subscriptionIds)
       },
       [
         column && column.subscriptionIds && column.subscriptionIds.join(','),
