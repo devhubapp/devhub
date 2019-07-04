@@ -574,6 +574,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
 Sidebar.displayName = 'Sidebar'
 
+const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
+  mergeSimilar: false,
+}
+
 const SidebarColumnItem = React.memo(
   (props: {
     activeOpacity?: ColumnHeaderItemProps['activeOpacity']
@@ -607,13 +611,12 @@ const SidebarColumnItem = React.memo(
 
     const { column, columnIndex, headerDetails } = useColumn(columnId)
 
+    const { allItems } = useColumnData(
+      (column && column.id) || '',
+      getFilteredItemsOptions,
+    )
+
     if (!(column && columnIndex >= 0 && headerDetails)) return null
-
-    const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
-      mergeSimilar: false,
-    }
-
-    const { allItems } = useColumnData(column.id, getFilteredItemsOptions)
 
     const filteredItemsMetadata = getItemsFilterMetadata(
       column.type,
