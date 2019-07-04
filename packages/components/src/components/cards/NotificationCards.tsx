@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react'
-import { View } from 'react-native'
+import { Dimensions, View } from 'react-native'
 
 import {
   Column,
@@ -353,9 +353,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}
-      initialNumToRender={15}
+      initialNumToRender={Math.ceil(Dimensions.get('window').height / 120)}
       keyExtractor={keyExtractor}
-      maxToRenderPerBatch={3}
       onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
       pointerEvents={pointerEvents}

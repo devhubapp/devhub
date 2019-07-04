@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { Dimensions, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
@@ -181,9 +181,10 @@ export const Columns = React.memo((props: ColumnsProps) => {
       disableVirtualization={Platform.OS === 'web'}
       getItemLayout={getItemLayout}
       horizontal
-      initialNumToRender={4}
+      initialNumToRender={Math.ceil(
+        Dimensions.get('window').width / columnWidth,
+      )}
       keyExtractor={keyExtractor}
-      maxToRenderPerBatch={1}
       onScrollToIndexFailed={onScrollToIndexFailed}
       // onViewableItemsChanged={onViewableItemsChanged}
       overScrollMode="never"
