@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react'
 import {
+  InteractionManager,
   TouchableOpacity,
   TouchableOpacityProps,
   TouchableWithoutFeedbackProps,
@@ -64,13 +65,15 @@ export const Touchable = React.forwardRef(
     const onPress: typeof _onPress =
       analyticsAction || analyticsCategory || analyticsLabel || analyticsValue
         ? e => {
-            analytics.trackEvent(
-              analyticsCategory || 'button',
-              analyticsAction || 'press',
-              analyticsLabel,
-              analyticsValue,
-            )
-            if (_onPress) _onPress(e)
+            InteractionManager.runAfterInteractions(() => {
+              analytics.trackEvent(
+                analyticsCategory || 'button',
+                analyticsAction || 'press',
+                analyticsLabel,
+                analyticsValue,
+              )
+              if (_onPress) _onPress(e)
+            })
           }
         : _onPress
 
