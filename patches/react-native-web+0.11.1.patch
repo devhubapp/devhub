@@ -1,37 +1,925 @@
-diff --git a/node_modules/react-native-web/dist/exports/VirtualizedList/index.js b/node_modules/react-native-web/dist/exports/VirtualizedList/index.js
-index e60fa0c..bf9cb04 100644
---- a/node_modules/react-native-web/dist/exports/VirtualizedList/index.js
-+++ b/node_modules/react-native-web/dist/exports/VirtualizedList/index.js
-@@ -6,5 +6,6 @@
-  *
-  * 
-  */
-+
- import VirtualizedList from '../../vendor/react-native/VirtualizedList';
- export default VirtualizedList;
-\ No newline at end of file
 diff --git a/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js b/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js
-index c08437e..68d082b 100644
+index c08437e..07da8b8 100644
 --- a/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js
 +++ b/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js
-@@ -1,3 +1,4 @@
+@@ -1,3 +1,14 @@
++/**
++ * Copyright (c) Facebook, Inc. and its affiliates.
++ *
++ * This source code is licensed under the MIT license found in the
++ * LICENSE file in the root directory of this source tree.
++ *
++ * 
++ * @format
++ */
++'use strict';
 +
  function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
  
  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-@@ -1380,6 +1381,15 @@ function (_React$Component) {
-   // reused by SectionList and we can keep VirtualizedList simpler.
-   ;
+@@ -8,15 +19,6 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
+ 
+ function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+ 
+-/**
+- * Copyright (c) 2015-present, Facebook, Inc.
+- *
+- * This source code is licensed under the MIT license found in the
+- * LICENSE file in the root directory of this source tree.
+- *
+- * 
+- * @format
+- */
+ import Batchinator from '../Batchinator';
+ import FillRateHelper from '../FillRateHelper';
+ import PropTypes from 'prop-types';
+@@ -37,6 +39,7 @@ var flattenStyle = StyleSheet.flatten;
+ var __DEV__ = process.env.NODE_ENV !== 'production';
+ 
+ var _usedIndexForKey = false;
++var _keylessItemComponentName = '';
+ 
+ /**
+  * Base implementation for the more convenient [`<FlatList>`](/react-native/docs/flatlist.html)
+@@ -62,7 +65,7 @@ var _usedIndexForKey = false;
+  *   offscreen. This means it's possible to scroll faster than the fill rate ands momentarily see
+  *   blank content. This is a tradeoff that can be adjusted to suit the needs of each application,
+  *   and we are working on improving it behind the scenes.
+- * - By default, the list looks for a `key` prop on each item and uses that for the React key.
++ * - By default, the list looks for a `key` or `id` prop on each item and uses that for the React key.
+  *   Alternatively, you can provide a custom `keyExtractor` prop.
+  *
+  */
+@@ -85,11 +88,7 @@ function (_React$PureComponent) {
+      * suppresses an error when upgrading Flow's support for React. To see the
+      * error delete this comment and run Flow. */
+ 
+-    this._scrollRef.scrollTo(
+-    /* $FlowFixMe(>=0.53.0 site=react_native_fb,react_native_oss) This
+-     * comment suppresses an error when upgrading Flow's support for React.
+-     * To see the error delete this comment and run Flow. */
+-    this.props.horizontal ? {
++    this._scrollRef.scrollTo(this.props.horizontal ? {
+       x: offset,
+       animated: animated
+     } : {
+@@ -129,11 +128,7 @@ function (_React$PureComponent) {
+      * suppresses an error when upgrading Flow's support for React. To see the
+      * error delete this comment and run Flow. */
+ 
+-    this._scrollRef.scrollTo(
+-    /* $FlowFixMe(>=0.53.0 site=react_native_fb,react_native_oss) This
+-     * comment suppresses an error when upgrading Flow's support for React.
+-     * To see the error delete this comment and run Flow. */
+-    horizontal ? {
++    this._scrollRef.scrollTo(horizontal ? {
+       x: offset,
+       animated: animated
+     } : {
+@@ -180,11 +175,7 @@ function (_React$PureComponent) {
+      * suppresses an error when upgrading Flow's support for React. To see the
+      * error delete this comment and run Flow. */
+ 
+-    this._scrollRef.scrollTo(
+-    /* $FlowFixMe(>=0.53.0 site=react_native_fb,react_native_oss) This
+-     * comment suppresses an error when upgrading Flow's support for React.
+-     * To see the error delete this comment and run Flow. */
+-    this.props.horizontal ? {
++    this._scrollRef.scrollTo(this.props.horizontal ? {
+       x: offset,
+       animated: animated
+     } : {
+@@ -232,6 +223,14 @@ function (_React$PureComponent) {
+     }
+   };
+ 
++  _proto.getScrollRef = function getScrollRef() {
++    if (this._scrollRef && this._scrollRef.getScrollRef) {
++      return this._scrollRef.getScrollRef();
++    } else {
++      return this._scrollRef;
++    }
++  };
++
+   _proto.setNativeProps = function setNativeProps(props) {
+     if (this._scrollRef) {
+       this._scrollRef.setNativeProps(props);
+@@ -291,7 +290,9 @@ function (_React$PureComponent) {
+ 
+       var existingChildData = _this._nestedChildLists.get(childList.key);
+ 
+-      invariant(!(existingChildData && existingChildData.ref !== null), 'A VirtualizedList contains a cell which itself contains ' + 'more than one VirtualizedList of the same orientation as the parent ' + 'list. You must pass a unique listKey prop to each sibling list.');
++      if (existingChildData && existingChildData.ref !== null) {
++        console.error('A VirtualizedList contains a cell which itself contains ' + 'more than one VirtualizedList of the same orientation as the parent ' + 'list. You must pass a unique listKey prop to each sibling list.');
++      }
+ 
+       _this._nestedChildLists.set(childList.key, {
+         ref: childList.ref,
+@@ -323,13 +324,14 @@ function (_React$PureComponent) {
+     _this._frames = {};
+     _this._footerLength = 0;
+     _this._hasDataChangedSinceEndReached = true;
++    _this._hasDoneInitialScroll = false;
+     _this._hasInteracted = false;
+     _this._hasMore = false;
+     _this._hasWarned = {};
+-    _this._highestMeasuredFrameIndex = 0;
+     _this._headerLength = 0;
++    _this._hiPriInProgress = false;
++    _this._highestMeasuredFrameIndex = 0;
+     _this._indicesToKeys = new Map();
+-    _this._hasDoneInitialScroll = false;
+     _this._nestedChildLists = new Map();
+     _this._offsetFromParentVirtualizedList = 0;
+     _this._prevParentOffset = 0;
+@@ -353,26 +355,78 @@ function (_React$PureComponent) {
+     };
+ 
+     _this._defaultRenderScrollComponent = function (props) {
++      var onRefresh = props.onRefresh;
++
+       if (_this._isNestedWithSameOrientation()) {
++        // $FlowFixMe - Typing ReactNativeComponent revealed errors
+         return React.createElement(View, props);
+-      } else if (props.onRefresh) {
++      } else if (onRefresh) {
+         invariant(typeof props.refreshing === 'boolean', '`refreshing` prop must be set as a boolean in order to use `onRefresh`, but got `' + JSON.stringify(props.refreshing) + '`');
+-        return React.createElement(ScrollView, _extends({}, props, {
+-          refreshControl:
+-          /* $FlowFixMe(>=0.53.0 site=react_native_fb,react_native_oss) This
+-           * comment suppresses an error when upgrading Flow's support for
+-           * React. To see the error delete this comment and run Flow. */
+-          React.createElement(RefreshControl, {
+-            refreshing: props.refreshing,
+-            onRefresh: props.onRefresh,
+-            progressViewOffset: props.progressViewOffset
+-          })
+-        }));
++        return (// $FlowFixMe Invalid prop usage
++          React.createElement(ScrollView, _extends({}, props, {
++            refreshControl: props.refreshControl == null ? React.createElement(RefreshControl, {
++              refreshing: props.refreshing,
++              onRefresh: onRefresh,
++              progressViewOffset: props.progressViewOffset
++            }) : props.refreshControl
++          }))
++        );
+       } else {
++        // $FlowFixMe Invalid prop usage
+         return React.createElement(ScrollView, props);
+       }
+     };
+ 
++    _this._onCellLayout = function (e, cellKey, index) {
++      var layout = e.nativeEvent.layout;
++      var next = {
++        offset: _this._selectOffset(layout),
++        length: _this._selectLength(layout),
++        index: index,
++        inLayout: true
++      };
++      var curr = _this._frames[cellKey];
++
++      if (!curr || next.offset !== curr.offset || next.length !== curr.length || index !== curr.index) {
++        _this._totalCellLength += next.length - (curr ? curr.length : 0);
++        _this._totalCellsMeasured += curr ? 0 : 1;
++        _this._averageCellLength = _this._totalCellLength / _this._totalCellsMeasured;
++        _this._frames[cellKey] = next;
++        _this._highestMeasuredFrameIndex = Math.max(_this._highestMeasuredFrameIndex, index);
++
++        _this._scheduleCellsToRenderUpdate();
++      } else {
++        _this._frames[cellKey].inLayout = true;
++      }
++
++      var childListKeys = _this._cellKeysToChildListKeys.get(cellKey);
++
++      if (childListKeys) {
++        for (var _iterator = childListKeys, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
++          var _ref;
++
++          if (_isArray) {
++            if (_i >= _iterator.length) break;
++            _ref = _iterator[_i++];
++          } else {
++            _i = _iterator.next();
++            if (_i.done) break;
++            _ref = _i.value;
++          }
++
++          var childKey = _ref;
++
++          var childList = _this._nestedChildLists.get(childKey);
++
++          childList && childList.ref && childList.ref.measureLayoutRelativeToContainingList();
++        }
++      }
++
++      _this._computeBlankness();
++
++      _this._updateViewableItems(_this.props.data);
++    };
++
+     _this._onCellUnmount = function (cellKey) {
+       var curr = _this._frames[cellKey];
+ 
+@@ -387,7 +441,7 @@ function (_React$PureComponent) {
+       if (_this._isNestedWithSameOrientation()) {
+         // Need to adjust our scroll metrics to be relative to our containing
+         // VirtualizedList before we can make claims about list item viewability
+-        _this._measureLayoutRelativeToContainingList();
++        _this.measureLayoutRelativeToContainingList();
+       } else {
+         _this._scrollMetrics.visibleLength = _this._selectLength(e.nativeEvent.layout);
+       }
+@@ -625,19 +679,19 @@ function (_React$PureComponent) {
+ 
+             var someChildHasMore = false; // For each cell, need to check whether any child list in it has more elements to render
+ 
+-            for (var _iterator = childListKeys, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+-              var _ref;
++            for (var _iterator2 = childListKeys, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
++              var _ref2;
+ 
+-              if (_isArray) {
+-                if (_i >= _iterator.length) break;
+-                _ref = _iterator[_i++];
++              if (_isArray2) {
++                if (_i2 >= _iterator2.length) break;
++                _ref2 = _iterator2[_i2++];
+               } else {
+-                _i = _iterator.next();
+-                if (_i.done) break;
+-                _ref = _i.value;
++                _i2 = _iterator2.next();
++                if (_i2.done) break;
++                _ref2 = _i2.value;
+               }
+ 
+-              var childKey = _ref;
++              var childKey = _ref2;
+ 
+               var childList = _this._nestedChildLists.get(childKey);
+ 
+@@ -801,7 +855,6 @@ function (_React$PureComponent) {
+ 
+   VirtualizedList.getDerivedStateFromProps = function getDerivedStateFromProps(newProps, prevState) {
+     var data = newProps.data,
+-        extraData = newProps.extraData,
+         getItemCount = newProps.getItemCount,
+         maxToRenderPerBatch = newProps.maxToRenderPerBatch; // first and last could be stale (e.g. if a new, shorter items props is passed in), so we make
+     // sure we're rendering a reasonable range here.
+@@ -822,7 +875,11 @@ function (_React$PureComponent) {
+         getItem = _this$props6.getItem,
+         getItemCount = _this$props6.getItemCount,
+         horizontal = _this$props6.horizontal,
+-        keyExtractor = _this$props6.keyExtractor;
++        keyExtractor = _this$props6.keyExtractor,
++        getItemLayout = _this$props6.getItemLayout,
++        renderItem = _this$props6.renderItem,
++        extraData = _this$props6.extraData,
++        debug = _this$props6.debug;
+     var stickyOffset = this.props.ListHeaderComponent ? 1 : 0;
+     var end = getItemCount(data) - 1;
+     var prevCellKey;
+@@ -850,13 +907,14 @@ function (_React$PureComponent) {
+         key: key,
+         prevCellKey: prevCellKey,
+         onUpdateSeparators: _this2._onUpdateSeparators,
+-        onLayout: function onLayout(e) {
+-          return _this2._onCellLayout(e, key, ii);
+-        },
++        onLayout: _this2._onCellLayout,
+         onUnmount: _this2._onCellUnmount,
+-        parentProps: _this2.props,
+-        ref: function ref(_ref2) {
+-          _this2._cellRefs[key] = _ref2;
++        getItemLayout: getItemLayout,
++        renderItem: renderItem,
++        extraData: extraData,
++        debug: debug,
++        ref: function ref(_ref3) {
++          _this2._cellRefs[key] = _ref3;
+         }
+       }));
+       prevCellKey = key;
+@@ -868,7 +926,7 @@ function (_React$PureComponent) {
+   };
+ 
+   _proto._isVirtualizationDisabled = function _isVirtualizationDisabled() {
+-    return this.props.disableVirtualization;
++    return this.props.disableVirtualization || false;
+   };
+ 
+   _proto._isNestedWithSameOrientation = function _isNestedWithSameOrientation() {
+@@ -877,6 +935,8 @@ function (_React$PureComponent) {
+   };
+ 
+   _proto.render = function render() {
++    var _this3 = this;
++
+     if (__DEV__) {
+       var flatStyles = flattenStyle(this.props.contentContainerStyle);
+       warning(flatStyles == null || flatStyles.flexWrap !== 'wrap', '`flexWrap: `wrap`` is not supported with the `VirtualizedList` components.' + 'Consider using `numColumns` with `FlatList` instead.');
+@@ -909,14 +969,16 @@ function (_React$PureComponent) {
+         key: "$header"
+       }, React.createElement(View, {
+         onLayout: this._onLayoutHeader,
+-        style: inversionStyle
+-      }, element)));
++        style: StyleSheet.compose(inversionStyle, this.props.ListHeaderComponentStyle)
++      }, // $FlowFixMe - Typing ReactNativeComponent revealed errors
++      element)));
+     }
+ 
+     var itemCount = this.props.getItemCount(data);
+ 
+     if (itemCount > 0) {
+       _usedIndexForKey = false;
++      _keylessItemComponentName = '';
+       var spacerKey = !horizontal ? 'height' : 'width';
+       var lastInitialIndex = this.props.initialScrollIndex ? -1 : this.props.initialNumToRender - 1;
+       var _this$state = this.state,
+@@ -935,16 +997,16 @@ function (_React$PureComponent) {
+ 
+           for (var ii = firstAfterInitial - 1; ii > lastInitialIndex; ii--) {
+             if (stickyIndicesFromProps.has(ii + stickyOffset)) {
+-              var _ref3, _ref4;
++              var _ref4, _ref5;
+ 
+               var initBlock = this._getFrameMetricsApprox(lastInitialIndex);
+ 
+               var stickyBlock = this._getFrameMetricsApprox(ii);
+ 
+-              var leadSpace = stickyBlock.offset - (initBlock.offset + initBlock.length);
++              var leadSpace = stickyBlock.offset - initBlock.offset - (this.props.initialScrollIndex ? 0 : initBlock.length);
+               cells.push(React.createElement(View, {
+                 key: "$sticky_lead",
+-                style: (_ref3 = {}, _ref3[spacerKey] = leadSpace, _ref3)
++                style: (_ref4 = {}, _ref4[spacerKey] = leadSpace, _ref4)
+               }));
+ 
+               this._pushCells(cells, stickyHeaderIndices, stickyIndicesFromProps, ii, ii, inversionStyle);
+@@ -952,7 +1014,7 @@ function (_React$PureComponent) {
+               var trailSpace = this._getFrameMetricsApprox(first).offset - (stickyBlock.offset + stickyBlock.length);
+               cells.push(React.createElement(View, {
+                 key: "$sticky_trail",
+-                style: (_ref4 = {}, _ref4[spacerKey] = trailSpace, _ref4)
++                style: (_ref5 = {}, _ref5[spacerKey] = trailSpace, _ref5)
+               }));
+               insertedStickySpacer = true;
+               break;
+@@ -961,7 +1023,7 @@ function (_React$PureComponent) {
+         }
+ 
+         if (!insertedStickySpacer) {
+-          var _ref5;
++          var _ref6;
+ 
+           var _initBlock = this._getFrameMetricsApprox(lastInitialIndex);
+ 
+@@ -969,7 +1031,7 @@ function (_React$PureComponent) {
+ 
+           cells.push(React.createElement(View, {
+             key: "$lead_spacer",
+-            style: (_ref5 = {}, _ref5[spacerKey] = firstSpace, _ref5)
++            style: (_ref6 = {}, _ref6[spacerKey] = firstSpace, _ref6)
+           }));
+         }
+       }
+@@ -977,12 +1039,12 @@ function (_React$PureComponent) {
+       this._pushCells(cells, stickyHeaderIndices, stickyIndicesFromProps, firstAfterInitial, last, inversionStyle);
+ 
+       if (!this._hasWarned.keys && _usedIndexForKey) {
+-        console.warn('VirtualizedList: missing keys for items, make sure to specify a key property on each ' + 'item or provide a custom keyExtractor.');
++        console.warn('VirtualizedList: missing keys for items, make sure to specify a key or id property on each ' + 'item or provide a custom keyExtractor.', _keylessItemComponentName);
+         this._hasWarned.keys = true;
+       }
+ 
+       if (!isVirtualizationDisabled && last < itemCount - 1) {
+-        var _ref6;
++        var _ref7;
+ 
+         var lastFrame = this._getFrameMetricsApprox(last); // Without getItemLayout, we limit our tail spacer to the _highestMeasuredFrameIndex to
+         // prevent the user for hyperscrolling into un-measured area because otherwise content will
+@@ -996,18 +1058,24 @@ function (_React$PureComponent) {
+         var tailSpacerLength = endFrame.offset + endFrame.length - (lastFrame.offset + lastFrame.length);
+         cells.push(React.createElement(View, {
+           key: "$tail_spacer",
+-          style: (_ref6 = {}, _ref6[spacerKey] = tailSpacerLength, _ref6)
++          style: (_ref7 = {}, _ref7[spacerKey] = tailSpacerLength, _ref7)
+         }));
+       }
+     } else if (ListEmptyComponent) {
+       var _element = React.isValidElement(ListEmptyComponent) ? ListEmptyComponent : // $FlowFixMe
+       React.createElement(ListEmptyComponent, null);
+ 
+-      cells.push(React.createElement(View, {
+-        key: "$empty",
+-        onLayout: this._onLayoutEmpty,
+-        style: inversionStyle
+-      }, _element));
++      cells.push(React.cloneElement(_element, {
++        key: '$empty',
++        onLayout: function onLayout(event) {
++          _this3._onLayoutEmpty(event);
++
++          if (_element.props.onLayout) {
++            _element.props.onLayout(event);
++          }
++        },
++        style: StyleSheet.compose(inversionStyle, _element.props.style)
++      }));
+     }
+ 
+     if (ListFooterComponent) {
+@@ -1019,8 +1087,9 @@ function (_React$PureComponent) {
+         key: "$footer"
+       }, React.createElement(View, {
+         onLayout: this._onLayoutFooter,
+-        style: inversionStyle
+-      }, _element2)));
++        style: StyleSheet.compose(inversionStyle, this.props.ListFooterComponentStyle)
++      }, // $FlowFixMe - Typing ReactNativeComponent revealed errors
++      _element2)));
+     }
+ 
+     var scrollProps = _objectSpread({}, this.props, {
+@@ -1037,6 +1106,9 @@ function (_React$PureComponent) {
+     });
+ 
+     if (inversionStyle) {
++      /* $FlowFixMe(>=0.70.0 site=react_native_fb) This comment suppresses an
++       * error found when Flow v0.70 was deployed. To see the error delete
++       * this comment and run Flow. */
+       scrollProps.style = [inversionStyle, this.props.style];
+     }
+ 
+@@ -1047,9 +1119,7 @@ function (_React$PureComponent) {
+ 
+     if (this.props.debug) {
+       return React.createElement(View, {
+-        style: {
+-          flex: 1
+-        }
++        style: styles.debug
+       }, ret, this._renderDebugOverlay());
+     } else {
+       return ret;
+@@ -1068,69 +1138,74 @@ function (_React$PureComponent) {
+       this._viewabilityTuples.forEach(function (tuple) {
+         tuple.viewabilityHelper.resetViewableIndices();
+       });
+-    }
++    } // The `this._hiPriInProgress` is guaranteeing a hiPri cell update will only happen
++    // once per fiber update. The `_scheduleCellsToRenderUpdate` will set it to true
++    // if a hiPri update needs to perform. If `componentDidUpdate` is triggered with
++    // `this._hiPriInProgress=true`, means it's triggered by the hiPri update. The
++    // `_scheduleCellsToRenderUpdate` will check this condition and not perform
++    // another hiPri update.
++
+ 
+-    this._scheduleCellsToRenderUpdate();
++    var hiPriInProgress = this._hiPriInProgress;
++
++    this._scheduleCellsToRenderUpdate(); // Make sure setting `this._hiPriInProgress` back to false after `componentDidUpdate`
++    // is triggered with `this._hiPriInProgress = true`
++
++
++    if (hiPriInProgress) {
++      this._hiPriInProgress = false;
++    }
+   };
+ 
+   _proto._computeBlankness = function _computeBlankness() {
+     this._fillRateHelper.computeBlankness(this.props, this.state, this._scrollMetrics);
+   };
+ 
+-  _proto._onCellLayout = function _onCellLayout(e, cellKey, index) {
+-    var layout = e.nativeEvent.layout;
+-    var next = {
+-      offset: this._selectOffset(layout),
+-      length: this._selectLength(layout),
+-      index: index,
+-      inLayout: true
+-    };
+-    var curr = this._frames[cellKey];
++  _proto.measureLayoutRelativeToContainingList = function measureLayoutRelativeToContainingList() {
++    var _this4 = this;
+ 
+-    if (!curr || next.offset !== curr.offset || next.length !== curr.length || index !== curr.index) {
+-      this._totalCellLength += next.length - (curr ? curr.length : 0);
+-      this._totalCellsMeasured += curr ? 0 : 1;
+-      this._averageCellLength = this._totalCellLength / this._totalCellsMeasured;
+-      this._frames[cellKey] = next;
+-      this._highestMeasuredFrameIndex = Math.max(this._highestMeasuredFrameIndex, index);
++    // TODO (T35574538): findNodeHandle sometimes crashes with "Unable to find
++    // node on an unmounted component" during scrolling
++    try {
++      if (!this._scrollRef) {
++        return;
++      } // We are asuming that getOutermostParentListRef().getScrollRef()
++      // is a non-null reference to a ScrollView
+ 
+-      this._scheduleCellsToRenderUpdate();
+-    } else {
+-      this._frames[cellKey].inLayout = true;
+-    }
+ 
+-    this._computeBlankness();
+-  };
++      this._scrollRef.measureLayout(this.context.virtualizedList.getOutermostParentListRef().getScrollRef().getNativeScrollRef(), function (x, y, width, height) {
++        _this4._offsetFromParentVirtualizedList = _this4._selectOffset({
++          x: x,
++          y: y
++        });
++        _this4._scrollMetrics.contentLength = _this4._selectLength({
++          width: width,
++          height: height
++        });
+ 
+-  _proto._measureLayoutRelativeToContainingList = function _measureLayoutRelativeToContainingList() {
+-    var _this3 = this;
++        var scrollMetrics = _this4._convertParentScrollMetrics(_this4.context.virtualizedList.getScrollMetrics());
+ 
+-    UIManager.measureLayout(findNodeHandle(this), findNodeHandle(this.context.virtualizedList.getOutermostParentListRef()), function (error) {
+-      console.warn("VirtualizedList: Encountered an error while measuring a list's" + ' offset from its containing VirtualizedList.');
+-    }, function (x, y, width, height) {
+-      _this3._offsetFromParentVirtualizedList = _this3._selectOffset({
+-        x: x,
+-        y: y
++        _this4._scrollMetrics.visibleLength = scrollMetrics.visibleLength;
++        _this4._scrollMetrics.offset = scrollMetrics.offset;
++      }, function (error) {
++        console.warn("VirtualizedList: Encountered an error while measuring a list's" + ' offset from its containing VirtualizedList.');
+       });
+-      _this3._scrollMetrics.contentLength = _this3._selectLength({
+-        width: width,
+-        height: height
+-      });
+-
+-      var scrollMetrics = _this3._convertParentScrollMetrics(_this3.context.virtualizedList.getScrollMetrics());
+-
+-      _this3._scrollMetrics.visibleLength = scrollMetrics.visibleLength;
+-      _this3._scrollMetrics.offset = scrollMetrics.offset;
+-    });
++    } catch (error) {
++      console.warn('measureLayoutRelativeToContainingList threw an error', error.stack);
++    }
+   };
+ 
+   _proto._renderDebugOverlay = function _renderDebugOverlay() {
+-    var normalize = this._scrollMetrics.visibleLength / this._scrollMetrics.contentLength;
++    var normalize = this._scrollMetrics.visibleLength / (this._scrollMetrics.contentLength || 1);
+     var framesInLayout = [];
+     var itemCount = this.props.getItemCount(this.props.data);
+ 
+     for (var ii = 0; ii < itemCount; ii++) {
+       var frame = this._getFrameMetricsApprox(ii);
++      /* $FlowFixMe(>=0.68.0 site=react_native_fb) This comment suppresses an
++       * error found when Flow v0.68 was deployed. To see the error delete this
++       * comment and run Flow. */
++
+ 
+       if (frame.inLayout) {
+         framesInLayout.push(frame);
+@@ -1144,44 +1219,26 @@ function (_React$PureComponent) {
+     var windowLen = frameLast.offset + frameLast.length - windowTop;
+     var visTop = this._scrollMetrics.offset;
+     var visLen = this._scrollMetrics.visibleLength;
+-    var baseStyle = {
+-      position: 'absolute',
+-      top: 0,
+-      right: 0
+-    };
+     return React.createElement(View, {
+-      style: _objectSpread({}, baseStyle, {
+-        bottom: 0,
+-        width: 20,
+-        borderColor: 'blue',
+-        borderWidth: 1
+-      })
++      style: [styles.debugOverlayBase, styles.debugOverlay]
+     }, framesInLayout.map(function (f, ii) {
+       return React.createElement(View, {
+         key: 'f' + ii,
+-        style: _objectSpread({}, baseStyle, {
+-          left: 0,
++        style: [styles.debugOverlayBase, styles.debugOverlayFrame, {
+           top: f.offset * normalize,
+-          height: f.length * normalize,
+-          backgroundColor: 'orange'
+-        })
++          height: f.length * normalize
++        }]
+       });
+     }), React.createElement(View, {
+-      style: _objectSpread({}, baseStyle, {
+-        left: 0,
++      style: [styles.debugOverlayBase, styles.debugOverlayFrameLast, {
+         top: windowTop * normalize,
+-        height: windowLen * normalize,
+-        borderColor: 'green',
+-        borderWidth: 2
+-      })
++        height: windowLen * normalize
++      }]
+     }), React.createElement(View, {
+-      style: _objectSpread({}, baseStyle, {
+-        left: 0,
++      style: [styles.debugOverlayBase, styles.debugOverlayFrameVis, {
+         top: visTop * normalize,
+-        height: visLen * normalize,
+-        borderColor: 'red',
+-        borderWidth: 2
+-      })
++        height: visLen * normalize
++      }]
+     }));
+   };
+ 
+@@ -1229,27 +1286,37 @@ function (_React$PureComponent) {
+         velocity = _this$_scrollMetrics3.velocity;
+     var itemCount = this.props.getItemCount(this.props.data);
+     var hiPri = false;
++    var scrollingThreshold =
++    /* $FlowFixMe(>=0.63.0 site=react_native_fb) This comment suppresses an
++     * error found when Flow v0.63 was deployed. To see the error delete
++     * this comment and run Flow. */
++    this.props.onEndReachedThreshold * visibleLength / 2; // Mark as high priority if we're close to the start of the first item
++    // But only if there are items before the first rendered item
+ 
+-    if (first > 0 || last < itemCount - 1) {
++    if (first > 0) {
+       var distTop = offset - this._getFrameMetricsApprox(first).offset;
+ 
++      hiPri = hiPri || distTop < 0 || velocity < -2 && distTop < scrollingThreshold;
++    } // Mark as high priority if we're close to the end of the last item
++    // But only if there are items after the last rendered item
++
++
++    if (last < itemCount - 1) {
+       var distBottom = this._getFrameMetricsApprox(last).offset - (offset + visibleLength);
+-      var scrollingThreshold =
+-      /* $FlowFixMe(>=0.63.0 site=react_native_fb) This comment suppresses an
+-       * error found when Flow v0.63 was deployed. To see the error delete
+-       * this comment and run Flow. */
+-      this.props.onEndReachedThreshold * visibleLength / 2;
+-      hiPri = Math.min(distTop, distBottom) < 0 || velocity < -2 && distTop < scrollingThreshold || velocity > 2 && distBottom < scrollingThreshold;
++      hiPri = hiPri || distBottom < 0 || velocity > 2 && distBottom < scrollingThreshold;
+     } // Only trigger high-priority updates if we've actually rendered cells,
+     // and with that size estimate, accurately compute how many cells we should render.
+     // Otherwise, it would just render as many cells as it can (of zero dimension),
+     // each time through attempting to render more (limited by maxToRenderPerBatch),
+     // starving the renderer from actually laying out the objects and computing _averageCellLength.
++    // If this is triggered in an `componentDidUpdate` followed by a hiPri cellToRenderUpdate
++    // We shouldn't do another hipri cellToRenderUpdate
+ 
+ 
+-    if (hiPri && this._averageCellLength) {
+-      // Don't worry about interactions when scrolling quickly; focus on filling content as fast
++    if (hiPri && (this._averageCellLength || this.props.getItemLayout) && !this._hiPriInProgress) {
++      this._hiPriInProgress = true; // Don't worry about interactions when scrolling quickly; focus on filling content as fast
+       // as possible.
++
+       this._updateCellsToRenderBatcher.dispose({
+         abort: true
+       });
+@@ -1263,12 +1330,12 @@ function (_React$PureComponent) {
+   };
+ 
+   _proto._updateViewableItems = function _updateViewableItems(data) {
+-    var _this4 = this;
++    var _this5 = this;
+ 
+     var getItemCount = this.props.getItemCount;
+ 
+     this._viewabilityTuples.forEach(function (tuple) {
+-      tuple.viewabilityHelper.onUpdate(getItemCount(data), _this4._scrollMetrics.offset, _this4._scrollMetrics.visibleLength, _this4._getFrameMetrics, _this4._createViewToken, tuple.onViewableItemsChanged, _this4.state);
++      tuple.viewabilityHelper.onUpdate(getItemCount(data), _this5._scrollMetrics.offset, _this5._scrollMetrics.visibleLength, _this5._getFrameMetrics, _this5._createViewToken, tuple.onViewableItemsChanged, _this5.state);
+     });
+   };
+ 
+@@ -1276,7 +1343,7 @@ function (_React$PureComponent) {
+ }(React.PureComponent);
+ 
+ VirtualizedList.defaultProps = {
+-  disableVirtualization: process.env.NODE_ENV === 'test',
++  disableVirtualization: false,
+   horizontal: false,
+   initialNumToRender: 10,
+   keyExtractor: function keyExtractor(item, index) {
+@@ -1284,7 +1351,16 @@ VirtualizedList.defaultProps = {
+       return item.key;
+     }
+ 
++    if (item.id != null) {
++      return item.id;
++    }
++
+     _usedIndexForKey = true;
++
++    if (item.type && item.type.displayName) {
++      _keylessItemComponentName = item.type.displayName;
++    }
++
+     return String(index);
+   },
+   maxToRenderPerBatch: 10,
+@@ -1325,49 +1401,62 @@ function (_React$Component) {
+   _inheritsLoose(CellRenderer, _React$Component);
+ 
+   function CellRenderer() {
+-    var _this5;
++    var _this6;
+ 
+     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+       args[_key] = arguments[_key];
+     }
+ 
+-    _this5 = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+-    _this5.state = {
++    _this6 = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
++    _this6.state = {
+       separatorProps: {
+         highlighted: false,
+-        leadingItem: _this5.props.item
++        leadingItem: _this6.props.item
+       }
+     };
+-    _this5._separators = {
++    _this6._separators = {
+       highlight: function highlight() {
+-        var _this5$props = _this5.props,
+-            cellKey = _this5$props.cellKey,
+-            prevCellKey = _this5$props.prevCellKey;
++        var _this6$props = _this6.props,
++            cellKey = _this6$props.cellKey,
++            prevCellKey = _this6$props.prevCellKey;
+ 
+-        _this5.props.onUpdateSeparators([cellKey, prevCellKey], {
++        _this6.props.onUpdateSeparators([cellKey, prevCellKey], {
+           highlighted: true
+         });
+       },
+       unhighlight: function unhighlight() {
+-        var _this5$props2 = _this5.props,
+-            cellKey = _this5$props2.cellKey,
+-            prevCellKey = _this5$props2.prevCellKey;
++        var _this6$props2 = _this6.props,
++            cellKey = _this6$props2.cellKey,
++            prevCellKey = _this6$props2.prevCellKey;
+ 
+-        _this5.props.onUpdateSeparators([cellKey, prevCellKey], {
++        _this6.props.onUpdateSeparators([cellKey, prevCellKey], {
+           highlighted: false
+         });
+       },
+       updateProps: function updateProps(select, newProps) {
+-        var _this5$props3 = _this5.props,
+-            cellKey = _this5$props3.cellKey,
+-            prevCellKey = _this5$props3.prevCellKey;
++        var _this6$props3 = _this6.props,
++            cellKey = _this6$props3.cellKey,
++            prevCellKey = _this6$props3.prevCellKey;
+ 
+-        _this5.props.onUpdateSeparators([select === 'leading' ? prevCellKey : cellKey], newProps);
++        _this6.props.onUpdateSeparators([select === 'leading' ? prevCellKey : cellKey], newProps);
+       }
+     };
+-    return _this5;
++
++    _this6._onLayout = function (e) {
++      return _this6.props.onLayout && _this6.props.onLayout(e, _this6.props.cellKey, _this6.props.index);
++    };
++
++    return _this6;
+   }
  
 +  CellRenderer.getDerivedStateFromProps = function getDerivedStateFromProps(props, prevState) {
 +    return {
-+      separatorProps: {
-+        ...prevState.separatorProps,
-+        leadingItem: props.item,
-+      },
++      separatorProps: _objectSpread({}, prevState.separatorProps, {
++        leadingItem: props.item
++      })
 +    };
 +  };
 +
-   _proto2.updateSeparatorProps = function updateSeparatorProps(newProps) {
-     this.setState(function (state) {
-       return {
+   var _proto2 = CellRenderer.prototype;
+ 
+   _proto2.getChildContext = function getChildContext() {
+@@ -1392,35 +1481,66 @@ function (_React$Component) {
+     this.props.onUnmount(this.props.cellKey);
+   };
+ 
++  _proto2._renderElement = function _renderElement(renderItem, ListItemComponent, item, index) {
++    if (renderItem && ListItemComponent) {
++      console.warn('VirtualizedList: Both ListItemComponent and renderItem props are present. ListItemComponent will take' + ' precedence over renderItem.');
++    }
++
++    if (ListItemComponent) {
++      return React.createElement(ListItemComponent, {
++        item: item,
++        index: index,
++        separators: this._separators
++      });
++    }
++
++    if (renderItem) {
++      return renderItem({
++        item: item,
++        index: index,
++        separators: this._separators
++      });
++    }
++
++    invariant(false, 'VirtualizedList: Either ListItemComponent or renderItem props are required but none were found.');
++  };
++
+   _proto2.render = function render() {
+     var _this$props11 = this.props,
+         CellRendererComponent = _this$props11.CellRendererComponent,
+         ItemSeparatorComponent = _this$props11.ItemSeparatorComponent,
++        ListItemComponent = _this$props11.ListItemComponent,
+         fillRateHelper = _this$props11.fillRateHelper,
+         horizontal = _this$props11.horizontal,
+         item = _this$props11.item,
+         index = _this$props11.index,
+         inversionStyle = _this$props11.inversionStyle,
+-        parentProps = _this$props11.parentProps;
+-    var renderItem = parentProps.renderItem,
+-        getItemLayout = parentProps.getItemLayout;
+-    invariant(renderItem, 'no renderItem!');
+-    var element = renderItem({
+-      item: item,
+-      index: index,
+-      separators: this._separators
+-    });
+-    var onLayout = getItemLayout && !parentProps.debug && !fillRateHelper.enabled() ? undefined : this.props.onLayout; // NOTE: that when this is a sticky header, `onLayout` will get automatically extracted and
++        renderItem = _this$props11.renderItem,
++        getItemLayout = _this$props11.getItemLayout,
++        debug = _this$props11.debug;
++
++    var element = this._renderElement(renderItem, ListItemComponent, item, index);
++
++    var onLayout =
++    /* $FlowFixMe(>=0.68.0 site=react_native_fb) This comment suppresses an
++     * error found when Flow v0.68 was deployed. To see the error delete this
++     * comment and run Flow. */
++    getItemLayout && !debug && !fillRateHelper.enabled() ? undefined : this._onLayout; // NOTE: that when this is a sticky header, `onLayout` will get automatically extracted and
+     // called explicitly by `ScrollViewStickyHeader`.
+ 
+     var itemSeparator = ItemSeparatorComponent && React.createElement(ItemSeparatorComponent, this.state.separatorProps);
+     var cellStyle = inversionStyle ? horizontal ? [styles.rowReverse, inversionStyle] : [styles.columnReverse, inversionStyle] : horizontal ? [styles.row, inversionStyle] : inversionStyle;
+ 
+     if (!CellRendererComponent) {
+-      return React.createElement(View, {
+-        style: cellStyle,
+-        onLayout: onLayout
+-      }, element, itemSeparator);
++      return (
++        /* $FlowFixMe(>=0.89.0 site=react_native_fb) This comment suppresses an
++         * error found when Flow v0.89 was deployed. To see the error, delete
++         * this comment and run Flow. */
++        React.createElement(View, {
++          style: cellStyle,
++          onLayout: onLayout
++        }, element, itemSeparator)
++      );
+     }
+ 
+     return React.createElement(CellRendererComponent, _extends({}, this.props, {
+@@ -1488,6 +1608,34 @@ var styles = StyleSheet.create({
+   },
+   columnReverse: {
+     flexDirection: 'column-reverse'
++  },
++  debug: {
++    flex: 1
++  },
++  debugOverlayBase: {
++    position: 'absolute',
++    top: 0,
++    right: 0
++  },
++  debugOverlay: {
++    bottom: 0,
++    width: 20,
++    borderColor: 'blue',
++    borderWidth: 1
++  },
++  debugOverlayFrame: {
++    left: 0,
++    backgroundColor: 'orange'
++  },
++  debugOverlayFrameLast: {
++    left: 0,
++    borderColor: 'green',
++    borderWidth: 2
++  },
++  debugOverlayFrameVis: {
++    left: 0,
++    borderColor: 'red',
++    borderWidth: 2
+   }
+ });
+ export default VirtualizedList;
