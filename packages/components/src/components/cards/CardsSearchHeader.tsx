@@ -92,7 +92,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
         key={`cards-search-header-column-${column.id}`}
         autoCapitalize="none"
         autoCorrect={false}
-        autoFocus={autoFocus}
+        autoFocus={autoFocus || isFocused}
         blurOnSubmit={false}
         borderHoverThemeColor={isPendingSave ? 'yellow' : undefined}
         borderThemeColor={isPendingSave ? 'yellow' : undefined}
