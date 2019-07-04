@@ -1,13 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react'
 import { Image, StyleSheet, View, ViewStyle } from 'react-native'
 
-import {
-  getFilteredItems,
-  getGitHubURLForUser,
-  getItemInbox,
-  getItemsFilterMetadata,
-  ModalPayload,
-} from '@devhub/core'
+import { getGitHubURLForUser, isItemRead, ModalPayload } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
 import { useColumnData } from '../../hooks/use-column-data'
@@ -574,10 +568,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
 Sidebar.displayName = 'Sidebar'
 
-const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
-  mergeSimilar: false,
-}
-
 const SidebarColumnItem = React.memo(
   (props: {
     activeOpacity?: ColumnHeaderItemProps['activeOpacity']
@@ -611,26 +601,13 @@ const SidebarColumnItem = React.memo(
 
     const { column, columnIndex, headerDetails } = useColumn(columnId)
 
-    const { allItems } = useColumnData(
-      (column && column.id) || '',
-      getFilteredItemsOptions,
-    )
+    const { filteredItems } = useColumnData((column && column.id) || '', {
+      mergeSimilar: false,
+    })
 
     if (!(column && columnIndex >= 0 && headerDetails)) return null
 
-    const filteredItemsMetadata = getItemsFilterMetadata(
-      column.type,
-      getFilteredItems(
-        column.type,
-        allItems,
-        column.filters,
-        getFilteredItemsOptions,
-      ),
-    )
-
-    const inbox = getItemInbox(column.type, column.filters)
-
-    const isUnread = filteredItemsMetadata.inbox[inbox].unread > 0
+    const hasUnreadItems = filteredItems.some(item => !isItemRead(item))
 
     const label = `${headerDetails.title ||
       headerDetails.subtitle ||
@@ -657,7 +634,7 @@ const SidebarColumnItem = React.memo(
         }
         hoverForegroundThemeColor={hoverForegroundThemeColor}
         iconName={headerDetails.icon}
-        isUnread={isUnread}
+        isUnread={hasUnreadItems}
         label={label}
         noPadding
         onPress={() => {
