@@ -18,14 +18,13 @@
     "test": "react-app-rewired test"
   },
   "dependencies": {
-    "@babel/polyfill": "7.4.0",
     "@devhub/components": "0.92.0",
     "react": "16.8.6",
-    "react-app-polyfill": "0.2.2",
+    "react-app-polyfill": "1.0.1",
     "react-art": "16.8.6",
     "react-dom": "16.8.6",
     "react-native-web": "0.11.1",
-    "react-scripts": "2.1.8",
+    "react-scripts": "3.0.1",
     "resize-observer-polyfill": "1.5.1",
     "smoothscroll-polyfill": "0.4.3"
   },
@@ -47,10 +46,13 @@
     "typescript": "3.5.1",
     "webpack-bundle-analyzer": "3.1.0"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 9",
-    "not op_mini all"
+    "last 1 electron version",
+    "last 1 chrome version",
+    "last 1 firefox version",
+    "last 1 safari version"
   ]
 }

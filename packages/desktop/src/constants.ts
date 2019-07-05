@@ -1,8 +1,9 @@
 import path from 'path'
 
+import { constants as shared } from '@devhub/core'
 import { __DEV__ } from './libs/electron-is-dev'
 
-export { constants as shared } from '@devhub/core'
+export { shared }
 
 export const START_URL = __DEV__
   ? 'http://localhost:3000'

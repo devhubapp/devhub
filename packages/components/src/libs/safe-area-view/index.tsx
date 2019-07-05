@@ -1,1 +1,3 @@
-export { View as SafeAreaView } from 'react-native'
+import { View as SafeAreaView } from 'react-native'
+
+export { SafeAreaView }

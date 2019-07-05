@@ -12,8 +12,6 @@ import {
   ToWithVH,
 } from './GradientLayerOverlay.shared'
 
-export { To as From, ToWithVH as FromWithVH }
-
 export interface TransparentTextOverlayProps
   extends Omit<GradientLayerOverlayProps, 'to' | 'color'> {
   to: ToWithVH

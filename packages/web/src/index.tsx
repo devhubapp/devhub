@@ -6,8 +6,7 @@
   throw error
 }
 
-import '@babel/polyfill'
-import 'react-app-polyfill/ie9'
+import 'react-app-polyfill/stable'
 import 'resize-observer-polyfill/dist/ResizeObserver.global'
 import smoothscroll from 'smoothscroll-polyfill'
 smoothscroll.polyfill()
