@@ -10,19 +10,7 @@ export interface State {
 }
 
 const initialState: State = {
-  banners: [
-    {
-      id: 'new_layout_mode',
-      message:
-        ':sparkles: New! You can now switch between "Multi-column" and "Single-column" layouts! Tap to try it out.',
-      href: `${constants.APP_DEEP_LINK_URLS.redux_action}/TOGGLE_APP_VIEW_MODE`,
-      openOnNewTab: true,
-      disableOnSmallScreens: true,
-      minLoginCount: undefined,
-      closedAt: undefined,
-      createdAt: '2019-06-21T00:00:00.000Z',
-    },
-  ],
+  banners: [],
 }
 
 export const appReducer: Reducer<State> = (state = initialState, action) => {
