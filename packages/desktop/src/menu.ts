@@ -59,7 +59,7 @@ export function getOptionsMenuItems() {
 }
 
 export function getOpenAtLoginMenuItem() {
-  if (!constants.FEATURE_FLAGS.OPEN_AT_LOGIN) return []
+  if (!constants.FEATURE_FLAGS.OPEN_AT_LOGIN) return null
 
   const menuItem: MenuItemConstructorOptions = {
     type: 'checkbox',
