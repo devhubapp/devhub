@@ -1,7 +1,8 @@
-import { app, ipcMain } from 'electron'
+import { ipcMain } from 'electron'
 
 import * as constants from './constants'
 import { getDock } from './dock'
+import * as helpers from './helpers'
 import * as tray from './tray'
 import * as window from './window'
 
@@ -13,9 +14,7 @@ export function register() {
     else if (uri.startsWith('http://') || uri.startsWith('https://'))
       returnValue = true
     else if (uri.startsWith(`${constants.shared.APP_DEEP_LINK_SCHEMA}://`))
-      returnValue = app.isDefaultProtocolClient(
-        constants.shared.APP_DEEP_LINK_SCHEMA,
-      )
+      returnValue = helpers.isDefaultAppSchema()
 
     e.returnValue = returnValue
   })

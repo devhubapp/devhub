@@ -1,7 +1,7 @@
 import immer from 'immer'
 import _ from 'lodash'
 
-import { BannerMessage, constants } from '@devhub/core'
+import { BannerMessage } from '@devhub/core'
 import { REHYDRATE } from 'redux-persist'
 import { Reducer } from '../types'
 

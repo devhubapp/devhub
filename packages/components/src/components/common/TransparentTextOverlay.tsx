@@ -8,7 +8,6 @@ import { getThemeColorOrItself } from '../themed/helpers'
 import { GradientLayerOverlay } from './GradientLayerOverlay'
 import {
   GradientLayerOverlayProps,
-  To,
   ToWithVH,
 } from './GradientLayerOverlay.shared'
 

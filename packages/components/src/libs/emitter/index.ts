@@ -4,7 +4,6 @@ export type EventEmitter = EventEmitter
 export type EventSubscription = EventSubscription
 
 export interface EmitterTypes {
-  DEEP_LINK: { url: string }
   FOCUS_ON_COLUMN: {
     animated?: boolean
     columnId: string

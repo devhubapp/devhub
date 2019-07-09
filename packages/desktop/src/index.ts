@@ -1,9 +1,7 @@
 import { app, shell } from 'electron'
-import path from 'path'
 import url from 'url'
 
 import * as config from './config'
-import * as constants from './constants'
 import * as helpers from './helpers'
 import * as ipc from './ipc'
 import { __DEV__ } from './libs/electron-is-dev'
@@ -53,7 +51,7 @@ function init() {
 
     helpers.showWindow(mainWindow)
 
-    app.emit('open-url', event, __DEV__ ? argv[2] : argv[1])
+    app.emit('open-url', event, argv.pop() || '')
   })
 
   app.on('ready', () => {
@@ -62,16 +60,7 @@ function init() {
       (config.store.get('launchCount', 0) as number) + 1,
     )
 
-    if (__DEV__ && process.platform === 'win32') {
-      app.removeAsDefaultProtocolClient(constants.shared.APP_DEEP_LINK_SCHEMA)
-      app.setAsDefaultProtocolClient(
-        constants.shared.APP_DEEP_LINK_SCHEMA,
-        process.execPath,
-        [path.resolve(process.argv[1])],
-      )
-    } else {
-      app.setAsDefaultProtocolClient(constants.shared.APP_DEEP_LINK_SCHEMA)
-    }
+    helpers.registerAppSchema()
 
     tray.createTray()
     window.init()
@@ -116,7 +105,7 @@ function init() {
       'new-window',
       (event, uri, _frameName, _disposition, _options) => {
         if (
-          !app.isDefaultProtocolClient(constants.shared.APP_DEEP_LINK_SCHEMA) &&
+          !helpers.isDefaultAppSchema() &&
           `${url.parse(uri).pathname || ''}`.startsWith('/oauth')
         )
           return

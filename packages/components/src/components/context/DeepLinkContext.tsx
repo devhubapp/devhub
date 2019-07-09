@@ -1,11 +1,11 @@
 import _ from 'lodash'
-import React, { useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { constants } from '@devhub/core'
-import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { analytics } from '../../libs/analytics'
+import { Linking } from '../../libs/linking'
 import * as actions from '../../redux/actions'
 
 export interface DeepLinkProviderProps {
@@ -23,18 +23,17 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
   const dispatch = useDispatch()
   const pushModal = useReduxAction(actions.pushModal)
 
-  useEmitter(
-    'DEEP_LINK',
-    useCallback(payload => {
+  useEffect(() => {
+    Linking.addEventListener('url', payload => {
       if (!(payload && payload.url && typeof payload.url === 'string')) return
 
       const { url } = payload
 
-      analytics.trackEvent('deep_link', 'open_url', url)
-
       const isDeepLink =
         url && url.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)
       if (!isDeepLink) return
+
+      analytics.trackEvent('deep_link', 'open_url', url)
 
       const suffixes = url
         .replace(`${constants.APP_DEEP_LINK_SCHEMA}://`, '')
@@ -49,6 +48,12 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
       ) as Record<keyof typeof constants.APP_DEEP_LINK_URLS, string>
 
       switch (suffixes[0]) {
+        case suffixMap.github_oauth: {
+          // current this is being handled at the login component
+          // might change this in the future
+          break
+        }
+
         case suffixMap.redux_action: {
           if (suffixes[1]) {
             dispatch({ type: suffixes[1] })
@@ -65,8 +70,8 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
           console.error(`Unhandled deep link url: "${url}"`)
         }
       }
-    }, []),
-  )
+    })
+  }, [])
 
   return (
     <DeepLinkContext.Provider value={undefined}>
