@@ -106,7 +106,7 @@ function init() {
       (event, uri, _frameName, _disposition, _options) => {
         if (
           !helpers.isDefaultAppSchema() &&
-          `${url.parse(uri).pathname || ''}`.startsWith('/oauth')
+          `${url.parse(uri).pathname || ''}`.startsWith('/github/oauth')
         )
           return
 
