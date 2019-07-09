@@ -14,7 +14,7 @@ import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
-import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
+import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
 import { Columns } from './Columns'
 import { NoColumns } from './NoColumns'
 import { NoFocusedColumn } from './NoFocusedColumn'
@@ -63,7 +63,7 @@ export function ColumnsRenderer() {
           {(containerHeight: number) => (
             <>
               {!!enableSharedFiltersView && (
-                <ColumnOptionsRenderer
+                <ColumnFiltersRenderer
                   key="column-options-renderer"
                   columnId={focusedColumnId}
                   containerHeight={containerHeight}
@@ -82,7 +82,7 @@ export function ColumnsRenderer() {
                 <ColumnContainer
                   key="single-column-container"
                   columnId={focusedColumnId}
-                  disableColumnOptions={inlineMode}
+                  disableColumnFilters={inlineMode}
                   pointerEvents={
                     isSharedFiltersOpened && !inlineMode ? 'none' : undefined
                   }

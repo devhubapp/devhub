@@ -9,7 +9,7 @@ import { FlatListProps } from '../libs/flatlist'
 
 export interface ColumnContainerProps {
   columnId: string
-  disableColumnOptions?: boolean
+  disableColumnFilters?: boolean
   pagingEnabled?: boolean
   swipeable: boolean
   pointerEvents: FlatListProps<any>['pointerEvents']
@@ -18,7 +18,7 @@ export interface ColumnContainerProps {
 export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
   const {
     columnId,
-    disableColumnOptions,
+    disableColumnFilters,
     pagingEnabled,
     pointerEvents,
     swipeable,
@@ -35,7 +35,7 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           key={`event-column-${column.id}`}
           column={column}
           columnIndex={columnIndex}
-          disableColumnOptions={disableColumnOptions}
+          disableColumnFilters={disableColumnFilters}
           headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
           pointerEvents={pointerEvents}
@@ -50,7 +50,7 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           key={`issue-or-pr-column-${column.id}`}
           column={column}
           columnIndex={columnIndex}
-          disableColumnOptions={disableColumnOptions}
+          disableColumnFilters={disableColumnFilters}
           headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
           pointerEvents={pointerEvents}
@@ -65,7 +65,7 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
           key={`notification-column-${column.id}`}
           column={column}
           columnIndex={columnIndex}
-          disableColumnOptions={disableColumnOptions}
+          disableColumnFilters={disableColumnFilters}
           headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
           pointerEvents={pointerEvents}

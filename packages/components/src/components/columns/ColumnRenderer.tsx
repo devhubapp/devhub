@@ -41,9 +41,9 @@ import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
 import { Column } from './Column'
+import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
-import { ColumnOptionsRenderer } from './ColumnOptionsRenderer'
 import { getColumnSeparatorSize } from './ColumnSeparator'
 
 export function getColumnCardThemeColors(
@@ -110,7 +110,7 @@ export interface ColumnRendererProps {
   }) => React.ReactNode
   column: ColumnType
   columnIndex: number
-  disableColumnOptions?: boolean
+  disableColumnFilters?: boolean
   icon: GitHubIcon
   owner: string | undefined
   pagingEnabled?: boolean
@@ -127,7 +127,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     children,
     column,
     columnIndex,
-    disableColumnOptions,
+    disableColumnFilters,
     icon,
     owner,
     pagingEnabled,
@@ -402,7 +402,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
           }
         />
 
-        {!disableColumnOptions && (
+        {!disableColumnFilters && (
           <ColumnHeaderItem
             key="column-options-button-toggle-column-options"
             analyticsAction={isFiltersOpened ? 'hide' : 'show'}
@@ -427,8 +427,8 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       >
         {(containerHeight: number) => (
           <>
-            {!disableColumnOptions && !enableSharedFiltersView && (
-              <ColumnOptionsRenderer
+            {!disableColumnFilters && !enableSharedFiltersView && (
+              <ColumnFiltersRenderer
                 key="column-options-renderer"
                 close={toggleOptions}
                 columnId={column.id}

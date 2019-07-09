@@ -13,7 +13,7 @@ export interface IssueOrPullRequestColumnProps
     'cardViewMode' | 'disableItemFocus' | 'enableCompactLabels' | 'repoIsKnown'
   > {
   columnIndex: number
-  disableColumnOptions?: boolean
+  disableColumnFilters?: boolean
   headerDetails: ReturnType<typeof getColumnHeaderDetails>
   pagingEnabled?: boolean
 }
@@ -23,7 +23,7 @@ export const IssueOrPullRequestColumn = React.memo(
     const {
       column,
       columnIndex,
-      disableColumnOptions,
+      disableColumnFilters,
       headerDetails,
       pagingEnabled,
     } = props
@@ -39,7 +39,7 @@ export const IssueOrPullRequestColumn = React.memo(
         }
         column={column}
         columnIndex={columnIndex}
-        disableColumnOptions={disableColumnOptions}
+        disableColumnFilters={disableColumnFilters}
         icon={headerDetails.icon}
         owner={headerDetails.owner}
         pagingEnabled={pagingEnabled}

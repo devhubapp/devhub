@@ -24,17 +24,17 @@ const styles = StyleSheet.create({
 })
 
 export function shouldRenderFAB({
-  isColumnOptionsVisible,
+  isColumnFiltersVisible,
   keyboardVisibility,
   sizename,
 }: {
-  isColumnOptionsVisible?: boolean
+  isColumnFiltersVisible?: boolean
   keyboardVisibility?: ReturnType<typeof useKeyboardVisibility>
   sizename: AppLayoutProviderState['sizename']
 }) {
   if (!(sizename <= '3-large')) return false
 
-  if (sizename === '1-small' && isColumnOptionsVisible) return false
+  if (sizename === '1-small' && isColumnFiltersVisible) return false
 
   if (keyboardVisibility === 'appearing' || keyboardVisibility === 'visible')
     return false
@@ -57,7 +57,7 @@ export function FABRenderer() {
     !shouldRenderFAB({
       sizename,
       keyboardVisibility,
-      isColumnOptionsVisible: isSharedFiltersOpened,
+      isColumnFiltersVisible: isSharedFiltersOpened,
     })
   )
     return null

@@ -17,12 +17,12 @@ import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
+import { ColumnFilters } from './ColumnFilters'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
-import { ColumnOptions } from './ColumnOptions'
 import { ColumnSeparator } from './ColumnSeparator'
 
-export interface ColumnOptionsRendererProps {
+export interface ColumnFiltersRendererProps {
   close: (() => void) | undefined
   columnId: string
   containerHeight: number
@@ -35,8 +35,8 @@ export interface ColumnOptionsRendererProps {
   startWithFiltersExpanded?: boolean
 }
 
-export const ColumnOptionsRenderer = React.memo(
-  (props: ColumnOptionsRendererProps) => {
+export const ColumnFiltersRenderer = React.memo(
+  (props: ColumnFiltersRendererProps) => {
     const {
       close,
       columnId,
@@ -132,7 +132,7 @@ export const ColumnOptionsRenderer = React.memo(
 
     const availableHeight =
       containerHeight -
-      (shouldRenderFAB({ sizename, isColumnOptionsVisible: true })
+      (shouldRenderFAB({ sizename, isColumnFiltersVisible: true })
         ? fabSize + 2 * fabSpacing
         : 0)
 
@@ -263,7 +263,7 @@ export const ColumnOptionsRenderer = React.memo(
               <AccordionView isOpen={isOpen}>{children}</AccordionView>
             )}
           >
-            <ColumnOptions
+            <ColumnFilters
               key={`column-options-${column.type}`}
               availableHeight={
                 availableHeight -
@@ -286,4 +286,4 @@ export const ColumnOptionsRenderer = React.memo(
   },
 )
 
-ColumnOptionsRenderer.displayName = 'ColumnOptionsRenderer'
+ColumnFiltersRenderer.displayName = 'ColumnFiltersRenderer'

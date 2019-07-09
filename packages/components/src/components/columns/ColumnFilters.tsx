@@ -94,7 +94,7 @@ const notificationReasonOptions = notificationReasons
   .map(getNotificationReasonMetadata)
   .sort(metadataSortFn)
 
-export interface ColumnOptionsProps {
+export interface ColumnFiltersProps {
   availableHeight: number
   column: Column
   columnIndex: number
@@ -103,7 +103,7 @@ export interface ColumnOptionsProps {
   startWithFiltersExpanded?: boolean
 }
 
-export type ColumnOptionCategory =
+export type ColumnFilterCategory =
   | 'bot'
   | 'draft'
   | 'event_action'
@@ -121,7 +121,7 @@ const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
   mergeSimilar: false,
 }
 
-export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
+export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   const {
     availableHeight,
     column,
@@ -195,7 +195,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
     !!involvingUsers &&
     involvingUsers.length >= 1
 
-  const _allColumnOptionCategories: Array<ColumnOptionCategory | false> = [
+  const _allColumnOptionCategories: Array<ColumnFilterCategory | false> = [
     column.type === 'notifications' && 'inbox',
     'saved_for_later',
     'unread',
@@ -212,11 +212,11 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
 
   const allColumnOptionCategories = _allColumnOptionCategories.filter(
     Boolean,
-  ) as ColumnOptionCategory[]
+  ) as ColumnFilterCategory[]
 
   const [openedOptionCategories, setOpenedOptionCategories] = useState(
     () =>
-      new Set<ColumnOptionCategory>(
+      new Set<ColumnFilterCategory>(
         forceOpenAll || startWithFiltersExpanded
           ? allColumnOptionCategories
           : [],
@@ -262,7 +262,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   )
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
 
-  const toggleOpenedOptionCategory = (optionCategory: ColumnOptionCategory) => {
+  const toggleOpenedOptionCategory = (optionCategory: ColumnFilterCategory) => {
     setOpenedOptionCategories(set => {
       const isOpen = set.has(optionCategory)
       if (allowOnlyOneCategoryToBeOpenedRef.current) set.clear()
@@ -1739,4 +1739,4 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   )
 })
 
-ColumnOptions.displayName = 'ColumnOptions'
+ColumnFilters.displayName = 'ColumnFilters'
