@@ -174,6 +174,18 @@ export const ColumnOptionsRenderer = React.memo(
 
         <SpringAnimatedView
           collapsable={false}
+          hidden={
+            enableAbsolutePositionAnimation &&
+            absolutePositionTransition.props &&
+            fixedPosition &&
+            fixedWidth
+              ? fixedPosition === 'left' || fixedPosition === 'right'
+                ? absolutePositionTransition.props[fixedPosition].interpolate(
+                    (value: number) => (fixedWidth + value <= 0 ? true : false),
+                  )
+                : false
+              : false
+          }
           style={[
             !inlineMode && {
               position: 'absolute',

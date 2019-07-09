@@ -22,6 +22,7 @@ namespace JSX {
       | 'navigation' // nav
       | 'region' // section
     className?: string
+    hidden?: boolean
     tabIndex?: number
   }
 }

@@ -54,6 +54,9 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
 
   return (
     <SpringAnimatedView
+      hidden={animatedStyles.height.interpolate((value: number | 'auto') =>
+        value === 'auto' || value > 0 ? false : true,
+      )}
       style={{
         height:
           isOpen && wasOpen === isOpen && hasCompletedAnimationRef.current
