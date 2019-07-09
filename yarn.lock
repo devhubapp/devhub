@@ -2910,10 +2910,10 @@ babel-plugin-named-asset-import@^0.3.2:
   resolved "https://registry.npmjs.org/babel-plugin-named-asset-import/-/babel-plugin-named-asset-import-0.3.2.tgz#20978ed446b8e1bf4a2f42d0a94c0ece85f75f4f"
   integrity sha512-CxwvxrZ9OirpXQ201Ec57OmGhmI8/ui/GwTDy0hSp6CmRvgRC0pSair6Z04Ck+JStA0sMPZzSJ3uE4n17EXpPQ==
 
-babel-plugin-react-native-web@0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.11.1.tgz#0b4a22a79fc6d99f6dd64dea4701d087a0207e65"
-  integrity sha512-l0BnsEVxACoNbNjIIHTlmwViruBDOa6zbt/95bXwMw/Lz18266n0Q2OPH4LxFWpxDtXTEi84LiG2E2LBe8b+vg==
+babel-plugin-react-native-web@0.11.5:
+  version "0.11.5"
+  resolved "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.11.5.tgz#df22a66991772fb3695279942528d3ae4dcba7af"
+  integrity sha512-elK9hL69DBxn5JUJT48QVoPEOrjb2AIkB18t476DYbmCZUFRuhGCbDxze0WXEI0NLhQDKrigJFgl6pVSHoCSmA==
 
 babel-plugin-syntax-object-rest-spread@^6.8.0:
   version "6.13.0"
@@ -12190,10 +12190,10 @@ react-native-vector-icons@6.4.2:
     prop-types "^15.6.2"
     yargs "^13.2.2"
 
-react-native-web@0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.11.1.tgz#a70c8358e36f38a563a709f267c8f153ee7dc435"
-  integrity sha512-U607lxZRrl08vP/4+d717pXZyo7wdiDNOT5j3szj7behxiYvW9kw6OF2GQzU+Jw9twyeu+ZGsO2JOG9NeU+QyQ==
+react-native-web@0.11.5:
+  version "0.11.5"
+  resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.11.5.tgz#adf2eff902fdb32e86be7877294d9a6bb0ad3815"
+  integrity sha512-KVvE6s32uBgp5m1BNSfNOXvGo1wt/pORSKvi8oy8tdhAPYqsr0oMuMP3rZd8vk+MpiYt1Z8raS/n+DK2xj85Jg==
   dependencies:
     array-find-index "^1.0.2"
     create-react-class "^15.6.2"
