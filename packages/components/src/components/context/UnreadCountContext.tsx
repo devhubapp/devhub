@@ -22,8 +22,11 @@ export const UnreadCountContext = React.createContext<UnreadCountProviderState>(
 UnreadCountContext.displayName = 'UnreadCountContext'
 
 export function UnreadCountProvider(props: UnreadCountProviderProps) {
-  const columns = useReduxState(selectors.columnsArrSelector)
+  const isLogged = useReduxState(selectors.isLoggedSelector)
+  const _columns = useReduxState(selectors.columnsArrSelector)
   const subscriptions = useReduxState(selectors.subscriptionsArrSelector)
+
+  const columns = isLogged ? _columns : []
 
   const unreadIds = new Set<string>([])
 
