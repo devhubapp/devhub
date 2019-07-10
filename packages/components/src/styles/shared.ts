@@ -16,6 +16,10 @@ export const sharedStyles = StyleSheet.create({
     flexWrap: 'wrap',
   },
 
+  fullWidth: {
+    width: '100%',
+  },
+
   center: {
     alignContent: 'center',
     alignItems: 'center',

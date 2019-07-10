@@ -11,7 +11,7 @@ import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 export type Transition = ReactSpringHook
 
 export interface AccordionViewProps {
-  animation?: 'height' | 'slideRight'
+  // animation?: 'height' | 'slideRight'
   children: React.ReactNode
   isOpen?: boolean
 }

@@ -11,8 +11,14 @@ import { useColumn } from '../../hooks/use-column'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
+import { sharedStyles } from '../../styles/shared'
+import { contentPadding } from '../../styles/variables'
+import { ColumnFiltersButton } from '../columns/ColumnFiltersButton'
 import { SearchBar, searchBarTotalHeight } from '../common/SearchBar'
 import { separatorSize } from '../common/Separator'
+import { Spacer } from '../common/Spacer'
+import { useColumnFilters } from '../context/ColumnFiltersContext'
+import { ThemedView } from '../themed/ThemedView'
 import { CardItemSeparator } from './partials/CardItemSeparator'
 
 export interface CardsSearchHeaderProps {
@@ -28,6 +34,8 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
 
   const [isFocused, setIsFocused] = useState(false)
   const { column } = useColumn(columnId)
+
+  const { inlineMode } = useColumnFilters()
 
   const filtersQuery =
     (column && getSearchQueryFromFilter(column.type, column.filters)) ||
@@ -88,26 +96,42 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
 
   return (
     <>
-      <SearchBar
-        key={`cards-search-header-column-${column.id}`}
-        autoCapitalize="none"
-        autoCorrect={false}
-        autoFocus={autoFocus || isFocused}
-        blurOnSubmit={false}
-        borderHoverThemeColor={isPendingSave ? 'yellow' : undefined}
-        borderThemeColor={isPendingSave ? 'yellow' : undefined}
-        clearButtonMode="while-editing"
-        onBlur={onBlur}
-        onChangeText={onChangeText}
-        onFocus={onFocus}
-        onKeyPress={onKeyPress}
-        onSubmitEditing={onSubmit}
-        returnKeyType="search"
-        textHoverThemeColor={isPendingSave ? 'yellow' : undefined}
-        textInputKey={`search-bar-input-component-column-${column.id}`}
-        textThemeColor={isPendingSave ? 'yellow' : undefined}
-        value={formikProps.values.query}
-      />
+      <ThemedView
+        backgroundColor="backgroundColorDarker1"
+        style={[
+          sharedStyles.flexGrow,
+          sharedStyles.horizontalAndVerticallyAligned,
+        ]}
+      >
+        <SearchBar
+          key={`cards-search-header-column-${column.id}`}
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={autoFocus || isFocused}
+          blurOnSubmit={false}
+          borderHoverThemeColor={isPendingSave ? 'yellow' : undefined}
+          borderThemeColor={isPendingSave ? 'yellow' : undefined}
+          clearButtonMode="while-editing"
+          containerBackgroundThemeColor={null}
+          onBlur={onBlur}
+          onChangeText={onChangeText}
+          onFocus={onFocus}
+          onKeyPress={onKeyPress}
+          onSubmitEditing={onSubmit}
+          returnKeyType="search"
+          textHoverThemeColor={isPendingSave ? 'yellow' : undefined}
+          textInputKey={`search-bar-input-component-column-${column.id}`}
+          textThemeColor={isPendingSave ? 'yellow' : undefined}
+          value={formikProps.values.query}
+        />
+
+        {!inlineMode && (
+          <>
+            <ColumnFiltersButton columnId={column.id} />
+            <Spacer width={contentPadding / 2} />
+          </>
+        )}
+      </ThemedView>
 
       <CardItemSeparator muted />
     </>

@@ -7,7 +7,8 @@ export function getThemeColorOrItself(
     | keyof ThemeColors
     | ((theme: ThemeColors) => string | undefined)
     | string
-    | undefined,
+    | undefined
+    | null,
   { enableCSSVariable = false } = {},
 ) {
   const _color = typeof color === 'function' ? color(theme) : color
@@ -17,5 +18,5 @@ export function getThemeColorOrItself(
       ? getCSSVariable(_color as keyof ThemeColors, !!theme.isInverted)
       : theme[_color as keyof ThemeColors]
 
-  return _color
+  return _color || undefined
 }

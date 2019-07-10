@@ -259,10 +259,12 @@ export type ColumnFilters =
   | IssueOrPullRequestColumnFilters
   | NotificationColumnFilters
 
-// export interface ColumnOptions {
-//   enableBadge?: boolean
-//   enableNotifications?: boolean
-// }
+export interface ColumnOptions {
+  enableInAppUnreadIndicator?: boolean
+  enableAppIconUnreadIndicator?: boolean
+  // enableDesktopPushNotifications?: boolean
+  // enableMobilePushNotifications?: boolean
+}
 
 export type ColumnSubscription =
   | ActivityColumnSubscription
@@ -274,7 +276,7 @@ export interface BaseColumn {
   // title?: string // TODO
   // subtitle?: string // TODO
   subscriptionIds: string[]
-  // options?: ColumnOptions // TODO
+  options?: ColumnOptions
   createdAt: string
   updatedAt: string
 }

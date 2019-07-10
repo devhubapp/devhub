@@ -1,7 +1,12 @@
 import React, { useLayoutEffect, useRef } from 'react'
 import { Image, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { getGitHubURLForUser, isItemRead, ModalPayload } from '@devhub/core'
+import {
+  getColumnOption,
+  getGitHubURLForUser,
+  isItemRead,
+  ModalPayload,
+} from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
 import { useColumnData } from '../../hooks/use-column-data'
@@ -607,7 +612,13 @@ const SidebarColumnItem = React.memo(
 
     if (!(column && columnIndex >= 0 && headerDetails)) return null
 
-    const hasUnreadItems = filteredItems.some(item => !isItemRead(item))
+    const showUnreadIndicator = getColumnOption(
+      column,
+      'enableInAppUnreadIndicator',
+      Platform.OS,
+    )
+      ? filteredItems.some(item => !isItemRead(item))
+      : false
 
     const label = `${headerDetails.title ||
       headerDetails.subtitle ||
@@ -634,7 +645,7 @@ const SidebarColumnItem = React.memo(
         }
         hoverForegroundThemeColor={hoverForegroundThemeColor}
         iconName={headerDetails.icon}
-        isUnread={hasUnreadItems}
+        isUnread={showUnreadIndicator}
         label={label}
         noPadding
         onPress={() => {
@@ -658,7 +669,7 @@ const SidebarColumnItem = React.memo(
           .toLowerCase()
           .trim()}
         unreadIndicatorBackgroundThemeColor={
-          Platform.OS === 'web' && column.type === 'notifications'
+          getColumnOption(column, 'enableAppIconUnreadIndicator', Platform.OS)
             ? 'red'
             : undefined
         }

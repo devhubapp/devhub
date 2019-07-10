@@ -72,7 +72,7 @@ export function ColumnsRenderer() {
                   forceOpenAll
                   inlineMode={inlineMode}
                   isOpen={isSharedFiltersOpened}
-                  renderHeader={inlineMode ? 'yes' : 'spacing-only'}
+                  shouldRenderHeader="yes"
                   startWithFiltersExpanded
                   close={closeSharedFiltersView}
                 />
@@ -82,7 +82,6 @@ export function ColumnsRenderer() {
                 <ColumnContainer
                   key="single-column-container"
                   columnId={focusedColumnId}
-                  disableColumnFilters={inlineMode}
                   pointerEvents={
                     isSharedFiltersOpened && !inlineMode ? 'none' : undefined
                   }

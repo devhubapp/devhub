@@ -6,7 +6,7 @@ import { useTransition } from 'react-spring/native'
 import { useColumn } from '../../hooks/use-column'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
-import { columnHeaderHeight } from '../../styles/variables'
+import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
@@ -31,7 +31,7 @@ export interface ColumnFiltersRendererProps {
   forceOpenAll?: boolean
   inlineMode?: boolean
   isOpen: boolean
-  renderHeader?: 'yes' | 'no' | 'spacing-only'
+  shouldRenderHeader?: 'yes' | 'no' | 'spacing-only'
   startWithFiltersExpanded?: boolean
 }
 
@@ -46,7 +46,7 @@ export const ColumnFiltersRenderer = React.memo(
       forceOpenAll,
       inlineMode,
       isOpen,
-      renderHeader,
+      shouldRenderHeader,
       startWithFiltersExpanded,
     } = props
 
@@ -145,12 +145,6 @@ export const ColumnFiltersRenderer = React.memo(
             collapsable={false}
             style={[
               StyleSheet.absoluteFillObject,
-              {
-                top:
-                  renderHeader === 'yes' || renderHeader === 'spacing-only'
-                    ? columnHeaderHeight
-                    : 0,
-              },
               overlayTransition.props,
               { zIndex: 200 },
             ]}
@@ -158,7 +152,7 @@ export const ColumnFiltersRenderer = React.memo(
           >
             <ThemedTouchableOpacity
               analyticsAction="close_via_overlay"
-              analyticsLabel="column_options"
+              analyticsLabel="column_filters"
               activeOpacity={1}
               backgroundColor="backgroundColorMore1"
               style={{
@@ -241,8 +235,8 @@ export const ColumnFiltersRenderer = React.memo(
               : 'box-none'
           }
         >
-          {renderHeader === 'yes' ? (
-            <ColumnHeader pointerEvents="none">
+          {shouldRenderHeader === 'yes' ? (
+            <ColumnHeader>
               <ColumnHeaderItem
                 analyticsLabel={undefined}
                 fixedIconSize
@@ -252,8 +246,26 @@ export const ColumnFiltersRenderer = React.memo(
                 style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
                 tooltip={undefined}
               />
+
+              <Spacer flex={1} />
+
+              {!inlineMode && !!close && (
+                <ColumnHeaderItem
+                  key="column-flters-close-button"
+                  analyticsAction={undefined}
+                  analyticsLabel={undefined}
+                  enableForegroundHover
+                  fixedIconSize
+                  iconName="x"
+                  onPress={() => close()}
+                  style={{
+                    paddingHorizontal: contentPadding / 3,
+                  }}
+                  tooltip="Close"
+                />
+              )}
             </ColumnHeader>
-          ) : renderHeader === 'spacing-only' ? (
+          ) : shouldRenderHeader === 'spacing-only' ? (
             <Spacer height={columnHeaderHeight} pointerEvents="none" />
           ) : null}
 
@@ -267,7 +279,8 @@ export const ColumnFiltersRenderer = React.memo(
               key={`column-options-${column.type}`}
               availableHeight={
                 availableHeight -
-                (renderHeader === 'yes' || renderHeader === 'spacing-only'
+                (shouldRenderHeader === 'yes' ||
+                shouldRenderHeader === 'spacing-only'
                   ? columnHeaderHeight
                   : 0)
               }

@@ -143,7 +143,7 @@ export function Checkbox(props: CheckboxProps) {
           styles.checkboxContainer,
           {
             width: size,
-            height: size,
+            height: Math.max(20, size + 4),
             borderRadius: circle ? size / 2 : checkboxBorderRadius,
           },
           squareContainerStyle,

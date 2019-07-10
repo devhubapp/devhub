@@ -1,6 +1,7 @@
 import {
   ColumnAndSubscriptions,
   ColumnFilters,
+  ColumnOptions,
   ColumnsAndSubscriptions,
   ColumnSubscriptionCreation,
   GitHubEventAction,
@@ -52,6 +53,14 @@ export function moveColumn(
   } & EmitterTypes['FOCUS_ON_COLUMN'],
 ) {
   return createAction('MOVE_COLUMN', payload)
+}
+
+export function setColumnOption<O extends keyof ColumnOptions>(payload: {
+  columnId: string
+  option: O
+  value: ColumnOptions[O] | null
+}) {
+  return createAction('SET_COLUMN_OPTION', payload)
 }
 
 export function clearColumnFilters(payload: { columnId: string }) {

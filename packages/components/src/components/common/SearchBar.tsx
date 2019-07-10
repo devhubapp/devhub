@@ -1,17 +1,22 @@
 import React from 'react'
 
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallTextSize } from '../../styles/variables'
 import { separatorSize } from '../common/Separator'
 import {
   ThemedTextInput,
   ThemedTextInputProps,
 } from '../themed/ThemedTextInput'
-import { ThemedView } from '../themed/ThemedView'
+import { ThemedView, ThemedViewProps } from '../themed/ThemedView'
 
-export interface SearchBarProps extends ThemedTextInputProps {}
+export interface SearchBarProps extends ThemedTextInputProps {
+  containerBackgroundThemeColor?: ThemedViewProps['backgroundColor']
+}
 
 export const searchBarTotalHeight =
   30 + (contentPadding / 2) * 2 + separatorSize
+
+export const searchBarOuterSpacing = contentPadding / 2
 
 export const SearchBar = React.memo(
   React.forwardRef((props: SearchBarProps, ref) => {
@@ -22,6 +27,7 @@ export const SearchBar = React.memo(
       borderFocusThemeColor = 'backgroundColorLighther2',
       borderHoverThemeColor = 'backgroundColorLighther1',
       borderThemeColor = 'backgroundColor',
+      containerBackgroundThemeColor = 'backgroundColorDarker1',
       fontSize = smallTextSize,
       placeholder = 'Search',
       placeholderTextThemeColor = 'foregroundColorMuted40',
@@ -34,8 +40,8 @@ export const SearchBar = React.memo(
 
     return (
       <ThemedView
-        backgroundColor="backgroundColorDarker1"
-        style={{ padding: contentPadding / 2 }}
+        backgroundColor={containerBackgroundThemeColor}
+        style={[sharedStyles.flex, { padding: searchBarOuterSpacing }]}
       >
         <ThemedTextInput
           key={`search-bar-${otherProps.textInputKey}`}

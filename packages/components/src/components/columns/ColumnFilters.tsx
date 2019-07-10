@@ -1616,10 +1616,12 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
       <Separator horizontal />
 
       <View
-        style={{
-          flexDirection: 'row',
-          paddingHorizontal: contentPadding / 2,
-        }}
+        style={[
+          sharedStyles.horizontal,
+          {
+            paddingHorizontal: contentPadding / 2,
+          },
+        ]}
       >
         <ColumnHeaderItem
           key="column-options-button-move-column-left"

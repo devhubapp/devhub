@@ -5,6 +5,7 @@ import {
   ActivityColumnFilters,
   Column,
   ColumnFilters,
+  ColumnOptions,
   ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
@@ -486,9 +487,8 @@ export function getSearchQueryTerms(
 
   q = q.replace(/\s+/g, ' ').trim()
 
-  const queryItems: string[] = q
-    .split(' ')
-    .map(queryItem => {
+  const queryItems: string[] = _.flatten(
+    q.split(' ').map(queryItem => {
       const dotParts = queryItem.split(':')
 
       // handle queries with comma, like: owner:facebook,styled-components
@@ -506,9 +506,8 @@ export function getSearchQueryTerms(
       }
 
       return queryItem
-    })
-    .flat()
-    .filter(Boolean)
+    }),
+  ).filter(Boolean)
 
   const otherStrings: string[] = []
   const keyValueItems: Array<[string, string, boolean]> = []
@@ -916,4 +915,30 @@ export function getItemInbox(type: Column['type'], filters: Column['filters']) {
   }
 
   return 'all'
+}
+
+export function getColumnOption<O extends keyof ColumnOptions>(
+  column: Column,
+  option: O,
+  platform: 'web' | 'ios' | 'android' | 'macos' | 'windows',
+): ColumnOptions[O] | undefined {
+  if (!(column && column.type)) return undefined
+
+  if (option === 'enableAppIconUnreadIndicator') {
+    return column.options &&
+      typeof column.options.enableAppIconUnreadIndicator === 'boolean'
+      ? column.options.enableAppIconUnreadIndicator
+      : platform === 'web'
+      ? column.type === 'notifications'
+      : false
+  }
+
+  if (option === 'enableInAppUnreadIndicator') {
+    return column.options &&
+      typeof column.options.enableInAppUnreadIndicator === 'boolean'
+      ? column.options.enableInAppUnreadIndicator
+      : true
+  }
+
+  return column.options && column.options[option]
 }

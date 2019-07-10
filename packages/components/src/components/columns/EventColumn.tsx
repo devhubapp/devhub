@@ -13,19 +13,12 @@ export interface EventColumnProps
     'cardViewMode' | 'disableItemFocus' | 'enableCompactLabels' | 'repoIsKnown'
   > {
   columnIndex: number
-  disableColumnFilters?: boolean
   headerDetails: ReturnType<typeof getColumnHeaderDetails>
   pagingEnabled?: boolean
 }
 
 export const EventColumn = React.memo((props: EventColumnProps) => {
-  const {
-    column,
-    columnIndex,
-    disableColumnFilters,
-    headerDetails,
-    pagingEnabled,
-  } = props
+  const { column, columnIndex, headerDetails, pagingEnabled } = props
 
   if (!headerDetails) return null
 
@@ -38,7 +31,6 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
       }
       column={column}
       columnIndex={columnIndex}
-      disableColumnFilters={disableColumnFilters}
       icon={headerDetails.icon}
       owner={headerDetails.owner}
       pagingEnabled={pagingEnabled}
