@@ -129,7 +129,6 @@ export const EventCardsContainer = React.memo(
     const refresh = useCallback(() => {
       if (data.errorMessage === 'Bad credentials' && appToken) {
         refreshInstallationsRequest({
-          appToken,
           includeInstallationToken: true,
         })
       } else {

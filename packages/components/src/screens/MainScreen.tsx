@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
 export const MainScreen = React.memo(() => {
   const { appOrientation } = useAppLayout()
 
-  const appToken = useReduxState(selectors.appTokenSelector)!
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const { focusedColumnId, focusedColumnIndex } = useFocusedColumn()
@@ -108,10 +107,7 @@ export const MainScreen = React.memo(() => {
       clearQueryStringFromURL(['installation_id', 'setup_action'])
 
       if (!isInitial) {
-        refreshInstallationsRequest({
-          appToken,
-          includeInstallationToken: true,
-        })
+        refreshInstallationsRequest({ includeInstallationToken: true })
       }
     }
 
@@ -122,7 +118,7 @@ export const MainScreen = React.memo(() => {
     return () => {
       Linking.removeEventListener('url', handler)
     }
-  }, [appToken])
+  }, [])
 
   const horizontalSidebar = appOrientation === 'portrait'
 

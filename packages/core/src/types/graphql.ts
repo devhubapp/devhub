@@ -39,6 +39,20 @@ export interface GitHubTokenDetails {
   tokenCreatedAt: string | Date // TODO: Fix this. Should be only one of the two.
 }
 
+export interface LoginActivity {
+  [key: string]: any
+
+  appVersion: string
+  isBeta: boolean
+  isDevMode: boolean
+  isElectron: boolean
+  isLocalhost: boolean
+  platformOS: string
+  platformRealOS: string
+
+  createdAt: string
+}
+
 export interface User {
   _id: any
   columns?: {
@@ -59,6 +73,7 @@ export interface User {
   }
   createdAt: string
   updatedAt: string
+  loginActivity?: LoginActivity[]
   lastLoginAt: string
 }
 

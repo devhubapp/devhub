@@ -12,6 +12,7 @@ import {
 
 import { Installation, refreshUserInstallations } from '@devhub/core'
 import { bugsnag } from '../../libs/bugsnag'
+import { getDefaultDevHubHeaders } from '../../utils/api'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
@@ -36,13 +37,9 @@ function* init() {
     const isLogged = selectors.isLoggedSelector(state)
     if (!isLogged) continue
 
-    const appToken = selectors.appTokenSelector(state)
-    if (!appToken) continue
-
     if (isFirstTime) {
       yield put(
         actions.refreshInstallationsRequest({
-          appToken,
           // includeInstallationRepositories: isFirstTime,
           includeInstallationToken: true,
         }),
@@ -80,7 +77,6 @@ function* init() {
 
     yield put(
       actions.refreshInstallationsRequest({
-        appToken,
         // includeInstallationRepositories: isFirstTime,
         includeInstallationToken: true,
       }),
@@ -98,20 +94,24 @@ function* onRefreshInstallationsRequest(
   try {
     const state = yield select()
 
+    const appToken = selectors.appTokenSelector(state)
+    if (!appToken) throw new Error('Not logged')
+
     const githubAppToken = selectors.githubAppTokenSelector(state)
     if (!githubAppToken) throw new Error(noGitHubAppTokenMessage)
 
     const {
-      appToken,
       // includeInstallationRepositories,
       includeInstallationToken,
     } = action.payload
 
-    const response: Installation[] = yield refreshUserInstallations({
-      appToken,
-      // includeInstallationRepositories,
-      includeInstallationToken,
-    })
+    const response: Installation[] = yield refreshUserInstallations(
+      {
+        // includeInstallationRepositories,
+        includeInstallationToken,
+      },
+      getDefaultDevHubHeaders({ appToken }),
+    )
 
     yield put(actions.refreshInstallationsSuccess(response))
   } catch (error) {

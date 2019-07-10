@@ -7,6 +7,7 @@ import { constants, User } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
 import { bugsnag } from '../../libs/bugsnag'
 import * as github from '../../libs/github'
+import { getDefaultDevHubHeaders } from '../../utils/api'
 import { clearOAuthQueryParams } from '../../utils/helpers/auth'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
@@ -23,6 +24,8 @@ function* onRehydrate() {
 function* onLoginRequest(
   action: ExtractActionFromActionCreator<typeof actions.loginRequest>,
 ) {
+  const { appToken } = action.payload
+
   try {
     // TODO: Auto generate these typings
     const response: AxiosResponse<{
@@ -92,9 +95,7 @@ function* onLoginRequest(
         }`,
       },
       {
-        headers: {
-          Authorization: `bearer ${action.payload.appToken}`,
-        },
+        headers: getDefaultDevHubHeaders({ appToken }),
       },
     )
 
@@ -232,9 +233,7 @@ function* onDeleteAccountRequest() {
         }`,
       },
       {
-        headers: {
-          Authorization: `bearer ${appToken}`,
-        },
+        headers: getDefaultDevHubHeaders({ appToken }),
       },
     )
 

@@ -10,6 +10,7 @@ import {
   VariableType,
 } from '@devhub/core'
 import { bugsnag } from '../../libs/bugsnag'
+import { getDefaultDevHubHeaders } from '../../utils/api'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
@@ -87,7 +88,7 @@ function* onSyncDown() {
         }),
       },
       {
-        headers: { Authorization: `bearer ${appToken}` },
+        headers: getDefaultDevHubHeaders({ appToken }),
       },
     )
 
@@ -181,7 +182,7 @@ async function syncUp(state: RootState) {
         },
       },
       {
-        headers: { Authorization: `bearer ${appToken}` },
+        headers: getDefaultDevHubHeaders({ appToken }),
       },
     )
 

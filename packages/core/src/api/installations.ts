@@ -1,18 +1,20 @@
 import axios, { AxiosResponse } from 'axios'
 
 import { constants, Installation } from '..'
+import { DevHubHeaders } from './shared'
+
+export interface FetchInstallationsHeaders extends DevHubHeaders {}
 
 export interface FetchInstallationsOptions {
-  appToken: string
   // includeInstallationRepositories: boolean
   includeInstallationToken: boolean
 }
 
 export async function refreshUserInstallations(
   options: FetchInstallationsOptions,
+  headers: FetchInstallationsHeaders,
 ) {
   const {
-    appToken,
     // includeInstallationRepositories,
     includeInstallationToken,
   } = options
@@ -69,11 +71,7 @@ export async function refreshUserInstallations(
         }
       `,
     },
-    {
-      headers: {
-        Authorization: `bearer ${appToken}`,
-      },
-    },
+    { headers },
   )
 
   const { data, errors } = response.data
