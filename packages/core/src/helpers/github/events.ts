@@ -364,7 +364,7 @@ export function getEventMetadata(
       case 'MemberEvent': {
         return {
           action: 'added',
-          actionText: `Added an user ${repositoryText &&
+          actionText: `Added a user ${repositoryText &&
             `to ${repositoryTextWithColon}`}`,
           subjectType: 'User',
         }
