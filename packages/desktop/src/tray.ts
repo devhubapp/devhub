@@ -148,7 +148,11 @@ export function updateUnreadState(unreadCount: number) {
   tray.setTitle(unreadCount > 0 ? `${unreadCount}` : '')
   tray.setToolTip(
     `${app.getName()}${
-      unreadCount > 0 ? ` (${unreadCount} unread items)` : ''
+      unreadCount > 0
+        ? unreadCount === 1
+          ? ' (1 unread item)'
+          : ` (${unreadCount} unread items)`
+        : ''
     }`,
   )
 }
