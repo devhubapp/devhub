@@ -12211,10 +12211,10 @@ react-native-vector-icons@6.4.2:
     prop-types "^15.6.2"
     yargs "^13.2.2"
 
-react-native-web@0.11.5:
-  version "0.11.5"
-  resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.11.5.tgz#adf2eff902fdb32e86be7877294d9a6bb0ad3815"
-  integrity sha512-KVvE6s32uBgp5m1BNSfNOXvGo1wt/pORSKvi8oy8tdhAPYqsr0oMuMP3rZd8vk+MpiYt1Z8raS/n+DK2xj85Jg==
+"react-native-web@npm:@brunolemos/react-native-web@0.11.5-concurrent.1":
+  version "0.11.5-concurrent.1"
+  resolved "https://registry.npmjs.org/@brunolemos/react-native-web/-/react-native-web-0.11.5-concurrent.1.tgz#23e116c6dc361f3c5c1e2a8b9c446aa01b8b7cc5"
+  integrity sha512-G/RLTD+h19R58gLtc4jJEdCxCMZRuHXN1O/83ruAk3RLt17ZnadgI1soE8e0DaEhkvJcPZxyEXeB/1IKgoqjNw==
   dependencies:
     array-find-index "^1.0.2"
     create-react-class "^15.6.2"
