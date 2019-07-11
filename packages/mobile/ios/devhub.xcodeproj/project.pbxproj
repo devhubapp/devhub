@@ -1414,7 +1414,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.devhubapp.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.devhubapp;
 				PRODUCT_NAME = devhub;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "devhub-Bridging-Header.h";
@@ -1459,7 +1459,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.devhubapp.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.devhubapp;
 				PRODUCT_NAME = devhub;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "devhub-Bridging-Header.h";
