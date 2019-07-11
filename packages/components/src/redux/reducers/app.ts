@@ -27,6 +27,7 @@ export const appReducer: Reducer<State> = (state = initialState, action) => {
             .map(banner => {
               if (!(banner && banner.id)) return banner
               if (banner.id === 'join_our_slack') return
+              if (banner.id === 'new_layout_mode') return
 
               const updatedBanner = initialState.banners.find(
                 b => b.id === banner.id,
