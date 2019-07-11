@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { InteractionManager, View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import { ThemeColors } from '@devhub/core'
@@ -43,6 +43,7 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
     to: async (next: any) => {
       while (1) {
         if (indeterminate) {
+          await InteractionManager.runAfterInteractions()
           await next({
             immediate: true,
             left: `-${indeterminateSize}%`,
@@ -50,11 +51,13 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
           })
           await next({ immediate: false })
 
+          await InteractionManager.runAfterInteractions()
           await next({
             left: '100%',
             width: `${indeterminateSize}%`,
           })
 
+          // await InteractionManager.runAfterInteractions()
           // await next({
           //   left: `-${indeterminateSize}%`,
           //   width: `${indeterminateSize}%`,
@@ -63,6 +66,7 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
           continue
         }
 
+        await InteractionManager.runAfterInteractions()
         await next({ left: '0%', width: `${progress}%` })
       }
     },
