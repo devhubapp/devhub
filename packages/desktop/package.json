@@ -17,7 +17,7 @@
     "build:skipweb": "yarn build:base && yarn build:web:post && yarn build:electron",
     "build:web": "pushd \"../web\" && yarn build && popd",
     "build:web:post": "shx cp -Rf ../web/dist dist/web",
-    "clean": "shx rm -rf build && shx rm -rf dist",
+    "clean": "shx rm -rf build && shx cp -Rf build-persist build && shx rm -rf dist",
     "compile": "tsc -b",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
@@ -28,6 +28,7 @@
     "appId": "com.devhubapp",
     "productName": "DevHub",
     "extends": null,
+    "afterSign": "scripts/notarize.js",
     "directories": {
       "buildResources": "assets",
       "output": "build"
@@ -40,8 +41,12 @@
     },
     "mac": {
       "category": "public.app-category.developer-tools",
-      "icon": "icons/icon.png",
-      "darkModeSupport": true
+      "darkModeSupport": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "gatekeeperAssess": false,
+      "hardenedRuntime": true,
+      "icon": "icons/icon.png"
     },
     "win": {
       "icon": "icons/icon.ico"
@@ -75,9 +80,11 @@
     "@types/electron-store": "3.2.0",
     "@types/jsonfile": "5.0.0",
     "@types/mkdirp": "0.5.2",
+    "dotenv": "8.0.0",
     "electron": "5.0.4",
     "electron-builder": "20.44.4",
     "electron-devtools-installer": "2.2.4",
+    "electron-notarize": "0.1.1",
     "nodemon": "1.19.1",
     "tslint": "5.14.0",
     "typescript": "3.5.1",
