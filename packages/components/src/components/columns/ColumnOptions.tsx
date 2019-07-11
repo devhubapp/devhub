@@ -12,7 +12,7 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallerTextSize } from '../../styles/variables'
 import { AccordionView } from '../common/AccordionView'
-import { Checkbox } from '../common/Checkbox'
+import { Checkbox, defaultCheckboxSize } from '../common/Checkbox'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
@@ -124,7 +124,22 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
             sharedColumnOptionsStyles.checkboxSquareContainer
           }
           enableIndeterminateState={false}
-          label="Push notifications"
+          label={
+            <Link
+              analyticsLabel="column_option_push_notification_soon_link"
+              openOnNewTab
+              href="https://github.com/devhubapp/devhub/issues/51"
+              style={sharedStyles.flex}
+            >
+              <ThemedText
+                color="foregroundColor"
+                numberOfLines={1}
+                style={[sharedStyles.flex, { lineHeight: defaultCheckboxSize }]}
+              >
+                Enable push notifications
+              </ThemedText>
+            </Link>
+          }
           onChange={_checked => {
             // dispatch(
             //   actions.setColumnOption({
@@ -136,6 +151,7 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
           }}
           right={
             <Link
+              analyticsLabel="column_option_push_notification_soon_link"
               openOnNewTab
               href="https://github.com/devhubapp/devhub/issues/51"
             >
