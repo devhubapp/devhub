@@ -516,6 +516,7 @@ export function getGitHubNotificationSubItems(
         },
         message: subject.title,
         url: subject.url,
+        comment_count: undefined,
       },
       url: subject.url,
     }) ||

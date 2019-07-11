@@ -647,7 +647,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
             <CardActions
               commentsCount={
-                issueOrPullRequest ? issueOrPullRequest.comments : undefined
+                issueOrPullRequest
+                  ? issueOrPullRequest.comments
+                  : commit
+                  ? commit.commit && commit.commit.comment_count
+                  : undefined
               }
               commentsLink={
                 (comment && (comment.html_url || comment.url)) ||
