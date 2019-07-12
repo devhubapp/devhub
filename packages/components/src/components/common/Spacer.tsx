@@ -7,7 +7,7 @@ export type SpacerProps = Pick<
 > &
   Pick<ViewProps, 'pointerEvents'>
 
-export const Spacer = React.memo((props: SpacerProps) => {
+export function Spacer(props: SpacerProps) {
   const { pointerEvents = 'none', ...style } = props
   return <View style={style} pointerEvents={pointerEvents} />
-})
+}

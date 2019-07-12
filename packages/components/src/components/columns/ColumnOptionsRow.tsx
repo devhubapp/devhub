@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useCallback, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -102,6 +102,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   const initialIsHovered = useHover(
     onToggle ? touchableRef : null,
     isHovered => {
+      if (cacheRef.current.isHovered === isHovered) return
       cacheRef.current.isHovered = isHovered
       updateStyles({ forceImmediate: false })
 
@@ -112,9 +113,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
-  useLayoutEffect(() => {
-    updateStyles({ forceImmediate: false })
-  }, [updateStyles])
+  // useLayoutEffect(() => {
+  //   updateStyles({ forceImmediate: false })
+  // }, [updateStyles])
 
   return (
     <SpringAnimatedView

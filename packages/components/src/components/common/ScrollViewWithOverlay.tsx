@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Ref, useEffect, useRef } from 'react'
 import {
   ScrollView,
@@ -40,15 +41,23 @@ export const ScrollViewWithOverlay = React.forwardRef(
 
     const layoutSizeRef = useRef({ width: 0, height: 0 })
     const contentSizeRef = useRef({ width: 0, height: 0 })
-    const leftOrTopOverlayRef = useRef<View>(null)
-    const rightOrBottomOverlayRef = useRef<View>(null)
+    const leftOrTopOverlayRef = useRef<View | null>(null)
+    const rightOrBottomOverlayRef = useRef<View | null>(null)
     const isLeftOrTopOverlayVisible = useRef(null as boolean | null)
     const isRightOrBottomOverlayVisible = useRef(null as boolean | null)
     const isScrollAtTheStartRef = useRef(true)
     const isScrollAtTheEndRef = useRef(false)
 
-    function updateOverlayVisibility() {
+    useEffect(() => {
+      return () => {
+        leftOrTopOverlayRef.current = null
+        rightOrBottomOverlayRef.current = null
+      }
+    }, [])
+
+    const updateOverlayVisibility = _.debounce(() => {
       const property = horizontal ? 'width' : 'height'
+
       const hasScroll = !!(
         layoutSizeRef.current &&
         layoutSizeRef.current[property] &&
@@ -59,7 +68,6 @@ export const ScrollViewWithOverlay = React.forwardRef(
 
       const shouldShowLeftOrTopOverlay =
         hasScroll && !isScrollAtTheStartRef.current
-
       const shouldShowRightOrBottomOverlay =
         hasScroll && !isScrollAtTheEndRef.current
 
@@ -82,7 +90,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
           style: { opacity: shouldShowRightOrBottomOverlay ? 1 : 0 },
         })
       }
-    }
+    }, 100)
 
     const onScroll: ScrollViewProps['onScroll'] = e => {
       isScrollAtTheStartRef.current = horizontal
@@ -121,10 +129,6 @@ export const ScrollViewWithOverlay = React.forwardRef(
 
       if (props.onLayout) props.onLayout(e)
     }
-
-    useEffect(() => {
-      updateOverlayVisibility()
-    }, [leftOrTopOverlayRef.current, rightOrBottomOverlayRef.current])
 
     return (
       <View

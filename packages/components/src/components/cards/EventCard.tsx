@@ -628,7 +628,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             isRead={isRead}
             itemIds={id}
             muted={muted}
-            size={columnHeaderItemContentSize}
             type="activity"
           />
         </View>

@@ -527,7 +527,6 @@ export const IssueOrPullRequestCard = React.memo(
               isRead={isRead}
               itemIds={id}
               muted={muted}
-              size={columnHeaderItemContentSize}
               type="issue_or_pr"
             />
           </View>

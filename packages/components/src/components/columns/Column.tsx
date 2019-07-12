@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
@@ -44,9 +44,15 @@ export const Column = React.memo(
     const _columnRef = useRef<View>(null)
     const columnRef = (ref as React.RefObject<View>) || _columnRef
 
-    const columnBorderRef = useRef<View>(null)
+    const columnBorderRef = useRef<View | null>(null)
 
     const columnWidth = useColumnWidth()
+
+    useEffect(() => {
+      return () => {
+        columnBorderRef.current = null
+      }
+    }, [])
 
     useEmitter(
       'FOCUS_ON_COLUMN',

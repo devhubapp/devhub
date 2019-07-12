@@ -141,12 +141,10 @@ export const IssueOrPullRequestRow = React.memo(
             <View
               style={[
                 sharedStyles.flex,
-                {
-                  justifyContent: keepLabelsTogether
-                    ? 'space-between'
-                    : 'flex-start',
-                  width: '100%',
-                },
+                keepLabelsTogether
+                  ? sharedStyles.justifyContentSpaceBetween
+                  : sharedStyles.justifyContentFlexStart,
+                sharedStyles.fullWidth,
                 inlineLabels && sharedStyles.horizontal,
                 inlineLabels && sharedStyles.flexWrap,
               ]}
@@ -159,7 +157,7 @@ export const IssueOrPullRequestRow = React.memo(
 
                     <Spacer width={contentPadding / 2} />
 
-                    <View style={{ alignSelf: 'flex-start' }}>
+                    <View style={sharedStyles.alignSelfFlexStart}>
                       {rightTitle}
                     </View>
                   </View>
@@ -170,7 +168,7 @@ export const IssueOrPullRequestRow = React.memo(
                   href={htmlUrl}
                   style={[
                     !inlineLabels && !rightTitle && sharedStyles.flex,
-                    { alignSelf: 'flex-start' },
+                    sharedStyles.alignSelfFlexStart,
                     !!inlineLabels &&
                       labels &&
                       labels.length > 0 && { marginRight: contentPadding / 2 },
@@ -233,7 +231,9 @@ export const IssueOrPullRequestRow = React.memo(
               )}
             </View>
 
-            <View style={{ alignSelf: 'stretch', maxWidth: '100%' }}>
+            <View
+              style={[sharedStyles.alignSelfStretch, sharedStyles.fullMaxWidth]}
+            >
               {!!showBodyRow && !!body && (
                 <>
                   <Spacer height={innerCardSpacing} />
@@ -261,12 +261,12 @@ export const IssueOrPullRequestRow = React.memo(
                     <Spacer height={innerCardSpacing} />
 
                     <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignSelf: 'stretch',
-                        alignItems: 'center',
-                      }}
+                      style={[
+                        sharedStyles.flex,
+                        sharedStyles.horizontal,
+                        sharedStyles.alignSelfStretch,
+                        sharedStyles.alignItemsCenter,
+                      ]}
                     >
                       {!!byText && (
                         <Link
@@ -276,7 +276,7 @@ export const IssueOrPullRequestRow = React.memo(
                           }
                           textProps={{
                             color: 'foregroundColorMuted60',
-                            style: [cardStyles.smallerText],
+                            style: cardStyles.smallerText,
                           }}
                         >
                           {byText}

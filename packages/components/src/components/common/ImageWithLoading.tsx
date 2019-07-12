@@ -34,7 +34,8 @@ export const ImageWithLoading = React.memo(
       ...otherProps
     } = props
 
-    const imageRef = useRef<Image>(null)
+    const imageRef = useRef<Image | null>(null)
+
     const stateRef = useRef({
       error: false,
       isLoading: false,
@@ -65,7 +66,9 @@ export const ImageWithLoading = React.memo(
     })
 
     useEffect(() => {
-      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
+      return () => {
+        imageRef.current = null
+      }
     }, [])
 
     useEffect(() => {
@@ -141,13 +144,35 @@ export const ImageWithLoading = React.memo(
         onLoad={handleLoad}
         onLoadEnd={handleLoadEnd}
         onLoadStart={handleLoadStart}
+        style={[
+          props.style,
+          getStyles({ ...propsRef.current, ...stateRef.current }),
+        ]}
       />
     )
   }),
-  _.isEqual,
 )
 
 ImageWithLoading.displayName = 'ImageWithLoading'
+
+function getStyles({
+  error,
+  isLoading,
+  backgroundColorFailed,
+  backgroundColorLoading,
+  backgroundColorLoaded,
+}: { error: boolean; isLoading: boolean } & Pick<
+  ImageWithLoadingProps,
+  'backgroundColorFailed' | 'backgroundColorLoaded' | 'backgroundColorLoading'
+>) {
+  return {
+    backgroundColor: error
+      ? backgroundColorFailed
+      : isLoading
+      ? backgroundColorLoading
+      : backgroundColorLoaded,
+  }
+}
 
 function updateStyles(
   imageRef: RefObject<Image>,
@@ -165,12 +190,12 @@ function updateStyles(
   if (!(imageRef && imageRef.current)) return
 
   imageRef.current.setNativeProps({
-    style: {
-      backgroundColor: error
-        ? backgroundColorFailed
-        : isLoading
-        ? backgroundColorLoading
-        : backgroundColorLoaded,
-    },
+    style: getStyles({
+      error,
+      isLoading,
+      backgroundColorFailed,
+      backgroundColorLoading,
+      backgroundColorLoaded,
+    }),
   })
 }

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useRef } from 'react'
-import { ScrollView, ViewProps } from 'react-native'
+import { ScrollView, StyleSheet, ViewProps } from 'react-native'
 
 import { GitHubLabel, ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
@@ -22,6 +22,15 @@ export interface LabelsViewProps
   }>
   style?: ViewProps['style']
 }
+
+const styles = StyleSheet.create({
+  touchable: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    maxWidth: '100%',
+  },
+})
 
 export const LabelsView = (props: LabelsViewProps) => {
   const {
@@ -67,10 +76,11 @@ export const LabelsView = (props: LabelsViewProps) => {
         ) : (
           <TouchableOpacity
             style={[
-              sharedStyles.horizontalAndVerticallyAligned,
+              styles.touchable,
+              enableScrollView
+                ? sharedStyles.flexNoWrap
+                : sharedStyles.flexWrap,
               {
-                flexWrap: enableScrollView ? 'nowrap' : 'wrap',
-                maxWidth: '100%',
                 marginHorizontal: -horizontalSpacing,
                 marginVertical: -verticalSpacing,
               },
@@ -101,11 +111,13 @@ export const LabelsView = (props: LabelsViewProps) => {
           key={label.key}
           backgroundThemeColor={backgroundThemeColor}
           colorThemeColor={label.color}
-          containerStyle={{
-            alignSelf: 'flex-start',
-            paddingHorizontal: horizontalSpacing,
-            paddingVertical: verticalSpacing,
-          }}
+          containerStyle={[
+            sharedStyles.alignSelfFlexStart,
+            {
+              paddingHorizontal: horizontalSpacing,
+              paddingVertical: verticalSpacing,
+            },
+          ]}
           disableEmojis
           hideText={hideText}
           outline={false}

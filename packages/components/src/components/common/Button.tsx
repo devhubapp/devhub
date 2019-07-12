@@ -1,5 +1,5 @@
 import { getLuminance, rgba } from 'polished'
-import React, { useCallback, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { ViewProps } from 'react-native'
 import { AnimatedValue, useSpring } from 'react-spring/native'
 
@@ -186,14 +186,15 @@ export const Button = React.memo((props: ButtonProps) => {
 
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(touchableRef, isHovered => {
+    if (cacheRef.current.isHovered === isHovered) return
     cacheRef.current.isHovered = isHovered
     updateStyles({ forceImmediate: false })
   })
   cacheRef.current.isHovered = initialIsHovered
 
-  useLayoutEffect(() => {
-    updateStyles({ forceImmediate: true })
-  }, [updateStyles])
+  // useLayoutEffect(() => {
+  //   updateStyles({ forceImmediate: true })
+  // }, [updateStyles])
 
   return (
     <SpringAnimatedTouchableOpacity

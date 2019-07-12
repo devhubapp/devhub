@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react'
-import { View } from 'react-native'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { StyleSheet, View } from 'react-native'
 
 import {
   CardViewMode,
@@ -14,6 +14,8 @@ import {
   getOwnerAndRepo,
   getUserAvatarByUsername,
   GitHubNotificationReason,
+  isItemRead,
+  ThemeColors,
 } from '@devhub/core'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
@@ -59,6 +61,19 @@ export interface NotificationCardProps {
   swipeable: boolean
 }
 
+const styles = StyleSheet.create({
+  cardIcon: {
+    fontSize: columnHeaderItemContentSize,
+    textAlign: 'center',
+    opacity: 1,
+  },
+  cardIconMuted: {
+    fontSize: columnHeaderItemContentSize,
+    textAlign: 'center',
+    opacity: mutedOpacity,
+  },
+})
+
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const {
     cardViewMode,
@@ -89,7 +104,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     }
   }, [isFocused])
 
-  if (!notification) return null
+  const isRead = isItemRead(notification)
+
+  const backgroundThemeColor = useCallback(
+    (theme: ThemeColors) =>
+      getCardBackgroundThemeColor(theme, { muted: isRead }),
+    [isRead],
+  )
 
   const {
     comment,
@@ -99,7 +120,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     isBot,
     isPrivate,
     isPrivateAndCantSee,
-    isRead,
+    // isRead,
     isRepoInvitation,
     isSaved,
     isVulnerabilityAlert,
@@ -146,23 +167,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   function renderContent() {
     return (
       <>
-        {/* {!!(
-          repoOwnerName &&
-          repoName &&
-          !repoIsKnown &&
-          cardViewMode === 'compact'
-        ) && (
-          <RepositoryRow
-            key={`notification-repo-row-${repo.id}`}
-            muted={muted}
-            ownerName={repoOwnerName}
-            repositoryName={repoName}
-            small
-            viewMode={cardViewMode}
-            withTopMargin={getWithTopMargin()}
-          />
-        )} */}
-
         {!(commit || issueOrPullRequest || release) && !!subject.title && (
           <CommentRow
             key={`notification-${id}-subject-title-row`}
@@ -210,9 +214,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             key={`notification-issue-or-pr-row-${issueOrPullRequest.id}`}
             addBottomAnchor={!comment}
             avatarUrl={issueOrPullRequest.user.avatar_url}
-            backgroundThemeColor={theme =>
-              getCardBackgroundThemeColor(theme, { muted: isRead })
-            }
+            backgroundThemeColor={backgroundThemeColor}
             body={issueOrPullRequest.body}
             bold={!isRead}
             commentsCount={
@@ -226,7 +228,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             isPrivate={isPrivate}
             muted={muted}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
+            labels={enableCompactLabels ? undefined : issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
             showBodyRow={
@@ -326,20 +328,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         }
         style={[
           cardStyles.compactContainer,
-          alignVertically && { alignItems: 'center' },
+          alignVertically && sharedStyles.alignItemsCenter,
         ]}
       >
         {!!showCardBorder && <CardBorder />}
-
-        {/* <CenterGuide /> */}
-
-        {/* <View
-          style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
-        >
-          <Checkbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
-        </View>
-
-        <Spacer width={contentPadding} /> */}
 
         <View style={cardStyles.compactItemFixedHeight}>
           <BookmarkButton
@@ -377,11 +369,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             <View
               style={[
                 cardStyles.compactItemFixedMinHeight,
+                sharedStyles.horizontal,
+                sharedStyles.justifyContentFlexStart,
+                sharedStyles.overflowHidden,
                 {
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
                   width: repoTableColumnWidth,
-                  overflow: 'hidden',
                 },
               ]}
             >
@@ -393,12 +385,14 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   muted={muted}
                   ownerName={repoOwnerName}
                   repositoryName={repoName}
-                  rightContainerStyle={{
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    justifyContent: 'center',
-                    width: repoTableColumnWidth,
-                  }}
+                  rightContainerStyle={[
+                    sharedStyles.vertical,
+                    sharedStyles.alignItemsFlexStart,
+                    sharedStyles.justifyContentCenter,
+                    {
+                      width: repoTableColumnWidth,
+                    },
+                  ]}
                   small
                   viewMode={cardViewMode}
                   withTopMargin={false}
@@ -414,7 +408,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           style={[
             sharedStyles.flex,
             sharedStyles.horizontal,
-            { alignItems: 'flex-start' },
+            sharedStyles.alignItemsFlexStart,
           ]}
         >
           <View
@@ -427,11 +421,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               color={cardIconColor || 'foregroundColor'}
               name={cardIconName}
               selectable={false}
-              style={{
-                fontSize: columnHeaderItemContentSize,
-                textAlign: 'center',
-                opacity: muted ? mutedOpacity : 1,
-              }}
+              style={muted ? styles.cardIconMuted : styles.cardIcon}
               {...!!cardIconDetails.tooltip &&
                 Platform.select({
                   web: { title: cardIconDetails.tooltip },
@@ -464,17 +454,19 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   name: label.name,
                 }))}
                 muted={muted}
-                style={{
-                  alignSelf: 'center',
-                  justifyContent: 'flex-end',
-                  maxWidth:
-                    260 +
-                    (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
-                    (`${issueOrPullRequest.title || ''}`.length <= 50
-                      ? 100
-                      : 0),
-                  overflow: 'hidden',
-                }}
+                style={[
+                  sharedStyles.alignSelfCenter,
+                  sharedStyles.justifyContentCenter,
+                  {
+                    maxWidth:
+                      260 +
+                      (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
+                      (`${issueOrPullRequest.title || ''}`.length <= 50
+                        ? 100
+                        : 0),
+                  },
+                  sharedStyles.overflowHidden,
+                ]}
                 textThemeColor={
                   muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
                 }
@@ -487,9 +479,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <View
           style={[
             cardStyles.compactItemFixedMinHeight,
+            sharedStyles.alignSelfCenter,
+            sharedStyles.alignItemsFlexEnd,
             {
-              alignSelf: 'center',
-              alignItems: 'flex-end',
               width: 102,
             },
           ]}
@@ -539,9 +531,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
           )}
 
           <NotificationReason
-            backgroundThemeColor={theme =>
-              getCardBackgroundThemeColor(theme, { muted: isRead })
-            }
+            backgroundThemeColor={backgroundThemeColor}
             muted={muted}
             reason={notification.reason as GitHubNotificationReason}
           />
@@ -552,16 +542,13 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
         <View
           style={[
             cardStyles.compactItemFixedHeight,
-            {
-              alignSelf: 'center',
-            },
+            sharedStyles.alignSelfCenter,
           ]}
         >
           <ToggleReadButton
             isRead={isRead}
             itemIds={id}
             muted={muted}
-            size={columnHeaderItemContentSize}
             type="notifications"
           />
         </View>
@@ -637,8 +624,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
           <Spacer width={spacingBetweenLeftAndRightColumn} />
           <View style={cardStyles.itemFixedWidth} />
-
-          {/* <Spacer width={contentPadding / 3} /> */}
         </View>
 
         {!!showCardActions && (
