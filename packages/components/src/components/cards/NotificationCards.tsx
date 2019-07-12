@@ -14,7 +14,6 @@ import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
-import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
@@ -351,7 +350,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       // contentOffset={{ x: 0, y: cardSearchTotalHeight }}
       data-flatlist-with-header-content-container-full-height-fix={isEmpty}
       data={items}
-      disableVirtualization={Platform.OS === 'web'}
+      disableVirtualization={false}
       extraData={rerender}
       initialNumToRender={Math.ceil(Dimensions.get('window').height / 120)}
       keyExtractor={keyExtractor}
@@ -359,7 +358,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       onViewableItemsChanged={handleViewableItemsChanged}
       pointerEvents={pointerEvents}
       refreshControl={refreshControl}
-      removeClippedSubviews={Platform.OS !== 'web'}
+      removeClippedSubviews
       renderItem={renderItem}
       stickyHeaderIndices={[0]}
       viewabilityConfig={viewabilityConfig}

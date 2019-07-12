@@ -1,5 +1,24 @@
-import { FlatList, FlatListProps as OriginalFlatListProps } from 'react-native'
+import React from 'react'
+import { FlatList as FlatListOriginal } from 'react-native'
 
-export interface FlatListProps<ItemT> extends OriginalFlatListProps<ItemT> {}
+import { CrossPlatformFlatList, CrossPlatformFlatListProps } from './types'
 
-export { FlatList }
+export interface FlatListProps<ItemT>
+  extends CrossPlatformFlatListProps<ItemT> {}
+
+export class FlatList<ItemT> extends React.Component<FlatListProps<ItemT>>
+  implements CrossPlatformFlatList<ItemT> {
+  ref = React.createRef<CrossPlatformFlatList<ItemT>>()
+
+  scrollToItem(params: {
+    animated?: boolean
+    item: ItemT
+    viewPosition?: number
+  }) {
+    if (this.ref.current) this.ref.current.scrollToItem(params)
+  }
+
+  render() {
+    return <FlatListOriginal ref={this.ref as any} {...this.props} />
+  }
+}

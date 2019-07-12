@@ -17,7 +17,6 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
-import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -427,7 +426,7 @@ export const IssueOrPullRequestCards = React.memo(
         // contentOffset={{ x: 0, y: cardSearchTotalHeight }}
         data-flatlist-with-header-content-container-full-height-fix={isEmpty}
         data={items}
-        disableVirtualization={Platform.OS === 'web'}
+        disableVirtualization={false}
         extraData={rerender}
         initialNumToRender={Math.ceil(Dimensions.get('window').height / 100)}
         keyExtractor={keyExtractor}
@@ -435,7 +434,7 @@ export const IssueOrPullRequestCards = React.memo(
         onViewableItemsChanged={handleViewableItemsChanged}
         pointerEvents={pointerEvents}
         refreshControl={refreshControl}
-        removeClippedSubviews={Platform.OS !== 'web'}
+        removeClippedSubviews
         renderItem={renderItem}
         stickyHeaderIndices={[0]}
         viewabilityConfig={viewabilityConfig}
