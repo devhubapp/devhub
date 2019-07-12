@@ -51,6 +51,8 @@ function keyExtractor(item: EnhancedGitHubNotification) {
   return `notification-card-${item.id}`
 }
 
+const stickyHeaderIndices = [0]
+
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
     cardViewMode,
@@ -177,9 +179,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           cardViewMode={cardViewMode}
           enableCompactLabels={enableCompactLabels}
           isFocused={
+            !disableItemFocus &&
             column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current &&
-            !disableItemFocus
+            item.id === selectedItemIdRef.current
           }
           notification={item}
           repoIsKnown={props.repoIsKnown}
@@ -190,7 +192,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   }
   const renderItem = useCallback(_renderItem, [
     cardViewMode,
-    column.id === focusedColumnId && selectedItemIdRef.current,
+    !disableItemFocus &&
+      column.id === focusedColumnId &&
+      selectedItemIdRef.current,
     enableCompactLabels,
     props.repoIsKnown,
     props.swipeable,
@@ -322,7 +326,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     )
   }
 
-  function renderEmptyComponent() {
+  const renderEmptyComponent = useCallback(() => {
     return (
       <EmptyCards
         clearMessage="No new notifications!"
@@ -334,7 +338,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         refresh={refresh}
       />
     )
-  }
+  }, [column, errorMessage, fetchNextPage, loadState, refresh])
 
   return (
     <FlatList
@@ -360,7 +364,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       refreshControl={refreshControl}
       removeClippedSubviews
       renderItem={renderItem}
-      stickyHeaderIndices={[0]}
+      stickyHeaderIndices={stickyHeaderIndices}
       viewabilityConfig={viewabilityConfig}
       windowSize={2}
     />

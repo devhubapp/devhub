@@ -52,6 +52,8 @@ function keyExtractor(item: EnhancedGitHubEvent, _index: number) {
   return `event-card-${item.id}`
 }
 
+const stickyHeaderIndices = [0]
+
 export const EventCards = React.memo((props: EventCardsProps) => {
   const {
     cardViewMode,
@@ -180,9 +182,9 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           enableCompactLabels={enableCompactLabels}
           event={item}
           isFocused={
+            !disableItemFocus &&
             column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current &&
-            !disableItemFocus
+            item.id === selectedItemIdRef.current
           }
           repoIsKnown={props.repoIsKnown}
           swipeable={props.swipeable}
@@ -193,7 +195,9 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   const renderItem = useCallback(_renderItem, [
     cardViewMode,
-    column.id === focusedColumnId && selectedItemIdRef.current,
+    !disableItemFocus &&
+      column.id === focusedColumnId &&
+      selectedItemIdRef.current,
     enableCompactLabels,
     props.swipeable,
     props.repoIsKnown,
@@ -348,7 +352,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     )
   }
 
-  function renderEmptyComponent() {
+  const renderEmptyComponent = useCallback(() => {
     return (
       <EmptyCards
         column={column}
@@ -359,7 +363,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         refresh={refresh}
       />
     )
-  }
+  }, [column, errorMessage, fetchNextPage, loadState, refresh])
 
   return (
     <FlatList
@@ -384,7 +388,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       refreshControl={refreshControl}
       removeClippedSubviews
       renderItem={renderItem}
-      stickyHeaderIndices={[0]}
+      stickyHeaderIndices={stickyHeaderIndices}
       viewabilityConfig={viewabilityConfig}
       windowSize={2}
     />

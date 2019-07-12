@@ -6,7 +6,7 @@ import { CrossPlatformFlatList, CrossPlatformFlatListProps } from './types'
 export interface FlatListProps<ItemT>
   extends CrossPlatformFlatListProps<ItemT> {}
 
-export class FlatList<ItemT> extends React.Component<FlatListProps<ItemT>>
+export class FlatList<ItemT> extends React.PureComponent<FlatListProps<ItemT>>
   implements CrossPlatformFlatList<ItemT> {
   ref = React.createRef<CrossPlatformFlatList<ItemT>>()
 

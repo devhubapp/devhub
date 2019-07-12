@@ -60,6 +60,8 @@ function keyExtractor(item: EnhancedGitHubIssueOrPullRequest) {
   return `issue-or-pr-card-${item.id}`
 }
 
+const stickyHeaderIndices = [0]
+
 export const IssueOrPullRequestCards = React.memo(
   (props: IssueOrPullRequestCardsProps) => {
     const {
@@ -196,9 +198,9 @@ export const IssueOrPullRequestCards = React.memo(
             cardViewMode={cardViewMode}
             enableCompactLabels={enableCompactLabels}
             isFocused={
+              !disableItemFocus &&
               column.id === focusedColumnId &&
-              item.id === selectedItemIdRef.current &&
-              !disableItemFocus
+              item.id === selectedItemIdRef.current
             }
             issueOrPullRequest={item}
             repoIsKnown={props.repoIsKnown}
@@ -210,7 +212,9 @@ export const IssueOrPullRequestCards = React.memo(
     }
     const renderItem = useCallback(_renderItem, [
       cardViewMode,
-      column.id === focusedColumnId && selectedItemIdRef.current,
+      !disableItemFocus &&
+        column.id === focusedColumnId &&
+        selectedItemIdRef.current,
       enableCompactLabels,
       props.repoIsKnown,
       props.swipeable,
@@ -350,7 +354,7 @@ export const IssueOrPullRequestCards = React.memo(
       )
     }
 
-    function renderEmptyComponent() {
+    const renderEmptyComponent = useCallback(() => {
       const maybeInvalidFilters = `${errorMessage || ''}`
         .toLowerCase()
         .startsWith('validation failed')
@@ -410,7 +414,14 @@ export const IssueOrPullRequestCards = React.memo(
           refresh={refresh}
         />
       )
-    }
+    }, [
+      column,
+      errorMessage,
+      fetchNextPage,
+      loadState,
+      refresh,
+      loggedUsername,
+    ])
 
     return (
       <FlatList
@@ -436,7 +447,7 @@ export const IssueOrPullRequestCards = React.memo(
         refreshControl={refreshControl}
         removeClippedSubviews
         renderItem={renderItem}
-        stickyHeaderIndices={[0]}
+        stickyHeaderIndices={stickyHeaderIndices}
         viewabilityConfig={viewabilityConfig}
         windowSize={2}
       />

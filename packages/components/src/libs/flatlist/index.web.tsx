@@ -17,7 +17,7 @@ export interface FlatListProps<ItemT>
   keyExtractor: (item: ItemT, index: number) => string
 }
 
-export class FlatList<ItemT> extends React.Component<FlatListProps<ItemT>>
+export class FlatList<ItemT> extends React.PureComponent<FlatListProps<ItemT>>
   implements CrossPlatformFlatList<ItemT> {
   static displayName = 'FlatList (react-window)'
 
