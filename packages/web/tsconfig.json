@@ -1,9 +1,7 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "allowJs": false,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
     "jsx": "preserve",
     "noEmit": true,
     "outDir": "dist",
@@ -17,7 +15,9 @@
     "src/index.tsx"
   ],
   "exclude": [
-    "src/setupProxy.js"
+    "src/setupProxy.js",
+    "node_modules",
+    "dist"
   ],
   "references": [
     {

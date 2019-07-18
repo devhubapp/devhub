@@ -1,0 +1,10 @@
+.DS_Store
+.history
+.jest
+.next
+.vscode
+node_modules
+npm-debug.log*
+out
+yarn-debug.log*
+yarn-error.log*

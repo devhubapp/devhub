@@ -3,7 +3,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "noEmit": false,
-    "outDir": "dist",
+    "outDir": "dist/",
     "rootDir": "src",
     "target": "es2015",
     "typeRoots": [
@@ -11,15 +11,5 @@
       "../../node_modules/@types"
     ]
   },
-  "include": [
-    "src"
-  ],
-  "references": [
-    {
-      "path": "../core"
-    },
-    {
-      "path": "../components"
-    }
-  ]
+  "include": ["src"]
 }
