@@ -3,6 +3,7 @@
 .DS_Store
 .history
 .jest
+.next
 .vscode
 Pods
 node_modules/

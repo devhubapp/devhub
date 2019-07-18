@@ -16,6 +16,6 @@
   "dependencies": {},
   "devDependencies": {
     "eslint": "5.9.0",
-    "now": "*"
+    "now": "15.8.3"
   }
 }

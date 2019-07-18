@@ -1,0 +1,34 @@
+{
+  "name": "@devhub/landing",
+  "version": "0.93.0",
+  "private": false,
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "shx rm -rf dist/* && shx rm -f *.tsbuildinfo",
+    "compile": "tsc -b",
+    "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
+    "lint": "tslint -p .",
+    "prepare": "cd ."
+  },
+  "dependencies": {
+    "@zeit/next-css": "1.0.1",
+    "autoprefixer": "9.6.1",
+    "isomorphic-unfetch": "3.0.0",
+    "next": "9.0.2",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-markdown": "4.1.0",
+    "tailwindcss": "1.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^12.6.6",
+    "@types/react": "^16.8.23",
+    "@types/react-dom": "^16.8.4",
+    "prettier": "1.16.4",
+    "tslint": "5.14.0",
+    "tslint-config-airbnb": "5.11.1",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-react": "3.6.0",
+    "typescript": "3.5.1"
+  }
+}
