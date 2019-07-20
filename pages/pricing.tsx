@@ -1,17 +1,11 @@
 import { NextPage } from 'next'
 
-import LandingLayout from '@devhub/landing/src/components/layouts/LandingLayout'
+import PricingPage from '@devhub/landing/src/pages/PricingPage'
 
-export interface PricingProps {
-  shows: Array<{ id: string; name: string }>
-}
+export interface PricingProps {}
 
 const Pricing: NextPage<PricingProps> = () => {
-  return (
-    <LandingLayout>
-      <p>This is the pricing page.</p>
-    </LandingLayout>
-  )
+  return <PricingPage />
 }
 
 export default Pricing

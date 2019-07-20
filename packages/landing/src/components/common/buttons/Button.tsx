@@ -3,20 +3,20 @@ import Link from 'next/link'
 import React, { AnchorHTMLAttributes } from 'react'
 
 const twClasses = {
-  button: 'py-2 px-8 text-black font-semibold rounded-full cursor-pointer',
-  button__primary: 'bg-primary text-primaryForeground',
-  button__secondary: 'bg-gray-400 text-gray-900',
-  button__marginRight: 'mr-4',
+  button:
+    'py-2 px-8 border text-black font-semibold rounded-full cursor-pointer',
+  button__primary: 'border-primary bg-primary text-primaryForeground',
+  button__secondary: 'border-primary text-primary',
+  button__neutral: 'border-gray-300 bg-gray-300 text-black',
 }
 
 export interface ButtonProps extends AnchorHTMLAttributes<any> {
   children: React.ReactNode
-  type: 'primary' | 'secondary'
-  withRightMargin?: boolean
+  type: 'primary' | 'secondary' | 'neutral'
 }
 
 export default function Button(props: ButtonProps) {
-  const { children, href, type, withRightMargin, ...aProps } = props
+  const { children, href, type, ...aProps } = props
 
   return (
     <Link href={href}>
@@ -27,7 +27,7 @@ export default function Button(props: ButtonProps) {
           twClasses.button,
           type === 'primary' && twClasses.button__primary,
           type === 'secondary' && twClasses.button__secondary,
-          withRightMargin && twClasses.button__marginRight,
+          type === 'neutral' && twClasses.button__neutral,
           aProps.className,
         )}
       >

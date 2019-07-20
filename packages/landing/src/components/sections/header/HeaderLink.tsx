@@ -5,17 +5,16 @@ import React from 'react'
 const twClasses = {
   headerLink: 'text-base font-semibold leading-loose text-black',
   headerLink__primary: 'text-primary',
-  headerLink__rightMargin: 'mr-6 md:mr-12',
 }
 
 export interface HeaderLinkProps extends LinkProps {
   children: React.ReactNode
+  className?: string
   type?: 'primary' | 'secondary'
-  withRightMargin?: boolean
 }
 
 export default function HeaderLink(props: HeaderLinkProps) {
-  const { children, type, withRightMargin, ...linkProps } = props
+  const { children, className, type, ...linkProps } = props
 
   return (
     <>
@@ -24,7 +23,7 @@ export default function HeaderLink(props: HeaderLinkProps) {
           className={classNames(
             twClasses.headerLink,
             type === 'primary' && twClasses.headerLink__primary,
-            withRightMargin && twClasses.headerLink__rightMargin,
+            className,
           )}
         >
           {children}
