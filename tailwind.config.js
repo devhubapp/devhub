@@ -19,13 +19,13 @@ module.exports = {
     function({ addBase, config }) {
       addBase({
         h1: {
-          marginBottom: config('theme.margin.5'),
+          marginBottom: config('theme.margin.6'),
           lineHeight: config('theme.lineHeight.tight'),
-          fontSize: config('theme.fontSize.5xl'),
+          fontSize: config('theme.fontSize.4xl'),
           fontWeight: config('theme.fontWeight.bold'),
         },
         h2: {
-          marginBottom: config('theme.margin.5'),
+          marginBottom: config('theme.margin.6'),
           lineHeight: config('theme.lineHeight.snug'),
           fontSize: config('theme.fontSize.xl'),
           fontWeight: config('theme.fontWeight.normal'),

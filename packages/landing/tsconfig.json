@@ -7,7 +7,6 @@
     "rootDir": "src",
     "target": "es2015",
     "typeRoots": [
-      "@types",
       "../../@types",
       "../../node_modules/@types"
     ]
