@@ -1,6 +1,10 @@
 module.exports = {
   theme: {
     extend: {
+      colors: {
+        primary: '#49D3B4',
+        primaryForeground: '#141C26',
+      },
       container: {
         center: true,
         padding: '2rem',
@@ -37,7 +41,7 @@ module.exports = {
           lineHeight: config('theme.lineHeight.normal'),
           fontSize: config('theme.fontSize.base'),
           fontWeight: config('theme.fontWeight.light'),
-          color: config('theme.colors.gray.500'),
+          color: config('theme.colors.gray.600'),
         },
       })
     },

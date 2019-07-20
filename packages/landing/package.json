@@ -13,6 +13,7 @@
   "dependencies": {
     "@zeit/next-css": "1.0.1",
     "autoprefixer": "9.6.1",
+    "classnames": "2.2.6",
     "isomorphic-unfetch": "3.0.0",
     "next": "9.0.2",
     "react": "16.8.6",
@@ -21,9 +22,11 @@
     "tailwindcss": "1.0.5"
   },
   "devDependencies": {
+    "@types/classnames": "2.2.9",
     "@types/node": "^12.6.6",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
+    "@types/styled-jsx": "2.2.8",
     "prettier": "1.16.4",
     "tslint": "5.14.0",
     "tslint-config-airbnb": "5.11.1",
