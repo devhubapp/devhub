@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Header() {
   return (
-    <header className="flex flex-row py-4 mb-12">
+    <header className="container flex flex-row py-4 mb-12">
       <Link href="/">
         <a>DevHub</a>
       </Link>

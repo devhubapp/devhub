@@ -34,7 +34,7 @@
     "@types/react": "16.8.15",
     "@types/react-dom": "16.8.4",
     "babel-plugin-react-native-web": "0.11.5",
-    "now": "15.8.3",
+    "now": "15.8.5",
     "postinstall-prepare": "1.0.1",
     "prettier": "1.16.4",
     "react-app-rewired": "2.1.1",

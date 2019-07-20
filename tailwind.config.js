@@ -25,8 +25,19 @@ module.exports = {
           lineHeight: config('theme.lineHeight.snug'),
           fontSize: config('theme.fontSize.xl'),
           fontWeight: config('theme.fontWeight.normal'),
-          fontWeight: config('theme.fontWeight.normal'),
           color: config('theme.colors.gray.800'),
+        },
+        h3: {
+          lineHeight: config('theme.lineHeight.normal'),
+          fontSize: config('theme.fontSize.lg'),
+          fontWeight: config('theme.fontWeight.medium'),
+          color: config('theme.colors.gray.800'),
+        },
+        h4: {
+          lineHeight: config('theme.lineHeight.normal'),
+          fontSize: config('theme.fontSize.base'),
+          fontWeight: config('theme.fontWeight.light'),
+          color: config('theme.colors.gray.500'),
         },
       })
     },
