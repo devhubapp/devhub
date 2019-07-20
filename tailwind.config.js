@@ -26,7 +26,7 @@ module.exports = {
         },
         h2: {
           marginBottom: config('theme.margin.6'),
-          lineHeight: config('theme.lineHeight.snug'),
+          lineHeight: config('theme.lineHeight.normal'),
           fontSize: config('theme.fontSize.xl'),
           fontWeight: config('theme.fontWeight.normal'),
           color: config('theme.colors.gray.800'),

@@ -4,7 +4,7 @@ export interface UsedByCompaniesProps {}
 
 export default function UsedByCompanies(_props: UsedByCompaniesProps) {
   return (
-    <section id="trusted-by" className="bg-gray-200 p-6 mb-16">
+    <section id="trusted-by" className="bg-gray-200 p-6 mb-16 md:mb-32">
       <div className="container text-center">
         <h3 className="uppercase">Loved by</h3>
         <h4>15,000+ Developers and Managers, including from:</h4>
