@@ -3,8 +3,7 @@ import Button from '../components/common/buttons/Button'
 import CheckLabel from '../components/common/CheckLabel'
 import LandingLayout from '../components/layouts/LandingLayout'
 import FeatureBlock from '../components/sections/FeatureBlock'
-import UsedByCompanies from '../components/sections/UsedByCompanies'
-import Check from '../components/svg/CheckIcon'
+import UsedByCompaniesBlock from '../components/sections/UsedByCompaniesBlock'
 import { aspectRatioToStyle } from '../helpers'
 
 export interface HomePageProps {}
@@ -88,7 +87,7 @@ export default function HomePage(_props: HomePageProps) {
           </div>
         </div>
 
-        <UsedByCompanies />
+        <UsedByCompaniesBlock />
 
         <section id="features">
           <FeatureBlock
