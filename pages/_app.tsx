@@ -21,7 +21,7 @@ export default class App extends NextApp {
     return (
       <Container>
         <Head>
-          <title>DevHub</title>
+          <title>DevHub | GitHub Management tool</title>
         </Head>
 
         <Component {...pageProps} />

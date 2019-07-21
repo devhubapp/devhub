@@ -1,15 +1,17 @@
 import { aspectRatioToStyle } from '../../helpers'
 
-export interface UsedByCompaniesProps {}
+export interface UsedByCompaniesBlockProps {}
 
-export default function UsedByCompanies(_props: UsedByCompaniesProps) {
+export default function UsedByCompaniesBlock(
+  _props: UsedByCompaniesBlockProps,
+) {
   return (
     <section id="trusted-by" className="bg-gray-200 p-6 mb-16 md:mb-32">
       <div className="container text-center">
-        <h3 className="uppercase">Loved by</h3>
-        <h4>15,000+ Developers and Managers, including from:</h4>
+        <h3 className="uppercase">Used by 15,000+ Developers &amp; Managers</h3>
+        <h4 className="mb-4">Including amazing people from these companies:</h4>
 
-        <div className="flex flex-row justify-center mt-3">
+        <div className="flex flex-row justify-center">
           <div className="w-32">
             <div
               className="bg-gray-400 rounded-full"
