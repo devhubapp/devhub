@@ -1,10 +1,10 @@
 import classNames from 'classnames'
 import Link from 'next/link'
-import React, { AnchorHTMLAttributes } from 'react'
+import React, { AnchorHTMLAttributes, Fragment } from 'react'
 
 const twClasses = {
   button:
-    'py-2 px-8 border text-black font-semibold rounded-full cursor-pointer',
+    'btn inline-block py-2 px-8 border text-black font-semibold rounded-full cursor-pointer',
   button__primary: 'border-primary bg-primary text-primaryForeground',
   button__secondary: 'border-primary text-primary',
   button__neutral: 'border-gray-300 bg-gray-300 text-black',
@@ -16,29 +16,44 @@ export interface ButtonProps extends AnchorHTMLAttributes<any> {
 }
 
 export default function Button(props: ButtonProps) {
-  const { children, href, type, ...aProps } = props
+  const { children: _children, href, type, ...aProps } = props
+
+  const className = classNames(
+    twClasses.button,
+    type === 'primary' && twClasses.button__primary,
+    type === 'secondary' && twClasses.button__secondary,
+    type === 'neutral' && twClasses.button__neutral,
+    aProps.className,
+  )
+
+  const children =
+    typeof _children === 'string' ? (
+      <span
+        dangerouslySetInnerHTML={{ __html: _children.replace(/ /g, '&nbsp;') }}
+      />
+    ) : (
+      _children
+    )
 
   return (
-    <Link href={href}>
-      <a
-        {...aProps}
-        className={classNames(
-          'btn',
-          twClasses.button,
-          type === 'primary' && twClasses.button__primary,
-          type === 'secondary' && twClasses.button__secondary,
-          type === 'neutral' && twClasses.button__neutral,
-          aProps.className,
-        )}
-      >
-        {children}
+    <>
+      {href && href.startsWith('/') ? (
+        <Link href={href}>
+          <a {...aProps} className={className}>
+            {children}
+          </a>
+        </Link>
+      ) : (
+        <a href={href} {...aProps} className={className}>
+          {children}
+        </a>
+      )}
 
-        <style jsx>{`
-          .btn:hover {
-            transform: translateY(-1px);
-          }
-        `}</style>
-      </a>
-    </Link>
+      <style jsx>{`
+        .btn:hover {
+          transform: translateY(-1px);
+        }
+      `}</style>
+    </>
   )
 }

@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import Link from 'next/link'
 
 import HeaderLink from './HeaderLink'
@@ -8,34 +9,51 @@ const twClasses = {
 
 export default function Header() {
   return (
-    <header className="container flex flex-row items-center py-4 mb-10">
-      <Link href="/">
-        <a className="flex flex-row items-center">
-          <div className="w-8 h-8 mr-3 bg-primary rounded-full" />
-          <span className="text-lg font-semibold text-black">DevHub</span>
-        </a>
-      </Link>
+    <header className="container mb-10 py-4">
+      <div className="flex flex-row items-center overflow-x-auto">
+        <Link href="/">
+          <a
+            className={classNames(
+              'flex flex-row items-center',
+              twClasses.headerLink__rightMargin,
+            )}
+          >
+            <div className="w-8 h-8 sm:mr-3 bg-primary rounded-full" />
+            <span className="text-lg font-semibold text-black hidden sm:inline-block">
+              DevHub
+            </span>
+          </a>
+        </Link>
 
-      <div className="flex-1" />
+        <div className="flex-1" />
 
-      <HeaderLink
-        prefetch
-        href="/pricing"
-        className={twClasses.headerLink__rightMargin}
-      >
-        Pricing
-      </HeaderLink>
+        <HeaderLink
+          prefetch
+          href="/features"
+          className={twClasses.headerLink__rightMargin}
+        >
+          Features
+        </HeaderLink>
 
-      <HeaderLink
-        href="/changelog"
-        className={twClasses.headerLink__rightMargin}
-      >
-        Changelog
-      </HeaderLink>
+        <HeaderLink
+          prefetch
+          href="/pricing"
+          className={twClasses.headerLink__rightMargin}
+        >
+          Pricing
+        </HeaderLink>
 
-      <HeaderLink prefetch href="/download" type="primary">
-        Download&nbsp;↓
-      </HeaderLink>
+        <HeaderLink
+          href="/changelog"
+          className={twClasses.headerLink__rightMargin}
+        >
+          Changelog
+        </HeaderLink>
+
+        <HeaderLink prefetch href="/download" type="primary">
+          Download
+        </HeaderLink>
+      </div>
     </header>
   )
 }

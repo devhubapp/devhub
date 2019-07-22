@@ -1,5 +1,4 @@
 import Footer from '../sections/Footer'
-import GetStartedBlock from '../sections/GetStartedBlock'
 import Header from '../sections/header/Header'
 
 export interface LandingLayoutProps {
@@ -13,7 +12,7 @@ export default function LandingLayout(props: LandingLayoutProps) {
 
       {props.children}
 
-      <GetStartedBlock />
+      <div className="pb-16 md:pb-32" />
 
       <Footer />
     </section>

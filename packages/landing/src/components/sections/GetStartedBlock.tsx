@@ -4,7 +4,7 @@ export interface GetStartedBlockProps {}
 
 export default function GetStartedBlock(_props: GetStartedBlockProps) {
   return (
-    <section id="get-started" className="bg-gray-200 p-6 mb-16 md:mb-32">
+    <section id="get-started" className="bg-gray-200 p-6">
       <div className="container text-center">
         <h3 className="uppercase mb-3">Get Started Now</h3>
 

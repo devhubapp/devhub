@@ -1,14 +1,14 @@
 import LandingLayout from '../components/layouts/LandingLayout'
 import GetStartedBlock from '../components/sections/GetStartedBlock'
 
-export interface ChangelogPageProps {}
+export interface FeaturesPageProps {}
 
-export default function ChangelogPage(_props: ChangelogPageProps) {
+export default function FeaturesPage(_props: FeaturesPageProps) {
   return (
     <LandingLayout>
-      <section id="changelog">
+      <section id="features">
         <div className="container">
-          <h1>Changelog</h1>
+          <h1>Features</h1>
         </div>
 
         <div className="pb-16" />
