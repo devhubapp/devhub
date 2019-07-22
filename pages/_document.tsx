@@ -14,7 +14,7 @@ export default class Document extends NextDocument {
       <html style={{ height: '100%' }}>
         <Head>
           <meta charSet="utf-8" />
-          <base href="%PUBLIC_URL%" target="_blank" />
+          <base href="%PUBLIC_URL%" target="_top" />
 
           <meta name="description" content={fullDescription} />
 

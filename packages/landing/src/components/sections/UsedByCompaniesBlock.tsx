@@ -6,7 +6,7 @@ export default function UsedByCompaniesBlock(
   _props: UsedByCompaniesBlockProps,
 ) {
   return (
-    <section id="trusted-by" className="bg-gray-200 p-6 mb-16 md:mb-32">
+    <section id="trusted-by" className="bg-gray-200 p-6">
       <div className="container text-center">
         <h3 className="uppercase">Used by 15,000+ Developers &amp; Managers</h3>
         <h4 className="mb-4">Including amazing people from these companies:</h4>

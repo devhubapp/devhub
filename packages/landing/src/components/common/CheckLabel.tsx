@@ -17,8 +17,9 @@ export default function CheckLabel(props: CheckLabelProps) {
       <Check
         {...checkProps}
         className={classNames(
-          'text-primary',
-          checkProps && checkProps.className,
+          checkProps && checkProps.className
+            ? checkProps.className
+            : 'text-primary',
         )}
         containerClassName={classNames(
           'mr-1',
