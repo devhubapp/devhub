@@ -1,12 +1,15 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 
-import { Theme, ThemeTransformer } from '@devhub/core'
+import {
+  defaultTheme,
+  Theme,
+  ThemeTransformer,
+  transformTheme,
+} from '@devhub/core'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { useReduxStateCallback } from '../../hooks/use-redux-state-callback'
 import { Browser } from '../../libs/browser'
 import * as selectors from '../../redux/selectors'
-import { defaultTheme } from '../../styles/utils'
-import { transformTheme } from '../../utils/helpers/theme'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 
 export interface ThemeProviderProps {

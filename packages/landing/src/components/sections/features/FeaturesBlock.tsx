@@ -1,3 +1,5 @@
+import Link from 'next/link'
+import CheckLabel from '../../common/CheckLabel'
 import { CheckLabels } from '../../common/CheckLabels'
 import FeatureBlock from './FeatureBlock'
 
@@ -27,38 +29,37 @@ export default function FeaturesBlock(_props: FeaturesBlockProps) {
         title="Cross Platform"
         subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
       >
-        <CheckLabels
-          labels={[
-            {
-              href:
-                'https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=devhub_landing_page',
-              target: '_blank',
-              label: 'iOS',
-            },
+        <CheckLabels>
+          <Link href="https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=devhub_landing_page">
+            <a target="_blank">
+              <CheckLabel label="iOS" />
+            </a>
+          </Link>
 
-            {
-              href:
-                'https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=devhub_landing_page',
-              target: '_blank',
-              label: 'Android',
-            },
+          <Link href="https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=devhub_landing_page">
+            <a target="_blank">
+              <CheckLabel label="Android" />
+            </a>
+          </Link>
 
-            {
-              href: '/download?os=macos',
-              label: 'macOS',
-            },
+          <Link href="/download?os=macos">
+            <a>
+              <CheckLabel label="macOS" />
+            </a>
+          </Link>
 
-            {
-              href: '/download?os=windows',
-              label: 'Windows',
-            },
+          <Link href="/download?os=windows">
+            <a>
+              <CheckLabel label="Windows" />
+            </a>
+          </Link>
 
-            {
-              href: '/download?os=linux',
-              label: 'Linux',
-            },
-          ]}
-        />
+          <Link href="/download?os=linux">
+            <a>
+              <CheckLabel label="Linux" />
+            </a>
+          </Link>
+        </CheckLabels>
       </FeatureBlock>
     </section>
   )

@@ -105,7 +105,12 @@ export default class Document extends NextDocument {
           */}
         </Head>
 
-        <body style={{ height: '100%' }}>
+        <body
+          style={{
+            height: '100%',
+            ...(process.env.NODE_ENV === 'development' && { color: 'red' }),
+          }}
+        >
           <Main />
           <NextScript />
         </body>

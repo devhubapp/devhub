@@ -4,6 +4,9 @@ import React from 'react'
 
 import './index.css'
 
+import { AppGlobalStyles } from '@devhub/landing/src/components/styles/AppGlobalStyles'
+import { ThemeProvider } from '@devhub/landing/src/context/ThemeContext'
+
 export default class App extends NextApp {
   static async getInitialProps({ Component, ctx }: AppContext) {
     let pageProps = {}
@@ -19,13 +22,16 @@ export default class App extends NextApp {
     const { Component, pageProps } = this.props
 
     return (
-      <Container>
-        <Head>
-          <title>DevHub | GitHub Management tool</title>
-        </Head>
+      <ThemeProvider>
+        <Container>
+          <Head>
+            <title>DevHub | GitHub Management tool</title>
+          </Head>
 
-        <Component {...pageProps} />
-      </Container>
+          <Component {...pageProps} />
+          <AppGlobalStyles />
+        </Container>
+      </ThemeProvider>
     )
   }
 }

@@ -1,4 +1,4 @@
-import { StaticThemeColors } from '@devhub/core'
+import { StaticThemeColors } from '../types'
 
 export function getStaticColors({
   isDark,
