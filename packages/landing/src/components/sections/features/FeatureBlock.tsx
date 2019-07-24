@@ -28,7 +28,7 @@ export default function FeatureBlock(props: FeatureBlockProps) {
 
         <div className={className('lg:w-7/12', inverted ? 'lg:mr-16' : '')}>
           <div
-            className="bg-gray-200 rounded-lg"
+            className="bg-less-1 rounded-lg"
             style={aspectRatioToStyle(9 / 16)}
           />
         </div>

@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import Link from 'next/link'
 
+import { ThemeSwitcher } from '../../common/ThemeSwitcher'
 import HeaderLink from './HeaderLink'
 
 const twClasses = {
@@ -19,7 +20,7 @@ export default function Header() {
             )}
           >
             <div className="w-8 h-8 sm:mr-3 bg-primary rounded-full" />
-            <span className="text-lg font-semibold text-black hidden sm:inline-block">
+            <span className="text-lg text-default font-semibold hidden sm:inline-block">
               DevHub
             </span>
           </a>
@@ -50,9 +51,18 @@ export default function Header() {
           Changelog
         </HeaderLink>
 
-        <HeaderLink prefetch href="/download" type="primary">
+        <HeaderLink
+          prefetch
+          href="/download"
+          type="primary"
+          className={twClasses.headerLink__rightMargin}
+        >
           Download
         </HeaderLink>
+
+        <ThemeSwitcher />
+
+        <div className="mr-2" />
       </div>
     </header>
   )

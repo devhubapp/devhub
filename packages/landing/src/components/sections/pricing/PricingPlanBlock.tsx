@@ -17,26 +17,28 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   return (
     <section className="pricing-plan w-64">
-      <div className="m-1 bg-white shadow rounded">
+      <div className="m-1 bg-default shadow border border-primary rounded">
         {banner === true ? (
           <div className="text-sm leading-loose px-6 text-center font-semibold">
             &nbsp;
           </div>
         ) : banner ? (
-          <div className="bg-primary text-primarySecondary text-sm leading-loose px-6 text-center font-semibold rounded-t">
+          <div className="bg-primary text-primary-foreground text-sm leading-loose px-6 text-center font-semibold rounded-t">
             {banner}
           </div>
         ) : null}
 
         <div className="p-6 text-center">
-          <div className="text-base leading-loose font-bold">{plan.name}</div>
-          <div className="mb-2 text-sm text-gray-700">{plan.description}</div>
+          <div className="text-base leading-loose font-bold text-default">
+            {plan.name}
+          </div>
+          <div className="mb-2 text-sm text-muted-60">{plan.description}</div>
 
-          <div className="text-5xl leading-snug font-bold">{`$${
+          <div className="text-5xl leading-snug font-bold text-default">{`$${
             typeof plan.price === 'number' ? plan.price : '?'
           }`}</div>
           {plan.period && (
-            <div className="text-sm text-gray-700">{`/${plan.period}`}</div>
+            <div className="text-sm text-muted-60">{`/${plan.period}`}</div>
           )}
 
           <div className="pb-6" />
@@ -62,7 +64,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               }}
               className={classNames(
                 'mb-2',
-                feature.available ? undefined : 'text-gray-600 line-through',
+                feature.available ? undefined : 'text-muted-60 line-through',
               )}
             />
           ))}

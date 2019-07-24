@@ -26,7 +26,7 @@
     "clean": "yarn workspaces run clean",
     "dev": "yarn workspace @devhub/desktop compile && concurrently --kill-others \"yarn workspace @devhub/desktop compile -w\" \"yarn workspace @devhub/web start\" \"yarn workspace @devhub/mobile start\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
     "dev:desktop": "cross-env BROWSER=none concurrently \"yarn dev:web\" \"yarn workspace @devhub/desktop compile -w\" \"wait-on http://localhost:3000 && yarn workspace @devhub/desktop start\"",
-    "dev:landing": "now dev",
+    "dev:landing": "yarn workspace @devhub/core compile && now dev",
     "dev:mobile": "yarn workspace @devhub/mobile compile && concurrently --kill-others \"yarn workspace @devhub/mobile compile -w\" \"yarn workspace @devhub/mobile start\"",
     "dev:web": "yarn workspace @devhub/web compile && concurrently --kill-others \"yarn workspace @devhub/web compile -w\" \"yarn workspace @devhub/web start\"",
     "format": "yarn workspaces run format",
@@ -38,6 +38,7 @@
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
   "dependencies": {
+    "@devhub/core": "0.93.0",
     "@devhub/landing": "0.93.0",
     "next": "9.0.2",
     "opencollective-postinstall": "2.0.2"

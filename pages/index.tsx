@@ -1,5 +1,4 @@
-import fetch from 'isomorphic-unfetch'
-import { NextPage, NextPageContext } from 'next'
+import { NextPage } from 'next'
 
 import HomePage from '@devhub/landing/src/pages/HomePage'
 
@@ -9,6 +8,7 @@ export interface IndexProps {
 }
 
 const Index: NextPage<IndexProps> = props => {
+  /*
   const { appToken: _appToken, hasOverridenRender } = props
 
   const appToken = _appToken || getUserAppToken()
@@ -17,10 +17,12 @@ const Index: NextPage<IndexProps> = props => {
     if (!hasOverridenRender) renderLoggedInApp({})
     return <>{null}</>
   }
+  */
 
   return <HomePage />
 }
 
+/*
 Index.getInitialProps = async ctx => {
   const appToken = getUserAppToken()
   const hasOverridenRender = appToken ? await renderLoggedInApp(ctx) : false
@@ -102,5 +104,6 @@ async function renderLoggedInApp(
 
   return false
 }
+*/
 
-export default HomePage
+export default Index

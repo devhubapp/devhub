@@ -1,9 +1,9 @@
+import _ from 'lodash'
 import { darken, getLuminance, lighten } from 'polished'
 import React, { useMemo } from 'react'
 
-import { Theme } from '@devhub/core'
+import { Theme, themeColorFields } from '@devhub/core'
 import { useColumnData } from '../hooks/use-column-data'
-import { themeColorFields } from '../utils/helpers/theme'
 import { getSeparatorThemeColors } from './common/Separator'
 import { useFocusedColumn } from './context/ColumnFocusContext'
 import { useTheme } from './context/ThemeContext'
@@ -31,10 +31,13 @@ function getStyles(params: { theme: Theme; isLoading: boolean }) {
 
     body {
       ${themeColorFields
-        .map(field => `--theme_${field}:${t[field]};`)
+        .map(field => `--theme-${_.kebabCase(field)}:${t[field]};`)
         .join('\n')}
       ${themeColorFields
-        .map(field => `--theme_inverted_${field}:${invertedTheme[field]};`)
+        .map(
+          field =>
+            `--theme-inverted-${_.kebabCase(field)}:${invertedTheme[field]};`,
+        )
         .join('\n')}
       background-color:${t.backgroundColor};
       color: ${t.foregroundColor};

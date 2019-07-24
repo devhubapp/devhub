@@ -1,25 +1,23 @@
-import Link from 'next/link'
-import React from 'react'
+import React, { ReactElement } from 'react'
 
-import CheckLabel, { CheckLabelProps } from './CheckLabel'
+import { CheckLabelProps } from './CheckLabel'
 
 export interface CheckLabelsProps {
-  labels: Array<CheckLabelProps & { href?: string; target?: string }>
+  children: Array<ReactElement<CheckLabelProps>>
 }
 
 export function CheckLabels(props: CheckLabelsProps) {
-  const { labels } = props
+  const { children } = props
 
-  if (!(labels && labels.length)) return null
+  const total = React.Children.count(children)
 
   return (
     <div className="flex flex-row flex-wrap">
-      {labels.map(({ href, target, ...label }) => (
-        <Link href={href}>
-          <a key={`label-${label.label}`} target={target} className="mr-4">
-            <CheckLabel {...label} />
-          </a>
-        </Link>
+      {React.Children.map(children, (child, index) => (
+        <>
+          {child}
+          {index < total - 1 && <div className="pr-4" />}
+        </>
       ))}
     </div>
   )

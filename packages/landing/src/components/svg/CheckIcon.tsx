@@ -15,8 +15,8 @@ export default function CheckIcon(props: CheckIconProps) {
   return (
     <svg
       className={classNames('inline', containerClassName)}
-      clip-rule="evenodd"
-      fill-rule="evenodd"
+      clipRule="evenodd"
+      fillRule="evenodd"
       height={size}
       viewBox="0 0 24 24"
       width={size}

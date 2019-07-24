@@ -1,0 +1,48 @@
+diff --git a/node_modules/polished/dist/polished.es.js b/node_modules/polished/dist/polished.es.js
+index f72209b..e530faf 100644
+--- a/node_modules/polished/dist/polished.es.js
++++ b/node_modules/polished/dist/polished.es.js
+@@ -2306,9 +2306,11 @@ function parseToHsl(color) {
+  * @private
+  */
+ var reduceHexValue = function reduceHexValue(value) {
++  /*
+   if (value.length === 7 && value[1] === value[2] && value[3] === value[4] && value[5] === value[6]) {
+     return "#" + value[1] + value[3] + value[5];
+   }
++  */
+ 
+   return value;
+ };
+diff --git a/node_modules/polished/dist/polished.js b/node_modules/polished/dist/polished.js
+index b7fe7c8..6109e29 100644
+--- a/node_modules/polished/dist/polished.js
++++ b/node_modules/polished/dist/polished.js
+@@ -2429,9 +2429,11 @@
+    * @private
+    */
+   var reduceHexValue = function reduceHexValue(value) {
++    /*
+     if (value.length === 7 && value[1] === value[2] && value[3] === value[4] && value[5] === value[6]) {
+       return "#" + value[1] + value[3] + value[5];
+     }
++    */
+ 
+     return value;
+   };
+diff --git a/node_modules/polished/lib/internalHelpers/_reduceHexValue.js b/node_modules/polished/lib/internalHelpers/_reduceHexValue.js
+index 568a79e..0ec5477 100644
+--- a/node_modules/polished/lib/internalHelpers/_reduceHexValue.js
++++ b/node_modules/polished/lib/internalHelpers/_reduceHexValue.js
+@@ -8,9 +8,11 @@ exports["default"] = void 0;
+  * @private
+  */
+ var reduceHexValue = function reduceHexValue(value) {
++  /*
+   if (value.length === 7 && value[1] === value[2] && value[3] === value[4] && value[5] === value[6]) {
+     return "#" + value[1] + value[3] + value[5];
+   }
++  */
+ 
+   return value;
+ };

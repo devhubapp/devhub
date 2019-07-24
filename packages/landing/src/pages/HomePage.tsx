@@ -1,4 +1,5 @@
 import Button from '../components/common/buttons/Button'
+import CheckLabel from '../components/common/CheckLabel'
 import { CheckLabels } from '../components/common/CheckLabels'
 import LandingLayout from '../components/layouts/LandingLayout'
 import FeaturesBlock from '../components/sections/features/FeaturesBlock'
@@ -32,26 +33,24 @@ export default function HomePage(_props: HomePageProps) {
                 href="/download?auto"
                 className="mb-2 mr-2 sm:mr-4"
               >
-                Download&nbsp;for&nbsp;macOS&nbsp;↓
+                Download for macOS ↓
               </Button>
 
               <Button type="neutral" href="/" className="mb-2">
-                Other&nbsp;downloads
+                Other downloads
               </Button>
             </div>
 
-            <CheckLabels
-              labels={[
-                { label: 'Free version' },
-                { label: 'Free trial on paid features' },
-              ]}
-            />
+            <CheckLabels>
+              <CheckLabel label="Free version" />
+              <CheckLabel label="Free trial on paid features" />
+            </CheckLabels>
           </div>
 
           <div className="lg:w-7/12">
-            <div className="p-2 bg-gray-100 rounded-lg">
+            <div className="p-2 bg-less-1 rounded-lg">
               <div
-                className="bg-gray-300 rounded"
+                className="bg-less-2 rounded"
                 style={aspectRatioToStyle(3 / 5)}
               />
             </div>

@@ -7,7 +7,8 @@
       "dom.iterable",
       "esnext"
     ],
-    "noEmit": true
+    "noEmit": true,
+    "module": "esnext"
   },
   "exclude": [
     "node_modules"
@@ -18,9 +19,6 @@
   "references": [
     {
       "path": "packages/core"
-    },
-    {
-      "path": "packages/components"
     }
   ]
 }

@@ -2,13 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  transition: all 0.2s linear;
+}
+
 html, body {
   width: 100%;
   overflow-x: hidden;
 }
 
-
 body {
+  background-color: var(--theme-background-color);
+  color: var(--theme-foreground-color);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

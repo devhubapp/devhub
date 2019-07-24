@@ -1,7 +1,6 @@
 import immer from 'immer'
 
-import { AppViewMode, constants, ThemePair } from '@devhub/core'
-import { loadTheme } from '../../styles/utils'
+import { AppViewMode, constants, loadTheme, ThemePair } from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface State {

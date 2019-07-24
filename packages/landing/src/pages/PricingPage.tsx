@@ -75,8 +75,8 @@ export default function PricingPage(_props: PricingPageProps) {
                 name: 'Sponsor',
                 description:
                   'All Pro features, plus your company logo on our page',
-                price: 5000,
-                period: 'year',
+                price: 1000,
+                period: 'month',
                 features: [
                   { label: 'All Pro features', available: true },
                   {

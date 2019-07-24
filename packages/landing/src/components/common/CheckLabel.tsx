@@ -5,15 +5,18 @@ import Check, { CheckIconProps } from '../svg/CheckIcon'
 export interface CheckLabelProps {
   checkProps?: CheckIconProps
   className?: string
+  containerClassName?: string
   label: string
   style?: CSSProperties
 }
 
 export default function CheckLabel(props: CheckLabelProps) {
-  const { checkProps, className, label, style } = props
+  const { style, containerClassName, label, className, checkProps } = props
 
   return (
-    <div className={classNames('flex flex-row items-center', className)}>
+    <div
+      className={classNames('flex flex-row items-center', containerClassName)}
+    >
       <Check
         {...checkProps}
         className={classNames(
@@ -22,11 +25,14 @@ export default function CheckLabel(props: CheckLabelProps) {
             : 'text-primary',
         )}
         containerClassName={classNames(
-          'mr-1',
+          'mr-1 self-start',
           checkProps && checkProps.containerClassName,
         )}
       />
-      <span className="text-sm" style={style}>
+      <span
+        className={classNames('text-sm text-default', className)}
+        style={style}
+      >
         {label}
       </span>
     </div>
