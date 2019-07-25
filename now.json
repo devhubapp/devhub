@@ -13,6 +13,10 @@
       "dest": "/_next/$1"
     },
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
       "src": "/(.*)\\.(.*)",
       "dest": "/packages/web/dist/$1.$2"
     }

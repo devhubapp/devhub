@@ -20,6 +20,10 @@ export default function Footer() {
           <a className={twClasses.footerLink}>Features</a>
         </Link>
 
+        <Link href="/changelog">
+          <a className={twClasses.footerLink}>Changelog</a>
+        </Link>
+
         <Link href="/pricing">
           <a className={twClasses.footerLink}>Pricing</a>
         </Link>
@@ -29,19 +33,19 @@ export default function Footer() {
         <div className={twClasses.footerTitle}>Community</div>
 
         <a
-          href="https://github.com/devhubapp/devhub"
-          target="_blank"
-          className={twClasses.footerLink}
-        >
-          GitHub
-        </a>
-
-        <a
           href="https://twitter.com/devhub_app"
           target="_blank"
           className={twClasses.footerLink}
         >
           Twitter
+        </a>
+
+        <a
+          href="https://github.com/devhubapp/devhub"
+          target="_blank"
+          className={twClasses.footerLink}
+        >
+          GitHub
         </a>
 
         <a
