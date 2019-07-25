@@ -15,31 +15,31 @@ export default function UsedByCompaniesBlock(
           <div className="w-32">
             <div
               className="bg-less-3 rounded-full"
-              style={aspectRatioToStyle(1 / 3)}
+              style={aspectRatioToStyle(3 / 1)}
             />
           </div>
           <div className="w-32 ml-1 lg:ml-3">
             <div
               className="bg-less-3 rounded-full"
-              style={aspectRatioToStyle(1 / 3)}
+              style={aspectRatioToStyle(3 / 1)}
             />
           </div>
           <div className="w-32 ml-1 lg:ml-3">
             <div
               className="bg-less-3 rounded-full"
-              style={aspectRatioToStyle(1 / 3)}
+              style={aspectRatioToStyle(3 / 1)}
             />
           </div>
           <div className="w-32 ml-1 lg:ml-3">
             <div
               className="bg-less-3 rounded-full"
-              style={aspectRatioToStyle(1 / 3)}
+              style={aspectRatioToStyle(3 / 1)}
             />
           </div>
           <div className="w-32 ml-1 lg:ml-3">
             <div
               className="bg-less-3 rounded-full"
-              style={aspectRatioToStyle(1 / 3)}
+              style={aspectRatioToStyle(3 / 1)}
             />
           </div>
         </div>

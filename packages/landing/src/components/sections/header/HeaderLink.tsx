@@ -12,10 +12,11 @@ const twClasses = {
 export interface HeaderLinkProps extends LinkProps {
   children: React.ReactNode
   className?: string
+  target?: string
 }
 
 export default function HeaderLink(props: HeaderLinkProps) {
-  const { children, className, ...linkProps } = props
+  const { children, className, target, ...linkProps } = props
 
   const route = useRouter()
 
@@ -31,7 +32,7 @@ export default function HeaderLink(props: HeaderLinkProps) {
   return (
     <>
       <Link {...linkProps}>
-        <a className={classNames('flex flex-col', className)}>
+        <a className={classNames('flex flex-col', className)} target={target}>
           <span className={baseClass} style={{ lineHeight }}>
             {children}
           </span>

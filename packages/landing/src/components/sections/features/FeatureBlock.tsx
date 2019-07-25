@@ -24,12 +24,13 @@ export default function FeatureBlock(props: FeatureBlockProps) {
           <h1 className="mb-2">{title}</h1>
           <h2 className="mb-6">{subtitle}</h2>
           {children}
+          {!!children && <div className="pb-6" />}
         </div>
 
         <div className={className('lg:w-7/12', inverted ? 'lg:mr-16' : '')}>
           <div
             className="bg-less-1 rounded-lg"
-            style={aspectRatioToStyle(9 / 16)}
+            style={aspectRatioToStyle(16 / 9)}
           />
         </div>
       </div>

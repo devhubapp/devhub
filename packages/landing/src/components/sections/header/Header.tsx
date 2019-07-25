@@ -10,7 +10,7 @@ const twClasses = {
 
 export default function Header() {
   return (
-    <header className="container mb-10 py-4">
+    <header className="container mb-10 py-4 overflow-x-visible">
       <div className="flex flex-row items-center overflow-x-auto">
         <Link href="/">
           <a
@@ -27,6 +27,15 @@ export default function Header() {
         </Link>
 
         <div className="flex-1" />
+
+        <HeaderLink
+          prefetch
+          href="https://twitter.com/devhub_app/"
+          className={twClasses.headerLink__rightMargin}
+          target="_blank"
+        >
+          Twitter
+        </HeaderLink>
 
         <HeaderLink
           prefetch
