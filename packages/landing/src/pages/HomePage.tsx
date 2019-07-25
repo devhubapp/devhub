@@ -31,7 +31,7 @@ export default function HomePage(_props: HomePageProps) {
               <Button
                 type="primary"
                 href="/download?auto"
-                className="mb-2 mr-2 sm:mr-4"
+                className="mb-2 mr-2"
               >
                 Download for macOS ↓
               </Button>

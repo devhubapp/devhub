@@ -235,7 +235,7 @@ export const IssueOrPullRequestCards = React.memo(
 
       return (
         <>
-          {!isEmpty && <CardItemSeparator muted={!fetchNextPage} />}
+          {!isEmpty && <CardItemSeparator />}
 
           {fetchNextPage ? (
             <View>

@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 * {
-  transition: all 0.2s linear;
+  transition: all 0.2s ease-out;
+  transition-property: background-color, border-color, color, opacity, top, bottom, left, right, margin, padding, transform;
 }
 
 html, body {
@@ -17,4 +18,17 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+a:hover, a:focus {
+  transform: translateY(-1px);
+}
+
+footer a:hover {
+  transform: none;
 }

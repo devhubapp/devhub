@@ -4,48 +4,49 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 const twClasses = {
-  headerLink: 'text-base font-semibold leading-loose',
-  headerLink__active: 'font-extrabold opacity-1',
-  headerLink__inactive: 'opacity-75',
-  headerLink__primary: 'text-primary',
-  headerLink__secondary: 'text-default',
+  headerLink: 'px-4 text-base font-semibold text-center border rounded-full',
+  headerLink__active: 'bg-less-2 border-bg-less-2 text-default font-extrabold',
+  headerLink__inactive: 'bg-default border-bg text-muted-60 hover:text-default',
 }
 
 export interface HeaderLinkProps extends LinkProps {
   children: React.ReactNode
   className?: string
-  type?: 'primary' | 'secondary'
 }
 
 export default function HeaderLink(props: HeaderLinkProps) {
-  const { children, className, type, ...linkProps } = props
+  const { children, className, ...linkProps } = props
 
   const route = useRouter()
+
+  const isActive = route.pathname.startsWith(`${linkProps.href || ''}`)
+
+  const baseClass = classNames(
+    twClasses.headerLink,
+    isActive ? twClasses.headerLink__active : twClasses.headerLink__inactive,
+  )
+
+  const lineHeight = '2rem'
 
   return (
     <>
       <Link {...linkProps}>
-        <a
-          className={classNames(
-            twClasses.headerLink,
-            route.pathname.startsWith(`${linkProps.href || ''}`)
-              ? twClasses.headerLink__active
-              : twClasses.headerLink__inactive,
-            type === 'primary'
-              ? twClasses.headerLink__primary
-              : twClasses.headerLink__secondary,
-            className,
-          )}
-        >
-          {children}
+        <a className={classNames('flex flex-col', className)}>
+          <span className={baseClass} style={{ lineHeight }}>
+            {children}
+          </span>
+          <span
+            className={classNames(
+              baseClass,
+              twClasses.headerLink__active,
+              'invisible',
+            )}
+            style={{ lineHeight, marginTop: `-${lineHeight}` }}
+          >
+            {children}
+          </span>
         </a>
       </Link>
-
-      <style jsx>{`
-        a:hover {
-          opacity: 1;
-        }
-      `}</style>
     </>
   )
 }

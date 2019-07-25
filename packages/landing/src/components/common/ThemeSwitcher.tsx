@@ -13,24 +13,28 @@ export function ThemeSwitcher(props: ThemeSwitcherProps) {
   return (
     <button
       type="button"
-      className={classNames(
-        'theme-switcher relative w-10 rounded-full focus:outline-none',
-        theme.isDark ? 'bg-primary' : 'bg-less-4',
-      )}
+      className="theme-switcher relative w-10 bg-less-2 rounded-full focus:outline-none"
       onClick={() => {
         toggleTheme()
       }}
-      style={{ height: '1rem' }}
     >
       <div
         className={classNames(
-          'theme-switcher-thumb absolute bg-white shadow rounded-full',
-          theme.isDark ? 'dark' : 'light',
+          'theme-switcher-thumb absolute shadow rounded-full',
+          theme.isDark ? 'dark bg-purple' : 'light bg-yellow',
         )}
-      />
+      >
+        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white opacity-25" />
+      </div>
 
       <style jsx>
         {`
+          .theme-switcher {
+            height: 1rem;
+            margin-left: 0.2rem;
+            margin-right: 0.2rem;
+          }
+
           .theme-switcher-thumb {
             top: -0.2rem;
             bottom: -0.2rem;
@@ -43,6 +47,10 @@ export function ThemeSwitcher(props: ThemeSwitcherProps) {
 
           .theme-switcher-thumb.dark {
             left: 1.3rem;
+          }
+
+          .theme-switcher-thumb > div {
+            margin: 2px;
           }
         `}
       </style>

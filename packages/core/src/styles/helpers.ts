@@ -91,6 +91,7 @@ export const themeColorFields: Array<keyof ThemeColors> = [
   'backgroundColorLess2',
   'backgroundColorLess3',
   'backgroundColorLess4',
+  'backgroundColorLess5',
   'backgroundColorLighther1',
   'backgroundColorLighther2',
   'backgroundColorLighther3',
@@ -100,6 +101,7 @@ export const themeColorFields: Array<keyof ThemeColors> = [
   'backgroundColorMore2',
   'backgroundColorMore3',
   'backgroundColorMore4',
+  'backgroundColorMore5',
   'backgroundColorTransparent10',
 
   'foregroundColor',

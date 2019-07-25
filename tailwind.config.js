@@ -9,14 +9,13 @@ module.exports = {
         default: 'var(--theme-primary-background-color)',
         foreground: 'var(--theme-primary-foreground-color)',
       },
+      transparent: 'transparent',
       ...Object.assign(
         {},
         ...staticColorFields.map(color => ({
           [_.kebabCase(color)]: `var(--theme-${_.kebabCase(color)})`,
         })),
       ),
-      blue: 'var(--theme-blue)',
-      purple: 'var(--theme-purple)',
       bg: {
         default: 'var(--theme-background-color)',
         'darker-1': 'var(--theme-background-color-darker-1)',
@@ -33,11 +32,13 @@ module.exports = {
         'more-2': 'var(--theme-background-color-more-2)',
         'more-3': 'var(--theme-background-color-more-3)',
         'more-4': 'var(--theme-background-color-more-4)',
+        'more-5': 'var(--theme-background-color-more-5)',
         'less-1': 'var(--theme-background-color-less-1)',
         'less-2': 'var(--theme-background-color-less-2)',
         'less-3': 'var(--theme-background-color-less-3)',
         'less-4': 'var(--theme-background-color-less-4)',
-        'transparent-10': 'var(--theme-background-color-transparent-1)',
+        'less-5': 'var(--theme-background-color-less-5)',
+        'transparent-10': 'var(--theme-background-color-transparent-10)',
       },
       text: {
         default: 'var(--theme-foreground-color)',

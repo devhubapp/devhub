@@ -6,6 +6,8 @@ export const theme = createThemeFromColor(
   'light-blue',
   'Light Blue',
   {
-    primaryBackgroundColor: getStaticColors({ isDark: false }).blue,
+    override: {
+      primaryBackgroundColor: getStaticColors({ isDark: false }).blue,
+    },
   },
 )

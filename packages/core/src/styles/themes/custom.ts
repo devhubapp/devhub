@@ -11,77 +11,110 @@ export function createThemeFromColor(
   color: string,
   id: Theme['id'],
   displayName: Theme['displayName'],
-  override: Partial<ThemeColors> = {},
-  isInverted?: boolean,
-  invertedTheme?: Theme,
+  {
+    override = {},
+    isInverted,
+    invertedTheme,
+    usePredefinedColors,
+  }: {
+    override?: Partial<ThemeColors>
+    isInverted?: boolean
+    invertedTheme?: Theme
+    usePredefinedColors?: boolean
+  } = {},
 ): Theme {
   const luminance = getLuminance(color)
   const isDark = luminance <= 0.4
 
   const backgroundColor = color
 
-  const amount1 = 0.03
-  const amount2 = 0.05
-  const amount3 = 0.07
-  const amount4 = 0.09
-  const amount5 = 0.11
+  let primaryBackgroundColor = '#49D3B4'
+  let primaryForegroundColor = '#141C26'
 
-  const backgroundColorDarker1 = darken(amount1, color)
-  const backgroundColorDarker2 = darken(amount2, color)
-  const backgroundColorDarker3 = darken(amount3, color)
-  const backgroundColorDarker4 = darken(amount4, color)
-  const backgroundColorDarker5 = darken(amount5, color)
-  const backgroundColorLighther1 = lighten(amount1, color)
-  const backgroundColorLighther2 = lighten(amount2, color)
-  const backgroundColorLighther3 = lighten(amount3, color)
-  const backgroundColorLighther4 = lighten(amount4, color)
-  const backgroundColorLighther5 = lighten(amount5, color)
+  if (override) {
+    if (override.primaryBackgroundColor)
+      primaryBackgroundColor = override.primaryBackgroundColor
+
+    if (override.primaryForegroundColor)
+      primaryForegroundColor = override.primaryForegroundColor
+    else if (override.primaryBackgroundColor) {
+      primaryForegroundColor = isDark
+        ? darken(0.05, color)
+        : lighten(0.05, color)
+    }
+  }
+
+  // Using Tailwind CSS colors on light theme instead of calculating them
+  const backgroundColorDarker1 =
+    !isDark && usePredefinedColors ? '#edf2f7' : darken(0.03, color)
+  const backgroundColorDarker2 =
+    !isDark && usePredefinedColors
+      ? '#e2e8f0'
+      : darken(0.05, backgroundColorDarker1)
+  const backgroundColorDarker3 =
+    !isDark && usePredefinedColors
+      ? '#cbd5e0'
+      : darken(0.05, backgroundColorDarker2)
+  const backgroundColorDarker4 =
+    !isDark && usePredefinedColors
+      ? '#a0aec0'
+      : darken(0.05, backgroundColorDarker3)
+  const backgroundColorDarker5 =
+    !isDark && usePredefinedColors
+      ? '#718096'
+      : darken(0.05, backgroundColorDarker4)
+
+  const backgroundColorLighther1 = lighten(0.05, color)
+  const backgroundColorLighther2 = lighten(0.05, backgroundColorLighther1)
+  const backgroundColorLighther3 = lighten(0.05, backgroundColorLighther2)
+  const backgroundColorLighther4 = lighten(0.05, backgroundColorLighther3)
+  const backgroundColorLighther5 = lighten(0.05, backgroundColorLighther4)
 
   const backgroundColorMore1 = isDark
-    ? darken(amount1, color)
-    : lighten(amount1, color)
+    ? backgroundColorDarker1
+    : backgroundColorLighther1
   const backgroundColorMore2 = isDark
-    ? darken(amount2, color)
-    : lighten(amount2, color)
+    ? backgroundColorDarker2
+    : backgroundColorLighther2
   const backgroundColorMore3 = isDark
-    ? darken(amount3, color)
-    : lighten(amount3, color)
+    ? backgroundColorDarker3
+    : backgroundColorLighther3
   const backgroundColorMore4 = isDark
-    ? darken(amount4, color)
-    : lighten(amount4, color)
+    ? backgroundColorDarker4
+    : backgroundColorLighther4
+  const backgroundColorMore5 = isDark
+    ? backgroundColorDarker5
+    : backgroundColorLighther5
 
-  const backgroundColorLess1 = isDark
-    ? lighten(amount1, color)
-    : darken(amount1, color)
-  const backgroundColorLess2 = isDark
-    ? lighten(amount2, color)
-    : darken(amount2, color)
-  const backgroundColorLess3 = isDark
-    ? lighten(amount3, color)
-    : darken(amount3, color)
-  const backgroundColorLess4 = isDark
-    ? lighten(amount4, color)
-    : darken(amount4, color)
+  const backgroundColorLess1 = !isDark
+    ? backgroundColorDarker1
+    : backgroundColorLighther1
+  const backgroundColorLess2 = !isDark
+    ? backgroundColorDarker2
+    : backgroundColorLighther2
+  const backgroundColorLess3 = !isDark
+    ? backgroundColorDarker3
+    : backgroundColorLighther3
+  const backgroundColorLess4 = !isDark
+    ? backgroundColorDarker4
+    : backgroundColorLighther4
+  const backgroundColorLess5 = !isDark
+    ? backgroundColorDarker5
+    : backgroundColorLighther5
 
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
-  const foregroundColor = isDark ? lighten(0.95, color) : darken(0.95, color)
+  const foregroundColor = isDark
+    ? lighten(0.95, backgroundColorLess1)
+    : darken(0.95, backgroundColorLess1)
   const foregroundColorMuted25 = isDark
-    ? lighten(0.2, color)
-    : darken(0.2, color)
+    ? lighten(0.25, backgroundColorLess1)
+    : darken(0.25, backgroundColorLess1)
   const foregroundColorMuted40 = isDark
-    ? lighten(0.4, color)
-    : darken(0.4, color)
+    ? lighten(0.4, backgroundColorLess1)
+    : darken(0.4, backgroundColorLess1)
   const foregroundColorMuted60 = isDark
-    ? lighten(0.6, color)
-    : darken(0.6, color)
-
-  if (
-    override &&
-    override.primaryBackgroundColor &&
-    !override.primaryForegroundColor
-  ) {
-    override.primaryForegroundColor = backgroundColorMore2
-  }
+    ? lighten(0.7, backgroundColorLess1)
+    : darken(0.7, backgroundColorLess1)
 
   const theme = createTheme({
     id: id || 'custom',
@@ -93,8 +126,8 @@ export function createThemeFromColor(
       return theme
     },
 
-    primaryBackgroundColor: '#49D3B4',
-    primaryForegroundColor: '#141C26',
+    primaryBackgroundColor,
+    primaryForegroundColor,
 
     backgroundColor,
     backgroundColorDarker1,
@@ -106,6 +139,7 @@ export function createThemeFromColor(
     backgroundColorLess2,
     backgroundColorLess3,
     backgroundColorLess4,
+    backgroundColorLess5,
     backgroundColorLighther1,
     backgroundColorLighther2,
     backgroundColorLighther3,
@@ -115,6 +149,7 @@ export function createThemeFromColor(
     backgroundColorMore2,
     backgroundColorMore3,
     backgroundColorMore4,
+    backgroundColorMore5,
     backgroundColorTransparent10,
 
     foregroundColor,
@@ -136,9 +171,11 @@ export function createThemeFromColor(
         invert(color),
         'custom',
         `${displayName} (inverted)`,
-        override,
-        true,
-        theme,
+        {
+          override,
+          isInverted: true,
+          invertedTheme: theme,
+        },
       )
     }
 
