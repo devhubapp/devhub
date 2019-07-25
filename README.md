@@ -29,7 +29,7 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 
 #### Menubar
 
-![DevHub Menubar](assets/static/menubar-co.jpg)
+![DevHub Menubar](static/menubar-co.jpg)
 
 ### Mobile
 

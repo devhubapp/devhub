@@ -76,19 +76,19 @@ module.exports = {
         },
         h2: {
           marginBottom: config('theme.margin.6'),
-          lineHeight: config('theme.lineHeight.normal'),
+          lineHeight: config('theme.lineHeight.relaxed'),
           fontSize: config('theme.fontSize.xl'),
           fontWeight: config('theme.fontWeight.normal'),
           color: config('theme.textColor.muted.60'),
         },
         h3: {
-          lineHeight: config('theme.lineHeight.normal'),
+          lineHeight: config('theme.lineHeight.relaxed'),
           fontSize: config('theme.fontSize.lg'),
           fontWeight: config('theme.fontWeight.medium'),
           color: config('theme.textColor.default'),
         },
         h4: {
-          lineHeight: config('theme.lineHeight.normal'),
+          lineHeight: config('theme.lineHeight.relaxed'),
           fontSize: config('theme.fontSize.base'),
           fontWeight: config('theme.fontWeight.light'),
           color: config('theme.textColor.muted.60'),

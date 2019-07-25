@@ -55,11 +55,11 @@ export default function HomePage(_props: HomePageProps) {
               >
                 <img
                   src="https://user-images.githubusercontent.com/619186/61841830-6c688180-ae6c-11e9-8804-d064c6db9117.png"
-                  className="visible-light-theme absolute inset-0 bg-cover rounded"
+                  className="visible-light-theme absolute inset-0 object-cover rounded"
                 />
                 <img
                   src="https://user-images.githubusercontent.com/619186/61841834-6e324500-ae6c-11e9-83bd-f1cd3e9948ad.png"
-                  className="visible-dark-theme absolute inset-0 bg-cover rounded"
+                  className="visible-dark-theme absolute inset-0 object-cover rounded"
                 />
               </div>
             </div>

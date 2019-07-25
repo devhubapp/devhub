@@ -16,7 +16,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   const { banner, buttonLabel, buttonLink, plan } = props
 
   return (
-    <section className="pricing-plan flex-shrink-0 w-64">
+    <section className="pricing-plan flex flex-col flex-shrink-0 w-64">
       <div className="m-1 bg-more-1 shadow border border-primary rounded">
         {banner === true ? (
           <div className="text-sm leading-loose px-6 text-center font-semibold">
