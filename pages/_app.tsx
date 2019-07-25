@@ -5,7 +5,10 @@ import React from 'react'
 import './index.css'
 
 import { AppGlobalStyles } from '@devhub/landing/src/components/styles/AppGlobalStyles'
-import { ThemeProvider } from '@devhub/landing/src/context/ThemeContext'
+import {
+  ThemeConsumer,
+  ThemeProvider,
+} from '@devhub/landing/src/context/ThemeContext'
 
 export default class App extends NextApp {
   static async getInitialProps({ Component, ctx }: AppContext) {
@@ -23,12 +26,18 @@ export default class App extends NextApp {
 
     return (
       <ThemeProvider>
-        <Container>
+        <Container className="xxx">
           <Head>
             <title>DevHub | GitHub Management tool</title>
           </Head>
 
-          <Component {...pageProps} />
+          <ThemeConsumer>
+            {({ theme }) => (
+              <div className={theme.isDark ? 'dark-theme' : 'light-theme'}>
+                <Component {...pageProps} />
+              </div>
+            )}
+          </ThemeConsumer>
           <AppGlobalStyles />
         </Container>
       </ThemeProvider>

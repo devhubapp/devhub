@@ -20,12 +20,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.dark-theme .hide-dark-theme,
+.dark-theme .show-light-theme:not(.show-dark-theme),
+.light-theme .hide-light-theme,
+.light-theme .show-dark-theme:not(.show-light-theme) {
+  display: none;
+}
+
+.dark-theme .invisible-dark-theme,
+.dark-theme .visible-light-theme:not(.visible-dark-theme),
+.light-theme .hide-light-theme,
+.light-theme .visible-dark-theme:not(.visible-light-theme) {
+  opacity: 0;
+}
+
 a {
   margin-top: 1px;
   margin-bottom: 1px;
 }
 
-a:hover, a:focus {
+a:hover, .btn:hover {
   transform: translateY(-1px);
 }
 

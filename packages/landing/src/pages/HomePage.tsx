@@ -36,7 +36,7 @@ export default function HomePage(_props: HomePageProps) {
                 Download for macOS ↓
               </Button>
 
-              <Button type="neutral" href="/" className="mb-2">
+              <Button type="neutral" href="/download" className="mb-2">
                 Other downloads
               </Button>
             </div>
@@ -50,9 +50,18 @@ export default function HomePage(_props: HomePageProps) {
           <div className="lg:w-7/12">
             <div className="p-2 bg-less-1 rounded-lg">
               <div
-                className="bg-less-2 rounded"
-                style={aspectRatioToStyle(3 / 5)}
-              />
+                className="relative bg-less-2 rounded"
+                style={aspectRatioToStyle(2880 / 1596)}
+              >
+                <img
+                  src="https://user-images.githubusercontent.com/619186/61841830-6c688180-ae6c-11e9-8804-d064c6db9117.png"
+                  className="visible-light-theme absolute inset-0 bg-cover rounded"
+                />
+                <img
+                  src="https://user-images.githubusercontent.com/619186/61841834-6e324500-ae6c-11e9-83bd-f1cd3e9948ad.png"
+                  className="visible-dark-theme absolute inset-0 bg-cover rounded"
+                />
+              </div>
             </div>
           </div>
         </div>

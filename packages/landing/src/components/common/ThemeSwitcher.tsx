@@ -13,7 +13,7 @@ export function ThemeSwitcher(props: ThemeSwitcherProps) {
   return (
     <button
       type="button"
-      className="theme-switcher relative w-10 bg-less-2 rounded-full focus:outline-none"
+      className="theme-switcher relative flex-shrink-0 w-10 bg-less-2 rounded-full focus:outline-none"
       onClick={() => {
         toggleTheme()
       }}
