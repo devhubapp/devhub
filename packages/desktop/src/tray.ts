@@ -63,7 +63,10 @@ export function createTray() {
       }
     }
 
-    alignWindowWithTray(mainWindow)
+    if (config.store.get('isMenuBarMode')) {
+      alignWindowWithTray(mainWindow)
+    }
+
     helpers.showWindow(mainWindow)
   })
 
