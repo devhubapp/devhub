@@ -6,7 +6,7 @@ const twClasses = {
   button:
     'btn inline-block py-2 px-8 border font-semibold rounded-full cursor-pointer',
   button__primary: 'bg-primary text-primary-foreground border-primary',
-  button__secondary: 'bg-default text-primary border-primary',
+  button__secondary: 'bg-transparent text-primary border-primary',
   button__neutral: 'bg-darker-2 text-default border-bg-darker-2',
 }
 
@@ -36,23 +36,13 @@ export default function Button(props: ButtonProps) {
       <span className={className}>{_children}</span>
     )
 
-  return (
-    <>
-      {href && href.startsWith('/') ? (
-        <Link href={href}>
-          <a {...aProps}>{children}</a>
-        </Link>
-      ) : (
-        <a href={href} {...aProps}>
-          {children}
-        </a>
-      )}
-
-      <style jsx>{`
-        .btn:hover {
-          transform: translateY(-1px);
-        }
-      `}</style>
-    </>
+  return href && href.startsWith('/') ? (
+    <Link href={href}>
+      <a {...aProps}>{children}</a>
+    </Link>
+  ) : (
+    <a href={href} {...aProps}>
+      {children}
+    </a>
   )
 }

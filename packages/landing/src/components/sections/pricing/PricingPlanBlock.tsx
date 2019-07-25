@@ -17,7 +17,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   return (
     <section className="pricing-plan w-64">
-      <div className="m-1 bg-default shadow border border-primary rounded">
+      <div className="m-1 bg-more-1 shadow border border-primary rounded">
         {banner === true ? (
           <div className="text-sm leading-loose px-6 text-center font-semibold">
             &nbsp;

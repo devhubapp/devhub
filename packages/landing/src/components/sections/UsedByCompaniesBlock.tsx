@@ -14,31 +14,31 @@ export default function UsedByCompaniesBlock(
         <div className="flex flex-row justify-center">
           <div className="w-32">
             <div
-              className="bg-less-2 rounded-full"
+              className="bg-less-3 rounded-full"
               style={aspectRatioToStyle(1 / 3)}
             />
           </div>
           <div className="w-32 ml-1 lg:ml-3">
             <div
-              className="bg-less-2 rounded-full"
+              className="bg-less-3 rounded-full"
               style={aspectRatioToStyle(1 / 3)}
             />
           </div>
           <div className="w-32 ml-1 lg:ml-3">
             <div
-              className="bg-less-2 rounded-full"
+              className="bg-less-3 rounded-full"
               style={aspectRatioToStyle(1 / 3)}
             />
           </div>
           <div className="w-32 ml-1 lg:ml-3">
             <div
-              className="bg-less-2 rounded-full"
+              className="bg-less-3 rounded-full"
               style={aspectRatioToStyle(1 / 3)}
             />
           </div>
           <div className="w-32 ml-1 lg:ml-3">
             <div
-              className="bg-less-2 rounded-full"
+              className="bg-less-3 rounded-full"
               style={aspectRatioToStyle(1 / 3)}
             />
           </div>

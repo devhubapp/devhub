@@ -5,7 +5,7 @@ import { ThemeSwitcher } from '../../common/ThemeSwitcher'
 import HeaderLink from './HeaderLink'
 
 const twClasses = {
-  headerLink__rightMargin: 'mr-6 md:mr-12',
+  headerLink__rightMargin: 'mr-1',
 }
 
 export default function Header() {
@@ -54,15 +54,14 @@ export default function Header() {
         <HeaderLink
           prefetch
           href="/download"
-          type="primary"
           className={twClasses.headerLink__rightMargin}
         >
           Download
         </HeaderLink>
 
-        <ThemeSwitcher />
+        <span className="pr-2" />
 
-        <div className="mr-2" />
+        <ThemeSwitcher />
       </div>
     </header>
   )

@@ -11,7 +11,7 @@ export interface ThemeProviderState {
   toggleTheme: () => void
 }
 
-const defaultLightTheme = themes['light-gray']!
+const defaultLightTheme = themes['light-white']!
 const defaultDarkTheme = themes['dark-gray']!
 const defaultTheme = getThemefromCache() || loadTheme({ id: 'auto' })
 
@@ -27,14 +27,16 @@ export function ThemeProvider(props: ThemeProviderProps) {
   const [theme, setTheme] = useState(defaultTheme)
 
   useEffect(() => {
-    // workaround for when server returns a different initial theme than client
-    // fix the theme switcher button not getting updated
-    setTheme(t => t)
-  }, [])
-
-  useEffect(() => {
     saveThemeOnCache(theme)
   }, [theme.id])
+
+  useEffect(() => {
+    // workaround for when server returns a different initial theme than client
+    // fix the theme switcher button not getting updated
+    setTimeout(() => {
+      setTheme(t => t)
+    }, 10)
+  }, [])
 
   const value: ThemeProviderState = useMemo(
     () => ({

@@ -218,7 +218,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
     return (
       <>
-        {!isEmpty && <CardItemSeparator muted={!fetchNextPage} />}
+        {!isEmpty && <CardItemSeparator />}
 
         {fetchNextPage ? (
           <View>
