@@ -11,7 +11,7 @@ const screenshot =
 export default class Document extends NextDocument {
   render() {
     return (
-      <html style={{ height: '100%' }}>
+      <html>
         <Head>
           <meta charSet="utf-8" />
           <base href="%PUBLIC_URL%" target="_top" />
@@ -107,7 +107,6 @@ export default class Document extends NextDocument {
 
         <body
           style={{
-            height: '100%',
             ...(process.env.NODE_ENV === 'development' && { color: 'red' }),
           }}
         >

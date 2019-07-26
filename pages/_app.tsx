@@ -2,7 +2,9 @@ import NextApp, { AppContext, Container } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 
-import './index.css'
+import './styles/index.css'
+
+import './styles/devices/iphone.css'
 
 import { AppGlobalStyles } from '@devhub/landing/src/components/styles/AppGlobalStyles'
 import {
