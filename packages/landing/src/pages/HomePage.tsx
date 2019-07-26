@@ -1,6 +1,7 @@
 import Button from '../components/common/buttons/Button'
 import CheckLabel from '../components/common/CheckLabel'
 import { CheckLabels } from '../components/common/CheckLabels'
+import { DeviceFrame } from '../components/common/DeviceFrame'
 import LandingLayout from '../components/layouts/LandingLayout'
 import FeaturesBlock from '../components/sections/features/FeaturesBlock'
 import GetStartedBlock from '../components/sections/GetStartedBlock'
@@ -31,7 +32,7 @@ export default function HomePage(_props: HomePageProps) {
               <Button
                 type="primary"
                 href="/download?auto"
-                className="mb-2 mr-2"
+                className="mb-1 md:mb-2 mr-2"
               >
                 Download for macOS ↓
               </Button>
@@ -54,14 +55,31 @@ export default function HomePage(_props: HomePageProps) {
                 style={aspectRatioToStyle(2880 / 1596)}
               >
                 <img
-                  src="https://user-images.githubusercontent.com/619186/61841830-6c688180-ae6c-11e9-8804-d064c6db9117.png"
+                  src="/static/screenshots/desktop-zoomed-light.png"
                   className="visible-light-theme absolute inset-0 object-cover rounded"
                 />
                 <img
-                  src="https://user-images.githubusercontent.com/619186/61841834-6e324500-ae6c-11e9-83bd-f1cd3e9948ad.png"
+                  src="/static/screenshots/desktop-zoomed-dark.png"
                   className="visible-dark-theme absolute inset-0 object-cover rounded"
                 />
               </div>
+            </div>
+
+            <div className="block sm:hidden">
+              <div className="pb-8" />
+
+              <DeviceFrame>
+                <div className="relative w-full h-full m-auto">
+                  <img
+                    src="/static/screenshots/iphone-notifications-light.png"
+                    className="visible-light-theme absolute inset-0 object-cover bg-white"
+                  />
+                  <img
+                    src="/static/screenshots/iphone-notifications-dark.png"
+                    className="visible-dark-theme absolute inset-0 object-cover"
+                  />
+                </div>
+              </DeviceFrame>
             </div>
           </div>
         </div>

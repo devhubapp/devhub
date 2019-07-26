@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 import { loadTheme, Theme, themes } from '@devhub/core/src'
 
@@ -13,7 +19,7 @@ export interface ThemeProviderState {
 
 const defaultLightTheme = themes['light-white']!
 const defaultDarkTheme = themes['dark-gray']!
-const defaultTheme = getThemefromCache() || loadTheme({ id: 'auto' })
+const defaultTheme = loadTheme({ id: 'auto' })
 
 export const ThemeContext = React.createContext<ThemeProviderState>({
   theme: defaultTheme,
@@ -26,17 +32,14 @@ ThemeContext.displayName = 'ThemeContext'
 export function ThemeProvider(props: ThemeProviderProps) {
   const [theme, setTheme] = useState(defaultTheme)
 
+  useLayoutEffect(() => {
+    const cache = getThemefromCache()
+    if (cache) setTheme(cache)
+  }, [])
+
   useEffect(() => {
     saveThemeOnCache(theme)
   }, [theme.id])
-
-  useEffect(() => {
-    // workaround for when server returns a different initial theme than client
-    // fix the theme switcher button not getting updated
-    setTimeout(() => {
-      setTheme(t => t)
-    }, 10)
-  }, [])
 
   const value: ThemeProviderState = useMemo(
     () => ({
