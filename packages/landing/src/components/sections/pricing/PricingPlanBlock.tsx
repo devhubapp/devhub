@@ -19,11 +19,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     <section className="pricing-plan flex flex-col flex-shrink-0 w-64">
       <div className="m-1 bg-more-1 shadow border border-primary rounded">
         {banner === true ? (
-          <div className="text-sm leading-loose px-6 text-center font-semibold">
+          <div className="text-sm leading-normal py-1 px-6 text-center font-semibold">
             &nbsp;
           </div>
         ) : banner ? (
-          <div className="bg-primary text-primary-foreground text-sm leading-loose px-6 text-center font-semibold rounded-t">
+          <div className="bg-primary text-primary-foreground text-sm leading-normal py-1 px-6 text-center font-semibold rounded-t">
             {banner}
           </div>
         ) : null}

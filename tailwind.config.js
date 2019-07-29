@@ -53,13 +53,28 @@ module.exports = {
     extend: {
       backgroundColor: theme => theme('colors.bg'),
       textColor: theme => theme('colors.text'),
-      borderColor: theme => theme('colors'),
+      borderColor: theme => ({
+        ...theme('colors'),
+        text: {
+          default: 'var(--theme-foreground-color)',
+          muted: 'var(--theme-foreground-color-muted-60)',
+          'muted-25': 'var(--theme-foreground-color-muted-25)',
+          'muted-40': 'var(--theme-foreground-color-muted-40)',
+          'muted-60': 'var(--theme-foreground-color-muted-60)',
+        },
+      }),
       container: {
         center: true,
         padding: '2rem',
       },
       lineHeight: {
         tight: 1.1,
+      },
+      spacing: {
+        '72': '18rem',
+        '84': '21rem',
+        '96': '24rem',
+        '100': '26rem',
       },
     },
   },

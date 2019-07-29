@@ -1,4 +1,4 @@
-import NextApp, { AppContext, Container } from 'next/app'
+import NextApp, { Container } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 
@@ -16,7 +16,11 @@ import {
 
 export default class App extends NextApp {
   onLoad() {
-    document.body.className = `${document.body.className} loaded`.trim()
+    setTimeout(() => {
+      window.requestAnimationFrame(() => {
+        document.body.className = `${document.body.className} loaded`.trim()
+      })
+    }, 1000)
   }
 
   componentDidMount() {

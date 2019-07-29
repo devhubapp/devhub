@@ -4,7 +4,8 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 const twClasses = {
-  headerLink: 'px-4 text-base font-semibold text-center border rounded-full',
+  headerLink:
+    'px-2 md:px-4 text-base font-semibold text-center border rounded-full',
   headerLink__active: 'bg-less-2 border-bg-less-2 text-default font-extrabold',
   headerLink__inactive: 'bg-default border-bg text-muted-60 hover:text-default',
 }

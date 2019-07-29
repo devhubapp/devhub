@@ -1,4 +1,4 @@
-import className from 'classnames'
+import classNames from 'classnames'
 
 import { aspectRatioToStyle } from '../../../helpers'
 
@@ -15,19 +15,19 @@ export default function FeatureBlock(props: FeatureBlockProps) {
   return (
     <section className="feature-block container">
       <div
-        className={className(
+        className={classNames(
           'flex flex-col lg:px-8 xl:items-center',
           inverted ? 'lg:flex-row-reverse' : 'lg:flex-row',
         )}
       >
-        <div className={className('lg:w-5/12', inverted ? '' : 'lg:mr-16')}>
+        <div className={classNames('lg:w-5/12', inverted ? '' : 'lg:mr-16')}>
           <h1 className="mb-2">{title}</h1>
           <h2 className="mb-6">{subtitle}</h2>
           {children}
           {!!children && <div className="pb-6" />}
         </div>
 
-        <div className={className('lg:w-7/12', inverted ? 'lg:mr-16' : '')}>
+        <div className={classNames('lg:w-7/12', inverted ? 'lg:mr-16' : '')}>
           <div
             className="bg-less-1 rounded-lg"
             style={aspectRatioToStyle(16 / 9)}

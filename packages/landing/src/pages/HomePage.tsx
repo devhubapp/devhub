@@ -6,11 +6,14 @@ import LandingLayout from '../components/layouts/LandingLayout'
 import FeaturesBlock from '../components/sections/features/FeaturesBlock'
 import GetStartedBlock from '../components/sections/GetStartedBlock'
 import UsedByCompaniesBlock from '../components/sections/UsedByCompaniesBlock'
-import { aspectRatioToStyle } from '../helpers'
+import { aspectRatioToStyle, getSystemLabel } from '../helpers'
+import { useSystem } from '../hooks/use-system'
 
 export interface HomePageProps {}
 
 export default function HomePage(_props: HomePageProps) {
+  const { category, os } = useSystem()
+
   return (
     <LandingLayout>
       <section id="homepage">
@@ -23,23 +26,53 @@ export default function HomePage(_props: HomePageProps) {
 
               <h2>
                 Manage notifications; Filter repository activities; Filter
-                Issues&nbsp;&amp;&nbsp;Pull&nbsp;Requests; Save custom searches;
-                Enable Push&nbsp;Notifications for only what you want.
+                Issues &amp; Pull Requests; Save custom searches; Enable Push
+                Notifications for only what you want.
               </h2>
             </div>
 
             <div className="flex flex-row flex-wrap mb-4">
-              <Button
-                type="primary"
-                href="/download?auto"
-                className="mb-1 md:mb-2 mr-2"
-              >
-                Download for macOS ↓
-              </Button>
+              {os ? (
+                <>
+                  <Button
+                    type="primary"
+                    href="/download?autostart"
+                    className="mb-2 mr-2"
+                  >
+                    {`Download for ${getSystemLabel(os)}`}
+                  </Button>
 
-              <Button type="neutral" href="/download" className="mb-2">
-                Other downloads
-              </Button>
+                  {category === 'desktop' ? (
+                    <Button type="neutral" href="/download" className="mb-2">
+                      Other downloads
+                    </Button>
+                  ) : (
+                    <Button
+                      type="neutral"
+                      href="https://app.devhubapp.com/"
+                      target="_top"
+                      className="mb-2"
+                    >
+                      Use web version
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Button type="primary" href="/download" className="mb-2 mr-2">
+                    Download the app
+                  </Button>
+
+                  <Button
+                    type="neutral"
+                    href="https://app.devhubapp.com/"
+                    target="_top"
+                    className="mb-2"
+                  >
+                    Use web version
+                  </Button>
+                </>
+              )}
             </div>
 
             <CheckLabels>

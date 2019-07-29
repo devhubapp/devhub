@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import CheckLabel from '../../common/CheckLabel'
 import { CheckLabels } from '../../common/CheckLabels'
-import FeatureBlock from './FeatureBlock'
+import FeatureBlock from './DownloadBlock'
 
 export interface FeaturesBlockProps {}
 
@@ -31,14 +31,14 @@ export default function FeaturesBlock(_props: FeaturesBlockProps) {
       >
         <CheckLabels>
           <a
-            href="https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=devhub_landing_page"
+            href="https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=devhub_landing_features"
             target="_blank"
           >
             <CheckLabel label="iOS" />
           </a>
 
           <a
-            href="https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=devhub_landing_page"
+            href="https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=devhub_landing_features"
             target="_blank"
           >
             <CheckLabel label="Android" />
