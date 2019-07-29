@@ -19,7 +19,7 @@ export default function Header() {
               twClasses.headerLink__rightMargin,
             )}
           >
-            <div className="w-8 h-8 sm:mr-3 bg-primary rounded-full" />
+            <div className="w-8 h-8 mr-6 sm:mr-3 bg-primary rounded-full" />
             <span className="text-lg text-default font-semibold hidden sm:inline-block">
               DevHub
             </span>

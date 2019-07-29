@@ -1,3 +1,8 @@
+* {
+  transition: all 0.2s ease-out;
+  transition-property: background-color, border-color, color, opacity, top, bottom, left, right, width, height, margin, padding, transform;
+}
+
 html, body {
   width: 100%;
   overflow-x: hidden;
@@ -21,6 +26,7 @@ body {
 .light-theme .hide-light-theme,
 .light-theme .show-dark-theme:not(.show-light-theme) {
   display: none;
+  pointer-events: none;
 }
 
 .dark-theme .invisible-dark-theme,
@@ -28,6 +34,7 @@ body {
 .light-theme .hide-light-theme,
 .light-theme .visible-dark-theme:not(.visible-light-theme) {
   opacity: 0;
+  pointer-events: none;
 }
 
 a {
