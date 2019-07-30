@@ -11,7 +11,6 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallerTextSize } from '../../styles/variables'
-import { AccordionView } from '../common/AccordionView'
 import { Checkbox, defaultCheckboxSize } from '../common/Checkbox'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
@@ -25,13 +24,13 @@ import { sharedColumnOptionsStyles } from './options/shared'
 
 export interface ColumnOptionsProps {
   columnId: Column['id']
-  isOpen: boolean
+  isOpen?: boolean
 }
 
 export type ColumnOptionCategory = 'badge'
 
-export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
-  const { columnId, isOpen } = props
+export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
+  const { columnId } = props
 
   const dispatch = useDispatch()
   const columnIds = useReduxState(selectors.columnIdsSelector)
@@ -43,225 +42,222 @@ export const ColumnOptions = React.memo((props: ColumnOptionsProps) => {
   if (!column) return null
 
   return (
-    <AccordionView isOpen={isOpen}>
-      <ThemedView
-        backgroundColor="backgroundColorDarker1"
-        style={sharedStyles.fullWidth}
-      >
-        <Spacer height={contentPadding} />
+    <ThemedView
+      backgroundColor="backgroundColorDarker1"
+      style={sharedStyles.fullWidth}
+    >
+      <Spacer height={contentPadding} />
 
+      <Checkbox
+        analyticsLabel="column_option_in_app_unread_indicator"
+        checked={getColumnOption(
+          column,
+          'enableInAppUnreadIndicator',
+          Platform.OS,
+        )}
+        containerStyle={
+          sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
+        }
+        defaultValue
+        squareContainerStyle={sharedColumnOptionsStyles.checkboxSquareContainer}
+        enableIndeterminateState={false}
+        label={`Show unread indicator at ${
+          appOrientation === 'portrait' ? 'bottom bar' : 'sidebar'
+        }`}
+        onChange={value => {
+          dispatch(
+            actions.setColumnOption({
+              columnId,
+              option: 'enableInAppUnreadIndicator',
+              value,
+            }),
+          )
+        }}
+      />
+
+      {Platform.realOS === 'web' && (
         <Checkbox
-          analyticsLabel="column_option_in_app_unread_indicator"
+          analyticsLabel="column_option_app_icon_unread_indicator"
           checked={getColumnOption(
             column,
-            'enableInAppUnreadIndicator',
+            'enableAppIconUnreadIndicator',
             Platform.OS,
           )}
           containerStyle={
             sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
           }
-          defaultValue
+          defaultValue={column.type === 'notifications'}
           squareContainerStyle={
             sharedColumnOptionsStyles.checkboxSquareContainer
           }
           enableIndeterminateState={false}
-          label={`Show unread indicator at ${
-            appOrientation === 'portrait' ? 'bottom bar' : 'sidebar'
+          label={`Show unread counter on ${
+            Platform.OS === 'web' && !Platform.isElectron
+              ? 'page title'
+              : 'app icon'
           }`}
           onChange={value => {
             dispatch(
               actions.setColumnOption({
                 columnId,
-                option: 'enableInAppUnreadIndicator',
+                option: 'enableAppIconUnreadIndicator',
                 value,
               }),
             )
           }}
         />
+      )}
 
-        {Platform.realOS === 'web' && (
-          <Checkbox
-            analyticsLabel="column_option_app_icon_unread_indicator"
-            checked={getColumnOption(
-              column,
-              'enableAppIconUnreadIndicator',
-              Platform.OS,
-            )}
-            containerStyle={
-              sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
-            }
-            defaultValue={column.type === 'notifications'}
-            squareContainerStyle={
-              sharedColumnOptionsStyles.checkboxSquareContainer
-            }
-            enableIndeterminateState={false}
-            label={`Show unread counter on ${
-              Platform.OS === 'web' && !Platform.isElectron
-                ? 'page title'
-                : 'app icon'
-            }`}
-            onChange={value => {
-              dispatch(
-                actions.setColumnOption({
-                  columnId,
-                  option: 'enableAppIconUnreadIndicator',
-                  value,
-                }),
-              )
-            }}
-          />
-        )}
+      <Checkbox
+        analyticsLabel="column_option_push_notification"
+        checked={false}
+        containerStyle={
+          sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
+        }
+        defaultValue={false}
+        disabled
+        squareContainerStyle={sharedColumnOptionsStyles.checkboxSquareContainer}
+        enableIndeterminateState={false}
+        label={
+          <Link
+            analyticsLabel="column_option_push_notification_soon_link"
+            openOnNewTab
+            href="https://github.com/devhubapp/devhub/issues/51"
+            style={sharedStyles.flex}
+          >
+            <ThemedText
+              color="foregroundColor"
+              numberOfLines={1}
+              style={[sharedStyles.flex, { lineHeight: defaultCheckboxSize }]}
+            >
+              Enable push notifications
+            </ThemedText>
+          </Link>
+        }
+        onChange={_checked => {
+          // dispatch(
+          //   actions.setColumnOption({
+          //     columnId,
+          //     option: 'enablePushNotifications',
+          //     value,
+          //   }),
+          // )
+        }}
+        right={
+          <Link
+            analyticsLabel="column_option_push_notification_soon_link"
+            openOnNewTab
+            href="https://github.com/devhubapp/devhub/issues/51"
+          >
+            <ThemedText
+              color="foregroundColor"
+              style={{ fontSize: smallerTextSize }}
+            >
+              SOON
+            </ThemedText>
+          </Link>
+        }
+      />
 
-        <Checkbox
-          analyticsLabel="column_option_push_notification"
-          checked={false}
-          containerStyle={
-            sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
+      <View
+        style={[
+          sharedStyles.horizontal,
+          { paddingHorizontal: contentPadding / 2 },
+        ]}
+      >
+        <ColumnHeaderItem
+          key="column-options-button-move-column-left"
+          analyticsLabel="move_column_left"
+          enableForegroundHover
+          disabled={columnIndex === 0 && Platform.realOS === 'web'}
+          fixedIconSize
+          iconName={
+            appOrientation === 'landscape' && appViewMode === 'single-column'
+              ? 'chevron-up'
+              : 'chevron-left'
           }
-          defaultValue={false}
-          disabled
-          squareContainerStyle={
-            sharedColumnOptionsStyles.checkboxSquareContainer
+          onPress={() =>
+            dispatch(
+              actions.moveColumn({
+                animated: appViewMode === 'multi-column',
+                columnId,
+                columnIndex: columnIndex - 1,
+                highlight: appViewMode === 'multi-column' || columnIndex === 0,
+                scrollTo: true,
+              }),
+            )
           }
-          enableIndeterminateState={false}
-          label={
-            <Link
-              analyticsLabel="column_option_push_notification_soon_link"
-              openOnNewTab
-              href="https://github.com/devhubapp/devhub/issues/51"
-              style={sharedStyles.flex}
-            >
-              <ThemedText
-                color="foregroundColor"
-                numberOfLines={1}
-                style={[sharedStyles.flex, { lineHeight: defaultCheckboxSize }]}
-              >
-                Enable push notifications
-              </ThemedText>
-            </Link>
-          }
-          onChange={_checked => {
-            // dispatch(
-            //   actions.setColumnOption({
-            //     columnId,
-            //     option: 'enablePushNotifications',
-            //     value,
-            //   }),
-            // )
-          }}
-          right={
-            <Link
-              analyticsLabel="column_option_push_notification_soon_link"
-              openOnNewTab
-              href="https://github.com/devhubapp/devhub/issues/51"
-            >
-              <ThemedText
-                color="foregroundColor"
-                style={{ fontSize: smallerTextSize }}
-              >
-                SOON
-              </ThemedText>
-            </Link>
+          style={{ opacity: columnIndex === 0 ? 0.5 : 1 }}
+          tooltip={
+            appOrientation === 'landscape' && appViewMode === 'single-column'
+              ? `Move column up (${
+                  keyboardShortcutsById.moveColumnLeft.keys[0]
+                })`
+              : `Move column left (${
+                  keyboardShortcutsById.moveColumnLeft.keys[0]
+                })`
           }
         />
 
-        <View
-          style={[
-            sharedStyles.horizontal,
-            { paddingHorizontal: contentPadding / 2 },
-          ]}
-        >
-          <ColumnHeaderItem
-            key="column-options-button-move-column-left"
-            analyticsLabel="move_column_left"
-            enableForegroundHover
-            disabled={columnIndex === 0 && Platform.realOS === 'web'}
-            fixedIconSize
-            iconName={
-              appOrientation === 'landscape' && appViewMode === 'single-column'
-                ? 'chevron-up'
-                : 'chevron-left'
-            }
-            onPress={() =>
-              dispatch(
-                actions.moveColumn({
-                  animated: appViewMode === 'multi-column',
-                  columnId,
-                  columnIndex: columnIndex - 1,
-                  highlight:
-                    appViewMode === 'multi-column' || columnIndex === 0,
-                  scrollTo: true,
-                }),
-              )
-            }
-            style={{ opacity: columnIndex === 0 ? 0.5 : 1 }}
-            tooltip={
-              appOrientation === 'landscape' && appViewMode === 'single-column'
-                ? `Move column up (${
-                    keyboardShortcutsById.moveColumnLeft.keys[0]
-                  })`
-                : `Move column left (${
-                    keyboardShortcutsById.moveColumnLeft.keys[0]
-                  })`
-            }
-          />
+        <ColumnHeaderItem
+          key="column-options-button-move-column-right"
+          analyticsLabel="move_column_right"
+          enableForegroundHover
+          disabled={
+            columnIndex === columnIds.length - 1 && Platform.realOS === 'web'
+          }
+          fixedIconSize
+          iconName={
+            appOrientation === 'landscape' && appViewMode === 'single-column'
+              ? 'chevron-down'
+              : 'chevron-right'
+          }
+          onPress={() =>
+            dispatch(
+              actions.moveColumn({
+                animated: appViewMode === 'multi-column',
+                columnId,
+                columnIndex: columnIndex + 1,
+                highlight:
+                  appViewMode === 'multi-column' ||
+                  columnIndex === columnIds.length - 1,
+                scrollTo: true,
+              }),
+            )
+          }
+          style={{
+            opacity: columnIndex === columnIds.length - 1 ? 0.5 : 1,
+          }}
+          tooltip={
+            appOrientation === 'landscape' && appViewMode === 'single-column'
+              ? `Move column down (${
+                  keyboardShortcutsById.moveColumnRight.keys[0]
+                })`
+              : `Move column right (${
+                  keyboardShortcutsById.moveColumnRight.keys[0]
+                })`
+          }
+        />
 
-          <ColumnHeaderItem
-            key="column-options-button-move-column-right"
-            analyticsLabel="move_column_right"
-            enableForegroundHover
-            disabled={
-              columnIndex === columnIds.length - 1 && Platform.realOS === 'web'
-            }
-            fixedIconSize
-            iconName={
-              appOrientation === 'landscape' && appViewMode === 'single-column'
-                ? 'chevron-down'
-                : 'chevron-right'
-            }
-            onPress={() =>
-              dispatch(
-                actions.moveColumn({
-                  animated: appViewMode === 'multi-column',
-                  columnId,
-                  columnIndex: columnIndex + 1,
-                  highlight:
-                    appViewMode === 'multi-column' ||
-                    columnIndex === columnIds.length - 1,
-                  scrollTo: true,
-                }),
-              )
-            }
-            style={{ opacity: columnIndex === columnIds.length - 1 ? 0.5 : 1 }}
-            tooltip={
-              appOrientation === 'landscape' && appViewMode === 'single-column'
-                ? `Move column down (${
-                    keyboardShortcutsById.moveColumnRight.keys[0]
-                  })`
-                : `Move column right (${
-                    keyboardShortcutsById.moveColumnRight.keys[0]
-                  })`
-            }
-          />
+        <Spacer flex={1} />
 
-          <Spacer flex={1} />
+        <ColumnHeaderItem
+          key="column-options-button-remove-column"
+          analyticsLabel="remove_column"
+          enableForegroundHover
+          fixedIconSize
+          iconName="trashcan"
+          onPress={() =>
+            dispatch(actions.deleteColumn({ columnId, columnIndex }))
+          }
+          text=""
+          tooltip="Remove column"
+        />
+      </View>
 
-          <ColumnHeaderItem
-            key="column-options-button-remove-column"
-            analyticsLabel="remove_column"
-            enableForegroundHover
-            fixedIconSize
-            iconName="trashcan"
-            onPress={() =>
-              dispatch(actions.deleteColumn({ columnId, columnIndex }))
-            }
-            text=""
-            tooltip="Remove column"
-          />
-        </View>
-
-        <Separator horizontal />
-      </ThemedView>
-    </AccordionView>
+      <Separator horizontal />
+    </ThemedView>
   )
 })
+
+ColumnOptions.displayName = 'ColumnOptions'

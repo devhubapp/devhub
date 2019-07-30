@@ -1,5 +1,5 @@
 import { getLuminance } from 'polished'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
 import {
@@ -44,7 +44,7 @@ import { Column } from './Column'
 import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
-import { ColumnOptions } from './ColumnOptions'
+import { ColumnOptionsAccordion } from './ColumnOptionsAccordion'
 import { getColumnSeparatorSize } from './ColumnSeparator'
 
 export function getColumnCardThemeColors(
@@ -136,8 +136,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     title,
   } = props
 
+  const columnOptionsRef = useRef<{ toggle: () => void }>(null)
+
   const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
-  const [showColumnOptions, setShowColumnOptions] = useState(false)
 
   const {
     enableSharedFiltersView,
@@ -244,8 +245,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   }
 
   const toggleOptions = () => {
+    if (!columnOptionsRef.current) return
+
     focusColumn()
-    setShowColumnOptions(v => !v)
+    columnOptionsRef.current.toggle()
   }
 
   const hasOneUnreadItem = (filteredItems as any[]).some(
@@ -449,7 +452,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 analyticsLabel="column_options"
                 enableForegroundHover
                 fixedIconSize
-                forceHoverState={showColumnOptions}
                 iconName="gear"
                 onPress={toggleOptions}
                 style={{
@@ -459,7 +461,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               />
             </ColumnHeader>
 
-            <ColumnOptions columnId={column.id} isOpen={showColumnOptions} />
+            <ColumnOptionsAccordion
+              ref={columnOptionsRef}
+              columnId={column.id}
+            />
 
             {!inlineMode && !enableSharedFiltersView && (
               <ColumnFiltersRenderer

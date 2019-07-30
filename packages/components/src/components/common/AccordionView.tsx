@@ -74,6 +74,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
           (value: number | 'auto') =>
             value === 'auto' || value > 0 ? 'visible' : 'hidden',
         ),
+        ['willChange' as any]: 'height',
       }}
     >
       {Platform.OS === 'web' ? (
