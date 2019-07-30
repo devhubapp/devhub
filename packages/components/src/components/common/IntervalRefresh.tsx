@@ -1,5 +1,5 @@
 import moment, { MomentInput } from 'moment'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export interface IntervalRefreshProps {
   children: () => any
@@ -46,12 +46,16 @@ export function IntervalRefresh(props: IntervalRefreshProps) {
 
   const [, setUpdatedTimes] = useState(0)
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setUpdatedTimes(prevValue => prevValue + 1)
-    }, interval)
+  const timerRef = useRef(-1)
 
-    return () => clearInterval(timer)
+  useEffect(() => {
+    clearInterval(timerRef.current)
+
+    timerRef.current = (setInterval(() => {
+      setUpdatedTimes(prevValue => prevValue + 1)
+    }, interval) as any) as number
+
+    return () => clearInterval(timerRef.current)
   }, [interval])
 
   return children()
