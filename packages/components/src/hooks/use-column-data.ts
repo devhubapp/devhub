@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react'
 
 import { EnhancedItem, getFilteredItems } from '@devhub/core'
 import * as selectors from '../redux/selectors'
+import { EMPTY_ARRAY } from '../utils/constants'
 import { useReduxState } from './use-redux-state'
 
 export function useColumnData<ItemT extends EnhancedItem>(
@@ -22,7 +23,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
 
   const subscriptionsDataSelector = useMemo(
     selectors.createSubscriptionsDataSelector,
-    [],
+    [columnId],
   )
 
   const column = useReduxState(
@@ -32,7 +33,10 @@ export function useColumnData<ItemT extends EnhancedItem>(
   const allItems = useReduxState(
     useCallback(
       state => {
-        if (!column) return []
+        if (
+          !(column && column.subscriptionIds && column.subscriptionIds.length)
+        )
+          return EMPTY_ARRAY
         return subscriptionsDataSelector(state, column.subscriptionIds)
       },
       [

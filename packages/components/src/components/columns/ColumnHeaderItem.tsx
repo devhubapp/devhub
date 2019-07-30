@@ -19,6 +19,7 @@ import {
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
+import { EMPTY_OBJ } from '../../utils/constants'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { findNode } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
@@ -222,7 +223,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
 
   const _username = useReduxState(selectors.currentGitHubUsernameSelector)
 
-  const avatarProps = _avatarProps || {}
+  const avatarProps = _avatarProps || (EMPTY_OBJ as Partial<AvatarProps>)
 
   const label = `${_label || ''}`.trim()
 

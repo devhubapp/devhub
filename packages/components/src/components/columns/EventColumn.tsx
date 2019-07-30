@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { getColumnHeaderDetails } from '@devhub/core'
 import {
   EventCardsContainer,
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
-import { ColumnRenderer } from './ColumnRenderer'
+import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 
 export interface EventColumnProps
   extends Omit<
@@ -18,7 +18,36 @@ export interface EventColumnProps
 }
 
 export const EventColumn = React.memo((props: EventColumnProps) => {
-  const { column, columnIndex, headerDetails, pagingEnabled } = props
+  const {
+    column,
+    columnIndex,
+    headerDetails,
+    pagingEnabled,
+    pointerEvents,
+    swipeable,
+  } = props
+
+  const Children = useMemo<ColumnRendererProps['children']>(
+    () => ({ cardViewMode, enableCompactLabels, disableItemFocus }) => (
+      <EventCardsContainer
+        key={`event-cards-container-${column.id}`}
+        cardViewMode={cardViewMode}
+        column={column}
+        columnIndex={columnIndex}
+        disableItemFocus={disableItemFocus}
+        enableCompactLabels={enableCompactLabels}
+        pointerEvents={pointerEvents}
+        repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}
+        swipeable={swipeable}
+      />
+    ),
+    [
+      column,
+      pointerEvents,
+      swipeable,
+      headerDetails && headerDetails.repoIsKnown,
+    ],
+  )
 
   if (!headerDetails) return null
 
@@ -39,17 +68,7 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
       subtitle={headerDetails.subtitle}
       title={headerDetails.title}
     >
-      {({ cardViewMode, enableCompactLabels, disableItemFocus }) => (
-        <EventCardsContainer
-          {...props}
-          key={`event-cards-container-${column.id}`}
-          cardViewMode={cardViewMode}
-          columnIndex={columnIndex}
-          enableCompactLabels={enableCompactLabels}
-          disableItemFocus={disableItemFocus}
-          repoIsKnown={headerDetails.repoIsKnown}
-        />
-      )}
+      {Children}
     </ColumnRenderer>
   )
 })

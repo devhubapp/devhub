@@ -1,8 +1,7 @@
+import { EMPTY_OBJ } from '../../../utils/constants'
 import { RootState } from '../../types'
 
-const emptyObj = {}
-
-const s = (state: RootState) => (state.github && state.github.auth) || emptyObj
+const s = (state: RootState) => (state.github && state.github.auth) || EMPTY_OBJ
 
 export const githubAppTokenDetailsSelector = (state: RootState) => s(state).app
 

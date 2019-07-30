@@ -17,7 +17,6 @@ export interface GitHubLoginButtonProps
   onPress: () => void
   rightIcon?: GitHubIcon
   subtitle?: string
-  subtitleProps?: TextProps
   textProps?: TextProps
   title?: string
 }
@@ -68,7 +67,6 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
     leftIcon = 'mark-github',
     rightIcon = '',
     subtitle = '',
-    subtitleProps = {},
     textProps = {},
     title = '',
     ...otherProps

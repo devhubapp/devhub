@@ -2,20 +2,18 @@ import _ from 'lodash'
 import { createSelector } from 'reselect'
 
 import { Installation } from '@devhub/core'
+import { EMPTY_ARRAY, EMPTY_OBJ } from '../../../utils/constants'
 import { RootState } from '../../types'
 import { createArraySelector } from '../helpers'
 
-const emptyArray: any[] = []
-const emptyObj = {}
-
 const s = (state: RootState) =>
-  (state.github && state.github.installations) || emptyObj
+  (state.github && state.github.installations) || EMPTY_OBJ
 
 export const installationIdsSelector = (state: RootState) =>
-  s(state).allIds || emptyArray
+  s(state).allIds || EMPTY_ARRAY
 
 export const installationOwnerNamesSelector = (state: RootState) =>
-  s(state).allOwnerNames || emptyArray
+  s(state).allOwnerNames || EMPTY_ARRAY
 
 export const installationsLastFetchedAtSelector = (state: RootState) =>
   s(state).lastFetchedAt
@@ -32,7 +30,7 @@ export const installationsArrSelector = createArraySelector(
   (ids, byId) =>
     (byId && ids
       ? ids.map(id => byId[id]).filter(Boolean)
-      : emptyArray) as Installation[],
+      : EMPTY_ARRAY) as Installation[],
 )
 
 export const installationByOwnerSelector = createSelector(

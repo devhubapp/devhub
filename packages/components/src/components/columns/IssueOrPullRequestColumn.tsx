@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { getColumnHeaderDetails } from '@devhub/core'
 import {
   IssueOrPullRequestCardsContainer,
   IssueOrPullRequestCardsContainerProps,
 } from '../../containers/IssueOrPullRequestCardsContainer'
-import { ColumnRenderer } from './ColumnRenderer'
+import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 
 export interface IssueOrPullRequestColumnProps
   extends Omit<
@@ -19,7 +19,39 @@ export interface IssueOrPullRequestColumnProps
 
 export const IssueOrPullRequestColumn = React.memo(
   (props: IssueOrPullRequestColumnProps) => {
-    const { column, columnIndex, headerDetails, pagingEnabled } = props
+    const {
+      column,
+      columnIndex,
+      headerDetails,
+      isPrivate,
+      pagingEnabled,
+      pointerEvents,
+      swipeable,
+    } = props
+
+    const Children = useMemo<ColumnRendererProps['children']>(
+      () => ({ cardViewMode, enableCompactLabels, disableItemFocus }) => (
+        <IssueOrPullRequestCardsContainer
+          key={`issue-or-pr-cards-container-${column.id}`}
+          cardViewMode={cardViewMode}
+          column={column}
+          columnIndex={columnIndex}
+          disableItemFocus={disableItemFocus}
+          enableCompactLabels={enableCompactLabels}
+          isPrivate={isPrivate}
+          pointerEvents={pointerEvents}
+          repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}
+          swipeable={swipeable}
+        />
+      ),
+      [
+        column,
+        isPrivate,
+        pointerEvents,
+        swipeable,
+        headerDetails && headerDetails.repoIsKnown,
+      ],
+    )
 
     if (!headerDetails) return null
 
@@ -40,17 +72,7 @@ export const IssueOrPullRequestColumn = React.memo(
         subtitle={headerDetails.subtitle}
         title={headerDetails.title}
       >
-        {({ cardViewMode, disableItemFocus, enableCompactLabels }) => (
-          <IssueOrPullRequestCardsContainer
-            {...props}
-            key={`issue-or-pr-cards-container-${column.id}`}
-            cardViewMode={cardViewMode}
-            columnIndex={columnIndex}
-            disableItemFocus={disableItemFocus}
-            enableCompactLabels={enableCompactLabels}
-            repoIsKnown={headerDetails.repoIsKnown}
-          />
-        )}
+        {Children}
       </ColumnRenderer>
     )
   },

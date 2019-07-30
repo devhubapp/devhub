@@ -11,3 +11,5 @@ export const Spacer = React.memo((props: SpacerProps) => {
   const { pointerEvents = 'none', ...style } = props
   return <View style={style} pointerEvents={pointerEvents} />
 })
+
+Spacer.displayName = 'Spacer'

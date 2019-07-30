@@ -12,6 +12,7 @@ import {
   IssueOrPullRequestColumnFilters,
   NotificationColumnFilters,
 } from '../types'
+import { constants } from '../utils'
 import {
   getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
@@ -587,6 +588,7 @@ export function getFilteredEvents(
   },
 ) {
   let _events = sortEvents(events)
+  if (!(_events && _events.length)) return constants.EMPTY_ARRAY
 
   const actionFilter = filters && filters.activity && filters.activity.actions
 

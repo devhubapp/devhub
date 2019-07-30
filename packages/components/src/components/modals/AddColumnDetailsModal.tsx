@@ -39,6 +39,7 @@ import {
   smallerTextSize,
   smallTextSize,
 } from '../../styles/variables'
+import { EMPTY_ARRAY } from '../../utils/constants'
 import { ColumnOptionsInboxContent } from '../columns/ColumnOptionsInbox'
 import { ModalColumn } from '../columns/ModalColumn'
 import { sharedColumnOptionsStyles } from '../columns/options/shared'
@@ -736,7 +737,7 @@ function getFormItems({
           return ['org']
 
         case 'PUBLIC_EVENTS':
-          return []
+          return EMPTY_ARRAY
 
         case 'REPO_EVENTS':
           return ['repo']
@@ -760,12 +761,12 @@ function getFormItems({
           return ['user']
 
         default:
-          return []
+          return EMPTY_ARRAY
       }
     }
 
     default:
-      return []
+      return EMPTY_ARRAY
   }
 }
 

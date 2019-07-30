@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import * as selectors from '../redux/selectors'
 import { useReduxState } from './use-redux-state'
@@ -13,11 +13,16 @@ export function useColumn(columnId: string) {
     columnId,
   )
 
+  const columnHeaderDetailsSelector = useMemo(
+    () => selectors.createColumnHeaderDetailsSelector(),
+    [columnId],
+  )
+
   const headerDetails = useReduxState(
-    useCallback(
-      state => selectors.columnHeaderDetailsSelector(state, columnId),
-      [columnId],
-    ),
+    useCallback(state => columnHeaderDetailsSelector(state, columnId), [
+      columnHeaderDetailsSelector,
+      columnId,
+    ]),
   )
 
   return {

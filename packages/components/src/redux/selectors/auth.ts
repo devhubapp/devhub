@@ -1,9 +1,8 @@
+import { EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { githubAppTokenSelector, githubOAuthTokenSelector } from './github/auth'
 
-const emptyObj = {}
-
-const s = (state: RootState) => state.auth || emptyObj
+const s = (state: RootState) => state.auth || EMPTY_OBJ
 
 export const authErrorSelector = (state: RootState) => s(state).error
 

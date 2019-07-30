@@ -1,4 +1,4 @@
-import { ThemePair } from '../types'
+import { ThemeName, ThemePair } from '../types'
 
 const pkg = require('../../package.json') // tslint:disable-line
 
@@ -24,8 +24,8 @@ export const DISABLE_ANIMATIONS = false
 export const DISABLE_SWIPEABLE_CARDS = true
 export const DISABLE_SINGLE_COLUMN = false
 
-export const DEFAULT_DARK_THEME = 'dark-gray'
-export const DEFAULT_LIGHT_THEME = 'light-blue'
+export const DEFAULT_DARK_THEME: ThemeName = 'dark-gray'
+export const DEFAULT_LIGHT_THEME: ThemeName = 'light-white'
 export const DEFAULT_THEME_PAIR: ThemePair = {
   id: DEFAULT_DARK_THEME,
   color: '',
@@ -48,3 +48,9 @@ export const APP_DEEP_LINK_URLS = {
   preferences: `${APP_DEEP_LINK_SCHEMA}://preferences`,
   redux_action: `${APP_DEEP_LINK_SCHEMA}://action`,
 }
+
+// prettier-ignore
+export const EMPTY_ARRAY = Object.freeze([]) as []
+
+// prettier-ignore
+export const EMPTY_OBJ = Object.freeze({}) as {}

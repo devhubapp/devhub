@@ -1,3 +1,4 @@
+import immer from 'immer'
 import _ from 'lodash'
 import moment from 'moment'
 
@@ -26,6 +27,7 @@ import {
   MultipleStarEvent,
   ThemeColors,
 } from '../../types'
+import { constants } from '../../utils'
 import { isEventPrivate } from '../shared'
 import {
   getBranchNameFromRef,
@@ -82,7 +84,7 @@ export function getOlderEventDate(
   events: EnhancedGitHubEvent[],
   field: keyof EnhancedGitHubEvent = 'created_at',
 ) {
-  const olderItem = sortEvents(events, field, 'desc').pop()
+  const olderItem = sortEvents(events, field, 'desc').slice(-1)[0]
   return olderItem && olderItem[field]
 }
 
@@ -661,7 +663,9 @@ export function mergeSimilarEvents(
 
   if (enhancedEvent) enhancedEvents.push(enhancedEvent)
 
-  return enhancedEvents.length === events.length ? events : enhancedEvents
+  const result =
+    enhancedEvents.length === events.length ? events : enhancedEvents
+  return result && result.length ? result : constants.EMPTY_ARRAY
 }
 
 export function isBranchMainEvent(event: EnhancedGitHubEvent) {
@@ -683,8 +687,9 @@ export function sortEvents(
   events: EnhancedGitHubEvent[] | undefined,
   field: keyof EnhancedGitHubEvent = 'created_at',
   order: 'asc' | 'desc' = 'desc',
-) {
-  if (!events) return []
+): EnhancedGitHubEvent[] {
+  if (!(events && events.length)) return constants.EMPTY_ARRAY
+
   return _(events)
     .uniqBy('id')
     .orderBy(field, order)
@@ -869,12 +874,14 @@ export function mergeEventPreservingEnhancement(
     unread: existingItem.unread,
   }
 
-  const mergedItem: EnhancedGitHubEvent = {
-    ...enhancements,
-    ...newItem,
-  }
-
-  return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
+  return immer(newItem, draft => {
+    Object.entries(enhancements).forEach(([key, value]) => {
+      if (typeof value === 'undefined') return
+      if (value === (draft as any)[key]) return
+      if (typeof (draft as any)[key] !== 'undefined') return
+      ;(draft as any)[key] = value
+    })
+  })
 }
 
 export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {

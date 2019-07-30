@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { getColumnHeaderDetails } from '@devhub/core'
 import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
-import { ColumnRenderer } from './ColumnRenderer'
+import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 
 export interface NotificationColumnProps
   extends Omit<
@@ -19,7 +19,37 @@ export interface NotificationColumnProps
 
 export const NotificationColumn = React.memo(
   (props: NotificationColumnProps) => {
-    const { column, columnIndex, headerDetails, pagingEnabled } = props
+    const {
+      column,
+      columnIndex,
+      headerDetails,
+      pagingEnabled,
+      pointerEvents,
+      swipeable,
+    } = props
+
+    const Children = useMemo<ColumnRendererProps['children']>(
+      () => ({ cardViewMode, enableCompactLabels, disableItemFocus }) => (
+        <NotificationCardsContainer
+          key={`notification-cards-container-${column.id}`}
+          cardViewMode={cardViewMode}
+          column={column}
+          columnIndex={columnIndex}
+          disableItemFocus={disableItemFocus}
+          enableCompactLabels={enableCompactLabels}
+          pointerEvents={pointerEvents}
+          swipeable={swipeable}
+          repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}
+        />
+      ),
+      [
+        column,
+        columnIndex,
+        pointerEvents,
+        swipeable,
+        headerDetails && headerDetails.repoIsKnown,
+      ],
+    )
 
     if (!headerDetails) return null
 
@@ -40,17 +70,7 @@ export const NotificationColumn = React.memo(
         subtitle={headerDetails.subtitle}
         title={headerDetails.title}
       >
-        {({ cardViewMode, disableItemFocus, enableCompactLabels }) => (
-          <NotificationCardsContainer
-            {...props}
-            key={`notification-cards-container-${column.id}`}
-            cardViewMode={cardViewMode}
-            columnIndex={columnIndex}
-            disableItemFocus={disableItemFocus}
-            enableCompactLabels={enableCompactLabels}
-            repoIsKnown={headerDetails.repoIsKnown}
-          />
-        )}
+        {Children}
       </ColumnRenderer>
     )
   },

@@ -1,5 +1,5 @@
+import { EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 
-const emptyObj = {}
-
-export const countersSelector = (state: RootState) => state.counters || emptyObj
+export const countersSelector = (state: RootState) =>
+  state.counters || EMPTY_OBJ

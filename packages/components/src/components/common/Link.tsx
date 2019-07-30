@@ -13,6 +13,7 @@ import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
+import { EMPTY_OBJ } from '../../utils/constants'
 import { findNode } from '../../utils/helpers/shared'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
@@ -63,9 +64,10 @@ export function Link(props: LinkProps) {
   const analyticsLabel = _analyticsLabel && _analyticsLabel.replace(/-/g, '_')
 
   const flatContainerStyle =
-    StyleSheet.flatten([{ maxWidth: '100%' }, otherProps.style]) || {}
+    StyleSheet.flatten([{ maxWidth: '100%' }, otherProps.style]) || EMPTY_OBJ
 
-  const flatTextStyle = StyleSheet.flatten([textProps && textProps.style]) || {}
+  const flatTextStyle =
+    StyleSheet.flatten([textProps && textProps.style]) || EMPTY_OBJ
 
   const openOnNewTab = _openOnNewTab || Platform.isElectron
 

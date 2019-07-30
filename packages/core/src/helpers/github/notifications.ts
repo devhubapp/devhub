@@ -1,4 +1,5 @@
 import axios from 'axios'
+import immer from 'immer'
 import _ from 'lodash'
 
 import {
@@ -15,6 +16,7 @@ import {
   NotificationPayloadEnhancement,
   ThemeColors,
 } from '../../types'
+import { constants } from '../../utils'
 import { capitalize, isNotificationPrivate } from '../shared'
 import {
   getCommitIconAndColor,
@@ -251,7 +253,7 @@ export function mergeNotificationPreservingEnhancement(
 
   const latestDate = _.max([lastReadAt, lastUnreadAt, newItem.updated_at])
 
-  const enhancements: Record<
+  const preEnhancements: Record<
     keyof Omit<EnhancedGitHubNotification, keyof GitHubNotification>,
     any
   > = {
@@ -271,16 +273,27 @@ export function mergeNotificationPreservingEnhancement(
     saved: existingItem.saved,
   }
 
-  const mergedItem: EnhancedGitHubNotification = {
-    ...enhancements,
-    ...newItem,
-    forceUnreadLocally: enhancements.forceUnreadLocally,
+  const postEnhancements = {
+    forceUnreadLocally: preEnhancements.forceUnreadLocally,
     last_read_at: lastReadAt,
-    last_unread_at: enhancements.last_unread_at,
+    last_unread_at: preEnhancements.last_unread_at,
     updated_at: _.max([existingItem.updated_at, newItem.updated_at])!,
   }
 
-  return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
+  return immer(newItem, draft => {
+    Object.entries(preEnhancements).forEach(([key, value]) => {
+      if (typeof value === 'undefined') return
+      if (value === (draft as any)[key]) return
+      if (typeof (draft as any)[key] !== 'undefined') return
+      ;(draft as any)[key] = value
+    })
+
+    Object.entries(postEnhancements).forEach(([key, value]) => {
+      if (typeof value === 'undefined') return
+      if (value === (draft as any)[key]) return
+      ;(draft as any)[key] = value
+    })
+  })
 }
 
 export async function getNotificationsEnhancementMap(
@@ -423,6 +436,8 @@ export function enhanceNotifications(
   enhancementMap: Record<string, NotificationPayloadEnhancement>,
   currentEnhancedNotifications: EnhancedGitHubNotification[] = [],
 ) {
+  if (!(notifications && notifications.length)) return constants.EMPTY_ARRAY
+
   return notifications.map(item => {
     const enhanced = currentEnhancedNotifications.find(n => n.id === item.id)
 
@@ -442,7 +457,7 @@ export function enhanceNotifications(
 export function getOlderNotificationDate(
   notifications: EnhancedGitHubNotification[],
 ) {
-  const olderItem = sortNotifications(notifications).pop()
+  const olderItem = sortNotifications(notifications).slice(-1)[0]
   return olderItem && olderItem.updated_at
 }
 
@@ -476,7 +491,7 @@ export function createNotificationsCache(
 export function sortNotifications(
   notifications: EnhancedGitHubNotification[] | undefined,
 ) {
-  if (!notifications) return []
+  if (!(notifications && notifications.length)) return constants.EMPTY_ARRAY
 
   return _(notifications)
     .uniqBy('id')

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import immer from 'immer'
 import _ from 'lodash'
 
 import {
@@ -12,6 +13,7 @@ import {
   IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestPayloadEnhancement,
 } from '../../types'
+import { constants } from '../../utils'
 import {
   filterRecordHasAnyForcedValue,
   getOwnerAndRepoFormattedFilter,
@@ -90,13 +92,16 @@ export function mergeIssueOrPullRequestPreservingEnhancement(
     unread: existingItem.unread,
   }
 
-  const mergedItem: EnhancedGitHubIssueOrPullRequest = {
-    ...enhancements,
-    ...newItem,
-    updated_at: _.max([existingItem.updated_at, newItem.updated_at])!,
-  }
+  return immer(newItem, draft => {
+    Object.entries(enhancements).forEach(([key, value]) => {
+      if (typeof value === 'undefined') return
+      if (value === (draft as any)[key]) return
+      if (typeof (draft as any)[key] !== 'undefined') return
+      ;(draft as any)[key] = value
+    })
 
-  return _.isEqual(mergedItem, existingItem) ? existingItem : mergedItem
+    draft.updated_at = _.max([existingItem.updated_at, newItem.updated_at])!
+  })
 }
 
 export function getIssueOrPullRequestState(
@@ -134,7 +139,7 @@ export function getOlderIssueOrPullRequestDate(
   events: EnhancedGitHubIssueOrPullRequest[],
   field: keyof EnhancedGitHubIssueOrPullRequest = 'updated_at',
 ) {
-  const olderItem = sortIssuesOrPullRequests(events, field, 'desc').pop()
+  const olderItem = sortIssuesOrPullRequests(events, field, 'desc').slice(-1)[0]
   return olderItem && olderItem[field]
 }
 
@@ -250,6 +255,8 @@ export function enhanceIssueOrPullRequests(
   enhancementMap: Record<string, IssueOrPullRequestPayloadEnhancement>,
   currentEnhancedIssueOrPullRequests: EnhancedGitHubIssueOrPullRequest[] = [],
 ) {
+  if (!(items && items.length)) return constants.EMPTY_ARRAY
+
   return items.map(item => {
     const enhanced = currentEnhancedIssueOrPullRequests.find(
       i => i.id === item.id,
@@ -269,12 +276,13 @@ export function enhanceIssueOrPullRequests(
 }
 
 export function sortIssuesOrPullRequests(
-  events: EnhancedGitHubIssueOrPullRequest[] | undefined,
+  items: EnhancedGitHubIssueOrPullRequest[] | undefined,
   field: keyof EnhancedGitHubIssueOrPullRequest = 'updated_at',
   order: 'asc' | 'desc' = 'desc',
 ) {
-  if (!events) return []
-  return _(events)
+  if (!(items && items.length)) return constants.EMPTY_ARRAY
+
+  return _(items)
     .uniqBy('id')
     .orderBy(field, order)
     .value()

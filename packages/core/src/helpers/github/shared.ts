@@ -29,6 +29,7 @@ import {
   NotificationColumnSubscription,
   ThemeColors,
 } from '../../types'
+import { constants } from '../../utils'
 import {
   getFilteredEvents,
   getFilteredIssueOrPullRequests,
@@ -970,7 +971,7 @@ export function getItemOwnersAndRepos(
     return 1
   }
 
-  if (!item) return []
+  if (!item) return constants.EMPTY_ARRAY
 
   switch (type) {
     case 'activity': {
@@ -1021,7 +1022,7 @@ export function getItemOwnersAndRepos(
     }
 
     default:
-      return []
+      return constants.EMPTY_ARRAY
   }
 }
 

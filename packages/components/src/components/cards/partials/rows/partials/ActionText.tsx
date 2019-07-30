@@ -10,6 +10,7 @@ import {
 import { Platform } from '../../../../../libs/platform'
 import { sharedStyles } from '../../../../../styles/shared'
 import { smallAvatarSize } from '../../../../../styles/variables'
+import { EMPTY_OBJ } from '../../../../../utils/constants'
 import { genericParseText } from '../../../../../utils/helpers/shared'
 import { Link } from '../../../../common/Link'
 import { ThemedText, ThemedTextProps } from '../../../../themed/ThemedText'
@@ -55,7 +56,7 @@ export const ActionText = React.memo((props: ActionTextProps) => {
       cardStyles.smallText,
       { lineHeight: smallAvatarSize },
       Platform.select({
-        default: {},
+        default: EMPTY_OBJ,
         web: {
           whiteSpace: 'pre',
           wordWrap: 'break-word',
