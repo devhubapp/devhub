@@ -9,6 +9,7 @@ import { ColumnFocusProvider } from './context/ColumnFocusContext'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DeepLinkProvider } from './context/DeepLinkContext'
 import { AppLayoutProvider } from './context/LayoutContext'
+import { ThemeProvider } from './context/ThemeContext'
 
 const { persistor, store } = configureStore()
 
@@ -25,7 +26,9 @@ export function AppProviders(props: AppProvidersProps) {
             <AppLayoutProvider>
               <ColumnFocusProvider>
                 <ColumnFiltersProvider>
-                  <ColumnWidthProvider>{props.children}</ColumnWidthProvider>
+                  <ColumnWidthProvider>
+                    <ThemeProvider>{props.children}</ThemeProvider>
+                  </ColumnWidthProvider>
                 </ColumnFiltersProvider>
               </ColumnFocusProvider>
             </AppLayoutProvider>
