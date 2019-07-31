@@ -1,11 +1,5 @@
 import _ from 'lodash'
-import React, {
-  RefObject,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-} from 'react'
+import React, { RefObject, useCallback, useEffect, useRef } from 'react'
 import { Image, ImageProps } from 'react-native'
 
 import { Platform } from '../../libs/platform'
@@ -69,10 +63,6 @@ export const ImageWithLoading = React.memo(
       hasCalledOnLoadStart: false,
       hasCalledOnLoadEnd: false,
     })
-
-    useLayoutEffect(() => {
-      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
-    }, [])
 
     useEffect(() => {
       callbackRef.current = {
@@ -147,6 +137,10 @@ export const ImageWithLoading = React.memo(
         onLoad={handleLoad}
         onLoadEnd={handleLoadEnd}
         onLoadStart={handleLoadStart}
+        style={[
+          otherProps.style,
+          getStyle({ ...propsRef.current, ...stateRef.current }),
+        ]}
       />
     )
   }),
@@ -155,28 +149,32 @@ export const ImageWithLoading = React.memo(
 
 ImageWithLoading.displayName = 'ImageWithLoading'
 
+function getStyle({
+  error,
+  isLoading,
+  backgroundColorFailed,
+  backgroundColorLoading,
+  backgroundColorLoaded,
+}: { error: boolean; isLoading: boolean } & Pick<
+  ImageWithLoadingProps,
+  'backgroundColorFailed' | 'backgroundColorLoaded' | 'backgroundColorLoading'
+>) {
+  return {
+    backgroundColor: error
+      ? backgroundColorFailed
+      : isLoading
+      ? backgroundColorLoading
+      : backgroundColorLoaded,
+  }
+}
+
 function updateStyles(
   imageRef: RefObject<Image>,
-  {
-    error,
-    isLoading,
-    backgroundColorFailed,
-    backgroundColorLoading,
-    backgroundColorLoaded,
-  }: { error: boolean; isLoading: boolean } & Pick<
-    ImageWithLoadingProps,
-    'backgroundColorFailed' | 'backgroundColorLoaded' | 'backgroundColorLoading'
-  >,
+  ...args: Parameters<typeof getStyle>
 ) {
   if (!(imageRef && imageRef.current)) return
 
   imageRef.current.setNativeProps({
-    style: {
-      backgroundColor: error
-        ? backgroundColorFailed
-        : isLoading
-        ? backgroundColorLoading
-        : backgroundColorLoaded,
-    },
+    style: getStyle(...args),
   })
 }

@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { useCallback, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -178,6 +178,7 @@ function AddColumnModalItem({
 
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(touchableRef, isHovered => {
+    if (cacheRef.current.isHovered === isHovered) return
     cacheRef.current.isHovered = isHovered
     updateStyles()
   })
@@ -207,7 +208,13 @@ function AddColumnModalItem({
     setSpringAnimatedStyles(getStyles())
   }, [getStyles])
 
+  const isFirstRendeRef = useRef(true)
   useLayoutEffect(() => {
+    if (isFirstRendeRef.current) {
+      isFirstRendeRef.current = false
+      return
+    }
+
     updateStyles()
   }, [updateStyles])
 

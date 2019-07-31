@@ -149,6 +149,7 @@ export function Link(props: LinkProps) {
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
     useCallback(
       isHovered => {
+        if (cacheRef.current.isHovered === isHovered) return
         cacheRef.current.isHovered = isHovered
         updateStyles()
       },
@@ -157,7 +158,13 @@ export function Link(props: LinkProps) {
   )
   cacheRef.current.isHovered = initialIsHovered
 
+  const isFirstRendeRef = useRef(true)
   useLayoutEffect(() => {
+    if (isFirstRendeRef.current) {
+      isFirstRendeRef.current = false
+      return
+    }
+
     updateStyles()
   }, [updateStyles])
 

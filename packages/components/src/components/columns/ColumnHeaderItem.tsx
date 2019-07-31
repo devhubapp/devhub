@@ -202,13 +202,20 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   const initialIsHovered = useHover(
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
     isHovered => {
+      if (cacheRef.current.isHovered === isHovered) return
       cacheRef.current.isHovered = isHovered
       updateStyles({ forceImmediate: false })
     },
   )
   cacheRef.current.isHovered = initialIsHovered
 
+  const isFirstRendeRef = useRef(true)
   useLayoutEffect(() => {
+    if (isFirstRendeRef.current) {
+      isFirstRendeRef.current = false
+      return
+    }
+
     updateStyles({ forceImmediate: true })
   }, [updateStyles])
 

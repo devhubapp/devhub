@@ -1,5 +1,5 @@
 import { getLuminance, rgba } from 'polished'
-import React, { useCallback, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { ViewProps } from 'react-native'
 import { AnimatedProps, useSpring } from 'react-spring/native'
 
@@ -186,12 +186,19 @@ export const Button = React.memo((props: ButtonProps) => {
 
   const touchableRef = useRef(null)
   const initialIsHovered = useHover(touchableRef, isHovered => {
+    if (cacheRef.current.isHovered === isHovered) return
     cacheRef.current.isHovered = isHovered
     updateStyles({ forceImmediate: false })
   })
   cacheRef.current.isHovered = initialIsHovered
 
+  const isFirstRendeRef = useRef(true)
   useLayoutEffect(() => {
+    if (isFirstRendeRef.current) {
+      isFirstRendeRef.current = false
+      return
+    }
+
     updateStyles({ forceImmediate: true })
   }, [updateStyles])
 
