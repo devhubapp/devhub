@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 

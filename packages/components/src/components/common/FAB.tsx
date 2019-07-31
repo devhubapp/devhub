@@ -4,7 +4,6 @@ import { StyleProp, TextStyle } from 'react-native'
 import { GitHubIcon } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { contentPadding } from '../../styles/variables'
-import { useTheme } from '../context/ThemeContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import {
@@ -34,8 +33,6 @@ export function FAB(props: FABProps) {
     useBrandColor,
     ...otherProps
   } = props
-
-  const theme = useTheme()
 
   const [isPressing, setIsPressing] = useState(false)
 

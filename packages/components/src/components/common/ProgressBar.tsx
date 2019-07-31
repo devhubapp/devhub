@@ -83,7 +83,7 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
             width: springAnimatedStyles.width,
             height: progressBarHeight,
             backgroundColor: getThemeColorOrItself(theme, color, {
-              enableCSSVariable: false,
+              enableCSSVariable: true,
             }),
           },
         ]}

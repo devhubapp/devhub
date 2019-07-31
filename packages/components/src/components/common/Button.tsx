@@ -1,5 +1,5 @@
 import { getLuminance, rgba } from 'polished'
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { ViewProps } from 'react-native'
 import { AnimatedValue, useSpring } from 'react-spring/native'
 

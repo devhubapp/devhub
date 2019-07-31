@@ -153,7 +153,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   return (
     <ThemedSafeAreaView
       backgroundColor={theme =>
-        theme[getColumnHeaderThemeColors(theme.backgroundColor).normal]
+        getColumnHeaderThemeColors(theme.backgroundColor).normal
       }
       style={{ zIndex: zIndex || 1000 }}
     >

@@ -62,7 +62,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
   return (
     <ThemedSafeAreaView
       backgroundColor={theme =>
-        theme[getColumnHeaderThemeColors(theme.backgroundColor).normal]
+        getColumnHeaderThemeColors(theme.backgroundColor).normal
       }
       style={styles.container}
     >

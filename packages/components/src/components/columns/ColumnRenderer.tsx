@@ -292,7 +292,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     <Column
       key={`column-renderer-${column.id}-inner-container`}
       backgroundColor={theme =>
-        theme[getColumnCardThemeColors(theme.backgroundColor).column]
+        getColumnCardThemeColors(theme.backgroundColor).column
       }
       columnId={column.id}
       fullWidth={appViewMode === 'single-column'}

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -126,7 +126,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   return (
     <SpringAnimatedView
       style={{
-        backgroundColor: springAnimatedStyles.backgroundColor,
+        backgroundColor: enableBackgroundHover
+          ? springAnimatedStyles.backgroundColor
+          : undefined,
         // borderWidth: 0,
         // borderColor: 'transparent',
         // borderBottomWidth: separatorSize,
