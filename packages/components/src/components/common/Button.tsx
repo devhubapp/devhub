@@ -1,7 +1,7 @@
 import { getLuminance, rgba } from 'polished'
 import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { ViewProps } from 'react-native'
-import { AnimatedProps, useSpring } from 'react-spring/native'
+import { AnimatedValue, useSpring } from 'react-spring/native'
 
 import { constants, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
@@ -29,7 +29,7 @@ export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
     | string
     | React.ReactNode
     | ((params: {
-        springAnimatedStyles: AnimatedProps<{
+        springAnimatedStyles: AnimatedValue<{
           touchableBackgroundColor: string
           touchableBorderColor: string
           innerContainerBackgroundColor: string

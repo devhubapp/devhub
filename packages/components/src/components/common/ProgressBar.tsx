@@ -49,6 +49,7 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
             left: `-${indeterminateSize}%`,
             width: `${indeterminateSize}%`,
           })
+          await next({ immediate: false })
 
           await next({
             left: '100%',
