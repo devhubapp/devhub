@@ -1,46 +1,75 @@
-import React from 'react'
-import { StyleProp, TextProps, TextStyle } from 'react-native'
+import _ from 'lodash'
+import React, { RefObject, useCallback, useRef } from 'react'
+import { SafeAreaView, StyleProp, ViewProps, ViewStyle } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
-import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
-import { useSpringAnimatedTheme } from '../context/SpringAnimatedThemeContext'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
+import { usePrevious } from '../../hooks/use-previous'
+import { useThemeCallback } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 
-export interface ThemedSafeAreaViewProps extends Omit<TextProps, 'style'> {
-  backgroundColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
-  borderColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+export interface ThemedViewProps extends Omit<ViewProps, 'style'> {
+  backgroundColor?:
+    | keyof ThemeColors
+    | ((theme: ThemeColors) => string | undefined)
+    | null
+  borderColor?: keyof ThemeColors | ((theme: ThemeColors) => string) | null
   children?: React.ReactNode
-  style?: StyleProp<Omit<TextStyle, 'backgroundColor' | 'borderColor'>>
-  // themeTransformer?: ThemeTransformer
+  style?: StyleProp<Omit<ViewStyle, 'backgroundColor' | 'borderColor'>>
+  themeTransformer?: ThemeTransformer
 }
 
 export const ThemedSafeAreaView = React.forwardRef<
-  SpringAnimatedSafeAreaView,
-  ThemedSafeAreaViewProps
->((props, ref) => {
-  const { backgroundColor, borderColor, style, ...otherProps } = props
-  const springAnimatedTheme = useSpringAnimatedTheme()
+  SafeAreaView,
+  ThemedViewProps
+>((props, receivedRef: any) => {
+  const {
+    backgroundColor,
+    borderColor,
+    style,
+    themeTransformer,
+    ...otherProps
+  } = props
+
+  const fallbackRef = useRef<SafeAreaView>(null)
+  const ref = receivedRef || fallbackRef
+
+  const initialTheme = useThemeCallback(
+    { skipFirstCallback: true, themeTransformer },
+    useCallback(
+      theme => {
+        updateStyle(
+          ref,
+          theme,
+          { backgroundColor, borderColor },
+          previousStyleRef,
+        )
+      },
+      [backgroundColor, borderColor],
+    ),
+  )
+
+  const initialStyle = getStyle(initialTheme, {
+    backgroundColor,
+    borderColor,
+  })
+
+  const previousStyle = usePrevious(initialStyle) || initialStyle
+  const previousStyleRef = useRef(previousStyle)
+  previousStyleRef.current = previousStyle
 
   return (
-    <SpringAnimatedSafeAreaView
-      {...otherProps}
-      ref={ref}
-      style={[
-        style,
-        getStyle(springAnimatedTheme, { backgroundColor, borderColor }),
-      ]}
-    />
+    <SafeAreaView {...otherProps} ref={ref} style={[style, initialStyle]} />
   )
 })
 
 ThemedSafeAreaView.displayName = 'ThemedSafeAreaView'
 
 function getStyle(
-  theme: Record<keyof ThemeColors, any> & { isInverted: boolean | 0 | 1 },
+  theme: Theme,
   {
     backgroundColor: _backgroundColor,
     borderColor: _borderColor,
-  }: Pick<ThemedSafeAreaViewProps, 'backgroundColor' | 'borderColor'>,
+  }: Pick<ThemedViewProps, 'backgroundColor' | 'borderColor'>,
 ) {
   const backgroundColor = getThemeColorOrItself(theme, _backgroundColor, {
     enableCSSVariable: true,
@@ -49,9 +78,30 @@ function getStyle(
     enableCSSVariable: true,
   })
 
-  const style: TextStyle = {}
+  const style: ViewStyle = {}
   if (backgroundColor) style.backgroundColor = backgroundColor
-  if (borderColor) style.color = borderColor
+  if (borderColor) style.borderColor = borderColor
 
   return style
+}
+
+function updateStyle(
+  ref: RefObject<SafeAreaView> | null,
+  theme: Theme,
+  {
+    backgroundColor,
+    borderColor,
+  }: Pick<ThemedViewProps, 'backgroundColor' | 'borderColor'>,
+  previousStyleRef: React.MutableRefObject<
+    ReturnType<typeof getStyle> | undefined
+  >,
+) {
+  if (!(ref && ref.current)) return
+
+  const newStyle = getStyle(theme, { backgroundColor, borderColor })
+
+  if (previousStyleRef && _.isEqual(newStyle, previousStyleRef.current)) return
+
+  ref.current.setNativeProps({ style: newStyle })
+  previousStyleRef.current = newStyle
 }

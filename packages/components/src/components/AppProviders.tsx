@@ -9,7 +9,6 @@ import { ColumnFocusProvider } from './context/ColumnFocusContext'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DeepLinkProvider } from './context/DeepLinkContext'
 import { AppLayoutProvider } from './context/LayoutContext'
-import { SpringAnimatedThemeProvider } from './context/SpringAnimatedThemeContext'
 
 const { persistor, store } = configureStore()
 
@@ -26,11 +25,7 @@ export function AppProviders(props: AppProvidersProps) {
             <AppLayoutProvider>
               <ColumnFocusProvider>
                 <ColumnFiltersProvider>
-                  <ColumnWidthProvider>
-                    <SpringAnimatedThemeProvider>
-                      {props.children}
-                    </SpringAnimatedThemeProvider>
-                  </ColumnWidthProvider>
+                  <ColumnWidthProvider>{props.children}</ColumnWidthProvider>
                 </ColumnFiltersProvider>
               </ColumnFocusProvider>
             </AppLayoutProvider>

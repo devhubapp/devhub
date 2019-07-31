@@ -1,5 +1,126 @@
+diff --git a/node_modules/react-native-web/dist/cjs/exports/SafeAreaView/index.js b/node_modules/react-native-web/dist/cjs/exports/SafeAreaView/index.js
+index f83b248..abbb376 100644
+--- a/node_modules/react-native-web/dist/cjs/exports/SafeAreaView/index.js
++++ b/node_modules/react-native-web/dist/cjs/exports/SafeAreaView/index.js
+@@ -11,46 +11,23 @@ var _StyleSheet = _interopRequireDefault(require("../StyleSheet"));
+ 
+ var _View = _interopRequireDefault(require("../View"));
+ 
+-var _ViewPropTypes = _interopRequireDefault(require("../ViewPropTypes"));
+-
+ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+ 
+-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+-
+-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+-
+ function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+ 
+ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+ 
+-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+-
+-var SafeAreaView =
+-/*#__PURE__*/
+-function (_React$Component) {
+-  _inheritsLoose(SafeAreaView, _React$Component);
+-
+-  function SafeAreaView() {
+-    return _React$Component.apply(this, arguments) || this;
+-  }
+-
+-  var _proto = SafeAreaView.prototype;
+-
+-  _proto.render = function render() {
+-    var _this$props = this.props,
+-        style = _this$props.style,
+-        rest = _objectWithoutPropertiesLoose(_this$props, ["style"]);
++var SafeAreaView = _react.default.forwardRef(function (props, ref) {
++  var style = props.style,
++      rest = _objectWithoutPropertiesLoose(props, ["style"]);
+ 
+-    return _react.default.createElement(_View.default, _extends({}, rest, {
+-      style: _StyleSheet.default.compose(styles.root, style)
+-    }));
+-  };
+-
+-  return SafeAreaView;
+-}(_react.default.Component);
++  return _react.default.createElement(_View.default, _extends({}, rest, {
++    ref: ref,
++    style: _StyleSheet.default.compose(styles.root, style)
++  }));
++});
+ 
+ SafeAreaView.displayName = 'SafeAreaView';
+-SafeAreaView.propTypes = process.env.NODE_ENV !== "production" ? _objectSpread({}, _ViewPropTypes.default) : {};
+ 
+ var cssFunction = function () {
+   if (_ExecutionEnvironment.canUseDOM && window.CSS && window.CSS.supports && window.CSS.supports('top: constant(safe-area-inset-top)')) {
+diff --git a/node_modules/react-native-web/dist/exports/SafeAreaView/index.js b/node_modules/react-native-web/dist/exports/SafeAreaView/index.js
+index ec7b97b..7944ec3 100644
+--- a/node_modules/react-native-web/dist/exports/SafeAreaView/index.js
++++ b/node_modules/react-native-web/dist/exports/SafeAreaView/index.js
+@@ -1,13 +1,7 @@
+-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+-
+-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+-
+ function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+ 
+ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+ 
+-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+-
+ /**
+  * Copyright (c) Nicolas Gallagher.
+  * Copyright (c) Facebook, Inc. and its affiliates.
+@@ -21,34 +15,16 @@ import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+ import React from 'react';
+ import StyleSheet from '../StyleSheet';
+ import View from '../View';
+-import ViewPropTypes from '../ViewPropTypes';
+-
+-var SafeAreaView =
+-/*#__PURE__*/
+-function (_React$Component) {
+-  _inheritsLoose(SafeAreaView, _React$Component);
+-
+-  function SafeAreaView() {
+-    return _React$Component.apply(this, arguments) || this;
+-  }
+-
+-  var _proto = SafeAreaView.prototype;
+-
+-  _proto.render = function render() {
+-    var _this$props = this.props,
+-        style = _this$props.style,
+-        rest = _objectWithoutPropertiesLoose(_this$props, ["style"]);
+-
+-    return React.createElement(View, _extends({}, rest, {
+-      style: StyleSheet.compose(styles.root, style)
+-    }));
+-  };
+-
+-  return SafeAreaView;
+-}(React.Component);
+-
++var SafeAreaView = React.forwardRef(function (props, ref) {
++  var style = props.style,
++      rest = _objectWithoutPropertiesLoose(props, ["style"]);
++
++  return React.createElement(View, _extends({}, rest, {
++    ref: ref,
++    style: StyleSheet.compose(styles.root, style)
++  }));
++});
+ SafeAreaView.displayName = 'SafeAreaView';
+-SafeAreaView.propTypes = process.env.NODE_ENV !== "production" ? _objectSpread({}, ViewPropTypes) : {};
+ 
+ var cssFunction = function () {
+   if (canUseDOM && window.CSS && window.CSS.supports && window.CSS.supports('top: constant(safe-area-inset-top)')) {
 diff --git a/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js b/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js
-index c08437e..07da8b8 100644
+index c08437e..4bc0ae2 100644
 --- a/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js
 +++ b/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js
 @@ -1,3 +1,14 @@
@@ -923,3 +1044,4 @@ index c08437e..07da8b8 100644
    }
  });
  export default VirtualizedList;
+\ No newline at end of file

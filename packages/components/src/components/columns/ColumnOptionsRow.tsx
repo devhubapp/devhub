@@ -123,7 +123,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         // borderWidth: 0,
         // borderColor: 'transparent',
         // borderBottomWidth: separatorSize,
-        // borderBottomColor: springAnimatedTheme.backgroundColorLess1,
+        // borderBottomColor: theme.backgroundColorLess1,
       }}
     >
       <ConditionalWrap
