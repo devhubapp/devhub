@@ -78,7 +78,7 @@ export const ColumnFiltersRenderer = React.memo(
     )
 
     const absolutePositionTransitions = useTransition<boolean, any>(
-      [true], // isOpen || enableSharedFiltersView ? [true] : [],
+      isOpen || enableSharedFiltersView ? [true] : [],
       isOpen
         ? [
             `column-options-renderer-${
