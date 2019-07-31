@@ -131,7 +131,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     currentOpenedModal && sizename > '1-small' ? [true] : [],
     () => 'modal-overlay',
     {
-      reset: true,
+      reset: false,
       unique: true,
       immediate,
       config: getDefaultReactSpringAnimationConfig(),
@@ -145,39 +145,39 @@ export function ModalRenderer(props: ModalRendererProps) {
     modalStack,
     item => `modal-stack-${item.name}`,
     {
-      reset: true,
+      reset: false,
       config: getDefaultReactSpringAnimationConfig(),
       immediate,
       ...(appOrientation === 'portrait'
         ? {
-            from: item =>
+            from: (item: ModalPayloadWithIndex) =>
               (item.index === 0 && modalStack.length) ||
               (item.index > 0 && !modalStack.length)
                 ? { top: Dimensions.get('window').height, left: 0 }
                 : { top: 0, left: size },
             enter: { top: 0, left: 0 },
-            update: item =>
+            update: (item: ModalPayloadWithIndex) =>
               modalStack.length > 1 && item.index !== modalStack.length - 1
                 ? { top: 0, left: -50 }
                 : { top: 0, left: 0 },
-            leave: item =>
+            leave: (item: ModalPayloadWithIndex) =>
               item.index === 0 || !modalStack.length
                 ? { top: Dimensions.get('window').height, left: 0 }
                 : { top: 0, left: size },
           }
         : {
-            from: item =>
+            from: (item: ModalPayloadWithIndex) =>
               (item.index === 0 && modalStack.length) ||
               (item.index > 0 && !modalStack.length)
                 ? { left: -size }
                 : { left: size },
             enter: { left: 0 },
-            update: item =>
+            update: (item: ModalPayloadWithIndex) =>
               modalStack.length > 1 && item.index !== modalStack.length - 1
                 ? { left: -size / 3 }
                 : { left: 0 },
 
-            leave: item =>
+            leave: (item: ModalPayloadWithIndex) =>
               item.index === 0 || !modalStack.length
                 ? { left: -size }
                 : { left: size },
@@ -191,7 +191,7 @@ export function ModalRenderer(props: ModalRendererProps) {
       : [],
     item => `modal-separator-${item}`,
     {
-      reset: true,
+      reset: false,
       unique: true,
       config: getDefaultReactSpringAnimationConfig(),
       immediate,

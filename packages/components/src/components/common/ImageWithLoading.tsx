@@ -1,5 +1,11 @@
 import _ from 'lodash'
-import React, { RefObject, useCallback, useEffect, useRef } from 'react'
+import React, {
+  RefObject,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react'
 import { Image, ImageProps } from 'react-native'
 
 import { Platform } from '../../libs/platform'
@@ -64,7 +70,7 @@ export const ImageWithLoading = React.memo(
       hasCalledOnLoadEnd: false,
     })
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
     }, [])
 

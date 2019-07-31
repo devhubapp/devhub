@@ -4,6 +4,14 @@ import { StyleSheet } from 'react-native'
 import { mutedOpacity } from './variables'
 
 export const sharedStyles = StyleSheet.create({
+  absolute: {
+    position: 'absolute',
+  },
+
+  relative: {
+    position: 'relative',
+  },
+
   flex: {
     flex: 1,
   },
@@ -38,5 +46,9 @@ export const sharedStyles = StyleSheet.create({
 
   muted: {
     opacity: mutedOpacity,
+  },
+
+  overflowHidden: {
+    overflow: 'hidden',
   },
 })

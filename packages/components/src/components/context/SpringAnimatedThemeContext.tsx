@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 
 import { ThemeColors } from '@devhub/core'
-import { useSpring, UseSpringProps } from 'react-spring/native'
+import { useSpring } from 'react-spring/native'
 import { defaultTheme } from '../../styles/utils'
 import { pickThemeColors } from '../../utils/helpers/theme'
 import { useThemeCallback } from './ThemeContext'
@@ -10,8 +10,9 @@ export interface SpringAnimatedThemeProviderProps {
   children?: React.ReactNode
 }
 
-export type SpringAnimatedThemeProviderState = UseSpringProps<
-  ThemeColors & { isDark: 0 | 1; isInverted: 0 | 1 }
+export type SpringAnimatedThemeProviderState = Record<
+  keyof (ThemeColors & { isDark: 0 | 1; isInverted: 0 | 1 }),
+  any
 >
 
 export const SpringAnimatedThemeContext = React.createContext<

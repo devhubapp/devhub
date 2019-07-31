@@ -113,7 +113,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring(getStyles)
 
   useLayoutEffect(() => {
-    updateStyles({ forceImmediate: false })
+    updateStyles({ forceImmediate: true })
   }, [updateStyles])
 
   return (

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import {
   InteractionManager,
   TouchableOpacity,
@@ -52,7 +52,7 @@ export const Touchable = React.forwardRef(
       }
     }, [touchableRef.current])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (Platform.realOS !== 'web') return
 
       const node = findNode(touchableRef)

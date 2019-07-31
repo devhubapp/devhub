@@ -61,7 +61,7 @@ export const ColumnFiltersRenderer = React.memo(
       isOpen ? [true] : [],
       () => 'column-options-overlay',
       {
-        reset: true,
+        reset: false,
         unique: true,
         config: getDefaultReactSpringAnimationConfig(),
         immediate,
@@ -174,8 +174,9 @@ export const ColumnFiltersRenderer = React.memo(
             fixedPosition &&
             fixedWidth
               ? fixedPosition === 'left' || fixedPosition === 'right'
-                ? absolutePositionTransition.props[fixedPosition].interpolate(
-                    (value: number) => (fixedWidth + value <= 0 ? true : false),
+                ? // TODO: Fix types
+                  absolutePositionTransition.props[fixedPosition].to(
+                    value => (fixedWidth + value <= 0 ? true : false) as any,
                   )
                 : false
               : false
@@ -192,10 +193,8 @@ export const ColumnFiltersRenderer = React.memo(
                 fixedPosition &&
                 fixedWidth
                   ? fixedPosition === 'left' || fixedPosition === 'right'
-                    ? absolutePositionTransition.props[
-                        fixedPosition
-                      ].interpolate((value: number) =>
-                        fixedWidth + value <= 0 ? 0 : 1,
+                    ? absolutePositionTransition.props[fixedPosition].to(
+                        (value: number) => (fixedWidth + value <= 0 ? 0 : 1),
                       )
                     : 1
                   : 1,
@@ -205,10 +204,9 @@ export const ColumnFiltersRenderer = React.memo(
                 fixedPosition &&
                 fixedWidth
                   ? fixedPosition === 'left' || fixedPosition === 'right'
-                    ? absolutePositionTransition.props[
-                        fixedPosition
-                      ].interpolate((value: number) =>
-                        fixedWidth + value <= 0 ? 'hidden' : 'visible',
+                    ? absolutePositionTransition.props[fixedPosition].to(
+                        (value: number) =>
+                          fixedWidth + value <= 0 ? 'hidden' : 'visible',
                       )
                     : 'visible'
                   : 'visible',
@@ -229,7 +227,7 @@ export const ColumnFiltersRenderer = React.memo(
             absolutePositionTransition.props &&
             fixedPosition &&
             fixedWidth
-              ? absolutePositionTransition.props[fixedPosition].interpolate(
+              ? absolutePositionTransition.props[fixedPosition].to(
                   (value: number) => (value < 0 ? 'none' : 'box-none'),
                 )
               : 'box-none'

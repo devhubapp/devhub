@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import { ThemeColors } from '@devhub/core'
+import { sharedStyles } from '../../styles/shared'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
@@ -48,17 +49,11 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
             left: `-${indeterminateSize}%`,
             width: `${indeterminateSize}%`,
           })
-          await next({ immediate: false })
 
           await next({
             left: '100%',
             width: `${indeterminateSize}%`,
           })
-
-          // await next({
-          //   left: `-${indeterminateSize}%`,
-          //   width: `${indeterminateSize}%`,
-          // })
 
           continue
         }
@@ -70,19 +65,27 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
 
   return (
     <View
-      style={{ width: '100%', height: progressBarHeight, overflow: 'hidden' }}
+      style={[
+        sharedStyles.relative,
+        sharedStyles.fullWidth,
+        sharedStyles.overflowHidden,
+        { height: progressBarHeight },
+      ]}
     >
       <SpringAnimatedView
-        style={{
-          top: 0,
-          bottom: 0,
-          left: springAnimatedStyles.left,
-          width: springAnimatedStyles.width,
-          height: progressBarHeight,
-          backgroundColor: getThemeColorOrItself(theme, color, {
-            enableCSSVariable: false,
-          }),
-        }}
+        style={[
+          sharedStyles.absolute,
+          {
+            top: 0,
+            bottom: 0,
+            left: springAnimatedStyles.left,
+            width: springAnimatedStyles.width,
+            height: progressBarHeight,
+            backgroundColor: getThemeColorOrItself(theme, color, {
+              enableCSSVariable: false,
+            }),
+          },
+        ]}
       />
     </View>
   )

@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { useCallback, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import {
   ImageStyle,
   StyleProp,
@@ -212,7 +212,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     updateStyles({ forceImmediate: true })
   }, [updateStyles])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!(Platform.realOS === 'web' && !onPress)) return
     const node = findNode(containerRef)
     if (!node) return
@@ -281,7 +281,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           paddingVertical: showLabel ? undefined : contentPadding,
         },
     style,
-    { backgroundColor: springAnimatedStyles.backgroundColor },
+    { backgroundColor: springAnimatedStyles.backgroundColor as any },
   ])
 
   const { opacity, ...wrapperStyle } = _wrapperStyle

@@ -1,14 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent, ScrollView, View } from 'react-native'
-import { ReactSpringHook, useSpring } from 'react-spring/native'
+import { useSpring } from 'react-spring/native'
 
 import { constants } from '@devhub/core'
 import { usePrevious } from '../../hooks/use-previous'
 import { Platform } from '../../libs/platform'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-
-export type Transition = ReactSpringHook
 
 export interface AccordionViewProps {
   // animation?: 'height' | 'slideRight'
@@ -54,25 +52,25 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
 
   return (
     <SpringAnimatedView
-      hidden={animatedStyles.height.interpolate((value: number | 'auto') =>
-        value === 'auto' || value > 0 ? false : true,
+      hidden={animatedStyles.height.to(
+        // TODO: Fix type
+        value => (value === 'auto' || value > 0 ? false : true) as any,
       )}
       style={{
         height:
           isOpen && wasOpen === isOpen && hasCompletedAnimationRef.current
             ? 'auto'
-            : animatedStyles.height.interpolate((value: number | 'auto') =>
+            : animatedStyles.height.to(value =>
                 value === 'auto' || value > 0 ? value : 0,
               ),
         overflow: 'hidden',
-        opacity: animatedStyles.height.interpolate((value: number | 'auto') =>
+        opacity: animatedStyles.height.to(value =>
           value === 'auto' || value > 0 ? 1 : 0,
         ),
 
         // [web] disable keyboard focus for this tree when accordion is collapsed
-        ['visibility' as any]: animatedStyles.height.interpolate(
-          (value: number | 'auto') =>
-            value === 'auto' || value > 0 ? 'visible' : 'hidden',
+        ['visibility' as any]: animatedStyles.height.to(value =>
+          value === 'auto' || value > 0 ? 'visible' : 'hidden',
         ),
         ['willChange' as any]: 'height',
       }}
