@@ -14,7 +14,7 @@ export default class Document extends NextDocument {
       <html>
         <Head>
           <meta charSet="utf-8" />
-          <base href="%PUBLIC_URL%" target="_top" />
+          <base target="_top" />
 
           <meta name="description" content={fullDescription} />
 
@@ -61,48 +61,45 @@ export default class Document extends NextDocument {
             content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"
           />
 
-          {/*<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
           <link
             rel="apple-touch-icon"
             type="image/png"
             sizes="100x100"
-            href="%PUBLIC_URL%/static/media/logo.png"
+            href="/static/logo.png"
           />
           <link
             rel="apple-touch-icon"
             type="image/png"
             sizes="200x200"
-            href="%PUBLIC_URL%/static/media/logo@2x.png"
+            href="/static/logo@2x.png"
           />
           <link
             rel="apple-touch-icon"
             type="image/png"
             sizes="300x300"
-            href="%PUBLIC_URL%/static/media/logo@3x.png"
+            href="/static/logo@3x.png"
           />
 
           <link
             rel="icon"
             type="image/png"
             sizes="100x100"
-            href="%PUBLIC_URL%/static/media/logo.png"
+            href="/static/logo.png"
           />
           <link
             rel="icon"
             type="image/png"
             sizes="200x200"
-            href="%PUBLIC_URL%/static/media/logo@2x.png"
+            href="/static/logo@2x.png"
           />
           <link
             rel="icon"
             type="image/png"
             sizes="300x300"
-            href="%PUBLIC_URL%/static/media/logo@3x.png"
+            href="/static/logo@3x.png"
           />
 
-          <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-          */}
+          <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
 
         <body

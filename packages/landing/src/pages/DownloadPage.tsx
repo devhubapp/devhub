@@ -54,8 +54,10 @@ export default function DownloadPage(_props: DownloadPageProps) {
     <LandingLayout>
       <section id="download" className="container">
         <div className="flex flex-col items-center m-auto text-center">
-          <div className="show-light-theme w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full" />
-          <div className="show-dark-theme w-20 h-20 mb-8 bg-primary border-4 border-white rounded-full" />
+          <img
+            className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
+            src="/static/logo.png"
+          />
 
           <h1 className="text-3xl sm:text-4xl whitespace-no-wrap">
             {isDownloading ? (
