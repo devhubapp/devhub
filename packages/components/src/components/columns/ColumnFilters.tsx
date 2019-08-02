@@ -31,20 +31,16 @@ import {
   notificationSubjectTypes,
   ThemeColors,
 } from '@devhub/core'
-import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useReduxAction } from '../../hooks/use-redux-action'
-import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
-import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderHeight,
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
-import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
 import {
@@ -59,12 +55,9 @@ import {
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
-import { useAppLayout } from '../context/LayoutContext'
-import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { getColumnHeaderThemeColors } from './ColumnHeader'
-import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsInbox } from './ColumnOptionsInbox'
 import { ColumnOptionsRow } from './ColumnOptionsRow'
 import { sharedColumnOptionsStyles } from './options/shared'
@@ -125,7 +118,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   const {
     availableHeight,
     column,
-    columnIndex,
     forceOpenAll,
     fullHeight,
     startWithFiltersExpanded,
@@ -222,22 +214,14 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
           : [],
       ),
   )
+  const lastColumnCategory = allColumnOptionCategories.slice(-1)[0]
 
   const allIsOpen =
     openedOptionCategories.size === allColumnOptionCategories.length
   const allowOnlyOneCategoryToBeOpenedRef = useRef(!allIsOpen)
   const allowToggleCategories = !forceOpenAll
 
-  // const [containerWidth, setContainerWidth] = useState(0)
-
-  const { appOrientation } = useAppLayout()
-  const { appViewMode } = useAppViewMode()
-
-  const columnIds = useReduxState(selectors.columnIdsSelector)
-
   const clearColumnFilters = useReduxAction(actions.clearColumnFilters)
-  const deleteColumn = useReduxAction(actions.deleteColumn)
-  const moveColumn = useReduxAction(actions.moveColumn)
   const setColumnSavedFilter = useReduxAction(actions.setColumnSavedFilter)
   const setColumnParticipatingFilter = useReduxAction(
     actions.setColumnParticipatingFilter,
@@ -378,6 +362,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={false}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'involves'}
                 iconName="person"
                 isOpen={openedOptionCategories.has('involves')}
                 onToggle={
@@ -494,6 +479,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={typeof savedForLater === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'saved_for_later'}
                 iconName="bookmark"
                 isOpen={openedOptionCategories.has('saved_for_later')}
                 onToggle={
@@ -561,6 +547,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   )
                 }
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'unread'}
                 iconName={
                   column.filters && column.filters.unread === true
                     ? 'mail'
@@ -686,6 +673,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'state'}
                 iconName={
                   hasForcedValue
                     ? itemPassesFilterRecord(
@@ -795,6 +783,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={typeof draft === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'draft'}
                 iconName="pencil"
                 isOpen={openedOptionCategories.has('draft')}
                 onToggle={
@@ -859,6 +848,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={typeof bot === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'bot'}
                 iconName="hubot"
                 isOpen={openedOptionCategories.has('bot')}
                 onToggle={
@@ -959,6 +949,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'subject_types'}
                 iconName="file"
                 isOpen={openedOptionCategories.has('subject_types')}
                 onToggle={
@@ -1077,6 +1068,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'notification_reason'}
                 iconName="rss"
                 isOpen={openedOptionCategories.has('notification_reason')}
                 onToggle={
@@ -1191,6 +1183,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'event_action'}
                 iconName="note"
                 isOpen={openedOptionCategories.has('event_action')}
                 onToggle={
@@ -1287,6 +1280,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   typeof column.filters.private === 'boolean'
                 }
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'privacy'}
                 iconName={
                   column.filters && column.filters.private === false
                     ? 'globe'
@@ -1409,6 +1403,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   ownerFilterHasForcedValue || repoFilterHasForcedValue
                 }
                 headerItemFixedIconSize={columnHeaderItemContentSize}
+                hideSeparator={lastColumnCategory === 'repos'}
                 iconName="repo"
                 isOpen={openedOptionCategories.has('repos')}
                 onToggle={
@@ -1579,164 +1574,43 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               </ColumnOptionsRow>
             )
           })()}
-
-        <Spacer flex={1} minHeight={contentPadding / 2} />
-
-        <View
-          style={{
-            paddingVertical: contentPadding / 2,
-            paddingHorizontal: contentPadding,
-          }}
-        >
-          <Button
-            analyticsLabel="clear_column_filters"
-            children="Reset filters"
-            disabled={
-              !columnHasAnyFilter(column.type, {
-                ...column.filters,
-                ...(column.type === 'notifications' && {
-                  notifications: {
-                    ...(column.filters && column.filters.notifications),
-                    participating: undefined,
-                  },
-                }),
-                // ...(column.type === 'issue_or_pr' && {
-                //   involves: undefined,
-                //   owners: undefined,
-                // }),
-              })
-            }
-            onPress={() => {
-              clearColumnFilters({ columnId: column.id })
-            }}
-          />
-        </View>
       </FullHeightScrollView>
 
       <Separator horizontal />
 
+      <Spacer flex={1} minHeight={contentPadding / 2} />
+
       <View
-        style={[
-          sharedStyles.horizontal,
-          {
-            paddingHorizontal: contentPadding / 2,
-          },
-        ]}
+        style={{
+          paddingVertical: contentPadding / 2,
+          paddingHorizontal: contentPadding,
+        }}
       >
-        <ColumnHeaderItem
-          key="column-options-button-move-column-left"
-          analyticsLabel="move_column_left"
-          enableForegroundHover
-          disabled={columnIndex === 0 && Platform.realOS === 'web'}
-          fixedIconSize
-          iconName={
-            appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? 'chevron-up'
-              : 'chevron-left'
-          }
-          onPress={() =>
-            moveColumn({
-              animated: appViewMode === 'multi-column',
-              columnId: column.id,
-              columnIndex: columnIndex - 1,
-              highlight: appViewMode === 'multi-column' || columnIndex === 0,
-              scrollTo: true,
-            })
-          }
-          style={{ opacity: columnIndex === 0 ? 0.5 : 1 }}
-          tooltip={
-            appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? `Move column up (${
-                  keyboardShortcutsById.moveColumnLeft.keys[0]
-                })`
-              : `Move column left (${
-                  keyboardShortcutsById.moveColumnLeft.keys[0]
-                })`
-          }
-        />
-
-        <ColumnHeaderItem
-          key="column-options-button-move-column-right"
-          analyticsLabel="move_column_right"
-          enableForegroundHover
+        <Button
+          analyticsLabel="clear_column_filters"
+          children="Reset filters"
           disabled={
-            columnIndex === columnIds.length - 1 && Platform.realOS === 'web'
-          }
-          fixedIconSize
-          iconName={
-            appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? 'chevron-down'
-              : 'chevron-right'
-          }
-          onPress={() =>
-            moveColumn({
-              animated: appViewMode === 'multi-column',
-              columnId: column.id,
-              columnIndex: columnIndex + 1,
-              highlight:
-                appViewMode === 'multi-column' ||
-                columnIndex === columnIds.length - 1,
-              scrollTo: true,
+            !columnHasAnyFilter(column.type, {
+              ...column.filters,
+              ...(column.type === 'notifications' && {
+                notifications: {
+                  ...(column.filters && column.filters.notifications),
+                  participating: undefined,
+                },
+              }),
+              // ...(column.type === 'issue_or_pr' && {
+              //   involves: undefined,
+              //   owners: undefined,
+              // }),
             })
           }
-          style={{ opacity: columnIndex === columnIds.length - 1 ? 0.5 : 1 }}
-          tooltip={
-            appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? `Move column down (${
-                  keyboardShortcutsById.moveColumnRight.keys[0]
-                })`
-              : `Move column right (${
-                  keyboardShortcutsById.moveColumnRight.keys[0]
-                })`
-          }
-        />
-
-        <Spacer flex={1} />
-
-        {!forceOpenAll && !!allowToggleCategories && (
-          <ColumnHeaderItem
-            key="column-options-button-toggle-collapse-filters"
-            analyticsLabel={allIsOpen ? 'collapse_filters' : 'expand_filters'}
-            enableForegroundHover
-            fixedIconSize
-            iconName={allIsOpen ? 'fold' : 'unfold'}
-            onPress={() => {
-              if (allIsOpen) {
-                allowOnlyOneCategoryToBeOpenedRef.current = true
-
-                setOpenedOptionCategories(new Set([]))
-              } else {
-                allowOnlyOneCategoryToBeOpenedRef.current = false
-
-                setOpenedOptionCategories(new Set(allColumnOptionCategories))
-              }
-            }}
-            text=""
-            // text={
-            //   containerWidth > 300
-            //     ? allIsOpen
-            //       ? 'Collapse filters'
-            //       : 'Expand filters'
-            //     : ''
-            // }
-            tooltip={allIsOpen ? 'Collapse filters' : 'Expand filters'}
-          />
-        )}
-
-        <ColumnHeaderItem
-          key="column-options-button-remove-column"
-          analyticsLabel="remove_column"
-          enableForegroundHover
-          fixedIconSize
-          iconName="trashcan"
-          onPress={() => deleteColumn({ columnId: column.id, columnIndex })}
-          // text={containerWidth > 300 ? 'Remove' : ''}
-          text=""
-          tooltip="Remove column"
+          onPress={() => {
+            clearColumnFilters({ columnId: column.id })
+          }}
         />
       </View>
 
-      <CardItemSeparator muted />
+      <Separator horizontal />
     </ThemedView>
   )
 })

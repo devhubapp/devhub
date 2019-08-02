@@ -35,6 +35,7 @@ export interface ColumnOptionsRowProps {
   forceImmediate?: boolean
   hasChanged: boolean
   headerItemFixedIconSize?: number
+  hideSeparator?: boolean
   iconName: GitHubIcon
   isOpen: boolean
   onToggle: (() => void) | undefined
@@ -52,6 +53,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     enableBackgroundHover = true,
     hasChanged,
     headerItemFixedIconSize = columnHeaderItemContentSize,
+    hideSeparator,
     iconName,
     isOpen,
     onToggle,
@@ -246,7 +248,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
           {children}
         </View>
 
-        <Separator horizontal />
+        {!hideSeparator && <Separator horizontal />}
       </ConditionalWrap>
     </SpringAnimatedView>
   )
