@@ -1,12 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-* {
-  transition: all 0.2s ease-out;
-  transition-property: background-color, border-color, color, opacity, top, bottom, left, right, margin, padding, transform;
-}
-
 html, body {
   width: 100%;
   overflow-x: hidden;
@@ -18,6 +9,11 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.loaded, .loaded * {
+  transition: all 0.2s ease-out;
+  transition-property: background-color, border-color, color, opacity, top, bottom, left, right, width, height, margin, padding, transform;
 }
 
 .dark-theme .hide-dark-theme,

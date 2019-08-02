@@ -29,7 +29,6 @@ export default function Header() {
         <div className="flex-1" />
 
         <HeaderLink
-          prefetch
           href="https://twitter.com/devhub_app/"
           className={twClasses.headerLink__rightMargin}
           target="_blank"
@@ -38,7 +37,6 @@ export default function Header() {
         </HeaderLink>
 
         <HeaderLink
-          prefetch
           href="/features"
           className={twClasses.headerLink__rightMargin}
         >
@@ -46,7 +44,6 @@ export default function Header() {
         </HeaderLink>
 
         <HeaderLink
-          prefetch
           href="/pricing"
           className={twClasses.headerLink__rightMargin}
         >
@@ -61,7 +58,6 @@ export default function Header() {
         </HeaderLink>
 
         <HeaderLink
-          prefetch
           href="/download"
           className={twClasses.headerLink__rightMargin}
         >

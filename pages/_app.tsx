@@ -2,6 +2,8 @@ import NextApp, { AppContext, Container } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 
+import './styles/tailwind.css'
+
 import './styles/index.css'
 
 import './styles/devices/iphone.css'
@@ -13,14 +15,20 @@ import {
 } from '@devhub/landing/src/context/ThemeContext'
 
 export default class App extends NextApp {
-  static async getInitialProps({ Component, ctx }: AppContext) {
-    let pageProps = {}
+  onLoad() {
+    document.body.className = `${document.body.className} loaded`.trim()
+  }
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
+  componentDidMount() {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('load', this.onLoad)
     }
+  }
 
-    return { pageProps }
+  componentWillUnmount() {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('load', this.onLoad)
+    }
   }
 
   render() {
