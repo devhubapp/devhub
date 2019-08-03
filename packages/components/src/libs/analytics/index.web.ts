@@ -1,6 +1,9 @@
+import _ from 'lodash'
+
 import { constants } from '@devhub/core'
 import { Platform } from '../platform'
 import { Analytics, DevHubAnalyticsCustomDimensions } from './'
+import { formatDimensions } from './helpers'
 
 const trackingId = 'UA-52350759-2'
 gtag('config', trackingId, {
@@ -41,7 +44,7 @@ export const analytics: Analytics = {
 
   setDimensions(dimensions) {
     _dimensions = { ..._dimensions, ...dimensions }
-    gtagAndLog('set', dimensions)
+    gtagAndLog('set', formatDimensions(dimensions))
   },
 
   trackEvent(category, action, label, value, payload) {

@@ -4,6 +4,7 @@ import * as firebase from 'react-native-firebase'
 import { constants } from '@devhub/core'
 import { Platform } from '../platform'
 import { Analytics, DevHubAnalyticsCustomDimensions } from './'
+import { formatDimensions } from './helpers'
 
 firebase.analytics().setAnalyticsCollectionEnabled(true) // !__DEV__
 
@@ -17,14 +18,6 @@ function log(..._args: any[]) {
   // console.log('[ANALYTICS]', ...args) // tslint:disable-line no-console
 }
 
-function getFormatedDimensions() {
-  return _.mapValues(_dimensions, d => {
-    if (typeof d === 'string') return d
-    if (d || d === false) return `${d}`
-    return null
-  }) as Record<keyof DevHubAnalyticsCustomDimensions, string | null>
-}
-
 export const analytics: Analytics = {
   setUser(userId) {
     if (__DEV__) log('set', { user_id: userId })
@@ -35,7 +28,7 @@ export const analytics: Analytics = {
     if (__DEV__) log('set', dimensions)
     _dimensions = { ..._dimensions, ...dimensions }
 
-    firebase.analytics().setUserProperties(getFormatedDimensions())
+    firebase.analytics().setUserProperties(formatDimensions(_dimensions))
   },
 
   trackEvent(category, action, label, value, payload = {}) {
