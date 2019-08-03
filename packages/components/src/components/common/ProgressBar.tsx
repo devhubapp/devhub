@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
@@ -35,6 +35,13 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
 
   const theme = useTheme()
 
+  const isMountedRef = useRef(true)
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
+
   const springAnimatedStyles = useSpring<any>({
     config: getDefaultReactSpringAnimationConfig(),
     from: {
@@ -42,7 +49,7 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
       width: '0%',
     },
     to: async (next: any) => {
-      while (1) {
+      while (isMountedRef.current) {
         if (indeterminate) {
           await next({
             immediate: true,
