@@ -18,12 +18,13 @@ export const countReducer: Reducer<State> = (
 ): State => {
   switch (action.type) {
     case REHYDRATE as any: {
+      const { err, payload } = action as any
+
+      const counters: State = err ? state : payload && payload.counters
+
       return {
         ...initialState,
-        ...(_.pick(
-          action.payload && (action.payload as any).counters,
-          Object.keys(initialState),
-        ) as any),
+        ...(_.pick(counters, Object.keys(initialState)) as any),
       }
     }
 

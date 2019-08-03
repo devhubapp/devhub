@@ -29,11 +29,16 @@ const initialState: State = {
 
 export const authReducer: Reducer<State> = (state = initialState, action) => {
   switch (action.type) {
-    case REHYDRATE as any:
+    case REHYDRATE as any: {
+      const { err, payload } = action as any
+
+      const auth: State = err ? state : payload && payload.auth
+
       return {
-        ...(action.payload && (action.payload as any).auth),
+        ...auth,
         ..._.pick(initialState, ['error', 'isDeletingAccount', 'isLoggingIn']),
       }
+    }
 
     case 'LOGIN_REQUEST':
       return {

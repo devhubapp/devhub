@@ -16,8 +16,9 @@ const initialState: State = {
 export const appReducer: Reducer<State> = (state = initialState, action) => {
   switch (action.type) {
     case REHYDRATE as any: {
-      const app =
-        action.payload && ((action.payload as any).app as State | undefined)
+      const { err, payload } = action as any
+
+      const app: State = err ? state : payload && payload.app
 
       return {
         ...app,
