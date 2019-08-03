@@ -86,11 +86,11 @@ export default function HomePage(_props: HomePageProps) {
                 style={aspectRatioToStyle(2880 / 1596)}
               >
                 <img
-                  src="/static/screenshots/desktop-zoomed-light.png"
+                  src="/static/screenshots/desktop-zoomed-light.jpg"
                   className="visible-light-theme absolute inset-0 object-cover rounded"
                 />
                 <img
-                  src="/static/screenshots/desktop-zoomed-dark.png"
+                  src="/static/screenshots/desktop-zoomed-dark.jpg"
                   className="visible-dark-theme absolute inset-0 object-cover rounded"
                 />
               </div>
@@ -102,11 +102,11 @@ export default function HomePage(_props: HomePageProps) {
               <DeviceFrame>
                 <div className="relative w-full h-full m-auto">
                   <img
-                    src="/static/screenshots/iphone-notifications-light.png"
+                    src="/static/screenshots/iphone-notifications-light.jpg"
                     className="visible-light-theme absolute inset-0 object-cover bg-white"
                   />
                   <img
-                    src="/static/screenshots/iphone-notifications-dark.png"
+                    src="/static/screenshots/iphone-notifications-dark.jpg"
                     className="visible-dark-theme absolute inset-0 object-cover"
                   />
                 </div>
