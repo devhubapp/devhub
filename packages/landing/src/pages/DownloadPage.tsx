@@ -180,8 +180,10 @@ export default function DownloadPage(_props: DownloadPageProps) {
             </>
           )}
 
-          {!!(version && releaseDate) && (
-            <small className="text-muted-60 mb-8">{`v${version} · ${releaseDate}`}</small>
+          {!!version && (
+            <small className="text-muted-60 mb-8">{`v${version}${
+              releaseDate ? ` · ${releaseDate}` : ''
+            }`}</small>
           )}
         </div>
       </section>

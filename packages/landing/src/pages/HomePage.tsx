@@ -3,8 +3,6 @@ import CheckLabel from '../components/common/CheckLabel'
 import { CheckLabels } from '../components/common/CheckLabels'
 import { DeviceFrame } from '../components/common/DeviceFrame'
 import LandingLayout from '../components/layouts/LandingLayout'
-import FeaturesBlock from '../components/sections/features/FeaturesBlock'
-import GetStartedBlock from '../components/sections/GetStartedBlock'
 import UsedByCompaniesBlock from '../components/sections/UsedByCompaniesBlock'
 import { aspectRatioToStyle, getSystemLabel } from '../helpers'
 import { useSystem } from '../hooks/use-system'
@@ -120,12 +118,6 @@ export default function HomePage(_props: HomePageProps) {
         <div className="pb-16" />
 
         <UsedByCompaniesBlock />
-
-        <FeaturesBlock />
-
-        <div className="pb-16" />
-
-        <GetStartedBlock />
       </section>
     </LandingLayout>
   )

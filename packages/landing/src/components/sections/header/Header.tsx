@@ -40,12 +40,12 @@ export default function Header() {
           Twitter
         </HeaderLink>
 
-        <HeaderLink
+        {/* <HeaderLink
           href="/features"
           className={twClasses.headerLink__rightMargin}
         >
           Features
-        </HeaderLink>
+        </HeaderLink> */}
 
         <HeaderLink
           href="/pricing"
@@ -54,12 +54,12 @@ export default function Header() {
           Pricing
         </HeaderLink>
 
-        <HeaderLink
+        {/* <HeaderLink
           href="/changelog"
           className={twClasses.headerLink__rightMargin}
         >
           Changelog
-        </HeaderLink>
+        </HeaderLink> */}
 
         <HeaderLink
           href="/download"
