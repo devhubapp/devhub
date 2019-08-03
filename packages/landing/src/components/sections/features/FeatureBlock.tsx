@@ -21,8 +21,8 @@ export default function FeatureBlock(props: FeatureBlockProps) {
         )}
       >
         <div className={classNames('lg:w-5/12', inverted ? '' : 'lg:mr-16')}>
-          <h1 className="mb-2">{title}</h1>
-          <h2 className="mb-6">{subtitle}</h2>
+          <h1 className="mb-2 text-3xl">{title}</h1>
+          <h2 className="mb-6 text-xl">{subtitle}</h2>
           {children}
           {!!children && <div className="pb-6" />}
         </div>

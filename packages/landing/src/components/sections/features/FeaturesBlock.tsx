@@ -8,8 +8,6 @@ export interface FeaturesBlockProps {}
 export default function FeaturesBlock(_props: FeaturesBlockProps) {
   return (
     <section id="features">
-      <div className="pb-16 md:pb-32" />
-
       <FeatureBlock
         title="Manage Notifications"
         subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
