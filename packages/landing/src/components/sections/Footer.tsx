@@ -8,8 +8,8 @@ const twClasses = {
 
 export default function Footer() {
   return (
-    <footer className="container flex flex-col sm:flex-row sm:justify-center py-4 mb-10">
-      <div className="flex-1 flex flex-col items-start mb-4 sm:mr-3">
+    <footer className="container flex flex-row flex-wrap sm:justify-between py-4 mb-10">
+      <div className="flex flex-col items-start w-1/2 sm:w-auto mb-4 sm:mr-3">
         <div className={twClasses.footerTitle}>Product</div>
 
         <Link href="/download">
@@ -29,7 +29,7 @@ export default function Footer() {
         </Link>
       </div>
 
-      <div className="flex-1 flex flex-col items-start mb-4 sm:mr-3">
+      <div className="flex flex-col items-start w-1/2 sm:w-auto mb-4 sm:mr-3">
         <div className={twClasses.footerTitle}>Community</div>
 
         <a
@@ -57,7 +57,7 @@ export default function Footer() {
         </a>
       </div>
 
-      <div className="flex-1 flex flex-col items-start mb-4 sm:mr-3">
+      <div className="flex flex-col items-start w-1/2 sm:w-auto mb-4 sm:mr-3">
         <div className={twClasses.footerTitle}>Resources</div>
 
         <Link href="/terms">
@@ -69,7 +69,7 @@ export default function Footer() {
         </Link>
       </div>
 
-      <div className="flex flex-col items-start">
+      <div className="flex flex-col items-start w-1/2 sm:w-auto">
         <div className={twClasses.footerTitle}>Contact a human</div>
 
         <a

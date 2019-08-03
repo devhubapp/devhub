@@ -8,7 +8,9 @@ export default function UsedByCompaniesBlock(
   return (
     <section id="trusted-by" className="bg-less-1 py-6">
       <div className="container text-center">
-        <h3 className="uppercase">Used by 15,000+ Developers &amp; Managers</h3>
+        <h3 className="uppercase mb-0">
+          Used by 15,000+ Developers &amp; Managers
+        </h3>
         <h4 className="mb-4">Including people from these companies:</h4>
 
         <div className="flex flex-row flex-wrap justify-center">

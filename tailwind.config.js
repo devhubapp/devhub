@@ -67,6 +67,9 @@ module.exports = {
         center: true,
         padding: '2rem',
       },
+      flex: {
+        '2': '2 2 0%',
+      },
       lineHeight: {
         tight: 1.1,
       },
@@ -97,12 +100,14 @@ module.exports = {
           color: config('theme.textColor.muted.60'),
         },
         h3: {
+          marginBottom: config('theme.margin.2'),
           lineHeight: config('theme.lineHeight.relaxed'),
           fontSize: config('theme.fontSize.lg'),
           fontWeight: config('theme.fontWeight.medium'),
           color: config('theme.textColor.default'),
         },
         h4: {
+          marginBottom: config('theme.margin.2'),
           lineHeight: config('theme.lineHeight.relaxed'),
           fontSize: config('theme.fontSize.base'),
           fontWeight: config('theme.fontWeight.light'),
