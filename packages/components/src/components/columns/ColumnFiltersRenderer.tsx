@@ -63,7 +63,7 @@ export const ColumnFiltersRenderer = React.memo(
       {
         reset: false,
         unique: true,
-        config: getDefaultReactSpringAnimationConfig(),
+        config: getDefaultReactSpringAnimationConfig({ precision: 0.01 }),
         immediate,
         from: { opacity: 0 },
         enter: { opacity: 0.75 },
@@ -89,7 +89,7 @@ export const ColumnFiltersRenderer = React.memo(
       enableAbsolutePositionAnimation &&
         (!inlineMode && fixedPosition && fixedWidth)
         ? {
-            config: getDefaultReactSpringAnimationConfig(),
+            config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
             immediate: constants.DISABLE_ANIMATIONS,
             unique: true,
             from: {
@@ -112,7 +112,7 @@ export const ColumnFiltersRenderer = React.memo(
             },
           }
         : {
-            config: getDefaultReactSpringAnimationConfig(),
+            config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
             immediate: constants.DISABLE_ANIMATIONS,
             unique: true,
             from: { left: 0, right: 0 },
@@ -145,8 +145,12 @@ export const ColumnFiltersRenderer = React.memo(
             collapsable={false}
             style={[
               StyleSheet.absoluteFillObject,
-              overlayTransition.props,
-              { zIndex: 200 },
+              {
+                zIndex: 200,
+                opacity: overlayTransition.props.opacity.interpolate(
+                  (opacity: number) => opacity.toFixed(2),
+                ),
+              },
             ]}
             pointerEvents="box-none"
           >
@@ -215,7 +219,18 @@ export const ColumnFiltersRenderer = React.memo(
                     : 'visible'
                   : 'visible',
             },
-            enableAbsolutePositionAnimation && absolutePositionTransition.props,
+            enableAbsolutePositionAnimation &&
+              absolutePositionTransition.props.left && {
+                left: absolutePositionTransition.props.left.interpolate(
+                  (left: number) => Math.ceil(left),
+                ),
+              },
+            enableAbsolutePositionAnimation &&
+              absolutePositionTransition.props.right && {
+                right: absolutePositionTransition.props.right.interpolate(
+                  (right: number) => Math.ceil(right),
+                ),
+              },
             !!fixedWidth && fixedPosition === 'left' && { right: undefined },
             !!fixedWidth && fixedPosition === 'right' && { left: undefined },
             !!fixedWidth && { width: fixedWidth },

@@ -137,7 +137,7 @@ export const Button = React.memo((props: ButtonProps) => {
         isHovered || isPressing ? hoverForegroundColor : foregroundColor
 
       return {
-        config: getDefaultReactSpringAnimationConfig(),
+        config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
         immediate,
         touchableBackgroundColor: transparent
           ? isHovered || isPressing

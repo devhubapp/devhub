@@ -134,7 +134,7 @@ export function ModalRenderer(props: ModalRendererProps) {
       reset: false,
       unique: true,
       immediate,
-      config: getDefaultReactSpringAnimationConfig(),
+      config: getDefaultReactSpringAnimationConfig({ precision: 0.01 }),
       from: { opacity: 0 },
       enter: { opacity: 0.75 },
       leave: { opacity: 0 },
@@ -146,7 +146,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     item => `modal-stack-${item.name}`,
     {
       reset: false,
-      config: getDefaultReactSpringAnimationConfig(),
+      config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
       immediate,
       ...(appOrientation === 'portrait'
         ? {
@@ -193,7 +193,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     {
       reset: false,
       unique: true,
-      config: getDefaultReactSpringAnimationConfig(),
+      config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
       immediate,
       from: { right: size },
       enter: { right: 0 },

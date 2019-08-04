@@ -82,7 +82,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         Platform.realOS !== 'web'
 
       return {
-        config: getDefaultReactSpringAnimationConfig(),
+        config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
         immediate,
         backgroundColor:
           enableBackgroundHover && (isHovered || isPressing || isOpen)

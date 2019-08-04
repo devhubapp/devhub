@@ -27,7 +27,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
   const immediate = constants.DISABLE_ANIMATIONS
   const animatedStyles = useSpring<any>({
     immediate,
-    config: getDefaultReactSpringAnimationConfig(),
+    config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
     from: { height: 0 },
     to: { height: isOpen ? size : 0 },
     // onStart: () => {
@@ -62,7 +62,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
           isOpen && wasOpen === isOpen && hasCompletedAnimationRef.current
             ? 'auto'
             : animatedStyles.height.interpolate((value: number | 'auto') =>
-                value === 'auto' || value > 0 ? value : 0,
+                value === 'auto' ? value : value > 0 ? Math.floor(value) : 0,
               ),
         overflow: 'hidden',
         opacity: animatedStyles.height.interpolate((value: number | 'auto') =>

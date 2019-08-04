@@ -157,7 +157,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
         (Platform.OS === 'web' && Platform.realOS !== 'web')
 
       return {
-        config: getDefaultReactSpringAnimationConfig(),
+        config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
         immediate,
         backgroundColor:
           isHovered && enableBackgroundHover

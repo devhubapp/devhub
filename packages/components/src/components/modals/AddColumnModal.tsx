@@ -193,7 +193,7 @@ function AddColumnModalItem({
       constants.DISABLE_ANIMATIONS || isHovered || Platform.realOS !== 'web'
 
     return {
-      config: getDefaultReactSpringAnimationConfig(),
+      config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
       immediate,
       backgroundColor:
         (isHovered || isPressing) && !disabled
