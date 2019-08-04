@@ -8,7 +8,7 @@
     "email": "bruno@devhubapp.com",
     "url": "https://twitter.com/brunolemos"
   },
-  "description": "GitHub Notifications Manager & Activity Watcher",
+  "description": "GitHub Management Tool",
   "repository": "https://github.com/devhubapp/devhub",
   "scripts": {
     "build": "yarn build:base && yarn build:web && yarn build:web:post && yarn build:electron",

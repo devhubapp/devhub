@@ -1,9 +1,9 @@
 import NextDocument, { Head, Main, NextScript } from 'next/document'
 import React from 'react'
 
-const shortDescriptionTitle = 'GitHub Notifications Manager & Activity Watcher'
+const shortDescriptionTitle = 'GitHub Management Tool'
 const shortDescriptionContent =
-  "Take back control of your GitHub workflow. Save custom searches, apply filters and don't miss anything important."
+  "Take back control of your GitHub workflow. Manage notifications, apply filters, save custom searches and don't miss anything important."
 const fullDescription = `${shortDescriptionTitle}. ${shortDescriptionContent}`
 const screenshot =
   'https://user-images.githubusercontent.com/619186/60048043-9bd77300-96a1-11e9-96c3-ad4ebd33e550.jpg'
