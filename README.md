@@ -76,11 +76,11 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 
 ### Next features:
 
-- [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([#110](https://github.com/devhubapp/devhub/issues/110));
-- [ ] **Trending**: New column type to show Trending repositories ([#48](https://github.com/devhubapp/devhub/issues/48));
-- [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([#51](https://github.com/devhubapp/devhub/issues/51));
-- [ ] **Drag & Drop**: Allow moving columns using drag&drop ([#42](https://github.com/devhubapp/devhub/issues/42))
-- [ ] **GitHub Enterprise**: Support for self hosted GitHubs on local networks; contact us via e-mail: [enterprise@devhubapp.com](mailto:enterprise@devhubapp.com) to show your interest.
+- [ ] **Issues/PR management**: Manage all issues and PRs, filter the ones related to you, take actions, etc. ([vote: #110](https://github.com/devhubapp/devhub/issues/110));
+- [ ] **Trending**: New column type to show Trending repositories ([vote: #48](https://github.com/devhubapp/devhub/issues/48));
+- [ ] **Push notifications**: Enable push notifications for your filtered columns on mobile and/or desktop ([vote: #51](https://github.com/devhubapp/devhub/issues/51));
+- [ ] **Drag & Drop**: Allow moving columns using drag&drop ([vote: #42](https://github.com/devhubapp/devhub/issues/42))
+- [ ] **GitHub Enterprise**: Support for self hosted GitHubs on local networks (vote: [#165](https://github.com/devhubapp/devhub/issues/165))
 
 > Which one do you want first? Any other recommendations? Search for [existing feature requests](https://github.com/devhubapp/devhub/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22+sort%3Areactions-%2B1-desc) and add a 👍 reaction on them, or create a new one. Feel free to ping me (@brunolemos) if you feel it's something important.
 
