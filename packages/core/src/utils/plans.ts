@@ -32,7 +32,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
       { label: 'All filters', available: true },
       { label: 'Sync between devices', available: false },
       { label: 'Private repositorites', available: false },
-      { label: 'Push Notifications', available: false },
+      // { label: 'Push Notifications', available: false },
       { label: 'More than 5 columns', available: false },
     ],
 
@@ -63,7 +63,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
       { label: 'All filters', available: true },
       { label: 'Sync between devices', available: true },
       { label: 'Private repositorites', available: true },
-      { label: 'Push Notifications', available: true },
+      // { label: 'Push Notifications', available: true },
       { label: 'More than 10 columns', available: false },
     ],
 
@@ -93,7 +93,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
       { label: 'All filters', available: true },
       { label: 'Sync between devices', available: true },
       { label: 'Private repositorites', available: true },
-      { label: 'Push Notifications', available: true },
+      // { label: 'Push Notifications', available: true },
       { label: 'More than 15 columns', available: false },
     ],
 
@@ -123,7 +123,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
       { label: 'All filters', available: true },
       { label: 'Sync between devices', available: true },
       { label: 'Private repositorites', available: true },
-      { label: 'Push Notifications', available: true },
+      // { label: 'Push Notifications', available: true },
     ],
 
     featureFlags: {

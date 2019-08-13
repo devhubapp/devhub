@@ -92,7 +92,7 @@ export default function DownloadPage(_props: DownloadPageProps) {
             <>
               <p className={swClasses.description}>
                 Download DevHub desktop app for a more complete experience with
-                menubar and push notifications.
+                menubar and badge support.
               </p>
 
               <div className={swClasses.buttonsContainer}>

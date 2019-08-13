@@ -21,8 +21,8 @@ export default function HomePage(_props: HomePageProps) {
 
               <h2>
                 Manage notifications; Filter repository activities; Filter
-                Issues &amp; Pull Requests; Save custom searches; Enable Push
-                Notifications for only what you want.
+                Issues &amp; Pull Requests; Save custom searches; Show a badge
+                notification for only what you want.
               </h2>
             </div>
 
