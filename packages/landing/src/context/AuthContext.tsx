@@ -16,6 +16,7 @@ export interface AuthProviderProps {
 }
 
 export interface AuthData {
+  _id: string
   appToken: string
   appTokenCreatedAt: string
   github: {
@@ -39,6 +40,7 @@ export interface AuthProviderState {
 }
 
 const defaultAuthData: AuthData = {
+  _id: '',
   appToken: '',
   appTokenCreatedAt: '',
   github: {
@@ -86,16 +88,22 @@ export function AuthProvider(props: AuthProviderProps) {
   useLayoutEffect(() => {
     const cache = getFromCache()
     if (cache) setAuthData(cache)
+
+    if (cache && cache.appToken) login(cache.appToken)
   }, [])
 
   useEffect(() => {
     saveOnCache(authData)
-  }, [
-    authData && authData.appToken,
-    authData && authData.appTokenCreatedAt,
-    authData && authData.github && authData.github.login,
-    authData && authData.plan && JSON.stringify(authData),
-  ])
+  }, [JSON.stringify(authData)])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.gtag === 'undefined')
+      return
+
+    if (authData && authData._id) {
+      window.gtag('set', { user_id: authData && authData._id })
+    }
+  }, [authData && authData._id])
 
   const cancelSubscription = useCallback(
     (shouldPrompt = true) => {
@@ -219,6 +227,7 @@ export function AuthProvider(props: AuthProviderProps) {
             login {
               appToken
               user {
+                _id
                 github {
                   user {
                     id
@@ -275,6 +284,8 @@ export function AuthProvider(props: AuthProviderProps) {
 
         if (response.status >= 200 && response.status < 300) {
           const { data } = await response.json()
+          const _id =
+            data && data.login && data.login.user && data.login.user._id
           const newAppToken = data && data.login && data.login.appToken
           const appTokenCreatedAt = new Date().toISOString()
           const user = data && data.login && data.login.user
@@ -282,6 +293,7 @@ export function AuthProvider(props: AuthProviderProps) {
           const plan = user && user.plan
 
           const v: AuthData = {
+            _id,
             appToken: newAppToken,
             appTokenCreatedAt,
             github,
@@ -343,7 +355,13 @@ export function useAuth() {
 }
 
 function isValid(auth: AuthData | undefined) {
-  return !!(auth && auth.appToken && auth.github && auth.github.login)
+  return !!(
+    auth &&
+    auth._id &&
+    auth.appToken &&
+    auth.github &&
+    auth.github.login
+  )
 }
 
 function getFromCache(): AuthData | undefined {
@@ -376,5 +394,11 @@ function saveOnCache(auth: AuthData | undefined) {
   } catch (error) {
     console.error(error)
     return false
+  }
+}
+
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void
   }
 }

@@ -100,6 +100,21 @@ export default class Document extends NextDocument {
           />
 
           <link rel="shortcut icon" href="/favicon.ico" />
+
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=UA-52350759-6"
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-52350759-6');
+          `,
+            }}
+          />
         </Head>
 
         <body
