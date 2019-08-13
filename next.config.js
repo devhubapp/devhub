@@ -1,6 +1,7 @@
 const withCSS = require('@zeit/next-css')
 
 module.exports = withCSS({
+  target: 'serverless',
   env: {
     STRIPE_PUBLIC_KEY:
       process.env.NODE_ENV === 'production'

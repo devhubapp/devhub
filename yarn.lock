@@ -4299,9 +4299,9 @@ compression@1.7.3:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-compression@^1.5.2, compression@^1.7.1:
+compression@1.7.4, compression@^1.5.2, compression@^1.7.1:
   version "1.7.4"
-  resolved "https://registry.yarnpkg.com/compression/-/compression-1.7.4.tgz#95523eff170ca57c29a0ca41e6fe131f41e5bb8f"
+  resolved "https://registry.npmjs.org/compression/-/compression-1.7.4.tgz#95523eff170ca57c29a0ca41e6fe131f41e5bb8f"
   integrity sha512-jaSIDzP9pZVS4ZfQ+TzvtiWhdpFhE2RDHz8QJkpX9SIpLq88VueF5jJw6t+6CUQcAoA6t+x89MLrWAqpfDE8iQ==
   dependencies:
     accepts "~1.3.5"
@@ -10534,6 +10534,25 @@ next-server@9.0.2:
     styled-jsx "3.2.1"
     url "0.11.0"
 
+next-server@9.0.3:
+  version "9.0.3"
+  resolved "https://registry.npmjs.org/next-server/-/next-server-9.0.3.tgz#b1372df158646ec40118c6e845d9a51764a21d89"
+  integrity sha512-fBTiph8k3GklHikeBcxkPZMTler7Q4oKSCUU7hJa0qDa8Sx+Tm4F1cn8FU0pM8C8Q1A+FVBZPEz5iJLJwhtZqA==
+  dependencies:
+    amp-toolbox-optimizer "1.2.0-alpha.1"
+    content-type "1.0.4"
+    cookie "0.4.0"
+    etag "1.8.1"
+    find-up "4.0.0"
+    fresh "0.5.2"
+    path-to-regexp "2.1.0"
+    prop-types "15.7.2"
+    raw-body "2.4.0"
+    react-is "16.8.6"
+    send "0.16.1"
+    styled-jsx "3.2.1"
+    url "0.11.0"
+
 next@9.0.2:
   version "9.0.2"
   resolved "https://registry.npmjs.org/next/-/next-9.0.2.tgz#4de9da7ca64d89dd1759ad2b5d9d23a9dc3ca63b"
@@ -10581,6 +10600,59 @@ next@9.0.2:
     url "0.11.0"
     watchpack "2.0.0-beta.5"
     webpack "4.35.3"
+    webpack-dev-middleware "3.7.0"
+    webpack-hot-middleware "2.25.0"
+    webpack-sources "1.3.0"
+    worker-farm "1.7.0"
+
+next@9.0.3:
+  version "9.0.3"
+  resolved "https://registry.npmjs.org/next/-/next-9.0.3.tgz#5c7b6f8dd142de907456a7c1df41e839ad16804a"
+  integrity sha512-Du0bGMdQDFq0itPm+OyaN/cKW20p9h6ZoEXnwIcop28L06pB45KcLEDdZgDZ75rk36UHiuwpRnjLMVzcbEqhRg==
+  dependencies:
+    "@babel/core" "7.4.5"
+    "@babel/plugin-proposal-class-properties" "7.4.4"
+    "@babel/plugin-proposal-object-rest-spread" "7.4.4"
+    "@babel/plugin-syntax-dynamic-import" "7.2.0"
+    "@babel/plugin-transform-modules-commonjs" "7.4.4"
+    "@babel/plugin-transform-runtime" "7.4.4"
+    "@babel/preset-env" "7.4.5"
+    "@babel/preset-react" "7.0.0"
+    "@babel/preset-typescript" "7.3.3"
+    "@babel/runtime" "7.4.5"
+    "@babel/runtime-corejs2" "7.4.5"
+    amphtml-validator "1.0.23"
+    async-sema "3.0.0"
+    autodll-webpack-plugin "0.4.2"
+    babel-core "7.0.0-bridge.0"
+    babel-loader "8.0.6"
+    babel-plugin-react-require "3.0.0"
+    babel-plugin-transform-async-to-promises "0.8.10"
+    babel-plugin-transform-react-remove-prop-types "0.4.24"
+    chalk "2.4.2"
+    compression "1.7.4"
+    find-up "4.0.0"
+    fork-ts-checker-webpack-plugin "1.3.4"
+    fresh "0.5.2"
+    launch-editor "2.2.1"
+    loader-utils "1.2.3"
+    mkdirp "0.5.1"
+    next-server "9.0.3"
+    prop-types "15.7.2"
+    prop-types-exact "1.2.0"
+    react-error-overlay "5.1.6"
+    react-is "16.8.6"
+    serialize-javascript "1.7.0"
+    source-map "0.6.1"
+    string-hash "1.1.3"
+    strip-ansi "5.2.0"
+    styled-jsx "3.2.1"
+    terser "4.0.0"
+    tty-aware-progress "1.0.4"
+    unfetch "4.1.0"
+    url "0.11.0"
+    watchpack "2.0.0-beta.5"
+    webpack "4.38.0"
     webpack-dev-middleware "3.7.0"
     webpack-hot-middleware "2.25.0"
     webpack-sources "1.3.0"
@@ -10786,10 +10858,10 @@ normalize.css@^8.0.1:
   resolved "https://registry.npmjs.org/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
   integrity sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==
 
-now@15.8.5:
-  version "15.8.5"
-  resolved "https://registry.npmjs.org/now/-/now-15.8.5.tgz#1201ad17d8f21f41455e5aeaf879def711beb3c5"
-  integrity sha512-YjkbEzxANkqDrQG5FAMkK4asZnU5NYvVUCgeACZlASNs+SXZgDObDlIOW2OCs1TF5zBZStD9BMkE8l16imddQA==
+now@16.1.1:
+  version "16.1.1"
+  resolved "https://registry.npmjs.org/now/-/now-16.1.1.tgz#692c406158c21bb0371de137b5f9957c861a4810"
+  integrity sha512-SXro0fOBTVBn+A2wEYV63It706egm7swgo6qb8zp6g07pOK0PQ1smeO0wmdYbx2Kuk5+Deh5t92KnZQi8wZjzA==
 
 npm-bundled@^1.0.1:
   version "1.0.6"
@@ -15993,6 +16065,35 @@ webpack@4.35.3:
   version "4.35.3"
   resolved "https://registry.npmjs.org/webpack/-/webpack-4.35.3.tgz#66bc35ef215a7b75e8790f84d560013ffecf0ca3"
   integrity sha512-xggQPwr9ILlXzz61lHzjvgoqGU08v5+Wnut19Uv3GaTtzN4xBTcwnobodrXE142EL1tOiS5WVEButooGzcQzTA==
+  dependencies:
+    "@webassemblyjs/ast" "1.8.5"
+    "@webassemblyjs/helper-module-context" "1.8.5"
+    "@webassemblyjs/wasm-edit" "1.8.5"
+    "@webassemblyjs/wasm-parser" "1.8.5"
+    acorn "^6.2.0"
+    ajv "^6.1.0"
+    ajv-keywords "^3.1.0"
+    chrome-trace-event "^1.0.0"
+    enhanced-resolve "^4.1.0"
+    eslint-scope "^4.0.0"
+    json-parse-better-errors "^1.0.2"
+    loader-runner "^2.3.0"
+    loader-utils "^1.1.0"
+    memory-fs "~0.4.1"
+    micromatch "^3.1.8"
+    mkdirp "~0.5.0"
+    neo-async "^2.5.0"
+    node-libs-browser "^2.0.0"
+    schema-utils "^1.0.0"
+    tapable "^1.1.0"
+    terser-webpack-plugin "^1.1.0"
+    watchpack "^1.5.0"
+    webpack-sources "^1.3.0"
+
+webpack@4.38.0:
+  version "4.38.0"
+  resolved "https://registry.npmjs.org/webpack/-/webpack-4.38.0.tgz#6d77108404b08883c78f4e7e45a43c4e5c47c931"
+  integrity sha512-lbuFsVOq8PZY+1Ytz/mYOvYOo+d4IJ31hHk/7iyoeWtwN33V+5HYotSH+UIb9tq914ey0Hot7z6HugD+je3sWw==
   dependencies:
     "@webassemblyjs/ast" "1.8.5"
     "@webassemblyjs/helper-module-context" "1.8.5"

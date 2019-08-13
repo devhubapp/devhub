@@ -27,9 +27,9 @@ script:
         -v ~/.cache/electron:/root/.cache/electron \
         -v ~/.cache/electron-builder:/root/.cache/electron-builder \
         electronuserland/builder:wine \
-        /bin/bash -c "yarn --pure-lockfile && yarn clean && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --linux --win"
+        /bin/bash -c "yarn --pure-lockfile && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --linux --win"
     else
-      yarn --pure-lockfile && yarn clean && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --mac && now --target production --token $NOW_TOKEN && now alias beta.devhubapp.com --token $NOW_TOKEN
+      yarn --pure-lockfile && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --mac && yarn now --local-config ./now.app.json --target production --token $NOW_TOKEN && yarn now --local-config ./now.landing.json --target production --token $NOW_TOKEN
     fi
 
 before_cache:
