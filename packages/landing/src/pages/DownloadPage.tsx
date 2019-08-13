@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
+import { PlatformCategory } from '@devhub/core/src'
 import Button from '../components/common/buttons/Button'
 import { Select } from '../components/common/Select'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { useSystem } from '../hooks/use-system'
-import { PlatformCategory } from '../types'
 
 export interface DownloadPageProps {}
 
@@ -32,7 +32,7 @@ export default function DownloadPage(_props: DownloadPageProps) {
     if (!autostart) return
 
     setIsDownloading(true)
-    Router.push(Router.route, Router.pathname, { shallow: true })
+    Router.replace(Router.route, Router.pathname, { shallow: true })
 
     setTimeout(() => {
       if (!autostartRef.current) return
@@ -163,8 +163,8 @@ export default function DownloadPage(_props: DownloadPageProps) {
           {category === 'web' && (
             <>
               <p className={swClasses.description}>
-                We recommend downloading DevHub apps instead to get the full
-                experience, but you can also use our web version.
+                We recommend downloading DevHub apps to get the full experience,
+                but you can also use our web version.
               </p>
 
               <div className={swClasses.buttonsContainer}>

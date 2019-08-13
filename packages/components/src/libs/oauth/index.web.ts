@@ -1,14 +1,13 @@
 import qs from 'qs'
 import url from 'url'
 
-import { constants, GitHubAppType } from '@devhub/core'
+import { constants, GitHubAppType, OAuthResponseData } from '@devhub/core'
 import { Linking } from '../linking'
 import { Platform } from '../platform/index.web'
 import {
   getUrlParamsIfMatches,
   listenForNextMessageData,
   listenForNextUrl,
-  OAuthResponseData,
 } from './helpers'
 
 const schemaRedirectUri = Platform.isElectron

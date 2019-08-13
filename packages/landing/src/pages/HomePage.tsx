@@ -1,17 +1,14 @@
-import Button from '../components/common/buttons/Button'
 import CheckLabel from '../components/common/CheckLabel'
 import { CheckLabels } from '../components/common/CheckLabels'
 import { DeviceFrame } from '../components/common/DeviceFrame'
 import LandingLayout from '../components/layouts/LandingLayout'
+import DownloadButtons from '../components/sections/download/DownloadButtons'
 import UsedByCompaniesBlock from '../components/sections/UsedByCompaniesBlock'
-import { aspectRatioToStyle, getSystemLabel } from '../helpers'
-import { useSystem } from '../hooks/use-system'
+import { aspectRatioToStyle } from '../helpers'
 
 export interface HomePageProps {}
 
 export default function HomePage(_props: HomePageProps) {
-  const { category, os } = useSystem()
-
   return (
     <LandingLayout>
       <section id="homepage">
@@ -29,53 +26,12 @@ export default function HomePage(_props: HomePageProps) {
               </h2>
             </div>
 
-            <div className="flex flex-row flex-wrap mb-4">
-              {os ? (
-                <>
-                  <Button
-                    type="primary"
-                    href="/download?autostart"
-                    className="mb-2 mr-2"
-                  >
-                    {`Download for ${getSystemLabel(os)}`}
-                  </Button>
-
-                  {category === 'desktop' ? (
-                    <Button type="neutral" href="/download" className="mb-2">
-                      Other downloads
-                    </Button>
-                  ) : (
-                    <Button
-                      type="neutral"
-                      href="https://app.devhubapp.com/"
-                      target="_top"
-                      className="mb-2"
-                    >
-                      Use web version
-                    </Button>
-                  )}
-                </>
-              ) : (
-                <>
-                  <Button type="primary" href="/download" className="mb-2 mr-2">
-                    Download the app
-                  </Button>
-
-                  <Button
-                    type="neutral"
-                    href="https://app.devhubapp.com/"
-                    target="_top"
-                    className="mb-2"
-                  >
-                    Use web version
-                  </Button>
-                </>
-              )}
-            </div>
+            <DownloadButtons />
 
             <CheckLabels>
               <CheckLabel label="Free version" />
               <CheckLabel label="Free trial on paid features" />
+              <CheckLabel label="No code access" />
             </CheckLabels>
           </div>
 

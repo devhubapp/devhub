@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from 'react'
 
+import { OS, PlatformCategory } from '@devhub/core/src'
 import { getOSName, getPlatformCategory } from '../helpers'
-import { OS, PlatformCategory } from '../types'
 
 interface System {
   category: PlatformCategory | undefined

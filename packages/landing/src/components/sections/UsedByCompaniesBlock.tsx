@@ -13,7 +13,7 @@ export default function UsedByCompaniesBlock(
         </h3>
         <h4 className="mb-4">Including people from these companies:</h4>
 
-        <div className="flex flex-row flex-wrap justify-center">
+        <div className="flex flex-row flex-wrap justify-center mb-4">
           <div className="flex-shrink-0 w-32 mx-1 my-1">
             <div
               className="relative bg-less-3 rounded-full"
@@ -97,17 +97,12 @@ export default function UsedByCompaniesBlock(
             </div>
           </div>
         </div>
+
+        <p className="text-xs text-muted-40 italic">
+          Not affiliated with these companies. Used by some of their
+          individuals.
+        </p>
       </div>
-
-      {/* <style jsx>{`
-        .company-logo {
-          filter: grayscale(1);
-        }
-
-        .company-logo:hover {
-          filter: none;
-        }
-      `}</style> */}
     </section>
   )
 }

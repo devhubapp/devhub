@@ -5,7 +5,7 @@ import React from 'react'
 
 const twClasses = {
   headerLink:
-    'px-2 md:px-4 text-base font-semibold text-center border rounded-full',
+    'header-link px-2 md:px-4 text-base font-semibold text-center border rounded-full',
   headerLink__active: 'bg-less-2 border-bg-less-2 text-default font-extrabold',
   headerLink__inactive: 'bg-default border-bg text-muted-60 hover:text-default',
 }
@@ -33,7 +33,10 @@ export default function HeaderLink(props: HeaderLinkProps) {
   return (
     <>
       <Link {...linkProps}>
-        <a className={classNames('flex flex-col', className)} target={target}>
+        <a
+          className={classNames('flex flex-col transform-on-hover', className)}
+          target={target}
+        >
           <span className={baseClass} style={{ lineHeight }}>
             {children}
           </span>

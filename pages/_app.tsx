@@ -9,6 +9,7 @@ import './styles/index.css'
 import './styles/devices/iphone.css'
 
 import { AppGlobalStyles } from '@devhub/landing/src/components/styles/AppGlobalStyles'
+import { AuthProvider } from '@devhub/landing/src/context/AuthContext'
 import {
   ThemeConsumer,
   ThemeProvider,
@@ -40,20 +41,22 @@ export default class App extends NextApp {
 
     return (
       <ThemeProvider>
-        <Container className="xxx">
-          <Head>
-            <title>DevHub | GitHub Management tool</title>
-          </Head>
+        <AuthProvider>
+          <Container>
+            <Head>
+              <title>DevHub | GitHub Management tool</title>
+            </Head>
 
-          <ThemeConsumer>
-            {({ theme }) => (
-              <div className={theme.isDark ? 'dark-theme' : 'light-theme'}>
-                <Component {...pageProps} />
-              </div>
-            )}
-          </ThemeConsumer>
-          <AppGlobalStyles />
-        </Container>
+            <ThemeConsumer>
+              {({ theme }) => (
+                <div className={theme.isDark ? 'dark-theme' : 'light-theme'}>
+                  <Component {...pageProps} />
+                </div>
+              )}
+            </ThemeConsumer>
+            <AppGlobalStyles />
+          </Container>
+        </AuthProvider>
       </ThemeProvider>
     )
   }

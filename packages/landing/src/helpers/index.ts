@@ -1,4 +1,10 @@
-import { OS, Platform, PlatformCategory } from '../types'
+import {
+  constants,
+  DevHubHeaders,
+  OS,
+  Platform,
+  PlatformCategory,
+} from '@devhub/core/src'
 
 export function aspectRatioToStyle(ratio: number) {
   return {
@@ -84,4 +90,47 @@ export function getSystemLabel(name: Platform | OS | '') {
     default:
       return ''
   }
+}
+
+export function formatPrice(
+  valueInCents: number,
+  currency: string,
+  locale = 'en-US',
+) {
+  const formatter = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency || 'usd',
+  })
+
+  const value = formatter.format(valueInCents / 100)
+  return value.endsWith('.00') ? value.slice(0, -3) : value
+}
+
+export function getDefaultDevHubHeaders({
+  appToken,
+}: {
+  appToken: string | undefined
+}): Record<keyof DevHubHeaders, string> {
+  const headers: Record<keyof DevHubHeaders, string> = {
+    Authorization: appToken ? `bearer ${appToken}` : '',
+    DEVHUB_HOSTNAME: constants.HOSTNAME || '',
+    DEVHUB_IS_BETA: `${!!constants.IS_BETA}`,
+    DEVHUB_IS_DEV: `${process.env.NODE_ENV !== 'production'}`,
+    DEVHUB_IS_LANDING: 'true',
+    DEVHUB_PLATFORM_IS_ELECTRON: 'false',
+    DEVHUB_PLATFORM_OS: getPlatform(),
+    DEVHUB_PLATFORM_REAL_OS: getOSName() || '',
+    DEVHUB_VERSION: constants.APP_VERSION,
+  }
+
+  return headers
+}
+
+export function getTrialTimeLeftLabel(endAt: string) {
+  if (!endAt) return ''
+
+  const days = (new Date(endAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  if (days < 0) return 'ended'
+  if (days < 1) return `${Math.ceil(days * 24)}h left`
+  return `${Math.ceil(days)} days left`
 }

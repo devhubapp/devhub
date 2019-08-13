@@ -2,9 +2,9 @@ import { NextPage } from 'next'
 
 import PrivacyPage from '@devhub/landing/src/pages/PrivacyPage'
 
-export interface PrivacyProps {}
+export interface PrivacyPageProps {}
 
-const Privacy: NextPage<PrivacyProps> = () => {
+const Privacy: NextPage<PrivacyPageProps> = () => {
   return <PrivacyPage />
 }
 

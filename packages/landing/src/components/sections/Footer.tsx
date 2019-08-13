@@ -27,6 +27,10 @@ export default function Footer() {
         <Link href="/pricing">
           <a className={twClasses.footerLink}>Pricing</a>
         </Link>
+
+        <Link href="/account">
+          <a className={twClasses.footerLink}>My account</a>
+        </Link>
       </div>
 
       <div className="flex flex-col items-start w-1/2 sm:w-auto mb-4 sm:mr-3">
@@ -81,7 +85,7 @@ export default function Footer() {
         </a>
 
         <span className={twClasses.footerText}>
-          bruno<span>@</span>devhubapp.com
+          bruno<span className="text-default">@</span>devhubapp.com
         </span>
       </div>
     </footer>

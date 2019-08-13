@@ -44,6 +44,7 @@ module.exports = {
         default: 'var(--theme-foreground-color)',
         muted: {
           default: 'var(--theme-foreground-color-muted-60)',
+          10: 'var(--theme-foreground-color-muted-10)',
           25: 'var(--theme-foreground-color-muted-25)',
           40: 'var(--theme-foreground-color-muted-40)',
           60: 'var(--theme-foreground-color-muted-60)',
@@ -58,6 +59,7 @@ module.exports = {
         text: {
           default: 'var(--theme-foreground-color)',
           muted: 'var(--theme-foreground-color-muted-60)',
+          'muted-10': 'var(--theme-foreground-color-muted-10)',
           'muted-25': 'var(--theme-foreground-color-muted-25)',
           'muted-40': 'var(--theme-foreground-color-muted-40)',
           'muted-60': 'var(--theme-foreground-color-muted-60)',
@@ -78,6 +80,7 @@ module.exports = {
         '84': '21rem',
         '96': '24rem',
         '100': '26rem',
+        '150': '36rem',
       },
     },
   },

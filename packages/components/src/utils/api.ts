@@ -8,9 +8,10 @@ export function getDefaultDevHubHeaders({
 }): DevHubHeaders {
   const headers: DevHubHeaders = {
     Authorization: appToken ? `bearer ${appToken}` : '',
+    DEVHUB_HOSTNAME: constants.HOSTNAME!,
     DEVHUB_IS_BETA: constants.IS_BETA,
     DEVHUB_IS_DEV: __DEV__,
-    DEVHUB_IS_LOCALHOST: constants.IS_LOCALHOST,
+    DEVHUB_IS_LANDING: false,
     DEVHUB_PLATFORM_IS_ELECTRON: Platform.isElectron,
     DEVHUB_PLATFORM_OS: Platform.OS,
     DEVHUB_PLATFORM_REAL_OS: Platform.realOS,

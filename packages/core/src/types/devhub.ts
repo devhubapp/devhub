@@ -1,6 +1,8 @@
 import Octokit from '@octokit/rest'
 
+import { PlanID } from '../utils'
 import {
+  GitHubAppType,
   GitHubComment,
   GitHubCommit,
   GitHubEvent,
@@ -21,6 +23,7 @@ import {
   GitHubStateType,
   GitHubWatchEvent,
 } from './github'
+import { GraphQLUserPlan } from './graphql'
 
 type octokit = InstanceType<typeof Octokit>
 
@@ -465,3 +468,86 @@ export interface ItemsFilterMetadata {
     }
   >
 }
+
+export interface OAuthResponseData {
+  app_token?: string
+  code: string
+  github_app_type: GitHubAppType
+  github_login: string
+  github_scope: string[]
+  github_token?: string
+  github_token_created_at?: string
+  github_token_type?: string
+  oauth: boolean
+}
+
+export type DesktopOS = 'macos' | 'windows' | 'linux'
+export type MobileOS = 'ios' | 'android'
+export type OS = DesktopOS | MobileOS
+
+export type DownloadOption =
+  | {
+      category: 'web'
+      platform: 'web'
+      os: OS
+    }
+  | {
+      category: 'mobile'
+      platform: 'ios'
+      os: 'ios'
+    }
+  | {
+      category: 'mobile'
+      platform: 'android'
+      os: 'android'
+    }
+  | {
+      category: 'desktop'
+      platform: 'web'
+      os: DesktopOS
+    }
+  | {
+      category: 'desktop'
+      platform: 'web'
+      os: DesktopOS
+    }
+  | {
+      category: 'desktop'
+      platform: 'web'
+      os: DesktopOS
+    }
+
+export type PlatformCategory = DownloadOption['category']
+export type Platform = DownloadOption['platform']
+
+export type PlanSource = 'stripe' // | 'github_marketplace' | 'opencollective' | 'appstore' | 'playstore'
+
+export interface Plan {
+  id: PlanID
+  stripeIds: [string, string] | []
+
+  cannonicalId: 'free' | 'starter' | 'pro' | 'max'
+  label: string
+  description: string
+
+  amount: number
+  currency: string
+  trialPeriodDays: number
+  interval: 'day' | 'week' | 'month' | 'year' | undefined
+  intervalCount: number
+
+  featureLabels: Array<{
+    label: string
+    available: boolean
+  }>
+
+  featureFlags: {
+    columnsLimit: number
+    enableFilters: boolean
+    enableSync: boolean
+    enablePrivateRepositories: boolean
+    enablePushNotifications: boolean
+  }
+}
+
+export interface UserPlan extends GraphQLUserPlan {}

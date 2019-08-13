@@ -10,14 +10,15 @@ const twClasses = {
 
 export default function Header() {
   return (
-    <header className="container mb-10 py-4 overflow-x-visible">
+    <header id="header" className="container mb-10 py-4 overflow-x-visible">
       <div className="flex flex-row items-center overflow-x-auto">
         <Link href="/">
           <a
             className={classNames(
-              'flex flex-row items-center',
+              'transform-on-hover flex flex-row items-center',
               twClasses.headerLink__rightMargin,
             )}
+            style={{ display: 'contents' }}
           >
             <img
               className="w-8 h-8 mr-6 sm:mr-3 bg-primary rounded-full"

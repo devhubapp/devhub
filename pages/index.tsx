@@ -2,12 +2,12 @@ import { NextPage } from 'next'
 
 import HomePage from '@devhub/landing/src/pages/HomePage'
 
-export interface IndexProps {
+export interface IndexPageProps {
   appToken: string | undefined
   hasOverridenRender: boolean
 }
 
-const Index: NextPage<IndexProps> = props => {
+const Index: NextPage<IndexPageProps> = props => {
   /*
   const { appToken: _appToken, hasOverridenRender } = props
 

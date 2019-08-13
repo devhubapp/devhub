@@ -1,8 +1,6 @@
 import qs from 'qs'
 
-import { GitHubTokenDetails } from '@devhub/core'
 import { Linking } from '../../libs/linking'
-import { OAuthResponseData } from '../../libs/oauth/helpers'
 import { Platform } from '../../libs/platform'
 
 export function clearQueryStringFromURL(fields: string[]) {
@@ -41,40 +39,11 @@ export function clearOAuthQueryParams() {
     'app_token',
     'code',
     'github_app_type',
+    'github_login',
     'github_scope',
     'github_token',
     'github_token_created_at',
     'github_token_type',
     'oauth',
   ])
-}
-
-export function tryParseOAuthParams(
-  params: OAuthResponseData,
-): { appToken?: string; tokenDetails?: GitHubTokenDetails } {
-  try {
-    if (!(params && params.app_token && params.github_token))
-      throw new Error('No token received.')
-
-    const appToken = params.app_token
-    const githubScope = params.github_scope
-    const githubToken = params.github_token
-    const githubTokenCreatedAt =
-      params.github_token_created_at || new Date().toISOString()
-    const githubTokenType = params.github_token_type || 'bearer'
-
-    const tokenDetails: GitHubTokenDetails = {
-      scope: githubScope,
-      token: githubToken,
-      tokenType: githubTokenType,
-      tokenCreatedAt: githubTokenCreatedAt,
-    }
-
-    clearOAuthQueryParams()
-
-    return { appToken, tokenDetails }
-  } catch (error) {
-    if (error.message === 'Canceled' || error.message === 'Timeout') return {}
-    throw error
-  }
 }

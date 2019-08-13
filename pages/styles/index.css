@@ -37,10 +37,22 @@ a {
   margin-bottom: 1px;
 }
 
-a:hover, .btn:hover {
+hr {
+  border-width: 0px;
+  border-bottom-width: 1px;
+  border-color: var(--theme-foreground-color-muted-10);
+}
+
+.transform-on-hover:hover, .btn:not(.btn-disabled):hover {
   transform: translateY(-1px);
 }
 
-footer a:hover {
+#landing a:not(.btn):not(.transform-on-hover):hover {
+  text-decoration: underline;
   transform: none;
+}
+
+.btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }

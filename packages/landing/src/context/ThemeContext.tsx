@@ -66,9 +66,13 @@ export function useTheme() {
 }
 
 function getThemefromCache() {
+  if (typeof localStorage === 'undefined') return
+
   try {
-    if (typeof localStorage === 'undefined') return
-    const cache = JSON.parse(localStorage.getItem('theme') || '{}')
+    const _cache = localStorage.getItem('theme')
+    if (!_cache) return
+
+    const cache = JSON.parse(_cache)
     if (!(cache && cache.id)) return
 
     const themeFromCache = loadTheme({ id: cache.id })

@@ -49,6 +49,7 @@ function* onLoginRequest(
                 updatedAt: User['github']['user']['updatedAt']
               }
             }
+            plan: User['plan']
             createdAt: User['createdAt']
             updatedAt: User['updatedAt']
             lastLoginAt: User['lastLoginAt']
@@ -86,6 +87,39 @@ function* onLoginRequest(
                   name
                   avatarUrl
                 }
+              }
+              plan {
+                id
+                source
+
+                amount
+                currency
+                trialPeriodDays
+                interval
+                intervalCount
+
+                status
+
+                startAt
+                cancelAt
+                cancelAtPeriodEnd
+
+                trialStartAt
+                trialEndAt
+
+                currentPeriodStartAt
+                currentPeriodEndAt
+
+                featureFlags {
+                  columnsLimit
+                  enableFilters
+                  enableSync
+                  enablePrivateRepositories
+                  enablePushNotifications
+                }
+
+                createdAt
+                updatedAt
               }
               createdAt
               updatedAt

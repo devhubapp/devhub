@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import { constants, GitHubAppType } from '@devhub/core'
+import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
@@ -12,7 +12,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { tryParseOAuthParams } from '../../utils/helpers/auth'
+import { clearOAuthQueryParams } from '../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -64,6 +64,7 @@ export const AdvancedSettingsModal = React.memo(
               : undefined,
         })
         const { appToken } = tryParseOAuthParams(params)
+        clearOAuthQueryParams()
         if (!appToken) throw new Error('No app token')
 
         loginRequest({ appToken })

@@ -105,6 +105,7 @@ export const themeColorFields: Array<keyof ThemeColors> = [
   'backgroundColorTransparent10',
 
   'foregroundColor',
+  'foregroundColorMuted10',
   'foregroundColorMuted25',
   'foregroundColorMuted40',
   'foregroundColorMuted60',

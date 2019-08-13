@@ -23,13 +23,15 @@ export function Select<T extends string>(props: SelectProps<T>) {
 
   return (
     <span className="select-container my-1 cursor-default">
-      <span className="bg-more-1 border border-bg-less-2 rounded-lg shadow text-left">
+      <span className="bg-default border border-bg-less-2 rounded-lg shadow text-left">
         <span className="relative w-full h-full">
           <span className="selected-option w-full px-2 py-1 hover:bg-less-2 whitespace-no-wrap cursor-pointer">
             <span className="text-default">
               {childrenArr[selectedIndex] || placeholder}
             </span>
-            <small className="text-default">▼</small>
+            <small className="text-default" style={{ fontSize: '75%' }}>
+              {` ▼`}
+            </small>
           </span>
 
           <span
@@ -39,7 +41,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
               left: -1,
             }}
           >
-            <span className="flex flex-col bg-more-1 border border-bg-less-2 rounded-lg shadow overflow-hidden">
+            <span className="flex flex-col bg-default border border-bg-less-2 rounded-lg shadow overflow-hidden">
               {React.Children.map(children, child => (
                 <span
                   className="w-full px-2 py-1 hover:bg-less-2  whitespace-no-wrap cursor-pointer"
@@ -53,8 +55,9 @@ export function Select<T extends string>(props: SelectProps<T>) {
                       'text-default',
                       !child.props.selected && 'opacity-0',
                     )}
+                    style={{ fontSize: '75%' }}
                   >
-                    ▼
+                    {` ▼`}
                   </small>
                 </span>
               ))}

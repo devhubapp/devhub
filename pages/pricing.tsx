@@ -2,9 +2,9 @@ import { NextPage } from 'next'
 
 import PricingPage from '@devhub/landing/src/pages/PricingPage'
 
-export interface PricingProps {}
+export interface PricingPageProps {}
 
-const Pricing: NextPage<PricingProps> = () => {
+const Pricing: NextPage<PricingPageProps> = () => {
   return <PricingPage />
 }
 

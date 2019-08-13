@@ -1,7 +1,9 @@
 import classNames from 'classnames'
 import React from 'react'
 
-import { Plan } from '../../../types'
+import { activePlans, Plan } from '@devhub/core/src'
+import { useAuth } from '../../../context/AuthContext'
+import { formatPrice } from '../../../helpers'
 import Button from '../../common/buttons/Button'
 import CheckLabel from '../../common/CheckLabel'
 
@@ -13,7 +15,20 @@ export interface PricingPlanBlockProps {
 }
 
 export function PricingPlanBlock(props: PricingPlanBlockProps) {
-  const { banner, buttonLabel, buttonLink, plan } = props
+  const { banner: _banner, buttonLabel, buttonLink, plan } = props
+
+  const { authData } = useAuth()
+
+  const isMyPlan = authData.plan && authData.plan.id === plan.id
+
+  const banner =
+    authData.plan &&
+    authData.plan.amount > 0 &&
+    activePlans.find(p => p.id === authData.plan!.id)
+      ? isMyPlan
+        ? 'Your plan'
+        : true
+      : _banner
 
   return (
     <section className="pricing-plan flex flex-col flex-shrink-0 w-64">
@@ -30,20 +45,23 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
         <div className="p-6 text-center">
           <div className="text-base leading-loose font-bold text-default">
-            {plan.name}
+            {plan.label}
           </div>
           <div className="mb-2 text-sm text-muted-60">{plan.description}</div>
 
-          <div className="text-5xl leading-snug font-bold text-default">{`$${
-            typeof plan.price === 'number' ? plan.price : '?'
-          }`}</div>
-          {plan.period && (
-            <div className="text-sm text-muted-60">{`/${plan.period}`}</div>
+          <div className="text-5xl leading-snug font-bold text-default">{`${formatPrice(
+            plan.amount,
+            plan.currency,
+          )}`}</div>
+          {plan.interval ? (
+            <div className="text-sm text-muted-60">{`/${plan.interval}`}</div>
+          ) : (
+            <div className="text-sm text-muted-60">&nbsp;</div>
           )}
 
           <div className="pb-6" />
 
-          <Button type="secondary" href={buttonLink}>
+          <Button type="neutral" href={buttonLink}>
             {buttonLabel || 'Get started'}
           </Button>
 
@@ -51,13 +69,13 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
         </div>
       </div>
 
-      {!!(plan.features && plan.features.length) && (
+      {!!(plan.featureLabels && plan.featureLabels.length) && (
         <div className="p-4">
           <div className="pb-2" />
 
-          {plan.features.map((feature, index) => (
+          {plan.featureLabels.map((feature, index) => (
             <CheckLabel
-              key={`pricing-plan-${plan.name}-feature-${index}`}
+              key={`pricing-plan-${plan.id}-feature-${index}`}
               label={feature.label}
               checkProps={{
                 className: feature.available ? 'text-primary' : 'invisible',

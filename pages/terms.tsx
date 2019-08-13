@@ -2,9 +2,9 @@ import { NextPage } from 'next'
 
 import TermsPage from '@devhub/landing/src/pages/TermsPage'
 
-export interface TermsProps {}
+export interface TermsPageProps {}
 
-const Terms: NextPage<TermsProps> = () => {
+const Terms: NextPage<TermsPageProps> = () => {
   return <TermsPage />
 }
 

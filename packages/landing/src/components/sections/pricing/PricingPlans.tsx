@@ -1,31 +1,56 @@
-import React, { ReactElement } from 'react'
+import React, { Fragment } from 'react'
 
-import { PricingPlanBlockProps } from './PricingPlanBlock'
+import { activePlans } from '@devhub/core/src'
+import Link from 'next/link'
+import { PricingPlanBlock } from './PricingPlanBlock'
 
-export interface PricingPlansProps {
-  children: Array<ReactElement<PricingPlanBlockProps>>
-}
+export interface PricingPlansProps {}
 
-export function PricingPlans(props: PricingPlansProps) {
-  const { children } = props
+const pricingPlanComponents = activePlans.map(plan =>
+  plan.amount > 0 ? (
+    <PricingPlanBlock
+      key={`pricing-plan-${plan.id}`}
+      banner={plan.cannonicalId === 'pro' ? 'Recommended' : true}
+      buttonLink={`/subscribe?plan=${plan.cannonicalId}`}
+      plan={plan}
+    />
+  ) : (
+    <PricingPlanBlock
+      key={`pricing-plan-${plan.cannonicalId}`}
+      banner
+      buttonLink={`/download?plan=${plan.cannonicalId}`}
+      buttonLabel="Download"
+      plan={plan}
+    />
+  ),
+)
 
-  const total = React.Children.count(children)
-
+export function PricingPlans(_props: PricingPlansProps) {
   return (
-    <section
-      id="pricing-plans"
-      className="flex flex-row lg:justify-center items-stretch overflow-x-scroll md:overflow-x-auto"
-    >
-      {React.Children.map(children, (child, index) => (
-        <>
-          {child}
-          {index < total - 1 ? (
-            <div className="pr-2 sm:pr-6" />
-          ) : (
-            <div className="pr-2" />
-          )}
-        </>
-      ))}
+    <section id="pricing-plans">
+      <div className="flex flex-row lg:justify-center items-stretch overflow-x-scroll md:overflow-x-auto">
+        {pricingPlanComponents.map((component, index) => (
+          <Fragment key={`${component.key}-container`}>
+            {component}
+
+            {index < pricingPlanComponents.length - 1 ? (
+              <div className="pr-2 sm:pr-6" />
+            ) : (
+              <div className="pr-2" />
+            )}
+          </Fragment>
+        ))}
+      </div>
+
+      <p className="mb-16" />
+
+      <div className="text-center">
+        <Link href="/account">
+          <a className="text-xs text-muted-60 text-center">
+            Already subscribed? Manage your subscription
+          </a>
+        </Link>
+      </div>
     </section>
   )
 }

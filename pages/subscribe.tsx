@@ -2,9 +2,9 @@ import { NextPage } from 'next'
 
 import SubscribePage from '@devhub/landing/src/pages/SubscribePage'
 
-export interface SubscribeProps {}
+export interface SubscribePageProps {}
 
-const Subscribe: NextPage<SubscribeProps> = () => {
+const Subscribe: NextPage<SubscribePageProps> = () => {
   return <SubscribePage />
 }
 

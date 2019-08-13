@@ -2,9 +2,9 @@ import { NextPage } from 'next'
 
 import DownloadPage from '@devhub/landing/src/pages/DownloadPage'
 
-export interface DownloadProps {}
+export interface DownloadPageProps {}
 
-const Download: NextPage<DownloadProps> = () => {
+const Download: NextPage<DownloadPageProps> = () => {
   return <DownloadPage />
 }
 

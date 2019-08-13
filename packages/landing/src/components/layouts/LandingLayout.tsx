@@ -7,7 +7,7 @@ export interface LandingLayoutProps {
 
 export default function LandingLayout(props: LandingLayoutProps) {
   return (
-    <section id="landing-page">
+    <section id="landing">
       <Header />
 
       {props.children}

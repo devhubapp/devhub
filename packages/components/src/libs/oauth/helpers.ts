@@ -1,20 +1,9 @@
 import qs from 'qs'
 
-import { GitHubAppType } from '@devhub/core'
+import { OAuthResponseData } from '@devhub/core'
 import { Browser } from '../browser'
 import { Linking } from '../linking'
 import { Platform } from '../platform'
-
-export interface OAuthResponseData {
-  app_token?: string
-  code: string
-  github_app_type: GitHubAppType
-  github_scope: string[]
-  github_token?: string
-  github_token_created_at?: string
-  github_token_type?: string
-  oauth: boolean
-}
 
 export const getUrlParamsIfMatches = (
   url: string,

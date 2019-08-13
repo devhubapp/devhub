@@ -1,8 +1,9 @@
 import { Platform as _Platform } from 'react-native'
 
 import {
-  PlataformSelectSpecifics,
-  PlatformOSType,
+  PlataformSelectSpecificsEnhanced,
+  PlatformName,
+  PlatformRealOS,
   PlatformSelectOptions,
 } from './index.shared'
 
@@ -41,9 +42,11 @@ function isElectron() {
   return false
 }
 
-function getOSName(): PlatformOSType {
+function getPlatform(): PlatformName {
   const userAgent =
-    navigator.userAgent || navigator.vendor || (window as any).opera
+    typeof navigator === 'undefined' || typeof window === 'undefined'
+      ? ''
+      : navigator.userAgent || navigator.vendor || (window as any).opera || ''
 
   if (/android/i.test(userAgent)) return 'android'
 
@@ -53,7 +56,23 @@ function getOSName(): PlatformOSType {
   return 'web'
 }
 
-const realOS = getOSName()
+function getOSName(): PlatformRealOS | undefined {
+  const os = getPlatform()
+  if (os === 'ios' || os === 'android') return os
+
+  const platform =
+    typeof navigator === 'undefined'
+      ? ''
+      : `${navigator.platform || ''}`.toLowerCase().trim()
+
+  if (platform.startsWith('mac')) return 'macos'
+  if (platform.startsWith('win')) return 'windows'
+  if (platform.startsWith('linux')) return 'linux'
+
+  return undefined
+}
+
+const realOS = getOSName() || 'web'
 
 export const Platform = {
   realOS,
@@ -61,8 +80,8 @@ export const Platform = {
   isElectron: isElectron(),
   isStandalone: (window.navigator as any).standalone,
   selectUsingRealOS<T>(
-    specifics: PlataformSelectSpecifics<T>,
-    { fallbackToWeb = false }: PlatformSelectOptions = {},
+    specifics: PlataformSelectSpecificsEnhanced<T>,
+    { fallbackToWeb = true }: PlatformSelectOptions = {},
   ) {
     const result =
       Platform.realOS in specifics

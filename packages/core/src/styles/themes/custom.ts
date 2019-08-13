@@ -1,4 +1,11 @@
-import { darken, getLuminance, invert, lighten, rgba } from 'polished'
+import {
+  darken,
+  getLuminance,
+  invert,
+  lighten,
+  rgba,
+  setLightness,
+} from 'polished'
 
 import { Theme, ThemeColors } from '../../types'
 import { getStaticColors } from '../colors'
@@ -104,17 +111,20 @@ export function createThemeFromColor(
 
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
   const foregroundColor = isDark
-    ? lighten(0.95, backgroundColorLess1)
-    : darken(0.95, backgroundColorLess1)
+    ? setLightness(0.9, backgroundColorLess5)
+    : setLightness(0.2, backgroundColorLess5)
+  const foregroundColorMuted10 = isDark
+    ? setLightness(0.1, foregroundColor)
+    : setLightness(1 - 0.1, foregroundColor)
   const foregroundColorMuted25 = isDark
-    ? lighten(0.25, backgroundColorLess1)
-    : darken(0.25, backgroundColorLess1)
+    ? setLightness(0.25, foregroundColor)
+    : setLightness(1 - 0.25, foregroundColor)
   const foregroundColorMuted40 = isDark
-    ? lighten(0.4, backgroundColorLess1)
-    : darken(0.4, backgroundColorLess1)
+    ? setLightness(0.4, foregroundColor)
+    : setLightness(1 - 0.4, foregroundColor)
   const foregroundColorMuted60 = isDark
-    ? lighten(0.7, backgroundColorLess1)
-    : darken(0.7, backgroundColorLess1)
+    ? setLightness(0.6, foregroundColor)
+    : setLightness(1 - 0.6, foregroundColor)
 
   const theme = createTheme({
     id: id || 'custom',
@@ -153,6 +163,7 @@ export function createThemeFromColor(
     backgroundColorTransparent10,
 
     foregroundColor,
+    foregroundColorMuted10,
     foregroundColorMuted25,
     foregroundColorMuted40,
     foregroundColorMuted60,
