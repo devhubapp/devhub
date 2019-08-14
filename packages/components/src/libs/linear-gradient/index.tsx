@@ -4,7 +4,7 @@ import LinearGradient, {
 
 import { createSpringAnimatedComponent } from '../../components/animated/spring/helpers'
 
-export { LinearGradient, LinearGradientProps }
+export { LinearGradient }
 
 export interface SpringAnimatedLinearGradientProps
   extends Omit<LinearGradientProps, 'colors'> {

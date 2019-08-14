@@ -48,10 +48,11 @@ export function register() {
     mainWindow.setFullScreen(false)
   })
 
-  ipcMain.on('unread-counter', (_e: any, unreadCount: any) => {
+  ipcMain.on('unread-counter', async (_e: any, unreadCount: any) => {
     tray.updateUnreadState(unreadCount)
 
     const dock = getDock()
+
     if (dock) dock.setBadge(unreadCount > 0 ? `${unreadCount}` : '')
   })
 }

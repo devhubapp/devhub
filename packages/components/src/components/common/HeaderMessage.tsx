@@ -45,7 +45,7 @@ export function HeaderMessage(props: HeaderMessageProps) {
       >
         {typeof children === 'string' ? (
           <ThemedText
-            color={color || 'foregroundColorMuted60'}
+            color={color || 'foregroundColorMuted65'}
             style={[styles.text, textStyle]}
           >
             {children}

@@ -73,7 +73,7 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
             href={userLinkURL}
             openOnNewTab
             textProps={{
-              color: (muted && 'foregroundColorMuted60') || 'foregroundColor',
+              color: (muted && 'foregroundColorMuted65') || 'foregroundColor',
               numberOfLines,
               style: [
                 cardStyles.normalText,

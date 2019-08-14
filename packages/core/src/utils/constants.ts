@@ -5,16 +5,14 @@ const pkg = require('../../package.json') // tslint:disable-line
 export const APP_VERSION = pkg.version as string
 
 const _window = typeof window !== 'undefined' ? window : undefined
-const _hostname =
+export const HOSTNAME =
   _window &&
   _window.location &&
   _window.location.hostname &&
   _window.location.hostname
 
-export const IS_LOCALHOST = _hostname === 'localhost'
-
 export const IS_BETA =
-  APP_VERSION.includes('beta') || (!!_hostname && _hostname.includes('beta'))
+  APP_VERSION.includes('beta') || (!!HOSTNAME && HOSTNAME.includes('beta'))
 
 export const COLUMNS_LIMIT = 20
 export const MIN_COLUMN_WIDTH = 300

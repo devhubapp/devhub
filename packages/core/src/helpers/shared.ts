@@ -942,3 +942,21 @@ export function getColumnOption<O extends keyof ColumnOptions>(
 
   return column.options && column.options[option]
 }
+
+export function fixDateToISO(
+  date: Date | number | string | undefined | null,
+): string | undefined {
+  if (!date) return undefined
+
+  let _date = date
+  if (typeof _date === 'string') _date = new Date(_date)
+
+  let timestamp: number | null = null
+  if (_date instanceof Date) timestamp = _date.getTime()
+  if (typeof _date === 'number') timestamp = _date
+  if (timestamp && timestamp.toString().length <= 10) timestamp *= 1000
+
+  if (!(timestamp && timestamp.toString().length >= 13)) return undefined
+
+  return new Date(timestamp).toISOString()
+}

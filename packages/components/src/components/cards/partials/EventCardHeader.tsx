@@ -102,7 +102,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
               <Link
                 href={userLinkURL}
                 textProps={{
-                  color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
+                  color: muted ? 'foregroundColorMuted65' : 'foregroundColor',
                   numberOfLines: 1,
                   style: [
                     cardStyles.usernameText,
@@ -118,7 +118,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                 <>
                   <Text children="  " />
                   <ThemedText
-                    color="foregroundColorMuted60"
+                    color="foregroundColorMuted65"
                     numberOfLines={1}
                     style={[
                       cardStyles.timestampText,
@@ -164,7 +164,7 @@ export function EventCardHeader(props: EventCardHeaderProps) {
                       color={
                         muted
                           ? 'foregroundColorMuted40'
-                          : 'foregroundColorMuted60'
+                          : 'foregroundColorMuted65'
                       }
                       numberOfLines={1}
                       style={cardStyles.timestampText}

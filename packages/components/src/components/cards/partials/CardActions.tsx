@@ -62,7 +62,7 @@ export function CardActions(props: CardActionsProps) {
         }}
         onPress={() => saveItemsForLater({ itemIds, save: !isSaved })}
         textProps={{
-          color: muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60',
+          color: muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65',
           style: { fontSize: smallerTextSize },
         }}
       >
@@ -84,7 +84,7 @@ export function CardActions(props: CardActionsProps) {
           markItemsAsReadOrUnread({ type, itemIds, unread: !!isRead })
         }
         textProps={{
-          color: muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60',
+          color: muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65',
           style: { fontSize: smallerTextSize },
         }}
       >
@@ -120,7 +120,7 @@ export function CardActions(props: CardActionsProps) {
               textProps={{
                 color: muted
                   ? 'foregroundColorMuted40'
-                  : 'foregroundColorMuted60',
+                  : 'foregroundColorMuted65',
                 style: { fontSize: smallerTextSize },
               }}
             >

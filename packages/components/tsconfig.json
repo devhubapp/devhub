@@ -1,9 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "allowJs": false,
     "composite": true,
     "declaration": true,
+    "isolatedModules": false,
     "jsx": "preserve",
     "noEmit": false,
     "outDir": "dist",

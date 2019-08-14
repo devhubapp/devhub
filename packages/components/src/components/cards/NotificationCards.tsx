@@ -215,7 +215,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
     return (
       <>
-        {!isEmpty && <CardItemSeparator muted={!fetchNextPage} />}
+        {!isEmpty && <CardItemSeparator />}
 
         {fetchNextPage ? (
           <View>

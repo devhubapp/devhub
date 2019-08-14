@@ -1,11 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
-    "allowJs": false,
     "composite": true,
     "declaration": true,
+    "isolatedModules": false,
     "noEmit": false,
     "outDir": "dist/",
     "rootDir": "src",
@@ -13,5 +11,6 @@
       "../../@types",
       "../../node_modules/@types"
     ]
-  }
+  },
+  "include": ["src"]
 }

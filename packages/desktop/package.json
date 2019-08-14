@@ -8,7 +8,7 @@
     "email": "bruno@devhubapp.com",
     "url": "https://twitter.com/brunolemos"
   },
-  "description": "GitHub Notifications Manager & Activity Watcher",
+  "description": "GitHub Management Tool",
   "repository": "https://github.com/devhubapp/devhub",
   "scripts": {
     "build": "yarn build:base && yarn build:web && yarn build:web:post && yarn build:electron",
@@ -82,7 +82,7 @@
     "@types/mkdirp": "0.5.2",
     "dotenv": "8.0.0",
     "electron": "6.0.0",
-    "electron-builder": "21.1.5",
+    "electron-builder": "21.2.0",
     "electron-devtools-installer": "2.2.4",
     "electron-notarize": "0.1.1",
     "nodemon": "1.19.1",

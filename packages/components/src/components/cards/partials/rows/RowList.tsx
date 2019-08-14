@@ -82,7 +82,7 @@ export const RowList = React.memo((props: RowListProps<any>) => {
             <Link
               onPress={() => setShowAll(!showAll)}
               textProps={{
-                color: 'foregroundColorMuted60',
+                color: 'foregroundColorMuted65',
                 style: { fontSize: smallerTextSize },
               }}
             >

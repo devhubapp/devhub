@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import url from 'url'
 
-import { constants } from '@devhub/core'
+import { constants, tryParseOAuthParams } from '@devhub/core'
 import { getAppVersionLabel } from '../components/common/AppVersion'
 import { FullHeightScrollView } from '../components/common/FullHeightScrollView'
 import { GitHubLoginButton } from '../components/common/GitHubLoginButton'
@@ -23,8 +23,8 @@ import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
 import { contentPadding } from '../styles/variables'
 import {
+  clearOAuthQueryParams,
   clearQueryStringFromURL,
-  tryParseOAuthParams,
 } from '../utils/helpers/auth'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
@@ -127,6 +127,7 @@ export const LoginScreen = React.memo(() => {
 
       try {
         const { appToken } = tryParseOAuthParams(params)
+        clearOAuthQueryParams()
         if (!appToken) return
 
         loginRequest({ appToken })
@@ -188,6 +189,7 @@ export const LoginScreen = React.memo(() => {
         scope: constants.DEFAULT_GITHUB_OAUTH_SCOPES,
       })
       const { appToken } = tryParseOAuthParams(params)
+      clearOAuthQueryParams()
       if (!appToken) throw new Error('No app token')
 
       loginRequest({ appToken })
@@ -238,8 +240,8 @@ export const LoginScreen = React.memo(() => {
 
           <Spacer height={contentPadding / 2} />
 
-          <ThemedText color="foregroundColorMuted60" style={styles.subtitle}>
-            GitHub Notifications Manager & Activity Watcher
+          <ThemedText color="foregroundColorMuted65" style={styles.subtitle}>
+            GitHub Management Tool
           </ThemedText>
 
           <Spacer height={contentPadding} />

@@ -1,4 +1,4 @@
-import { Column, ColumnSubscription } from './devhub'
+import { DatabaseUser, DatabaseUserPlan } from './database'
 
 // TODO: Auto generate this from the schema using apollo codegen cli
 
@@ -33,6 +33,7 @@ export interface GraphQLGitHubUser {
 }
 
 export interface GitHubTokenDetails {
+  login: string
   scope?: string[] | undefined
   token: string
   tokenType?: 'bearer' | string
@@ -43,39 +44,39 @@ export interface LoginActivity {
   [key: string]: any
 
   appVersion: string
+  hostname: string
   isBeta: boolean
   isDevMode: boolean
   isElectron: boolean
-  isLocalhost: boolean
+  isLanding: boolean
   platformOS: string
   platformRealOS: string
 
   createdAt: string
 }
 
-export interface User {
-  _id: any
-  columns?: {
-    allIds: string[]
-    byId: Record<string, Column | undefined>
-    updatedAt: string
+export interface GraphQLUserPlan extends DatabaseUserPlan {
+  featureFlags: {
+    columnsLimit: number
+    enableFilters: boolean
+    enableSync: boolean
+    enablePrivateRepositories: boolean
+    enablePushNotifications: boolean
   }
-  subscriptions?: {
-    allIds: string[]
-    byId: Record<string, ColumnSubscription | undefined>
-    updatedAt: string
-  }
-  github: {
-    app?: GitHubTokenDetails
-    oauth?: GitHubTokenDetails
-    user: GraphQLGitHubUser
-    installations?: Installation[]
-  }
-  createdAt: string
-  updatedAt: string
-  loginActivity?: LoginActivity[]
-  lastLoginAt: string
 }
+
+export interface GraphQLUser {
+  _id: DatabaseUser['_id']
+  columns?: DatabaseUser['columns']
+  subscriptions?: DatabaseUser['subscriptions']
+  github: DatabaseUser['github']
+  plan: GraphQLUserPlan | undefined
+  createdAt: DatabaseUser['createdAt']
+  updatedAt: DatabaseUser['updatedAt']
+  lastLoginAt: DatabaseUser['lastLoginAt']
+}
+
+export interface User extends GraphQLUser {}
 
 export interface GitHubPlan {
   name?: string | null

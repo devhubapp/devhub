@@ -557,7 +557,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   overflow: 'hidden',
                 }}
                 textThemeColor={
-                  muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                  muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
                 }
               />
 
@@ -586,7 +586,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
                     color={
                       muted
                         ? 'foregroundColorMuted40'
-                        : 'foregroundColorMuted60'
+                        : 'foregroundColorMuted65'
                     }
                     numberOfLines={1}
                     style={[

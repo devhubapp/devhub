@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { constants, isNight } from '@devhub/core'
-import { loadTheme } from '../../styles/utils'
+import { constants, isNight, loadTheme, ThemePair } from '@devhub/core'
 import { EMPTY_OBJ } from '../../utils/constants'
 import { isBigEnoughForMultiColumnView } from '../../utils/helpers/shared'
 import { RootState } from '../types'
@@ -11,11 +10,15 @@ const s = (state: RootState) => state.config || EMPTY_OBJ
 export const themePairSelector = (state: RootState) =>
   s(state).theme || constants.DEFAULT_THEME_PAIR
 
-const defaultPreferredDarkThemePair = { id: constants.DEFAULT_DARK_THEME }
+const defaultPreferredDarkThemePair: ThemePair = {
+  id: constants.DEFAULT_DARK_THEME,
+}
 export const preferredDarkThemePairSelector = (state: RootState) =>
   s(state).preferredDarkTheme || defaultPreferredDarkThemePair
 
-const defaultPreferredLightThemePair = { id: constants.DEFAULT_LIGHT_THEME }
+const defaultPreferredLightThemePair: ThemePair = {
+  id: constants.DEFAULT_LIGHT_THEME,
+}
 export const preferredLightThemePairSelector = (state: RootState) =>
   s(state).preferredLightTheme || defaultPreferredLightThemePair
 

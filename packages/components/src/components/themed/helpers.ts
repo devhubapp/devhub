@@ -1,5 +1,5 @@
-import { ThemeColors } from '@devhub/core'
-import { getCSSVariable, supportsCSSVariables } from '../../utils/helpers/theme'
+import { getCSSVariable, ThemeColors } from '@devhub/core'
+import { supportsCSSVariables } from '../../utils/helpers/theme'
 
 export function getThemeColorOrItself(
   theme: ThemeColors & { isInverted: boolean | 0 | 1 },

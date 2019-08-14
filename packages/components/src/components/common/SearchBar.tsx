@@ -33,8 +33,8 @@ export const SearchBar = React.memo(
       placeholderTextThemeColor = 'foregroundColorMuted40',
       size = 30,
       textFocusThemeColor = 'foregroundColor',
-      textHoverThemeColor = 'foregroundColorMuted60',
-      textThemeColor = 'foregroundColorMuted60',
+      textHoverThemeColor = 'foregroundColorMuted65',
+      textThemeColor = 'foregroundColorMuted65',
       ...otherProps
     } = props
 

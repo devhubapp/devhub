@@ -1,9 +1,10 @@
-export {
+import {
   EnumType,
-  IJsonToGraphQLOptions,
-  VariableType,
   jsonToGraphQLQuery,
+  VariableType,
 } from 'json-to-graphql-query'
+
+export { EnumType, VariableType, jsonToGraphQLQuery }
 
 export function objToScapedJSONString(obj: object | undefined) {
   return obj ? `"${JSON.stringify(obj).replace(/"/g, '\\"')}"` : null

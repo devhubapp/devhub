@@ -1,0 +1,58 @@
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--theme-background-color);
+  color: var(--theme-foreground-color);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.loaded, .loaded * {
+  transition: all 0.2s ease-out;
+  transition-property: background-color, border-color, color, opacity, top, bottom, left, right, width, height, margin, padding, transform;
+}
+
+.dark-theme .hide-dark-theme,
+.dark-theme .show-light-theme:not(.show-dark-theme),
+.light-theme .hide-light-theme,
+.light-theme .show-dark-theme:not(.show-light-theme) {
+  display: none;
+  pointer-events: none;
+}
+
+.dark-theme .invisible-dark-theme,
+.dark-theme .visible-light-theme:not(.visible-dark-theme),
+.light-theme .hide-light-theme,
+.light-theme .visible-dark-theme:not(.visible-light-theme) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+a {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+hr {
+  border-width: 0px;
+  border-bottom-width: 1px;
+  border-color: var(--theme-foreground-color-muted-10);
+}
+
+.transform-on-hover:hover, .btn:not(.btn-disabled):hover {
+  transform: translateY(-1px);
+}
+
+#landing a:not(.btn):not(.transform-on-hover):hover {
+  text-decoration: underline;
+  transform: none;
+}
+
+.btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

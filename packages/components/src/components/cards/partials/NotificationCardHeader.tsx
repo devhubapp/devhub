@@ -119,7 +119,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                 <Link
                   href={userLinkURL}
                   textProps={{
-                    color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
+                    color: muted ? 'foregroundColorMuted65' : 'foregroundColor',
                     numberOfLines: 1,
                     style: [
                       { maxWidth: '100%' },
@@ -136,7 +136,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                   <>
                     <Text children="  " />
                     <ThemedText
-                      color="foregroundColorMuted60"
+                      color="foregroundColorMuted65"
                       numberOfLines={1}
                       style={[
                         cardStyles.timestampText,
@@ -188,7 +188,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                       color={
                         muted
                           ? 'foregroundColorMuted40'
-                          : 'foregroundColorMuted60'
+                          : 'foregroundColorMuted65'
                       }
                       numberOfLines={1}
                       style={cardStyles.timestampText}

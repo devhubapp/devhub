@@ -3,8 +3,10 @@
 .DS_Store
 .history
 .jest
+.next
 .vscode
 Pods
 node_modules/
 npm-debug.log
+out
 yarn-error.log

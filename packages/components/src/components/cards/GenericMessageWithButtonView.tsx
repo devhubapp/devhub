@@ -57,7 +57,7 @@ export const GenericMessageWithButtonView = React.memo(
         )}
 
         <ThemedText
-          color="foregroundColorMuted60"
+          color="foregroundColorMuted65"
           style={{
             fontSize: 18,
             fontWeight: '200',
@@ -72,7 +72,7 @@ export const GenericMessageWithButtonView = React.memo(
             {!!title && <Spacer height={contentPadding / 2} />}
 
             <ThemedText
-              color="foregroundColorMuted60"
+              color="foregroundColorMuted65"
               style={{
                 fontSize: 13,
                 fontWeight: '200',

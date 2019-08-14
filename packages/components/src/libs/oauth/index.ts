@@ -1,13 +1,9 @@
 import qs from 'qs'
 
-import { constants, GitHubAppType } from '@devhub/core'
+import { constants, GitHubAppType, OAuthResponseData } from '@devhub/core'
 import { Browser } from '../browser'
 import { Platform } from '../platform'
-import {
-  getUrlParamsIfMatches,
-  listenForNextUrl,
-  OAuthResponseData,
-} from './helpers'
+import { getUrlParamsIfMatches, listenForNextUrl } from './helpers'
 
 const redirectUri = constants.APP_DEEP_LINK_URLS.github_oauth
 

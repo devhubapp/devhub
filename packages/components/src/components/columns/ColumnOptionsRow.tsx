@@ -210,7 +210,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               color={
                 !subtitle && hasChanged
                   ? 'primaryBackgroundColor'
-                  : 'foregroundColorMuted60'
+                  : 'foregroundColorMuted65'
               }
               numberOfLines={1}
               style={{ fontSize: subtitle ? 12 : 10 }}

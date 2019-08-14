@@ -1,0 +1,229 @@
+ .iphone {
+     position: relative;
+     padding: 6% 7%;
+}
+ .iphone--ls {
+     padding: 3.3% 3%;
+}
+ .iphone__body {
+     position: absolute;
+     top: 0;
+     right: 1%;
+     bottom: 0;
+     left: 1%;
+     background: linear-gradient(to top, #e5e5e5 0%, #f7f7f9 10%, #eeeef0 90%);
+     border-radius: 14%/7%;
+     box-shadow: inset 0 0 3px 1px #000 
+}
+ .iphone--ls > .iphone__body {
+     top: 1%;
+     right: 0;
+     bottom: 1%;
+     left: 0;
+     border-radius: 7%/14%;
+}
+ .iphone__body:before {
+     content: '';
+     position: absolute;
+     top: .7%;
+     right: 1.4%;
+     bottom: .7%;
+     left: 1.4%;
+     background-color: #000;
+     border-radius: 13%/7%;
+     box-shadow: 0 0 3px #000 
+}
+ .iphone--ls > .iphone__body:before {
+     top: 1.4%;
+     right: .7%;
+     bottom: 1.4%;
+     left: .7%;
+     border-radius: 7%/13%;
+}
+ .iphone__body:after {
+     content: '';
+     position: absolute;
+     top: 1%;
+     right: 2.3%;
+     bottom: 1%;
+     left: 2.3%;
+     background-color: #000;
+     box-shadow: inset 0 0 10px 2px #fff;
+     border-radius: 13%/6.5%;
+}
+ .iphone--ls > .iphone__body:after {
+     top: 2.3%;
+     right: 1%;
+     bottom: 2.3%;
+     left: 1%;
+     border-radius: 6.5%/13%;
+}
+ .iphone__body__cut {
+     position: absolute;
+     z-index: 2;
+     top: 3%;
+     left: 50%;
+     width: 45%;
+     height: 3.5%;
+     background-color: #000;
+     border-radius: 0 0 10% 10%/60%;
+     transform: translate3d(-50%,0,0);
+}
+ .iphone--ls .iphone__body__cut {
+     top: 50%;
+     left: 3%;
+     width: 3.5%;
+     height: 50%;
+     border-radius: 0 80% 80% 0/10%;
+     transform: translate3d(0,-50%,0);
+}
+ .iphone__body__speaker, .iphone__body__camera, .iphone__body__sensor {
+     position: absolute;
+     z-index: 2;
+     background-color: #222;
+     transform: translate(-50%,-50%);
+}
+ .iphone__body__speaker {
+     top: 4%;
+     left: 50%;
+     width: 12%;
+     height: .8%;
+     border-radius: 5px;
+}
+ .iphone--ls .iphone__body__speaker {
+     top: 50%;
+     left: 4%;
+     width: .8%;
+     height: 12%;
+}
+ .iphone__body__camera {
+     top: 4%;
+     left: 36%;
+     width: 3.5%;
+     height: 1.7%;
+     border-radius: 50%;
+     box-shadow: inset 0 0 2px 1px #000;
+}
+ .iphone--ls .iphone__body__camera {
+     top: 64%;
+     left: 4%;
+     width: 1.7%;
+     height: 3.5%;
+}
+ .iphone__body__sensor {
+     top: 4%;
+     left: 61%;
+     width: 2.2%;
+     height: 1.1%;
+     border-radius: 50%;
+     background-color: #2a4a73;
+     box-shadow: inset 0 0 2px 1px #000;
+}
+ .iphone--ls .iphone__body__sensor {
+     top: 39%;
+     left: 4%;
+     width: 1.1%;
+     height: 2.2%;
+}
+ .iphone__body__mute, .iphone__body__up, .iphone__body__down, .iphone__body__right {
+     position: absolute;
+     background-color: #b5b8ba;
+     box-shadow: inset 0 5px 5px -3px rgba(0,0,0,.5), inset 0 -5px 5px -3px rgba(0,0,0,.5);
+     transform: translate(0,-50%);
+}
+ .iphone--ls .iphone__body__mute, .iphone--ls .iphone__body__up, .iphone--ls .iphone__body__down, .iphone--ls .iphone__body__right {
+     box-shadow: inset 5px 0 5px -3px rgba(0,0,0,.5), inset -5px 0 5px -3px rgba(0,0,0,.5);
+     transform: translate(-50%,0);
+}
+ .iphone--ls .iphone__body__right {
+     background-color: #f4f6f6;
+}
+ .iphone__body__mute {
+     top: 14.7%;
+     left: -.7%;
+     width: .7%;
+     height: 4%;
+     border-radius: 1px 0 0 1px;
+}
+ .iphone--ls .iphone__body__mute {
+     top: auto;
+     left: 14.7%;
+     bottom: -.7%;
+     width: 4%;
+     height: .7%;
+     border-radius: 0 0 1px 1px;
+}
+ .iphone__body__up, .iphone__body__down {
+     left: -1%;
+     width: 1%;
+     height: 7.5%;
+     border-radius: 2px 0 0 2px;
+}
+ .iphone--ls .iphone__body__up, .iphone--ls .iphone__body__down {
+     bottom: -1%;
+     width: 7.5%;
+     height: 1%;
+     border-radius: 0 0 2px 2px;
+}
+ .iphone__body__up {
+     top: 25%;
+}
+ .iphone--ls .iphone__body__up {
+     top: auto;
+     left: 25%;
+}
+ .iphone__body__down {
+     top: 34%;
+}
+ .iphone--ls .iphone__body__down {
+     top: auto;
+     left: 34%;
+}
+ .iphone__body__right {
+     top: 25%;
+     right: -1%;
+     width: 1%;
+     height: 7.5%;
+     border-radius: 0 2px 2px 0;
+}
+ .iphone--ls .iphone__body__right {
+     top: -1%;
+     right: auto;
+     left: 25%;
+     width: 7.5%;
+     height: 1%;
+     border-radius: 2px 2px 0 0;
+}
+ .iphone__screen {
+     position: relative;
+     z-index: 1;
+}
+ .iphone__screen__ {
+     position: relative;
+     padding-bottom: 218%;
+     background-color: #888;
+     border-radius: 10%/5%;
+     box-shadow: 0 0 10px #000;
+}
+ .iphone--ls .iphone__screen__ {
+     padding-bottom: 46%;
+     border-radius: 5%/10%;
+}
+ .iphone__screen__frame {
+     position: absolute;
+     top: 0;
+     right: 0;
+     bottom: 0;
+     left: 0;
+     overflow: hidden;
+     border-radius: inherit;
+     background-size: cover;
+     background-position: center center 
+}
+ .iphone__screen__frame > .fa {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     font-size: 5em;
+     transform: translate(-50%,-50%);
+}

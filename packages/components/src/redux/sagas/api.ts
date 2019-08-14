@@ -7,6 +7,7 @@ import {
   jsonToGraphQLQuery,
   removeUndefinedFields,
   User,
+  UserPlan,
   VariableType,
 } from '@devhub/core'
 import { bugsnag } from '../../libs/bugsnag'
@@ -61,7 +62,7 @@ function* onSyncUp() {
 }
 
 function* onSyncDown() {
-  const state: RootState = yield select()
+  let state: RootState = yield select()
 
   const appToken = selectors.appTokenSelector(state)
   if (!appToken) return
@@ -72,25 +73,63 @@ function* onSyncDown() {
         me?: {
           columns?: User['columns']
           subscriptions: User['subscriptions']
+          plan: UserPlan
         }
       }
       errors?: any[]
     }> = yield axios.post(
       constants.GRAPHQL_ENDPOINT,
       {
-        query: jsonToGraphQLQuery({
-          query: {
-            me: {
-              columns: true,
-              subscriptions: true,
-            },
-          },
-        }),
+        query: `{
+          me {
+            _id
+            columns
+            subscriptions
+            plan {
+              id
+              source
+
+              amount
+              currency
+              trialPeriodDays
+              interval
+              intervalCount
+
+              status
+
+              startAt
+              cancelAt
+              cancelAtPeriodEnd
+
+              trialStartAt
+              trialEndAt
+
+              currentPeriodStartAt
+              currentPeriodEndAt
+
+              featureFlags {
+                columnsLimit
+                enableFilters
+                enableSync
+                enablePrivateRepositories
+                enablePushNotifications
+              }
+
+              createdAt
+              updatedAt
+            }
+            createdAt
+            updatedAt
+            lastLoginAt
+          }
+        }`,
       },
       {
         headers: getDefaultDevHubHeaders({ appToken }),
       },
     )
+
+    state = yield select()
 
     const { data, errors } = response.data
 
@@ -102,7 +141,7 @@ function* onSyncDown() {
       throw Object.assign(new Error('GraphQL Error'), { response })
     }
 
-    const { columns, subscriptions } = data.me
+    const { columns, subscriptions, plan } = data.me
 
     const serverDataIsNewer =
       (columns.updatedAt &&
@@ -131,6 +170,16 @@ function* onSyncDown() {
           subscriptionsUpdatedAt: columns.updatedAt,
         }),
       )
+    }
+
+    const user = selectors.currentUserSelector(state)
+    if (
+      plan &&
+      user &&
+      user.plan &&
+      JSON.stringify(plan) !== JSON.stringify(user.plan)
+    ) {
+      yield put(actions.updateUserData({ plan }))
     }
   } catch (error) {
     const description = 'Sync down failed'

@@ -179,7 +179,7 @@ export const IssueOrPullRequestRow = React.memo(
                       labels.length > 0 && { marginBottom: innerCardSpacing },
                   ]}
                   textProps={{
-                    color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
+                    color: muted ? 'foregroundColorMuted65' : 'foregroundColor',
                     numberOfLines,
                     style: [
                       sharedStyles.flex,
@@ -227,7 +227,7 @@ export const IssueOrPullRequestRow = React.memo(
                   }))}
                   muted={muted}
                   textThemeColor={
-                    muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                    muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
                   }
                 />
               )}
@@ -243,7 +243,7 @@ export const IssueOrPullRequestRow = React.memo(
                     style={cardRowStyles.mainContentContainer}
                     textProps={{
                       color: muted
-                        ? 'foregroundColorMuted60'
+                        ? 'foregroundColorMuted65'
                         : 'foregroundColor',
                       // color: 'foregroundColor',
                       numberOfLines,
@@ -275,7 +275,7 @@ export const IssueOrPullRequestRow = React.memo(
                             (username && getGitHubURLForUser(username))
                           }
                           textProps={{
-                            color: 'foregroundColorMuted60',
+                            color: 'foregroundColorMuted65',
                             style: [cardStyles.smallerText],
                           }}
                         >
@@ -297,7 +297,7 @@ export const IssueOrPullRequestRow = React.memo(
                                   color={
                                     muted
                                       ? 'foregroundColorMuted40'
-                                      : 'foregroundColorMuted60'
+                                      : 'foregroundColorMuted65'
                                   }
                                   numberOfLines={1}
                                   style={cardStyles.smallerText}
@@ -331,7 +331,7 @@ export const IssueOrPullRequestRow = React.memo(
                                   color={
                                     muted
                                       ? 'foregroundColorMuted40'
-                                      : 'foregroundColorMuted60'
+                                      : 'foregroundColorMuted65'
                                   }
                                   numberOfLines={1}
                                   style={cardStyles.smallerText}

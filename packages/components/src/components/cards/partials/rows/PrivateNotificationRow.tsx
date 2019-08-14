@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
+import { tryParseOAuthParams } from '@devhub/core'
 import { useReduxAction } from '../../../../hooks/use-redux-action'
 import { useReduxState } from '../../../../hooks/use-redux-state'
 import { analytics } from '../../../../libs/analytics'
@@ -8,7 +9,7 @@ import { bugsnag } from '../../../../libs/bugsnag'
 import { executeOAuth } from '../../../../libs/oauth'
 import * as actions from '../../../../redux/actions'
 import * as selectors from '../../../../redux/selectors'
-import { tryParseOAuthParams } from '../../../../utils/helpers/auth'
+import { clearOAuthQueryParams } from '../../../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../../../utils/helpers/shared'
 import { Link } from '../../../common/Link'
 import { ThemedText } from '../../../themed/ThemedText'
@@ -50,6 +51,7 @@ export const PrivateNotificationRow = React.memo(
         })
 
         const { appToken } = tryParseOAuthParams(params)
+        clearOAuthQueryParams()
         if (!appToken) throw new Error('No app token')
 
         loginRequest({ appToken })
@@ -73,7 +75,7 @@ export const PrivateNotificationRow = React.memo(
             onPress={() => startOAuth()}
             style={cardRowStyles.mainContentContainer}
             textProps={{
-              color: 'foregroundColorMuted60',
+              color: 'foregroundColorMuted65',
               style: [cardStyles.commentText, { fontStyle: 'italic' }],
             }}
           >
@@ -92,7 +94,7 @@ export const PrivateNotificationRow = React.memo(
           openOnNewTab={false}
           style={cardRowStyles.mainContentContainer}
           textProps={{
-            color: 'foregroundColorMuted60',
+            color: 'foregroundColorMuted65',
             style: [cardStyles.commentText, { fontStyle: 'italic' }],
           }}
         >
@@ -129,7 +131,7 @@ export const PrivateNotificationRow = React.memo(
                 ]}
               >
                 <ThemedText
-                  color="foregroundColorMuted60"
+                  color="foregroundColorMuted65"
                   style={[cardStyles.commentText, { fontStyle: 'italic' }]}
                 >
                   Checking required permissions...

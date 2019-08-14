@@ -16,7 +16,10 @@ export interface State {
   error: AuthError | null
   isDeletingAccount: boolean
   isLoggingIn: boolean
-  user: Pick<User, '_id' | 'createdAt' | 'lastLoginAt' | 'updatedAt'> | null
+  user: Pick<
+    User,
+    '_id' | 'plan' | 'lastLoginAt' | 'createdAt' | 'updatedAt'
+  > | null
 }
 
 const initialState: State = {
@@ -58,6 +61,7 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
         isLoggingIn: false,
         user: action.payload.user && {
           _id: action.payload.user._id,
+          plan: action.payload.user.plan,
           lastLoginAt:
             action.payload.user.lastLoginAt || new Date().toISOString(),
           createdAt: action.payload.user.createdAt,
@@ -69,6 +73,15 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       return {
         ...initialState,
         error: action.error,
+      }
+
+    case 'UPDATE_USER_DATA':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        } as State['user'],
       }
 
     case 'DELETE_ACCOUNT_REQUEST':

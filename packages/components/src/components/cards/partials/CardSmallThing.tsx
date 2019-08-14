@@ -56,7 +56,7 @@ export function CardSmallThing(props: CardSmallThingProps) {
       <View style={styles.innerContainer}>
         {!!icon && (
           <ThemedIcon
-            color="foregroundColorMuted60"
+            color="foregroundColorMuted65"
             name={icon}
             style={[
               cardStyles.smallerText,
@@ -71,7 +71,7 @@ export function CardSmallThing(props: CardSmallThingProps) {
 
         {!!hasText && (
           <ThemedText
-            color="foregroundColorMuted60"
+            color="foregroundColorMuted65"
             style={cardStyles.smallerText}
           >
             {text}

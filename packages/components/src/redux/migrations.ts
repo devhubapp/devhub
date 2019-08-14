@@ -211,19 +211,19 @@ export default {
       }
 
       if (!auth.user) return
-
-      draft.auth.user = {
+      ;(draft.auth as any).user = {
         _id: auth.user._id,
         createdAt: auth.user.createdAt,
         lastLoginAt: auth.user.lastLoginAt,
         updatedAt: auth.user.updatedAt,
-      }
+      } as typeof auth['user']
 
       if (!(auth.user.github && auth.user.github.token)) return
       draft.github = draft.github || {}
       draft.github.auth = draft.github.auth || {}
 
       draft.github.auth.oauth = {
+        login: '',
         scope: auth.user.github.scope,
         token: auth.user.github.token,
         tokenCreatedAt: auth.user.github.tokenCreatedAt!,

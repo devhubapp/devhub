@@ -67,7 +67,7 @@ export function Label(props: LabelProps) {
 
   const color =
     getThemeColorOrItself(theme, _colorThemeColor) ||
-    theme.foregroundColorMuted60
+    theme.foregroundColorMuted65
 
   const circleColor = getReadableColor(color, backgroundThemeColor, 0.3)
 

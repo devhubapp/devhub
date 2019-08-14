@@ -107,7 +107,7 @@ export const Column = React.memo(
 
         <ThemedView
           ref={columnBorderRef}
-          borderColor="foregroundColorMuted60"
+          borderColor="foregroundColorMuted65"
           collapsable={false}
           pointerEvents="box-none"
           style={[
