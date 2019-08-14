@@ -31,6 +31,7 @@ export default function FeaturesBlock(_props: FeaturesBlockProps) {
           <a
             href="https://itunes.apple.com/us/app/devhub-for-github/id1191864199?l=en&mt=8&utm_source=devhub_landing_page"
             target="_blank"
+            rel="noopener"
           >
             <CheckLabel label="iOS" />
           </a>
@@ -38,6 +39,7 @@ export default function FeaturesBlock(_props: FeaturesBlockProps) {
           <a
             href="https://play.google.com/store/apps/details?id=com.devhubapp&utm_source=devhub_landing_page"
             target="_blank"
+            rel="noopener"
           >
             <CheckLabel label="Android" />
           </a>

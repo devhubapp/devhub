@@ -476,7 +476,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                   overflow: 'hidden',
                 }}
                 textThemeColor={
-                  muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                  muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
                 }
               />
 
@@ -505,7 +505,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                     color={
                       muted
                         ? 'foregroundColorMuted40'
-                        : 'foregroundColorMuted60'
+                        : 'foregroundColorMuted65'
                     }
                     numberOfLines={1}
                     style={[

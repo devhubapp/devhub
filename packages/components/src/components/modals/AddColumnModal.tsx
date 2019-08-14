@@ -343,7 +343,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
 
         {!!hasReachedColumnLimit && (
           <ThemedText
-            color="foregroundColorMuted60"
+            color="foregroundColorMuted65"
             style={{
               marginTop: contentPadding,
               paddingHorizontal: contentPadding,

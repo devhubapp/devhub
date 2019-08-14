@@ -191,7 +191,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               base: {
                 color: theme.foregroundColor,
                 '::placeholder': {
-                  color: theme.foregroundColorMuted60,
+                  color: theme.foregroundColorMuted65,
                 },
                 iconColor: theme.foregroundColor,
               },
@@ -203,9 +203,9 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           />
         </div>
 
-        <p className="mb-8 text-sm text-muted-60 italic">
+        <p className="mb-8 text-sm text-muted-65 italic">
           🔒 Payment secured by{' '}
-          <a href="https://stripe.com/" target="_blank">
+          <a href="https://stripe.com/" target="_blank" rel="noopener">
             Stripe
           </a>
           {process.env.STRIPE_PUBLIC_KEY!.startsWith('pk_test') && (

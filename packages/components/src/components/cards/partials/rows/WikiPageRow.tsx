@@ -49,7 +49,7 @@ export const WikiPageRow = React.memo((props: WikiPageRowProps) => {
             href={fixURL(url)}
             style={cardRowStyles.mainContentContainer}
             textProps={{
-              color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
+              color: muted ? 'foregroundColorMuted65' : 'foregroundColor',
               numberOfLines: 1,
               style: [
                 cardStyles.normalText,

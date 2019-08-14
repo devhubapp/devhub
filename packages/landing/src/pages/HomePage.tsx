@@ -42,10 +42,12 @@ export default function HomePage(_props: HomePageProps) {
                 style={aspectRatioToStyle(2880 / 1596)}
               >
                 <img
+                  alt="DevHub desktop screenshot"
                   src="/static/screenshots/desktop-zoomed-light.jpg"
                   className="visible-light-theme absolute inset-0 object-cover rounded"
                 />
                 <img
+                  alt="DevHub desktop screenshot"
                   src="/static/screenshots/desktop-zoomed-dark.jpg"
                   className="visible-dark-theme absolute inset-0 object-cover rounded"
                 />
@@ -58,10 +60,12 @@ export default function HomePage(_props: HomePageProps) {
               <DeviceFrame>
                 <div className="relative w-full h-full m-auto">
                   <img
+                    alt="DevHub mobile screenshot"
                     src="/static/screenshots/iphone-notifications-light.jpg"
                     className="visible-light-theme absolute inset-0 object-cover bg-white"
                   />
                   <img
+                    alt="DevHub mobile screenshot"
                     src="/static/screenshots/iphone-notifications-dark.jpg"
                     className="visible-dark-theme absolute inset-0 object-cover"
                   />

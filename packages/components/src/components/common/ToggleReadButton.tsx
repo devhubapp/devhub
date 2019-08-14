@@ -45,7 +45,7 @@ export const ToggleReadButton = React.memo((props: ToggleReadButtonProps) => {
       enableForegroundHover
       fixedIconSize
       foregroundThemeColor={
-        muted ? 'foregroundColorMuted60' : 'foregroundColor'
+        muted ? 'foregroundColorMuted65' : 'foregroundColor'
       }
       iconName={isRead ? 'mail-read' : 'mail'}
       noPadding

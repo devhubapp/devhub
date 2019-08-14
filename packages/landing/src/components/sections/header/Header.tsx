@@ -21,6 +21,7 @@ export default function Header() {
             style={{ display: 'contents' }}
           >
             <img
+              alt="DevHub Logo"
               className="w-8 h-8 mr-6 sm:mr-3 bg-primary rounded-full"
               src="/static/logo.png"
             />
@@ -34,9 +35,10 @@ export default function Header() {
         <div className="flex-1" />
 
         <HeaderLink
-          href="https://twitter.com/devhub_app/"
           className={twClasses.headerLink__rightMargin}
+          href="https://twitter.com/devhub_app/"
           target="_blank"
+          rel="noopener"
         >
           Twitter
         </HeaderLink>

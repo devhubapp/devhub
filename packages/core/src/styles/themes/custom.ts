@@ -122,9 +122,9 @@ export function createThemeFromColor(
   const foregroundColorMuted40 = isDark
     ? setLightness(0.4, foregroundColor)
     : setLightness(1 - 0.4, foregroundColor)
-  const foregroundColorMuted60 = isDark
-    ? setLightness(0.6, foregroundColor)
-    : setLightness(1 - 0.6, foregroundColor)
+  const foregroundColorMuted65 = isDark
+    ? setLightness(0.65, foregroundColor)
+    : setLightness(1 - 0.65, foregroundColor)
 
   const theme = createTheme({
     id: id || 'custom',
@@ -166,7 +166,7 @@ export function createThemeFromColor(
     foregroundColorMuted10,
     foregroundColorMuted25,
     foregroundColorMuted40,
-    foregroundColorMuted60,
+    foregroundColorMuted65,
 
     ...getStaticColors({ isDark }),
 

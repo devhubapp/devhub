@@ -11,7 +11,7 @@ const screenshot =
 export default class Document extends NextDocument {
   render() {
     return (
-      <html>
+      <html lang="en">
         <Head>
           <meta charSet="utf-8" />
           <base target="_top" />
@@ -58,7 +58,7 @@ export default class Document extends NextDocument {
           />
           <meta
             name="viewport"
-            content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"
+            content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no"
           />
 
           <link
@@ -99,7 +99,7 @@ export default class Document extends NextDocument {
             href="/static/logo@3x.png"
           />
 
-          <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href="/static/favicon.ico" />
 
           <script
             async

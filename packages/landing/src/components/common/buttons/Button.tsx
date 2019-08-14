@@ -84,9 +84,10 @@ function Button(
     <a
       {...aProps}
       ref={ref}
-      href={href}
       className={className}
+      href={href}
       onClick={onClick}
+      rel={aProps.target === '_blank' ? 'noopener' : undefined}
     >
       {children}
     </a>

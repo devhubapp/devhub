@@ -59,7 +59,7 @@ export const TextInput = React.forwardRef(
       backgroundColor: _backgroundColor = 'transparent',
       borderFocusColor = theme.primaryBackgroundColor,
       borderHoverColor = theme.foregroundColor,
-      borderColor: _borderColor = theme.foregroundColorMuted60,
+      borderColor: _borderColor = theme.foregroundColorMuted65,
       placeholderTextColor = theme.foregroundColorMuted40,
       textFocusColor,
       textHoverColor,

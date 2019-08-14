@@ -43,11 +43,11 @@ module.exports = {
       text: {
         default: 'var(--theme-foreground-color)',
         muted: {
-          default: 'var(--theme-foreground-color-muted-60)',
+          default: 'var(--theme-foreground-color-muted-65)',
           10: 'var(--theme-foreground-color-muted-10)',
           25: 'var(--theme-foreground-color-muted-25)',
           40: 'var(--theme-foreground-color-muted-40)',
-          60: 'var(--theme-foreground-color-muted-60)',
+          65: 'var(--theme-foreground-color-muted-65)',
         },
       },
     },
@@ -58,11 +58,11 @@ module.exports = {
         ...theme('colors'),
         text: {
           default: 'var(--theme-foreground-color)',
-          muted: 'var(--theme-foreground-color-muted-60)',
+          muted: 'var(--theme-foreground-color-muted-65)',
           'muted-10': 'var(--theme-foreground-color-muted-10)',
           'muted-25': 'var(--theme-foreground-color-muted-25)',
           'muted-40': 'var(--theme-foreground-color-muted-40)',
-          'muted-60': 'var(--theme-foreground-color-muted-60)',
+          'muted-65': 'var(--theme-foreground-color-muted-65)',
         },
       }),
       container: {
@@ -100,7 +100,7 @@ module.exports = {
           lineHeight: config('theme.lineHeight.relaxed'),
           fontSize: config('theme.fontSize.xl'),
           fontWeight: config('theme.fontWeight.normal'),
-          color: config('theme.textColor.muted.60'),
+          color: config('theme.textColor.muted.65'),
         },
         h3: {
           marginBottom: config('theme.margin.2'),
@@ -114,7 +114,7 @@ module.exports = {
           lineHeight: config('theme.lineHeight.relaxed'),
           fontSize: config('theme.fontSize.base'),
           fontWeight: config('theme.fontWeight.light'),
-          color: config('theme.textColor.muted.60'),
+          color: config('theme.textColor.muted.65'),
         },
       })
     },

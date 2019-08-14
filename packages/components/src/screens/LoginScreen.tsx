@@ -240,7 +240,7 @@ export const LoginScreen = React.memo(() => {
 
           <Spacer height={contentPadding / 2} />
 
-          <ThemedText color="foregroundColorMuted60" style={styles.subtitle}>
+          <ThemedText color="foregroundColorMuted65" style={styles.subtitle}>
             GitHub Management Tool
           </ThemedText>
 

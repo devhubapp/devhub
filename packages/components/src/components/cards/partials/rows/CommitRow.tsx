@@ -107,7 +107,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
             })}
             style={sharedStyles.flex}
             textProps={{
-              color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
+              color: muted ? 'foregroundColorMuted65' : 'foregroundColor',
               numberOfLines,
               style: [
                 cardStyles.normalText,
@@ -130,7 +130,7 @@ export const CommitRow = React.memo((props: CommitRowProps) => {
               {message}
               {Boolean(byText) && (
                 <ThemedText
-                  color="foregroundColorMuted60"
+                  color="foregroundColorMuted65"
                   style={[cardStyles.normalText, cardStyles.smallText]}
                 >
                   {` by ${byText}`}

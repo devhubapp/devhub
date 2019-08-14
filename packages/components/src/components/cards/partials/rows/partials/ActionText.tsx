@@ -44,7 +44,7 @@ export const ActionText = React.memo((props: ActionTextProps) => {
   } = props
 
   const color: keyof ThemeColors =
-    (muted && 'foregroundColorMuted60') || 'foregroundColor'
+    (muted && 'foregroundColorMuted65') || 'foregroundColor'
 
   const bodyStr = `${_body || ''}`.replace(_body[0], _body[0].toLowerCase())
 

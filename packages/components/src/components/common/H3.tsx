@@ -15,7 +15,7 @@ export function H3(props: H3Props) {
 
   return (
     <ThemedText
-      color={color || 'foregroundColorMuted60'}
+      color={color || 'foregroundColorMuted65'}
       {...otherProps}
       style={[
         {

@@ -20,6 +20,7 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
       <section id="subscribed" className="container">
         <div className="flex flex-col items-center m-auto text-center">
           <img
+            alt="DevHub screenshot"
             className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
             src="/static/logo.png"
           />

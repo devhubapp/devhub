@@ -19,6 +19,7 @@ export default function AccountPage(_props: AccountPageProps) {
       return (
         <>
           <img
+            alt="DevHub logo"
             className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
             src="/static/logo.png"
           />
@@ -31,6 +32,7 @@ export default function AccountPage(_props: AccountPageProps) {
     return (
       <>
         <img
+          alt="Your GitHub profile logo"
           className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
           src={`https://github.com/${authData.github.login}.png`}
         />

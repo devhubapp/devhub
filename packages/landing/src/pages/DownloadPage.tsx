@@ -12,7 +12,7 @@ export interface DownloadPageProps {}
 const categories: PlatformCategory[] = ['desktop', 'mobile', 'web']
 
 const swClasses = {
-  description: 'sm:w-100 m-auto leading-relaxed text-muted-60 mb-4',
+  description: 'sm:w-100 m-auto leading-relaxed text-muted-65 mb-4',
   buttonsContainer: 'flex flex-row flex-wrap justify-center mb-3',
   button: 'my-1 mx-1',
 }
@@ -55,6 +55,7 @@ export default function DownloadPage(_props: DownloadPageProps) {
       <section id="download" className="container">
         <div className="flex flex-col items-center m-auto text-center">
           <img
+            alt="DevHub logo"
             className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
             src="/static/logo.png"
           />
@@ -181,7 +182,7 @@ export default function DownloadPage(_props: DownloadPageProps) {
           )}
 
           {!!version && (
-            <small className="text-muted-60 mb-8">{`v${version}${
+            <small className="text-muted-65 mb-8">{`v${version}${
               releaseDate ? ` · ${releaseDate}` : ''
             }`}</small>
           )}

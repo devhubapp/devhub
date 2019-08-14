@@ -356,7 +356,7 @@ export const AddColumnDetailsModal = React.memo(
                   <Spacer flex={1} />
 
                   <ThemedIcon
-                    color="foregroundColorMuted60"
+                    color="foregroundColorMuted65"
                     name={isPrivateSupported ? 'lock' : 'globe'}
                     onPress={() => {
                       alert(text)
@@ -576,7 +576,7 @@ export const AddColumnDetailsModal = React.memo(
           })}
 
           {/* {!!__DEV__ && (
-            <ThemedText color="foregroundColorMuted60">
+            <ThemedText color="foregroundColorMuted65">
               {JSON.stringify(formikProps, null, 2)}
             </ThemedText>
           )} */}

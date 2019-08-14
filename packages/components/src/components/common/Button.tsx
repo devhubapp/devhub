@@ -120,7 +120,7 @@ export const Button = React.memo((props: ButtonProps) => {
             ? backgroundColor
             : isHovered || isPressing
             ? theme.foregroundColor
-            : theme.foregroundColorMuted60
+            : theme.foregroundColorMuted65
           : theme.foregroundColor)
 
       const hoverForegroundColor =

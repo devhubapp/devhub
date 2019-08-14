@@ -68,7 +68,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
           <Link
             href={getGitHubURLForRepo(ownerName, repositoryName)}
             textProps={{
-              color: muted ? 'foregroundColorMuted60' : 'foregroundColor',
+              color: muted ? 'foregroundColorMuted65' : 'foregroundColor',
               numberOfLines: hideOwner ? 2 : 1,
               style: [cardStyles.normalText, small && cardStyles.smallText],
             }}
@@ -91,7 +91,7 @@ export const RepositoryRow = React.memo((props: RepositoryRowProps) => {
               <Link
                 href={getGitHubURLForUser(ownerName)}
                 textProps={{
-                  color: 'foregroundColorMuted60',
+                  color: 'foregroundColorMuted65',
                   numberOfLines: 1,
                   style: [cardStyles.normalText, small && cardStyles.smallText],
                 }}

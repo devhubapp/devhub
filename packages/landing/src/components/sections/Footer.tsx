@@ -37,25 +37,28 @@ export default function Footer() {
         <div className={twClasses.footerTitle}>Community</div>
 
         <a
+          className={twClasses.footerLink}
           href="https://twitter.com/devhub_app"
           target="_blank"
-          className={twClasses.footerLink}
+          rel="noopener"
         >
           Twitter
         </a>
 
         <a
+          className={twClasses.footerLink}
           href="https://github.com/devhubapp/devhub"
           target="_blank"
-          className={twClasses.footerLink}
+          rel="noopener"
         >
           GitHub
         </a>
 
         <a
+          className={twClasses.footerLink}
           href="https://slack.devhubapp.com/"
           target="_blank"
-          className={twClasses.footerLink}
+          rel="noopener"
         >
           Slack
         </a>
@@ -77,9 +80,10 @@ export default function Footer() {
         <div className={twClasses.footerTitle}>Contact a human</div>
 
         <a
+          className={twClasses.footerLink}
           href="https://twitter.com/brunolemos"
           target="_blank"
-          className={twClasses.footerLink}
+          rel="noopener"
         >
           @brunolemos
         </a>

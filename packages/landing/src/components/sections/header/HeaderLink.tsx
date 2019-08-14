@@ -7,17 +7,19 @@ const twClasses = {
   headerLink:
     'header-link px-2 md:px-4 text-base font-semibold text-center border rounded-full',
   headerLink__active: 'bg-less-2 border-bg-less-2 text-default font-extrabold',
-  headerLink__inactive: 'bg-default border-bg text-muted-60 hover:text-default',
+  headerLink__inactive: 'bg-default border-bg text-muted-65 hover:text-default',
 }
 
 export interface HeaderLinkProps extends LinkProps {
   children: React.ReactNode
   className?: string
+  href: string
   target?: string
+  rel?: string
 }
 
 export default function HeaderLink(props: HeaderLinkProps) {
-  const { children, className, target, ...linkProps } = props
+  const { children: _children, className, rel, target, ...linkProps } = props
 
   const route = useRouter()
 
@@ -30,28 +32,46 @@ export default function HeaderLink(props: HeaderLinkProps) {
 
   const lineHeight = '2rem'
 
-  return (
+  const children = (
     <>
+      <span className={baseClass} style={{ lineHeight }}>
+        {_children}
+      </span>
+      <span
+        className={classNames(
+          baseClass,
+          twClasses.headerLink__active,
+          'invisible',
+        )}
+        style={{ lineHeight, marginTop: `-${lineHeight}` }}
+      >
+        {_children}
+      </span>
+    </>
+  )
+
+  if (linkProps.href && linkProps.href.startsWith('/')) {
+    return (
       <Link {...linkProps}>
         <a
           className={classNames('flex flex-col transform-on-hover', className)}
           target={target}
+          rel={rel || (target === '_blank' ? 'noopener' : undefined)}
         >
-          <span className={baseClass} style={{ lineHeight }}>
-            {children}
-          </span>
-          <span
-            className={classNames(
-              baseClass,
-              twClasses.headerLink__active,
-              'invisible',
-            )}
-            style={{ lineHeight, marginTop: `-${lineHeight}` }}
-          >
-            {children}
-          </span>
+          {children}
         </a>
       </Link>
-    </>
+    )
+  }
+
+  return (
+    <a
+      className={classNames('flex flex-col transform-on-hover', className)}
+      href={linkProps.href}
+      target={target}
+      rel={rel || (target === '_blank' ? 'noopener' : undefined)}
+    >
+      {children}
+    </a>
   )
 }

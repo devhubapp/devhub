@@ -48,7 +48,7 @@ export function SwipeableIssueOrPullRequestCard(
           onPress: handleSnooze,
         },
         {
-          color: theme.foregroundColorMuted60,
+          color: theme.foregroundColorMuted65,
           icon: 'archive',
           key: 'archive',
           label: 'Archive',

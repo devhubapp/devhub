@@ -47,16 +47,16 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           <div className="text-base leading-loose font-bold text-default">
             {plan.label}
           </div>
-          <div className="mb-2 text-sm text-muted-60">{plan.description}</div>
+          <div className="mb-2 text-sm text-muted-65">{plan.description}</div>
 
           <div className="text-5xl leading-snug font-bold text-default">{`${formatPrice(
             plan.amount,
             plan.currency,
           )}`}</div>
           {plan.interval ? (
-            <div className="text-sm text-muted-60">{`/${plan.interval}`}</div>
+            <div className="text-sm text-muted-65">{`/${plan.interval}`}</div>
           ) : (
-            <div className="text-sm text-muted-60">&nbsp;</div>
+            <div className="text-sm text-muted-65">&nbsp;</div>
           )}
 
           <div className="pb-6" />
@@ -82,7 +82,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               }}
               className={classNames(
                 'mb-2',
-                feature.available ? undefined : 'text-muted-60 line-through',
+                feature.available ? undefined : 'text-muted-65 line-through',
               )}
             />
           ))}

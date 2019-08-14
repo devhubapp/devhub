@@ -93,25 +93,26 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
         <div className="flex flex-row flex-wrap items-center italic text-sm whitespace-pre">
           <Link href="/account">
-            <a className="text-muted-60">
+            <a className="text-muted-65">
               <img
+                alt="Your GitHub profile logo"
                 className="w-4 h-4 mr-2 bg-less-1 rounded-full"
                 src={`https://github.com/${authData.github.login}.png`}
               />
             </a>
           </Link>
 
-          <span className="text-muted-60">Logged as </span>
+          <span className="text-muted-65">Logged as </span>
           <Link href="/account">
-            <a className="text-muted-60">{authData.github.login}</a>
+            <a className="text-muted-65">{authData.github.login}</a>
           </Link>
-          <span className="text-muted-60">
+          <span className="text-muted-65">
             {' '}
             (
             <a
               href="javascript:void(0)"
               onClick={() => logout()}
-              className="text-muted-60"
+              className="text-muted-65"
             >
               logout
             </a>
@@ -131,6 +132,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
       <section id="subscribe" className="container">
         <div className="flex flex-col items-center m-auto text-center">
           <img
+            alt="DevHub screenshot"
             className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
             src="/static/logo.png"
           />
@@ -162,7 +164,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
             plan
           </h1>
 
-          <p className="mb-4 text-sm text-muted-60">{`${formatPrice(
+          <p className="mb-4 text-sm text-muted-65">{`${formatPrice(
             plan.amount,
             plan.currency,
           )}/${plan.interval} (${plan.currency.toUpperCase()}) · ${
@@ -173,7 +175,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
           {authData.plan && authData.plan.amount > 0 && (
             <Link href="/account">
-              <a className="mb-4 text-sm text-muted-60">
+              <a className="mb-4 text-sm text-muted-65">
                 Manage existing subscription
               </a>
             </Link>

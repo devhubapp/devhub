@@ -157,7 +157,7 @@ export const IssueOrPullRequestCard = React.memo(
                     color={
                       muted
                         ? 'foregroundColorMuted40'
-                        : 'foregroundColorMuted60'
+                        : 'foregroundColorMuted65'
                     }
                     numberOfLines={1}
                     style={cardStyles.smallerText}
@@ -446,7 +446,7 @@ export const IssueOrPullRequestCard = React.memo(
                     overflow: 'hidden',
                   }}
                   textThemeColor={
-                    muted ? 'foregroundColorMuted40' : 'foregroundColorMuted60'
+                    muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
                   }
                 />
 
@@ -478,7 +478,7 @@ export const IssueOrPullRequestCard = React.memo(
                       color={
                         muted
                           ? 'foregroundColorMuted40'
-                          : 'foregroundColorMuted60'
+                          : 'foregroundColorMuted65'
                       }
                       numberOfLines={1}
                       style={[

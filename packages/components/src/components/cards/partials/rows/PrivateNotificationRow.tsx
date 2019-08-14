@@ -75,7 +75,7 @@ export const PrivateNotificationRow = React.memo(
             onPress={() => startOAuth()}
             style={cardRowStyles.mainContentContainer}
             textProps={{
-              color: 'foregroundColorMuted60',
+              color: 'foregroundColorMuted65',
               style: [cardStyles.commentText, { fontStyle: 'italic' }],
             }}
           >
@@ -94,7 +94,7 @@ export const PrivateNotificationRow = React.memo(
           openOnNewTab={false}
           style={cardRowStyles.mainContentContainer}
           textProps={{
-            color: 'foregroundColorMuted60',
+            color: 'foregroundColorMuted65',
             style: [cardStyles.commentText, { fontStyle: 'italic' }],
           }}
         >
@@ -131,7 +131,7 @@ export const PrivateNotificationRow = React.memo(
                 ]}
               >
                 <ThemedText
-                  color="foregroundColorMuted60"
+                  color="foregroundColorMuted65"
                   style={[cardStyles.commentText, { fontStyle: 'italic' }]}
                 >
                   Checking required permissions...

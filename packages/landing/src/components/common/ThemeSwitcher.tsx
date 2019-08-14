@@ -12,11 +12,14 @@ export function ThemeSwitcher(props: ThemeSwitcherProps) {
 
   return (
     <button
+      id="theme-switcher"
       type="button"
       className="theme-switcher relative flex-shrink-0 w-10 bg-less-2 rounded-full focus:outline-none"
       onClick={() => {
         toggleTheme()
       }}
+      role="button"
+      aria-label="Toggle theme"
     >
       <div
         className={classNames(
