@@ -41,7 +41,6 @@ export const ColumnFiltersButton = React.memo(
         key="column-filters-toggle-button"
         analyticsAction="toggle"
         analyticsLabel="column_filters"
-        enableForegroundHover
         fixedIconSize
         iconName="settings"
         onPress={onPress}

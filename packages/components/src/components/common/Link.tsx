@@ -49,7 +49,7 @@ export function Link(props: LinkProps) {
     analyticsLabel: _analyticsLabel,
     backgroundThemeColor,
     enableBackgroundHover,
-    enableForegroundHover = true,
+    enableForegroundHover,
     enableTextWrapper,
     hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
     hoverForegroundThemeColor: _hoverForegroundThemeColor,

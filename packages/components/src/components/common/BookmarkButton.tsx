@@ -27,8 +27,6 @@ export const BookmarkButton = React.memo((props: BookmarkButtonProps) => {
   return (
     <ColumnHeaderItem
       analyticsLabel={isSaved ? 'unsave_for_later' : 'save_for_later'}
-      enableBackgroundHover={false}
-      enableForegroundHover={!isSaved}
       fixedIconSize
       foregroundThemeColor={
         isSaved ? 'primaryBackgroundColor' : 'foregroundColorMuted25'

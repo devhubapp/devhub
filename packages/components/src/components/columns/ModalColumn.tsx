@@ -74,7 +74,6 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
           <ColumnHeaderItem
             analyticsLabel="modal"
             analyticsAction="back"
-            enableForegroundHover
             fixedIconSize
             iconName="chevron-left"
             onPress={() => popModal()}
@@ -98,7 +97,6 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
           <ColumnHeaderItem
             analyticsAction="close"
             analyticsLabel="modal"
-            enableForegroundHover
             fixedIconSize
             iconName="x"
             onPress={() => closeAllModals()}

@@ -337,7 +337,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 analyticsLabel={
                   clearableItems.length ? 'clear_column' : 'unclear_column'
                 }
-                enableForegroundHover={!!clearableItems.length}
                 fixedIconSize
                 iconName="check"
                 onPress={() => {
@@ -367,7 +366,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                   !hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'
                 }
                 disabled={!filteredItems.length}
-                enableForegroundHover
                 fixedIconSize
                 iconName={!hasOneUnreadItem ? 'mail-read' : 'mail'}
                 onPress={() => {
@@ -427,7 +425,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 key="column-options-toggle-button"
                 analyticsAction="toggle"
                 analyticsLabel="column_options"
-                enableForegroundHover
                 fixedIconSize
                 iconName="gear"
                 onPress={toggleOptions}

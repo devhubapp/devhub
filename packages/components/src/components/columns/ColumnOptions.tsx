@@ -168,7 +168,6 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         <ColumnHeaderItem
           key="column-options-button-move-column-left"
           analyticsLabel="move_column_left"
-          enableForegroundHover
           disabled={columnIndex === 0}
           fixedIconSize
           iconName={
@@ -202,7 +201,6 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         <ColumnHeaderItem
           key="column-options-button-move-column-right"
           analyticsLabel="move_column_right"
-          enableForegroundHover
           disabled={columnIndex === columnIds.length - 1}
           fixedIconSize
           iconName={
@@ -242,7 +240,6 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         <ColumnHeaderItem
           key="column-options-button-remove-column"
           analyticsLabel="remove_column"
-          enableForegroundHover
           fixedIconSize
           iconName="trashcan"
           onPress={() =>

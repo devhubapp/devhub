@@ -272,7 +272,6 @@ export const ColumnFiltersRenderer = React.memo(
                   key="column-flters-close-button"
                   analyticsAction={undefined}
                   analyticsLabel={undefined}
-                  enableForegroundHover
                   fixedIconSize
                   iconName="x"
                   onPress={() => close()}

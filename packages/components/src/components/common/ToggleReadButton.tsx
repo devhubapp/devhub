@@ -42,7 +42,6 @@ export const ToggleReadButton = React.memo((props: ToggleReadButtonProps) => {
   return (
     <ColumnHeaderItem
       analyticsLabel={isRead ? 'mark_as_unread' : 'mark_as_read'}
-      enableForegroundHover
       fixedIconSize
       foregroundThemeColor={
         muted ? 'foregroundColorMuted65' : 'foregroundColor'
