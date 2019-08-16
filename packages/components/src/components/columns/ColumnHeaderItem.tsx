@@ -86,7 +86,7 @@ export interface ColumnHeaderItemProps {
 
 export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   const {
-    activeOpacity = Platform.realOS !== 'web' && props.enableBackgroundHover
+    activeOpacity = !Platform.supportsTouch && props.enableBackgroundHover
       ? 1
       : undefined,
     analyticsAction,
@@ -154,10 +154,10 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
         forceImmediate ||
         isHovered ||
         !!(enableForegroundHover && !enableBackgroundHover) ||
-        (Platform.OS === 'web' && Platform.realOS !== 'web')
+        Platform.supportsTouch
 
       return {
-        config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
+        config: getDefaultReactSpringAnimationConfig(),
         immediate,
         backgroundColor:
           isHovered && enableBackgroundHover
@@ -220,7 +220,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   }, [updateStyles])
 
   useEffect(() => {
-    if (!(Platform.realOS === 'web' && !onPress)) return
+    if (!(Platform.OS === 'web' && !Platform.supportsTouch)) return
     const node = findNode(containerRef)
     if (!node) return
 

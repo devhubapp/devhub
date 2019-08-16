@@ -148,7 +148,7 @@ export const ColumnFiltersRenderer = React.memo(
               {
                 zIndex: 200,
                 opacity: overlayTransition.props.opacity.interpolate(
-                  (opacity: number) => opacity.toFixed(2),
+                  (opacity: number) => Number(opacity.toFixed(2)),
                 ),
               },
             ]}
@@ -241,7 +241,8 @@ export const ColumnFiltersRenderer = React.memo(
           pointerEvents={
             // prevent clicking on filters even when they are hidden behind column
             // (only enabled for web desktop because this is causing bugs on ios safari)
-            Platform.realOS === 'web' &&
+            Platform.OS === 'web' &&
+            Platform.realOS !== 'ios' &&
             enableAbsolutePositionAnimation &&
             absolutePositionTransition.props &&
             fixedPosition &&

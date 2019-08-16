@@ -130,16 +130,16 @@ export const getGitHubAvatarURLFromPayload = (
   return payload[fieldWithAvatar].user.avatar_url as string
 }
 
-export function appBottomAnchorIfPossible(uri: string, realOSName: string) {
+export function appBottomAnchorIfPossible(uri: string, isMobile: boolean) {
   if (!uri) return ''
 
-  const anchorId = realOSName === 'web' ? 'partial-timeline' : 'bottom'
+  const anchorId = isMobile ? 'bottom' : 'partial-timeline'
   return uri.includes('#') ? uri : `${uri}#${anchorId}`
 }
 
 export function githubHTMLUrlFromAPIUrl(
   apiURL: string,
-  realOSName: string,
+  isMobile: boolean,
   {
     addBottomAnchor,
     commentId,
@@ -206,12 +206,12 @@ export function githubHTMLUrlFromAPIUrl(
 
   const uri = `${baseURL}/${restOfURL}`
 
-  return addBottomAnchor ? appBottomAnchorIfPossible(uri, realOSName) : uri
+  return addBottomAnchor ? appBottomAnchorIfPossible(uri, isMobile) : uri
 }
 
 export function fixURLForPlatform(
   url: string,
-  realOSName: string,
+  isMobile: boolean,
   options?: GitHubURLOptions,
 ) {
   if (!url) return ''
@@ -221,9 +221,9 @@ export function fixURLForPlatform(
     url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url
 
   if (uri.indexOf('api.github.com') >= 0)
-    uri = githubHTMLUrlFromAPIUrl(uri, realOSName, options)
+    uri = githubHTMLUrlFromAPIUrl(uri, isMobile, options)
 
   return options && options.addBottomAnchor
-    ? appBottomAnchorIfPossible(uri, realOSName)
+    ? appBottomAnchorIfPossible(uri, isMobile)
     : uri
 }

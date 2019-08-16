@@ -75,7 +75,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         }}
       />
 
-      {Platform.realOS === 'web' && (
+      {Platform.OS === 'web' && (
         <Checkbox
           analyticsLabel="column_option_app_icon_unread_indicator"
           checked={getColumnOption(
@@ -169,7 +169,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           key="column-options-button-move-column-left"
           analyticsLabel="move_column_left"
           enableForegroundHover
-          disabled={columnIndex === 0 && Platform.realOS === 'web'}
+          disabled={columnIndex === 0}
           fixedIconSize
           iconName={
             appOrientation === 'landscape' && appViewMode === 'single-column'
@@ -203,9 +203,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           key="column-options-button-move-column-right"
           analyticsLabel="move_column_right"
           enableForegroundHover
-          disabled={
-            columnIndex === columnIds.length - 1 && Platform.realOS === 'web'
-          }
+          disabled={columnIndex === columnIds.length - 1}
           fixedIconSize
           iconName={
             appOrientation === 'landscape' && appViewMode === 'single-column'

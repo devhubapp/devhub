@@ -2,7 +2,6 @@ import { Platform as _Platform } from 'react-native'
 
 import {
   PlataformSelectSpecificsEnhanced,
-  PlatformName,
   PlatformRealOS,
   PlatformSelectOptions,
 } from './index.shared'
@@ -42,7 +41,20 @@ function isElectron() {
   return false
 }
 
-function getPlatform(): PlatformName {
+// https://stackoverflow.com/a/4819886/2228575
+function supportsTouchInput() {
+  if ('ontouchstart' in window) {
+    return true
+  }
+
+  const prefixes = ' -webkit- -moz- -o- -ms- '.split(' ')
+  const query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('')
+
+  const mq = (q: string) => window.matchMedia(q).matches
+  return mq(query)
+}
+
+function getOSName(): PlatformRealOS | undefined {
   const userAgent =
     typeof navigator === 'undefined' || typeof window === 'undefined'
       ? ''
@@ -52,13 +64,6 @@ function getPlatform(): PlatformName {
 
   if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream)
     return 'ios'
-
-  return 'web'
-}
-
-function getOSName(): PlatformRealOS | undefined {
-  const os = getPlatform()
-  if (os === 'ios' || os === 'android') return os
 
   const platform =
     typeof navigator === 'undefined'
@@ -92,4 +97,5 @@ export const Platform = {
 
     return result
   },
+  supportsTouch: supportsTouchInput(),
 }

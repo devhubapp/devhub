@@ -130,7 +130,7 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     html_url: repo.html_url || getGitHubURLForRepo(repoOwnerName!, repoName!),
   }
 
-  const showCardBorder = Platform.realOS === 'web' && isFocused
+  const showCardBorder = !Platform.supportsTouch && isFocused
 
   const showCardActions = cardViewMode !== 'compact' && !swipeable
 

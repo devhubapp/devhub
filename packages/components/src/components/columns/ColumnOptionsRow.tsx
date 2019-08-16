@@ -79,10 +79,10 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         constants.DISABLE_ANIMATIONS ||
         forceImmediate ||
         isHovered ||
-        Platform.realOS !== 'web'
+        Platform.supportsTouch
 
       return {
-        config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
+        config: getDefaultReactSpringAnimationConfig(),
         immediate,
         backgroundColor:
           enableBackgroundHover && (isHovered || isPressing || isOpen)
@@ -151,13 +151,13 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                 onToggle()
               }}
               onPressIn={() => {
-                if (Platform.realOS === 'web') return
+                if (!Platform.supportsTouch) return
 
                 cacheRef.current.isPressing = true
                 updateStyles({ forceImmediate: false })
               }}
               onPressOut={() => {
-                if (Platform.realOS === 'web') return
+                if (!Platform.supportsTouch) return
 
                 cacheRef.current.isPressing = false
                 updateStyles({ forceImmediate: false })

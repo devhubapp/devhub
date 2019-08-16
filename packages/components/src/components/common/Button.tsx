@@ -90,9 +90,7 @@ export const Button = React.memo((props: ButtonProps) => {
       const isHovered = _isHovered && !disabled
 
       const immediate =
-        forceImmediate ||
-        constants.DISABLE_ANIMATIONS ||
-        Platform.realOS !== 'web'
+        forceImmediate || constants.DISABLE_ANIMATIONS || Platform.supportsTouch
 
       const backgroundColor = getThemeColorOrItself(
         theme,
@@ -137,7 +135,7 @@ export const Button = React.memo((props: ButtonProps) => {
         isHovered || isPressing ? hoverForegroundColor : foregroundColor
 
       return {
-        config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
+        config: getDefaultReactSpringAnimationConfig(),
         immediate,
         touchableBackgroundColor: transparent
           ? isHovered || isPressing
@@ -206,16 +204,16 @@ export const Button = React.memo((props: ButtonProps) => {
     <SpringAnimatedTouchableOpacity
       ref={touchableRef}
       {...otherProps}
-      activeOpacity={Platform.realOS !== 'web' ? 1 : otherProps.activeOpacity}
+      activeOpacity={Platform.supportsTouch ? 1 : otherProps.activeOpacity}
       disabled={disabled}
       onPressIn={() => {
-        if (Platform.realOS === 'web') return
+        if (!Platform.supportsTouch) return
 
         cacheRef.current.isPressing = true
         updateStyles({ forceImmediate: true })
       }}
       onPressOut={() => {
-        if (Platform.realOS === 'web') return
+        if (!Platform.supportsTouch) return
 
         cacheRef.current.isPressing = false
         updateStyles({ forceImmediate: true })

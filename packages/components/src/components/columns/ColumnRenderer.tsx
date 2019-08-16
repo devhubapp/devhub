@@ -310,7 +310,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         }) => (
           <>
             <ColumnHeader key={`column-renderer-${column.id}-header`}>
-              {Platform.realOS === 'web' &&
+              {!Platform.supportsTouch &&
                 filteredItems.length === 0 &&
                 focusedColumnId === column.id &&
                 appViewMode === 'multi-column' && <CardBorder />}

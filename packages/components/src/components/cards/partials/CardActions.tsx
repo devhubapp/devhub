@@ -108,9 +108,14 @@ export function CardActions(props: CardActionsProps) {
               }}
               href={
                 typeof commentsLink === 'string'
-                  ? fixURLForPlatform(commentsLink, Platform.realOS, {
-                      addBottomAnchor: true,
-                    })
+                  ? fixURLForPlatform(
+                      commentsLink,
+                      Platform.realOS === 'ios' ||
+                        Platform.realOS === 'android',
+                      {
+                        addBottomAnchor: true,
+                      },
+                    )
                   : undefined
               }
               onPress={

@@ -145,7 +145,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
     forkRepoFullName || '',
   )
 
-  const showCardBorder = Platform.realOS === 'web' && isFocused
+  const showCardBorder = !Platform.supportsTouch && isFocused
 
   const showCardActions = cardViewMode !== 'compact' && !swipeable
 

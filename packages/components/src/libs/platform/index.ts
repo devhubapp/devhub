@@ -13,4 +13,5 @@ export const Platform = {
   ) {
     return _Platform.select(specifics)
   },
+  supportsTouch: true,
 }

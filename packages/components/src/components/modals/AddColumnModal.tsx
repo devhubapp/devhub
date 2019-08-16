@@ -189,11 +189,10 @@ function AddColumnModalItem({
   const getStyles = useCallback(() => {
     const { isHovered, isPressing } = cacheRef.current
 
-    const immediate =
-      constants.DISABLE_ANIMATIONS || isHovered || Platform.realOS !== 'web'
+    const immediate = constants.DISABLE_ANIMATIONS || isHovered
 
     return {
-      config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
+      config: getDefaultReactSpringAnimationConfig(),
       immediate,
       backgroundColor:
         (isHovered || isPressing) && !disabled
@@ -221,7 +220,7 @@ function AddColumnModalItem({
   return (
     <SpringAnimatedTouchableOpacity
       ref={touchableRef}
-      activeOpacity={Platform.realOS !== 'web' ? 1 : undefined}
+      activeOpacity={Platform.supportsTouch ? 1 : undefined}
       analyticsLabel={undefined}
       disabled={disabled || !payload}
       onPress={
@@ -234,13 +233,13 @@ function AddColumnModalItem({
           : undefined
       }
       onPressIn={() => {
-        if (Platform.realOS === 'web') return
+        if (!Platform.supportsTouch) return
 
         cacheRef.current.isPressing = true
         updateStyles()
       }}
       onPressOut={() => {
-        if (Platform.realOS === 'web') return
+        if (!Platform.supportsTouch) return
 
         cacheRef.current.isPressing = false
         updateStyles()

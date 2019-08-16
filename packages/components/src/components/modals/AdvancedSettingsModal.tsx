@@ -95,7 +95,7 @@ export const AdvancedSettingsModal = React.memo(
             flexGrow: 1,
           }}
         >
-          {Platform.realOS === 'web' && (
+          {Platform.OS === 'web' && (
             <SubHeader title="Keyboard shortcuts">
               <>
                 <Spacer flex={1} />

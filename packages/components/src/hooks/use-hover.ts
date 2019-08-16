@@ -11,7 +11,7 @@ export function useHover(
   const forceRerender = useForceRerender()
   const cacheRef = useRef(false)
 
-  if (Platform.realOS !== 'web') return false
+  if (Platform.supportsTouch) return false
 
   useEffect(() => {
     const node = findNode(ref)

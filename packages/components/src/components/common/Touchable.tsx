@@ -52,7 +52,7 @@ export const Touchable = React.forwardRef(
     }, [touchableRef.current])
 
     useEffect(() => {
-      if (Platform.realOS !== 'web') return
+      if (!(Platform.OS === 'web' && !Platform.supportsTouch)) return
 
       const node = findNode(touchableRef)
       if (!node) return
@@ -76,7 +76,7 @@ export const Touchable = React.forwardRef(
 
     const onLongPress: typeof _onLongPress =
       _onLongPress ||
-      (tooltip && Platform.realOS !== 'web'
+      (tooltip && Platform.supportsTouch
         ? () => {
             alert(tooltip)
           }

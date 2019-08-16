@@ -19,7 +19,8 @@ function getPopupTarget() {
   const query = qs.parse(url.parse(currentURL).query || '')
 
   return !__DEV__ &&
-    (Platform.realOS !== 'web' ||
+    (Platform.realOS === 'ios' ||
+      Platform.realOS === 'android' ||
       query.installation_id ||
       Platform.isStandalone ||
       (navigator.userAgent || '').includes('Edge'))

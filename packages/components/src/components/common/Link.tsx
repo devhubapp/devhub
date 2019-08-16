@@ -169,7 +169,8 @@ export function Link(props: LinkProps) {
   }, [updateStyles])
 
   useEffect(() => {
-    if (!(Platform.realOS === 'web')) return
+    if (!(Platform.OS === 'web' && !Platform.supportsTouch)) return
+
     const node = findNode(containerRef)
     if (!node) return
 

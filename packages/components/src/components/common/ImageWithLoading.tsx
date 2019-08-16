@@ -74,7 +74,7 @@ export const ImageWithLoading = React.memo(
     }, [JSON.stringify(otherProps.source || {})])
 
     useEffect(() => {
-      if (!(Platform.realOS === 'web')) return
+      if (!(Platform.OS === 'web' && !Platform.supportsTouch)) return
 
       const node = findNode(imageRef)
       if (!node) return
