@@ -58,6 +58,9 @@
     "tslint-react": "3.6.0",
     "typescript": "3.5.1"
   },
+  "resolutions": {
+    "scheduler": "0.15.0"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "yarn workspace @devhub/desktop compile && lint-staged"
