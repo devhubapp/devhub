@@ -70,9 +70,7 @@ export function ColumnOptionsInboxContent(
         analyticsLabel="all_notifications"
         checked={inbox === 'all'}
         circle
-        containerStyle={
-          sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
-        }
+        containerStyle={sharedColumnOptionsStyles.fullWidthCheckboxContainer}
         defaultValue={false}
         label="All"
         squareContainerStyle={sharedColumnOptionsStyles.checkboxSquareContainer}
@@ -86,9 +84,7 @@ export function ColumnOptionsInboxContent(
         analyticsLabel="participating_notifications"
         checked={inbox === 'participating'}
         circle
-        containerStyle={
-          sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
-        }
+        containerStyle={sharedColumnOptionsStyles.fullWidthCheckboxContainer}
         defaultValue={false}
         label="Participating"
         squareContainerStyle={sharedColumnOptionsStyles.checkboxSquareContainer}

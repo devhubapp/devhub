@@ -1,8 +1,10 @@
 import {
   darken,
   getLuminance,
+  hsl,
   invert,
   lighten,
+  parseToHsl,
   rgba,
   setLightness,
 } from 'polished'
@@ -19,21 +21,19 @@ export function createThemeFromColor(
   id: Theme['id'],
   displayName: Theme['displayName'],
   {
-    override = {},
-    isInverted,
     invertedTheme,
-    usePredefinedColors,
+    isInverted,
+    override = {},
+    tintColor,
   }: {
-    override?: Partial<ThemeColors>
-    isInverted?: boolean
     invertedTheme?: Theme
-    usePredefinedColors?: boolean
+    isInverted?: boolean
+    override?: Partial<ThemeColors>
+    tintColor?: string
   } = {},
 ): Theme {
   const luminance = getLuminance(color)
   const isDark = luminance <= 0.4
-
-  const backgroundColor = color
 
   let primaryBackgroundColor = '#49D3B4'
   let primaryForegroundColor = '#141C26'
@@ -51,31 +51,25 @@ export function createThemeFromColor(
     }
   }
 
-  // Using Tailwind CSS colors on light theme instead of calculating them
-  const backgroundColorDarker1 =
-    !isDark && usePredefinedColors ? '#edf2f7' : darken(0.03, color)
-  const backgroundColorDarker2 =
-    !isDark && usePredefinedColors
-      ? '#e2e8f0'
-      : darken(0.05, backgroundColorDarker1)
-  const backgroundColorDarker3 =
-    !isDark && usePredefinedColors
-      ? '#cbd5e0'
-      : darken(0.05, backgroundColorDarker2)
-  const backgroundColorDarker4 =
-    !isDark && usePredefinedColors
-      ? '#a0aec0'
-      : darken(0.05, backgroundColorDarker3)
-  const backgroundColorDarker5 =
-    !isDark && usePredefinedColors
-      ? '#718096'
-      : darken(0.05, backgroundColorDarker4)
+  const colorHsl = parseToHsl(color)
+  const tintHsl = parseToHsl(tintColor || color)
 
-  const backgroundColorLighther1 = lighten(0.05, color)
-  const backgroundColorLighther2 = lighten(0.05, backgroundColorLighther1)
-  const backgroundColorLighther3 = lighten(0.05, backgroundColorLighther2)
-  const backgroundColorLighther4 = lighten(0.05, backgroundColorLighther3)
-  const backgroundColorLighther5 = lighten(0.05, backgroundColorLighther4)
+  const h = tintHsl.hue
+  const s = tintHsl.saturation
+  const l = colorHsl.lightness
+  const backgroundColor = hsl(h, s, l)
+
+  const backgroundColorDarker1 = hsl(h, s, Math.max(0, l - 0.05))
+  const backgroundColorDarker2 = hsl(h, s, Math.max(0, l - 0.1))
+  const backgroundColorDarker3 = hsl(h, s, Math.max(0, l - 0.2))
+  const backgroundColorDarker4 = hsl(h, s, Math.max(0, l - 0.3))
+  const backgroundColorDarker5 = hsl(h, s, Math.max(0, l - 0.5))
+
+  const backgroundColorLighther1 = hsl(h, s, Math.min(l + 0.05, 1))
+  const backgroundColorLighther2 = hsl(h, s, Math.min(l + 0.1, 1))
+  const backgroundColorLighther3 = hsl(h, s, Math.min(l + 0.2, 1))
+  const backgroundColorLighther4 = hsl(h, s, Math.min(l + 0.3, 1))
+  const backgroundColorLighther5 = hsl(h, s, Math.min(l + 0.5, 1))
 
   const backgroundColorMore1 = isDark
     ? backgroundColorDarker1

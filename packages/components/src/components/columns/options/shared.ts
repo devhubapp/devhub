@@ -10,6 +10,7 @@ export const sharedColumnOptionsStyles = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
     maxWidth: '100%',
+    paddingVertical: contentPadding / 4,
   },
 
   fullWidthCheckboxContainerWithPadding: {

@@ -320,6 +320,8 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
             <ColumnOptionsInbox
               enableBackgroundHover={allowToggleCategories}
               getCheckboxPropsFor={i => ({
+                containerStyle:
+                  sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding,
                 right:
                   inbox === i
                     ? i === 'all'

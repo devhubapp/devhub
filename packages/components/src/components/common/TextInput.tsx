@@ -54,16 +54,16 @@ export const TextInput = React.forwardRef(
     const isHovered = useHover(ref)
 
     const {
-      backgroundFocusColor,
-      backgroundHoverColor,
-      backgroundColor: _backgroundColor = 'transparent',
+      backgroundFocusColor = theme.backgroundColorDarker2,
+      backgroundHoverColor = theme.backgroundColorDarker2,
+      backgroundColor: _backgroundColor = theme.backgroundColorDarker1,
       borderFocusColor = theme.primaryBackgroundColor,
-      borderHoverColor = theme.foregroundColor,
-      borderColor: _borderColor = theme.foregroundColorMuted65,
+      borderHoverColor = theme.backgroundColorDarker2,
+      borderColor: _borderColor = theme.backgroundColorDarker1,
       placeholderTextColor = theme.foregroundColorMuted40,
-      textFocusColor,
-      textHoverColor,
-      textColor: _textColor = theme.foregroundColor,
+      textFocusColor = theme.foregroundColor,
+      textHoverColor = theme.foregroundColorMuted65,
+      textColor: _textColor = theme.foregroundColorMuted65,
       ...otherProps
     } = _otherProps
 

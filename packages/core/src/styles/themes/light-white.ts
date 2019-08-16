@@ -5,6 +5,6 @@ export const theme = createThemeFromColor(
   'light-white',
   'Light White',
   {
-    usePredefinedColors: true,
+    tintColor: '#1F3247',
   },
 )

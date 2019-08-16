@@ -1,6 +1,10 @@
 import { useFormik } from 'formik'
 import React, { useCallback, useState } from 'react'
-import { NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native'
+import {
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
+  View,
+} from 'react-native'
 
 import {
   Column,
@@ -15,11 +19,10 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { ColumnFiltersButton } from '../columns/ColumnFiltersButton'
 import { SearchBar, searchBarTotalHeight } from '../common/SearchBar'
-import { separatorSize } from '../common/Separator'
+import { Separator, separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { ThemedView } from '../themed/ThemedView'
-import { CardItemSeparator } from './partials/CardItemSeparator'
 
 export interface CardsSearchHeaderProps {
   autoFocus?: boolean
@@ -95,9 +98,8 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
   if (!column) return null
 
   return (
-    <>
-      <ThemedView
-        backgroundColor="backgroundColorDarker1"
+    <ThemedView backgroundColor="backgroundColor" style={sharedStyles.flexGrow}>
+      <View
         style={[
           sharedStyles.flexGrow,
           sharedStyles.horizontalAndVerticallyAligned,
@@ -131,10 +133,10 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
             <Spacer width={contentPadding / 2} />
           </>
         )}
-      </ThemedView>
+      </View>
 
-      <CardItemSeparator muted />
-    </>
+      <Separator horizontal />
+    </ThemedView>
   )
 })
 

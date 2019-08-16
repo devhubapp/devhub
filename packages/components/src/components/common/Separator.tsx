@@ -1,4 +1,4 @@
-import { getLuminance } from 'polished'
+import _ from 'lodash'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
@@ -8,19 +8,13 @@ import { ThemedView } from '../themed/ThemedView'
 export const separatorSize = 2
 export const separatorThickSize = 5
 
-export function getSeparatorThemeColors(
-  backgroundColor: string,
-): [keyof ThemeColors, keyof ThemeColors | undefined] {
-  const luminance = getLuminance(backgroundColor)
-
-  if (luminance >= 0.6)
-    return ['backgroundColorDarker2', 'backgroundColorLighther3']
-
-  if (luminance <= 0.01)
-    return ['backgroundColorDarker3', 'backgroundColorLighther2']
-
-  return ['backgroundColorDarker2', 'backgroundColorLighther2']
-}
+export const getSeparatorThemeColors = _.memoize(
+  (
+    _backgroundColor: string,
+  ): [keyof ThemeColors, keyof ThemeColors | undefined] => {
+    return ['backgroundColorDarker1', 'backgroundColorLighther1']
+  },
+)
 
 const styles = StyleSheet.create({
   absoluteTop: {
@@ -83,7 +77,11 @@ export const Separator = React.memo((props: SeparatorProps) => {
     ? _backgroundThemeColor2
     : (theme: ThemeColors) => getSeparatorThemeColors(theme.backgroundColor)[1]
 
-  const _twoSeparators = !!(backgroundThemeColor1 && backgroundThemeColor2)
+  const _twoSeparators = !!(
+    backgroundThemeColor1 &&
+    backgroundThemeColor2 &&
+    !half
+  )
 
   const size =
     (thick ? separatorThickSize : separatorSize) /
@@ -128,7 +126,7 @@ export const Separator = React.memo((props: SeparatorProps) => {
         />
       )}
 
-      {!!backgroundThemeColor2 && (
+      {!!backgroundThemeColor2 && !!_twoSeparators && (
         <ThemedView
           backgroundColor={backgroundThemeColor2}
           style={separatorStyle}

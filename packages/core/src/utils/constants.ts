@@ -25,7 +25,7 @@ export const DISABLE_SINGLE_COLUMN = false
 export const DEFAULT_DARK_THEME: ThemeName = 'dark-gray'
 export const DEFAULT_LIGHT_THEME: ThemeName = 'light-white'
 export const DEFAULT_THEME_PAIR: ThemePair = {
-  id: DEFAULT_DARK_THEME,
+  id: 'auto',
   color: '',
 }
 

@@ -1,4 +1,3 @@
-import { getLuminance } from 'polished'
 import React, { useCallback, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
@@ -48,7 +47,7 @@ import { ColumnOptionsAccordion } from './ColumnOptionsAccordion'
 import { getColumnSeparatorSize } from './ColumnSeparator'
 
 export function getColumnCardThemeColors(
-  backgroundColor: string,
+  _backgroundColor: string,
 ): {
   column: keyof ThemeColors
   card: keyof ThemeColors
@@ -56,31 +55,9 @@ export function getColumnCardThemeColors(
   card__muted: keyof ThemeColors
   card__muted_hover: keyof ThemeColors
 } {
-  const luminance = getLuminance(backgroundColor)
-
-  if (luminance <= 0.01) {
-    return {
-      card: 'backgroundColorLighther3',
-      card__hover: 'backgroundColorLighther4',
-      card__muted: 'backgroundColor',
-      card__muted_hover: 'backgroundColorLighther2',
-      column: 'backgroundColor',
-    }
-  }
-
-  if (luminance >= 0.6) {
-    return {
-      card: 'backgroundColorLighther1',
-      card__hover: 'backgroundColorLighther2',
-      card__muted: 'backgroundColorDarker1',
-      card__muted_hover: 'backgroundColorDarker2',
-      column: 'backgroundColor',
-    }
-  }
-
   return {
-    card: 'backgroundColorLighther2',
-    card__hover: 'backgroundColorLighther3',
+    card: 'backgroundColorLighther1',
+    card__hover: 'backgroundColorLighther2',
     card__muted: 'backgroundColorDarker1',
     card__muted_hover: 'backgroundColorDarker2',
     column: 'backgroundColor',

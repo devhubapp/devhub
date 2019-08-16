@@ -197,7 +197,7 @@ function AddColumnModalItem({
       immediate,
       backgroundColor:
         (isHovered || isPressing) && !disabled
-          ? theme.backgroundColorLess2
+          ? theme.backgroundColorLess1
           : rgba(theme.backgroundColor, 0),
     }
   }, [disabled, theme])

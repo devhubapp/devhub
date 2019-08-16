@@ -21,7 +21,7 @@ import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
 
-export const defaultButtonSize = 36
+export const defaultButtonSize = 40
 
 export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
   backgroundThemeColor?: keyof ThemeColors
@@ -96,13 +96,13 @@ export const Button = React.memo((props: ButtonProps) => {
 
       const backgroundColor = getThemeColorOrItself(
         theme,
-        backgroundThemeColor || 'backgroundColorLess2',
+        backgroundThemeColor || 'backgroundColorLess1',
       )!
       const hoverBackgroundColor = getThemeColorOrItself(
         theme,
         hoverBackgroundThemeColor ||
           (transparent && backgroundThemeColor) ||
-          (!backgroundThemeColor && 'backgroundColorLess4') ||
+          (!backgroundThemeColor && 'backgroundColorLess2') ||
           undefined,
       )
       const foregroundColor =

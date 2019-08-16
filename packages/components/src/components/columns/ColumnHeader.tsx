@@ -13,28 +13,10 @@ export function getColumnHeaderThemeColors(
   hover: keyof ThemeColors
   selected: keyof ThemeColors
 } {
-  // const luminance = getLuminance(backgroundColor)
-
-  // if (luminance >= 0.4) {
-  //   return {
-  //     normal: 'backgroundColor',
-  //     hover: 'backgroundColorLess1',
-  //     selected: 'backgroundColorLess2',
-  //   }
-  // }
-
-  // if (luminance <= 0.01) {
-  //   return {
-  //     normal: 'backgroundColor',
-  //     hover: 'backgroundColorLess2',
-  //     selected: 'backgroundColorLess4',
-  //   }
-  // }
-
   return {
     normal: 'backgroundColor',
-    hover: 'backgroundColorLess2',
-    selected: 'backgroundColorLess3',
+    hover: 'backgroundColorLess1',
+    selected: 'backgroundColorLess2',
   }
 }
 

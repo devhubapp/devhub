@@ -6,6 +6,7 @@ export const theme = createThemeFromColor(
   'light-blue',
   'Light Blue',
   {
+    tintColor: '#1F3247',
     override: {
       primaryBackgroundColor: getStaticColors({ isDark: false }).blue,
     },

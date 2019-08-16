@@ -21,20 +21,20 @@ export const searchBarOuterSpacing = contentPadding / 2
 export const SearchBar = React.memo(
   React.forwardRef((props: SearchBarProps, ref) => {
     const {
-      backgroundFocusThemeColor = 'backgroundColorLighther2',
-      backgroundHoverThemeColor = 'backgroundColorLighther1',
-      backgroundThemeColor = 'backgroundColor',
-      borderFocusThemeColor = 'backgroundColorLighther2',
-      borderHoverThemeColor = 'backgroundColorLighther1',
-      borderThemeColor = 'backgroundColor',
-      containerBackgroundThemeColor = 'backgroundColorDarker1',
+      backgroundFocusThemeColor,
+      backgroundHoverThemeColor,
+      backgroundThemeColor,
+      borderFocusThemeColor = 'backgroundColorDarker2',
+      borderHoverThemeColor,
+      borderThemeColor,
+      containerBackgroundThemeColor = 'backgroundColorLighther1',
       fontSize = smallTextSize,
       placeholder = 'Search',
-      placeholderTextThemeColor = 'foregroundColorMuted40',
-      size = 30,
-      textFocusThemeColor = 'foregroundColor',
-      textHoverThemeColor = 'foregroundColorMuted65',
-      textThemeColor = 'foregroundColorMuted65',
+      placeholderTextThemeColor,
+      size = 34,
+      textFocusThemeColor,
+      textHoverThemeColor,
+      textThemeColor,
       ...otherProps
     } = props
 
