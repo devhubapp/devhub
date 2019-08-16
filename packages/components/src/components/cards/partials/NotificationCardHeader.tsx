@@ -124,6 +124,7 @@ export function NotificationCardHeader(props: NotificationCardHeaderProps) {
                     style: [
                       { maxWidth: '100%' },
                       cardStyles.usernameText,
+                      cardStyles.smallText,
                       bold && cardStyles.boldText,
                       { lineHeight: undefined },
                     ],
