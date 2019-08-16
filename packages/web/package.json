@@ -23,7 +23,7 @@
     "react-app-polyfill": "1.0.1",
     "react-art": "16.8.6",
     "react-dom": "16.8.6",
-    "react-native-web": "0.11.5",
+    "react-native-web": "0.11.7",
     "react-scripts": "3.0.1",
     "resize-observer-polyfill": "1.5.1",
     "smoothscroll-polyfill": "0.4.3"
@@ -33,7 +33,7 @@
     "@types/node": "12.6.9",
     "@types/react": "16.8.24",
     "@types/react-dom": "16.8.5",
-    "babel-plugin-react-native-web": "0.11.5",
+    "babel-plugin-react-native-web": "0.11.7",
     "now": "16.1.1",
     "postinstall-prepare": "1.0.1",
     "prettier": "1.16.4",
