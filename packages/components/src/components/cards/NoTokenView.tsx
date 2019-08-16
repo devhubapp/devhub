@@ -10,7 +10,6 @@ import { executeOAuth } from '../../libs/oauth'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
 import { clearOAuthQueryParams } from '../../utils/helpers/auth'
 import { GitHubEmoji } from '../../utils/helpers/github/emojis'
 import { Button } from '../common/Button'
@@ -70,13 +69,7 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
   return (
     <View style={sharedStyles.flex}>
       <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: contentPadding,
-        }}
+        style={[sharedStyles.flex, sharedStyles.center, sharedStyles.padding]}
       >
         <GenericMessageWithButtonView
           buttonView={

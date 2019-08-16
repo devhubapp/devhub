@@ -85,7 +85,7 @@ export const AppViewModePreference = React.memo(
         </SubHeader>
 
         <View style={{ paddingHorizontal: contentPadding }}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={sharedStyles.horizontal}>
             <View style={sharedStyles.flex}>
               {renderOption('single-column')}
             </View>

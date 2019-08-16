@@ -1,6 +1,12 @@
 import { createSelector } from 'reselect'
 
-import { constants, isNight, loadTheme, ThemePair } from '@devhub/core'
+import {
+  AppViewMode,
+  constants,
+  isNight,
+  loadTheme,
+  ThemePair,
+} from '@devhub/core'
 import { EMPTY_OBJ } from '../../utils/constants'
 import { isBigEnoughForMultiColumnView } from '../../utils/helpers/shared'
 import { RootState } from '../types'
@@ -30,7 +36,7 @@ export const themeSelector = createSelector(
   loadTheme,
 )
 
-export const appViewModeSelector = (state: RootState) => {
+export const appViewModeSelector = (state: RootState): AppViewMode => {
   const _appViewMode = constants.DISABLE_SINGLE_COLUMN
     ? 'multi-column'
     : s(state).appViewMode || 'multi-column'

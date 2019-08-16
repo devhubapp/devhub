@@ -84,6 +84,64 @@ export interface ColumnHeaderItemProps {
     | ((theme: ThemeColors) => string)
 }
 
+const styles = StyleSheet.create({
+  container: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    overflow: 'hidden',
+  },
+
+  mainContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+
+  innerContainer: {
+    position: 'relative',
+    alignSelf: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  icon: {
+    textAlign: 'center',
+  },
+
+  title: {
+    fontWeight: '800',
+    marginRight: contentPadding / 2,
+  },
+
+  subtitle: {
+    marginRight: contentPadding / 2,
+  },
+
+  text: {},
+
+  labelText: {
+    marginHorizontal: 2,
+    marginTop: 3,
+    letterSpacing: -0.5,
+    fontSize: 10,
+    textAlign: 'center',
+  },
+
+  dotIndicator: {
+    position: 'absolute',
+    right: -7,
+    width: 12,
+    height: 12,
+    borderWidth: 2,
+    borderRadius: 12 / 2,
+    zIndex: 1,
+  },
+})
+
 export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   const {
     activeOpacity = !Platform.supportsTouch && props.enableBackgroundHover
@@ -112,7 +170,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     selectable,
     showLabel,
     size = columnHeaderItemContentSize,
-    style,
+    style: _style,
     subtitle,
     subtitleStyle,
     text,
@@ -243,43 +301,9 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
 
   const hasText = !!(title || subtitle || text)
 
-  const styles = {
-    container: {
-      alignSelf: 'center',
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignContent: 'center',
-      overflow: 'hidden',
-    } as ViewStyle,
+  const { opacity, ...style } = StyleSheet.flatten(_style || {})
 
-    mainContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignContent: 'center',
-      justifyContent: 'center',
-    } as ViewStyle,
-
-    icon: {
-      fontSize: size,
-      textAlign: 'center',
-    } as TextStyle,
-
-    title: {
-      fontWeight: '800',
-      marginRight: contentPadding / 2,
-      lineHeight: size,
-      fontSize: size - 1,
-    } as TextStyle,
-
-    subtitle: {
-      marginRight: contentPadding / 2,
-      fontSize: size - 5,
-    } as TextStyle,
-
-    text: {} as TextStyle,
-  }
-
-  const _wrapperStyle = StyleSheet.flatten([
+  const wrapperStyle = [
     styles.container,
     noPadding
       ? undefined
@@ -288,10 +312,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
           paddingVertical: showLabel ? undefined : contentPadding,
         },
     style,
-    { backgroundColor: springAnimatedStyles.backgroundColor as any },
-  ])
-
-  const { opacity, ...wrapperStyle } = _wrapperStyle
+    { backgroundColor: springAnimatedStyles.backgroundColor },
+  ]
 
   const wrap: ConditionalWrapProps['wrap'] = child =>
     onPress ? (
@@ -320,31 +342,25 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
         <View style={[styles.mainContainer, { opacity }, mainContainerStyle]}>
           {(!!iconName || !!username) && (
             <View
-              style={{
-                position: 'relative',
-                alignSelf: 'center',
-                alignContent: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: hasText ? contentPadding / 2 : 0,
-              }}
+              style={[
+                styles.innerContainer,
+                {
+                  marginRight: hasText ? contentPadding / 2 : 0,
+                },
+              ]}
             >
               {!!isUnread && (
                 <SpringAnimatedView
-                  style={{
-                    position: 'absolute',
-                    ...(showLabel ? { top: -2 } : { bottom: -3 }),
-                    right: -7,
-                    width: 12,
-                    height: 12,
-                    backgroundColor:
-                      springAnimatedStyles.unreadIndicatorBackgroundColor,
-                    borderColor:
-                      springAnimatedStyles.backgroundColorWithoutTransparency,
-                    borderWidth: 2,
-                    borderRadius: 12 / 2,
-                    zIndex: 1,
-                  }}
+                  style={[
+                    styles.dotIndicator,
+                    {
+                      ...(showLabel ? { top: -2 } : { bottom: -3 }),
+                      backgroundColor:
+                        springAnimatedStyles.unreadIndicatorBackgroundColor,
+                      borderColor:
+                        springAnimatedStyles.backgroundColorWithoutTransparency,
+                    },
+                  ]}
                 />
               )}
 
@@ -368,7 +384,10 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                         width: size,
                       },
                       iconStyle,
-                      { color: springAnimatedStyles.foregroundColor },
+                      {
+                        fontSize: size,
+                        color: springAnimatedStyles.foregroundColor,
+                      },
                     ]}
                   />
                 )
@@ -384,6 +403,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 styles.title,
                 titleStyle,
                 {
+                  lineHeight: size,
+                  fontSize: size - 1,
                   color: springAnimatedStyles.foregroundColor,
                 },
               ]}
@@ -399,7 +420,10 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
               style={[
                 styles.subtitle,
                 subtitleStyle,
-                { color: springAnimatedStyles.mutedForegroundColor },
+                {
+                  fontSize: size - 5,
+                  color: springAnimatedStyles.mutedForegroundColor,
+                },
               ]}
             >
               {subtitle}
@@ -424,16 +448,12 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
         {!!showLabel && (
           <SpringAnimatedText
             style={[
+              styles.labelText,
               {
                 width: Math.max(54, size + contentPadding),
-                marginHorizontal: 2,
-                marginTop: 3,
-                letterSpacing: -0.5,
-                fontSize: 10,
-                textAlign: 'center',
+                color: springAnimatedStyles.foregroundColor,
                 opacity,
               },
-              { color: springAnimatedStyles.foregroundColor },
             ]}
             numberOfLines={1}
           >

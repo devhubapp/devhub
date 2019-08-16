@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
+import { sharedStyles } from '../../styles/shared'
 import { GenericMessageWithButtonView } from '../cards/GenericMessageWithButtonView'
 import { Column } from './Column'
 
@@ -11,7 +12,7 @@ export function NoFocusedColumn() {
     <Column
       columnId=""
       fullWidth={appViewMode === 'single-column'}
-      style={{ alignItems: 'center', justifyContent: 'center' }}
+      style={[sharedStyles.alignItemsCenter, sharedStyles.justifyContentCenter]}
     >
       <GenericMessageWithButtonView
         buttonView={undefined}

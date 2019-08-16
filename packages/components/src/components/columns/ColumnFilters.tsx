@@ -297,10 +297,12 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
       backgroundColor={theme =>
         getColumnHeaderThemeColors(theme.backgroundColor).normal
       }
-      style={{
-        alignSelf: 'stretch',
-        height: fullHeight ? availableHeight : 'auto',
-      }}
+      style={[
+        sharedStyles.alignSelfStretch,
+        {
+          height: fullHeight ? availableHeight : 'auto',
+        },
+      ]}
       // onLayout={e => {
       //   setContainerWidth(e.nativeEvent.layout.width)
       // }}
@@ -399,10 +401,12 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       <ThemedText
                         color="foregroundColor"
                         numberOfLines={1}
-                        style={{
-                          flex: 1,
-                          lineHeight: defaultCheckboxSize,
-                        }}
+                        style={[
+                          sharedStyles.flex,
+                          {
+                            lineHeight: defaultCheckboxSize,
+                          },
+                        ]}
                         {...!!user &&
                           Platform.select({
                             web: { title: user },

@@ -1,3 +1,4 @@
+import { rgba } from 'polished'
 import React, {
   AnchorHTMLAttributes,
   useCallback,
@@ -8,7 +9,6 @@ import React, {
 import { StyleSheet, Text, View } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
-import { rgba } from 'polished'
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
@@ -82,6 +82,7 @@ export function Link(props: LinkProps) {
       theme,
       _hoverBackgroundThemeColor,
     )
+
     const hoverForegroundThemeColor = getThemeColorOrItself(
       theme,
       _hoverForegroundThemeColor,
@@ -144,7 +145,7 @@ export function Link(props: LinkProps) {
   ])
 
   const containerRef = useRef<View>(null)
-  const textRef = useRef<Text>(null)
+  const textRef = useRef<Text | null>(null)
   const initialIsHovered = useHover(
     enableBackgroundHover || enableForegroundHover ? containerRef : null,
     useCallback(
@@ -157,6 +158,12 @@ export function Link(props: LinkProps) {
     ),
   )
   cacheRef.current.isHovered = initialIsHovered
+
+  useEffect(() => {
+    return () => {
+      textRef.current = null
+    }
+  }, [])
 
   const isFirstRendeRef = useRef(true)
   useLayoutEffect(() => {

@@ -2,6 +2,7 @@ import { GitHubIcon } from '@devhub/core'
 import React, { PureComponent, ReactNode } from 'react'
 import { Animated, View } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
+import { sharedStyles } from '../../styles/shared'
 
 export type BaseActionType = 'BUTTON' | 'FULL'
 
@@ -77,7 +78,7 @@ export abstract class BaseSwipeableRow<
     let x = 0
 
     return (
-      <View style={{ width, flexDirection: 'row' }}>
+      <View style={[sharedStyles.horizontal, { width }]}>
         {buttonActions.map(action => {
           x += action.width || defaultWidth
           return this.renderButtonAction(action, {
@@ -111,7 +112,7 @@ export abstract class BaseSwipeableRow<
     let x = width
 
     return (
-      <View style={{ width, flexDirection: 'row' }}>
+      <View style={[sharedStyles.horizontal, { width }]}>
         {buttonActions.map(action => {
           const component = this.renderButtonAction(action, {
             dragX,

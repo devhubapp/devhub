@@ -44,12 +44,7 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
 
         <Spacer height={contentPadding} />
 
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
+        <View style={[sharedStyles.horizontal, sharedStyles.alignItemsCenter]}>
           <H3>E-mail: </H3>
 
           <Link

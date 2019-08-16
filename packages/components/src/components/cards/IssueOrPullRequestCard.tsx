@@ -358,12 +358,14 @@ export const IssueOrPullRequestCard = React.memo(
                     muted={muted}
                     ownerName={repoOwnerName}
                     repositoryName={repoName}
-                    rightContainerStyle={{
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      justifyContent: 'center',
-                      width: repoTableColumnWidth,
-                    }}
+                    rightContainerStyle={[
+                      sharedStyles.horizontal,
+                      sharedStyles.alignItemsFlexStart,
+                      sharedStyles.justifyContentCenter,
+                      {
+                        width: repoTableColumnWidth,
+                      },
+                    ]}
                     small
                     viewMode={cardViewMode}
                     withTopMargin={false}
@@ -392,11 +394,13 @@ export const IssueOrPullRequestCard = React.memo(
                 color={cardIconColor || 'foregroundColor'}
                 name={cardIconName}
                 selectable={false}
-                style={{
-                  fontSize: columnHeaderItemContentSize,
-                  textAlign: 'center',
-                  opacity: muted ? mutedOpacity : 1,
-                }}
+                style={[
+                  sharedStyles.textCenter,
+                  {
+                    fontSize: columnHeaderItemContentSize,
+                    opacity: muted ? mutedOpacity : 1,
+                  },
+                ]}
                 {...!!cardIconDetails.tooltip &&
                   Platform.select({
                     web: { title: cardIconDetails.tooltip },
@@ -434,17 +438,19 @@ export const IssueOrPullRequestCard = React.memo(
                     name: label.name,
                   }))}
                   muted={muted}
-                  style={{
-                    alignSelf: 'center',
-                    justifyContent: 'flex-end',
-                    maxWidth:
-                      260 +
-                      (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
-                      (`${issueOrPullRequest.title || ''}`.length <= 50
-                        ? 100
-                        : 0),
-                    overflow: 'hidden',
-                  }}
+                  style={[
+                    sharedStyles.alignSelfCenter,
+                    sharedStyles.justifyContentFlexEnd,
+                    sharedStyles.overflowHidden,
+                    {
+                      maxWidth:
+                        260 +
+                        (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
+                        (`${issueOrPullRequest.title || ''}`.length <= 50
+                          ? 100
+                          : 0),
+                    },
+                  ]}
                   textThemeColor={
                     muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
                   }
@@ -527,7 +533,6 @@ export const IssueOrPullRequestCard = React.memo(
               isRead={isRead}
               itemIds={id}
               muted={muted}
-              size={columnHeaderItemContentSize}
               type="issue_or_pr"
             />
           </View>
@@ -563,11 +568,13 @@ export const IssueOrPullRequestCard = React.memo(
                 color={cardIconColor || 'foregroundColor'}
                 name={cardIconName}
                 selectable={false}
-                style={{
-                  fontSize: columnHeaderItemContentSize,
-                  textAlign: 'center',
-                  opacity: muted ? mutedOpacity : 1,
-                }}
+                style={[
+                  sharedStyles.textCenter,
+                  {
+                    fontSize: columnHeaderItemContentSize,
+                    opacity: muted ? mutedOpacity : 1,
+                  },
+                ]}
                 {...!!cardIconDetails.tooltip &&
                   Platform.select({
                     web: { title: cardIconDetails.tooltip },

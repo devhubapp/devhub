@@ -20,6 +20,7 @@ import { useReduxState } from '../hooks/use-redux-state'
 import { octokit } from '../libs/github'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { sharedStyles } from '../styles/shared'
 import { contentPadding } from '../styles/variables'
 import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
@@ -166,13 +167,13 @@ export const EventCardsContainer = React.memo(
       if (ownerResponse.data && ownerResponse.data.id) {
         return (
           <View
-            style={{
-              flex: 1,
-              alignContent: 'center',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: contentPadding,
-            }}
+            style={[
+              sharedStyles.flex,
+              sharedStyles.center,
+              {
+                padding: contentPadding,
+              },
+            ]}
           >
             <GenericMessageWithButtonView
               buttonView={
@@ -211,13 +212,13 @@ export const EventCardsContainer = React.memo(
     ) {
       return (
         <View
-          style={{
-            flex: 1,
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: contentPadding,
-          }}
+          style={[
+            sharedStyles.flex,
+            sharedStyles.center,
+            {
+              padding: contentPadding,
+            },
+          ]}
         >
           <GenericMessageWithButtonView
             buttonView={

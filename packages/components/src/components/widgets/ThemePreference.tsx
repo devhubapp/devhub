@@ -98,11 +98,11 @@ export const ThemePreference = React.memo(() => {
         <Spacer height={contentPadding} />
 
         <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
+          style={[
+            sharedStyles.horizontal,
+            sharedStyles.alignItemsCenter,
+            sharedStyles.justifyContentSpaceBetween,
+          ]}
         >
           <H3>Auto toggle on day/night</H3>
           <Switch

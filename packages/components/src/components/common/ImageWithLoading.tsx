@@ -34,7 +34,8 @@ export const ImageWithLoading = React.memo(
       ...otherProps
     } = props
 
-    const imageRef = useRef<Image>(null)
+    const imageRef = useRef<Image | null>(null)
+
     const stateRef = useRef({
       error: false,
       isLoading: false,
@@ -65,13 +66,19 @@ export const ImageWithLoading = React.memo(
     })
 
     useEffect(() => {
+      return () => {
+        imageRef.current = null
+      }
+    }, [])
+
+    useEffect(() => {
       callbackRef.current = {
         hasCalledOnError: false,
         hasCalledOnLoad: false,
         hasCalledOnLoadStart: false,
         hasCalledOnLoadEnd: false,
       }
-    }, [JSON.stringify(otherProps.source || {})])
+    }, [otherProps.source && (otherProps.source as any).uri])
 
     useEffect(() => {
       if (!(Platform.OS === 'web' && !Platform.supportsTouch)) return
@@ -138,18 +145,17 @@ export const ImageWithLoading = React.memo(
         onLoadEnd={handleLoadEnd}
         onLoadStart={handleLoadStart}
         style={[
-          otherProps.style,
-          getStyle({ ...propsRef.current, ...stateRef.current }),
+          props.style,
+          getStyles({ ...propsRef.current, ...stateRef.current }),
         ]}
       />
     )
   }),
-  _.isEqual,
 )
 
 ImageWithLoading.displayName = 'ImageWithLoading'
 
-function getStyle({
+function getStyles({
   error,
   isLoading,
   backgroundColorFailed,
@@ -170,11 +176,11 @@ function getStyle({
 
 function updateStyles(
   imageRef: RefObject<Image>,
-  ...args: Parameters<typeof getStyle>
+  ...args: Parameters<typeof getStyles>
 ) {
   if (!(imageRef && imageRef.current)) return
 
   imageRef.current.setNativeProps({
-    style: getStyle(...args),
+    style: getStyles(...args),
   })
 }

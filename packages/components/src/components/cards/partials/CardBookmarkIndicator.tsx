@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { sharedStyles } from '../../../styles/shared'
 import { contentPadding, smallAvatarSize } from '../../../styles/variables'
 import { ThemedIcon } from '../../themed/ThemedIcon'
 
@@ -17,12 +18,14 @@ export function CardBookmarkIndicator(props: CardBorderProps) {
       color="primaryBackgroundColor"
       name="bookmark"
       size={size}
-      style={{
-        position: 'absolute',
-        top: -size * 0.7,
-        right: contentPadding / 3 + size / 3,
-        // transform: [{ rotate: '-90deg' }],
-      }}
+      style={[
+        sharedStyles.absolute,
+        {
+          top: -size * 0.7,
+          right: contentPadding / 3 + size / 3,
+          // transform: [{ rotate: '-90deg' }],
+        },
+      ]}
     />
   )
 }

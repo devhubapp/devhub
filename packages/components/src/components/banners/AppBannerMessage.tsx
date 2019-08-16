@@ -6,6 +6,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
@@ -21,21 +22,21 @@ export function AppBannerMessage() {
   if (!(bannerMessage && bannerMessage.message)) return null
 
   return (
-    <SafeAreaView style={{ width: '100%' }}>
-      <View style={{ width: '100%', flexDirection: 'row' }}>
+    <SafeAreaView style={sharedStyles.fullWidth}>
+      <View style={[sharedStyles.fullWidth, sharedStyles.horizontal]}>
         <Spacer width={contentPadding / 2} />
         <View style={{ width: 18 + contentPadding }} />
         <Spacer width={contentPadding / 2} />
 
         <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            alignContent: 'center',
-            justifyContent: 'center',
-            paddingVertical: contentPadding,
-            paddingHorizontal: contentPadding / 2,
-          }}
+          style={[
+            sharedStyles.flex,
+            sharedStyles.center,
+            {
+              paddingVertical: contentPadding,
+              paddingHorizontal: contentPadding / 2,
+            },
+          ]}
         >
           <Link
             analyticsCategory="banner_link"
@@ -44,7 +45,7 @@ export function AppBannerMessage() {
             openOnNewTab={bannerMessage.openOnNewTab}
             tooltip={undefined}
           >
-            <ThemedText color="foregroundColor" style={{ textAlign: 'center' }}>
+            <ThemedText color="foregroundColor" style={sharedStyles.textCenter}>
               {parseTextWithEmojisToReactComponents(bannerMessage.message, {
                 key: `banner-message-${bannerMessage.message}`,
                 imageProps: {
@@ -61,12 +62,12 @@ export function AppBannerMessage() {
         <Spacer width={contentPadding / 2} />
 
         <View
-          style={{
-            alignItems: 'center',
-            alignContent: 'center',
-            justifyContent: 'center',
-            width: 18 + contentPadding,
-          }}
+          style={[
+            sharedStyles.center,
+            {
+              width: 18 + contentPadding,
+            },
+          ]}
         >
           <ColumnHeaderItem
             iconName="x"

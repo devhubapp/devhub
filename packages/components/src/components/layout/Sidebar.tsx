@@ -158,12 +158,14 @@ export const Sidebar = React.memo((props: SidebarProps) => {
       style={{ zIndex: zIndex || 1000 }}
     >
       <View
-        style={{
-          flexGrow: 1,
-          flexDirection: horizontal ? 'row' : 'column',
-          width: horizontal ? '100%' : sidebarSize,
-          height: horizontal ? sidebarSize : '100%',
-        }}
+        style={[
+          sharedStyles.flexGrow,
+          {
+            flexDirection: horizontal ? 'row' : 'column',
+            width: horizontal ? '100%' : sidebarSize,
+            height: horizontal ? sidebarSize : '100%',
+          },
+        ]}
       >
         {!horizontal && (
           <ColumnHeader noPadding>

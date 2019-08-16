@@ -13,6 +13,7 @@ import { Platform } from '../../libs/platform'
 import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -207,22 +208,24 @@ export function ModalRenderer(props: ModalRendererProps) {
       {!!overlayTransition && (
         <SpringAnimatedSafeAreaView
           collapsable={false}
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            ...overlayTransition.props,
-            zIndex: 500,
-          }}
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              ...overlayTransition.props,
+              zIndex: 500,
+            },
+          ]}
         >
           <ThemedTouchableOpacity
             analyticsAction="close_via_overlay"
             analyticsLabel="modal"
             activeOpacity={1}
             backgroundColor="backgroundColorMore1"
-            style={{
-              width: '100%',
-              height: '100%',
-              ...Platform.select({ web: { cursor: 'default' } as any }),
-            }}
+            style={[
+              sharedStyles.fullWidth,
+              sharedStyles.fullHeight,
+              Platform.select({ web: { cursor: 'default' } as any }),
+            ]}
             onPress={() => closeAllModals()}
             tabIndex={-1}
           />
@@ -232,24 +235,28 @@ export function ModalRenderer(props: ModalRendererProps) {
       {!!modalTransitions.length && (
         <SafeAreaView
           collapsable={false}
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: size,
-            overflow: 'hidden',
-            zIndex: 900,
-          }}
+          style={[
+            sharedStyles.absolute,
+            sharedStyles.overflowHidden,
+            {
+              top: 0,
+              bottom: 0,
+              left: 0,
+              width: size,
+              zIndex: 900,
+            },
+          ]}
         >
           <View
             collapsable={false}
-            style={{
-              width: columnWidth,
-              height: '100%',
-              overflow: 'hidden',
-              zIndex: 900,
-            }}
+            style={[
+              sharedStyles.fullHeight,
+              sharedStyles.overflowHidden,
+              {
+                width: columnWidth,
+                zIndex: 900,
+              },
+            ]}
           >
             {modalTransitions.map(
               ({ key, item, props: { width, ...animatedStyle } }) =>
@@ -257,15 +264,17 @@ export function ModalRenderer(props: ModalRendererProps) {
                   <SpringAnimatedView
                     key={key}
                     collapsable={false}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      bottom: 0,
-                      flexDirection: 'row',
-                      ...animatedStyle,
-                      overflow: 'hidden',
-                      zIndex: 900 + item.index,
-                    }}
+                    style={[
+                      sharedStyles.absolute,
+                      sharedStyles.horizontal,
+                      sharedStyles.overflowHidden,
+                      {
+                        top: 0,
+                        bottom: 0,
+                        ...animatedStyle,
+                        zIndex: 900 + item.index,
+                      },
+                    ]}
                   >
                     {renderModal(item)}
                   </SpringAnimatedView>
@@ -279,12 +288,14 @@ export function ModalRenderer(props: ModalRendererProps) {
                 <SpringAnimatedView
                   key={key}
                   collapsable={false}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    ...animatedStyle,
-                  }}
+                  style={[
+                    sharedStyles.absolute,
+                    {
+                      top: 0,
+                      bottom: 0,
+                    },
+                    animatedStyle,
+                  ]}
                 >
                   <separatorMetadata.Component />
                 </SpringAnimatedView>

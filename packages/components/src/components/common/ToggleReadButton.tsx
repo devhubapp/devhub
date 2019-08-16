@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
+import { StyleSheet } from 'react-native'
 
 import { ColumnSubscription } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -21,15 +22,18 @@ export interface ToggleReadButtonProps
   type: ColumnSubscription['type']
 }
 
+const styles = StyleSheet.create({
+  style: {
+    paddingVertical: 0,
+    paddingHorizontal: contentPadding / 3,
+  },
+  unreadIconStyle: {
+    lineHeight: columnHeaderItemContentSize,
+  },
+})
+
 export const ToggleReadButton = React.memo((props: ToggleReadButtonProps) => {
-  const {
-    isRead,
-    itemIds: _itemIds,
-    muted,
-    size = columnHeaderItemContentSize,
-    type,
-    ...otherProps
-  } = props
+  const { isRead, itemIds: _itemIds, muted, type, ...otherProps } = props
 
   const itemIds = Array.isArray(_itemIds)
     ? _itemIds.filter(Boolean)
@@ -38,6 +42,25 @@ export const ToggleReadButton = React.memo((props: ToggleReadButtonProps) => {
   const markItemsAsReadOrUnread = useReduxAction(
     actions.markItemsAsReadOrUnread,
   )
+
+  const onPress = useCallback(
+    () =>
+      markItemsAsReadOrUnread({
+        type,
+        itemIds,
+        unread: !!isRead,
+      }),
+    [type, itemIds.join(','), !!isRead],
+  )
+
+  const iconStyle = useMemo(
+    () => [!isRead && styles.unreadIconStyle, otherProps.iconStyle],
+    [!isRead, otherProps.iconStyle],
+  )
+
+  const style = useMemo(() => [styles.style, otherProps.style], [
+    otherProps.style,
+  ])
 
   return (
     <ColumnHeaderItem
@@ -48,28 +71,16 @@ export const ToggleReadButton = React.memo((props: ToggleReadButtonProps) => {
       }
       iconName={isRead ? 'mail-read' : 'mail'}
       noPadding
-      onPress={() =>
-        markItemsAsReadOrUnread({
-          type,
-          itemIds,
-          unread: !!isRead,
-        })
-      }
+      onPress={onPress}
       tooltip={
         isRead
           ? `Mark as unread (${keyboardShortcutsById.toggleRead.keys[0]})`
           : `Mark as read (${keyboardShortcutsById.toggleRead.keys[0]})`
       }
       {...otherProps}
-      iconStyle={[!isRead && { lineHeight: size }, otherProps.iconStyle]}
-      size={size}
-      style={[
-        {
-          paddingVertical: 0,
-          paddingHorizontal: contentPadding / 3,
-        },
-        otherProps.style,
-      ]}
+      iconStyle={iconStyle}
+      size={columnHeaderItemContentSize}
+      style={style}
     />
   )
 })

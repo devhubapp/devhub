@@ -3,6 +3,7 @@ import { StyleProp, TextStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -82,15 +83,17 @@ export function FAB(props: FABProps) {
               : 'backgroundColorLess2'
             : undefined
         }
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: fabSize,
-          height: fabSize,
-          borderRadius: fabSize / 2,
-          overflow: 'hidden',
-        }}
+        style={[
+          sharedStyles.flex,
+          sharedStyles.alignItemsCenter,
+          sharedStyles.justifyContentCenter,
+          sharedStyles.overflowHidden,
+          {
+            width: fabSize,
+            height: fabSize,
+            borderRadius: fabSize / 2,
+          },
+        ]}
       >
         {typeof iconName === 'string' ? (
           <ThemedIcon

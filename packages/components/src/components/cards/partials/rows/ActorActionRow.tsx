@@ -2,6 +2,7 @@ import React from 'react'
 import { View } from 'react-native'
 
 import { getGitHubURLForUser } from '@devhub/core'
+import { sharedStyles } from '../../../../styles/shared'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { Avatar } from '../../../common/Avatar'
 import { Link } from '../../../common/Link'
@@ -63,11 +64,11 @@ export const ActorActionRow = React.memo((props: ActorActionRowProps) => {
       }
       right={
         <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'nowrap',
-            alignItems: 'center',
-          }}
+          style={[
+            sharedStyles.horizontal,
+            sharedStyles.flexNoWrap,
+            sharedStyles.alignItemsCenter,
+          ]}
         >
           <Link
             href={userLinkURL}

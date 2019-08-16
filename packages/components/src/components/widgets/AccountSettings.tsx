@@ -3,6 +3,7 @@ import { View } from 'react-native'
 
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
@@ -20,11 +21,13 @@ export function AccountSettings() {
       <SubHeader title="Account" />
 
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: contentPadding,
-        }}
+        style={[
+          sharedStyles.horizontal,
+          sharedStyles.alignItemsCenter,
+          {
+            paddingHorizontal: contentPadding,
+          },
+        ]}
       >
         <Avatar size={28} username={username} />
         <Spacer width={contentPadding / 2} />

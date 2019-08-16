@@ -196,20 +196,22 @@ export function Checkbox(props: CheckboxProps) {
               color={checkedForegroundThemeColor}
               name="check"
               size={size - 5}
-              style={{
-                lineHeight: size - 5,
-                ...Platform.selectUsingRealOS({
-                  ios: {
-                    paddingTop: 1,
-                  },
-                  android: {},
-                  default: {
-                    paddingBottom: 1,
-                  },
-                }),
-                textAlign: 'center',
-                opacity: checked ? 1 : 0,
-              }}
+              style={[
+                sharedStyles.textCenter,
+                {
+                  lineHeight: size - 5,
+                  ...Platform.selectUsingRealOS({
+                    ios: {
+                      paddingTop: 1,
+                    },
+                    android: {},
+                    default: {
+                      paddingBottom: 1,
+                    },
+                  }),
+                  opacity: checked ? 1 : 0,
+                },
+              ]}
             />
           </View>
         </ThemedView>
@@ -226,13 +228,11 @@ export function Checkbox(props: CheckboxProps) {
 
       {!!label && (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignContent: 'center',
-            justifyContent: 'space-between',
-          }}
+          style={[
+            sharedStyles.flex,
+            sharedStyles.horizontalAndVerticallyAligned,
+            sharedStyles.justifyContentSpaceBetween,
+          ]}
         >
           {typeof label === 'string' ? (
             <ThemedText

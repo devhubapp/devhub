@@ -469,12 +469,14 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   muted={muted}
                   ownerName={repoOwnerName}
                   repositoryName={repoName}
-                  rightContainerStyle={{
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    justifyContent: 'center',
-                    width: repoTableColumnWidth,
-                  }}
+                  rightContainerStyle={[
+                    sharedStyles.horizontal,
+                    sharedStyles.alignItemsFlexStart,
+                    sharedStyles.justifyContentCenter,
+                    {
+                      width: repoTableColumnWidth,
+                    },
+                  ]}
                   small
                   viewMode={cardViewMode}
                   withTopMargin={false}
@@ -503,11 +505,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
               color={cardIconColor || 'foregroundColor'}
               name={cardIconName}
               selectable={false}
-              style={{
-                fontSize: columnHeaderItemContentSize,
-                textAlign: 'center',
-                opacity: muted ? mutedOpacity : 1,
-              }}
+              style={[
+                sharedStyles.textCenter,
+                {
+                  fontSize: columnHeaderItemContentSize,
+                  opacity: muted ? mutedOpacity : 1,
+                },
+              ]}
               {...!!actionTextWithoutColon &&
                 Platform.select({
                   web: { title: actionTextWithoutColon },
@@ -545,17 +549,19 @@ export const EventCard = React.memo((props: EventCardProps) => {
                   name: label.name,
                 }))}
                 muted={muted}
-                style={{
-                  alignSelf: 'center',
-                  justifyContent: 'flex-end',
-                  maxWidth:
-                    260 +
-                    (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
-                    (`${issueOrPullRequest.title || ''}`.length <= 50
-                      ? 100
-                      : 0),
-                  overflow: 'hidden',
-                }}
+                style={[
+                  sharedStyles.alignSelfCenter,
+                  sharedStyles.justifyContentFlexEnd,
+                  sharedStyles.overflowHidden,
+                  {
+                    maxWidth:
+                      260 +
+                      (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
+                      (`${issueOrPullRequest.title || ''}`.length <= 50
+                        ? 100
+                        : 0),
+                  },
+                ]}
                 textThemeColor={
                   muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
                 }
@@ -628,7 +634,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             isRead={isRead}
             itemIds={id}
             muted={muted}
-            size={columnHeaderItemContentSize}
             type="activity"
           />
         </View>
@@ -657,11 +662,13 @@ export const EventCard = React.memo((props: EventCardProps) => {
               color={cardIconColor || 'foregroundColor'}
               name={cardIconName}
               selectable={false}
-              style={{
-                fontSize: columnHeaderItemContentSize,
-                textAlign: 'center',
-                opacity: muted ? mutedOpacity : 1,
-              }}
+              style={[
+                sharedStyles.textCenter,
+                {
+                  fontSize: columnHeaderItemContentSize,
+                  opacity: muted ? mutedOpacity : 1,
+                },
+              ]}
               {...!!actionTextWithoutColon &&
                 Platform.select({
                   web: { title: actionTextWithoutColon },

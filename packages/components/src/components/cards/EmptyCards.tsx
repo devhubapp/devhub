@@ -114,23 +114,25 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
 
     return (
       <View
-        style={{
-          flexDirection: 'row',
-          alignContent: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          padding: contentPadding,
-        }}
+        style={[
+          sharedStyles.fullWidth,
+          sharedStyles.horizontal,
+          sharedStyles.center,
+          {
+            padding: contentPadding,
+          },
+        ]}
       >
         {!!clearMessage && (
           <ThemedText
             color="foregroundColorMuted40"
-            style={{
-              fontSize: 20,
-              fontWeight: '200',
-              textAlign: 'center',
-            }}
+            style={[
+              sharedStyles.textCenter,
+              {
+                fontSize: 20,
+                fontWeight: '200',
+              },
+            ]}
           >
             {clearMessage}
           </ThemedText>

@@ -9,6 +9,7 @@ import { bugsnag } from '../../../../libs/bugsnag'
 import { executeOAuth } from '../../../../libs/oauth'
 import * as actions from '../../../../redux/actions'
 import * as selectors from '../../../../redux/selectors'
+import { sharedStyles } from '../../../../styles/shared'
 import { clearOAuthQueryParams } from '../../../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../../../utils/helpers/shared'
 import { Link } from '../../../common/Link'
@@ -111,11 +112,13 @@ export const PrivateNotificationRow = React.memo(
         right={
           <>
             <View
-              style={{
-                flex: 1,
-                position: 'relative',
-                opacity: showLoadingIndicator ? 0 : 1,
-              }}
+              style={[
+                sharedStyles.flex,
+                sharedStyles.relative,
+                {
+                  opacity: showLoadingIndicator ? 0 : 1,
+                },
+              ]}
             >
               {renderContent()}
             </View>

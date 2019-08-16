@@ -244,18 +244,17 @@ function AddColumnModalItem({
         cacheRef.current.isPressing = false
         updateStyles()
       }}
-      style={{
-        flex: 1,
-        ...springAnimatedStyles,
-      }}
+      style={[sharedStyles.flex, springAnimatedStyles]}
     >
       <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: contentPadding,
-        }}
+        style={[
+          sharedStyles.flex,
+          sharedStyles.horizontal,
+          sharedStyles.alignItemsCenter,
+          {
+            padding: contentPadding,
+          },
+        ]}
       >
         <ColumnHeaderItem
           analyticsLabel={undefined}
@@ -343,13 +342,15 @@ export function AddColumnModal(props: AddColumnModalProps) {
         {!!hasReachedColumnLimit && (
           <ThemedText
             color="foregroundColorMuted65"
-            style={{
-              marginTop: contentPadding,
-              paddingHorizontal: contentPadding,
-              lineHeight: 20,
-              fontSize: 14,
-              textAlign: 'center',
-            }}
+            style={[
+              sharedStyles.textCenter,
+              {
+                marginTop: contentPadding,
+                paddingHorizontal: contentPadding,
+                lineHeight: 20,
+                fontSize: 14,
+              },
+            ]}
           >
             {`You have reached the limit of ${
               constants.COLUMNS_LIMIT

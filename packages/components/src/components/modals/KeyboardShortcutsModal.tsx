@@ -88,26 +88,23 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
       <ScrollView style={[sharedStyles.flex, { padding: contentPadding }]}>
         {keyboardShortcuts.map((ks, index) => (
           <Fragment key={[...ks.keys, index].join('+')}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={sharedStyles.horizontal}>
               <View style={{ width: 70 }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                  }}
-                >
+                <View style={[sharedStyles.horizontal, sharedStyles.flexWrap]}>
                   {ks.keys.map(key => (
                     <ThemedView
                       key={`keyboard-shortcut-label-${index}-${key}`}
                       backgroundColor="backgroundColorLess2"
-                      style={{
-                        alignSelf: 'flex-start',
-                        marginBottom: contentPadding / 2,
-                        marginRight: contentPadding / 2,
-                        paddingVertical: contentPadding / 4,
-                        paddingHorizontal: contentPadding / 2,
-                        borderRadius: contentPadding,
-                      }}
+                      style={[
+                        sharedStyles.alignSelfFlexStart,
+                        {
+                          marginBottom: contentPadding / 2,
+                          marginRight: contentPadding / 2,
+                          paddingVertical: contentPadding / 4,
+                          paddingHorizontal: contentPadding / 2,
+                          borderRadius: contentPadding,
+                        },
+                      ]}
                     >
                       <ThemedText
                         color="foregroundColor"

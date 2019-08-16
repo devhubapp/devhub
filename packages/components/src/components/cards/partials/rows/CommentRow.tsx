@@ -2,6 +2,7 @@ import React from 'react'
 import { View } from 'react-native'
 
 import { stripMarkdown, trimNewLinesAndSpaces } from '@devhub/core'
+import { sharedStyles } from '../../../../styles/shared'
 import { smallAvatarSize } from '../../../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../../../utils/helpers/github/emojis'
 import { fixURL } from '../../../../utils/helpers/github/url'
@@ -68,7 +69,7 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
             color="foregroundColorMuted65"
             name="comment"
             size={smallAvatarSize}
-            style={[{ alignSelf: 'flex-end' }, cardStyles.normalText]}
+            style={[sharedStyles.alignSelfFlexEnd, cardStyles.normalText]}
           />
         ) : leftContent === 'avatar' ? (
           <Avatar

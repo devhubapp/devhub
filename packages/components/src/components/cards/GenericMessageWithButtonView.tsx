@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, View, ViewProps } from 'react-native'
 
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import {
   getEmojiImageURL,
@@ -44,12 +45,14 @@ export const GenericMessageWithButtonView = React.memo(
           <>
             <Image
               source={{ uri: emojiImageURL }}
-              style={{
-                alignSelf: 'center',
-                width: 24,
-                height: 24,
-                marginBottom: 4,
-              }}
+              style={[
+                sharedStyles.alignSelfCenter,
+                {
+                  width: 24,
+                  height: 24,
+                  marginBottom: 4,
+                },
+              ]}
             />
 
             {!!(title || subtitle) && <Spacer height={contentPadding / 2} />}
@@ -58,11 +61,13 @@ export const GenericMessageWithButtonView = React.memo(
 
         <ThemedText
           color="foregroundColorMuted65"
-          style={{
-            fontSize: 18,
-            fontWeight: '200',
-            textAlign: 'center',
-          }}
+          style={[
+            sharedStyles.textCenter,
+            {
+              fontSize: 18,
+              fontWeight: '200',
+            },
+          ]}
         >
           {title}
         </ThemedText>
@@ -73,11 +78,13 @@ export const GenericMessageWithButtonView = React.memo(
 
             <ThemedText
               color="foregroundColorMuted65"
-              style={{
-                fontSize: 13,
-                fontWeight: '200',
-                textAlign: 'center',
-              }}
+              style={[
+                sharedStyles.textCenter,
+                {
+                  fontSize: 13,
+                  fontWeight: '200',
+                },
+              ]}
             >
               {subtitle}
             </ThemedText>

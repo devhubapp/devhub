@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import {
   StyleProp,
+  StyleSheet,
   Text,
   TextProps,
   View,
@@ -10,7 +11,8 @@ import {
 
 import { ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
-import { contentPadding, mutedOpacity } from '../../styles/variables'
+import { sharedStyles } from '../../styles/shared'
+import { contentPadding } from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { useTheme } from '../context/ThemeContext'
@@ -38,7 +40,16 @@ export interface LabelProps {
 
 export const hiddenLabelSize = { width: 10, height: 10 }
 
-export function Label(props: LabelProps) {
+const styles = StyleSheet.create({
+  dot: {
+    width: 6,
+    height: 6,
+    marginTop: 1,
+    borderRadius: 6 / 2,
+  },
+})
+
+export const Label = React.memo((props: LabelProps) => {
   const theme = useTheme()
 
   const {
@@ -98,13 +109,11 @@ export function Label(props: LabelProps) {
     <View
       {...containerProps}
       style={[
+        sharedStyles.horizontal,
+        sharedStyles.center,
         hideText ? { width } : { minWidth: width },
         {
           height,
-          flexDirection: 'row',
-          alignContent: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
           borderRadius: typeof radius === 'number' ? radius : height / 2,
           borderWidth: outline ? 1 : 0,
         },
@@ -122,14 +131,11 @@ export function Label(props: LabelProps) {
           {/* <Spacer width={contentPadding / (small ? 3 : 2)} /> */}
           <View
             style={[
+              styles.dot,
               {
-                width: 6,
-                height: 6,
-                marginTop: 1,
-                borderRadius: 6 / 2,
                 backgroundColor: circleColor,
               },
-              muted && { opacity: mutedOpacity },
+              muted && sharedStyles.muted,
             ]}
           />
         </>
@@ -174,4 +180,4 @@ export function Label(props: LabelProps) {
       </Text>
     </View>
   )
-}
+})

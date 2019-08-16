@@ -5,6 +5,7 @@ import { useSpring } from 'react-spring/native'
 import { constants } from '@devhub/core'
 import { usePrevious } from '../../hooks/use-previous'
 import { Platform } from '../../libs/platform'
+import { sharedStyles } from '../../styles/shared'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 
@@ -57,25 +58,27 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
         (value: number | 'auto') =>
           (value === 'auto' || value > 0 ? false : true) as any,
       )}
-      style={{
-        height:
-          isOpen && wasOpen === isOpen && hasCompletedAnimationRef.current
-            ? 'auto'
-            : animatedStyles.height.interpolate((value: number | 'auto') =>
-                value === 'auto' ? value : value > 0 ? Math.floor(value) : 0,
-              ),
-        overflow: 'hidden',
-        opacity: animatedStyles.height.interpolate((value: number | 'auto') =>
-          value === 'auto' || value > 0 ? 1 : 0,
-        ),
+      style={[
+        sharedStyles.overflowHidden,
+        {
+          height:
+            isOpen && wasOpen === isOpen && hasCompletedAnimationRef.current
+              ? 'auto'
+              : animatedStyles.height.interpolate((value: number | 'auto') =>
+                  value === 'auto' ? value : value > 0 ? Math.floor(value) : 0,
+                ),
+          opacity: animatedStyles.height.interpolate((value: number | 'auto') =>
+            value === 'auto' || value > 0 ? 1 : 0,
+          ),
 
-        // [web] disable keyboard focus for this tree when accordion is collapsed
-        ['visibility' as any]: animatedStyles.height.interpolate(
-          (value: number | 'auto') =>
-            value === 'auto' || value > 0 ? 'visible' : 'hidden',
-        ),
-        ['willChange' as any]: 'height',
-      }}
+          // [web] disable keyboard focus for this tree when accordion is collapsed
+          ['visibility' as any]: animatedStyles.height.interpolate(
+            (value: number | 'auto') =>
+              value === 'auto' || value > 0 ? 'visible' : 'hidden',
+          ),
+          ['willChange' as any]: 'height',
+        },
+      ]}
     >
       {Platform.OS === 'web' ? (
         <View onLayout={onLayout}>{children}</View>

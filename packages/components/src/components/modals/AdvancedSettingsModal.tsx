@@ -91,9 +91,7 @@ export const AdvancedSettingsModal = React.memo(
       >
         <ScrollView
           style={sharedStyles.flex}
-          contentContainerStyle={{
-            flexGrow: 1,
-          }}
+          contentContainerStyle={sharedStyles.flexGrow}
         >
           {Platform.OS === 'web' && (
             <SubHeader title="Keyboard shortcuts">
@@ -126,11 +124,13 @@ export const AdvancedSettingsModal = React.memo(
               <SubHeader title="Manage OAuth access" />
 
               <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingHorizontal: contentPadding,
-                }}
+                style={[
+                  sharedStyles.horizontal,
+                  sharedStyles.alignItemsCenter,
+                  {
+                    paddingHorizontal: contentPadding,
+                  },
+                ]}
               >
                 <ThemedText color="foregroundColor" style={sharedStyles.flex}>
                   GitHub OAuth
@@ -186,11 +186,13 @@ export const AdvancedSettingsModal = React.memo(
               <Spacer height={contentPadding / 2} />
 
               <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingHorizontal: contentPadding,
-                }}
+                style={[
+                  sharedStyles.horizontal,
+                  sharedStyles.alignItemsCenter,
+                  {
+                    paddingHorizontal: contentPadding,
+                  },
+                ]}
               >
                 <ThemedText color="foregroundColor" style={sharedStyles.flex}>
                   GitHub App
@@ -295,12 +297,14 @@ export const AdvancedSettingsModal = React.memo(
                       ) && (
                         <View
                           key={`github-installation-${installation.id}`}
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingTop: index === 0 ? 0 : contentPadding / 2,
-                            paddingHorizontal: contentPadding,
-                          }}
+                          style={[
+                            sharedStyles.horizontal,
+                            sharedStyles.alignItemsCenter,
+                            {
+                              paddingTop: index === 0 ? 0 : contentPadding / 2,
+                              paddingHorizontal: contentPadding,
+                            },
+                          ]}
                         >
                           <Avatar
                             avatarUrl={

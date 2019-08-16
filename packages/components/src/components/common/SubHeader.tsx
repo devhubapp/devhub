@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { View } from 'react-native'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import {
   ColumnHeaderItem,
@@ -21,13 +22,15 @@ export function SubHeader(props: SubHeaderProps) {
 
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignSelf: 'stretch',
-        alignItems: 'center',
-        padding: contentPadding,
-      }}
+      style={[
+        sharedStyles.horizontal,
+        sharedStyles.justifyContentFlexStart,
+        sharedStyles.alignSelfStretch,
+        sharedStyles.alignItemsCenter,
+        {
+          padding: contentPadding,
+        },
+      ]}
     >
       {!!iconName && (
         <ColumnHeaderItem
