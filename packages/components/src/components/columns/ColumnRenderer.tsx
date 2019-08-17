@@ -22,7 +22,6 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { emitter } from '../../libs/emitter'
-import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import {
@@ -135,8 +134,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     getCardViewMode,
     getEnableCompactLabels,
   } = useAppViewMode()
-
-  const { focusedColumnId } = useFocusedColumn()
 
   const columnWidth = useColumnWidth()
 
@@ -310,11 +307,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         }) => (
           <>
             <ColumnHeader key={`column-renderer-${column.id}-header`}>
-              {!Platform.supportsTouch &&
-                filteredItems.length === 0 &&
-                focusedColumnId === column.id &&
-                appViewMode === 'multi-column' && <CardBorder />}
-
               <ColumnHeaderItem
                 analyticsLabel={undefined}
                 avatarProps={
