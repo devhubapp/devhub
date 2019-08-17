@@ -52,7 +52,6 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
     url,
     userLinkURL,
     username,
-    viewMode,
     ...otherProps
   } = props
 
@@ -77,7 +76,6 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
           muted={muted}
           ownerName={ownerName || ''}
           repositoryName={repositoryName || ''}
-          viewMode={viewMode}
         />
       )}
 
@@ -125,7 +123,6 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
               </Link>
             </View>
           }
-          viewMode={viewMode}
         />
       )}
 
@@ -138,7 +135,6 @@ export const ReleaseRow = React.memo((props: ReleaseRowProps) => {
           url={fixedURL}
           userLinkURL={userLinkURL}
           username={username}
-          viewMode={viewMode}
           withTopMargin
         />
       )}

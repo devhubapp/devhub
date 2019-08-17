@@ -1,11 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 import {
-  CardViewMode,
   EnhancedGitHubNotification,
-  getDateSmallText,
-  getFullDateText,
   getGitHubNotificationSubItems,
   getGitHubURLForRepo,
   getGitHubURLForRepoInvitation,
@@ -17,25 +14,18 @@ import {
   isItemRead,
   ThemeColors,
 } from '@devhub/core'
-import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
   mutedOpacity,
-  smallerTextSize,
 } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
-import { Avatar } from '../common/Avatar'
-import { BookmarkButton } from '../common/BookmarkButton'
-import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
-import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
-import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { CardActions } from './partials/CardActions'
 import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
@@ -44,49 +34,22 @@ import { NotificationCardHeader } from './partials/NotificationCardHeader'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitRow } from './partials/rows/CommitRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
-import { LabelsView } from './partials/rows/LabelsView'
-import { NotificationReason } from './partials/rows/partials/NotificationReason'
 import { PrivateNotificationRow } from './partials/rows/PrivateNotificationRow'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
-import { RepositoryRow } from './partials/rows/RepositoryRow'
 import { topCardMargin } from './partials/rows/styles'
 import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
 
 export interface NotificationCardProps {
-  cardViewMode: CardViewMode
-  enableCompactLabels: boolean
   isFocused: boolean
   notification: EnhancedGitHubNotification
   repoIsKnown: boolean
   swipeable: boolean
 }
 
-const styles = StyleSheet.create({
-  cardIcon: {
-    fontSize: columnHeaderItemContentSize,
-    textAlign: 'center',
-    opacity: 1,
-  },
-  cardIconMuted: {
-    fontSize: columnHeaderItemContentSize,
-    textAlign: 'center',
-    opacity: mutedOpacity,
-  },
-})
-
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
-  const {
-    cardViewMode,
-    enableCompactLabels,
-    isFocused,
-    notification,
-    repoIsKnown,
-    swipeable,
-  } = props
+  const { isFocused, notification, swipeable } = props
 
   const itemRef = useRef<View>(null)
-
-  const repoTableColumnWidth = useRepoTableColumnWidth()
 
   /*
   const hasPrivateAccess = useReduxState(state =>
@@ -115,7 +78,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const {
     comment,
     commit,
-    createdAt,
     id,
     isBot,
     isPrivate,
@@ -153,9 +115,9 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
 
   const showCardBorder = !Platform.supportsTouch && isFocused
 
-  const showCardActions = cardViewMode !== 'compact' && !swipeable
+  const showCardActions = !swipeable
 
-  let withTopMargin = cardViewMode !== 'compact'
+  let withTopMargin = true
   let withTopMarginCount = withTopMargin ? 1 : 0
   function getWithTopMargin() {
     const _withTopMargin = withTopMargin
@@ -184,7 +146,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
                 ? getGitHubURLForSecurityAlert(repoOwnerName, repoName)
                 : fixURL(subject.latest_comment_url || subject.url)
             }
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -204,7 +165,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             muted={muted}
             numberOfLines={2}
             url={commit.url || commit.commit.url}
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -224,11 +184,10 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             hideIcon
             hideLabelText={false}
             id={issueOrPullRequest.id}
-            inlineLabels={false}
             isPrivate={isPrivate}
             muted={muted}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={enableCompactLabels ? undefined : issueOrPullRequest.labels}
+            labels={issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
             showBodyRow={
@@ -254,7 +213,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             url={issueOrPullRequest.url}
             userLinkURL={issueOrPullRequest.user.html_url || ''}
             username={issueOrPullRequest.user.login || ''}
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -275,7 +233,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             url={release.url}
             userLinkURL={release.author.html_url || ''}
             username={release.author.login || ''}
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -291,7 +248,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
             url={comment.html_url}
             userLinkURL={comment.user.html_url || ''}
             username={comment.user.login}
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -305,7 +261,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
               undefined
             }
             repoId={repo.id}
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -314,247 +269,6 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   }
 
   const Content = renderContent()
-
-  const isSingleRow = withTopMarginCount <= 1 && !release
-  const alignVertically = isSingleRow
-
-  if (cardViewMode === 'compact') {
-    return (
-      <ThemedView
-        key={`notification-card-${id}-compact-inner`}
-        ref={itemRef}
-        backgroundColor={theme =>
-          getCardBackgroundThemeColor(theme, { muted: isRead })
-        }
-        style={[
-          cardStyles.compactContainer,
-          alignVertically && sharedStyles.alignItemsCenter,
-        ]}
-      >
-        {!!showCardBorder && <CardBorder />}
-
-        <View style={cardStyles.compactItemFixedHeight}>
-          <BookmarkButton
-            isSaved={isSaved}
-            itemIds={id}
-            size={columnHeaderItemContentSize}
-          />
-        </View>
-
-        <Spacer
-          width={
-            spacingBetweenLeftAndRightColumn - columnHeaderItemContentSize / 4
-          }
-        />
-
-        {!repoIsKnown && (
-          <>
-            <View
-              style={[
-                cardStyles.compactItemFixedWidth,
-                cardStyles.compactItemFixedHeight,
-              ]}
-            >
-              <Avatar
-                isBot={isBot}
-                linkURL=""
-                muted={muted}
-                small
-                username={repoOwnerName}
-              />
-            </View>
-
-            <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-            <View
-              style={[
-                cardStyles.compactItemFixedMinHeight,
-                sharedStyles.horizontal,
-                sharedStyles.justifyContentFlexStart,
-                sharedStyles.overflowHidden,
-                {
-                  width: repoTableColumnWidth,
-                },
-              ]}
-            >
-              {!!(repoOwnerName && repoName) && (
-                <RepositoryRow
-                  key={`notification-repo-row-${repo.id}`}
-                  disableLeft
-                  hideOwner
-                  muted={muted}
-                  ownerName={repoOwnerName}
-                  repositoryName={repoName}
-                  rightContainerStyle={[
-                    sharedStyles.vertical,
-                    sharedStyles.alignItemsFlexStart,
-                    sharedStyles.justifyContentCenter,
-                    {
-                      width: repoTableColumnWidth,
-                    },
-                  ]}
-                  small
-                  viewMode={cardViewMode}
-                  withTopMargin={false}
-                />
-              )}
-            </View>
-
-            <Spacer width={spacingBetweenLeftAndRightColumn} />
-          </>
-        )}
-
-        <View
-          style={[
-            sharedStyles.flex,
-            sharedStyles.horizontal,
-            sharedStyles.alignItemsFlexStart,
-          ]}
-        >
-          <View
-            style={[
-              cardStyles.compactItemFixedWidth,
-              cardStyles.compactItemFixedHeight,
-            ]}
-          >
-            <ThemedIcon
-              color={cardIconColor || 'foregroundColor'}
-              name={cardIconName}
-              selectable={false}
-              style={muted ? styles.cardIconMuted : styles.cardIcon}
-              {...!!cardIconDetails.tooltip &&
-                Platform.select({
-                  web: { title: cardIconDetails.tooltip },
-                })}
-            />
-          </View>
-
-          <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-          <View style={sharedStyles.flex}>{Content}</View>
-        </View>
-
-        <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-        {!!enableCompactLabels &&
-          !!issueOrPullRequest &&
-          !!issueOrPullRequest.labels &&
-          issueOrPullRequest.labels.length > 0 && (
-            <>
-              <LabelsView
-                backgroundThemeColor={theme =>
-                  getCardBackgroundThemeColor(theme, { muted: isRead })
-                }
-                labels={issueOrPullRequest.labels.map(label => ({
-                  key: `issue-or-pr-row-${
-                    issueOrPullRequest.id
-                  }-${issueOrPullRequestNumber}-label-${label.id ||
-                    label.name}`,
-                  color: label.color && `#${label.color}`,
-                  name: label.name,
-                }))}
-                muted={muted}
-                style={[
-                  sharedStyles.alignSelfCenter,
-                  sharedStyles.justifyContentCenter,
-                  {
-                    maxWidth:
-                      260 +
-                      (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
-                      (`${issueOrPullRequest.title || ''}`.length <= 50
-                        ? 100
-                        : 0),
-                  },
-                  sharedStyles.overflowHidden,
-                ]}
-                textThemeColor={
-                  muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
-                }
-              />
-
-              <Spacer width={spacingBetweenLeftAndRightColumn} />
-            </>
-          )}
-
-        <View
-          style={[
-            cardStyles.compactItemFixedMinHeight,
-            sharedStyles.alignSelfCenter,
-            sharedStyles.alignItemsFlexEnd,
-            {
-              width: 102,
-            },
-          ]}
-        >
-          {!!updatedAt && (
-            <IntervalRefresh date={updatedAt}>
-              {() => {
-                const dateText = getDateSmallText(updatedAt, false)
-                if (!dateText) return null
-
-                return (
-                  <ThemedText
-                    color={
-                      muted
-                        ? 'foregroundColorMuted40'
-                        : 'foregroundColorMuted65'
-                    }
-                    numberOfLines={1}
-                    style={[
-                      cardStyles.timestampText,
-                      cardStyles.smallText,
-                      { fontSize: smallerTextSize },
-                    ]}
-                    {...Platform.select({
-                      web: {
-                        title: `${
-                          createdAt
-                            ? `Created: ${getFullDateText(createdAt)}\n`
-                            : ''
-                        }Updated: ${getFullDateText(updatedAt)}`,
-                      },
-                    })}
-                  >
-                    {!!isPrivate && (
-                      <>
-                        <ThemedIcon
-                          name="lock"
-                          style={cardStyles.smallerText}
-                        />{' '}
-                      </>
-                    )}
-                    {dateText}
-                  </ThemedText>
-                )
-              }}
-            </IntervalRefresh>
-          )}
-
-          <NotificationReason
-            backgroundThemeColor={backgroundThemeColor}
-            muted={muted}
-            reason={notification.reason as GitHubNotificationReason}
-          />
-        </View>
-
-        <Spacer width={contentPadding / 2} />
-
-        <View
-          style={[
-            cardStyles.compactItemFixedHeight,
-            sharedStyles.alignSelfCenter,
-          ]}
-        >
-          <ToggleReadButton
-            isRead={isRead}
-            itemIds={id}
-            muted={muted}
-            type="notifications"
-          />
-        </View>
-      </ThemedView>
-    )
-  }
 
   return (
     <ThemedView

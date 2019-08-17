@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, ViewProps } from 'react-native'
 
-import { CardViewMode } from '@devhub/core'
 import { cardStyles } from '../../../styles'
 import { cardRowStyles } from '../styles'
 
@@ -13,7 +12,6 @@ export interface BaseRowProps {
   right: React.ReactNode
   rightContainerStyle?: ViewProps['style']
   smallLeftColumn?: boolean
-  viewMode: CardViewMode
   withTopMargin: boolean
 }
 

@@ -55,10 +55,8 @@ function keyExtractor(item: EnhancedGitHubEvent, _index: number) {
 
 export const EventCards = React.memo((props: EventCardsProps) => {
   const {
-    cardViewMode,
     column,
     columnIndex,
-    enableCompactLabels,
     disableItemFocus,
     errorMessage,
     fetchNextPage,
@@ -160,8 +158,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     if (props.swipeable) {
       return (
         <SwipeableEventCard
-          cardViewMode={cardViewMode}
-          enableCompactLabels={enableCompactLabels}
           event={item}
           isFocused={
             column.id === focusedColumnId &&
@@ -177,8 +173,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     return (
       <ErrorBoundary>
         <EventCard
-          cardViewMode={cardViewMode}
-          enableCompactLabels={enableCompactLabels}
           event={item}
           isFocused={
             column.id === focusedColumnId &&
@@ -193,9 +187,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   }
 
   const renderItem = useCallback(_renderItem, [
-    cardViewMode,
     column.id === focusedColumnId && selectedItemIdRef.current,
-    enableCompactLabels,
     props.swipeable,
     props.repoIsKnown,
   ])
@@ -239,10 +231,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
           <View
             style={{
               paddingVertical: fabSpacing + (fabSize - defaultButtonSize) / 2,
-              paddingHorizontal:
-                cardViewMode === 'compact'
-                  ? contentPadding / 2
-                  : contentPadding,
+              paddingHorizontal: contentPadding,
             }}
           >
             <Button

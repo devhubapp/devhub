@@ -21,35 +21,6 @@ export const cardStyles = StyleSheet.create({
     overflow: 'hidden',
   },
 
-  compactContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    paddingVertical: contentPadding * (2 / 3),
-    paddingHorizontal: contentPadding / 2,
-  },
-
-  compactItemFixedWidth: {
-    width: 22,
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  compactItemFixedHeight: {
-    height: 22,
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  compactItemFixedMinHeight: {
-    minHeight: 22,
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
   itemFixedWidth: {
     width: smallAvatarSize,
     alignContent: 'center',

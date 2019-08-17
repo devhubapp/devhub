@@ -40,15 +40,13 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
     avatarUrl,
     body: _body,
     leftContent,
-    maxLength = props.viewMode === 'compact' ? 60 : 120,
+    maxLength = 120,
     muted,
-    numberOfLines = props.numberOfLines ||
-      (props.viewMode === 'compact' ? 1 : 2),
+    numberOfLines = props.numberOfLines || 2,
     textStyle,
     url,
     userLinkURL,
     username,
-    viewMode,
     ...otherProps
   } = props
 
@@ -109,7 +107,6 @@ export const CommentRow = React.memo((props: CommentRowProps) => {
           </Link>
         </View>
       }
-      viewMode={viewMode}
     />
   )
 })

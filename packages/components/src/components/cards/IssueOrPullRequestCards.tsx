@@ -64,11 +64,9 @@ function keyExtractor(item: EnhancedGitHubIssueOrPullRequest) {
 export const IssueOrPullRequestCards = React.memo(
   (props: IssueOrPullRequestCardsProps) => {
     const {
-      cardViewMode,
       column,
       columnIndex,
       disableItemFocus,
-      enableCompactLabels,
       errorMessage,
       fetchNextPage,
       items,
@@ -176,8 +174,6 @@ export const IssueOrPullRequestCards = React.memo(
       if (props.swipeable) {
         return (
           <SwipeableIssueOrPullRequestCard
-            cardViewMode={cardViewMode}
-            enableCompactLabels={enableCompactLabels}
             isFocused={
               column.id === focusedColumnId &&
               item.id === selectedItemIdRef.current &&
@@ -194,8 +190,6 @@ export const IssueOrPullRequestCards = React.memo(
       return (
         <ErrorBoundary>
           <IssueOrPullRequestCard
-            cardViewMode={cardViewMode}
-            enableCompactLabels={enableCompactLabels}
             isFocused={
               column.id === focusedColumnId &&
               item.id === selectedItemIdRef.current &&
@@ -210,9 +204,7 @@ export const IssueOrPullRequestCards = React.memo(
       )
     }
     const renderItem = useCallback(_renderItem, [
-      cardViewMode,
       column.id === focusedColumnId && selectedItemIdRef.current,
-      enableCompactLabels,
       props.repoIsKnown,
       props.swipeable,
     ])
@@ -260,10 +252,7 @@ export const IssueOrPullRequestCards = React.memo(
             <View
               style={{
                 paddingVertical: fabSpacing + (fabSize - defaultButtonSize) / 2,
-                paddingHorizontal:
-                  cardViewMode === 'compact'
-                    ? contentPadding / 2
-                    : contentPadding,
+                paddingHorizontal: contentPadding,
               }}
             >
               <Button

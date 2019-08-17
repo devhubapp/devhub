@@ -2,36 +2,28 @@ import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
 import {
-  CardViewMode,
   EnhancedGitHubIssueOrPullRequest,
   getDateSmallText,
   getFullDateText,
   getGitHubURLForRepo,
   getIssueOrPullRequestIconAndColor,
   getIssueOrPullRequestNumberFromUrl,
-  getItemIsBot,
   getOwnerAndRepo,
   getRepoFullNameFromUrl,
   GitHubIssueOrPullRequestSubjectType,
   isItemRead,
 } from '@devhub/core'
-import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
   mutedOpacity,
-  smallAvatarSize,
-  smallerTextSize,
 } from '../../styles/variables'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
-import { Avatar } from '../common/Avatar'
-import { BookmarkButton } from '../common/BookmarkButton'
 import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
-import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
@@ -39,14 +31,11 @@ import { CardActions } from './partials/CardActions'
 import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
 import { CardBorder } from './partials/CardBorder'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
-import { LabelsView } from './partials/rows/LabelsView'
 import { RepositoryRow } from './partials/rows/RepositoryRow'
 import { topCardMargin } from './partials/rows/styles'
 import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
 
 export interface IssueOrPullRequestCardProps {
-  cardViewMode: CardViewMode
-  enableCompactLabels: boolean
   isFocused?: boolean
   isPrivate?: boolean
   issueOrPullRequest: EnhancedGitHubIssueOrPullRequest
@@ -58,8 +47,6 @@ export interface IssueOrPullRequestCardProps {
 export const IssueOrPullRequestCard = React.memo(
   (props: IssueOrPullRequestCardProps) => {
     const {
-      cardViewMode,
-      enableCompactLabels,
       isFocused,
       isPrivate,
       issueOrPullRequest,
@@ -69,8 +56,6 @@ export const IssueOrPullRequestCard = React.memo(
     } = props
 
     const itemRef = useRef<View>(null)
-
-    const repoTableColumnWidth = useRepoTableColumnWidth()
 
     useEffect(() => {
       if (Platform.OS === 'web' && isFocused && itemRef.current) {
@@ -116,8 +101,6 @@ export const IssueOrPullRequestCard = React.memo(
       html_url: getGitHubURLForRepo(repoOwnerName!, repoName!)!,
     }
 
-    const isBot = getItemIsBot('issue_or_pr', issueOrPullRequest)
-
     const cardIconDetails = getIssueOrPullRequestIconAndColor(
       type,
       issueOrPullRequest,
@@ -125,7 +108,7 @@ export const IssueOrPullRequestCard = React.memo(
     const cardIconName = cardIconDetails.icon
     const cardIconColor = cardIconDetails.color
 
-    const showCardActions = cardViewMode !== 'compact' && !swipeable
+    const showCardActions = !swipeable
 
     let withTopMargin = false
     let withTopMarginCount = withTopMargin ? 1 : 0
@@ -138,9 +121,7 @@ export const IssueOrPullRequestCard = React.memo(
 
     function renderContent() {
       const TimestampComponent = !!issueOrPullRequest.updated_at && (
-        <View
-          style={[cardStyles.compactItemFixedHeight, sharedStyles.horizontal]}
-        >
+        <View style={[cardStyles.itemFixedHeight, sharedStyles.horizontal]}>
           <Spacer width={contentPadding / 2} />
 
           <IntervalRefresh date={issueOrPullRequest.updated_at}>
@@ -197,30 +178,28 @@ export const IssueOrPullRequestCard = React.memo(
 
       return (
         <>
-          {cardViewMode !== 'compact' &&
-            !!(repoOwnerName && repoName && !repoIsKnown) && (
-              <View
-                style={[
-                  sharedStyles.flexGrow,
-                  sharedStyles.horizontal,
-                  { maxWidth: '100%' },
-                ]}
-              >
-                <RepositoryRow
-                  key={`issue-or-pr-repo-row-${repo.id}`}
-                  containerStyle={sharedStyles.flex}
-                  muted={muted}
-                  ownerName={repoOwnerName}
-                  repositoryName={repoName}
-                  rightContainerStyle={sharedStyles.flex}
-                  small
-                  viewMode={cardViewMode}
-                  withTopMargin={getWithTopMargin()}
-                />
+          {!!(repoOwnerName && repoName && !repoIsKnown) && (
+            <View
+              style={[
+                sharedStyles.flexGrow,
+                sharedStyles.horizontal,
+                { maxWidth: '100%' },
+              ]}
+            >
+              <RepositoryRow
+                key={`issue-or-pr-repo-row-${repo.id}`}
+                containerStyle={sharedStyles.flex}
+                muted={muted}
+                ownerName={repoOwnerName}
+                repositoryName={repoName}
+                rightContainerStyle={sharedStyles.flex}
+                small
+                withTopMargin={getWithTopMargin()}
+              />
 
-                {maybeRenderTimestampComponent()}
-              </View>
-            )}
+              {maybeRenderTimestampComponent()}
+            </View>
+          )}
 
           {!!issueOrPullRequest && (
             <IssueOrPullRequestRow
@@ -245,7 +224,7 @@ export const IssueOrPullRequestCard = React.memo(
               isPrivate={!!isPrivate}
               muted={muted}
               issueOrPullRequestNumber={issueOrPullRequestNumber!}
-              labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
+              labels={issueOrPullRequest.labels}
               owner={repoOwnerName || ''}
               repo={repoName || ''}
               rightTitle={
@@ -267,7 +246,6 @@ export const IssueOrPullRequestCard = React.memo(
               url={issueOrPullRequest.url}
               userLinkURL={issueOrPullRequest.user.html_url || ''}
               username={issueOrPullRequest.user.login || ''}
-              viewMode={cardViewMode}
               withTopMargin={getWithTopMargin()}
             />
           )}
@@ -276,269 +254,6 @@ export const IssueOrPullRequestCard = React.memo(
     }
 
     const Content = renderContent()
-
-    const isSingleRow = withTopMarginCount <= 1
-    const alignVertically = isSingleRow
-
-    if (cardViewMode === 'compact') {
-      return (
-        <ThemedView
-          key={`issue-or-pr-card-${id}-compact-inner`}
-          ref={itemRef}
-          backgroundColor={theme =>
-            getCardBackgroundThemeColor(theme, { muted: isRead })
-          }
-          style={[
-            cardStyles.compactContainer,
-            alignVertically && { alignItems: 'center' },
-          ]}
-        >
-          {!!showCardBorder && <CardBorder />}
-
-          {/* <CenterGuide /> */}
-
-          {/* <View
-          style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
-        >
-          <Checkbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
-        </View>
-
-        <Spacer width={contentPadding} /> */}
-
-          <View style={cardStyles.compactItemFixedHeight}>
-            <BookmarkButton
-              isSaved={isSaved}
-              itemIds={id}
-              size={columnHeaderItemContentSize}
-            />
-          </View>
-
-          <Spacer
-            width={
-              spacingBetweenLeftAndRightColumn - columnHeaderItemContentSize / 4
-            }
-          />
-
-          {!repoIsKnown && (
-            <>
-              <View
-                style={[
-                  cardStyles.compactItemFixedWidth,
-                  cardStyles.compactItemFixedHeight,
-                ]}
-              >
-                <Avatar
-                  isBot={isBot}
-                  linkURL=""
-                  muted={muted}
-                  small
-                  size={smallAvatarSize}
-                  username={repoOwnerName}
-                />
-              </View>
-
-              <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-              <View
-                style={[
-                  cardStyles.compactItemFixedMinHeight,
-                  {
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    width: repoTableColumnWidth,
-                    overflow: 'hidden',
-                  },
-                ]}
-              >
-                {!!(repoOwnerName && repoName) && (
-                  <RepositoryRow
-                    key={`issue-or-pr-repo-row-${repoOwnerName}-${repoName}`}
-                    disableLeft
-                    hideOwner
-                    muted={muted}
-                    ownerName={repoOwnerName}
-                    repositoryName={repoName}
-                    rightContainerStyle={[
-                      sharedStyles.horizontal,
-                      sharedStyles.alignItemsFlexStart,
-                      sharedStyles.justifyContentCenter,
-                      {
-                        width: repoTableColumnWidth,
-                      },
-                    ]}
-                    small
-                    viewMode={cardViewMode}
-                    withTopMargin={false}
-                  />
-                )}
-              </View>
-
-              <Spacer width={spacingBetweenLeftAndRightColumn} />
-            </>
-          )}
-
-          <View
-            style={[
-              sharedStyles.flex,
-              sharedStyles.horizontal,
-              { alignItems: 'flex-start' },
-            ]}
-          >
-            <View
-              style={[
-                cardStyles.compactItemFixedWidth,
-                cardStyles.compactItemFixedHeight,
-              ]}
-            >
-              <ThemedIcon
-                color={cardIconColor || 'foregroundColor'}
-                name={cardIconName}
-                selectable={false}
-                style={[
-                  sharedStyles.textCenter,
-                  {
-                    fontSize: columnHeaderItemContentSize,
-                    opacity: muted ? mutedOpacity : 1,
-                  },
-                ]}
-                {...!!cardIconDetails.tooltip &&
-                  Platform.select({
-                    web: { title: cardIconDetails.tooltip },
-                  })}
-              />
-            </View>
-
-            <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-            <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
-              <View style={sharedStyles.flex}>{Content}</View>
-
-              <Spacer width={contentPadding / 3} />
-            </View>
-          </View>
-
-          <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-          {!!enableCompactLabels &&
-            !!issueOrPullRequest &&
-            !!issueOrPullRequest.labels &&
-            issueOrPullRequest.labels.length > 0 && (
-              <>
-                <LabelsView
-                  backgroundThemeColor={theme =>
-                    getCardBackgroundThemeColor(theme, { muted: isRead })
-                  }
-                  enableScrollView={isSingleRow}
-                  labels={issueOrPullRequest.labels.map(label => ({
-                    key: `issue-or-pr-row-${
-                      issueOrPullRequest.id
-                    }-${issueOrPullRequestNumber}-label-${label.id ||
-                      label.name}`,
-                    color: label.color && `#${label.color}`,
-                    name: label.name,
-                  }))}
-                  muted={muted}
-                  style={[
-                    sharedStyles.alignSelfCenter,
-                    sharedStyles.justifyContentFlexEnd,
-                    sharedStyles.overflowHidden,
-                    {
-                      maxWidth:
-                        260 +
-                        (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
-                        (`${issueOrPullRequest.title || ''}`.length <= 50
-                          ? 100
-                          : 0),
-                    },
-                  ]}
-                  textThemeColor={
-                    muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
-                  }
-                />
-
-                <Spacer width={spacingBetweenLeftAndRightColumn} />
-              </>
-            )}
-
-          <View
-            style={[
-              cardStyles.compactItemFixedMinHeight,
-              {
-                alignSelf: 'center',
-                alignItems: 'flex-end',
-                width: 60,
-              },
-            ]}
-          >
-            {!!issueOrPullRequest.updated_at && (
-              <IntervalRefresh date={issueOrPullRequest.updated_at}>
-                {() => {
-                  const createdAt = issueOrPullRequest.created_at
-                  const updatedAt = issueOrPullRequest.updated_at
-
-                  const dateText = getDateSmallText(updatedAt, false)
-                  if (!dateText) return null
-
-                  return (
-                    <ThemedText
-                      color={
-                        muted
-                          ? 'foregroundColorMuted40'
-                          : 'foregroundColorMuted65'
-                      }
-                      numberOfLines={1}
-                      style={[
-                        cardStyles.timestampText,
-                        cardStyles.smallText,
-                        { fontSize: smallerTextSize },
-                      ]}
-                      {...Platform.select({
-                        web: {
-                          title: `${
-                            createdAt
-                              ? `Created: ${getFullDateText(createdAt)}\n`
-                              : ''
-                          }Updated: ${getFullDateText(updatedAt)}`,
-                        },
-                      })}
-                    >
-                      {!!isPrivate && (
-                        <>
-                          <ThemedIcon
-                            name="lock"
-                            style={cardStyles.smallerText}
-                          />{' '}
-                        </>
-                      )}
-                      {/* <ThemedIcon name="clock" />{' '} */}
-                      {dateText}
-                    </ThemedText>
-                  )
-                }}
-              </IntervalRefresh>
-            )}
-          </View>
-
-          <Spacer width={contentPadding / 2} />
-
-          <View
-            style={[
-              cardStyles.compactItemFixedHeight,
-              {
-                alignSelf: 'center',
-              },
-            ]}
-          >
-            <ToggleReadButton
-              isRead={isRead}
-              itemIds={id}
-              muted={muted}
-              type="issue_or_pr"
-            />
-          </View>
-        </ThemedView>
-      )
-    }
 
     return (
       <ThemedView

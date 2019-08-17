@@ -14,7 +14,6 @@ gtag('config', trackingId, {
     dimension2: 'is_electron',
     dimension3: 'theme_id',
     dimension4: 'is_beta',
-    dimension5: 'layout_mode',
     dimension6: 'is_dev',
     dimension7: 'light_theme_id',
     dimension8: 'dark_theme_id',

@@ -4,7 +4,6 @@ import { BackHandler, Dimensions, StyleSheet, View } from 'react-native'
 import { constants, ModalPayloadWithIndex } from '@devhub/core'
 import { useTransition } from 'react-spring/native'
 import { SettingsModal } from '../../components/modals/SettingsModal'
-import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { usePrevious } from '../../hooks/use-previous'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -18,11 +17,7 @@ import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animat
 import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { ColumnSeparator } from '../columns/ColumnSeparator'
-import {
-  Separator,
-  separatorSize,
-  separatorThickSize,
-} from '../common/Separator'
+import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
@@ -72,7 +67,6 @@ export function ModalRenderer(props: ModalRendererProps) {
   const { renderSeparator } = props
 
   const { appOrientation, sizename } = useAppLayout()
-  const { appViewMode } = useAppViewMode()
   const columnWidth = useColumnWidth()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
@@ -118,15 +112,7 @@ export function ModalRenderer(props: ModalRendererProps) {
       ? true
       : false)
 
-  const separatorMetadata =
-    appViewMode === 'multi-column'
-      ? { Component: () => <ColumnSeparator />, size: separatorThickSize }
-      : {
-          Component: () => <Separator horizontal={false} thick={false} />,
-          size: separatorSize,
-        }
-
-  const size = columnWidth + (renderSeparator ? separatorMetadata.size : 0)
+  const size = columnWidth + (renderSeparator ? separatorThickSize : 0)
 
   const overlayTransition = useTransition<boolean, any>(
     currentOpenedModal && sizename > '1-small' ? [true] : [],
@@ -297,7 +283,7 @@ export function ModalRenderer(props: ModalRendererProps) {
                     animatedStyle,
                   ]}
                 >
-                  <separatorMetadata.Component />
+                  <ColumnSeparator />
                 </SpringAnimatedView>
               ),
           )}

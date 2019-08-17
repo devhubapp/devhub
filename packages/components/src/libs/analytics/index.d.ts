@@ -1,5 +1,3 @@
-import { AppViewMode } from '@devhub/core'
-
 export interface Analytics {
   setUser(userId: string): void
   setDimensions(
@@ -23,7 +21,6 @@ export interface DevHubAnalyticsCustomDimensions {
   is_beta: boolean
   is_dev: boolean
   is_electron: boolean
-  layout_mode?: AppViewMode
   light_theme_id?: string
   theme_id?: string
   user_id?: string

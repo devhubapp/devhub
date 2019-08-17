@@ -1,4 +1,4 @@
-import { AppViewMode, User } from '@devhub/core'
+import { User } from '@devhub/core'
 import { createAction, createErrorAction } from '../helpers'
 import { AuthError, State as AuthState } from '../reducers/auth'
 
@@ -7,7 +7,6 @@ export function loginRequest(payload: { appToken: string }) {
 }
 
 export function loginSuccess(payload: {
-  appViewMode: AppViewMode
   appToken: string
   user: NonNullable<User>
 }) {

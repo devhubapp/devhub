@@ -36,7 +36,7 @@ export type EventCardsContainerProps = Omit<
 
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
-    const { cardViewMode, column, repoIsKnown, ...otherProps } = props
+    const { column, repoIsKnown, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -89,11 +89,11 @@ export const EventCardsContainer = React.memo(
 
     useEffect(() => {
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-    }, [cardViewMode, ...column.subscriptionIds])
+    }, [column.subscriptionIds.join(',')])
 
     const { allItems, filteredItems, loadState } = useColumnData<
       EnhancedGitHubEvent
-    >(column.id, { mergeSimilar: cardViewMode !== 'compact' })
+    >(column.id, { mergeSimilar: true })
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderEventDate(allItems)
@@ -250,7 +250,6 @@ export const EventCardsContainer = React.memo(
       <EventCards
         {...otherProps}
         key={`event-cards-${column.id}`}
-        cardViewMode={cardViewMode}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}

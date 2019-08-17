@@ -18,16 +18,6 @@ function* init() {
   }
 }
 
-function* onSetAppViewMode() {
-  const state = yield select()
-
-  const appViewMode = selectors.appViewModeSelector(state)
-
-  analytics.setDimensions({
-    layout_mode: appViewMode,
-  })
-}
-
 function* onThemeChange() {
   const state = yield select()
 
@@ -48,9 +38,5 @@ export function* configSagas() {
   yield all([
     yield fork(init),
     yield takeLatest(['SET_THEME', 'SET_PREFERRABLE_THEME'], onThemeChange),
-    yield takeLatest(
-      ['SET_APP_VIEW_MODE', 'TOGGLE_APP_VIEW_MODE'],
-      onSetAppViewMode,
-    ),
   ])
 }

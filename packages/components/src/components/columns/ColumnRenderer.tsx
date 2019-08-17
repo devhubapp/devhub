@@ -2,7 +2,6 @@ import React, { useCallback, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
 import {
-  CardViewMode,
   Column as ColumnType,
   columnHasAnyFilter,
   EnhancedGitHubEvent,
@@ -20,7 +19,6 @@ import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
-import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
@@ -29,12 +27,10 @@ import {
   contentPadding,
   sidebarSize,
 } from '../../styles/variables'
-import { CardBorder } from '../cards/partials/CardBorder'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
-import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ViewMeasurer } from '../render-props/ViewMeasure'
@@ -80,9 +76,7 @@ export interface ColumnRendererProps {
   avatarRepo?: string
   avatarUsername?: string
   children: (p: {
-    cardViewMode: CardViewMode
     disableItemFocus: boolean
-    enableCompactLabels: boolean
     isFiltersOpened: boolean
   }) => React.ReactNode
   column: ColumnType
@@ -129,15 +123,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
   const { appOrientation, sizename } = useAppLayout()
 
-  const {
-    appViewMode,
-    getCardViewMode,
-    getEnableCompactLabels,
-  } = useAppViewMode()
+  const { appViewMode } = useAppViewMode()
 
   const columnWidth = useColumnWidth()
-
-  const repoTableColumnWidth = useRepoTableColumnWidth()
 
   useEmitter(
     'TOGGLE_COLUMN_FILTERS',
@@ -279,32 +267,14 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         initialResult={{
           width: estimatedInitialCardWidth,
           height: estimatedContainerHeight,
-          cardViewMode: getCardViewMode(estimatedInitialCardWidth),
-          enableCompactLabels: getEnableCompactLabels(
-            estimatedInitialCardWidth,
-            repoTableColumnWidth,
-          ),
         }}
         mapper={({ width, height }) => ({
           width,
           height,
-          cardViewMode: getCardViewMode(width),
-          enableCompactLabels: getEnableCompactLabels(
-            width,
-            repoTableColumnWidth,
-          ),
         })}
         style={sharedStyles.flex}
       >
-        {({
-          cardViewMode,
-          enableCompactLabels,
-          height: containerHeight,
-        }: {
-          cardViewMode: CardViewMode
-          enableCompactLabels: boolean
-          height: number
-        }) => (
+        {({ height: containerHeight }: { height: number }) => (
           <>
             <ColumnHeader key={`column-renderer-${column.id}-header`}>
               <ColumnHeaderItem
@@ -447,9 +417,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             )}
 
             {children({
-              cardViewMode,
               disableItemFocus: inlineMode ? false : isFiltersOpened,
-              enableCompactLabels,
               isFiltersOpened,
             })}
 

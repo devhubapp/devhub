@@ -54,11 +54,9 @@ function keyExtractor(item: EnhancedGitHubNotification) {
 
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
-    cardViewMode,
     column,
     columnIndex,
     disableItemFocus,
-    enableCompactLabels,
     errorMessage,
     fetchNextPage,
     items,
@@ -158,8 +156,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     if (props.swipeable) {
       return (
         <SwipeableNotificationCard
-          cardViewMode={cardViewMode}
-          enableCompactLabels={enableCompactLabels}
           isFocused={
             column.id === focusedColumnId &&
             item.id === selectedItemIdRef.current &&
@@ -175,8 +171,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     return (
       <ErrorBoundary>
         <NotificationCard
-          cardViewMode={cardViewMode}
-          enableCompactLabels={enableCompactLabels}
           isFocused={
             column.id === focusedColumnId &&
             item.id === selectedItemIdRef.current &&
@@ -190,9 +184,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     )
   }
   const renderItem = useCallback(_renderItem, [
-    cardViewMode,
     column.id === focusedColumnId && selectedItemIdRef.current,
-    enableCompactLabels,
     props.repoIsKnown,
     props.swipeable,
   ])
@@ -236,10 +228,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           <View
             style={{
               paddingVertical: fabSpacing + (fabSize - defaultButtonSize) / 2,
-              paddingHorizontal:
-                cardViewMode === 'compact'
-                  ? contentPadding / 2
-                  : contentPadding,
+              paddingHorizontal: contentPadding,
             }}
           >
             <Button

@@ -10,7 +10,7 @@ import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 export interface IssueOrPullRequestColumnProps
   extends Omit<
     IssueOrPullRequestCardsContainerProps,
-    'cardViewMode' | 'disableItemFocus' | 'enableCompactLabels' | 'repoIsKnown'
+    'disableItemFocus' | 'repoIsKnown'
   > {
   columnIndex: number
   headerDetails: ReturnType<typeof getColumnHeaderDetails>
@@ -30,14 +30,12 @@ export const IssueOrPullRequestColumn = React.memo(
     } = props
 
     const Children = useMemo<ColumnRendererProps['children']>(
-      () => ({ cardViewMode, enableCompactLabels, disableItemFocus }) => (
+      () => ({ disableItemFocus }) => (
         <IssueOrPullRequestCardsContainer
           key={`issue-or-pr-cards-container-${column.id}`}
-          cardViewMode={cardViewMode}
           column={column}
           columnIndex={columnIndex}
           disableItemFocus={disableItemFocus}
-          enableCompactLabels={enableCompactLabels}
           isPrivate={isPrivate}
           pointerEvents={pointerEvents}
           repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}

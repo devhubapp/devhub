@@ -154,11 +154,8 @@ function* onLoginRequest(
       throw new Error('Invalid response')
     }
 
-    const appViewMode = yield select(selectors.appViewModeSelector)
-
     yield put(
       actions.loginSuccess({
-        appViewMode,
         appToken: data.login.appToken,
         user: data.login.user,
       }),
@@ -198,7 +195,6 @@ function* onLoginSuccess(
 function* updateLoggedUserOnTools() {
   const state = yield select()
 
-  const appViewMode = selectors.appViewModeSelector(state)
   const preferredDarkThemePair = selectors.preferredDarkThemePairSelector(state)
   const preferredLightThemePair = selectors.preferredLightThemePairSelector(
     state,
@@ -215,7 +211,6 @@ function* updateLoggedUserOnTools() {
   analytics.setUser(user && user._id)
   analytics.setDimensions({
     dark_theme_id: preferredDarkThemePair.id,
-    layout_mode: appViewMode,
     light_theme_id: preferredLightThemePair.id,
     theme_id: themePair.id,
   })

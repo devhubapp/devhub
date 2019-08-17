@@ -170,11 +170,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           analyticsLabel="move_column_left"
           disabled={columnIndex === 0}
           fixedIconSize
-          iconName={
-            appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? 'chevron-up'
-              : 'chevron-left'
-          }
+          iconName="chevron-left"
           onPress={() =>
             dispatch(
               actions.moveColumn({
@@ -187,15 +183,9 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
             )
           }
           style={{ opacity: columnIndex === 0 ? 0.5 : 1 }}
-          tooltip={
-            appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? `Move column up (${
-                  keyboardShortcutsById.moveColumnLeft.keys[0]
-                })`
-              : `Move column left (${
-                  keyboardShortcutsById.moveColumnLeft.keys[0]
-                })`
-          }
+          tooltip={`Move column left (${
+            keyboardShortcutsById.moveColumnLeft.keys[0]
+          })`}
         />
 
         <ColumnHeaderItem
@@ -224,15 +214,9 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           style={{
             opacity: columnIndex === columnIds.length - 1 ? 0.5 : 1,
           }}
-          tooltip={
-            appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? `Move column down (${
-                  keyboardShortcutsById.moveColumnRight.keys[0]
-                })`
-              : `Move column right (${
-                  keyboardShortcutsById.moveColumnRight.keys[0]
-                })`
-          }
+          tooltip={`Move column right (${
+            keyboardShortcutsById.moveColumnRight.keys[0]
+          })`}
         />
 
         <Spacer flex={1} />

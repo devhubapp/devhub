@@ -45,7 +45,6 @@ export interface IssueOrPullRequestRowProps
   iconColor?: keyof ThemeColors
   iconName?: ThemedIconProps['name']
   id: string | number | undefined
-  inlineLabels?: boolean
   isPrivate: boolean
   issueOrPullRequestNumber: number
   labels?: GitHubLabel[] | undefined
@@ -77,7 +76,6 @@ export const IssueOrPullRequestRow = React.memo(
       iconColor,
       iconName = 'issue-opened',
       id,
-      inlineLabels: _inlineLabels,
       isPrivate,
       issueOrPullRequestNumber,
       labels,
@@ -92,7 +90,6 @@ export const IssueOrPullRequestRow = React.memo(
       url,
       userLinkURL,
       username: _username,
-      viewMode,
       ...otherProps
     } = props
 
@@ -101,7 +98,7 @@ export const IssueOrPullRequestRow = React.memo(
 
     const body = trimNewLinesAndSpaces(stripMarkdown(`${_body || ''}`), 150)
     const isBot = Boolean(_username && _username.indexOf('[bot]') >= 0)
-    const numberOfLines = viewMode === 'compact' ? 1 : 2
+    const numberOfLines = 2
     const username =
       isBot && _username ? _username.replace('[bot]', '') : _username
     const byText = username ? `@${username}` : ''
@@ -110,12 +107,7 @@ export const IssueOrPullRequestRow = React.memo(
       issueOrPullRequestNumber,
     })
 
-    const inlineLabels =
-      typeof _inlineLabels === 'boolean'
-        ? _inlineLabels
-        : viewMode === 'compact' &&
-          numberOfLines === 1 &&
-          (hideLabelText ? labels && labels.length <= 20 : true)
+    const inlineLabels = false
     const keepLabelsTogether = true
 
     return (
@@ -199,10 +191,6 @@ export const IssueOrPullRequestRow = React.memo(
                       </>
                     )}
                     {title}
-
-                    {/* {!!issueOrPullRequestNumber &&
-                    (viewMode === 'compact' || !showCreationDetails) &&
-                    ` #${issueOrPullRequestNumber}`} */}
                   </>
                 </Link>
               </ConditionalWrap>
@@ -355,11 +343,7 @@ export const IssueOrPullRequestRow = React.memo(
                         </IntervalRefresh>
                       )}
 
-                      {viewMode === 'compact' ? (
-                        <Spacer width={contentPadding / 2} />
-                      ) : (
-                        <Spacer flex={1} />
-                      )}
+                      {<Spacer flex={1} />}
 
                       {typeof commentsCount === 'number' &&
                         commentsCount >= 0 && (
@@ -370,23 +354,15 @@ export const IssueOrPullRequestRow = React.memo(
                           />
                         )}
 
-                      {viewMode !== 'compact' && (
-                        <>
-                          <Spacer width={contentPadding / 2} />
+                      <Spacer width={contentPadding / 2} />
 
-                          <CardItemId
-                            id={issueOrPullRequestNumber}
-                            url={htmlUrl}
-                          />
-                        </>
-                      )}
+                      <CardItemId id={issueOrPullRequestNumber} url={htmlUrl} />
                     </View>
                   </>
                 )}
             </View>
           </View>
         }
-        viewMode={viewMode}
       />
     )
   },

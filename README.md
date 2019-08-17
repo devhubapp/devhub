@@ -19,13 +19,8 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 
 ### Desktop
 
-#### Multi-column view
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/60048043-9bd77300-96a1-11e9-96c3-ad4ebd33e550.jpg)
 
-![DevHub Desktop - Multi-column view](https://user-images.githubusercontent.com/619186/60048043-9bd77300-96a1-11e9-96c3-ad4ebd33e550.jpg)
-
-#### Single-column view
-
-![DevHub Desktop - Single-column view](https://user-images.githubusercontent.com/619186/60048044-9c700980-96a1-11e9-9661-0866b60a3ed9.jpg)
 
 #### Menubar
 
@@ -60,7 +55,6 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 ## Features
 
 - [x] **Multi-column layout**: See at a quick glance everything that is going on (like TweetDeck!);
-- [x] **Single-column layout**: Do focused work, a single task at a time;
 - [x] **Filters**: Apply different filters to each column, save your custom searches to make your life easier;
 - [x] **Inbox Zero**: Clear all the seen items and gain peace of mind;
 - [x] **Notifications manager**: See all the relevant information before opening the notification, like comment content, issue/pull request status, release description, etc.;

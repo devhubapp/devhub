@@ -8,10 +8,7 @@ import {
 import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 
 export interface EventColumnProps
-  extends Omit<
-    EventCardsContainerProps,
-    'cardViewMode' | 'disableItemFocus' | 'enableCompactLabels' | 'repoIsKnown'
-  > {
+  extends Omit<EventCardsContainerProps, 'disableItemFocus' | 'repoIsKnown'> {
   columnIndex: number
   headerDetails: ReturnType<typeof getColumnHeaderDetails>
   pagingEnabled?: boolean
@@ -28,14 +25,12 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
   } = props
 
   const Children = useMemo<ColumnRendererProps['children']>(
-    () => ({ cardViewMode, enableCompactLabels, disableItemFocus }) => (
+    () => ({ disableItemFocus }) => (
       <EventCardsContainer
         key={`event-cards-container-${column.id}`}
-        cardViewMode={cardViewMode}
         column={column}
         columnIndex={columnIndex}
         disableItemFocus={disableItemFocus}
-        enableCompactLabels={enableCompactLabels}
         pointerEvents={pointerEvents}
         repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}
         swipeable={swipeable}

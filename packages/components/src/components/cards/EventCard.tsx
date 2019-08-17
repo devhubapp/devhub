@@ -2,45 +2,32 @@ import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
 import {
-  CardViewMode,
   EnhancedGitHubEvent,
-  getDateSmallText,
   getEventIconAndColor,
   getEventMetadata,
-  getFullDateText,
   getGitHubEventSubItems,
   getOwnerAndRepo,
 } from '@devhub/core'
-import { useRepoTableColumnWidth } from '../../hooks/use-repo-table-column-width'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
   mutedOpacity,
-  smallAvatarSize,
-  smallerTextSize,
 } from '../../styles/variables'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
-import { Avatar } from '../common/Avatar'
-import { BookmarkButton } from '../common/BookmarkButton'
-import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Spacer } from '../common/Spacer'
-import { ToggleReadButton } from '../common/ToggleReadButton'
 import { ThemedIcon } from '../themed/ThemedIcon'
-import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { CardActions } from './partials/CardActions'
 import { CardBookmarkIndicator } from './partials/CardBookmarkIndicator'
 import { CardBorder } from './partials/CardBorder'
 import { EventCardHeader } from './partials/EventCardHeader'
-import { ActorActionRow } from './partials/rows/ActorActionRow'
 import { BranchRow } from './partials/rows/BranchRow'
 import { CommentRow } from './partials/rows/CommentRow'
 import { CommitListRow } from './partials/rows/CommitListRow'
 import { IssueOrPullRequestRow } from './partials/rows/IssueOrPullRequestRow'
-import { LabelsView } from './partials/rows/LabelsView'
 import { ActionText } from './partials/rows/partials/ActionText'
 import { ReleaseRow } from './partials/rows/ReleaseRow'
 import { RepositoryListRow } from './partials/rows/RepositoryListRow'
@@ -51,8 +38,6 @@ import { WikiPageListRow } from './partials/rows/WikiPageListRow'
 import { cardStyles, spacingBetweenLeftAndRightColumn } from './styles'
 
 export interface EventCardProps {
-  cardViewMode: CardViewMode
-  enableCompactLabels?: boolean
   event: EnhancedGitHubEvent
   isFocused?: boolean
   repoIsKnown: boolean
@@ -60,18 +45,9 @@ export interface EventCardProps {
 }
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const {
-    cardViewMode,
-    enableCompactLabels,
-    event,
-    isFocused,
-    repoIsKnown,
-    swipeable,
-  } = props
+  const { event, isFocused, repoIsKnown, swipeable } = props
 
   const itemRef = useRef<View>(null)
-
-  const repoTableColumnWidth = useRepoTableColumnWidth()
 
   useEffect(() => {
     if (Platform.OS === 'web' && isFocused && itemRef.current) {
@@ -116,9 +92,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
     appendColon: false,
-    includeBranch: cardViewMode === 'compact' || event.type === 'PushEvent',
-    includeFork: cardViewMode === 'compact',
-    includeTag: cardViewMode === 'compact',
+    includeBranch: event.type === 'PushEvent',
+    includeFork: false,
+    includeTag: false,
     repoIsKnown,
   }
 
@@ -147,9 +123,9 @@ export const EventCard = React.memo((props: EventCardProps) => {
 
   const showCardBorder = !Platform.supportsTouch && isFocused
 
-  const showCardActions = cardViewMode !== 'compact' && !swipeable
+  const showCardActions = !swipeable
 
-  let withTopMargin = cardViewMode !== 'compact'
+  let withTopMargin = true
   let withTopMarginCount = withTopMargin ? 1 : 0
   function getWithTopMargin() {
     const _withTopMargin = withTopMargin
@@ -179,20 +155,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
   function renderContent() {
     return (
       <>
-        {!!actionText && cardViewMode === 'compact' && (
-          <ActorActionRow
-            ActionTextComponent={ActionTextComponent}
-            avatarUrl={avatarUrl}
-            bold={!isRead}
-            isBot={isBot}
-            muted={muted}
-            userLinkURL={actor.html_url || ''}
-            username={actor.display_login || actor.login}
-            viewMode={cardViewMode}
-            withTopMargin={getWithTopMargin()}
-          />
-        )}
-
         {Boolean(comment && comment.body) && (
           <>
             <Spacer height={innerCardSpacing} />
@@ -207,28 +169,25 @@ export const EventCard = React.memo((props: EventCardProps) => {
               url={comment.html_url || comment.url}
               userLinkURL={comment.user.html_url || ''}
               username={comment.user.display_login || comment.user.login}
-              viewMode={cardViewMode}
               withTopMargin={getWithTopMargin() && false}
             />
           </>
         )}
 
-        {repos.length > 0 &&
-          (cardViewMode !== 'compact' || repos.length > 1) && (
-            <RepositoryListRow
-              key={`event-repo-list-row-${repoIds.join('-')}`}
-              data={repos}
-              isForcePush={isForcePush}
-              isPush={isPush}
-              muted={muted}
-              overlayThemeColor={theme =>
-                getCardBackgroundThemeColor(theme, { muted: isRead })
-              }
-              small
-              viewMode={cardViewMode}
-              withTopMargin={getWithTopMargin()}
-            />
-          )}
+        {repos.length > 0 && (
+          <RepositoryListRow
+            key={`event-repo-list-row-${repoIds.join('-')}`}
+            data={repos}
+            isForcePush={isForcePush}
+            isPush={isPush}
+            muted={muted}
+            overlayThemeColor={theme =>
+              getCardBackgroundThemeColor(theme, { muted: isRead })
+            }
+            small
+            withTopMargin={getWithTopMargin()}
+          />
+        )}
 
         {!!branchName &&
           !(isBranchMainEvent && actionTextOptions!.includeBranch) && (
@@ -239,7 +198,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
               muted={muted}
               ownerName={repoOwnerName || ''}
               repositoryName={repoName || ''}
-              viewMode={cardViewMode}
               withTopMargin={getWithTopMargin()}
             />
           )}
@@ -248,7 +206,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
           forkee &&
           forkRepoOwnerName &&
           forkRepoName &&
-          cardViewMode !== 'compact' &&
           !actionTextOptions!.includeFork
         ) && (
           <RepositoryRow
@@ -259,7 +216,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             ownerName={forkRepoOwnerName || ''}
             repositoryName={forkRepoName || ''}
             small
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -286,7 +242,7 @@ export const EventCard = React.memo((props: EventCardProps) => {
             isPrivate={isPrivate}
             muted={muted}
             issueOrPullRequestNumber={issueOrPullRequestNumber!}
-            labels={enableCompactLabels ? [] : issueOrPullRequest.labels}
+            labels={issueOrPullRequest.labels}
             owner={repoOwnerName || ''}
             repo={repoName || ''}
             showBodyRow={
@@ -312,7 +268,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             url={issueOrPullRequest.url}
             userLinkURL={issueOrPullRequest.user.html_url || ''}
             username={issueOrPullRequest.user.login || ''}
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -326,7 +281,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             overlayThemeColor={theme =>
               getCardBackgroundThemeColor(theme, { muted: isRead })
             }
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -340,7 +294,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             overlayThemeColor={theme =>
               getCardBackgroundThemeColor(theme, { muted: isRead })
             }
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -355,7 +308,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
             overlayThemeColor={theme =>
               getCardBackgroundThemeColor(theme, { muted: isRead })
             }
-            viewMode={cardViewMode}
             withTopMargin={getWithTopMargin()}
           />
         )}
@@ -378,7 +330,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
               url={release.html_url || release.url}
               userLinkURL={release.author.html_url || ''}
               username={release.author.display_login || release.author.login}
-              viewMode={cardViewMode}
               withTopMargin={getWithTopMargin()}
             />
           )}
@@ -387,259 +338,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
   }
 
   const Content = renderContent()
-
-  const isSingleRow = withTopMarginCount <= 1 && !release
-  const alignVertically = isSingleRow
-
-  if (cardViewMode === 'compact') {
-    return (
-      <ThemedView
-        key={`event-card-${id}-compact-inner`}
-        ref={itemRef}
-        backgroundColor={theme =>
-          getCardBackgroundThemeColor(theme, { muted: isRead })
-        }
-        style={[
-          cardStyles.compactContainer,
-          alignVertically && { alignItems: 'center' },
-        ]}
-      >
-        {!!showCardBorder && <CardBorder />}
-
-        {/* <CenterGuide /> */}
-
-        {/* <View
-          style={[cardStyles.compactItemFixedWidth, cardStyles.compactItemFixedHeight]}
-        >
-          <Checkbox analyticsLabel={undefined} size={columnHeaderItemContentSize} />
-        </View>
-
-        <Spacer width={contentPadding} /> */}
-
-        <View style={cardStyles.compactItemFixedHeight}>
-          <BookmarkButton
-            isSaved={isSaved}
-            itemIds={id}
-            size={columnHeaderItemContentSize}
-          />
-        </View>
-
-        <Spacer
-          width={
-            spacingBetweenLeftAndRightColumn - columnHeaderItemContentSize / 4
-          }
-        />
-
-        {!repoIsKnown && (
-          <>
-            <View
-              style={[
-                cardStyles.compactItemFixedWidth,
-                cardStyles.compactItemFixedHeight,
-              ]}
-            >
-              <Avatar
-                isBot={isBot}
-                linkURL=""
-                muted={muted}
-                small
-                size={smallAvatarSize}
-                username={repoOwnerName}
-              />
-            </View>
-
-            <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-            <View
-              style={[
-                cardStyles.compactItemFixedMinHeight,
-                {
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  width: repoTableColumnWidth,
-                  overflow: 'hidden',
-                },
-              ]}
-            >
-              {!!(repoOwnerName && repoName) && (
-                <RepositoryRow
-                  key={`notification-repo-row-${repoOwnerName}-${repoName}`}
-                  disableLeft
-                  hideOwner
-                  muted={muted}
-                  ownerName={repoOwnerName}
-                  repositoryName={repoName}
-                  rightContainerStyle={[
-                    sharedStyles.horizontal,
-                    sharedStyles.alignItemsFlexStart,
-                    sharedStyles.justifyContentCenter,
-                    {
-                      width: repoTableColumnWidth,
-                    },
-                  ]}
-                  small
-                  viewMode={cardViewMode}
-                  withTopMargin={false}
-                />
-              )}
-            </View>
-
-            <Spacer width={spacingBetweenLeftAndRightColumn} />
-          </>
-        )}
-
-        <View
-          style={[
-            sharedStyles.flex,
-            sharedStyles.horizontal,
-            { alignItems: 'flex-start' },
-          ]}
-        >
-          <View
-            style={[
-              cardStyles.compactItemFixedWidth,
-              cardStyles.compactItemFixedHeight,
-            ]}
-          >
-            <ThemedIcon
-              color={cardIconColor || 'foregroundColor'}
-              name={cardIconName}
-              selectable={false}
-              style={[
-                sharedStyles.textCenter,
-                {
-                  fontSize: columnHeaderItemContentSize,
-                  opacity: muted ? mutedOpacity : 1,
-                },
-              ]}
-              {...!!actionTextWithoutColon &&
-                Platform.select({
-                  web: { title: actionTextWithoutColon },
-                })}
-            />
-          </View>
-
-          <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-          <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
-            <View style={sharedStyles.flex}>{Content}</View>
-
-            <Spacer width={contentPadding / 3} />
-          </View>
-        </View>
-
-        <Spacer width={spacingBetweenLeftAndRightColumn} />
-
-        {!!enableCompactLabels &&
-          !!issueOrPullRequest &&
-          !!issueOrPullRequest.labels &&
-          issueOrPullRequest.labels.length > 0 && (
-            <>
-              <LabelsView
-                backgroundThemeColor={theme =>
-                  getCardBackgroundThemeColor(theme, { muted: isRead })
-                }
-                enableScrollView={isSingleRow}
-                labels={issueOrPullRequest.labels.map(label => ({
-                  key: `issue-or-pr-row-${
-                    issueOrPullRequest.id
-                  }-${issueOrPullRequestNumber}-label-${label.id ||
-                    label.name}`,
-                  color: label.color && `#${label.color}`,
-                  name: label.name,
-                }))}
-                muted={muted}
-                style={[
-                  sharedStyles.alignSelfCenter,
-                  sharedStyles.justifyContentFlexEnd,
-                  sharedStyles.overflowHidden,
-                  {
-                    maxWidth:
-                      260 +
-                      (repoIsKnown ? repoTableColumnWidth + 20 : 0) +
-                      (`${issueOrPullRequest.title || ''}`.length <= 50
-                        ? 100
-                        : 0),
-                  },
-                ]}
-                textThemeColor={
-                  muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65'
-                }
-              />
-
-              <Spacer width={spacingBetweenLeftAndRightColumn} />
-            </>
-          )}
-
-        <View
-          style={[
-            cardStyles.compactItemFixedMinHeight,
-            {
-              alignSelf: 'center',
-              alignItems: 'flex-end',
-              width: 60,
-            },
-          ]}
-        >
-          {!!createdAt && (
-            <IntervalRefresh date={createdAt}>
-              {() => {
-                const dateText = getDateSmallText(createdAt, false)
-                if (!dateText) return null
-
-                return (
-                  <ThemedText
-                    color={
-                      muted
-                        ? 'foregroundColorMuted40'
-                        : 'foregroundColorMuted65'
-                    }
-                    numberOfLines={1}
-                    style={[
-                      cardStyles.timestampText,
-                      cardStyles.smallText,
-                      { fontSize: smallerTextSize },
-                    ]}
-                    {...Platform.select({
-                      web: { title: getFullDateText(createdAt) },
-                    })}
-                  >
-                    {!!isPrivate && (
-                      <>
-                        <ThemedIcon
-                          name="lock"
-                          style={cardStyles.smallerText}
-                        />{' '}
-                      </>
-                    )}
-                    {dateText}
-                  </ThemedText>
-                )
-              }}
-            </IntervalRefresh>
-          )}
-        </View>
-
-        <Spacer width={contentPadding / 2} />
-
-        <View
-          style={[
-            cardStyles.compactItemFixedHeight,
-            {
-              alignSelf: 'center',
-            },
-          ]}
-        >
-          <ToggleReadButton
-            isRead={isRead}
-            itemIds={id}
-            muted={muted}
-            type="activity"
-          />
-        </View>
-      </ThemedView>
-    )
-  }
 
   return (
     <ThemedView

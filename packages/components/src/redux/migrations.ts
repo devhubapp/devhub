@@ -234,9 +234,8 @@ export default {
   9: (state: RootState) =>
     immer(state, draft => {
       draft.config = draft.config || {}
-
-      draft.config.appViewMode =
-        draft.config.appViewMode === 'single-column'
+      ;(draft.config as any).appViewMode =
+        (draft.config as any).appViewMode === 'single-column'
           ? 'single-column'
           : 'multi-column'
     }),

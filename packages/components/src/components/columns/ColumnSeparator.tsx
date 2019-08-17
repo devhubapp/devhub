@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { AppViewMode, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import {
   Separator,
@@ -12,7 +12,6 @@ import { useAppLayout } from '../context/LayoutContext'
 
 export function getColumnCardBackgroundThemeColor(
   _backgroundColor: string,
-  _appViewMode: AppViewMode,
 ): keyof ThemeColors {
   return 'backgroundColor'
 }

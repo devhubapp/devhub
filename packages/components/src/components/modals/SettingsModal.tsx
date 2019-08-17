@@ -22,7 +22,6 @@ import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
-import { AppViewModePreference } from '../widgets/AppViewModePreference'
 import { ThemePreference } from '../widgets/ThemePreference'
 
 export interface SettingsModalProps {
@@ -62,10 +61,6 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         bounces
         style={sharedStyles.flex}
       >
-        <AppViewModePreference>
-          <Spacer height={contentPadding} />
-        </AppViewModePreference>
-
         <ThemePreference />
 
         {/* <Spacer height={contentPadding * 2} />

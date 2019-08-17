@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, useState } from 'react'
 import { View } from 'react-native'
 
-import { CardViewMode, mergeMaxLength } from '@devhub/core'
+import { mergeMaxLength } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import {
   contentPadding,
@@ -25,7 +25,6 @@ export interface RowListProps<T> {
   maxLength?: number
   overlayThemeColor: ScrollViewWithOverlayProps['overlayThemeColor']
   renderItem: RenderItem<T>
-  viewMode: CardViewMode
 }
 
 export const rowListProps: Array<keyof RowListProps<any>> = [
@@ -34,7 +33,6 @@ export const rowListProps: Array<keyof RowListProps<any>> = [
   'maxLength',
   'overlayThemeColor',
   'renderItem',
-  'viewMode',
 ]
 
 export const RowList = React.memo((props: RowListProps<any>) => {
