@@ -11,11 +11,8 @@ import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animat
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
-import { fabSize } from '../common/FAB'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
-import { useAppLayout } from '../context/LayoutContext'
-import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { ColumnFilters } from './ColumnFilters'
 import { ColumnHeader } from './ColumnHeader'
@@ -25,7 +22,6 @@ import { ColumnSeparator } from './ColumnSeparator'
 export interface ColumnFiltersRendererProps {
   close: (() => void) | undefined
   columnId: string
-  containerHeight: number
   fixedPosition?: 'left' | 'right'
   fixedWidth?: number | undefined
   forceOpenAll?: boolean
@@ -40,7 +36,6 @@ export const ColumnFiltersRenderer = React.memo(
     const {
       close,
       columnId,
-      containerHeight,
       fixedPosition,
       fixedWidth,
       forceOpenAll,
@@ -50,7 +45,6 @@ export const ColumnFiltersRenderer = React.memo(
       startWithFiltersExpanded,
     } = props
 
-    const { sizename } = useAppLayout()
     const { column, columnIndex } = useColumn(columnId)
 
     const { enableSharedFiltersView } = useColumnFilters()
@@ -130,12 +124,6 @@ export const ColumnFiltersRenderer = React.memo(
     if (!(absolutePositionTransition && absolutePositionTransition.item))
       return null
 
-    const availableHeight =
-      containerHeight -
-      (shouldRenderFAB({ sizename, isColumnFiltersVisible: true })
-        ? fabSize + 2 * fabSpacing
-        : 0)
-
     const key = absolutePositionTransition.key || 'column-options-renderer'
     return (
       <Fragment key={`${key}-inner-container`}>
@@ -144,7 +132,7 @@ export const ColumnFiltersRenderer = React.memo(
             key={`${key}-overlay-container`}
             collapsable={false}
             style={[
-              StyleSheet.absoluteFillObject,
+              StyleSheet.absoluteFill,
               {
                 zIndex: 200,
                 opacity: overlayTransition.props.opacity.interpolate(
@@ -159,11 +147,13 @@ export const ColumnFiltersRenderer = React.memo(
               analyticsLabel="column_filters"
               activeOpacity={1}
               backgroundColor="backgroundColorMore1"
-              style={{
-                ...StyleSheet.absoluteFillObject,
-                zIndex: 200,
-                ...Platform.select({ web: { cursor: 'default' } as any }),
-              }}
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  zIndex: 200,
+                  ...Platform.select({ web: { cursor: 'default' } as any }),
+                },
+              ]}
               onPress={close && (() => close())}
               tabIndex={-1}
             />
@@ -187,11 +177,8 @@ export const ColumnFiltersRenderer = React.memo(
               : false
           }
           style={[
+            !inlineMode && StyleSheet.absoluteFill,
             !inlineMode && {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
               opacity:
                 enableAbsolutePositionAnimation &&
                 absolutePositionTransition.props &&
@@ -222,13 +209,13 @@ export const ColumnFiltersRenderer = React.memo(
             enableAbsolutePositionAnimation &&
               absolutePositionTransition.props.left && {
                 left: absolutePositionTransition.props.left.interpolate(
-                  (left: number) => Math.ceil(left),
+                  (left: number) => Math.floor(left),
                 ),
               },
             enableAbsolutePositionAnimation &&
               absolutePositionTransition.props.right && {
                 right: absolutePositionTransition.props.right.interpolate(
-                  (right: number) => Math.ceil(right),
+                  (right: number) => Math.floor(right),
                 ),
               },
             !!fixedWidth && fixedPosition === 'left' && { right: undefined },
@@ -294,17 +281,9 @@ export const ColumnFiltersRenderer = React.memo(
           >
             <ColumnFilters
               key={`column-options-${column.type}`}
-              availableHeight={
-                availableHeight -
-                (shouldRenderHeader === 'yes' ||
-                shouldRenderHeader === 'spacing-only'
-                  ? columnHeaderHeight
-                  : 0)
-              }
               column={column}
               columnIndex={columnIndex}
               forceOpenAll={forceOpenAll}
-              fullHeight={inlineMode || !!fixedWidth}
               startWithFiltersExpanded={startWithFiltersExpanded}
             />
           </ConditionalWrap>

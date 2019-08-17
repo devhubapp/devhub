@@ -37,7 +37,6 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import {
-  columnHeaderHeight,
   columnHeaderItemContentSize,
   contentPadding,
 } from '../../styles/variables'
@@ -88,11 +87,9 @@ const notificationReasonOptions = notificationReasons
   .sort(metadataSortFn)
 
 export interface ColumnFiltersProps {
-  availableHeight: number
   column: Column
   columnIndex: number
   forceOpenAll?: boolean
-  fullHeight?: boolean
   startWithFiltersExpanded?: boolean
 }
 
@@ -115,13 +112,7 @@ const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
 }
 
 export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
-  const {
-    availableHeight,
-    column,
-    forceOpenAll,
-    fullHeight,
-    startWithFiltersExpanded,
-  } = props
+  const { column, forceOpenAll, startWithFiltersExpanded } = props
 
   const { allItems, filteredItems } = useColumnData(
     column.id,
@@ -297,25 +288,14 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
       backgroundColor={theme =>
         getColumnHeaderThemeColors(theme.backgroundColor).normal
       }
-      style={[
-        sharedStyles.alignSelfStretch,
-        {
-          height: fullHeight ? availableHeight : 'auto',
-        },
-      ]}
-      // onLayout={e => {
-      //   setContainerWidth(e.nativeEvent.layout.width)
-      // }}
+      style={sharedStyles.flex}
     >
       <FullHeightScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical
         bounces
         showsHorizontalScrollIndicator={false}
-        style={[
-          sharedStyles.flex,
-          { maxHeight: availableHeight - columnHeaderHeight - 4 },
-        ]}
+        style={sharedStyles.flex}
       >
         {allColumnOptionCategories.includes('inbox') &&
           column.type === 'notifications' && (
