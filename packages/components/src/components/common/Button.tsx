@@ -223,7 +223,7 @@ export const Button = React.memo((props: ButtonProps) => {
           height: size,
           backgroundColor: springAnimatedStyles.touchableBackgroundColor,
           borderColor: springAnimatedStyles.touchableBorderColor,
-          borderWidth: showBorder ? 1 : 0,
+          borderWidth: showBorder ? 2 : 0,
           borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
         },
         style,
