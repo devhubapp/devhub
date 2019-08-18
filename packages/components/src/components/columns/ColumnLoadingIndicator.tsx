@@ -2,6 +2,8 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { useColumnData } from '../../hooks/use-column-data'
+import { useReduxState } from '../../hooks/use-redux-state'
+import * as selectors from '../../redux/selectors'
 import { ProgressBar } from '../common/ProgressBar'
 
 const styles = StyleSheet.create({
@@ -21,9 +23,12 @@ export interface ColumnLoadingIndicatorProps {
 export const ColumnLoadingIndicator = React.memo(
   (props: ColumnLoadingIndicatorProps) => {
     const { columnId } = props
+
+    const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
     const { loadState } = useColumnData(columnId || '')
 
-    if (!(loadState && loadState.includes('loading'))) return null
+    if (!(isLoggingIn || (loadState && loadState.includes('loading'))))
+      return null
 
     return (
       <View style={styles.container}>
