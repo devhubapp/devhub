@@ -17,44 +17,24 @@ import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
 
-// Fetch new installation tokens every X minutes
+// Fetch new installation tokens every 50 minutes
+// Check for expired tokens every 5 minutes
 function* init() {
-  let _isFirstTime = true
-
   while (true) {
-    const { action } = yield race({
+    yield race({
       delay: delay(1000 * 60 * 5), // 5 minutes
       action: take(['LOGIN_SUCCESS', 'LOGIN_FAILURE', 'LOGOUT']),
     })
-
-    if (action) _isFirstTime = true
-
-    const isFirstTime = _isFirstTime
-    _isFirstTime = false
 
     const state = yield select()
 
     const isLogged = selectors.isLoggedSelector(state)
     if (!isLogged) continue
 
-    if (isFirstTime) {
-      yield put(
-        actions.refreshInstallationsRequest({
-          // includeInstallationRepositories: isFirstTime,
-          includeInstallationToken: true,
-        }),
-      )
-
-      continue
-    }
-
     const lastFetchedAt = selectors.installationsLastFetchedAtSelector(state)
     const fetchedNMinutesAgo = lastFetchedAt
       ? (new Date().valueOf() - new Date(lastFetchedAt).valueOf()) / 1000 / 60
       : undefined
-
-    // if fetched in the last 5 minutes, dont retry yet
-    if (fetchedNMinutesAgo && fetchedNMinutesAgo < 5) continue
 
     const installations = selectors.installationsArrSelector(state)
     const hasExpiredInstallationToken = installations.some(
@@ -72,8 +52,10 @@ function* init() {
         hasExpiredInstallationToken ||
         (fetchedNMinutesAgo && fetchedNMinutesAgo > 50)
       )
-    )
+    ) {
+      yield put(actions.refreshInstallationsNoop())
       continue
+    }
 
     yield put(
       actions.refreshInstallationsRequest({

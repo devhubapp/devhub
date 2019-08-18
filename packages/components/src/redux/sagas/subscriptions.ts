@@ -56,8 +56,11 @@ let issuesOrPullRequestsCache: EnhancementCache
 let notificationsCache: EnhancementCache
 
 function* init() {
-  // yield take('LOGIN_SUCCESS')
-  yield take(['REFRESH_INSTALLATIONS_SUCCESS', 'REFRESH_INSTALLATIONS_FAILURE'])
+  yield take([
+    'REFRESH_INSTALLATIONS_SUCCESS',
+    'REFRESH_INSTALLATIONS_FAILURE',
+    'REFRESH_INSTALLATIONS_NOOP',
+  ])
 
   let _isFirstTime = true
   while (true) {
@@ -73,9 +76,7 @@ function* init() {
     })
 
     const forceFetchAll = !!(
-      action &&
-      (action.type === 'LOGIN_SUCCESS' ||
-        action.type === 'REFRESH_INSTALLATIONS_SUCCESS')
+      action && action.type === 'REFRESH_INSTALLATIONS_SUCCESS'
     )
 
     const isFirstTime = _isFirstTime
@@ -102,27 +103,26 @@ function* init() {
 
     // TODO: Eventually the number of subscriptions wont be 1x1 with the number of columns
     // Because columns will be able to have multiple subscriptions.
-    // When that happens, improve this. Limit based on number of columns or subscriptions?
-    const subscriptionsToFetch = isFirstTime
-      ? subscriptions.slice(0, constants.COLUMNS_LIMIT)
-      : subscriptions
-          .slice(0, constants.COLUMNS_LIMIT)
-          .filter(
-            s =>
-              s &&
-              !(
-                (s.data.loadState === 'loading' ||
-                  s.data.loadState === 'loading_first') &&
-                !minimumRefetchTimeHasPassed(s, 1 * 60 * 1000)
-              ) &&
-              (forceFetchAll ||
-                minimumRefetchTimeHasPassed(
-                  s,
-                  typeof github.pollInterval === 'number'
-                    ? github.pollInterval * 1000
-                    : undefined,
-                )),
-          )
+    // When that happens, improve this COLUMNS_LIMIT.
+    // Limit based on number of columns or subscriptions?
+    const subscriptionsToFetch = subscriptions
+      .slice(0, constants.COLUMNS_LIMIT)
+      .filter(
+        s =>
+          s &&
+          !(
+            (s.data.loadState === 'loading' ||
+              s.data.loadState === 'loading_first') &&
+            !minimumRefetchTimeHasPassed(s, 1 * 60 * 1000)
+          ) &&
+          (forceFetchAll ||
+            minimumRefetchTimeHasPassed(
+              s,
+              typeof github.pollInterval === 'number'
+                ? github.pollInterval * 1000
+                : undefined,
+            )),
+      )
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
     yield all(

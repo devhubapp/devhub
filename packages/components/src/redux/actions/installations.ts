@@ -16,3 +16,7 @@ export function refreshInstallationsFailure<E extends Error>(
 ) {
   return createErrorAction('REFRESH_INSTALLATIONS_FAILURE', error)
 }
+
+export function refreshInstallationsNoop() {
+  return createAction('REFRESH_INSTALLATIONS_NOOP')
+}
