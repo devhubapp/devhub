@@ -43,7 +43,7 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
   }, [])
 
   const springAnimatedStyles = useSpring<any>({
-    config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
+    config: getDefaultReactSpringAnimationConfig(),
     from: {
       left: '0%',
       width: '0%',
