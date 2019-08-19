@@ -138,7 +138,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
         <ScrollViewComponent
           ref={ref}
           horizontal={horizontal}
-          scrollEventThrottle={3}
+          scrollEventThrottle={16}
           {...restProps}
           collapsable={false}
           onContentSizeChange={onContentSizeChange}

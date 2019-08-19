@@ -39,7 +39,7 @@ export type IssueOrPullRequestCardsContainerProps = Omit<
 
 export const IssueOrPullRequestCardsContainer = React.memo(
   (props: IssueOrPullRequestCardsContainerProps) => {
-    const { column, repoIsKnown, ...otherProps } = props
+    const { column, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -84,7 +84,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
 
     const { allItems, filteredItems, loadState } = useColumnData<
       EnhancedGitHubIssueOrPullRequest
-    >(column.id, { mergeSimilar: true })
+    >(column.id, { mergeSimilar: false })
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderIssueOrPullRequestDate(allItems)
@@ -235,7 +235,6 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={loadState}
         refresh={refresh}
-        repoIsKnown={repoIsKnown}
       />
     )
   },

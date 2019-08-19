@@ -51,7 +51,11 @@ import {
   getGitHubNotificationSubItems,
   getNotificationSubjectType,
 } from './notifications'
-import { getCommitShaFromUrl, getRepoFullNameFromUrl } from './url'
+import {
+  getBaseUrlFromOtherUrl,
+  getCommitShaFromUrl,
+  getRepoFullNameFromUrl,
+} from './url'
 
 const GITHUB_USERNAME_REGEX_PATTERN =
   '[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}'
@@ -125,6 +129,19 @@ export function isDraft(
   return !!pullRequest.draft || pullRequest.mergeable_state === 'draft'
 }
 
+export function getUserURLFromObject(user: {
+  login: string
+  avatar_url: string
+  url?: string
+  html_url?: string
+}): string | undefined {
+  if (user.html_url) return user.html_url
+  if (!user.login) return undefined
+
+  const _baseURL = getBaseUrlFromOtherUrl(user.url) || 'https://github.com'
+  return `${_baseURL}/${user.login}`
+}
+
 export function getUserAvatarByAvatarURL(
   avatarUrl: string,
   { size }: { size?: number } = {},
@@ -145,16 +162,29 @@ export function getUserAvatarByAvatarURL(
 
 export function getUserAvatarByUsername(
   username: string,
-  { size }: { size?: number } = {},
+  { baseURL, size }: { baseURL: string | undefined; size?: number },
   getPixelSizeForLayoutSizeFn?: (size: number) => number,
 ) {
   return username
-    ? `https://github.com/${username}.png?size=${getSteppedSize(
+    ? `${baseURL || 'https://github.com/'}${username}.png?size=${getSteppedSize(
         size,
         undefined,
         getPixelSizeForLayoutSizeFn,
       )}`
     : ''
+}
+
+export function getUserAvatarFromObject(
+  user: { login: string; avatar_url: string; url?: string; html_url?: string },
+  { size }: { size?: number } = {},
+) {
+  if (user.avatar_url) return user.avatar_url
+  if (!user.login) return undefined
+
+  return getUserAvatarByUsername(user.login, {
+    baseURL: getBaseUrlFromOtherUrl(user.html_url || user.url),
+    size,
+  })
 }
 
 export function tryGetUsernameFromGitHubEmail(email?: string) {
@@ -169,7 +199,11 @@ export function tryGetUsernameFromGitHubEmail(email?: string) {
 
 export function getUserAvatarByEmail(
   email: string,
-  { size, ...otherOptions }: { size?: number } = {},
+  {
+    baseURL,
+    size,
+    ...otherOptions
+  }: { baseURL: string | undefined; size?: number },
   getPixelSizeForLayoutSizeFn?: (size: number) => number,
 ) {
   const steppedSize = getSteppedSize(
@@ -181,7 +215,7 @@ export function getUserAvatarByEmail(
   if (username)
     return getUserAvatarByUsername(
       username,
-      { size: steppedSize },
+      { baseURL, size: steppedSize },
       getPixelSizeForLayoutSizeFn,
     )
 
@@ -192,7 +226,7 @@ export function getUserAvatarByEmail(
 export function isPullRequest(issue: {
   pull_request?: object
   merged_at?: GitHubPullRequest['merged_at']
-  html_url?: GitHubPullRequest['html_url']
+  html_url: GitHubPullRequest['html_url']
   url?: GitHubPullRequest['url']
 }) {
   return !!(
@@ -205,7 +239,7 @@ export function isPullRequest(issue: {
 }
 
 export function getOwnerAndRepo(
-  repoFullName: string,
+  repoFullName: string | undefined,
 ): { owner: string | undefined; repo: string | undefined } {
   if (!repoFullName) return { owner: '', repo: '' }
 
@@ -341,6 +375,7 @@ export function getColumnHeaderDetails(
       icon: GitHubIcon
       owner?: string
       repo?: string
+      ownerIsKnown: boolean
       repoIsKnown: boolean
       subtitle?: string
       title: string
@@ -357,6 +392,7 @@ export function getColumnHeaderDetails(
           return {
             avatarProps: { username: s.params!.org },
             icon: 'organization',
+            ownerIsKnown: true,
             repoIsKnown: false,
             subtitle: 'Activity',
             title: s.params!.org,
@@ -365,6 +401,7 @@ export function getColumnHeaderDetails(
         case 'PUBLIC_EVENTS': {
           return {
             icon: 'rss',
+            ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: 'Activity',
             title: 'Public',
@@ -377,6 +414,7 @@ export function getColumnHeaderDetails(
               username: s.params!.owner,
             },
             icon: 'repo',
+            ownerIsKnown: true,
             repoIsKnown: true,
             owner: s.params!.owner,
             repo: s.params!.repo,
@@ -391,7 +429,8 @@ export function getColumnHeaderDetails(
               username: s.params!.owner,
             },
             icon: 'repo',
-            repoIsKnown: true,
+            ownerIsKnown: false,
+            repoIsKnown: false,
             owner: s.params!.owner,
             repo: s.params!.repo,
             subtitle: 'Network',
@@ -402,6 +441,7 @@ export function getColumnHeaderDetails(
           return {
             avatarProps: { username: s.params!.username },
             icon: 'person',
+            ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: 'Activity',
             title: s.params!.username,
@@ -411,6 +451,7 @@ export function getColumnHeaderDetails(
           return {
             avatarProps: { username: s.params!.org },
             icon: 'organization',
+            ownerIsKnown: true,
             repoIsKnown: false,
             subtitle: 'Activity',
             title: s.params!.org,
@@ -420,6 +461,7 @@ export function getColumnHeaderDetails(
           return {
             avatarProps: { username: s.params!.username },
             icon: 'person',
+            ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: 'Activity',
             title: s.params!.username,
@@ -430,6 +472,7 @@ export function getColumnHeaderDetails(
           return {
             avatarProps: { username: s.params!.username },
             icon: 'home',
+            ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: 'Dashboard',
             title: s.params!.username,
@@ -443,6 +486,7 @@ export function getColumnHeaderDetails(
 
           return {
             icon: 'mark-github',
+            ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: (column && (column as any).subtype) || '',
             title: 'Unknown',
@@ -524,6 +568,7 @@ export function getColumnHeaderDetails(
         default: {
           return {
             avatarProps,
+            ownerIsKnown: !!owner,
             repoIsKnown: !!(ownerAndRepo.owner && ownerAndRepo.repo),
             owner: ownerAndRepo.owner || owner || '',
             repo: ownerAndRepo.repo || '',
@@ -558,6 +603,7 @@ export function getColumnHeaderDetails(
         case 'REPO_NOTIFICATIONS': {
           return {
             icon: 'bell',
+            ownerIsKnown: true,
             repoIsKnown: true,
             owner: (s && s.params && s.params.owner) || '',
             repo: (s && s.params && s.params.repo) || '',
@@ -569,6 +615,7 @@ export function getColumnHeaderDetails(
         default: {
           return {
             icon: 'bell',
+            ownerIsKnown: false,
             repoIsKnown: false,
             subtitle:
               s && s.params && s.params.participating
@@ -597,6 +644,7 @@ export function getColumnHeaderDetails(
       )
       return {
         icon: 'mark-github',
+        ownerIsKnown: false,
         repoIsKnown: false,
         subtitle: (column && (column as any).type) || '',
         title: 'Unknown',
@@ -643,7 +691,7 @@ export function getGitHubAPIHeadersFromHeader(headers: Record<string, any>) {
   return github
 }
 
-export function getBranchNameFromRef(ref: string | undefined) {
+export function getNameFromRef(ref: string | undefined) {
   if (!(ref && ref.startsWith('refs/'))) return ref || undefined
 
   return ref
@@ -733,6 +781,7 @@ export function getPullRequestIconAndColor(pullRequest: {
 export function getIssueIconAndColor(issue: {
   state?: GitHubPullRequest['state']
   merged_at?: GitHubPullRequest['merged_at']
+  html_url: GitHubPullRequest['html_url']
 }): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
   const { state } = issue
 
@@ -1323,8 +1372,7 @@ export function getItemSearchableStrings(
     const {
       actor,
       // avatarUrl,
-      branchName,
-      branchOrTagRef,
+      branchOrTagName,
       comment: _comment,
       // commitShas,
       commits,
@@ -1357,7 +1405,7 @@ export function getItemSearchableStrings(
     release = _release
 
     strings.push(`${(actor && actor.login) || ''}`)
-    strings.push(`${branchName || branchOrTagRef || ''}`)
+    if (branchOrTagName) strings.push(branchOrTagName)
     if (commits) {
       commits.forEach(commit => {
         if (!commit) return
@@ -1374,7 +1422,7 @@ export function getItemSearchableStrings(
       })
     }
     strings.push(createdAt)
-    strings.push(forkRepoFullName)
+    if (forkRepoFullName) strings.push(forkRepoFullName)
     if (mergedIds && mergedIds.length) {
       mergedIds.forEach(mergedId => {
         strings.push(mergedId)

@@ -12,6 +12,7 @@ import {
   EnhancedGitHubNotification,
   EnhancedItem,
   GitHubEventAction,
+  GitHubIssueOrPullRequest,
   GitHubItemSubjectType,
   GitHubNotification,
   GitHubStateType,
@@ -164,6 +165,13 @@ export function isNotificationPrivate(notification: GitHubNotification) {
   return !!(notification.repository && notification.repository.private)
 }
 
+// TODO: GitHub doesn't return this info apparently
+export function isIssueOrPullRequestPrivate(
+  _issueOrPullRequest: GitHubIssueOrPullRequest,
+) {
+  return false
+}
+
 export function deepMapper<T extends object, R = T>(
   obj: T,
   mapper: (obj: T) => any,
@@ -208,6 +216,8 @@ export function stripMarkdown(
     useImgAltText?: boolean
   },
 ) {
+  if (!(md && typeof md === 'string')) return ''
+
   const options = _options || {}
 
   options.listUnicodeChar = options.hasOwnProperty('listUnicodeChar')

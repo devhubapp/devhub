@@ -32,9 +32,7 @@ import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsAccordion } from './ColumnOptionsAccordion'
 
-export function getColumnCardThemeColors(
-  _backgroundColor: string,
-): {
+export function getColumnCardThemeColors(): {
   column: keyof ThemeColors
   card: keyof ThemeColors
   card__hover: keyof ThemeColors
@@ -43,22 +41,28 @@ export function getColumnCardThemeColors(
 } {
   return {
     card: 'backgroundColorLighther1',
-    card__hover: 'backgroundColorLighther2',
+    card__hover: 'backgroundColorLess2',
     card__muted: 'backgroundColorDarker1',
-    card__muted_hover: 'backgroundColorDarker2',
+    card__muted_hover: 'backgroundColorLess2',
     column: 'backgroundColor',
   }
 }
 
-export function getCardBackgroundThemeColor(
-  theme: ThemeColors,
-  { muted }: { muted: boolean },
-) {
-  const backgroundThemeColors = getColumnCardThemeColors(theme.backgroundColor)
+export function getCardBackgroundThemeColor({
+  isHovered,
+  isMuted,
+}: {
+  isHovered?: boolean
+  isMuted: boolean
+}) {
+  const backgroundThemeColors = getColumnCardThemeColors()
 
   const _backgroundThemeColor =
-    // (isFocused && 'backgroundColorLess2') ||
-    (muted && backgroundThemeColors.card__muted) || backgroundThemeColors.card
+    (isMuted &&
+      (isHovered
+        ? backgroundThemeColors.card__muted_hover
+        : backgroundThemeColors.card__muted)) ||
+    (isHovered ? backgroundThemeColors.card__hover : backgroundThemeColors.card)
 
   return _backgroundThemeColor
 }
@@ -220,9 +224,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   return (
     <Column
       key={`column-renderer-${column.id}-inner-container`}
-      backgroundColor={theme =>
-        getColumnCardThemeColors(theme.backgroundColor).column
-      }
+      backgroundColor={getColumnCardThemeColors().column}
       columnId={column.id}
       fullWidth={appViewMode === 'single-column'}
       pagingEnabled={pagingEnabled}

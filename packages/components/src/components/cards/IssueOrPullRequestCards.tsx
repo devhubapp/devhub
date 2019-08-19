@@ -11,6 +11,7 @@ import {
   getSearchQueryFromFilter,
   isItemRead,
 } from '@devhub/core'
+import { useCardGetItemLayout } from '../../hooks/use-card-get-item-layout'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -42,7 +43,7 @@ import { SwipeableIssueOrPullRequestCard } from './SwipeableIssueOrPullRequestCa
 export interface IssueOrPullRequestCardsProps
   extends Omit<
     IssueOrPullRequestCardProps,
-    'isFocused' | 'issueOrPullRequest' | 'type'
+    'cachedCardProps' | 'isFocused' | 'issueOrPullRequest' | 'type'
   > {
   column: Column
   columnIndex: number
@@ -52,7 +53,9 @@ export interface IssueOrPullRequestCardsProps
   items: EnhancedGitHubIssueOrPullRequest[]
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
-  pointerEvents: FlatListProps<any>['pointerEvents']
+  pointerEvents: FlatListProps<
+    EnhancedGitHubIssueOrPullRequest
+  >['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   swipeable: boolean
 }
@@ -60,6 +63,8 @@ export interface IssueOrPullRequestCardsProps
 function keyExtractor(item: EnhancedGitHubIssueOrPullRequest) {
   return `issue-or-pr-card-${item.id}`
 }
+
+const stickyHeaderIndices = [0]
 
 export const IssueOrPullRequestCards = React.memo(
   (props: IssueOrPullRequestCardsProps) => {
@@ -72,8 +77,11 @@ export const IssueOrPullRequestCards = React.memo(
       items,
       lastFetchedAt,
       loadState,
+      ownerIsKnown,
       pointerEvents,
       refresh,
+      repoIsKnown,
+      swipeable,
     } = props
 
     const flatListRef = React.useRef<
@@ -168,46 +176,70 @@ export const IssueOrPullRequestCards = React.memo(
 
     const isEmpty = !items.length
 
-    const _renderItem: FlatListProps<
-      EnhancedGitHubIssueOrPullRequest
-    >['renderItem'] = ({ item }) => {
-      if (props.swipeable) {
-        return (
-          <SwipeableIssueOrPullRequestCard
-            isFocused={
-              column.id === focusedColumnId &&
-              item.id === selectedItemIdRef.current &&
-              !disableItemFocus
-            }
-            issueOrPullRequest={item}
-            repoIsKnown={props.repoIsKnown}
-            swipeable={props.swipeable}
-            type={getIssueOrPullRequestSubjectType(item) || 'Issue'}
-          />
-        )
-      }
+    const { getItemLayout, itemCardProps, itemLayouts } = useCardGetItemLayout(
+      'issue_or_pr',
+      items,
+      {
+        ownerIsKnown,
+        repoIsKnown,
+      },
+    )
 
-      return (
-        <ErrorBoundary>
-          <IssueOrPullRequestCard
-            isFocused={
-              column.id === focusedColumnId &&
-              item.id === selectedItemIdRef.current &&
-              !disableItemFocus
-            }
-            issueOrPullRequest={item}
-            repoIsKnown={props.repoIsKnown}
-            swipeable={props.swipeable}
-            type={getIssueOrPullRequestSubjectType(item) || 'Issue'}
-          />
-        </ErrorBoundary>
-      )
-    }
-    const renderItem = useCallback(_renderItem, [
-      column.id === focusedColumnId && selectedItemIdRef.current,
-      props.repoIsKnown,
-      props.swipeable,
-    ])
+    const renderItem = useCallback<
+      NonNullable<FlatListProps<EnhancedGitHubIssueOrPullRequest>['renderItem']>
+    >(
+      ({ item, index }) => {
+        const height = itemLayouts[index] && itemLayouts[index]!.length
+
+        if (swipeable) {
+          return (
+            <View style={{ height }}>
+              <SwipeableIssueOrPullRequestCard
+                cachedCardProps={itemCardProps[index]}
+                isFocused={
+                  column.id === focusedColumnId &&
+                  item.id === selectedItemIdRef.current &&
+                  !disableItemFocus
+                }
+                issueOrPullRequest={item}
+                ownerIsKnown={ownerIsKnown}
+                repoIsKnown={repoIsKnown}
+                swipeable={swipeable}
+                type={getIssueOrPullRequestSubjectType(item) || 'Issue'}
+              />
+            </View>
+          )
+        }
+
+        return (
+          <ErrorBoundary>
+            <View style={{ height }}>
+              <IssueOrPullRequestCard
+                cachedCardProps={itemCardProps[index]}
+                isFocused={
+                  column.id === focusedColumnId &&
+                  item.id === selectedItemIdRef.current &&
+                  !disableItemFocus
+                }
+                issueOrPullRequest={item}
+                ownerIsKnown={ownerIsKnown}
+                repoIsKnown={repoIsKnown}
+                swipeable={swipeable}
+                type={getIssueOrPullRequestSubjectType(item) || 'Issue'}
+              />
+            </View>
+          </ErrorBoundary>
+        )
+      },
+      [
+        column.id === focusedColumnId && selectedItemIdRef.current,
+        itemCardProps,
+        itemLayouts,
+        ownerIsKnown,
+        repoIsKnown,
+        swipeable,
+      ],
+    )
 
     const renderHeader = useCallback(() => {
       return (
@@ -287,60 +319,7 @@ export const IssueOrPullRequestCards = React.memo(
       refresh,
     ])
 
-    const _onScrollToIndexFailed: FlatListProps<
-      string
-    >['onScrollToIndexFailed'] = (info: {
-      index: number
-      highestMeasuredFrameIndex: number
-      averageItemLength: number
-    }) => {
-      console.error(info)
-      bugsnag.notify({
-        name: 'ScrollToIndexFailed',
-        message: 'Failed to scroll to index',
-        ...info,
-      })
-    }
-    const onScrollToIndexFailed = useCallback(_onScrollToIndexFailed, [])
-
-    const refreshControl = useMemo(
-      () => (
-        <RefreshControl
-          intervalRefresh={lastFetchedAt}
-          onRefresh={refresh}
-          refreshing={false}
-          title={
-            lastFetchedAt
-              ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
-              : 'Pull to refresh'
-          }
-        />
-      ),
-      [lastFetchedAt, refresh],
-    )
-
-    const rerender = useMemo(() => ({}), [
-      renderItem,
-      renderHeader,
-      renderFooter,
-    ])
-
-    if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
-      return (
-        <EmptyCards
-          column={column}
-          errorMessage={`You have reached the limit of ${
-            constants.COLUMNS_LIMIT
-          } columns. This is to maintain a healthy usage of the GitHub API.`}
-          errorTitle="Too many columns"
-          fetchNextPage={undefined}
-          loadState="error"
-          refresh={undefined}
-        />
-      )
-    }
-
-    function renderEmptyComponent() {
+    const renderEmptyComponent = useCallback(() => {
       const maybeInvalidFilters = `${errorMessage || ''}`
         .toLowerCase()
         .startsWith('validation failed')
@@ -400,7 +379,69 @@ export const IssueOrPullRequestCards = React.memo(
           refresh={refresh}
         />
       )
+    }, [
+      items.length ? undefined : column,
+      items.length ? undefined : errorMessage,
+      items.length ? undefined : fetchNextPage,
+      items.length ? undefined : loadState,
+      items.length ? undefined : refresh,
+      items.length ? undefined : loggedUsername,
+    ])
+
+    const onScrollToIndexFailed = useCallback<
+      NonNullable<
+        FlatListProps<EnhancedGitHubIssueOrPullRequest>['onScrollToIndexFailed']
+      >
+    >(info => {
+      console.error(info)
+      bugsnag.notify({
+        name: 'ScrollToIndexFailed',
+        message: 'Failed to scroll to index',
+        ...info,
+      })
+    }, [])
+
+    const refreshControl = useMemo(
+      () => (
+        <RefreshControl
+          intervalRefresh={lastFetchedAt}
+          onRefresh={refresh}
+          refreshing={false}
+          title={
+            lastFetchedAt
+              ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
+              : 'Pull to refresh'
+          }
+        />
+      ),
+      [lastFetchedAt, refresh],
+    )
+
+    const rerender = useMemo(() => ({}), [
+      renderItem,
+      renderHeader,
+      renderFooter,
+    ])
+
+    if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
+      return (
+        <EmptyCards
+          column={column}
+          errorMessage={`You have reached the limit of ${
+            constants.COLUMNS_LIMIT
+          } columns. This is to maintain a healthy usage of the GitHub API.`}
+          errorTitle="Too many columns"
+          fetchNextPage={undefined}
+          loadState="error"
+          refresh={undefined}
+        />
+      )
     }
+
+    const _estimatedItemSize = (getItemLayout(items, 0) || {}).length || 89
+    const _nItemsThatFitInTheWindow = Math.ceil(
+      Dimensions.get('window').height / _estimatedItemSize,
+    )
 
     return (
       <FlatList
@@ -418,7 +459,8 @@ export const IssueOrPullRequestCards = React.memo(
         data={items}
         disableVirtualization={Platform.OS === 'web'}
         extraData={rerender}
-        initialNumToRender={Math.ceil(Dimensions.get('window').height / 100)}
+        getItemLayout={getItemLayout}
+        initialNumToRender={_nItemsThatFitInTheWindow}
         keyExtractor={keyExtractor}
         onScrollToIndexFailed={onScrollToIndexFailed}
         onViewableItemsChanged={handleViewableItemsChanged}
@@ -426,7 +468,7 @@ export const IssueOrPullRequestCards = React.memo(
         refreshControl={refreshControl}
         removeClippedSubviews={Platform.OS !== 'web'}
         renderItem={renderItem}
-        stickyHeaderIndices={[0]}
+        stickyHeaderIndices={stickyHeaderIndices}
         viewabilityConfig={viewabilityConfig}
         windowSize={2}
       />

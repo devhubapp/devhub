@@ -8,7 +8,7 @@ export type BaseActionType = 'BUTTON' | 'FULL'
 
 export interface BaseSwipeableRowAction {
   color: string
-  icon?: GitHubIcon
+  icon?: string
   key: string
   label?: string
   onPress: () => void

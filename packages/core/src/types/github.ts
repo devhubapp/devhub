@@ -256,7 +256,7 @@ export interface GitHubRepo {
   private: boolean
   owner?: GitHubOrg | GitHubUser | undefined
   url: string // https://api.github.com/repos/facebook/react
-  html_url: string // https://github.com/facebook/react
+  html_url?: string // https://github.com/facebook/react
 }
 
 export interface GitHubPage {

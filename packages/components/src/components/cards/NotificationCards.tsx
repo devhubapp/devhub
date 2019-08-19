@@ -9,12 +9,13 @@ import {
   getDateSmallText,
   isItemRead,
 } from '@devhub/core'
+import { useCardGetItemLayout } from '../../hooks/use-card-get-item-layout'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
-import { Platform } from '../../libs/platform'
+import { Platform } from '../../libs/platform/index.web'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
@@ -33,7 +34,10 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
 
 export interface NotificationCardsProps
-  extends Omit<NotificationCardProps, 'notification' | 'isFocused'> {
+  extends Omit<
+    NotificationCardProps,
+    'cachedCardProps' | 'notification' | 'isFocused'
+  > {
   column: Column
   columnIndex: number
   disableItemFocus: boolean
@@ -42,6 +46,7 @@ export interface NotificationCardsProps
   items: EnhancedGitHubNotification[]
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
+  ownerIsKnown: boolean
   pointerEvents: FlatListProps<any>['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
@@ -51,6 +56,8 @@ export interface NotificationCardsProps
 function keyExtractor(item: EnhancedGitHubNotification) {
   return `notification-card-${item.id}`
 }
+
+const stickyHeaderIndices = [0]
 
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
@@ -62,8 +69,11 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     items,
     lastFetchedAt,
     loadState,
+    ownerIsKnown,
     pointerEvents,
     refresh,
+    repoIsKnown,
+    swipeable,
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubNotification>>(null)
@@ -129,17 +139,15 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     actions.setColumnClearedAtFilter,
   )
 
-  const _handleViewableItemsChanged: FlatListProps<
-    EnhancedGitHubNotification
-  >['onViewableItemsChanged'] = ({ viewableItems }) => {
+  const handleViewableItemsChanged = useCallback<
+    NonNullable<
+      FlatListProps<EnhancedGitHubNotification>['onViewableItemsChanged']
+    >
+  >(({ viewableItems }) => {
     visibleItemIndexesRef.current = viewableItems
       .filter(v => v.isViewable && typeof v.index === 'number')
       .map(v => v.index!)
-  }
-  const handleViewableItemsChanged = useCallback(
-    _handleViewableItemsChanged,
-    [],
-  )
+  }, [])
 
   const viewabilityConfig = useMemo(
     () => ({
@@ -150,44 +158,68 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   const isEmpty = !items.length
 
-  const _renderItem: FlatListProps<
-    EnhancedGitHubNotification
-  >['renderItem'] = ({ item }) => {
-    if (props.swipeable) {
-      return (
-        <SwipeableNotificationCard
-          isFocused={
-            column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current &&
-            !disableItemFocus
-          }
-          notification={item}
-          repoIsKnown={props.repoIsKnown}
-          swipeable={props.swipeable}
-        />
-      )
-    }
+  const { getItemLayout, itemCardProps, itemLayouts } = useCardGetItemLayout(
+    'notifications',
+    items,
+    {
+      ownerIsKnown,
+      repoIsKnown,
+    },
+  )
 
-    return (
-      <ErrorBoundary>
-        <NotificationCard
-          isFocused={
-            column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current &&
-            !disableItemFocus
-          }
-          notification={item}
-          repoIsKnown={props.repoIsKnown}
-          swipeable={props.swipeable}
-        />
-      </ErrorBoundary>
-    )
-  }
-  const renderItem = useCallback(_renderItem, [
-    column.id === focusedColumnId && selectedItemIdRef.current,
-    props.repoIsKnown,
-    props.swipeable,
-  ])
+  const renderItem = useCallback<
+    NonNullable<FlatListProps<EnhancedGitHubNotification>['renderItem']>
+  >(
+    ({ item, index }) => {
+      const height = itemLayouts[index] && itemLayouts[index]!.length
+
+      if (swipeable) {
+        return (
+          <View style={{ height }}>
+            <SwipeableNotificationCard
+              cachedCardProps={itemCardProps[index]}
+              isFocused={
+                column.id === focusedColumnId &&
+                item.id === selectedItemIdRef.current &&
+                !disableItemFocus
+              }
+              notification={item}
+              ownerIsKnown={ownerIsKnown}
+              repoIsKnown={repoIsKnown}
+              swipeable={swipeable}
+            />
+          </View>
+        )
+      }
+
+      return (
+        <ErrorBoundary>
+          <View style={{ height }}>
+            <NotificationCard
+              cachedCardProps={itemCardProps[index]}
+              isFocused={
+                column.id === focusedColumnId &&
+                item.id === selectedItemIdRef.current &&
+                !disableItemFocus
+              }
+              notification={item}
+              ownerIsKnown={ownerIsKnown}
+              repoIsKnown={repoIsKnown}
+              swipeable={swipeable}
+            />
+          </View>
+        </ErrorBoundary>
+      )
+    },
+    [
+      column.id === focusedColumnId && selectedItemIdRef.current,
+      itemCardProps,
+      itemLayouts,
+      ownerIsKnown,
+      repoIsKnown,
+      swipeable,
+    ],
+  )
 
   const renderHeader = useCallback(() => {
     return (
@@ -263,21 +295,38 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     refresh,
   ])
 
-  const _onScrollToIndexFailed: FlatListProps<
-    string
-  >['onScrollToIndexFailed'] = (info: {
-    index: number
-    highestMeasuredFrameIndex: number
-    averageItemLength: number
-  }) => {
+  const renderEmptyComponent = useCallback(() => {
+    if (items && items.length) return null
+
+    return (
+      <EmptyCards
+        clearMessage="No new notifications!"
+        column={column}
+        disableLoadingIndicator
+        errorMessage={errorMessage}
+        fetchNextPage={fetchNextPage}
+        loadState={loadState}
+        refresh={refresh}
+      />
+    )
+  }, [
+    items.length ? undefined : column,
+    items.length ? undefined : errorMessage,
+    items.length ? undefined : fetchNextPage,
+    items.length ? undefined : loadState,
+    items.length ? undefined : refresh,
+  ])
+
+  const onScrollToIndexFailed = useCallback<
+    NonNullable<FlatListProps<string>['onScrollToIndexFailed']>
+  >(info => {
     console.error(info)
     bugsnag.notify({
       name: 'ScrollToIndexFailed',
       message: 'Failed to scroll to index',
       ...info,
     })
-  }
-  const onScrollToIndexFailed = useCallback(_onScrollToIndexFailed, [])
+  }, [])
 
   const refreshControl = useMemo(
     () => (
@@ -312,19 +361,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     )
   }
 
-  function renderEmptyComponent() {
-    return (
-      <EmptyCards
-        clearMessage="No new notifications!"
-        column={column}
-        disableLoadingIndicator
-        errorMessage={errorMessage}
-        fetchNextPage={fetchNextPage}
-        loadState={loadState}
-        refresh={refresh}
-      />
-    )
-  }
+  const _estimatedItemSize = (getItemLayout(items, 0) || {}).length || 89
+  const _nItemsThatFitInTheWindow = Math.ceil(
+    Dimensions.get('window').height / _estimatedItemSize,
+  )
 
   return (
     <FlatList
@@ -342,7 +382,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}
-      initialNumToRender={Math.ceil(Dimensions.get('window').height / 120)}
+      getItemLayout={getItemLayout}
+      initialNumToRender={_nItemsThatFitInTheWindow}
       keyExtractor={keyExtractor}
       onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
@@ -350,7 +391,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       refreshControl={refreshControl}
       removeClippedSubviews={Platform.OS !== 'web'}
       renderItem={renderItem}
-      stickyHeaderIndices={[0]}
+      stickyHeaderIndices={stickyHeaderIndices}
       viewabilityConfig={viewabilityConfig}
       windowSize={2}
     />

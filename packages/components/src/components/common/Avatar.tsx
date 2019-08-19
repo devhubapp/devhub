@@ -2,6 +2,7 @@ import React from 'react'
 import { PixelRatio, StyleProp, View } from 'react-native'
 
 import {
+  getBaseUrlFromOtherUrl,
   getGitHubURLForRepo,
   getGitHubURLForUser,
   getUserAvatarByAvatarURL,
@@ -79,20 +80,22 @@ export function Avatar(props: AvatarProps) {
     (username &&
       getUserAvatarByUsername(
         username,
-        { size: finalSize },
+        { baseURL: getBaseUrlFromOtherUrl(linkURL), size: finalSize },
         PixelRatio.getPixelSizeForLayoutSize,
       )) ||
     (email &&
       getUserAvatarByEmail(
         email,
-        { size: finalSize },
+        { baseURL: getBaseUrlFromOtherUrl(linkURL), size: finalSize },
         PixelRatio.getPixelSizeForLayoutSize,
       ))
 
   if (!uri) return null
 
   const tooltip =
-    !_tooltip && _tooltip !== undefined ? '' : _tooltip || `@${username}`
+    !_tooltip && _tooltip !== undefined
+      ? ''
+      : _tooltip || (username && `@${username}`) || ''
 
   const linkUri = disableLink
     ? undefined
@@ -120,7 +123,7 @@ export function Avatar(props: AvatarProps) {
       <ThemedImageWithLoading
         backgroundColorFailed="#FFFFFF"
         backgroundColorLoaded="#FFFFFF"
-        backgroundColorLoading="backgroundColorLess1"
+        backgroundColorLoading="foregroundColorTransparent05"
         {...otherProps}
         source={{ uri, width: finalSize + 1, height: finalSize + 1 }}
         style={[

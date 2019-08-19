@@ -68,7 +68,9 @@ export const ThemedImageWithLoading = React.forwardRef<
   const backgroundColorLoading = getThemeColorOrItself(
     theme,
     _backgroundColorLoading,
-    { enableCSSVariable: true },
+    {
+      enableCSSVariable: true,
+    },
   )
 
   return (

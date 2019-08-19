@@ -78,16 +78,14 @@ export const MainScreen = React.memo(() => {
       isInitial?: boolean
       url: string
     }) => {
+      if (isInitial) return
+
       const querystring = url.parse(uri).query || ''
       const query = qs.parse(querystring)
-
       if (!query.installation_id) return
 
       clearQueryStringFromURL(['installation_id', 'setup_action'])
-
-      if (!isInitial) {
-        refreshInstallationsRequest({ includeInstallationToken: true })
-      }
+      refreshInstallationsRequest({ includeInstallationToken: true })
     }
 
     Linking.addEventListener('url', handler)

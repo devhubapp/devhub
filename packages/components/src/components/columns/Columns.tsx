@@ -4,6 +4,7 @@ import { Dimensions, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
@@ -39,6 +40,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const { pointerEvents, style, ...otherProps } = props
 
   const { sizename } = useAppLayout()
+  const { appViewMode } = useAppViewMode()
   const columnWidth = useColumnWidth()
   const { focusedColumnId, focusedColumnIndex } = useFocusedColumn()
 
@@ -89,7 +91,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const pagingEnabled = sizename < '3-large'
   const swipeable = constants.DISABLE_SWIPEABLE_CARDS
     ? false
-    : sizename === '1-small'
+    : appViewMode === 'single-column'
 
   const renderItem: FlatListProps<string>['renderItem'] = useCallback(
     ({ item: columnId }) => {
@@ -105,7 +107,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
     [pagingEnabled, pointerEvents, swipeable],
   )
 
-  const getItemLayout: FlatListProps<string>['getItemLayout'] = useCallback(
+  const getItemLayout = useCallback<
+    NonNullable<FlatListProps<string>['getItemLayout']>
+  >(
     (_data, index) => ({
       index,
       length: columnWidth,
@@ -171,6 +175,12 @@ export const Columns = React.memo((props: ColumnsProps) => {
   )
   */
 
+  const _estimatedItemSize =
+    (getItemLayout(columnIds, 0) || {}).length || columnWidth
+  const _nItemsThatFitInTheWindow = Math.ceil(
+    Dimensions.get('window').width / _estimatedItemSize,
+  )
+
   return (
     <FlatList
       ref={flatListRef}
@@ -181,9 +191,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       disableVirtualization={Platform.OS === 'web'}
       getItemLayout={getItemLayout}
       horizontal
-      initialNumToRender={Math.ceil(
-        Dimensions.get('window').width / columnWidth,
-      )}
+      initialNumToRender={_nItemsThatFitInTheWindow}
       keyExtractor={keyExtractor}
       onScrollToIndexFailed={onScrollToIndexFailed}
       // onViewableItemsChanged={onViewableItemsChanged}

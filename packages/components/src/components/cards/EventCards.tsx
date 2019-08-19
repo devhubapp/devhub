@@ -9,6 +9,7 @@ import {
   getDateSmallText,
   isItemRead,
 } from '@devhub/core'
+import { useCardGetItemLayout } from '../../hooks/use-card-get-item-layout'
 import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -34,7 +35,7 @@ import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableEventCard } from './SwipeableEventCard'
 
 export interface EventCardsProps
-  extends Omit<EventCardProps, 'event' | 'isFocused'> {
+  extends Omit<EventCardProps, 'cachedCardProps' | 'event' | 'isFocused'> {
   column: Column
   columnIndex: number
   disableItemFocus: boolean
@@ -43,7 +44,8 @@ export interface EventCardsProps
   items: EnhancedGitHubEvent[]
   lastFetchedAt: string | undefined
   loadState: EnhancedLoadState
-  pointerEvents: FlatListProps<any>['pointerEvents']
+  ownerIsKnown: boolean
+  pointerEvents: FlatListProps<EnhancedGitHubEvent>['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
   swipeable: boolean
@@ -52,6 +54,8 @@ export interface EventCardsProps
 function keyExtractor(item: EnhancedGitHubEvent, _index: number) {
   return `event-card-${item.id}`
 }
+
+const stickyHeaderIndices = [0]
 
 export const EventCards = React.memo((props: EventCardsProps) => {
   const {
@@ -63,8 +67,11 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     items,
     lastFetchedAt,
     loadState,
+    ownerIsKnown,
     pointerEvents,
     refresh,
+    repoIsKnown,
+    swipeable,
   } = props
 
   const flatListRef = React.useRef<FlatList<EnhancedGitHubEvent>>(null)
@@ -152,45 +159,65 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   const isEmpty = !items.length
 
-  const _renderItem: FlatListProps<EnhancedGitHubEvent>['renderItem'] = ({
-    item,
-  }) => {
-    if (props.swipeable) {
+  const { getItemLayout, itemLayouts, itemCardProps } = useCardGetItemLayout(
+    'activity',
+    items,
+    { ownerIsKnown, repoIsKnown },
+  )
+
+  const renderItem = useCallback<
+    NonNullable<FlatListProps<EnhancedGitHubEvent>['renderItem']>
+  >(
+    ({ item, index }) => {
+      const height = itemLayouts[index] && itemLayouts[index]!.length
+
+      if (swipeable) {
+        return (
+          <View style={{ height }}>
+            <SwipeableEventCard
+              cachedCardProps={itemCardProps[index]}
+              event={item}
+              isFocused={
+                column.id === focusedColumnId &&
+                item.id === selectedItemIdRef.current &&
+                !disableItemFocus
+              }
+              ownerIsKnown={ownerIsKnown}
+              repoIsKnown={repoIsKnown}
+              swipeable={swipeable}
+            />
+          </View>
+        )
+      }
+
       return (
-        <SwipeableEventCard
-          event={item}
-          isFocused={
-            column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current &&
-            !disableItemFocus
-          }
-          repoIsKnown={props.repoIsKnown}
-          swipeable={props.swipeable}
-        />
+        <ErrorBoundary>
+          <View style={{ height }}>
+            <EventCard
+              cachedCardProps={itemCardProps[index]}
+              event={item}
+              isFocused={
+                column.id === focusedColumnId &&
+                item.id === selectedItemIdRef.current &&
+                !disableItemFocus
+              }
+              ownerIsKnown={ownerIsKnown}
+              repoIsKnown={repoIsKnown}
+              swipeable={swipeable}
+            />
+          </View>
+        </ErrorBoundary>
       )
-    }
-
-    return (
-      <ErrorBoundary>
-        <EventCard
-          event={item}
-          isFocused={
-            column.id === focusedColumnId &&
-            item.id === selectedItemIdRef.current &&
-            !disableItemFocus
-          }
-          repoIsKnown={props.repoIsKnown}
-          swipeable={props.swipeable}
-        />
-      </ErrorBoundary>
-    )
-  }
-
-  const renderItem = useCallback(_renderItem, [
-    column.id === focusedColumnId && selectedItemIdRef.current,
-    props.swipeable,
-    props.repoIsKnown,
-  ])
+    },
+    [
+      column.id === focusedColumnId && selectedItemIdRef.current,
+      itemCardProps,
+      itemLayouts,
+      ownerIsKnown,
+      repoIsKnown,
+      swipeable,
+    ],
+  )
 
   const renderHeader = useCallback(() => {
     return (
@@ -266,21 +293,35 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     refresh,
   ])
 
-  const _onScrollToIndexFailed: FlatListProps<
-    string
-  >['onScrollToIndexFailed'] = (info: {
-    index: number
-    highestMeasuredFrameIndex: number
-    averageItemLength: number
-  }) => {
+  const renderEmptyComponent = useCallback(() => {
+    return (
+      <EmptyCards
+        column={column}
+        disableLoadingIndicator
+        errorMessage={errorMessage}
+        fetchNextPage={fetchNextPage}
+        loadState={loadState}
+        refresh={refresh}
+      />
+    )
+  }, [
+    items.length ? undefined : column,
+    items.length ? undefined : errorMessage,
+    items.length ? undefined : fetchNextPage,
+    items.length ? undefined : loadState,
+    items.length ? undefined : refresh,
+  ])
+
+  const onScrollToIndexFailed = useCallback<
+    NonNullable<FlatListProps<EnhancedGitHubEvent>['onScrollToIndexFailed']>
+  >(info => {
     console.error(info)
     bugsnag.notify({
       name: 'ScrollToIndexFailed',
       message: 'Failed to scroll to index',
       ...info,
     })
-  }
-  const onScrollToIndexFailed = useCallback(_onScrollToIndexFailed, [])
+  }, [])
 
   const refreshControl = useMemo(
     () => (
@@ -338,18 +379,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     )
   }
 
-  function renderEmptyComponent() {
-    return (
-      <EmptyCards
-        column={column}
-        disableLoadingIndicator
-        errorMessage={errorMessage}
-        fetchNextPage={fetchNextPage}
-        loadState={loadState}
-        refresh={refresh}
-      />
-    )
-  }
+  const _estimatedItemSize = (getItemLayout(items, 0) || {}).length || 89
+  const _nItemsThatFitInTheWindow = Math.ceil(
+    Dimensions.get('window').height / _estimatedItemSize,
+  )
 
   return (
     <FlatList
@@ -366,7 +399,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       data={items}
       disableVirtualization={Platform.OS === 'web'}
       extraData={rerender}
-      initialNumToRender={Math.ceil(Dimensions.get('window').height / 80)}
+      getItemLayout={getItemLayout}
+      initialNumToRender={_nItemsThatFitInTheWindow}
       keyExtractor={keyExtractor}
       onScrollToIndexFailed={onScrollToIndexFailed}
       onViewableItemsChanged={handleViewableItemsChanged}
@@ -374,7 +408,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       refreshControl={refreshControl}
       removeClippedSubviews={Platform.OS !== 'web'}
       renderItem={renderItem}
-      stickyHeaderIndices={[0]}
+      stickyHeaderIndices={stickyHeaderIndices}
       viewabilityConfig={viewabilityConfig}
       windowSize={2}
     />

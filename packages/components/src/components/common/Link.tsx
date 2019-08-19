@@ -1,4 +1,3 @@
-import { rgba } from 'polished'
 import React, {
   AnchorHTMLAttributes,
   useCallback,
@@ -13,6 +12,7 @@ import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
+import { sharedStyles } from '../../styles/shared'
 import { EMPTY_OBJ } from '../../utils/constants'
 import { findNode } from '../../utils/helpers/shared'
 import { useTheme } from '../context/ThemeContext'
@@ -62,73 +62,57 @@ export function Link(props: LinkProps) {
   } = props
 
   const analyticsLabel = _analyticsLabel && _analyticsLabel.replace(/-/g, '_')
-
-  const flatContainerStyle =
-    StyleSheet.flatten([{ maxWidth: '100%' }, otherProps.style]) || EMPTY_OBJ
-
-  const flatTextStyle =
-    StyleSheet.flatten([textProps && textProps.style]) || EMPTY_OBJ
-
   const openOnNewTab = _openOnNewTab || Platform.isElectron
 
+  const theme = useTheme()
   const cacheRef = useRef({ isHovered: false })
 
-  const theme = useTheme()
+  const _flatContainerStyle = StyleSheet.flatten(otherProps.style) || EMPTY_OBJ
+
+  const _flatTextStyle =
+    StyleSheet.flatten(textProps && textProps.style) || EMPTY_OBJ
+
+  const backgroundColor =
+    (backgroundThemeColor &&
+      getThemeColorOrItself(theme, backgroundThemeColor)) ||
+    _flatContainerStyle.backgroundColor
+
+  const color =
+    (textProps &&
+      textProps.color &&
+      getThemeColorOrItself(theme, textProps.color)) ||
+    _flatTextStyle.color
 
   const updateStyles = useCallback(() => {
     const { isHovered } = cacheRef.current
 
-    const hoverBackgroundThemeColor = getThemeColorOrItself(
-      theme,
-      _hoverBackgroundThemeColor,
-    )
+    const hoverBackgroundColor = enableBackgroundHover
+      ? getThemeColorOrItself(
+          theme,
+          _hoverBackgroundThemeColor || 'foregroundColorTransparent10',
+        )
+      : undefined
 
-    const hoverForegroundThemeColor = getThemeColorOrItself(
-      theme,
-      _hoverForegroundThemeColor,
-    )
+    const hoverForegroundColor = enableForegroundHover
+      ? getThemeColorOrItself(
+          theme,
+          _hoverForegroundThemeColor || 'primaryBackgroundColor',
+        )
+      : undefined
 
     if (containerRef.current) {
-      const hoverBackgroundColor = enableBackgroundHover
-        ? (hoverBackgroundThemeColor && hoverBackgroundThemeColor) ||
-          rgba(theme.invert().foregroundColor, 0.2)
-        : undefined
-
-      const backgroundColor =
-        (backgroundThemeColor &&
-          getThemeColorOrItself(theme, backgroundThemeColor)) ||
-        flatContainerStyle.backgroundColor
-
       containerRef.current!.setNativeProps({
         style: {
           backgroundColor:
-            hoverBackgroundColor && isHovered
-              ? hoverBackgroundColor
-              : backgroundColor ||
-                (hoverBackgroundColor ? rgba(hoverBackgroundColor, 0) : null),
+            (isHovered && hoverBackgroundColor) || backgroundColor,
         },
       })
     }
 
     if (textRef.current) {
-      const hoverForegroundColor = enableForegroundHover
-        ? (hoverForegroundThemeColor && hoverForegroundThemeColor) ||
-          theme.primaryBackgroundColor
-        : undefined
-
-      const color =
-        (textProps &&
-          textProps.color &&
-          getThemeColorOrItself(theme, textProps.color)) ||
-        flatTextStyle.color
-
       textRef.current.setNativeProps({
         style: {
-          color:
-            hoverForegroundColor && isHovered
-              ? hoverForegroundColor
-              : color ||
-                (hoverForegroundColor ? rgba(hoverForegroundColor, 0) : null),
+          color: (isHovered && hoverForegroundColor) || color,
         },
       })
     }
@@ -138,8 +122,8 @@ export function Link(props: LinkProps) {
     backgroundThemeColor,
     enableBackgroundHover,
     enableForegroundHover,
-    flatContainerStyle.backgroundColor,
-    flatTextStyle.color,
+    backgroundColor,
+    color,
     textProps && textProps.color,
     theme,
   ])
@@ -218,13 +202,13 @@ export function Link(props: LinkProps) {
           ...otherProps,
         } as any,
       }),
-      style: flatContainerStyle,
+      style: [sharedStyles.fullMaxWidth, otherProps.style, { backgroundColor }],
     }
   } else {
     finalProps = {
       ...otherProps,
       onPress,
-      style: flatContainerStyle,
+      style: [sharedStyles.fullMaxWidth, otherProps.style, { backgroundColor }],
     }
   }
 
@@ -233,7 +217,7 @@ export function Link(props: LinkProps) {
     (typeof finalProps.children !== 'string' && enableTextWrapper === true)
   ) {
     finalProps.children = (
-      <ThemedText ref={textRef} {...textProps}>
+      <ThemedText ref={textRef} {...textProps} color={color as any}>
         {finalProps.children}
       </ThemedText>
     )

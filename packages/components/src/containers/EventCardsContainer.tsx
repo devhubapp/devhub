@@ -36,7 +36,7 @@ export type EventCardsContainerProps = Omit<
 
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
-    const { column, repoIsKnown, ...otherProps } = props
+    const { column, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -93,7 +93,7 @@ export const EventCardsContainer = React.memo(
 
     const { allItems, filteredItems, loadState } = useColumnData<
       EnhancedGitHubEvent
-    >(column.id, { mergeSimilar: true })
+    >(column.id, { mergeSimilar: false })
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderEventDate(allItems)
@@ -257,7 +257,6 @@ export const EventCardsContainer = React.memo(
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
         loadState={loadState}
         refresh={refresh}
-        repoIsKnown={repoIsKnown}
       />
     )
   },

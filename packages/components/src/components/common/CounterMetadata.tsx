@@ -30,7 +30,7 @@ interface NumberMetadata {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingVertical: contentPadding / 8,
+    paddingVertical: 1,
     paddingHorizontal: contentPadding / 2,
     borderWidth: 1,
     borderColor: 'transparent',

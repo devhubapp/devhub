@@ -672,7 +672,7 @@ const SidebarColumnItem = React.memo(
           .trim()}
         unreadIndicatorBackgroundThemeColor={
           getColumnOption(column, 'enableAppIconUnreadIndicator', Platform.OS)
-            ? 'red'
+            ? 'lightRed'
             : undefined
         }
       />

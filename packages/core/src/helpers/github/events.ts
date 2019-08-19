@@ -4,6 +4,7 @@ import moment from 'moment'
 
 import {
   EnhancedGitHubEvent,
+  GitHubComment,
   GitHubCommitCommentEvent,
   GitHubCreateEvent,
   GitHubEnhancedEventBase,
@@ -30,10 +31,10 @@ import {
 import { constants } from '../../utils'
 import { isEventPrivate } from '../shared'
 import {
-  getBranchNameFromRef,
   getCommitIconAndColor,
   getIssueIconAndColor,
   getItemIsBot,
+  getNameFromRef,
   getOwnerAndRepo,
   getPullRequestIconAndColor,
   getReleaseIconAndColor,
@@ -106,8 +107,11 @@ export function getEventMetadata(
         appendColon?: boolean
         includeBranch?: boolean
         includeFork?: boolean
+        includeRepo?: boolean
         includeTag?: boolean
+        includeUser?: boolean
         issueOrPullRequestIsKnown?: boolean
+        ownerIsKnown?: boolean
         repoIsKnown?: boolean
       }
     | undefined = {},
@@ -120,10 +124,17 @@ export function getEventMetadata(
     appendColon,
     includeBranch,
     includeFork,
+    includeRepo,
     includeTag,
+    includeUser,
     issueOrPullRequestIsKnown,
+    ownerIsKnown,
     repoIsKnown,
   } = options
+
+  const repoFullName =
+    ('repo' in event && getRepoFullNameFromObject(event.repo)) ||
+    ('repos' in event && getRepoFullNameFromObject(event.repos[0]))
 
   const isDraftPR =
     ('pull_request' in event.payload && isDraft(event.payload.pull_request)) ||
@@ -133,9 +144,16 @@ export function getEventMetadata(
 
   const issueText = issueOrPullRequestIsKnown ? 'this issue' : 'an issue'
   const pullRequestText = issueOrPullRequestIsKnown
-    ? `this ${isDraftPR ? 'draft pull request' : 'pull request'}`
-    : `a ${isDraftPR ? 'draft pull request' : 'pull request'}`
-  const repositoryText = repoIsKnown ? 'this repository' : 'a repository'
+    ? `this ${isDraftPR ? 'draft pr' : 'pr'}`
+    : `a ${isDraftPR ? 'draft pr' : 'pr'}`
+  let repositoryText = repoIsKnown
+    ? 'this repository'
+    : (includeRepo && repoFullName) || 'a repository'
+
+  if (ownerIsKnown && repositoryText === repoFullName) {
+    const { owner } = getOwnerAndRepo(repositoryText)
+    if (owner) repositoryText = repositoryText.replace(`${owner}/`, '')
+  }
 
   const colonText = appendColon ? ':' : ''
 
@@ -158,7 +176,7 @@ export function getEventMetadata(
       case 'CommitCommentEvent': {
         return {
           action: 'commented',
-          actionText: `Commented on a commit${colonText}`,
+          actionText: `Commented on commit${colonText}`,
           subjectType: 'Commit',
         }
       }
@@ -171,12 +189,12 @@ export function getEventMetadata(
               subjectType: 'Repository',
             }
           case 'branch': {
-            const branch = getBranchNameFromRef(event.payload.ref || undefined)
+            const branch = getNameFromRef(event.payload.ref || undefined)
             return {
               action: 'created',
               actionText:
                 includeBranch && branch
-                  ? `Created the branch ${branch}`
+                  ? `Created branch ${branch}`
                   : `Created a branch${colonText}`,
               subjectType: 'Branch',
             }
@@ -187,7 +205,7 @@ export function getEventMetadata(
               action: 'created',
               actionText:
                 includeTag && tag
-                  ? `Created the tag ${tag}`
+                  ? `Created tag ${tag}`
                   : `Created a tag${colonText}`,
               subjectType: 'Tag',
             }
@@ -210,12 +228,12 @@ export function getEventMetadata(
               subjectType: 'Repository',
             }
           case 'branch': {
-            const branch = getBranchNameFromRef(event.payload.ref)
+            const branch = getNameFromRef(event.payload.ref)
             return {
               action: 'deleted',
               actionText:
                 includeBranch && branch
-                  ? `Deleted the branch ${branch}`
+                  ? `Deleted branch ${branch}`
                   : `Deleted a branch${colonText}`,
               subjectType: 'Branch',
             }
@@ -226,7 +244,7 @@ export function getEventMetadata(
               action: 'deleted',
               actionText:
                 includeTag && tag
-                  ? `Deleted the tag ${tag}`
+                  ? `Deleted tag ${tag}`
                   : `Deleted a tag${colonText}`,
               subjectType: 'Tag',
             }
@@ -242,11 +260,20 @@ export function getEventMetadata(
 
       case 'ForkEvent': {
         const fork = event.payload.forkee
-        const forkFullName = fork && fork.full_name
+        const forkFullName =
+          fork && (fork.full_name || getRepoFullNameFromObject(fork))
+        const isSameName =
+          forkFullName &&
+          forkFullName.split('/')[1] === repositoryText.split('/')[1]
+
         return {
           action: 'forked',
           actionText: includeFork
-            ? `Forked ${repositoryText} to ${forkFullName}`
+            ? `Forked ${repositoryText}${
+                !repoIsKnown && forkFullName && !isSameName
+                  ? ` to ${forkFullName}`
+                  : ''
+              }`
             : `Forked ${repositoryTextWithColon}`,
           subjectType: 'Repository',
         }
@@ -369,10 +396,13 @@ export function getEventMetadata(
       }
 
       case 'MemberEvent': {
+        const username = event.payload.member && event.payload.member.login
         return {
           action: 'added',
-          actionText: `Added a user ${repositoryText &&
-            `to ${repositoryTextWithColon}`}`,
+          actionText:
+            includeUser && username
+              ? `Added ${username} to ${repositoryTextWithColon}`
+              : `Added a user to ${repositoryTextWithColon}`,
           subjectType: 'User',
         }
       }
@@ -505,18 +535,13 @@ export function getEventMetadata(
 
       case 'PushEvent': {
         const commits = event.payload.commits || [{}]
-        // const commit = event.payload.head_commit || commits[0];
-        const count =
-          Math.max(
-            ...[
-              1,
-              event.payload.size,
-              event.payload.distinct_size,
-              commits.length,
-            ],
-          ) || 1
+        const count = Math.max(
+          commits.length || 1,
+          event.payload.distinct_size || 1,
+          event.payload.size || 1,
+        )
 
-        const branch = getBranchNameFromRef(event.payload.ref)
+        const branch = getNameFromRef(event.payload.ref)
         const pushedText = event.forced ? 'Force pushed' : 'Pushed'
         const commitText = count > 1 ? ` ${count} commits` : ' a commit'
         const branchText = includeBranch && branch ? ` to ${branch}` : ''
@@ -727,11 +752,11 @@ export function getEventIconAndColor(
     case 'DeleteEvent': {
       switch (event.payload.ref_type) {
         case 'repository':
-          return { icon: 'repo', color: 'red' }
+          return { icon: 'repo', color: 'lightRed' }
         case 'branch':
-          return { icon: 'git-branch', color: 'red' }
+          return { icon: 'git-branch', color: 'lightRed' }
         case 'tag':
-          return { icon: 'tag', color: 'red' }
+          return { icon: 'tag', color: 'lightRed' }
         default:
           return { icon: 'trashcan' }
       }
@@ -817,7 +842,9 @@ export function getEventIconAndColor(
     }
 
     case 'PushEvent':
-      return { icon: 'code' }
+      return {
+        icon: 'code',
+      }
 
     case 'ReleaseEvent':
       return isTagMainEvent(event)
@@ -902,9 +929,12 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
   const { repo: _repo } = event as GitHubEvent
   const { repos: _repos } = event as MultipleStarEvent
 
-  const { comment } = payload as GitHubCommitCommentEvent['payload']
+  const comment:
+    | GitHubComment
+    | undefined = (payload as GitHubCommitCommentEvent['payload']).comment
   const { commits: _commits } = payload as GitHubPushEvent['payload']
-  const { forkee } = payload as GitHubForkEvent['payload']
+  const forkee: GitHubRepo | undefined = (payload as GitHubForkEvent['payload'])
+    .forkee
   const { member: _member } = payload as GitHubMemberEvent['payload']
   let { release } = payload as GitHubReleaseEvent['payload']
   const { pages: _pages } = payload as GitHubGollumEvent['payload']
@@ -914,7 +944,7 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
   const { issue } = payload as GitHubIssuesEvent['payload']
   const { ref: branchOrTagRef } = payload as GitHubPushEvent['payload']
 
-  let branchName = getBranchNameFromRef(branchOrTagRef)
+  const branchOrTagName = getNameFromRef(branchOrTagRef)
 
   const issueOrPullRequest = (issue || pullRequest) as
     | typeof issue
@@ -964,8 +994,6 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
   if (event.type === 'CreateEvent' || event.type === 'DeleteEvent') {
     const p = payload as GitHubCreateEvent['payload']
 
-    if (p.ref_type !== 'branch') branchName = ''
-
     if (!release && p.ref_type === 'tag') {
       release = {
         id: '',
@@ -1013,8 +1041,7 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
   return {
     actor,
     avatarUrl,
-    branchName,
-    branchOrTagRef,
+    branchOrTagName,
     comment,
     commitShas,
     commits,

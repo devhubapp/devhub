@@ -10,7 +10,7 @@ import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 export interface NotificationColumnProps
   extends Omit<
     NotificationCardsContainerProps,
-    'disableItemFocus' | 'repoIsKnown'
+    'disableItemFocus' | 'ownerIsKnown' | 'repoIsKnown'
   > {
   columnIndex: number
   headerDetails: ReturnType<typeof getColumnHeaderDetails>
@@ -35,6 +35,7 @@ export const NotificationColumn = React.memo(
           column={column}
           columnIndex={columnIndex}
           disableItemFocus={disableItemFocus}
+          ownerIsKnown={!!(headerDetails && headerDetails.ownerIsKnown)}
           pointerEvents={pointerEvents}
           swipeable={swipeable}
           repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}
@@ -45,6 +46,7 @@ export const NotificationColumn = React.memo(
         columnIndex,
         pointerEvents,
         swipeable,
+        headerDetails && headerDetails.ownerIsKnown,
         headerDetails && headerDetails.repoIsKnown,
       ],
     )

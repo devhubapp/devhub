@@ -38,6 +38,7 @@ module.exports = {
         'less-3': 'var(--theme-background-color-less-3)',
         'less-4': 'var(--theme-background-color-less-4)',
         'less-5': 'var(--theme-background-color-less-5)',
+        'transparent-05': 'var(--theme-background-color-transparent-05)',
         'transparent-10': 'var(--theme-background-color-transparent-10)',
       },
       text: {
@@ -48,6 +49,10 @@ module.exports = {
           25: 'var(--theme-foreground-color-muted-25)',
           40: 'var(--theme-foreground-color-muted-40)',
           65: 'var(--theme-foreground-color-muted-65)',
+        },
+        transparent: {
+          05: 'var(--theme-foreground-color-transparent-05)',
+          10: 'var(--theme-foreground-color-transparent-10)',
         },
       },
     },

@@ -56,7 +56,7 @@ let issuesOrPullRequestsCache: EnhancementCache
 let notificationsCache: EnhancementCache
 
 function* init() {
-  yield take([
+  const initialAction = yield take([
     'REFRESH_INSTALLATIONS_SUCCESS',
     'REFRESH_INSTALLATIONS_FAILURE',
     'REFRESH_INSTALLATIONS_NOOP',
@@ -76,7 +76,8 @@ function* init() {
     })
 
     const forceFetchAll = !!(
-      action && action.type === 'REFRESH_INSTALLATIONS_SUCCESS'
+      (action && action.type === 'REFRESH_INSTALLATIONS_SUCCESS') ||
+      (_isFirstTime && initialAction.type === 'REFRESH_INSTALLATIONS_SUCCESS')
     )
 
     const isFirstTime = _isFirstTime

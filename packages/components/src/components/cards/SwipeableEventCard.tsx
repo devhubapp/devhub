@@ -9,12 +9,16 @@ export interface SwipeableEventCardProps extends EventCardProps {}
 export function SwipeableEventCard(props: SwipeableEventCardProps) {
   const theme = useTheme()
 
-  function onArchive() {
+  function handleArchive() {
     // alert('Archive')
   }
 
-  function onMarkAsRead() {
+  function handleMarkAsRead() {
     // alert('Mark as read')
+  }
+
+  function handleSnooze() {
+    // alert('Snooze')
   }
 
   return (
@@ -22,21 +26,27 @@ export function SwipeableEventCard(props: SwipeableEventCardProps) {
       leftActions={[
         {
           color: theme.blue,
-          icon: 'mail-read',
+          icon: 'done',
           key: 'read',
           label: 'Read',
-          onPress: onMarkAsRead,
+          onPress: handleMarkAsRead,
           type: 'FULL',
         },
       ]}
       rightActions={[
         {
-          color: theme.backgroundColorMore1,
+          color: theme.orange,
+          icon: 'snooze',
+          key: 'snooze',
+          label: 'Snooze',
+          onPress: handleSnooze,
+        },
+        {
+          color: theme.foregroundColorMuted65,
           icon: 'archive',
           key: 'archive',
           label: 'Archive',
-          onPress: onArchive,
-          type: 'FULL',
+          onPress: handleArchive,
         },
       ]}
     >
