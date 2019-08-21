@@ -48,6 +48,7 @@ function* init() {
 
     // only fetch installations tokens if there are expired ones or havent fetched for 50+ minutes
     if (
+      lastFetchedAt &&
       !(
         hasExpiredInstallationToken ||
         (fetchedNMinutesAgo && fetchedNMinutesAgo > 50)
