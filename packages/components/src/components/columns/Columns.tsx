@@ -9,7 +9,6 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { FlatList, FlatListProps } from '../../libs/flatlist'
-import { Platform } from '../../libs/platform'
 import * as selectors from '../../redux/selectors'
 import { separatorThickSize } from '../common/Separator'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
@@ -188,19 +187,22 @@ export const Columns = React.memo((props: ColumnsProps) => {
       bounces={!swipeable}
       data={columnIds}
       data-paging-enabled-fix
-      disableVirtualization={Platform.OS === 'web'}
+      disableVirtualization
       getItemLayout={getItemLayout}
       horizontal
       initialNumToRender={_nItemsThatFitInTheWindow}
       keyExtractor={keyExtractor}
+      maxToRenderPerBatch={2}
       onScrollToIndexFailed={onScrollToIndexFailed}
       // onViewableItemsChanged={onViewableItemsChanged}
       overScrollMode="never"
       pagingEnabled={pagingEnabled}
       pointerEvents={pointerEvents}
-      removeClippedSubviews={Platform.OS !== 'web'}
+      removeClippedSubviews={false}
       scrollEnabled={!swipeable}
-      windowSize={2}
+      scrollEventThrottle={16}
+      updateCellsBatchingPeriod={0}
+      windowSize={1}
       {...otherProps}
       renderItem={renderItem}
       style={flatListStyle}
