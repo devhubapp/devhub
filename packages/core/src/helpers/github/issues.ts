@@ -427,7 +427,7 @@ export function getGitHubIssueSearchQuery(
           searchTerm[0] === 'sort',
       )
     ) {
-      queries.join('sort:updated-desc')
+      queries.push('sort:updated-desc')
     }
   }
 
