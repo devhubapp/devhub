@@ -1,9 +1,17 @@
 import _ from 'lodash'
-import React, { RefObject, useCallback, useEffect, useRef } from 'react'
-import { Image, ImageProps } from 'react-native'
+import React, {
+  RefObject,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react'
+import { Image, ImageProps, ImageURISource } from 'react-native'
 
 import { Platform } from '../../libs/platform'
 import { findNode } from '../../utils/helpers/shared'
+
+export type LoadingState = 'loaded' | 'loading' | 'error'
 
 export interface ImageWithLoadingProps extends ImageProps {
   animated?: boolean
@@ -14,6 +22,7 @@ export interface ImageWithLoadingProps extends ImageProps {
   onLoad?: ImageProps['onLoad']
   onLoadEnd?: ImageProps['onLoadEnd']
   onLoadStart?: ImageProps['onLoadStart']
+  source: ImageURISource
   tooltip?: string
 }
 
@@ -35,28 +44,8 @@ export const ImageWithLoading = React.memo(
     } = props
 
     const imageRef = useRef<Image | null>(null)
-
-    const stateRef = useRef({
-      error: false,
-      isLoading: false,
-    })
-
-    const propsRef = useRef({
-      backgroundColorFailed,
-      backgroundColorLoaded,
-      backgroundColorLoading,
-      onError,
-      onLoad,
-      onLoadEnd,
-      onLoadStart,
-    })
-    propsRef.current.backgroundColorFailed = backgroundColorFailed
-    propsRef.current.backgroundColorLoaded = backgroundColorLoaded
-    propsRef.current.backgroundColorLoading = backgroundColorLoading
-    propsRef.current.onError = onError
-    propsRef.current.onLoad = onLoad
-    propsRef.current.onLoadEnd = onLoadEnd
-    propsRef.current.onLoadStart = onLoadStart
+    const loadingStateRef = useRef<LoadingState>('loading')
+    const propsRef = useRef(props)
 
     const callbackRef = useRef({
       hasCalledOnError: false,
@@ -65,23 +54,27 @@ export const ImageWithLoading = React.memo(
       hasCalledOnLoadEnd: false,
     })
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       return () => {
         imageRef.current = null
       }
     }, [])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
+      propsRef.current = props
+    })
+
+    useLayoutEffect(() => {
       callbackRef.current = {
         hasCalledOnError: false,
         hasCalledOnLoad: false,
         hasCalledOnLoadStart: false,
         hasCalledOnLoadEnd: false,
       }
-    }, [otherProps.source && (otherProps.source as any).uri])
+    }, [otherProps.source && otherProps.source.uri])
 
     useEffect(() => {
-      if (!(Platform.OS === 'web' && !Platform.supportsTouch)) return
+      if (!(Platform.OS === 'web' && !Platform.supportsTouch && tooltip)) return
 
       const node = findNode(imageRef)
       if (!node) return
@@ -90,51 +83,63 @@ export const ImageWithLoading = React.memo(
       if (!tooltip && node.removeAttribute) node.removeAttribute('title')
     }, [imageRef.current, tooltip])
 
-    const handleLoad = useCallback(e => {
-      if (callbackRef.current.hasCalledOnLoad) return
-      callbackRef.current.hasCalledOnLoad = true
+    const handleLoad = useCallback(
+      e => {
+        loadingStateRef.current = 'loaded'
 
-      stateRef.current.isLoading = false
-      stateRef.current.error = false
-      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
+        if (!imageRef.current || callbackRef.current.hasCalledOnLoad) return
+        callbackRef.current.hasCalledOnLoad = true
 
-      if (typeof propsRef.current.onLoad === 'function')
-        propsRef.current.onLoad(e)
-    }, [])
+        updateStyles(imageRef, {
+          ...propsRef.current,
+          loadingState: loadingStateRef.current,
+        })
+        if (props.onLoad) props.onLoad(e)
+      },
+      [props.onLoad],
+    )
 
     const handleLoadStart = useCallback(() => {
-      if (callbackRef.current.hasCalledOnLoadStart) return
+      loadingStateRef.current = 'loading'
+
+      if (!imageRef.current || callbackRef.current.hasCalledOnLoadStart) return
       callbackRef.current.hasCalledOnLoadStart = true
 
-      stateRef.current.isLoading = true
-      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
-
-      if (typeof propsRef.current.onLoadStart === 'function')
-        propsRef.current.onLoadStart()
-    }, [])
+      updateStyles(imageRef, {
+        ...propsRef.current,
+        loadingState: loadingStateRef.current,
+      })
+      if (props.onLoadStart) props.onLoadStart()
+    }, [props.onLoadStart])
 
     const handleLoadEnd = useCallback(() => {
-      if (callbackRef.current.hasCalledOnLoadEnd) return
+      loadingStateRef.current = 'loaded'
+
+      if (!imageRef.current || callbackRef.current.hasCalledOnLoadEnd) return
       callbackRef.current.hasCalledOnLoadEnd = true
 
-      stateRef.current.isLoading = false
-      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
+      updateStyles(imageRef, {
+        ...propsRef.current,
+        loadingState: loadingStateRef.current,
+      })
+      if (props.onLoadEnd) props.onLoadEnd()
+    }, [props.onLoadEnd])
 
-      if (typeof propsRef.current.onLoadEnd === 'function')
-        propsRef.current.onLoadEnd()
-    }, [])
+    const handleError = useCallback(
+      e => {
+        loadingStateRef.current = 'error'
 
-    const handleError = useCallback(e => {
-      if (callbackRef.current.hasCalledOnError) return
-      callbackRef.current.hasCalledOnError = true
+        if (!imageRef.current || callbackRef.current.hasCalledOnError) return
+        callbackRef.current.hasCalledOnError = true
 
-      stateRef.current.isLoading = false
-      stateRef.current.error = true
-      updateStyles(imageRef, { ...propsRef.current, ...stateRef.current })
-
-      if (typeof propsRef.current.onError === 'function')
-        propsRef.current.onError(e)
-    }, [])
+        updateStyles(imageRef, {
+          ...propsRef.current,
+          loadingState: loadingStateRef.current,
+        })
+        if (props.onError) props.onError(e)
+      },
+      [props.onError],
+    )
 
     return (
       <Image
@@ -144,9 +149,27 @@ export const ImageWithLoading = React.memo(
         onLoad={handleLoad}
         onLoadEnd={handleLoadEnd}
         onLoadStart={handleLoadStart}
+        onLayout={() => {
+          if (
+            !(
+              callbackRef.current.hasCalledOnLoad ||
+              callbackRef.current.hasCalledOnLoadEnd
+            )
+          ) {
+            updateStyles(imageRef, {
+              ...propsRef.current,
+              loadingState: loadingStateRef.current,
+            })
+          }
+        }}
         style={[
           props.style,
-          getStyles({ ...propsRef.current, ...stateRef.current }),
+          getStyles({
+            backgroundColorFailed,
+            backgroundColorLoaded,
+            backgroundColorLoading,
+            loadingState: loadingStateRef.current,
+          }),
         ]}
       />
     )
@@ -156,31 +179,32 @@ export const ImageWithLoading = React.memo(
 ImageWithLoading.displayName = 'ImageWithLoading'
 
 function getStyles({
-  error,
-  isLoading,
+  loadingState,
   backgroundColorFailed,
   backgroundColorLoading,
   backgroundColorLoaded,
-}: { error: boolean; isLoading: boolean } & Pick<
+}: { loadingState: LoadingState } & Pick<
   ImageWithLoadingProps,
   'backgroundColorFailed' | 'backgroundColorLoaded' | 'backgroundColorLoading'
 >) {
   return {
-    backgroundColor: error
-      ? backgroundColorFailed
-      : isLoading
-      ? backgroundColorLoading
-      : backgroundColorLoaded,
+    backgroundColor:
+      loadingState === 'error'
+        ? backgroundColorFailed
+        : loadingState === 'loading'
+        ? backgroundColorLoading
+        : backgroundColorLoaded,
   }
 }
 
 function updateStyles(
-  imageRef: RefObject<Image>,
-  ...args: Parameters<typeof getStyles>
+  imageRef: RefObject<Image | null>,
+  params: Parameters<typeof getStyles>[0],
 ) {
-  if (!(imageRef && imageRef.current)) return
+  if (!(imageRef && imageRef.current)) return false
 
   imageRef.current.setNativeProps({
-    style: getStyles(...args),
+    style: getStyles(params),
   })
+  return true
 }
