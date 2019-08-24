@@ -6,7 +6,7 @@
   "scripts": {
     "build": "yarn compile && react-app-rewired build && shx rm -rf dist && mv build dist",
     "clean": "shx rm -rf dist/*",
-    "compile": "tsc -b",
+    "compile": "tsc -b --incremental",
     "deploy": "yarn build && cd ../../ && now --local-config ./now.app.json --target production && cd -",
     "deploy:beta": "yarn build && cd ../../ && now --local-config ./now.app.json --target staging && now alias beta.devhubapp.com && cd -",
     "eject": "react-app-rewired eject",

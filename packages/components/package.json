@@ -4,7 +4,7 @@
   "private": false,
   "main": "dist",
   "scripts": {
-    "compile": "tsc -b",
+    "compile": "tsc -b --incremental",
     "clean": "shx rm -rf dist/* && shx rm -f *.tsbuildinfo",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",

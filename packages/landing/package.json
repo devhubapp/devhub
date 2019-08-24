@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "shx rm -rf dist/* && shx rm -f *.tsbuildinfo",
-    "compile": "tsc -b",
+    "compile": "tsc -b --incremental",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd ."
