@@ -81,11 +81,16 @@ export const eventSubjectTypes: GitHubEventSubjectType[] = [
 ]
 
 export function getOlderEventDate(
-  events: EnhancedGitHubEvent[],
-  field: keyof EnhancedGitHubEvent = 'created_at',
+  items: EnhancedGitHubEvent[],
+  ignoreFutureDates = true,
 ) {
-  const olderItem = sortEvents(events, field, 'desc').slice(-1)[0]
-  return olderItem && olderItem[field]
+  const now = Date.now()
+  return sortEvents(items, 'created_at', 'asc')
+    .map(item => item.created_at)
+    .filter(
+      date =>
+        !!(date && ignoreFutureDates ? now > new Date(date).getTime() : true),
+    )[0]
 }
 
 export function getEventActionMetadata<T extends GitHubEventAction>(

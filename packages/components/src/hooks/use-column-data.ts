@@ -39,10 +39,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
           return EMPTY_ARRAY
         return subscriptionsDataSelector(state, column.subscriptionIds)
       },
-      [
-        column && column.subscriptionIds && column.subscriptionIds.join(','),
-        column && column.filters,
-      ],
+      [column && column.subscriptionIds && column.subscriptionIds.join(',')],
     ),
   ) as ItemT[]
 

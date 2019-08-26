@@ -455,10 +455,16 @@ export function enhanceNotifications(
 }
 
 export function getOlderNotificationDate(
-  notifications: EnhancedGitHubNotification[],
+  items: EnhancedGitHubNotification[],
+  ignoreFutureDates = true,
 ) {
-  const olderItem = sortNotifications(notifications).slice(-1)[0]
-  return olderItem && olderItem.updated_at
+  const now = Date.now()
+  return sortNotifications(items, 'updated_at', 'asc')
+    .map(item => item.updated_at)
+    .filter(
+      date =>
+        !!(date && ignoreFutureDates ? now > new Date(date).getTime() : true),
+    )[0]
 }
 
 export function createNotificationsCache(
@@ -490,12 +496,14 @@ export function createNotificationsCache(
 
 export function sortNotifications(
   notifications: EnhancedGitHubNotification[] | undefined,
+  field: keyof EnhancedGitHubNotification = 'updated_at',
+  order: 'asc' | 'desc' = 'desc',
 ) {
   if (!(notifications && notifications.length)) return constants.EMPTY_ARRAY
 
   return _(notifications)
     .uniqBy('id')
-    .orderBy('updated_at', 'desc')
+    .orderBy(field, order)
     .value()
 }
 

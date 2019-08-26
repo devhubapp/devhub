@@ -73,16 +73,22 @@ export function getDateSmallText(date: MomentInput, includeExactTime = false) {
   const momentNow = moment(new Date())
   const timeText = momentDate.format('HH:mm')
 
-  const secondsDiff = momentNow.diff(momentDate, 'seconds')
-  const minutesDiff = momentNow.diff(momentDate, 'minutes')
-  const hoursDiff =
+  const _secondsDiff = momentNow.diff(momentDate, 'seconds')
+  const isInFuture = _secondsDiff < 0
+  const inText = isInFuture ? 'in ' : ''
+
+  const secondsDiff = Math.abs(_secondsDiff)
+  const minutesDiff = Math.abs(momentNow.diff(momentDate, 'minutes'))
+  const hoursDiff = Math.abs(
     momentNow.diff(momentDate, 'minutes') >= 60
       ? Math.round(secondsDiff / (60 * 60))
-      : Math.floor(secondsDiff / (60 * 60))
-  const daysDiff =
+      : Math.floor(secondsDiff / (60 * 60)),
+  )
+  const daysDiff = Math.abs(
     momentNow.diff(momentDate, 'hours') >= 24
       ? Math.round(secondsDiff / (24 * 60 * 60))
-      : Math.floor(secondsDiff / (24 * 60 * 60))
+      : Math.floor(secondsDiff / (24 * 60 * 60)),
+  )
 
   if (daysDiff < 1) {
     if (hoursDiff < 1) {
@@ -91,17 +97,19 @@ export function getDateSmallText(date: MomentInput, includeExactTime = false) {
           return 'now'
         }
 
-        return `${secondsDiff}s`
+        return `${inText}${secondsDiff}s`
       }
 
-      return `${minutesDiff}m${includeExactTime ? ` (${timeText})` : ''}`
+      return `${inText}${minutesDiff}m${
+        includeExactTime ? ` (${timeText})` : ''
+      }`
     }
 
-    return `${hoursDiff}h${includeExactTime ? ` (${timeText})` : ''}`
+    return `${inText}${hoursDiff}h${includeExactTime ? ` (${timeText})` : ''}`
   }
 
   if (daysDiff <= 3) {
-    return `${daysDiff}d${includeExactTime ? ` (${timeText})` : ''}`
+    return `${inText}${daysDiff}d${includeExactTime ? ` (${timeText})` : ''}`
   }
 
   if (momentDate.year() !== moment().year()) {

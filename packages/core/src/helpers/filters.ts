@@ -450,7 +450,10 @@ export function getFilteredIssueOrPullRequests(
 
       if (
         filters.clearedAt &&
-        (!item.updated_at || item.updated_at <= filters.clearedAt)
+        (!item.updated_at ||
+          new Date(item.updated_at).getTime() <=
+            new Date(filters.clearedAt).getTime() ||
+          new Date(item.updated_at).getTime() > Date.now())
       )
         if (!(showSaveForLater && item.saved))
           /* && isItemRead(notification) */
@@ -563,7 +566,10 @@ export function getFilteredNotifications(
 
       if (
         filters.clearedAt &&
-        (!item.updated_at || item.updated_at <= filters.clearedAt)
+        (!item.updated_at ||
+          new Date(item.updated_at).getTime() <=
+            new Date(filters.clearedAt).getTime() ||
+          new Date(item.updated_at).getTime() > Date.now())
       )
         if (!(showSaveForLater && item.saved))
           /* && isItemRead(notification) */
@@ -680,7 +686,10 @@ export function getFilteredEvents(
 
       if (
         filters.clearedAt &&
-        (!item.created_at || item.created_at <= filters.clearedAt)
+        (!item.created_at ||
+          new Date(item.created_at).getTime() <=
+            new Date(filters.clearedAt).getTime() ||
+          new Date(item.created_at).getTime() > Date.now())
       )
         if (!(showSaveForLater && item.saved))
           /* && isItemRead(event) */

@@ -17,12 +17,12 @@ const defaultInterval = 1000
 function getIntervalFromDate(date: IntervalRefreshProps['date']) {
   if (!date) return
 
-  const secondsDiff = moment().diff(date, 's')
+  const secondsDiff = Math.abs(moment().diff(date, 's'))
 
-  // // each hour
-  // if (secondsDiff >= 3600) {
-  //   return 3600000
-  // }
+  // each 10 minutes
+  if (secondsDiff >= 6000) {
+    return 600000
+  }
 
   // each minute
   if (secondsDiff >= 60) {

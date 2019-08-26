@@ -136,11 +136,17 @@ export function getIssueOrPullRequestSubjectType(
 }
 
 export function getOlderIssueOrPullRequestDate(
-  events: EnhancedGitHubIssueOrPullRequest[],
-  field: keyof EnhancedGitHubIssueOrPullRequest = 'updated_at',
+  items: EnhancedGitHubIssueOrPullRequest[],
+  field: 'created_at' | 'updated_at' = 'updated_at',
+  ignoreFutureDates = true,
 ) {
-  const olderItem = sortIssuesOrPullRequests(events, field, 'desc').slice(-1)[0]
-  return olderItem && olderItem[field]
+  const now = Date.now()
+  return sortIssuesOrPullRequests(items, field, 'asc')
+    .map(item => item[field])
+    .filter(
+      date =>
+        !!(date && ignoreFutureDates ? now > new Date(date).getTime() : true),
+    )[0]
 }
 
 export function createIssuesOrPullRequestsCache(
