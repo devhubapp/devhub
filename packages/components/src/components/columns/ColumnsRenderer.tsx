@@ -73,5 +73,5 @@ export function ColumnsRenderer() {
     )
   }
 
-  return <Columns key="columns" />
+  return <Columns />
 }

@@ -54,12 +54,3 @@ input:focus {
 [data-touchable="true"][data-touchable-disabled="true"] {
   cursor: not-allowed;
 }
-
-/* https://github.com/necolas/react-native-web/issues/1299 */
-[data-paging-enabled-fix="true"]  > div > div > div {
-  height: 100%;
-}
-
-[data-flatlist-with-header-content-container-full-height-fix="true"]  > div > div:nth-child(2){
-  flex-grow: 1;
-}

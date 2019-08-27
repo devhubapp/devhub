@@ -1,105 +1,59 @@
 import _ from 'lodash'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import {
-  Dimensions,
-  FlatList,
-  FlatListProps,
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native'
+import React, { useCallback, useMemo, useRef } from 'react'
+import { StyleProp, ViewStyle } from 'react-native'
 
 import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
-import { bugsnag } from '../../libs/bugsnag'
+import { emitter } from '../../libs/emitter'
+import { OneList, OneListProps } from '../../libs/one-list'
 import * as selectors from '../../redux/selectors'
-import { sharedStyles } from '../../styles/shared'
-import { separatorThickSize } from '../common/Separator'
-import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 
 export interface ColumnsProps
-  extends Omit<FlatListProps<string>, 'data' | 'renderItem'> {
+  extends Pick<OneListProps<string>, 'pointerEvents'> {
   contentContainerStyle?: StyleProp<ViewStyle>
-  style?: StyleProp<ViewStyle>
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  flatlist: {
-    flex: 1,
-  },
-})
 
 function keyExtractor(columnId: string) {
   return `column-container-${columnId}`
 }
 
 export const Columns = React.memo((props: ColumnsProps) => {
-  const { pointerEvents, style, ...otherProps } = props
+  const { pointerEvents } = props
 
+  const listRef = useRef<typeof OneList>(null)
   const { sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
   const columnWidth = useColumnWidth()
-  const { focusedColumnId, focusedColumnIndex } = useFocusedColumn()
-
   const columnIds = useReduxState(selectors.columnIdsSelector)
-  const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
-
-  const currentOpenedModalRef = useRef(false)
-  currentOpenedModalRef.current = !!currentOpenedModal
-
-  const flatListRef = useRef<FlatList<string>>(null)
 
   useEmitter(
     'FOCUS_ON_COLUMN',
     payload => {
-      if (!flatListRef.current) return
+      if (!listRef.current) return
       if (!(columnIds && columnIds.length)) return
       if (!payload.columnId) return
 
       if (payload.scrollTo) {
-        flatListRef.current.scrollToIndex({
-          animated: payload.animated,
-          index: columnIds.indexOf(payload.columnId),
-          viewPosition: 0.5,
+        listRef.current.scrollToIndex(columnIds.indexOf(payload.columnId), {
+          // animated: payload.animated,
+          alignment: 'smart',
         })
       }
     },
-    [flatListRef, columnIds],
+    [columnIds],
   )
-
-  useEffect(() => {
-    if (!flatListRef.current) return
-    if (!(focusedColumnId && focusedColumnIndex >= 0)) return
-    if (sizename !== '1-small') return
-
-    flatListRef.current.scrollToIndex({
-      animated: true,
-      index: focusedColumnIndex,
-      viewPosition: 0,
-    })
-  }, [
-    flatListRef.current,
-    columnIds,
-    focusedColumnId,
-    focusedColumnIndex,
-    sizename,
-  ])
 
   const pagingEnabled = sizename < '3-large'
   const swipeable = constants.DISABLE_SWIPEABLE_CARDS
     ? false
     : appViewMode === 'single-column'
 
-  const renderItem: FlatListProps<string>['renderItem'] = useCallback(
+  const renderItem: OneListProps<string>['renderItem'] = useCallback(
     ({ item: columnId }) => {
       return (
         <ColumnContainer
@@ -113,107 +67,47 @@ export const Columns = React.memo((props: ColumnsProps) => {
     [pagingEnabled, pointerEvents, swipeable],
   )
 
-  const getItemLayout = useCallback<
-    NonNullable<FlatListProps<string>['getItemLayout']>
+  const getItemSize = useCallback<
+    NonNullable<OneListProps<string>['getItemSize']>
+  >(() => columnWidth, [columnWidth])
+
+  const onVisibleItemsChanged = useCallback<
+    NonNullable<OneListProps<string>['onVisibleItemsChanged']>
   >(
-    (_data, index) => ({
-      index,
-      length: columnWidth,
-      offset: index * columnWidth,
-    }),
-    [columnWidth],
+    (fromIndex, toIndex) => {
+      if (appViewMode !== 'single-column') return
+
+      if (!(fromIndex >= 0 && fromIndex === toIndex)) return
+
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: columnIds[fromIndex],
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
+    },
+    [appViewMode],
   )
 
-  const _onScrollToIndexFailed: FlatListProps<
-    string
-  >['onScrollToIndexFailed'] = (info: {
-    index: number
-    highestMeasuredFrameIndex: number
-    averageItemLength: number
-  }) => {
-    console.error(info)
-    bugsnag.notify({
-      name: 'ScrollToIndexFailed',
-      message: 'Failed to scroll to index',
-      ...info,
-    })
-  }
-  const onScrollToIndexFailed: FlatListProps<
-    string
-  >['onScrollToIndexFailed'] = useCallback(_onScrollToIndexFailed, [])
-
-  const flatListStyle = useMemo(() => [styles.flatlist, style], [
-    style,
-    sizename,
-    separatorThickSize,
-  ])
-
-  /*
-  const _onViewableItemsChanged: FlatListProps<
-    string
-  >['onViewableItemsChanged'] = info => {
-    if (currentOpenedModalRef.current) return
-
-    const allVisibleItems =
-      info &&
-      info.viewableItems &&
-      info.viewableItems.filter(item => item.isViewable)
-
-    if (!(allVisibleItems && allVisibleItems.length === 1)) return
-
-    emitter.emit('FOCUS_ON_COLUMN', {
-      animated: false,
-      columnId: allVisibleItems[0].item,
-      focusOnVisibleItem: false,
-      highlight: false,
-      scrollTo: false,
-    })
-  }
-
-  const _debouncedOnViewableItemsChanged = _.debounce(
-    _onViewableItemsChanged,
-    800,
-  )
-
-  const onViewableItemsChanged = useCallback(
-    _debouncedOnViewableItemsChanged,
-    [],
-  )
-  */
-
-  const _estimatedItemSize =
-    (getItemLayout(columnIds, 0) || {}).length || columnWidth
-  const _nItemsThatFitInTheWindow = Math.ceil(
-    Dimensions.get('window').width / _estimatedItemSize,
+  const debouncedOnVisibleItemsChanged = useMemo(
+    () => _.debounce(onVisibleItemsChanged, 800),
+    [onVisibleItemsChanged],
   )
 
   return (
-    <FlatList
-      ref={flatListRef}
-      key="columns-flat-list"
-      bounces={!swipeable}
-      contentContainerStyle={sharedStyles.flex}
+    <OneList
+      ref={listRef}
+      key="columns-list"
       data={columnIds}
-      data-paging-enabled-fix
-      disableVirtualization
-      getItemLayout={getItemLayout}
+      estimatedItemSize={getItemSize(columnIds[0], 0) || columnWidth}
+      getItemKey={keyExtractor}
+      getItemSize={getItemSize}
       horizontal
-      initialNumToRender={_nItemsThatFitInTheWindow}
-      keyExtractor={keyExtractor}
-      maxToRenderPerBatch={2}
-      onScrollToIndexFailed={onScrollToIndexFailed}
-      // onViewableItemsChanged={onViewableItemsChanged}
-      overScrollMode="never"
-      pagingEnabled={pagingEnabled}
+      onVisibleItemsChanged={debouncedOnVisibleItemsChanged}
+      overscanCount={3}
       pointerEvents={pointerEvents}
-      removeClippedSubviews={false}
-      scrollEnabled={!swipeable}
-      scrollEventThrottle={100}
-      updateCellsBatchingPeriod={100}
-      windowSize={5}
-      {...otherProps}
       renderItem={renderItem}
-      style={flatListStyle}
     />
   )
 })

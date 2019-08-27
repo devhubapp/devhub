@@ -3,6 +3,7 @@ import { View } from 'react-native'
 
 import { EnhancedGitHubNotification } from '@devhub/core'
 import { useIsItemFocused } from '../../hooks/use-is-item-focused'
+import { usePrevious } from '../../hooks/use-previous'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { tryFocus } from '../../utils/helpers/shared'
@@ -31,11 +32,12 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const ref = useRef<View>(null)
 
   const isFocused = useIsItemFocused(columnId, notification.id)
+  const wasFocused = usePrevious(isFocused)
 
   useEffect(() => {
     if (!(Platform.OS === 'web' && ref.current)) return
-    if (isFocused) tryFocus(ref.current)
-  }, [isFocused])
+    if (isFocused && !wasFocused) tryFocus(ref.current)
+  }, [isFocused && !wasFocused])
 
   const CardComponent = useMemo(
     () => (
