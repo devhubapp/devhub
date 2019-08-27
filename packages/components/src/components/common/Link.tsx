@@ -180,13 +180,14 @@ export function Link(props: LinkProps) {
       ...Platform.select({
         default: {
           ...otherProps,
-          onPress:
-            onPress ||
-            (href
-              ? href.startsWith('http')
-                ? () => Browser.openURL(href)
-                : () => Linking.openURL(href)
-              : undefined),
+          onPress: href
+            ? (e: any) => {
+                if (onPress) onPress(e)
+
+                if (href.startsWith('http')) Browser.openURL(href)
+                else Linking.openURL(href)
+              }
+            : onPress,
         } as any,
 
         web: {

@@ -1,5 +1,6 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 
+import { InteractionManager } from 'react-native'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useForceRerender } from '../../hooks/use-force-rerender'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -24,6 +25,7 @@ export const ColumnFocusContext = React.createContext<ColumnFocusProviderState>(
 )
 ColumnFocusContext.displayName = 'ColumnFocusContext'
 
+let _focusedColumnId: string | null
 export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   const forceRerender = useForceRerender()
   const valueRef = useRef<ColumnFocusProviderState>(defaultValue)
@@ -53,6 +55,18 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       focusedColumnIndex: fixedFocusedColumnIndex,
     }
   }
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: fixedFocusedColumnId,
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
+    })
+  }, [])
 
   useEmitter(
     'FOCUS_ON_COLUMN',
@@ -159,6 +173,8 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
     [],
   )
 
+  _focusedColumnId = valueRef.current.focusedColumnId
+
   return (
     <ColumnFocusContext.Provider value={valueRef.current}>
       {props.children}
@@ -171,4 +187,8 @@ export const ColumnFocusConsumer = ColumnFocusContext.Consumer
 
 export function useFocusedColumn() {
   return useContext(ColumnFocusContext)
+}
+
+export function getCurrentFocusedColumnId() {
+  return _focusedColumnId
 }

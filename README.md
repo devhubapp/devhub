@@ -170,6 +170,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 | `0`       | Go to the last column            | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Arrow`, `j`, `k` | Move down/up inside a column     | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
 | `Arrow`, `h`, `l` | Move left/right between columns  | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
+| `Enter`   | Open link of selected item       | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `r`       | Mark item as read/unread         | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `s`       | Toggle save item for later       | ✅             | [@brunolemos](https://github.com/brunolemos) |
 | `Alt` + `Arrow` | Move currently selected column | ✅             | [@brunolemos](https://github.com/brunolemos) |

@@ -9,6 +9,7 @@ export interface BrowserCrossPlatform {
   }
   dismiss(): void
   openURL(url: string): Promise<void>
+  openURLOnNewTab(url: string): void
   setBackgroundColor(color: string): void
   setForegroundColor(color: string): void
 }

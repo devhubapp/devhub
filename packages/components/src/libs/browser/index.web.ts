@@ -13,6 +13,9 @@ export const Browser: BrowserCrossPlatform = {
   },
   dismiss: () => undefined,
   openURL: Linking.openURL,
+  openURLOnNewTab: url => {
+    window.open(url, '_blank')
+  },
   setBackgroundColor: () => undefined,
   setForegroundColor: () => undefined,
 }
