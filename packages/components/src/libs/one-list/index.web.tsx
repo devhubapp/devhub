@@ -38,7 +38,7 @@ export const OneList = (React.memo(
       renderItem,
 
       // TODO
-      refreshControl: _refreshControl,
+      // refreshControl,
     } = props
 
     const variableSizeListRef = useRef<VariableSizeList>(null)
@@ -60,76 +60,6 @@ export const OneList = (React.memo(
 
     const itemCount =
       data.length + (innerHeaderSize ? 1 : 0) + (innerFooterSize ? 1 : 0)
-
-    const ItemRow = useCallback(
-      ({ index }: { index: number }) => {
-        return (
-          <View style={[sharedStyles.fullWidth, sharedStyles.fullHeight]}>
-            {renderItem({ index, item: data[index] })}
-            {!!(
-              index >= 0 &&
-              index < data.length - 1 &&
-              itemSeparator &&
-              itemSeparator.size > 0 &&
-              itemSeparator.Component
-            ) && (
-              <itemSeparator.Component
-                leading={{ index, item: data[index] }}
-                trailing={
-                  index + 1 < data.length - 1
-                    ? { index: index + 1, item: data[index + 1] }
-                    : undefined
-                }
-              />
-            )}
-          </View>
-        )
-      },
-      [
-        data,
-        itemSeparator && itemSeparator.Component,
-        itemSeparatorSize,
-        renderItem,
-      ],
-    )
-
-    const Row = useCallback(
-      React.forwardRef<any, ListChildComponentProps>((row, rowRef) => {
-        if (innerHeaderSize && row.index === 0 && header) {
-          return (
-            <div ref={rowRef} style={row.style}>
-              <header.Component />
-            </div>
-          )
-        }
-
-        if (innerFooterSize && row.index === itemCount - 1 && footer) {
-          return (
-            <div ref={rowRef} style={row.style}>
-              <footer.Component />
-            </div>
-          )
-        }
-
-        const dataIndex = innerHeaderSize ? row.index - 1 : row.index
-        if (!(dataIndex >= 0 && dataIndex <= data.length - 1)) return null
-
-        return (
-          <div ref={rowRef} style={row.style}>
-            <ItemRow index={dataIndex} />
-          </div>
-        )
-      }),
-      [
-        ItemRow,
-        data,
-        footer && footer.Component,
-        header && header.Component,
-        innerFooterSize,
-        innerHeaderSize,
-        itemCount,
-      ],
-    )
 
     const itemKey = useMemo<VariableSizeListProps['itemKey']>(() => {
       return index => {
@@ -164,6 +94,90 @@ export const OneList = (React.memo(
       itemCount,
       itemSeparatorSize,
     ])
+
+    const ItemRow = useCallback(
+      ({ index }: { index: number }) => {
+        return (
+          <View
+            key={
+              itemKey ? itemKey(index, data) : `react-window-item-row-${index}`
+            }
+            style={[sharedStyles.fullWidth, sharedStyles.fullHeight]}
+          >
+            {renderItem({ index, item: data[index] })}
+            {!!(
+              index >= 0 &&
+              index < data.length - 1 &&
+              itemSeparator &&
+              itemSeparator.size > 0 &&
+              itemSeparator.Component
+            ) && (
+              <itemSeparator.Component
+                leading={{ index, item: data[index] }}
+                trailing={
+                  index + 1 < data.length - 1
+                    ? { index: index + 1, item: data[index + 1] }
+                    : undefined
+                }
+              />
+            )}
+          </View>
+        )
+      },
+      [
+        data,
+        itemSeparator && itemSeparator.Component,
+        itemSeparatorSize,
+        renderItem,
+      ],
+    )
+
+    const Row = useCallback(
+      React.forwardRef<any, ListChildComponentProps>(
+        ({ index, style }, rowRef) => {
+          if (innerHeaderSize && index === 0 && header) {
+            return (
+              <div
+                ref={rowRef}
+                key={
+                  itemKey ? itemKey(index, data) : `react-window-row-${index}`
+                }
+                style={style}
+              >
+                <header.Component />
+              </div>
+            )
+          }
+
+          if (innerFooterSize && index === itemCount - 1 && footer) {
+            return (
+              <div ref={rowRef} style={style}>
+                <footer.Component />
+              </div>
+            )
+          }
+
+          const dataIndex = innerHeaderSize ? index - 1 : index
+          if (!(dataIndex >= 0 && dataIndex <= data.length - 1)) return null
+
+          return (
+            <div ref={rowRef} style={style}>
+              <ItemRow index={dataIndex} />
+            </div>
+          )
+        },
+      ),
+      [
+        ItemRow,
+        data,
+        footer && footer.Component,
+        header && header.Component,
+        innerFooterSize,
+        innerHeaderSize,
+        itemCount,
+        itemKey,
+      ],
+    )
 
     const onItemsRendered = useMemo<
       VariableSizeListProps['onItemsRendered']
@@ -243,6 +257,7 @@ export const OneList = (React.memo(
                 ) && (
                   <VariableSizeList
                     ref={variableSizeListRef}
+                    key="variable-size-list"
                     direction={horizontal ? 'horizontal' : 'vertical'}
                     estimatedItemSize={estimatedItemSize}
                     height={horizontal ? '100%' : height}

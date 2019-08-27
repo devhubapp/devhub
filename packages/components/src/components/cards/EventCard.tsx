@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import { View } from 'react-native'
 
 import { EnhancedGitHubEvent } from '@devhub/core'
+import { useIsItemFocused } from '../../hooks/use-is-item-focused'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { tryFocus } from '../../utils/helpers/shared'
@@ -11,17 +12,19 @@ import { CardBorder } from './partials/CardBorder'
 
 export interface EventCardProps {
   cachedCardProps?: BaseCardProps | undefined
+  columnId: string
   event: EnhancedGitHubEvent
-  isFocused?: boolean
   ownerIsKnown: boolean
   repoIsKnown: boolean
   swipeable: boolean
 }
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const { cachedCardProps, event, isFocused, ownerIsKnown, repoIsKnown } = props
+  const { cachedCardProps, columnId, event, ownerIsKnown, repoIsKnown } = props
 
   const ref = useRef<View>(null)
+
+  const isFocused = useIsItemFocused(columnId, event.id)
 
   useEffect(() => {
     if (!(Platform.OS === 'web' && ref.current)) return

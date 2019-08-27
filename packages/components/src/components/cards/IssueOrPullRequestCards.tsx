@@ -17,7 +17,6 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { Button } from '../common/Button'
-import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import {
   IssueOrPullRequestCard,
@@ -30,11 +29,10 @@ type ItemT = EnhancedGitHubIssueOrPullRequest
 export interface IssueOrPullRequestCardsProps
   extends Omit<
     IssueOrPullRequestCardProps,
-    'cachedCardProps' | 'issueOrPullRequest' | 'isFocused' | 'type'
+    'cachedCardProps' | 'columnId' | 'issueOrPullRequest' | 'type'
   > {
   column: Column
   columnIndex: number
-  disableItemFocus: boolean
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: ItemT[]
@@ -55,7 +53,6 @@ export const IssueOrPullRequestCards = React.memo(
     const {
       column,
       columnIndex,
-      disableItemFocus,
       errorMessage,
       fetchNextPage,
       items,
@@ -70,7 +67,6 @@ export const IssueOrPullRequestCards = React.memo(
     const listRef = React.useRef<typeof OneList>(null)
 
     const dispatch = useDispatch()
-    const { focusedColumnId } = useFocusedColumn()
 
     const loggedUsername = useReduxState(
       selectors.currentGitHubUsernameSelector,
@@ -98,9 +94,8 @@ export const IssueOrPullRequestCards = React.memo(
       type: 'issue_or_pr',
     })
 
-    const { selectedItemIdRef } = useCardsKeyboard(listRef, {
+    useCardsKeyboard(listRef, {
       columnId: column.id,
-      enabled: focusedColumnId === column.id,
       firstVisibleItemIndexRef,
       items,
       type: 'issue_or_pr',
@@ -117,11 +112,7 @@ export const IssueOrPullRequestCards = React.memo(
             <View style={{ height }}>
               <SwipeableIssueOrPullRequestCard
                 cachedCardProps={itemCardProps[index]}
-                isFocused={
-                  column.id === focusedColumnId &&
-                  item.id === selectedItemIdRef.current &&
-                  !disableItemFocus
-                }
+                columnId={column.id}
                 issueOrPullRequest={item}
                 ownerIsKnown={ownerIsKnown}
                 repoIsKnown={repoIsKnown}
@@ -137,11 +128,7 @@ export const IssueOrPullRequestCards = React.memo(
             <View style={{ height }}>
               <IssueOrPullRequestCard
                 cachedCardProps={itemCardProps[index]}
-                isFocused={
-                  column.id === focusedColumnId &&
-                  item.id === selectedItemIdRef.current &&
-                  !disableItemFocus
-                }
+                columnId={column.id}
                 issueOrPullRequest={item}
                 ownerIsKnown={ownerIsKnown}
                 repoIsKnown={repoIsKnown}
@@ -152,14 +139,7 @@ export const IssueOrPullRequestCards = React.memo(
           </ErrorBoundary>
         )
       },
-      [
-        column.id === focusedColumnId && selectedItemIdRef.current,
-        getItemSize,
-        itemCardProps,
-        ownerIsKnown,
-        repoIsKnown,
-        swipeable,
-      ],
+      [getItemSize, itemCardProps, ownerIsKnown, repoIsKnown, swipeable],
     )
 
     const ListEmptyComponent = useMemo<
@@ -252,7 +232,7 @@ export const IssueOrPullRequestCards = React.memo(
           horizontal={false}
           itemSeparator={itemSeparator}
           onVisibleItemsChanged={onVisibleItemsChanged}
-          overscanCount={5}
+          overscanCount={1}
           pointerEvents={pointerEvents}
           refreshControl={refreshControl}
           renderItem={renderItem}

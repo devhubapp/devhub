@@ -5,6 +5,7 @@ import {
   EnhancedGitHubIssueOrPullRequest,
   GitHubIssueOrPullRequestSubjectType,
 } from '@devhub/core'
+import { useIsItemFocused } from '../../hooks/use-is-item-focused'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { tryFocus } from '../../utils/helpers/shared'
@@ -14,7 +15,7 @@ import { CardBorder } from './partials/CardBorder'
 
 export interface IssueOrPullRequestCardProps {
   cachedCardProps?: BaseCardProps | undefined
-  isFocused?: boolean
+  columnId: string
   isPrivate?: boolean
   issueOrPullRequest: EnhancedGitHubIssueOrPullRequest
   ownerIsKnown: boolean
@@ -27,13 +28,15 @@ export const IssueOrPullRequestCard = React.memo(
   (props: IssueOrPullRequestCardProps) => {
     const {
       cachedCardProps,
-      isFocused,
+      columnId,
       issueOrPullRequest,
       ownerIsKnown,
       repoIsKnown,
     } = props
 
     const ref = useRef<View>(null)
+
+    const isFocused = useIsItemFocused(columnId, issueOrPullRequest.id)
 
     useEffect(() => {
       if (!(Platform.OS === 'web' && ref.current)) return

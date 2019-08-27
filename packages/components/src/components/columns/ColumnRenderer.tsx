@@ -76,10 +76,7 @@ export function getCardBackgroundThemeColor({
 export interface ColumnRendererProps {
   avatarRepo?: string
   avatarUsername?: string
-  children: (p: {
-    disableItemFocus: boolean
-    isFiltersOpened: boolean
-  }) => React.ReactNode
+  children: React.ReactNode
   column: ColumnType
   columnIndex: number
   icon: GitHubIcon
@@ -365,10 +362,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         />
       )}
 
-      {children({
-        disableItemFocus: inlineMode ? false : isFiltersOpened,
-        isFiltersOpened,
-      })}
+      {children}
 
       {!!isFreeTrial && <FreeTrialHeaderMessage />}
     </Column>

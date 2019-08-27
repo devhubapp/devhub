@@ -130,6 +130,7 @@ export const OneList = (React.memo(
                 ) && (
                   <FlatList
                     ref={flatListRef}
+                    key="flatlist"
                     ListFooterComponent={
                       footer && footer.size > 0 && !footer.sticky
                         ? footer.Component

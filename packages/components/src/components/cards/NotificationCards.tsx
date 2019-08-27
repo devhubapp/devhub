@@ -7,7 +7,6 @@ import { useCardsProps } from '../../hooks/use-cards-props'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { OneList, OneListProps } from '../../libs/one-list'
 import { sharedStyles } from '../../styles/shared'
-import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard, NotificationCardProps } from './NotificationCard'
 import { SwipeableNotificationCard } from './SwipeableNotificationCard'
@@ -17,11 +16,10 @@ type ItemT = EnhancedGitHubNotification
 export interface NotificationCardsProps
   extends Omit<
     NotificationCardProps,
-    'cachedCardProps' | 'notification' | 'isFocused'
+    'cachedCardProps' | 'columnId' | 'notification'
   > {
   column: Column
   columnIndex: number
-  disableItemFocus: boolean
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: ItemT[]
@@ -41,7 +39,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
     column,
     columnIndex,
-    disableItemFocus,
     errorMessage,
     fetchNextPage,
     items,
@@ -54,8 +51,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   } = props
 
   const listRef = React.useRef<typeof OneList>(null)
-
-  const { focusedColumnId } = useFocusedColumn()
 
   const {
     OverrideRenderComponent,
@@ -79,9 +74,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     type: 'notifications',
   })
 
-  const { selectedItemIdRef } = useCardsKeyboard(listRef, {
+  useCardsKeyboard(listRef, {
     columnId: column.id,
-    enabled: focusedColumnId === column.id,
     firstVisibleItemIndexRef,
     items,
     type: 'notifications',
@@ -98,11 +92,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           <View style={{ height }}>
             <SwipeableNotificationCard
               cachedCardProps={itemCardProps[index]}
-              isFocused={
-                column.id === focusedColumnId &&
-                item.id === selectedItemIdRef.current &&
-                !disableItemFocus
-              }
+              columnId={column.id}
               notification={item}
               ownerIsKnown={ownerIsKnown}
               repoIsKnown={repoIsKnown}
@@ -117,11 +107,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
           <View style={{ height }}>
             <NotificationCard
               cachedCardProps={itemCardProps[index]}
-              isFocused={
-                column.id === focusedColumnId &&
-                item.id === selectedItemIdRef.current &&
-                !disableItemFocus
-              }
+              columnId={column.id}
               notification={item}
               ownerIsKnown={ownerIsKnown}
               repoIsKnown={repoIsKnown}
@@ -131,14 +117,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         </ErrorBoundary>
       )
     },
-    [
-      column.id === focusedColumnId && selectedItemIdRef.current,
-      getItemSize,
-      itemCardProps,
-      ownerIsKnown,
-      repoIsKnown,
-      swipeable,
-    ],
+    [getItemSize, itemCardProps, ownerIsKnown, repoIsKnown, swipeable],
   )
 
   const ListEmptyComponent = useMemo<
@@ -181,7 +160,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         horizontal={false}
         itemSeparator={itemSeparator}
         onVisibleItemsChanged={onVisibleItemsChanged}
-        overscanCount={5}
+        overscanCount={1}
         pointerEvents={pointerEvents}
         refreshControl={refreshControl}
         renderItem={renderItem}

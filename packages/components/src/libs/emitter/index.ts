@@ -23,6 +23,7 @@ export interface EmitterTypes {
     highlight?: boolean
     scrollTo?: boolean
   }
+  FOCUS_ON_COLUMN_ITEM: { columnId: string; itemId: string | number | null }
   PRESSED_KEYBOARD_SHORTCUT: { keys: string[] }
   SCROLL_DOWN_COLUMN: { columnId: string; columnIndex: number }
   SCROLL_UP_COLUMN: { columnId: string; columnIndex: number }

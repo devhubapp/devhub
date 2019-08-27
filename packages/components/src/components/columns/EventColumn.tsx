@@ -8,10 +8,7 @@ import {
 import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 
 export interface EventColumnProps
-  extends Omit<
-    EventCardsContainerProps,
-    'disableItemFocus' | 'ownerIsKnown' | 'repoIsKnown'
-  > {
+  extends Omit<EventCardsContainerProps, 'ownerIsKnown' | 'repoIsKnown'> {
   columnIndex: number
   headerDetails: ReturnType<typeof getColumnHeaderDetails>
   pagingEnabled?: boolean
@@ -28,12 +25,11 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
   } = props
 
   const Children = useMemo<ColumnRendererProps['children']>(
-    () => ({ disableItemFocus }) => (
+    () => (
       <EventCardsContainer
         key={`event-cards-container-${column.id}`}
         column={column}
         columnIndex={columnIndex}
-        disableItemFocus={disableItemFocus}
         ownerIsKnown={!!(headerDetails && headerDetails.ownerIsKnown)}
         pointerEvents={pointerEvents}
         repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}

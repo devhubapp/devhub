@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import { View } from 'react-native'
 
 import { EnhancedGitHubNotification } from '@devhub/core'
+import { useIsItemFocused } from '../../hooks/use-is-item-focused'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { tryFocus } from '../../utils/helpers/shared'
@@ -11,7 +12,7 @@ import { CardBorder } from './partials/CardBorder'
 
 export interface NotificationCardProps {
   cachedCardProps?: BaseCardProps | undefined
-  isFocused: boolean
+  columnId: string
   notification: EnhancedGitHubNotification
   ownerIsKnown: boolean
   repoIsKnown: boolean
@@ -21,13 +22,15 @@ export interface NotificationCardProps {
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
   const {
     cachedCardProps,
-    isFocused,
+    columnId,
     notification,
     ownerIsKnown,
     repoIsKnown,
   } = props
 
   const ref = useRef<View>(null)
+
+  const isFocused = useIsItemFocused(columnId, notification.id)
 
   useEffect(() => {
     if (!(Platform.OS === 'web' && ref.current)) return

@@ -128,11 +128,13 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       )
         return
 
-      valueRef.current = {
-        focusedColumnId: payload.columnId || null,
-        focusedColumnIndex: payload.columnIndex,
-      }
-      forceRerender()
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: payload.columnId || '',
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
     },
     [],
   )
@@ -146,11 +148,13 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       )
         return
 
-      valueRef.current = {
-        focusedColumnId: payload.columnId || null,
-        focusedColumnIndex: payload.columnIndex,
-      }
-      forceRerender()
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: payload.columnId || '',
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
     },
     [],
   )
