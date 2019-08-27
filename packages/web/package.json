@@ -8,7 +8,7 @@
     "clean": "shx rm -rf dist/*",
     "compile": "tsc -b --incremental",
     "deploy": "yarn build && cd ../../ && now --local-config ./now.app.json --target production && cd -",
-    "deploy:beta": "yarn build && cd ../../ && now --local-config ./now.app.json --target staging && now alias beta.devhubapp.com && cd -",
+    "deploy:beta": "yarn build && cd ../../ && now --local-config ./now.beta.json --target production && cd -",
     "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
