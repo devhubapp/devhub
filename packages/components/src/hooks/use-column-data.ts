@@ -14,13 +14,6 @@ export function useColumnData<ItemT extends EnhancedItem>(
     mergeSimilar?: boolean
   } = {},
 ) {
-  const mainSubscription = useReduxState(
-    useCallback(
-      state => selectors.columnSubscriptionSelector(state, columnId),
-      [columnId],
-    ),
-  )
-
   const subscriptionsDataSelector = useMemo(
     selectors.createSubscriptionsDataSelector,
     [columnId],
@@ -55,21 +48,8 @@ export function useColumnData<ItemT extends EnhancedItem>(
     mergeSimilar,
   ]) as ItemT[]
 
-  const installationsLoadState = useReduxState(
-    selectors.installationsLoadStateSelector,
-  )
-
-  const loadState =
-    installationsLoadState === 'loading' && !filteredItems.length
-      ? 'loading_first'
-      : (mainSubscription &&
-          mainSubscription.data &&
-          mainSubscription.data.loadState) ||
-        'not_loaded'
-
   return {
     allItems,
     filteredItems,
-    loadState,
   }
 }

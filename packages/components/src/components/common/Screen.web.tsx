@@ -50,7 +50,7 @@ function updateStyles({
 }) {
   const themeColor: keyof ThemeColors =
     statusBarBackgroundThemeColor === 'header'
-      ? getColumnHeaderThemeColors(theme.backgroundColor).normal
+      ? getColumnHeaderThemeColors().normal
       : statusBarBackgroundThemeColor || 'backgroundColor'
 
   const color = theme[themeColor]

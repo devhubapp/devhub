@@ -6,7 +6,6 @@ import {
   EnhancedGitHubEvent,
   GitHubComment,
   GitHubCommitCommentEvent,
-  GitHubCreateEvent,
   GitHubEnhancedEventBase,
   GitHubEvent,
   GitHubEventAction,
@@ -936,7 +935,7 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
   const forkee: GitHubRepo | undefined = (payload as GitHubForkEvent['payload'])
     .forkee
   const { member: _member } = payload as GitHubMemberEvent['payload']
-  let { release } = payload as GitHubReleaseEvent['payload']
+  const { release } = payload as GitHubReleaseEvent['payload']
   const { pages: _pages } = payload as GitHubGollumEvent['payload']
   const {
     pull_request: pullRequest,
@@ -990,28 +989,6 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
   const pages: GitHubPage[] = (_pages || []).filter(Boolean)
 
   const repo = repos.length === 1 ? repos[0] : undefined
-
-  if (event.type === 'CreateEvent' || event.type === 'DeleteEvent') {
-    const p = payload as GitHubCreateEvent['payload']
-
-    if (!release && p.ref_type === 'tag') {
-      release = {
-        id: '',
-        name: '',
-        tag_name: p.ref || '',
-        target_commitish: p.master_branch,
-        body: '',
-        draft: false,
-        prerelease: false,
-        created_at: event.created_at,
-        published_at: event.created_at,
-        author: event.actor,
-        assets: [],
-        url: '',
-        html_url: '',
-      }
-    }
-  }
 
   const commitShas = commits
     .filter(Boolean)

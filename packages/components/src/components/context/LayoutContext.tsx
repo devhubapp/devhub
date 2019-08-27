@@ -27,7 +27,7 @@ export interface AppLayoutProviderState {
 }
 
 export const AppLayoutContext = React.createContext<AppLayoutProviderState>(
-  getLayoutConsumerState(),
+  getAppLayout(),
 )
 AppLayoutContext.displayName = 'AppLayoutContext'
 
@@ -35,7 +35,7 @@ export function AppLayoutProvider(props: AppLayoutProviderProps) {
   const dimensions = useDimensions()
 
   return (
-    <AppLayoutContext.Provider value={getLayoutConsumerState(dimensions)}>
+    <AppLayoutContext.Provider value={getAppLayout(dimensions)}>
       {props.children}
     </AppLayoutContext.Provider>
   )
@@ -44,7 +44,7 @@ export function AppLayoutProvider(props: AppLayoutProviderProps) {
 export const AppLayoutConsumer = AppLayoutContext.Consumer
 ;(AppLayoutConsumer as any).displayName = 'AppLayoutConsumer'
 
-export function getLayoutConsumerState(dimensions?: {
+export function getAppLayout(dimensions?: {
   width: number
   height: number
 }): AppLayoutProviderState {

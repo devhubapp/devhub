@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { useColumnData } from '../../hooks/use-column-data'
+import { useColumnLoadingState } from '../../hooks/use-column-loading-state'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
-import { ProgressBar } from '../common/ProgressBar'
+import { ProgressBar, progressBarHeight } from '../common/ProgressBar'
 
 const styles = StyleSheet.create({
   container: {
@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
   },
 })
 
+export const columnLoadingIndicatorSize = progressBarHeight
+
 export interface ColumnLoadingIndicatorProps {
   columnId: string
 }
@@ -25,7 +27,7 @@ export const ColumnLoadingIndicator = React.memo(
     const { columnId } = props
 
     const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
-    const { loadState } = useColumnData(columnId || '')
+    const loadState = useColumnLoadingState(columnId || '')
 
     if (!(isLoggingIn || (loadState && loadState.includes('loading'))))
       return null

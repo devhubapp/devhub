@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { useEmitter } from '../../hooks/use-emitter'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -15,9 +15,7 @@ import { ColumnSeparator } from './ColumnSeparator'
 export const columnMargin = contentPadding / 2
 
 export interface ColumnProps extends ViewProps {
-  backgroundColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string | undefined)
+  backgroundColor?: keyof ThemeColors | ((theme: Theme) => string | undefined)
   children?: ReactNode
   columnId: string
   fullWidth?: boolean

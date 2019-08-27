@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp } from 'react-native'
 
-import { ThemeColors, ThemeTransformer } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import {
   TouchableOpacity,
   TouchableOpacityProps,
@@ -11,7 +11,7 @@ import { getThemeColorOrItself } from './helpers'
 
 export interface ThemedTouchableOpacityProps
   extends Omit<TouchableOpacityProps, 'style'> {
-  backgroundColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  backgroundColor?: keyof ThemeColors | ((theme: Theme) => string)
   style?: StyleProp<Omit<TouchableOpacityProps['style'], 'backgroundColor'>>
   themeTransformer?: ThemeTransformer
 }

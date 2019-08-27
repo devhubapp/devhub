@@ -28,7 +28,7 @@ export default function useMultiKeyPressCallback(
 
   useEffect(() => {
     params.current = { targetKeys, callback, preventDefault }
-  }, [...targetKeys, callback, preventDefault])
+  }, [targetKeys.join(','), callback, preventDefault])
 
   const downHandler = useCallback(
     (e: KeyboardEvent) => {
@@ -65,6 +65,7 @@ export default function useMultiKeyPressCallback(
 
   useEffect(() => {
     if (!(window && typeof window.addEventListener === 'function')) return
+    if (!targetKeys.length) return
 
     window.addEventListener('keydown', downHandler)
     window.addEventListener('keyup', upHandler)
@@ -73,10 +74,10 @@ export default function useMultiKeyPressCallback(
       window.removeEventListener('keydown', downHandler)
       window.removeEventListener('keyup', upHandler)
     }
-  }, [downHandler, upHandler])
+  }, [downHandler, upHandler, targetKeys.length])
 
   useEmitter(
-    'PRESSED_KEYBOARD_SHORTCUT',
+    targetKeys.length ? 'PRESSED_KEYBOARD_SHORTCUT' : undefined,
     payload => {
       if (payload.keys.length === 1) pressedKeysRef.current.clear()
     },

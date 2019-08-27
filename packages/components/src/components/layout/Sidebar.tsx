@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef } from 'react'
-import { Image, StyleSheet, View, ViewStyle } from 'react-native'
+import { FlatList, Image, StyleSheet, View, ViewStyle } from 'react-native'
 
 import {
   getColumnOption,
@@ -14,7 +14,6 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { emitter } from '../../libs/emitter'
-import { FlatList } from '../../libs/flatlist'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
@@ -86,12 +85,12 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   useLayoutEffect(() => {
     if (!(flatListRef.current && focusedColumnId)) return
 
-    flatListRef.current.scrollToItem({
+    flatListRef.current.scrollToIndex({
       animated: true,
-      item: focusedColumnId,
+      index: focusedColumnIndex,
       viewPosition: 0.5,
     })
-  }, [focusedColumnId, focusedColumnIndex, flatListRef.current])
+  }, [focusedColumnIndex, flatListRef.current])
 
   const small = sizename === '1-small'
   const large = sizename >= '3-large'
@@ -152,9 +151,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
   return (
     <ThemedSafeAreaView
-      backgroundColor={theme =>
-        getColumnHeaderThemeColors(theme.backgroundColor).normal
-      }
+      backgroundColor={getColumnHeaderThemeColors().normal}
       style={{ zIndex: zIndex || 1000 }}
     >
       <View
@@ -197,9 +194,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 enableForegroundHover={
                   getItemProps({ highlight: false }).enableForegroundHover
                 }
-                hoverBackgroundThemeColor={theme =>
-                  getColumnHeaderThemeColors(theme.backgroundColor).hover
-                }
+                hoverBackgroundThemeColor={getColumnHeaderThemeColors().hover}
                 href={getGitHubURLForUser(username!)}
                 openOnNewTab
                 style={[
@@ -242,12 +237,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   }
                   hoverBackgroundThemeColor={
                     isModalOpen('ADD_COLUMN')
-                      ? theme =>
-                          getColumnHeaderThemeColors(theme.backgroundColor)
-                            .selected
-                      : theme =>
-                          getColumnHeaderThemeColors(theme.backgroundColor)
-                            .hover
+                      ? theme => getColumnHeaderThemeColors().selected
+                      : theme => getColumnHeaderThemeColors().hover
                   }
                   hoverForegroundThemeColor={
                     getItemProps({ highlight: isModalOpen('ADD_COLUMN') })
@@ -298,11 +289,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 }
                 hoverBackgroundThemeColor={
                   isModalOpen('SETTINGS')
-                    ? theme =>
-                        getColumnHeaderThemeColors(theme.backgroundColor)
-                          .selected
-                    : theme =>
-                        getColumnHeaderThemeColors(theme.backgroundColor).hover
+                    ? theme => getColumnHeaderThemeColors().selected
+                    : theme => getColumnHeaderThemeColors().hover
                 }
                 hoverForegroundThemeColor={
                   getItemProps({ highlight: isModalOpen('SETTINGS') })
@@ -419,9 +407,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                     getItemProps({ highlight: isModalOpen('ADD_COLUMN') })
                       .foregroundThemeColor
                   }
-                  hoverBackgroundThemeColor={theme =>
-                    getColumnHeaderThemeColors(theme.backgroundColor).hover
-                  }
+                  hoverBackgroundThemeColor={getColumnHeaderThemeColors().hover}
                   hoverForegroundThemeColor={
                     getItemProps({ highlight: isModalOpen('ADD_COLUMN') })
                       .hoverForegroundThemeColor
@@ -462,10 +448,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             analyticsLabel="sidebar_settings"
             hoverBackgroundThemeColor={
               isModalOpen('SETTINGS')
-                ? theme =>
-                    getColumnHeaderThemeColors(theme.backgroundColor).selected
-                : theme =>
-                    getColumnHeaderThemeColors(theme.backgroundColor).hover
+                ? theme => getColumnHeaderThemeColors().selected
+                : theme => getColumnHeaderThemeColors().hover
             }
             enableBackgroundHover={
               getItemProps({ highlight: isModalOpen('SETTINGS') })
@@ -539,9 +523,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 enableForegroundHover={
                   getItemProps({ highlight: false }).enableForegroundHover
                 }
-                hoverBackgroundThemeColor={theme =>
-                  getColumnHeaderThemeColors(theme.backgroundColor).hover
-                }
+                hoverBackgroundThemeColor={getColumnHeaderThemeColors().hover}
                 href="https://github.com/devhubapp/devhub"
                 openOnNewTab
                 style={[
@@ -641,9 +623,8 @@ const SidebarColumnItem = React.memo(
         foregroundThemeColor={foregroundThemeColor}
         hoverBackgroundThemeColor={
           highlight
-            ? theme =>
-                getColumnHeaderThemeColors(theme.backgroundColor).selected
-            : theme => getColumnHeaderThemeColors(theme.backgroundColor).hover
+            ? theme => getColumnHeaderThemeColors().selected
+            : theme => getColumnHeaderThemeColors().hover
         }
         hoverForegroundThemeColor={hoverForegroundThemeColor}
         iconName={headerDetails.icon}

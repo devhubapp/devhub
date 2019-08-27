@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import React, { Ref, useEffect, useRef } from 'react'
 import {
+  FlatList,
   ScrollView,
   ScrollViewProps,
   StyleSheet,
@@ -8,7 +9,6 @@ import {
   ViewProps,
 } from 'react-native'
 
-import { FlatList } from '../../libs/flatlist'
 import { contentPadding } from '../../styles/variables'
 import {
   TransparentTextOverlay,

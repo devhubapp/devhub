@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ThemeColors, ThemeTransformer } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import { TextInput, TextInputProps } from '../common/TextInput'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
@@ -19,23 +19,17 @@ export interface ThemedTextInputProps
     | 'textFocusColor'
     | 'textHoverColor'
   > {
-  backgroundFocusThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-  backgroundHoverThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-  backgroundThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
-  borderFocusThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
-  borderHoverThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
-  borderThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  backgroundFocusThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  backgroundHoverThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  backgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  borderFocusThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  borderHoverThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  borderThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   children?: React.ReactNode
-  placeholderTextThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-  textFocusThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
-  textHoverThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
-  textThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  placeholderTextThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  textFocusThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  textHoverThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  textThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   themeTransformer?: ThemeTransformer
 }
 

@@ -10,9 +10,9 @@ import { getThemeColorOrItself } from './helpers'
 export interface ThemedViewProps extends Omit<ViewProps, 'style'> {
   backgroundColor?:
     | keyof ThemeColors
-    | ((theme: ThemeColors) => string | undefined)
+    | ((theme: Theme) => string | undefined)
     | null
-  borderColor?: keyof ThemeColors | ((theme: ThemeColors) => string) | null
+  borderColor?: keyof ThemeColors | ((theme: Theme) => string) | null
   children?: React.ReactNode
   style?: StyleProp<Omit<ViewStyle, 'backgroundColor' | 'borderColor'>>
   themeTransformer?: ThemeTransformer

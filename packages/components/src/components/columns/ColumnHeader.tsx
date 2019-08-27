@@ -6,9 +6,7 @@ import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import { Separator } from '../common/Separator'
 import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'
 
-export function getColumnHeaderThemeColors(
-  _backgroundColor?: string,
-): {
+export function getColumnHeaderThemeColors(): {
   normal: keyof ThemeColors
   hover: keyof ThemeColors
   selected: keyof ThemeColors
@@ -43,9 +41,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
 
   return (
     <ThemedSafeAreaView
-      backgroundColor={theme =>
-        getColumnHeaderThemeColors(theme.backgroundColor).normal
-      }
+      backgroundColor={getColumnHeaderThemeColors().normal}
       style={styles.container}
     >
       <View

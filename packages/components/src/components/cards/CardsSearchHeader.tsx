@@ -18,6 +18,7 @@ import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { ColumnFiltersButton } from '../columns/ColumnFiltersButton'
+import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { SearchBar, searchBarTotalHeight } from '../common/SearchBar'
 import { Separator, separatorSize } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
@@ -98,7 +99,10 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
   if (!column) return null
 
   return (
-    <ThemedView backgroundColor="backgroundColor" style={sharedStyles.flexGrow}>
+    <ThemedView
+      backgroundColor={getColumnHeaderThemeColors().normal}
+      style={sharedStyles.flexGrow}
+    >
       <View
         style={[
           sharedStyles.flexGrow,

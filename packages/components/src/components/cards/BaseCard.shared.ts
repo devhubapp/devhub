@@ -230,25 +230,26 @@ export function getCardPropsForItem(
 
       const subjectType = getItemSubjectType('activity', event)
 
-      const subitems = ((): BaseCardProps['subitems'] | undefined => {
-        if (!(_comment && _comment.body)) return undefined
+      const subitems =
+        _comment && _comment.body
+          ? ((): BaseCardProps['subitems'] | undefined => {
+              const trimmerBody = trimNewLinesAndSpaces(
+                stripMarkdown(_comment.body),
+                120,
+              )
+              if (!trimmerBody) return undefined
 
-        const trimmerBody = trimNewLinesAndSpaces(
-          stripMarkdown(_comment.body),
-          120,
-        )
-        if (!trimmerBody) return undefined
-
-        return [
-          {
-            avatar: {
-              imageURL: getUserAvatarFromObject(_comment.user)!,
-              linkURL: getUserURLFromObject(_comment.user)!,
-            },
-            text: trimmerBody,
-          },
-        ]
-      })()
+              return [
+                {
+                  avatar: {
+                    imageURL: getUserAvatarFromObject(_comment.user)!,
+                    linkURL: getUserURLFromObject(_comment.user)!,
+                  },
+                  text: trimmerBody,
+                },
+              ]
+            })()
+          : undefined
 
       const actorUsername = actor.display_login || actor.login
 
@@ -487,7 +488,12 @@ export function getCardPropsForItem(
                 subjectType === 'RepositoryVulnerabilityAlert') &&
                 repoURL) ||
               (subjectType === 'User' && (users[0] && users[0].html_url)) ||
-              '',
+              (branchOrTagName &&
+                ((isTagMainEvent &&
+                  `${repoURL}/releases/tag/${branchOrTagName}`) ||
+                  (isBranchMainEvent &&
+                    `${repoURL}/tree/${branchOrTagName}`))) ||
+              (__DEV__ ? '' : repoURL),
             subitems,
             subtitle: undefined,
             text: getRepoText({

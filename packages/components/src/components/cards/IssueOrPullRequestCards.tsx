@@ -1,69 +1,54 @@
-import React, { useCallback, useMemo, useRef } from 'react'
-import { Dimensions, View } from 'react-native'
+import React, { useCallback, useMemo } from 'react'
+import { View, ViewProps } from 'react-native'
+import { useDispatch } from 'react-redux'
 
 import {
   Column,
-  constants,
   EnhancedGitHubIssueOrPullRequest,
-  EnhancedLoadState,
-  getDateSmallText,
   getIssueOrPullRequestSubjectType,
   getSearchQueryFromFilter,
-  isItemRead,
 } from '@devhub/core'
-import { useCardGetItemLayout } from '../../hooks/use-card-get-item-layout'
-import useKeyPressCallback from '../../hooks/use-key-press-callback'
-import { useKeyboardScrolling } from '../../hooks/use-keyboard-scrolling'
-import { useReduxAction } from '../../hooks/use-redux-action'
+import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
+import { useCardsProps } from '../../hooks/use-cards-props'
 import { useReduxState } from '../../hooks/use-redux-state'
-import { bugsnag, ErrorBoundary } from '../../libs/bugsnag'
-import { FlatList, FlatListProps } from '../../libs/flatlist'
+import { ErrorBoundary } from '../../libs/bugsnag'
+import { OneList, OneListProps } from '../../libs/one-list'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
-import { ColumnLoadingIndicator } from '../columns/ColumnLoadingIndicator'
-import { Button, defaultButtonSize } from '../common/Button'
-import { fabSize } from '../common/FAB'
-import { RefreshControl } from '../common/RefreshControl'
-import { Spacer } from '../common/Spacer'
+import { Button } from '../common/Button'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
-import { useAppLayout } from '../context/LayoutContext'
-import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
-import { CardsSearchHeader } from './CardsSearchHeader'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import {
   IssueOrPullRequestCard,
   IssueOrPullRequestCardProps,
 } from './IssueOrPullRequestCard'
-import { CardItemSeparator } from './partials/CardItemSeparator'
 import { SwipeableIssueOrPullRequestCard } from './SwipeableIssueOrPullRequestCard'
+
+type ItemT = EnhancedGitHubIssueOrPullRequest
 
 export interface IssueOrPullRequestCardsProps
   extends Omit<
     IssueOrPullRequestCardProps,
-    'cachedCardProps' | 'isFocused' | 'issueOrPullRequest' | 'type'
+    'cachedCardProps' | 'issueOrPullRequest' | 'isFocused' | 'type'
   > {
   column: Column
   columnIndex: number
   disableItemFocus: boolean
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
-  items: EnhancedGitHubIssueOrPullRequest[]
+  items: ItemT[]
   lastFetchedAt: string | undefined
-  loadState: EnhancedLoadState
-  pointerEvents: FlatListProps<
-    EnhancedGitHubIssueOrPullRequest
-  >['pointerEvents']
+  ownerIsKnown: boolean
+  pointerEvents: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
+  repoIsKnown: boolean
   swipeable: boolean
 }
 
-function keyExtractor(item: EnhancedGitHubIssueOrPullRequest) {
+function keyExtractor(item: ItemT) {
   return `issue-or-pr-card-${item.id}`
 }
-
-const stickyHeaderIndices = [0]
 
 export const IssueOrPullRequestCards = React.memo(
   (props: IssueOrPullRequestCardsProps) => {
@@ -75,7 +60,6 @@ export const IssueOrPullRequestCards = React.memo(
       fetchNextPage,
       items,
       lastFetchedAt,
-      loadState,
       ownerIsKnown,
       pointerEvents,
       refresh,
@@ -83,112 +67,50 @@ export const IssueOrPullRequestCards = React.memo(
       swipeable,
     } = props
 
-    const flatListRef = React.useRef<
-      FlatList<EnhancedGitHubIssueOrPullRequest>
-    >(null)
+    const listRef = React.useRef<typeof OneList>(null)
 
-    const visibleItemIndexesRef = useRef<number[]>([])
-    const getVisibleItemIndex = useCallback(() => {
-      if (
-        !(visibleItemIndexesRef.current && visibleItemIndexesRef.current.length)
-      )
-        return
-
-      return visibleItemIndexesRef.current[0]
-    }, [])
-
-    const { selectedItemIdRef } = useKeyboardScrolling(flatListRef, {
-      columnId: column.id,
-      getVisibleItemIndex,
-      items,
-    })
+    const dispatch = useDispatch()
     const { focusedColumnId } = useFocusedColumn()
-
-    const hasSelectedItem =
-      !!selectedItemIdRef.current && column.id === focusedColumnId
 
     const loggedUsername = useReduxState(
       selectors.currentGitHubUsernameSelector,
     )
 
-    const markItemsAsReadOrUnread = useReduxAction(
-      actions.markItemsAsReadOrUnread,
-    )
-    const saveItemsForLater = useReduxAction(actions.saveItemsForLater)
-    const setColumnInvolvesFilter = useReduxAction(
-      actions.setColumnInvolvesFilter,
-    )
-
-    useKeyPressCallback(
-      's',
-      useCallback(() => {
-        const selectedItem =
-          hasSelectedItem &&
-          items.find(item => item.id === selectedItemIdRef.current)
-        if (!selectedItem) return
-
-        saveItemsForLater({
-          itemIds: [selectedItemIdRef.current!],
-          save: !selectedItem.saved,
-        })
-      }, [hasSelectedItem, items]),
-    )
-
-    useKeyPressCallback(
-      'r',
-      useCallback(() => {
-        const selectedItem =
-          hasSelectedItem &&
-          items.find(item => item.id === selectedItemIdRef.current)
-        if (!selectedItem) return
-
-        markItemsAsReadOrUnread({
-          type: 'issue_or_pr',
-          itemIds: [selectedItemIdRef.current!],
-          unread: isItemRead(selectedItem),
-        })
-      }, [hasSelectedItem, items]),
-    )
-
-    const setColumnClearedAtFilter = useReduxAction(
-      actions.setColumnClearedAtFilter,
-    )
-
-    const _handleViewableItemsChanged: FlatListProps<
-      EnhancedGitHubIssueOrPullRequest
-    >['onViewableItemsChanged'] = ({ viewableItems }) => {
-      visibleItemIndexesRef.current = viewableItems
-        .filter(v => v.isViewable && typeof v.index === 'number')
-        .map(v => v.index!)
-    }
-    const handleViewableItemsChanged = useCallback(
-      _handleViewableItemsChanged,
-      [],
-    )
-
-    const viewabilityConfig = useMemo(
-      () => ({
-        itemVisiblePercentThreshold: 100,
-      }),
-      [],
-    )
-
-    const isEmpty = !items.length
-
-    const { getItemLayout, itemCardProps, itemLayouts } = useCardGetItemLayout(
-      'issue_or_pr',
+    const {
+      OverrideRenderComponent,
+      firstVisibleItemIndexRef,
+      footer,
+      getItemSize,
+      header,
+      itemCardProps,
+      itemSeparator,
+      onVisibleItemsChanged,
+      refreshControl,
+    } = useCardsProps({
+      column,
+      columnIndex,
+      fetchNextPage,
       items,
-      {
-        ownerIsKnown,
-        repoIsKnown,
-      },
-    )
+      lastFetchedAt,
+      ownerIsKnown,
+      refresh,
+      repoIsKnown,
+      type: 'issue_or_pr',
+    })
+
+    const { selectedItemIdRef } = useCardsKeyboard(listRef, {
+      columnId: column.id,
+      enabled: focusedColumnId === column.id,
+      firstVisibleItemIndexRef,
+      items,
+      type: 'issue_or_pr',
+    })
 
     const renderItem = useCallback<
-      NonNullable<FlatListProps<EnhancedGitHubIssueOrPullRequest>['renderItem']>
+      NonNullable<OneListProps<ItemT>['renderItem']>
     >(
       ({ item, index }) => {
-        const height = itemLayouts[index] && itemLayouts[index]!.length
+        const height = getItemSize(item, index)
 
         if (swipeable) {
           return (
@@ -232,248 +154,110 @@ export const IssueOrPullRequestCards = React.memo(
       },
       [
         column.id === focusedColumnId && selectedItemIdRef.current,
+        getItemSize,
         itemCardProps,
-        itemLayouts,
         ownerIsKnown,
         repoIsKnown,
         swipeable,
       ],
     )
 
-    const renderHeader = useCallback(() => {
-      return (
-        <>
-          <CardsSearchHeader
-            key={`cards-search-header-column-${column.id}`}
-            columnId={column.id}
-          />
+    const ListEmptyComponent = useMemo<
+      NonNullable<OneListProps<ItemT>['ListEmptyComponent']>
+    >(
+      () => () => {
+        const maybeInvalidFilters = `${errorMessage || ''}`
+          .toLowerCase()
+          .startsWith('validation failed')
+        const messageHasMoreDetails =
+          `${errorMessage || ''}` !== 'validation failed'
+        const emptyFilters =
+          maybeInvalidFilters &&
+          !getSearchQueryFromFilter(column.type, column.filters)
 
-          <ColumnLoadingIndicator columnId={column.id} />
-        </>
-      )
-    }, [column.id])
+        const exampleFilter = `involves:${loggedUsername || 'gaearon'}`
 
-    const renderFooter = useCallback(() => {
-      const { sizename } = useAppLayout()
+        if (maybeInvalidFilters) {
+          return (
+            <EmptyCards
+              column={column}
+              disableLoadingIndicator
+              emoji={emptyFilters ? 'desert' : 'squirrel'}
+              errorButtonView={
+                <Button
+                  analyticsLabel="try_fix_invalid_filter"
+                  children={`Add "${exampleFilter}" filter`}
+                  onPress={() =>
+                    dispatch(
+                      actions.setColumnInvolvesFilter({
+                        columnId: column.id,
+                        user: loggedUsername || 'gaearon',
+                        value: true,
+                      }),
+                    )
+                  }
+                />
+              }
+              errorMessage={
+                emptyFilters
+                  ? `You need to add some filters for this search to work. \nExample: ${exampleFilter}`
+                  : `Something went wrong. Try changing your search query. \n${
+                      messageHasMoreDetails
+                        ? errorMessage
+                        : `Example: ${exampleFilter}`
+                    }`
+              }
+              errorTitle={
+                emptyFilters ? 'Empty search' : 'Check your search query'
+              }
+              fetchNextPage={undefined}
+              refresh={undefined}
+            />
+          )
+        }
 
-      return (
-        <>
-          {!isEmpty && <CardItemSeparator />}
-
-          {fetchNextPage ? (
-            <View>
-              <Button
-                analyticsLabel={
-                  loadState === 'error' ? 'try_again' : 'load_more'
-                }
-                children={
-                  loadState === 'error' ? 'Oops. Try again' : 'Load more'
-                }
-                disabled={
-                  loadState === 'loading' ||
-                  loadState === 'loading_first' ||
-                  loadState === 'loading_more'
-                }
-                loading={loadState === 'loading_more'}
-                onPress={fetchNextPage}
-                round={false}
-              />
-            </View>
-          ) : column.filters && column.filters.clearedAt ? (
-            <View
-              style={{
-                paddingVertical: fabSpacing + (fabSize - defaultButtonSize) / 2,
-                paddingHorizontal: contentPadding,
-              }}
-            >
-              <Button
-                analyticsLabel="show_cleared"
-                children="Show cleared items"
-                onPress={() => {
-                  setColumnClearedAtFilter({
-                    clearedAt: null,
-                    columnId: column.id,
-                  })
-
-                  if (refresh) refresh()
-                }}
-                round
-                showBorder
-                transparent
-              />
-            </View>
-          ) : null}
-
-          {!isEmpty && shouldRenderFAB({ sizename }) && (
-            <Spacer height={fabSize + 2 * fabSpacing} />
-          )}
-        </>
-      )
-    }, [
-      isEmpty,
-      fetchNextPage,
-      loadState,
-      column.filters && column.filters.clearedAt,
-      column.id,
-      refresh,
-    ])
-
-    const renderEmptyComponent = useCallback(() => {
-      const maybeInvalidFilters = `${errorMessage || ''}`
-        .toLowerCase()
-        .startsWith('validation failed')
-      const messageHasMoreDetails =
-        `${errorMessage || ''}` !== 'validation failed'
-      const emptyFilters =
-        maybeInvalidFilters &&
-        !getSearchQueryFromFilter(column.type, column.filters)
-
-      const exampleFilter = `involves:${loggedUsername || 'gaearon'}`
-
-      if (maybeInvalidFilters) {
         return (
           <EmptyCards
             column={column}
             disableLoadingIndicator
-            emoji={emptyFilters ? 'desert' : 'squirrel'}
-            errorButtonView={
-              <Button
-                analyticsLabel="try_fix_invalid_filter"
-                children={`Add "${exampleFilter}" filter`}
-                onPress={() =>
-                  setColumnInvolvesFilter({
-                    columnId: column.id,
-                    user: loggedUsername || 'gaearon',
-                    value: true,
-                  })
-                }
-              />
-            }
-            errorMessage={
-              emptyFilters
-                ? `You need to add some filters for this search to work. \nExample: ${exampleFilter}`
-                : `Something went wrong. Try changing your search query. \n${
-                    messageHasMoreDetails
-                      ? errorMessage
-                      : `Example: ${exampleFilter}`
-                  }`
-            }
-            errorTitle={
-              emptyFilters ? 'Empty search' : 'Check your search query'
-            }
-            fetchNextPage={undefined}
-            loadState={loadState}
-            refresh={undefined}
+            errorMessage={errorMessage}
+            fetchNextPage={fetchNextPage}
+            refresh={refresh}
           />
         )
-      }
-
-      return (
-        <EmptyCards
-          column={column}
-          disableLoadingIndicator
-          errorMessage={errorMessage}
-          fetchNextPage={fetchNextPage}
-          loadState={loadState}
-          refresh={refresh}
-        />
-      )
-    }, [
-      items.length ? undefined : column,
-      items.length ? undefined : errorMessage,
-      items.length ? undefined : fetchNextPage,
-      items.length ? undefined : loadState,
-      items.length ? undefined : refresh,
-      items.length ? undefined : loggedUsername,
-    ])
-
-    const onScrollToIndexFailed = useCallback<
-      NonNullable<
-        FlatListProps<EnhancedGitHubIssueOrPullRequest>['onScrollToIndexFailed']
-      >
-    >(info => {
-      console.error(info)
-      bugsnag.notify({
-        name: 'ScrollToIndexFailed',
-        message: 'Failed to scroll to index',
-        ...info,
-      })
-    }, [])
-
-    const refreshControl = useMemo(
-      () => (
-        <RefreshControl
-          intervalRefresh={lastFetchedAt}
-          onRefresh={refresh}
-          refreshing={false}
-          title={
-            lastFetchedAt
-              ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
-              : 'Pull to refresh'
-          }
-        />
-      ),
-      [lastFetchedAt, refresh],
+      },
+      [
+        items.length ? undefined : column,
+        items.length ? undefined : errorMessage,
+        items.length ? undefined : fetchNextPage,
+        items.length ? undefined : refresh,
+        items.length ? undefined : loggedUsername,
+      ],
     )
 
-    const rerender = useMemo(() => ({}), [
-      renderItem,
-      renderHeader,
-      renderFooter,
-    ])
-
-    if (columnIndex && columnIndex >= constants.COLUMNS_LIMIT) {
-      return (
-        <EmptyCards
-          column={column}
-          errorMessage={`You have reached the limit of ${
-            constants.COLUMNS_LIMIT
-          } columns. This is to maintain a healthy usage of the GitHub API.`}
-          errorTitle="Too many columns"
-          fetchNextPage={undefined}
-          loadState="error"
-          refresh={undefined}
-        />
-      )
-    }
-
-    const _estimatedItemSize = (getItemLayout(items, 0) || {}).length || 89
-    const _nItemsThatFitInTheWindow = Math.ceil(
-      Dimensions.get('window').height / _estimatedItemSize,
-    )
+    if (OverrideRenderComponent) return <OverrideRenderComponent />
 
     return (
-      <FlatList
-        ref={flatListRef}
-        key="issue-or-pr-cards-flat-list"
-        ItemSeparatorComponent={CardItemSeparator}
-        ListEmptyComponent={renderEmptyComponent}
-        ListFooterComponent={renderFooter}
-        ListHeaderComponent={renderHeader}
-        alwaysBounceVertical
-        bounces
-        contentContainerStyle={isEmpty && sharedStyles.flexGrow}
-        // contentOffset={{ x: 0, y: cardSearchTotalHeight }}
-        data-flatlist-with-header-content-container-full-height-fix={isEmpty}
-        data={items}
-        disableVirtualization={false}
-        extraData={rerender}
-        getItemLayout={getItemLayout}
-        initialNumToRender={_nItemsThatFitInTheWindow}
-        keyExtractor={keyExtractor}
-        maxToRenderPerBatch={2}
-        onScrollToIndexFailed={onScrollToIndexFailed}
-        onViewableItemsChanged={handleViewableItemsChanged}
-        pointerEvents={pointerEvents}
-        refreshControl={refreshControl}
-        removeClippedSubviews
-        renderItem={renderItem}
-        scrollEventThrottle={16}
-        stickyHeaderIndices={stickyHeaderIndices}
-        updateCellsBatchingPeriod={0}
-        viewabilityConfig={viewabilityConfig}
-        windowSize={1}
-      />
+      <View style={sharedStyles.flex}>
+        <OneList
+          ref={listRef}
+          key="issue-or-pr-cards-list"
+          ListEmptyComponent={ListEmptyComponent}
+          data={items}
+          estimatedItemSize={getItemSize(items[0], 0) || 89}
+          footer={footer}
+          getItemKey={keyExtractor}
+          getItemSize={getItemSize}
+          header={header}
+          horizontal={false}
+          itemSeparator={itemSeparator}
+          onVisibleItemsChanged={onVisibleItemsChanged}
+          overscanCount={5}
+          pointerEvents={pointerEvents}
+          refreshControl={refreshControl}
+          renderItem={renderItem}
+        />
+      </View>
     )
   },
 )

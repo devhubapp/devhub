@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
@@ -25,16 +25,12 @@ export interface LinkProps
   extends Omit<TouchableOpacityProps, 'analyticsLabel'> {
   allowEmptyLink?: boolean
   analyticsLabel?: TouchableOpacityProps['analyticsLabel']
-  backgroundThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  backgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
   enableTextWrapper?: boolean
-  hoverBackgroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-  hoverForegroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
+  hoverBackgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  hoverForegroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   href?: string
   mobileProps?: TouchableOpacityProps
   openOnNewTab?: boolean

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { PixelRatio, StyleSheet, Text, View } from 'react-native'
 
-import { getDateSmallText, getFullDateText } from '@devhub/core'
+import { getDateSmallText, getFullDateText, Theme } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import {
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: sizes.avatarContainerWidth,
     height: smallAvatarSize,
+    paddingRight: sizes.avatarContainerWidth - avatarSize - smallAvatarSize / 2,
   },
 
   avatarContainer: {
@@ -107,6 +108,7 @@ const styles = StyleSheet.create({
     fontSize: smallerTextSize,
     fontWeight: '300',
     overflow: 'hidden',
+    ...Platform.select({ web: { fontFeatureSettings: '"tnum"' } }),
   },
 
   actionContainer: {
@@ -176,7 +178,14 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     title,
   } = props
 
-  const backgroundThemeColor = getCardBackgroundThemeColor({ isMuted: isRead })
+  const backgroundThemeColor = (theme: Theme) =>
+    getCardBackgroundThemeColor({ isDark: theme.isDark, isMuted: isRead })
+  const backgroundHoverThemeColor = (theme: Theme) =>
+    getCardBackgroundThemeColor({
+      isDark: theme.isDark,
+      isMuted: isRead,
+      isHovered: true,
+    })
 
   if (!link) console.error(`No link for card: ${title}, ${text}`)
   if (link && link.includes('api.github.com'))
@@ -184,14 +193,10 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
   return (
     <Link
-      activeOpacity={1}
       backgroundThemeColor={backgroundThemeColor}
       enableBackgroundHover
       enableForegroundHover={false}
-      hoverBackgroundThemeColor={getCardBackgroundThemeColor({
-        isMuted: isRead,
-        isHovered: true,
-      })}
+      hoverBackgroundThemeColor={backgroundHoverThemeColor}
       href={link}
       openOnNewTab
       style={styles.container}
@@ -201,16 +206,12 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
           <>
             <View style={styles.actionContainer}>
               <View style={styles.smallAvatarContainer}>
-                <View style={sharedStyles.horizontal}>
-                  <Spacer width={avatarSize - smallAvatarSize} />
-
-                  <Avatar
-                    avatarUrl={action.avatar.imageURL}
-                    linkURL={action.avatar.linkURL}
-                    style={styles.avatar}
-                    size={smallAvatarSize}
-                  />
-                </View>
+                <Avatar
+                  avatarUrl={action.avatar.imageURL}
+                  linkURL={action.avatar.linkURL}
+                  style={styles.avatar}
+                  size={smallAvatarSize}
+                />
               </View>
 
               <Spacer width={sizes.horizontalSpaceSize} />
@@ -244,7 +245,10 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
             >
               <ThemedIcon
                 name={icon.name}
-                color={icon.color || 'foregroundColor'}
+                color={
+                  icon.color ||
+                  (isRead ? 'foregroundColorMuted65' : 'foregroundColor')
+                }
                 style={styles.icon}
               />
             </ThemedView>
@@ -257,7 +261,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
             <View style={sharedStyles.horizontalAndVerticallyAligned}>
               <ThemedText
-                color="foregroundColor"
+                color={isRead ? 'foregroundColorMuted65' : 'foregroundColor'}
                 numberOfLines={1}
                 style={styles.title}
               >
@@ -290,7 +294,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
             {!!subtitle && (
               <ThemedText
-                color="foregroundColor"
+                color={isRead ? 'foregroundColorMuted65' : 'foregroundColor'}
                 numberOfLines={1}
                 style={styles.subtitle}
               >
@@ -323,16 +327,12 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               <View style={styles.subitemContainer}>
                 <View style={styles.smallAvatarContainer}>
                   {subitem.avatar && subitem.avatar.imageURL && (
-                    <View style={sharedStyles.horizontal}>
-                      <Spacer width={avatarSize - smallAvatarSize} />
-
-                      <Avatar
-                        avatarUrl={subitem.avatar.imageURL}
-                        linkURL={subitem.avatar.linkURL}
-                        style={styles.avatar}
-                        size={smallAvatarSize}
-                      />
-                    </View>
+                    <Avatar
+                      avatarUrl={subitem.avatar.imageURL}
+                      linkURL={subitem.avatar.linkURL}
+                      style={styles.avatar}
+                      size={smallAvatarSize}
+                    />
                   )}
                 </View>
 

@@ -1,4 +1,3 @@
-import { GitHubIcon } from '@devhub/core'
 import React, { PureComponent, ReactNode } from 'react'
 import { Animated, View } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'

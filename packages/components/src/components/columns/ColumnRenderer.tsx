@@ -32,7 +32,11 @@ import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsAccordion } from './ColumnOptionsAccordion'
 
-export function getColumnCardThemeColors(): {
+export function getColumnCardThemeColors({
+  isDark,
+}: {
+  isDark: boolean
+}): {
   column: keyof ThemeColors
   card: keyof ThemeColors
   card__hover: keyof ThemeColors
@@ -42,20 +46,22 @@ export function getColumnCardThemeColors(): {
   return {
     card: 'backgroundColorLighther1',
     card__hover: 'backgroundColorLess2',
-    card__muted: 'backgroundColorDarker1',
+    card__muted: isDark ? 'backgroundColor' : 'backgroundColorDarker1',
     card__muted_hover: 'backgroundColorLess2',
     column: 'backgroundColor',
   }
 }
 
 export function getCardBackgroundThemeColor({
+  isDark,
   isHovered,
   isMuted,
 }: {
+  isDark: boolean
   isHovered?: boolean
   isMuted: boolean
 }) {
-  const backgroundThemeColors = getColumnCardThemeColors()
+  const backgroundThemeColors = getColumnCardThemeColors({ isDark })
 
   const _backgroundThemeColor =
     (isMuted &&
@@ -224,7 +230,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   return (
     <Column
       key={`column-renderer-${column.id}-inner-container`}
-      backgroundColor={getColumnCardThemeColors().column}
+      backgroundColor={getColumnCardThemeColors({ isDark: false }).column}
       columnId={column.id}
       fullWidth={appViewMode === 'single-column'}
       pagingEnabled={pagingEnabled}

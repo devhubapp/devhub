@@ -27,7 +27,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
   const theme = useReduxState(selectors.themeSelector)
 
   useEffect(() => {
-    const headerThemeColors = getColumnHeaderThemeColors(theme.backgroundColor)
+    const headerThemeColors = getColumnHeaderThemeColors()
     Browser.setBackgroundColor(theme[headerThemeColors.normal])
     Browser.setForegroundColor(theme.foregroundColor)
   }, [theme])
@@ -73,9 +73,7 @@ export function useThemeCallback(
   if (themeTransformer)
     initialTheme = transformTheme(initialTheme, themeTransformer)
 
-  const headerThemeColors = getColumnHeaderThemeColors(
-    initialTheme.backgroundColor,
-  )
+  const headerThemeColors = getColumnHeaderThemeColors()
   Browser.setBackgroundColor(initialTheme[headerThemeColors.normal])
   Browser.setForegroundColor(initialTheme.foregroundColor)
 

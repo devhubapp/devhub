@@ -13,8 +13,9 @@ export interface SearchBarProps extends ThemedTextInputProps {
   containerBackgroundThemeColor?: ThemedViewProps['backgroundColor']
 }
 
+const defaultSize = 34
 export const searchBarTotalHeight =
-  30 + (contentPadding / 2) * 2 + separatorSize
+  defaultSize + (contentPadding / 2) * 2 + separatorSize
 
 export const searchBarOuterSpacing = contentPadding / 2
 
@@ -31,7 +32,7 @@ export const SearchBar = React.memo(
       fontSize = smallTextSize,
       placeholder = 'Search',
       placeholderTextThemeColor,
-      size = 34,
+      size = defaultSize,
       textFocusThemeColor,
       textHoverThemeColor,
       textThemeColor,

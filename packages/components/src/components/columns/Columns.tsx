@@ -1,6 +1,13 @@
 import _ from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Dimensions, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import {
+  Dimensions,
+  FlatList,
+  FlatListProps,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native'
 
 import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
@@ -8,8 +15,8 @@ import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
-import { FlatList, FlatListProps } from '../../libs/flatlist'
 import * as selectors from '../../redux/selectors'
+import { sharedStyles } from '../../styles/shared'
 import { separatorThickSize } from '../common/Separator'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
@@ -59,9 +66,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
       if (!payload.columnId) return
 
       if (payload.scrollTo) {
-        flatListRef.current.scrollToItem({
+        flatListRef.current.scrollToIndex({
           animated: payload.animated,
-          item: payload.columnId,
+          index: columnIds.indexOf(payload.columnId),
           viewPosition: 0.5,
         })
       }
@@ -74,9 +81,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
     if (!(focusedColumnId && focusedColumnIndex >= 0)) return
     if (sizename !== '1-small') return
 
-    flatListRef.current.scrollToItem({
+    flatListRef.current.scrollToIndex({
       animated: true,
-      item: focusedColumnId,
+      index: focusedColumnIndex,
       viewPosition: 0,
     })
   }, [
@@ -185,6 +192,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       ref={flatListRef}
       key="columns-flat-list"
       bounces={!swipeable}
+      contentContainerStyle={sharedStyles.flex}
       data={columnIds}
       data-paging-enabled-fix
       disableVirtualization
@@ -200,9 +208,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
       pointerEvents={pointerEvents}
       removeClippedSubviews={false}
       scrollEnabled={!swipeable}
-      scrollEventThrottle={16}
-      updateCellsBatchingPeriod={0}
-      windowSize={1}
+      scrollEventThrottle={100}
+      updateCellsBatchingPeriod={100}
+      windowSize={5}
       {...otherProps}
       renderItem={renderItem}
       style={flatListStyle}

@@ -29,12 +29,7 @@ import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
 export type IssueOrPullRequestCardsContainerProps = Omit<
   IssueOrPullRequestCardsProps,
-  | 'errorMessage'
-  | 'items'
-  | 'fetchNextPage'
-  | 'lastFetchedAt'
-  | 'loadState'
-  | 'refresh'
+  'errorMessage' | 'items' | 'fetchNextPage' | 'lastFetchedAt' | 'refresh'
 >
 
 export const IssueOrPullRequestCardsContainer = React.memo(
@@ -82,7 +77,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       actions.fetchColumnSubscriptionRequest,
     )
 
-    const { allItems, filteredItems, loadState } = useColumnData<
+    const { allItems, filteredItems } = useColumnData<
       EnhancedGitHubIssueOrPullRequest
     >(column.id, { mergeSimilar: false })
 
@@ -233,7 +228,6 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
-        loadState={loadState}
         refresh={refresh}
       />
     )

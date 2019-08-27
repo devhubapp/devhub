@@ -26,12 +26,7 @@ import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
 export type EventCardsContainerProps = Omit<
   EventCardsProps,
-  | 'errorMessage'
-  | 'fetchNextPage'
-  | 'items'
-  | 'lastFetchedAt'
-  | 'loadState'
-  | 'refresh'
+  'errorMessage' | 'fetchNextPage' | 'items' | 'lastFetchedAt' | 'refresh'
 >
 
 export const EventCardsContainer = React.memo(
@@ -91,9 +86,10 @@ export const EventCardsContainer = React.memo(
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
     }, [column.subscriptionIds.join(',')])
 
-    const { allItems, filteredItems, loadState } = useColumnData<
-      EnhancedGitHubEvent
-    >(column.id, { mergeSimilar: false })
+    const { allItems, filteredItems } = useColumnData<EnhancedGitHubEvent>(
+      column.id,
+      { mergeSimilar: false },
+    )
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderEventDate(allItems)
@@ -255,7 +251,6 @@ export const EventCardsContainer = React.memo(
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
-        loadState={loadState}
         refresh={refresh}
       />
     )

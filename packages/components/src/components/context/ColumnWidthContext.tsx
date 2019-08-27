@@ -4,7 +4,7 @@ import { Dimensions } from 'react-native'
 import { constants } from '@devhub/core'
 import { useDimensions } from '../../hooks/use-dimensions'
 import { sidebarSize } from '../../styles/variables'
-import { APP_LAYOUT_BREAKPOINTS, getLayoutConsumerState } from './LayoutContext'
+import { APP_LAYOUT_BREAKPOINTS, getAppLayout } from './LayoutContext'
 
 export interface ColumnWidthProviderProps {
   children?: React.ReactNode
@@ -40,7 +40,7 @@ function calculateColumnWidth({
   minWidth?: number
   maxWidth?: number
 }) {
-  const horizontal = getLayoutConsumerState().appOrientation === 'landscape'
+  const horizontal = getAppLayout().appOrientation === 'landscape'
 
   const availableWidth = windowWidth - (horizontal ? sidebarSize : 0)
 

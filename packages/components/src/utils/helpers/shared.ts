@@ -4,7 +4,7 @@ import { findDOMNode } from 'react-dom'
 import { constants } from '@devhub/core'
 import {
   AppLayoutProviderState,
-  getLayoutConsumerState,
+  getAppLayout,
 } from '../../components/context/LayoutContext'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
@@ -148,5 +148,5 @@ export function genericParseText<T extends string>(
 export function isBigEnoughForMultiColumnView(
   sizename?: AppLayoutProviderState['sizename'],
 ) {
-  return (sizename || getLayoutConsumerState().sizename) >= '2-medium'
+  return (sizename || getAppLayout().sizename) >= '2-medium'
 }
