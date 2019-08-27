@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { Fragment, useLayoutEffect, useMemo, useRef } from 'react'
 import { View } from 'react-native'
 import {
   ListChildComponentProps,
@@ -12,6 +12,108 @@ import { AutoSizer } from '../auto-sizer'
 import { OneListInstance, OneListProps } from './index.shared'
 
 export { OneListProps }
+
+const ItemRow = React.memo(
+  (props: {
+    index: number
+    item: any
+    key: string
+    renderItem: OneListProps<any>['renderItem']
+  }) => {
+    const { index, item, key, renderItem } = props
+    return <Fragment key={key}>{renderItem({ index, item })}</Fragment>
+  },
+)
+
+interface ItemData {
+  data: any[]
+  footer?: OneListProps<any>['footer']
+  getItemKey?: OneListProps<any>['getItemKey']
+  header?: OneListProps<any>['header']
+  innerFooterSize: number
+  innerHeaderSize: number
+  itemCount: number
+  itemSeparator?: OneListProps<any>['itemSeparator']
+  renderItem: OneListProps<any>['renderItem']
+}
+
+const Row = React.memo(
+  React.forwardRef<any, ListChildComponentProps>((props, rowRef) => {
+    const { index, style } = props
+    const {
+      data,
+      footer,
+      getItemKey,
+      header,
+      innerFooterSize,
+      innerHeaderSize,
+      itemCount,
+      itemSeparator,
+      renderItem,
+    } = props.data as ItemData
+
+    if (innerHeaderSize && index === 0 && header) {
+      return (
+        <div
+          ref={rowRef}
+          key={
+            getItemKey
+              ? getItemKey(data[index], index)
+              : `react-window-row-${index}`
+          }
+          style={style}
+        >
+          <header.Component />
+        </div>
+      )
+    }
+
+    if (innerFooterSize && index === itemCount - 1 && footer) {
+      return (
+        <div ref={rowRef} style={style}>
+          <footer.Component />
+        </div>
+      )
+    }
+
+    const dataIndex = innerHeaderSize ? index - 1 : index
+    if (!(dataIndex >= 0 && dataIndex <= data.length - 1)) return null
+
+    return (
+      <div ref={rowRef} style={style}>
+        <View style={[sharedStyles.fullWidth, sharedStyles.fullHeight]}>
+          <ItemRow
+            index={dataIndex}
+            item={data[dataIndex]}
+            key={
+              getItemKey
+                ? getItemKey(data[dataIndex], dataIndex)
+                : `react-window-item-row-${dataIndex}`
+            }
+            renderItem={renderItem}
+          />
+
+          {!!(
+            dataIndex >= 0 &&
+            dataIndex < data.length - 1 &&
+            itemSeparator &&
+            itemSeparator.size > 0 &&
+            itemSeparator.Component
+          ) && (
+            <itemSeparator.Component
+              leading={{ index, item: data[dataIndex] }}
+              trailing={
+                dataIndex + 1 < data.length - 1
+                  ? { index: dataIndex + 1, item: data[dataIndex + 1] }
+                  : undefined
+              }
+            />
+          )}
+        </View>
+      </div>
+    )
+  }),
+)
 
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
@@ -95,90 +197,6 @@ export const OneList = (React.memo(
       itemSeparatorSize,
     ])
 
-    const ItemRow = useCallback(
-      ({ index }: { index: number }) => {
-        return (
-          <View
-            key={
-              itemKey ? itemKey(index, data) : `react-window-item-row-${index}`
-            }
-            style={[sharedStyles.fullWidth, sharedStyles.fullHeight]}
-          >
-            {renderItem({ index, item: data[index] })}
-            {!!(
-              index >= 0 &&
-              index < data.length - 1 &&
-              itemSeparator &&
-              itemSeparator.size > 0 &&
-              itemSeparator.Component
-            ) && (
-              <itemSeparator.Component
-                leading={{ index, item: data[index] }}
-                trailing={
-                  index + 1 < data.length - 1
-                    ? { index: index + 1, item: data[index + 1] }
-                    : undefined
-                }
-              />
-            )}
-          </View>
-        )
-      },
-      [
-        data,
-        itemSeparator && itemSeparator.Component,
-        itemSeparatorSize,
-        renderItem,
-      ],
-    )
-
-    const Row = useCallback(
-      React.forwardRef<any, ListChildComponentProps>(
-        ({ index, style }, rowRef) => {
-          if (innerHeaderSize && index === 0 && header) {
-            return (
-              <div
-                ref={rowRef}
-                key={
-                  itemKey ? itemKey(index, data) : `react-window-row-${index}`
-                }
-                style={style}
-              >
-                <header.Component />
-              </div>
-            )
-          }
-
-          if (innerFooterSize && index === itemCount - 1 && footer) {
-            return (
-              <div ref={rowRef} style={style}>
-                <footer.Component />
-              </div>
-            )
-          }
-
-          const dataIndex = innerHeaderSize ? index - 1 : index
-          if (!(dataIndex >= 0 && dataIndex <= data.length - 1)) return null
-
-          return (
-            <div ref={rowRef} style={style}>
-              <ItemRow index={dataIndex} />
-            </div>
-          )
-        },
-      ),
-      [
-        ItemRow,
-        data,
-        footer && footer.Component,
-        header && header.Component,
-        innerFooterSize,
-        innerHeaderSize,
-        itemCount,
-        itemKey,
-      ],
-    )
-
     const onItemsRendered = useMemo<
       VariableSizeListProps['onItemsRendered']
     >(() => {
@@ -225,6 +243,31 @@ export const OneList = (React.memo(
       }
     }, [itemCount, itemSize, previousItemCount, previousItemSize])
 
+    const itemData = useMemo<ItemData>(
+      () => ({
+        data,
+        footer,
+        getItemKey,
+        header,
+        innerFooterSize,
+        innerHeaderSize,
+        itemCount,
+        itemSeparator,
+        renderItem,
+      }),
+      [
+        data,
+        footer,
+        getItemKey,
+        header,
+        innerFooterSize,
+        innerHeaderSize,
+        itemCount,
+        itemSeparator,
+        renderItem,
+      ],
+    )
+
     return (
       <View
         pointerEvents={pointerEvents}
@@ -262,6 +305,7 @@ export const OneList = (React.memo(
                     estimatedItemSize={estimatedItemSize}
                     height={horizontal ? '100%' : height}
                     itemCount={itemCount}
+                    itemData={itemData}
                     itemKey={itemKey}
                     itemSize={itemSize}
                     onItemsRendered={onItemsRendered}

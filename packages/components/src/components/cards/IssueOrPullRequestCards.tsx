@@ -9,7 +9,7 @@ import {
   getSearchQueryFromFilter,
 } from '@devhub/core'
 import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
-import { useCardsProps } from '../../hooks/use-cards-props'
+import { DataItemT, useCardsProps } from '../../hooks/use-cards-props'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { OneList, OneListProps } from '../../libs/one-list'
@@ -44,7 +44,7 @@ export interface IssueOrPullRequestCardsProps
   swipeable: boolean
 }
 
-function keyExtractor(item: ItemT) {
+function keyExtractor({ item }: DataItemT<ItemT>) {
   return `issue-or-pr-card-${item.id}`
 }
 
@@ -74,11 +74,11 @@ export const IssueOrPullRequestCards = React.memo(
 
     const {
       OverrideRenderComponent,
+      data,
       firstVisibleItemIndexRef,
       footer,
       getItemSize,
       header,
-      itemCardProps,
       itemSeparator,
       onVisibleItemsChanged,
       refreshControl,
@@ -102,16 +102,14 @@ export const IssueOrPullRequestCards = React.memo(
     })
 
     const renderItem = useCallback<
-      NonNullable<OneListProps<ItemT>['renderItem']>
+      NonNullable<OneListProps<DataItemT<ItemT>>['renderItem']>
     >(
-      ({ item, index }) => {
-        const height = getItemSize(item, index)
-
+      ({ item: { cachedCardProps, height, item } }) => {
         if (swipeable) {
           return (
             <View style={{ height }}>
               <SwipeableIssueOrPullRequestCard
-                cachedCardProps={itemCardProps[index]}
+                cachedCardProps={cachedCardProps}
                 columnId={column.id}
                 issueOrPullRequest={item}
                 ownerIsKnown={ownerIsKnown}
@@ -127,7 +125,7 @@ export const IssueOrPullRequestCards = React.memo(
           <ErrorBoundary>
             <View style={{ height }}>
               <IssueOrPullRequestCard
-                cachedCardProps={itemCardProps[index]}
+                cachedCardProps={cachedCardProps}
                 columnId={column.id}
                 issueOrPullRequest={item}
                 ownerIsKnown={ownerIsKnown}
@@ -139,11 +137,11 @@ export const IssueOrPullRequestCards = React.memo(
           </ErrorBoundary>
         )
       },
-      [getItemSize, itemCardProps, ownerIsKnown, repoIsKnown, swipeable],
+      [ownerIsKnown, repoIsKnown, swipeable],
     )
 
     const ListEmptyComponent = useMemo<
-      NonNullable<OneListProps<ItemT>['ListEmptyComponent']>
+      NonNullable<OneListProps<DataItemT<ItemT>>['ListEmptyComponent']>
     >(
       () => () => {
         const maybeInvalidFilters = `${errorMessage || ''}`
@@ -223,8 +221,8 @@ export const IssueOrPullRequestCards = React.memo(
           ref={listRef}
           key="issue-or-pr-cards-list"
           ListEmptyComponent={ListEmptyComponent}
-          data={items}
-          estimatedItemSize={getItemSize(items[0], 0) || 89}
+          data={data}
+          estimatedItemSize={getItemSize(data[0], 0) || 89}
           footer={footer}
           getItemKey={keyExtractor}
           getItemSize={getItemSize}

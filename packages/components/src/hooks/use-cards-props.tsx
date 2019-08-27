@@ -35,6 +35,12 @@ import { RefreshControl } from '../components/common/RefreshControl'
 import { OneListProps } from '../libs/one-list'
 import { FlatListItemLayout } from '../utils/types'
 
+export interface DataItemT<ItemT extends EnhancedItem> {
+  cachedCardProps: BaseCardProps
+  height: number
+  item: ItemT
+}
+
 export function useCardsProps<ItemT extends EnhancedItem>({
   column,
   columnIndex,
@@ -114,25 +120,35 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   }, [itemCardProps, items, ownerIsKnown, repoIsKnown])
 
   const getItemSize = useCallback<
-    NonNullable<OneListProps<ItemT>['getItemSize']>
+    NonNullable<OneListProps<any>['getItemSize']>
   >((_, index) => (itemLayouts[index] && itemLayouts[index]!.length) || 0, [
     items,
     itemLayouts,
   ])
 
+  const data = useMemo<Array<DataItemT<ItemT>>>(() => {
+    return (items || []).map((item, index) => ({
+      cachedCardProps: itemCardProps[index]!,
+      height: getItemSize(undefined, index),
+      item,
+    }))
+  }, [items])
+
   const itemSeparator = useMemo<
-    NonNullable<OneListProps<ItemT>['itemSeparator']>
+    NonNullable<OneListProps<DataItemT<ItemT>>['itemSeparator']>
   >(
     () => ({
       size: cardItemSeparatorSize,
       Component: ({ leading }) => (
-        <CardItemSeparator leadingItem={leading && leading.item} />
+        <CardItemSeparator
+          leadingItem={leading && leading.item && leading.item.item}
+        />
       ),
     }),
     [cardItemSeparatorSize],
   )
 
-  const header = useMemo<OneListProps<ItemT>['header']>(() => {
+  const header = useMemo<OneListProps<DataItemT<ItemT>>['header']>(() => {
     return {
       size: cardSearchTotalHeight + columnLoadingIndicatorSize,
       sticky: true,
@@ -156,7 +172,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     isEmpty: !(items && items.length > 0),
     refresh,
   }
-  const footer = useMemo<OneListProps<ItemT>['footer']>(() => {
+  const footer = useMemo<OneListProps<DataItemT<ItemT>>['footer']>(() => {
     return {
       size: getCardsFooterSize({
         clearedAt: cardsFooterProps.clearedAt,
@@ -175,7 +191,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   ])
 
   const onVisibleItemsChanged = useCallback<
-    NonNullable<OneListProps<ItemT>['onVisibleItemsChanged']>
+    NonNullable<OneListProps<DataItemT<ItemT>>['onVisibleItemsChanged']>
   >(fromIndex => {
     firstVisibleItemIndexRef.current = fromIndex
   }, [])
@@ -221,6 +237,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   return {
     OverrideRenderComponent,
+    data,
     firstVisibleItemIndexRef,
     footer,
     getItemSize,

@@ -3,7 +3,7 @@ import { View, ViewProps } from 'react-native'
 
 import { Column, EnhancedGitHubNotification } from '@devhub/core'
 import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
-import { useCardsProps } from '../../hooks/use-cards-props'
+import { DataItemT, useCardsProps } from '../../hooks/use-cards-props'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { OneList, OneListProps } from '../../libs/one-list'
 import { sharedStyles } from '../../styles/shared'
@@ -31,7 +31,7 @@ export interface NotificationCardsProps
   swipeable: boolean
 }
 
-function keyExtractor(item: ItemT) {
+function keyExtractor({ item }: DataItemT<ItemT>) {
   return `notification-card-${item.id}`
 }
 
@@ -54,11 +54,11 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   const {
     OverrideRenderComponent,
+    data,
     firstVisibleItemIndexRef,
     footer,
     getItemSize,
     header,
-    itemCardProps,
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
@@ -82,16 +82,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   })
 
   const renderItem = useCallback<
-    NonNullable<OneListProps<ItemT>['renderItem']>
+    NonNullable<OneListProps<DataItemT<ItemT>>['renderItem']>
   >(
-    ({ item, index }) => {
-      const height = getItemSize(item, index)
-
+    ({ item: { cachedCardProps, height, item } }) => {
       if (swipeable) {
         return (
           <View style={{ height }}>
             <SwipeableNotificationCard
-              cachedCardProps={itemCardProps[index]}
+              cachedCardProps={cachedCardProps}
               columnId={column.id}
               notification={item}
               ownerIsKnown={ownerIsKnown}
@@ -106,7 +104,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         <ErrorBoundary>
           <View style={{ height }}>
             <NotificationCard
-              cachedCardProps={itemCardProps[index]}
+              cachedCardProps={cachedCardProps}
               columnId={column.id}
               notification={item}
               ownerIsKnown={ownerIsKnown}
@@ -117,11 +115,11 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         </ErrorBoundary>
       )
     },
-    [getItemSize, itemCardProps, ownerIsKnown, repoIsKnown, swipeable],
+    [ownerIsKnown, repoIsKnown, swipeable],
   )
 
   const ListEmptyComponent = useMemo<
-    NonNullable<OneListProps<ItemT>['ListEmptyComponent']>
+    NonNullable<OneListProps<DataItemT<ItemT>>['ListEmptyComponent']>
   >(
     () => () => {
       return (
@@ -151,8 +149,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         ref={listRef}
         key="notification-cards-list"
         ListEmptyComponent={ListEmptyComponent}
-        data={items}
-        estimatedItemSize={getItemSize(items[0], 0) || 89}
+        data={data}
+        estimatedItemSize={getItemSize(data[0], 0) || 89}
         footer={footer}
         getItemKey={keyExtractor}
         getItemSize={getItemSize}
