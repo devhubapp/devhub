@@ -30,6 +30,7 @@ export const sharedStyles = StyleSheet.create({
   textCenter: { textAlign: 'center' },
   muted: { opacity: mutedOpacity },
   overflowHidden: { overflow: 'hidden' },
+  overflowVisible: { overflow: 'visible' },
 
   center: {
     alignContent: 'center',

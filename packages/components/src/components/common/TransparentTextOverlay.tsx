@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../styles/shared'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
@@ -14,7 +14,7 @@ import {
 export interface TransparentTextOverlayProps
   extends Omit<GradientLayerOverlayProps, 'to' | 'color'> {
   to: ToWithVH
-  themeColor: keyof ThemeColors | ((theme: ThemeColors) => string | undefined)
+  themeColor: keyof ThemeColors | ((theme: Theme) => string | undefined)
 }
 
 export const TransparentTextOverlay = React.memo(

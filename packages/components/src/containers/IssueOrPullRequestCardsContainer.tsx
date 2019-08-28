@@ -29,17 +29,12 @@ import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
 export type IssueOrPullRequestCardsContainerProps = Omit<
   IssueOrPullRequestCardsProps,
-  | 'errorMessage'
-  | 'items'
-  | 'fetchNextPage'
-  | 'lastFetchedAt'
-  | 'loadState'
-  | 'refresh'
+  'errorMessage' | 'items' | 'fetchNextPage' | 'lastFetchedAt' | 'refresh'
 >
 
 export const IssueOrPullRequestCardsContainer = React.memo(
   (props: IssueOrPullRequestCardsContainerProps) => {
-    const { column, repoIsKnown, ...otherProps } = props
+    const { column, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -82,9 +77,9 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       actions.fetchColumnSubscriptionRequest,
     )
 
-    const { allItems, filteredItems, loadState } = useColumnData<
+    const { allItems, filteredItems } = useColumnData<
       EnhancedGitHubIssueOrPullRequest
-    >(column.id, { mergeSimilar: true })
+    >(column.id, { mergeSimilar: false })
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderIssueOrPullRequestDate(allItems)
@@ -233,9 +228,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
-        loadState={loadState}
         refresh={refresh}
-        repoIsKnown={repoIsKnown}
       />
     )
   },

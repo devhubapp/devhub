@@ -1,4 +1,4 @@
-import { getLayoutConsumerState } from '../../components/context/LayoutContext'
+import { getAppLayout } from '../../components/context/LayoutContext'
 import { RootState } from '../types'
 import { countersSelector } from './counters'
 
@@ -11,7 +11,7 @@ export const bannerMessageSelector = (state: RootState) => {
   const banners = allBannerMessagesSelector(state)
   const loginCount = countersSelector(state).loginSuccess
 
-  const { sizename } = getLayoutConsumerState()
+  const { sizename } = getAppLayout()
 
   const filteredBanners = banners.filter(
     banner =>

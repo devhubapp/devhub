@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
@@ -57,18 +57,12 @@ export interface CheckboxProps {
   squareContainerStyle?: StyleProp<ViewStyle>
   useBrandColor?: boolean
 
-  checkedBackgroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-  checkedForegroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-  uncheckedBackgroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
+  checkedBackgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  checkedForegroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  uncheckedBackgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   // uncheckedForegroundThemeColor?:
   //   | keyof ThemeColors
-  //   | ((theme: ThemeColors) => string)
+  //   | ((theme: Theme) => string)
 }
 
 export function Checkbox(props: CheckboxProps) {

@@ -32,9 +32,11 @@ import { ColumnHeader } from './ColumnHeader'
 import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsAccordion } from './ColumnOptionsAccordion'
 
-export function getColumnCardThemeColors(
-  _backgroundColor: string,
-): {
+export function getColumnCardThemeColors({
+  isDark,
+}: {
+  isDark: boolean
+}): {
   column: keyof ThemeColors
   card: keyof ThemeColors
   card__hover: keyof ThemeColors
@@ -43,22 +45,32 @@ export function getColumnCardThemeColors(
 } {
   return {
     card: 'backgroundColorLighther1',
-    card__hover: 'backgroundColorLighther2',
-    card__muted: 'backgroundColorDarker1',
-    card__muted_hover: 'backgroundColorDarker2',
+    card__hover: isDark ? 'backgroundColorLighther2' : 'backgroundColorDarker1',
+    card__muted: isDark ? 'backgroundColor' : 'backgroundColorDarker1',
+    card__muted_hover: isDark
+      ? 'backgroundColorLighther1'
+      : 'backgroundColorDarker2',
     column: 'backgroundColor',
   }
 }
 
-export function getCardBackgroundThemeColor(
-  theme: ThemeColors,
-  { muted }: { muted: boolean },
-) {
-  const backgroundThemeColors = getColumnCardThemeColors(theme.backgroundColor)
+export function getCardBackgroundThemeColor({
+  isDark,
+  isHovered,
+  isMuted,
+}: {
+  isDark: boolean
+  isHovered?: boolean
+  isMuted: boolean
+}) {
+  const backgroundThemeColors = getColumnCardThemeColors({ isDark })
 
   const _backgroundThemeColor =
-    // (isFocused && 'backgroundColorLess2') ||
-    (muted && backgroundThemeColors.card__muted) || backgroundThemeColors.card
+    (isMuted &&
+      (isHovered
+        ? backgroundThemeColors.card__muted_hover
+        : backgroundThemeColors.card__muted)) ||
+    (isHovered ? backgroundThemeColors.card__hover : backgroundThemeColors.card)
 
   return _backgroundThemeColor
 }
@@ -66,10 +78,7 @@ export function getCardBackgroundThemeColor(
 export interface ColumnRendererProps {
   avatarRepo?: string
   avatarUsername?: string
-  children: (p: {
-    disableItemFocus: boolean
-    isFiltersOpened: boolean
-  }) => React.ReactNode
+  children: React.ReactNode
   column: ColumnType
   columnIndex: number
   icon: GitHubIcon
@@ -220,9 +229,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   return (
     <Column
       key={`column-renderer-${column.id}-inner-container`}
-      backgroundColor={theme =>
-        getColumnCardThemeColors(theme.backgroundColor).column
-      }
+      backgroundColor={getColumnCardThemeColors({ isDark: false }).column}
       columnId={column.id}
       fullWidth={appViewMode === 'single-column'}
       pagingEnabled={pagingEnabled}
@@ -357,10 +364,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         />
       )}
 
-      {children({
-        disableItemFocus: inlineMode ? false : isFiltersOpened,
-        isFiltersOpened,
-      })}
+      {children}
 
       {!!isFreeTrial && <FreeTrialHeaderMessage />}
     </Column>

@@ -3,7 +3,7 @@ import { DependencyList, useEffect } from 'react'
 import { emitter, EmitterTypes } from '../libs/emitter'
 
 export function useEmitter<K extends keyof EmitterTypes>(
-  key: K,
+  key: K | undefined,
   callback: (payload: EmitterTypes[K]) => void,
   deps: DependencyList = [],
 ) {

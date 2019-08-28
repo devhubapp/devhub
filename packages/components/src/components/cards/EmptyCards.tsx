@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, View } from 'react-native'
 
 import { Column, EnhancedLoadState } from '@devhub/core'
+import { useColumnLoadingState } from '../../hooks/use-column-loading-state'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import {
@@ -60,7 +61,7 @@ export interface EmptyCardsProps {
   errorMessage?: string
   errorTitle?: string
   fetchNextPage: (() => void) | undefined
-  loadState: EnhancedLoadState
+  loadState?: EnhancedLoadState
   refresh: (() => void | Promise<void>) | undefined
 }
 
@@ -68,15 +69,19 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearEmoji = randomEmoji,
     clearMessage = randomClearMessage,
+    column,
     disableLoadingIndicator,
     emoji = 'warning',
     errorButtonView,
     errorMessage,
     errorTitle = 'Something went wrong',
     fetchNextPage,
-    loadState,
+    loadState: _loadStateProp,
     refresh,
   } = props
+
+  const _loadState = useColumnLoadingState(column.id)
+  const loadState = _loadStateProp || _loadState
 
   const clearEmojiURL = clearEmoji ? getEmojiImageURL(clearEmoji) : undefined
   const hasError = errorMessage || loadState === 'error'

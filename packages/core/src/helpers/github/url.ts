@@ -15,21 +15,63 @@ export function getCommentIdFromUrl(url: string) {
   return (matches && matches[1] && parseInt(matches[1], 10)) || null
 }
 
-export function getCommitShaFromUrl(url: string) {
-  if (!url) return null
+export function getCommitShaFromUrl(url: string): string | undefined {
+  if (!url) return undefined
 
-  const matches = url.match(/\/commits\/([a-zA-Z0-9]+)([?].+)?$/)
-  return (matches && matches[1]) || null
+  const matches = url.match(/\/commits?\/([a-zA-Z0-9]+)([?].+)?$/)
+  return (matches && matches[1]) || undefined
 }
 
-export function getIssueOrPullRequestNumberFromUrl(url: string) {
-  if (!url) return null
+export function getCommitUrlFromOtherUrl(url: string): string | undefined {
+  if (!url) return
+
+  const repoURL = getRepoUrlFromOtherUrl(url)
+  if (!repoURL) return
+
+  const sha = getCommitShaFromUrl(url)
+  if (!sha) return
+
+  return `${repoURL}/commit/${sha}`
+}
+
+export function getCommitCompareUrlFromUrls(
+  commit1URL: string,
+  commit2URL: string,
+): string | undefined {
+  if (!(commit1URL && commit2URL)) return
+
+  const repo1URL = getRepoUrlFromOtherUrl(commit1URL)
+  const repo2URL = getRepoUrlFromOtherUrl(commit2URL)
+  if (!(repo1URL && repo2URL && repo1URL === repo2URL)) return
+
+  const sha1 = getCommitShaFromUrl(commit1URL)
+  const sha2 = getCommitShaFromUrl(commit2URL)
+  if (!(sha1 && sha2)) return
+
+  return `${repo1URL}/compare/${sha1.substr(0, 7)}...${sha2.substr(0, 7)}`
+}
+
+export function getCommitCompareUrlFromRefs(
+  before: string,
+  head: string,
+  { repoURL }: { repoURL: string },
+): string | undefined {
+  if (!(before && head && repoURL)) return
+
+  return `${repoURL}/compare/${before.substr(0, 7)}...${head.substr(0, 7)}`
+}
+
+export function getIssueOrPullRequestNumberFromUrl(
+  url: string,
+): number | undefined {
+  if (!url) return
 
   const matches = url.match(/\/(issues|pulls)\/([0-9]+)([?].+)?$/)
   const issueOrPullRequestNumber = matches && matches[2]
 
   return (
-    (issueOrPullRequestNumber && parseInt(issueOrPullRequestNumber, 10)) || null
+    (issueOrPullRequestNumber && parseInt(issueOrPullRequestNumber, 10)) ||
+    undefined
   )
 }
 
@@ -40,20 +82,38 @@ export function getReleaseIdFromUrl(url: string) {
   return (matches && matches[1]) || null
 }
 
-/* eslint-disable-next-line no-useless-escape */
-export const getRepoFullNameFromUrl = (url: string): string =>
+export const getBaseUrlFromOtherUrl = (
+  url: string | undefined,
+): string | undefined =>
+  url
+    ? (
+        (url.match(
+          /([^:]+:\/\/[^\/]+)(\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^/#$]?)/i,
+        ) || [])[1] || ''
+      ).replace('/api.', '/') || undefined
+    : undefined
+
+export const getRepoFullNameFromUrl = (url: string): string | undefined =>
   url
     ? (url.match(
-        /(github.com\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^/#$]?)/i,
-      ) || [])[3] || ''
-    : ''
+        /([^:]+:\/\/[^\/]+)(\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^/#$]?)/i,
+      ) || [])[4] || undefined
+    : undefined
 
-export const getRepoFullNameFromObject = (repo: GitHubRepo): string =>
+export const getRepoUrlFromOtherUrl = (url: string): string | undefined => {
+  const _baseURL = getBaseUrlFromOtherUrl(url)
+  const _repoFullName = getRepoFullNameFromUrl(url)
+
+  return _baseURL && _repoFullName ? `${_baseURL}/${_repoFullName}` : undefined
+}
+
+export const getRepoFullNameFromObject = (
+  repo: GitHubRepo,
+): string | undefined =>
   (repo &&
-    (repo.full_name ||
-      repo.name ||
-      getRepoFullNameFromUrl(repo.html_url || repo.url))) ||
-  ''
+    ((repo.name && repo.name.includes('/') ? repo.name : undefined) ||
+      (repo.full_name || getRepoFullNameFromUrl(repo.html_url || repo.url)))) ||
+  undefined
 
 export const getGitHubURLForUser = (
   username: string,

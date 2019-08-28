@@ -1014,5 +1014,5 @@ function getNewColumnAndSubscriptions(
 function getErrorColor({
   required,
 }: { required?: boolean } = {}): keyof ThemeColors {
-  return required === false ? 'orange' : 'red'
+  return required === false ? 'yellow' : 'lightRed'
 }

@@ -1,0 +1,28 @@
+{
+  "public": true,
+  "name": "devhub-beta",
+  "alias": "beta.devhubapp.com",
+  "version": 2,
+  "builds": [
+    { "src": "packages/web/dist/**", "use": "@now/static" }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)\\.(.*)",
+      "dest": "/packages/web/dist/$1.$2"
+    },
+    {
+      "src": "/",
+      "dest": "/packages/web/dist/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "status": 301, "headers": { "Location": "/" }
+    }
+  ],
+  "regions": ["all"],
+  "github": {
+    "enabled": false,
+    "autoAlias": false
+  }
+}

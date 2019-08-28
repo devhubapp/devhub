@@ -19,17 +19,12 @@ import * as selectors from '../redux/selectors'
 
 export type NotificationCardsContainerProps = Omit<
   NotificationCardsProps,
-  | 'errorMessage'
-  | 'fetchNextPage'
-  | 'items'
-  | 'lastFetchedAt'
-  | 'loadState'
-  | 'refresh'
+  'errorMessage' | 'fetchNextPage' | 'items' | 'lastFetchedAt' | 'refresh'
 >
 
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
-    const { column, repoIsKnown, ...otherProps } = props
+    const { column, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
@@ -49,9 +44,9 @@ export const NotificationCardsContainer = React.memo(
       actions.fetchColumnSubscriptionRequest,
     )
 
-    const { allItems, filteredItems, loadState } = useColumnData<
+    const { allItems, filteredItems } = useColumnData<
       EnhancedGitHubNotification
-    >(column.id, { mergeSimilar: true })
+    >(column.id, { mergeSimilar: false })
 
     const clearedAt = column.filters && column.filters.clearedAt
     const olderDate = getOlderNotificationDate(allItems)
@@ -111,9 +106,7 @@ export const NotificationCardsContainer = React.memo(
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
         lastFetchedAt={mainSubscription.data.lastFetchedAt}
-        loadState={loadState}
         refresh={refresh}
-        repoIsKnown={repoIsKnown}
       />
     )
   },

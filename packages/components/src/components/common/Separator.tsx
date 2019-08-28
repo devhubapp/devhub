@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { ThemedView } from '../themed/ThemedView'
 
 export const separatorSize = 2
@@ -71,11 +71,11 @@ export const Separator = React.memo((props: SeparatorProps) => {
 
   const backgroundThemeColor1 =
     _backgroundThemeColor1 ||
-    ((theme: ThemeColors) => getSeparatorThemeColors(theme.backgroundColor)[0])
+    ((theme: Theme) => getSeparatorThemeColors(theme.backgroundColor)[0])
 
   const backgroundThemeColor2 = _backgroundThemeColor1
     ? _backgroundThemeColor2
-    : (theme: ThemeColors) => getSeparatorThemeColors(theme.backgroundColor)[1]
+    : (theme: Theme) => getSeparatorThemeColors(theme.backgroundColor)[1]
 
   const _twoSeparators = !!(
     backgroundThemeColor1 &&

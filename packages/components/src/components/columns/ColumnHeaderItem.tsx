@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { constants, GitHubIcon, ThemeColors } from '@devhub/core'
+import { constants, GitHubIcon, Theme, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
@@ -41,26 +41,16 @@ export interface ColumnHeaderItemProps {
   analyticsLabel?: TouchableOpacityProps['analyticsLabel']
   avatarProps?: Partial<AvatarProps>
   avatarStyle?: StyleProp<ImageStyle>
-  backgroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-    | string
+  backgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string) | string
   children?: React.ReactNode
   disabled?: TouchableOpacityProps['disabled']
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
   fixedIconSize?: boolean
   forceHoverState?: boolean
-  foregroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-    | string
-  hoverBackgroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
-  hoverForegroundThemeColor?:
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
+  foregroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string) | string
+  hoverBackgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  hoverForegroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   iconName?: GitHubIcon
   iconStyle?: StyleProp<TextStyle>
   isUnread?: boolean
@@ -81,7 +71,7 @@ export interface ColumnHeaderItemProps {
   tooltip: string | undefined
   unreadIndicatorBackgroundThemeColor?:
     | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
+    | ((theme: Theme) => string)
 }
 
 const styles = StyleSheet.create({

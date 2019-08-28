@@ -1,5 +1,6 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 
+import { InteractionManager } from 'react-native'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useForceRerender } from '../../hooks/use-force-rerender'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -24,6 +25,7 @@ export const ColumnFocusContext = React.createContext<ColumnFocusProviderState>(
 )
 ColumnFocusContext.displayName = 'ColumnFocusContext'
 
+let _focusedColumnId: string | null
 export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   const forceRerender = useForceRerender()
   const valueRef = useRef<ColumnFocusProviderState>(defaultValue)
@@ -54,6 +56,20 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
     }
   }
 
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (valueRef.current.focusedColumnId !== fixedFocusedColumnId) return
+
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: fixedFocusedColumnId,
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
+    })
+  }, [])
+
   useEmitter(
     'FOCUS_ON_COLUMN',
     payload => {
@@ -78,16 +94,11 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   useEmitter(
     'FOCUS_ON_PREVIOUS_COLUMN',
     payload => {
-      const focusedColumnIndex = columnIds
-        ? columnIds.findIndex(
-            id => id === (valueRef.current.focusedColumnId || columnIds[0]),
-          )
-        : -1
-
       const previousColumnIndex = Math.max(
         0,
-        Math.min(focusedColumnIndex - 1, columnIds.length - 1),
+        Math.min(valueRef.current.focusedColumnIndex - 1, columnIds.length - 1),
       )
+      if (previousColumnIndex === valueRef.current.focusedColumnIndex) return
 
       emitter.emit('FOCUS_ON_COLUMN', {
         ...payload,
@@ -100,16 +111,11 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   useEmitter(
     'FOCUS_ON_NEXT_COLUMN',
     payload => {
-      const focusedColumnIndex = columnIds
-        ? columnIds.findIndex(
-            id => id === (valueRef.current.focusedColumnId || columnIds[0]),
-          )
-        : -1
-
       const nextColumnIndex = Math.max(
         0,
-        Math.min(focusedColumnIndex + 1, columnIds.length - 1),
+        Math.min(valueRef.current.focusedColumnIndex + 1, columnIds.length - 1),
       )
+      if (nextColumnIndex === valueRef.current.focusedColumnIndex) return
 
       emitter.emit('FOCUS_ON_COLUMN', {
         ...payload,
@@ -117,6 +123,23 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       })
     },
     [columnIds],
+  )
+
+  useEmitter(
+    'FOCUS_ON_COLUMN_ITEM',
+    payload => {
+      if (valueRef.current.focusedColumnId === (payload.columnId || null))
+        return
+
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: payload.columnId || '',
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
+    },
+    [],
   )
 
   useEmitter(
@@ -128,11 +151,13 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       )
         return
 
-      valueRef.current = {
-        focusedColumnId: payload.columnId || null,
-        focusedColumnIndex: payload.columnIndex,
-      }
-      forceRerender()
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: payload.columnId || '',
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
     },
     [],
   )
@@ -146,14 +171,18 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
       )
         return
 
-      valueRef.current = {
-        focusedColumnId: payload.columnId || null,
-        focusedColumnIndex: payload.columnIndex,
-      }
-      forceRerender()
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: payload.columnId || '',
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
     },
     [],
   )
+
+  _focusedColumnId = valueRef.current.focusedColumnId
 
   return (
     <ColumnFocusContext.Provider value={valueRef.current}>
@@ -167,4 +196,8 @@ export const ColumnFocusConsumer = ColumnFocusContext.Consumer
 
 export function useFocusedColumn() {
   return useContext(ColumnFocusContext)
+}
+
+export function getCurrentFocusedColumnId() {
+  return _focusedColumnId
 }

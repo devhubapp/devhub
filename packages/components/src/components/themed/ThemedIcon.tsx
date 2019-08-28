@@ -1,14 +1,14 @@
 import React from 'react'
 import { StyleProp } from 'react-native'
 
-import { ThemeColors, ThemeTransformer } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import { OcticonIconProps, Octicons } from '../../libs/vector-icons'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 
 export interface ThemedIconProps
   extends Omit<OcticonIconProps, 'color' | 'style'> {
-  color?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  color?: keyof ThemeColors | ((theme: Theme) => string)
   style?: StyleProp<Omit<OcticonIconProps['style'], 'color'>>
   themeTransformer?: ThemeTransformer
 }

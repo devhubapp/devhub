@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { tryParseOAuthParams } from '@devhub/core'
-import { useReduxAction } from '../../../../hooks/use-redux-action'
+import { useDispatch } from 'react-redux'
 import { useReduxState } from '../../../../hooks/use-redux-state'
 import { analytics } from '../../../../libs/analytics'
 import { bugsnag } from '../../../../libs/bugsnag'
@@ -13,31 +13,35 @@ import { sharedStyles } from '../../../../styles/shared'
 import { clearOAuthQueryParams } from '../../../../utils/helpers/auth'
 import { getGitHubAppInstallUri } from '../../../../utils/helpers/shared'
 import { Link } from '../../../common/Link'
-import { ThemedText } from '../../../themed/ThemedText'
-import { cardStyles } from '../../styles'
-import { BaseRow, BaseRowProps } from './partials/BaseRow'
-import { cardRowStyles } from './styles'
+import { ThemedText, ThemedTextProps } from '../../../themed/ThemedText'
 
-export interface PrivateNotificationRowProps
-  extends Omit<
-    BaseRowProps,
-    'containerStyle' | 'contentContainerStyle' | 'left' | 'right'
-  > {
+export interface InstallGitHubAppTextProps {
   ownerId?: number | string | undefined
   repoId?: number | string | undefined
+  text?: string
+  textProps?: Omit<ThemedTextProps, 'children'>
 }
 
-export const PrivateNotificationRow = React.memo(
-  (props: PrivateNotificationRowProps) => {
-    const { ownerId, repoId, ...otherProps } = props
+export const styles = StyleSheet.create({
+  link: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    maxWidth: '100%',
+  },
+})
 
+export const InstallGitHubAppText = React.memo(
+  (props: InstallGitHubAppTextProps) => {
+    const { ownerId, repoId, text, textProps } = props
+
+    const dispatch = useDispatch()
     const existingAppToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
     const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
     )
-    const loginRequest = useReduxAction(actions.loginRequest)
 
     const showLoadingIndicator =
       isLoggingIn || installationsLoadState === 'loading'
@@ -55,7 +59,7 @@ export const PrivateNotificationRow = React.memo(
         clearOAuthQueryParams()
         if (!appToken) throw new Error('No app token')
 
-        loginRequest({ appToken })
+        dispatch(actions.loginRequest({ appToken }))
       } catch (error) {
         const description = 'OAuth execution failed'
         console.error(description, error)
@@ -71,14 +75,11 @@ export const PrivateNotificationRow = React.memo(
       if (!(existingAppToken && githubAppToken)) {
         return (
           <Link
-            analyticsLabel="setup_github_app_from_private_notification"
+            analyticsLabel="setup_github_app_from_card"
             disabled={showLoadingIndicator}
             onPress={() => startOAuth()}
-            style={cardRowStyles.mainContentContainer}
-            textProps={{
-              color: 'foregroundColorMuted65',
-              style: [cardStyles.commentText, { fontStyle: 'italic' }],
-            }}
+            style={styles.link}
+            textProps={textProps}
           >
             Required permission is missing. Tap to login again.
           </Link>
@@ -87,65 +88,48 @@ export const PrivateNotificationRow = React.memo(
 
       return (
         <Link
-          analyticsLabel="setup_github_app_from_private_notification"
+          analyticsLabel="setup_github_app_from_card"
           href={getGitHubAppInstallUri({
             repositoryIds: repoId ? [repoId] : [],
             suggestedTargetId: ownerId,
           })}
           openOnNewTab={false}
-          style={cardRowStyles.mainContentContainer}
-          textProps={{
-            color: 'foregroundColorMuted65',
-            style: [cardStyles.commentText, { fontStyle: 'italic' }],
-          }}
+          style={styles.link}
+          textProps={textProps}
         >
-          Install the GitHub App on this repo to unlock details from private
-          notifications.
+          {text || 'Install the GitHub App to unlock more details'}
         </Link>
       )
     }
 
     return (
-      <BaseRow
-        {...otherProps}
-        left={null}
-        right={
-          <>
-            <View
-              style={[
-                sharedStyles.flex,
-                sharedStyles.relative,
-                {
-                  opacity: showLoadingIndicator ? 0 : 1,
-                },
-              ]}
-            >
-              {renderContent()}
-            </View>
+      <View style={sharedStyles.flex}>
+        <View
+          style={[
+            sharedStyles.flex,
+            sharedStyles.relative,
+            { opacity: showLoadingIndicator ? 0 : 1 },
+          ]}
+        >
+          {renderContent()}
+        </View>
 
-            {!!showLoadingIndicator && (
-              <View
-                style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    alignItems: 'flex-start',
-                    justifyContent: 'flex-start',
-                  },
-                ]}
-              >
-                <ThemedText
-                  color="foregroundColorMuted65"
-                  style={[cardStyles.commentText, { fontStyle: 'italic' }]}
-                >
-                  Checking required permissions...
-                </ThemedText>
-              </View>
-            )}
-          </>
-        }
-      />
+        {!!showLoadingIndicator && (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              sharedStyles.alignSelfFlexStart,
+              sharedStyles.justifyContentFlexStart,
+            ]}
+          >
+            <ThemedText {...textProps}>
+              Checking required permissions...
+            </ThemedText>
+          </View>
+        )}
+      </View>
     )
   },
 )
 
-PrivateNotificationRow.displayName = 'PrivateNotificationRow'
+InstallGitHubAppText.displayName = 'InstallGitHubAppText'

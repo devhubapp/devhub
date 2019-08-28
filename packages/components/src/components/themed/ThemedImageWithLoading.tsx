@@ -17,20 +17,20 @@ export interface ThemedImageWithLoadingProps
     | 'backgroundColorLoading'
     | 'style'
   > {
-  backgroundColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  backgroundColor?: keyof ThemeColors | ((theme: Theme) => string)
   backgroundColorFailed?:
     | keyof ThemeColors
     | string
-    | ((theme: ThemeColors) => string)
+    | ((theme: Theme) => string)
   backgroundColorLoaded?:
     | keyof ThemeColors
     | string
-    | ((theme: ThemeColors) => string)
+    | ((theme: Theme) => string)
   backgroundColorLoading?:
     | keyof ThemeColors
     | string
-    | ((theme: ThemeColors) => string)
-  borderColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+    | ((theme: Theme) => string)
+  borderColor?: keyof ThemeColors | ((theme: Theme) => string)
   children?: React.ReactNode
   style?: StyleProp<
     Omit<ImageWithLoadingProps['style'], 'backgroundColor' | 'borderColor'>
@@ -68,7 +68,9 @@ export const ThemedImageWithLoading = React.forwardRef<
   const backgroundColorLoading = getThemeColorOrItself(
     theme,
     _backgroundColorLoading,
-    { enableCSSVariable: true },
+    {
+      enableCSSVariable: true,
+    },
   )
 
   return (

@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import qs from 'qs'
 import {
   all,
   delay,
@@ -9,10 +10,13 @@ import {
   take,
   takeEvery,
 } from 'redux-saga/effects'
+import url from 'url'
 
 import { Installation, refreshUserInstallations } from '@devhub/core'
 import { bugsnag } from '../../libs/bugsnag'
+import { Linking } from '../../libs/linking'
 import { getDefaultDevHubHeaders } from '../../utils/api'
+import { clearQueryStringFromURL } from '../../utils/helpers/auth'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
@@ -46,13 +50,27 @@ function* init() {
           new Date().valueOf(),
     )
 
-    // only fetch installations tokens if there are expired ones or havent fetched for 50+ minutes
+    const installationIdFromQuery = (() => {
+      const uri = Linking.getCurrentURL() || ''
+      const querystring = url.parse(uri).query || ''
+      const query = qs.parse(querystring)
+
+      clearQueryStringFromURL(['installation_id', 'setup_action'])
+      return query.installation_id
+    })()
+
+    // only fetch installations tokens if:
+    // 1. never fetched
+    // 2. or there are expired ones
+    // 3. or havent fetched for 50+ minutes
+    // 4. or just installed the github app on a repo
     if (
       lastFetchedAt &&
       !(
         hasExpiredInstallationToken ||
         (fetchedNMinutesAgo && fetchedNMinutesAgo > 50)
-      )
+      ) &&
+      !installationIdFromQuery
     ) {
       yield put(actions.refreshInstallationsNoop())
       continue

@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
@@ -19,13 +19,10 @@ import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
 
 export interface LabelProps {
-  backgroundThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
-  borderThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  backgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  borderThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   children: ReactNode
-  colorThemeColor?:
-    | string
-    | keyof ThemeColors
-    | ((theme: ThemeColors) => string)
+  colorThemeColor?: string | keyof ThemeColors | ((theme: Theme) => string)
   containerProps?: ViewProps
   containerStyle?: StyleProp<ViewStyle>
   disableEmojis?: boolean
@@ -35,7 +32,7 @@ export interface LabelProps {
   radius?: number
   small?: boolean
   textProps?: TextProps
-  textThemeColor?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  textThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
 }
 
 export const hiddenLabelSize = { width: 10, height: 10 }

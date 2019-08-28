@@ -285,9 +285,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
   return (
     <ThemedView
-      backgroundColor={theme =>
-        getColumnHeaderThemeColors(theme.backgroundColor).normal
-      }
+      backgroundColor={getColumnHeaderThemeColors().normal}
       style={sharedStyles.flex}
     >
       <FullHeightScrollView

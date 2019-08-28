@@ -1,13 +1,13 @@
 import React from 'react'
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native'
 
-import { ThemeColors, ThemeTransformer } from '@devhub/core'
+import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 
 export interface ThemedActivityIndicatorProps
   extends Omit<ActivityIndicatorProps, 'color'> {
-  color?: keyof ThemeColors | ((theme: ThemeColors) => string)
+  color?: keyof ThemeColors | ((theme: Theme) => string)
   themeTransformer?: ThemeTransformer
 }
 

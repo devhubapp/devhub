@@ -1,17 +1,17 @@
-import { getCSSVariable, ThemeColors } from '@devhub/core'
+import { getCSSVariable, Theme, ThemeColors } from '@devhub/core'
 import { supportsCSSVariables } from '../../utils/helpers/theme'
 
 export function getThemeColorOrItself(
-  theme: ThemeColors & { isInverted: boolean | 0 | 1 },
+  theme: ThemeColors & { isDark: boolean | 0 | 1; isInverted: boolean | 0 | 1 },
   color:
     | keyof ThemeColors
-    | ((theme: ThemeColors) => string | undefined)
+    | ((theme: Theme) => string | undefined)
     | string
     | undefined
     | null,
   { enableCSSVariable = false } = {},
 ) {
-  const _color = typeof color === 'function' ? color(theme) : color
+  const _color = typeof color === 'function' ? color(theme as any) : color
 
   if (_color && typeof _color === 'string' && _color in theme)
     return enableCSSVariable && supportsCSSVariables

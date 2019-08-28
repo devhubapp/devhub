@@ -50,6 +50,9 @@ export const Browser: BrowserCrossPlatform = {
       return Linking.openURL(url)
     }
   },
+  openURLOnNewTab: url => {
+    Browser.openURL(url)
+  },
   setBackgroundColor: color => {
     backgroundColor = color
   },

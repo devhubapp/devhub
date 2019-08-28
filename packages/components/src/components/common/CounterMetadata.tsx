@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { StyleSheet } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
+import { Platform } from '../../libs/platform'
 import {
   contentPadding,
   mutedOpacity,
@@ -30,8 +31,8 @@ interface NumberMetadata {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingVertical: contentPadding / 8,
-    paddingHorizontal: contentPadding / 2,
+    paddingVertical: 0,
+    paddingHorizontal: contentPadding / 3,
     borderWidth: 1,
     borderColor: 'transparent',
     borderRadius: radius,
@@ -39,6 +40,7 @@ const styles = StyleSheet.create({
 
   number: {
     fontSize: smallerTextSize,
+    ...Platform.select({ web: { fontFeatureSettings: '"tnum"' } }),
   },
 
   separator: {

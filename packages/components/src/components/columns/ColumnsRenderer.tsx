@@ -43,7 +43,7 @@ export function ColumnsRenderer() {
     }
 
     return (
-      <SafeAreaView style={sharedStyles.flex}>
+      <SafeAreaView style={[sharedStyles.flex, sharedStyles.horizontal]}>
         <>
           {!!enableSharedFiltersView && (
             <ColumnFiltersRenderer
@@ -60,25 +60,18 @@ export function ColumnsRenderer() {
             />
           )}
 
-          {appViewMode === 'single-column' ? (
-            <ColumnContainer
-              key="single-column-container"
-              columnId={focusedColumnId}
-              pointerEvents={
-                isSharedFiltersOpened && !inlineMode ? 'none' : undefined
-              }
-              swipeable={!constants.DISABLE_SWIPEABLE_CARDS}
-            />
-          ) : (
-            <Columns
-              key="columns"
-              pointerEvents={isSharedFiltersOpened ? 'none' : undefined}
-            />
-          )}
+          <ColumnContainer
+            key="single-column-container"
+            columnId={focusedColumnId}
+            pointerEvents={
+              isSharedFiltersOpened && !inlineMode ? 'none' : undefined
+            }
+            swipeable={!constants.DISABLE_SWIPEABLE_CARDS}
+          />
         </>
       </SafeAreaView>
     )
   }
 
-  return <Columns key="columns" />
+  return <Columns />
 }

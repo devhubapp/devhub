@@ -86,8 +86,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         immediate,
         backgroundColor:
           enableBackgroundHover && (isHovered || isPressing || isOpen)
-            ? theme[getColumnHeaderThemeColors(theme.backgroundColor).hover]
-            : theme[getColumnHeaderThemeColors(theme.backgroundColor).normal],
+            ? theme[getColumnHeaderThemeColors().hover]
+            : theme[getColumnHeaderThemeColors().normal],
       }
     },
     [enableBackgroundHover, isOpen, theme],

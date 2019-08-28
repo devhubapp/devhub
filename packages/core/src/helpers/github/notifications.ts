@@ -27,7 +27,11 @@ import {
   getReleaseIconAndColor,
   isItemRead,
 } from './shared'
-import { getCommentIdFromUrl, getIssueOrPullRequestNumberFromUrl } from './url'
+import {
+  getCommentIdFromUrl,
+  getIssueOrPullRequestNumberFromUrl,
+  getRepoFullNameFromObject,
+} from './url'
 
 export const notificationReasons: GitHubNotificationReason[] = [
   'assign',
@@ -86,7 +90,7 @@ export function getNotificationIconAndColor(
     case 'RepositoryVulnerabilityAlert':
       return {
         icon: 'alert',
-        color: 'yellow',
+        color: 'red',
         tooltip: 'Repository vulnerability alert',
       }
     default: {
@@ -610,10 +614,7 @@ export function getGitHubNotificationSubItems(
       )
     : undefined
 
-  const repoFullName =
-    (notification &&
-      (notification.repository.full_name || notification.repository.name)) ||
-    ''
+  const repoFullName = getRepoFullNameFromObject(notification.repository)
 
   const isBot = getItemIsBot('notifications', notification)
 

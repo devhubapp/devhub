@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, ViewProps } from 'react-native'
 
-import { GitHubLabel, ThemeColors } from '@devhub/core'
+import { GitHubLabel, Theme, ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
@@ -11,7 +11,7 @@ import { TouchableOpacity } from '../../../common/TouchableOpacity'
 
 export interface LabelsViewProps
   extends Omit<LabelProps, 'children' | 'color' | 'containerStyle'> {
-  backgroundThemeColor: keyof ThemeColors | ((theme: ThemeColors) => string)
+  backgroundThemeColor: keyof ThemeColors | ((theme: Theme) => string)
   enableScrollView?: boolean
   fragment?: boolean
   hideText?: boolean

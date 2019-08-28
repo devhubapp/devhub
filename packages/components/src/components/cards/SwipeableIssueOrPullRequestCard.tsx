@@ -32,7 +32,7 @@ export function SwipeableIssueOrPullRequestCard(
       leftActions={[
         {
           color: theme.blue,
-          icon: 'mail-read',
+          icon: 'done',
           key: 'read',
           label: 'Read',
           onPress: handleMarkAsRead,
@@ -42,7 +42,7 @@ export function SwipeableIssueOrPullRequestCard(
       rightActions={[
         {
           color: theme.orange,
-          icon: 'clock',
+          icon: 'snooze',
           key: 'snooze',
           label: 'Snooze',
           onPress: handleSnooze,
