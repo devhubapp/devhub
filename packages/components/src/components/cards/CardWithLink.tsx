@@ -42,6 +42,7 @@ export const CardWithLink = React.memo(
     const ref = useRef<any>(null)
     const focusIndicatorRef = useRef<View>(null)
     const isFocusedRef = useRef(false)
+    const isHoveredRef = useRef(false)
 
     const dispatch = useDispatch()
 
@@ -65,6 +66,8 @@ export const CardWithLink = React.memo(
     isReadRef.current = cardProps.isRead
 
     const onPress = useCallback(() => {
+      isHoveredRef.current = false
+
       dispatch(
         actions.markItemsAsReadOrUnread({
           type,
@@ -75,42 +78,48 @@ export const CardWithLink = React.memo(
       )
     }, [])
 
+    const updateStyles = useCallback(() => {
+      if (ref.current) {
+        const theme = getTheme()
+
+        ref.current.setNativeProps({
+          style: {
+            backgroundColor:
+              theme[
+                getCardBackgroundThemeColor({
+                  isDark: theme.isDark,
+                  isMuted: isReadRef.current,
+                  isHovered: isHoveredRef.current,
+                })
+              ],
+          },
+        })
+      }
+
+      if (focusIndicatorRef.current) {
+        focusIndicatorRef.current.setNativeProps({
+          style: {
+            opacity: !Platform.supportsTouch && isFocusedRef.current ? 1 : 0,
+          },
+        })
+      }
+    }, [])
+
     const handleFocusChange = useCallback(
       (value, disableDomFocus?: boolean) => {
         const changed = isFocusedRef.current !== value
         isFocusedRef.current = value
 
-        if (ref.current) {
-          const theme = getTheme()
+        if (Platform.OS === 'web' && value && changed && !disableDomFocus) {
+          const node = tryFocus(ref.current)
 
-          ref.current.setNativeProps({
-            style: {
-              backgroundColor:
-                theme[
-                  getCardBackgroundThemeColor({
-                    isDark: theme.isDark,
-                    isMuted: isReadRef.current,
-                    isHovered: value,
-                  })
-                ],
-            },
-          })
-
-          if (Platform.OS === 'web' && value && changed && !disableDomFocus) {
-            const node = tryFocus(ref.current)
-
-            // Workaround to fix onPress not being called when pressing the Enter key
-            // I think react-native-web is removing the onClick from links
-            // @see https://github.com/necolas/react-native-web/blob/36dacb2052efdab2a28655773dc76934157d9134/packages/react-native-web/src/exports/createElement/index.js#L69-L79
-            if (node) node.onclick = onPress
-          }
+          // Workaround to fix onPress not being called when pressing the Enter key
+          // I think react-native-web is removing the onClick from links
+          // @see https://github.com/necolas/react-native-web/blob/36dacb2052efdab2a28655773dc76934157d9134/packages/react-native-web/src/exports/createElement/index.js#L69-L79
+          if (node) node.onclick = onPress
         }
 
-        if (focusIndicatorRef.current) {
-          focusIndicatorRef.current.setNativeProps({
-            style: { opacity: !Platform.supportsTouch && value ? 1 : 0 },
-          })
-        }
+        updateStyles()
       },
       [],
     )
@@ -121,14 +130,20 @@ export const CardWithLink = React.memo(
       ref,
       useCallback(
         isHovered => {
-          if (isFocusedRef.current === isHovered) return
-          if (!isHovered) return
+          if (isHoveredRef.current === isHovered) return
+          isHoveredRef.current = isHovered
 
-          handleFocusChange(isHovered)
-          emitter.emit('FOCUS_ON_COLUMN_ITEM', {
-            columnId,
-            itemId: item.id,
-          })
+          const isAlreadyFocused = isFocusedRef.current
+          if (isHovered && !isAlreadyFocused) {
+            handleFocusChange(true)
+
+            emitter.emit('FOCUS_ON_COLUMN_ITEM', {
+              columnId,
+              itemId: item.id,
+            })
+          } else {
+            updateStyles()
+          }
         },
         [columnId, item.id, cardProps.isRead],
       ),
