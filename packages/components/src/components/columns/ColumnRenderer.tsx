@@ -45,9 +45,11 @@ export function getColumnCardThemeColors({
 } {
   return {
     card: 'backgroundColorLighther1',
-    card__hover: 'backgroundColorLess2',
+    card__hover: isDark ? 'backgroundColorLighther2' : 'backgroundColorDarker1',
     card__muted: isDark ? 'backgroundColor' : 'backgroundColorDarker1',
-    card__muted_hover: 'backgroundColorLess2',
+    card__muted_hover: isDark
+      ? 'backgroundColorLighther1'
+      : 'backgroundColorDarker2',
     column: 'backgroundColor',
   }
 }
