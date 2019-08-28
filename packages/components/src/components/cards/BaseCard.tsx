@@ -13,7 +13,6 @@ import {
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { IntervalRefresh } from '../common/IntervalRefresh'
-import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -23,6 +22,7 @@ import { InstallGitHubAppText } from './partials/rows/InstallGitHubAppText'
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'transparent',
     overflow: 'hidden',
   },
 
@@ -169,6 +169,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     date,
     githubApp,
     icon,
+    id,
     isPrivate,
     isRead,
     link,
@@ -176,29 +177,19 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     subtitle,
     text,
     title,
+    type,
   } = props
+
+  if (!link) console.error(`No link for ${type} card: ${id}, ${title}, ${text}`)
+  if (link && link.includes('api.github.com'))
+    console.error(`Wrong link for ${type} card: ${id}, ${title}, ${text}`, link)
 
   const backgroundThemeColor = (theme: Theme) =>
     getCardBackgroundThemeColor({ isDark: theme.isDark, isMuted: isRead })
-  const backgroundHoverThemeColor = (theme: Theme) =>
-    getCardBackgroundThemeColor({
-      isDark: theme.isDark,
-      isMuted: isRead,
-      isHovered: true,
-    })
-
-  if (!link) console.error(`No link for card: ${title}, ${text}`)
-  if (link && link.includes('api.github.com'))
-    console.error(`Wrong link for card: ${title}, ${text}`, link)
 
   return (
-    <Link
-      backgroundThemeColor={backgroundThemeColor}
-      enableBackgroundHover
-      enableForegroundHover={false}
-      hoverBackgroundThemeColor={backgroundHoverThemeColor}
-      href={link}
-      openOnNewTab
+    <View
+      key={`base-card-container-${type}-${id}-inner`}
       style={styles.container}
     >
       <View style={styles.innerContainer}>
@@ -372,7 +363,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
           </>
         )}
       </View>
-    </Link>
+    </View>
   )
 })
 

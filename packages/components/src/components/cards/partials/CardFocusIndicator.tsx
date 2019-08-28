@@ -1,9 +1,11 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import { ThemedView } from '../../themed/ThemedView'
+import { ThemedView, ThemedViewProps } from '../../themed/ThemedView'
 
-export interface CardFocusIndicatorProps {}
+export interface CardFocusIndicatorProps {
+  style?: ThemedViewProps['style']
+}
 
 const styles = StyleSheet.create({
   cardBorder: {
@@ -16,11 +18,18 @@ const styles = StyleSheet.create({
   },
 })
 
-export function CardFocusIndicator(_props: CardFocusIndicatorProps) {
+export const CardFocusIndicator = React.forwardRef<
+  View,
+  CardFocusIndicatorProps
+>((props, ref) => {
+  const { style } = props
+
   return (
     <ThemedView
+      ref={ref}
       backgroundColor="primaryBackgroundColor"
-      style={styles.cardBorder}
+      style={[styles.cardBorder, style]}
+      pointerEvents="none"
     />
   )
-}
+})

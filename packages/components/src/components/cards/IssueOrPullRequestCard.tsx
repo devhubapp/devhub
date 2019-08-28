@@ -1,29 +1,16 @@
-import React, { useEffect, useMemo, useRef } from 'react'
-import { View } from 'react-native'
+import React from 'react'
 
-import {
-  EnhancedGitHubIssueOrPullRequest,
-  GitHubIssueOrPullRequestSubjectType,
-} from '@devhub/core'
-import { useIsItemFocused } from '../../hooks/use-is-item-focused'
-import { usePrevious } from '../../hooks/use-previous'
-import { Platform } from '../../libs/platform'
-import { sharedStyles } from '../../styles/shared'
-import { tryFocus } from '../../utils/helpers/shared'
-import { BaseCard } from './BaseCard'
-import { BaseCardProps, getCardPropsForItem } from './BaseCard.shared'
-import { CardFocusIndicator } from './partials/CardFocusIndicator'
-import { CardSavedIndicator } from './partials/CardSavedIndicator'
+import { EnhancedGitHubIssueOrPullRequest } from '@devhub/core'
+import { BaseCardProps } from './BaseCard.shared'
+import { CardWithLink } from './CardWithLink'
 
 export interface IssueOrPullRequestCardProps {
   cachedCardProps?: BaseCardProps | undefined
   columnId: string
-  isPrivate?: boolean
   issueOrPullRequest: EnhancedGitHubIssueOrPullRequest
   ownerIsKnown: boolean
   repoIsKnown: boolean
   swipeable: boolean
-  type: GitHubIssueOrPullRequestSubjectType
 }
 
 export const IssueOrPullRequestCard = React.memo(
@@ -34,38 +21,19 @@ export const IssueOrPullRequestCard = React.memo(
       issueOrPullRequest,
       ownerIsKnown,
       repoIsKnown,
+      swipeable,
     } = props
 
-    const ref = useRef<View>(null)
-
-    const isFocused = useIsItemFocused(columnId, issueOrPullRequest.id)
-    const wasFocused = usePrevious(isFocused)
-
-    useEffect(() => {
-      if (!(Platform.OS === 'web' && ref.current)) return
-      if (isFocused && !wasFocused) tryFocus(ref.current)
-    }, [isFocused && !wasFocused])
-
-    const CardComponent = useMemo(
-      () => (
-        <BaseCard
-          key={`issue_or_pr-base-card-${issueOrPullRequest.id}`}
-          {...cachedCardProps ||
-            getCardPropsForItem('issue_or_pr', issueOrPullRequest, {
-              ownerIsKnown,
-              repoIsKnown,
-            })}
-        />
-      ),
-      [cachedCardProps, issueOrPullRequest, ownerIsKnown, repoIsKnown],
-    )
-
     return (
-      <View ref={ref} style={sharedStyles.relative}>
-        {CardComponent}
-        {!!(!Platform.supportsTouch && isFocused) && <CardFocusIndicator />}
-        {!!issueOrPullRequest.saved && <CardSavedIndicator />}
-      </View>
+      <CardWithLink
+        type="issue_or_pr"
+        swipeable={swipeable}
+        repoIsKnown={repoIsKnown}
+        ownerIsKnown={ownerIsKnown}
+        item={issueOrPullRequest}
+        columnId={columnId}
+        cachedCardProps={cachedCardProps}
+      />
     )
   },
 )

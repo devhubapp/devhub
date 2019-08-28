@@ -23,7 +23,6 @@ export const IssueOrPullRequestColumn = React.memo(
       column,
       columnIndex,
       headerDetails,
-      isPrivate,
       pagingEnabled,
       pointerEvents,
       swipeable,
@@ -35,7 +34,6 @@ export const IssueOrPullRequestColumn = React.memo(
           key={`issue-or-pr-cards-container-${column.id}`}
           column={column}
           columnIndex={columnIndex}
-          isPrivate={isPrivate}
           ownerIsKnown={!!(headerDetails && headerDetails.ownerIsKnown)}
           pointerEvents={pointerEvents}
           repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}
@@ -44,7 +42,6 @@ export const IssueOrPullRequestColumn = React.memo(
       ),
       [
         column,
-        isPrivate,
         pointerEvents,
         swipeable,
         headerDetails && headerDetails.ownerIsKnown,

@@ -2,9 +2,7 @@ import { RefObject, useCallback, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Column, EnhancedItem, isItemRead } from '@devhub/core'
-import { getCardPropsForItem } from '../components/cards/BaseCard.shared'
 import { getCurrentFocusedColumnId } from '../components/context/ColumnFocusContext'
-import { Browser } from '../libs/browser'
 import { emitter } from '../libs/emitter'
 import { OneList } from '../libs/one-list'
 import * as actions from '../redux/actions'
@@ -148,29 +146,6 @@ export function useCardsKeyboard(
         itemId: selectedItemIdRef.current,
       })
     }, []),
-  )
-
-  // Disable default space behavior
-  useKeyPressCallback(' ', useCallback(() => undefined, []))
-
-  useKeyPressCallback(
-    'Enter',
-    useCallback(() => {
-      if (!isColumnFocusedRef.current) return
-
-      const selectedItem =
-        !!selectedItemIdRef.current &&
-        items.find(item => item && item.id === selectedItemIdRef.current)
-      if (!selectedItem) return
-
-      const { link } = getCardPropsForItem(type, selectedItem, {
-        ownerIsKnown: false,
-        repoIsKnown: false,
-      })
-      if (!link) return
-
-      Browser.openURLOnNewTab(link)
-    }, [type, items]),
   )
 
   useKeyPressCallback(

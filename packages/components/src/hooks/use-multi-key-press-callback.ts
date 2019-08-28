@@ -32,6 +32,10 @@ export default function useMultiKeyPressCallback(
 
   const downHandler = useCallback(
     (e: KeyboardEvent) => {
+      pingTimeout()
+
+      if (pressedKeysRef.current.has(e.key)) return
+
       pressedKeysRef.current.add(e.key)
       const hasPressedCombo = areKeysPressed(
         params.current.targetKeys,
@@ -51,16 +55,14 @@ export default function useMultiKeyPressCallback(
           })
         }, 10)
       }
-
-      pingTimeout()
     },
     [caseSensitive],
   )
 
   const upHandler = useCallback((e: KeyboardEvent) => {
-    pressedKeysRef.current.delete(e.key)
-
     pingTimeout()
+
+    pressedKeysRef.current.delete(e.key)
   }, [])
 
   useEffect(() => {

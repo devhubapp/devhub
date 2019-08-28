@@ -2,9 +2,12 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { contentPadding } from '../../../styles/variables'
+import { ThemedViewProps } from '../../themed/ThemedView'
 import { Triangle } from '../../Triangle'
 
-export interface CardSavedProps {}
+export interface CardSavedProps {
+  style?: ThemedViewProps['style']
+}
 
 const styles = StyleSheet.create({
   indicator: {
@@ -17,15 +20,19 @@ const styles = StyleSheet.create({
   },
 })
 
-export function CardSavedIndicator(_props: CardSavedProps) {
-  return (
-    <View style={styles.indicator}>
-      <Triangle
-        color="primaryBackgroundColor"
-        degree={-90}
-        size={contentPadding * (2 / 3)}
-        type="border"
-      />
-    </View>
-  )
-}
+export const CardSavedIndicator = React.forwardRef<View, CardSavedProps>(
+  (props, ref) => {
+    const { style } = props
+
+    return (
+      <View ref={ref} style={[styles.indicator, style]} pointerEvents="none">
+        <Triangle
+          color="primaryBackgroundColor"
+          degree={-90}
+          size={contentPadding * (2 / 3)}
+          type="border"
+        />
+      </View>
+    )
+  },
+)

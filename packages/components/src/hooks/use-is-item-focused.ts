@@ -1,12 +1,19 @@
-import { useState } from 'react'
+import { useRef } from 'react'
 
 import { useEmitter } from './use-emitter'
+import { useForceRerender } from './use-force-rerender'
 
 let focusedColumnId: string
 let focusedItemId: string | number | null
 
-export function useIsItemFocused(columnId: string, itemId: string | number) {
-  const [isFocused, setIsFocused] = useState(
+export function useIsItemFocused(
+  columnId: string,
+  itemId: string | number,
+  callback?: (isItemFocused: boolean) => void,
+) {
+  const forceRerender = useForceRerender()
+
+  const isFocusedRef = useRef(
     focusedColumnId === columnId && focusedItemId === itemId,
   )
 
@@ -17,12 +24,18 @@ export function useIsItemFocused(columnId: string, itemId: string | number) {
       focusedItemId = payload.itemId
 
       const newValue = focusedColumnId === columnId && focusedItemId === itemId
-      if (isFocused === newValue) return
+      if (isFocusedRef.current === newValue) return
+      isFocusedRef.current = newValue
 
-      setIsFocused(newValue)
+      if (callback) {
+        callback(newValue)
+        return
+      }
+
+      forceRerender()
     },
-    [columnId, itemId, isFocused],
+    [columnId, itemId, callback],
   )
 
-  return isFocused
+  return isFocusedRef.current
 }

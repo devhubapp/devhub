@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import {
   Column,
   EnhancedGitHubIssueOrPullRequest,
-  getIssueOrPullRequestSubjectType,
   getSearchQueryFromFilter,
 } from '@devhub/core'
 import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
@@ -115,7 +114,6 @@ export const IssueOrPullRequestCards = React.memo(
                 ownerIsKnown={ownerIsKnown}
                 repoIsKnown={repoIsKnown}
                 swipeable={swipeable}
-                type={getIssueOrPullRequestSubjectType(item) || 'Issue'}
               />
             </View>
           )
@@ -131,7 +129,6 @@ export const IssueOrPullRequestCards = React.memo(
                 ownerIsKnown={ownerIsKnown}
                 repoIsKnown={repoIsKnown}
                 swipeable={swipeable}
-                type={getIssueOrPullRequestSubjectType(item) || 'Issue'}
               />
             </View>
           </ErrorBoundary>

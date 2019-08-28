@@ -23,8 +23,10 @@ export const ThemeContext = React.createContext<ThemeProviderState>(
 )
 ThemeContext.displayName = 'ThemeContext'
 
+let _theme: Theme = defaultTheme
 export function ThemeProvider(props: ThemeProviderProps) {
   const theme = useReduxState(selectors.themeSelector)
+  _theme = theme
 
   useEffect(() => {
     const headerThemeColors = getColumnHeaderThemeColors()
@@ -78,4 +80,8 @@ export function useThemeCallback(
   Browser.setForegroundColor(initialTheme.foregroundColor)
 
   return initialTheme
+}
+
+export function getTheme() {
+  return _theme
 }

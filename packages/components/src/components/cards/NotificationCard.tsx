@@ -1,16 +1,8 @@
-import React, { useEffect, useMemo, useRef } from 'react'
-import { View } from 'react-native'
+import React from 'react'
 
 import { EnhancedGitHubNotification } from '@devhub/core'
-import { useIsItemFocused } from '../../hooks/use-is-item-focused'
-import { usePrevious } from '../../hooks/use-previous'
-import { Platform } from '../../libs/platform'
-import { sharedStyles } from '../../styles/shared'
-import { tryFocus } from '../../utils/helpers/shared'
-import { BaseCard } from './BaseCard'
-import { BaseCardProps, getCardPropsForItem } from './BaseCard.shared'
-import { CardFocusIndicator } from './partials/CardFocusIndicator'
-import { CardSavedIndicator } from './partials/CardSavedIndicator'
+import { BaseCardProps } from './BaseCard.shared'
+import { CardWithLink } from './CardWithLink'
 
 export interface NotificationCardProps {
   cachedCardProps?: BaseCardProps | undefined
@@ -28,38 +20,19 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     notification,
     ownerIsKnown,
     repoIsKnown,
+    swipeable,
   } = props
 
-  const ref = useRef<View>(null)
-
-  const isFocused = useIsItemFocused(columnId, notification.id)
-  const wasFocused = usePrevious(isFocused)
-
-  useEffect(() => {
-    if (!(Platform.OS === 'web' && ref.current)) return
-    if (isFocused && !wasFocused) tryFocus(ref.current)
-  }, [isFocused && !wasFocused])
-
-  const CardComponent = useMemo(
-    () => (
-      <BaseCard
-        key={`notifications-base-card-${notification.id}`}
-        {...cachedCardProps ||
-          getCardPropsForItem('notifications', notification, {
-            ownerIsKnown,
-            repoIsKnown,
-          })}
-      />
-    ),
-    [cachedCardProps, notification, ownerIsKnown, repoIsKnown],
-  )
-
   return (
-    <View ref={ref} style={sharedStyles.relative}>
-      {CardComponent}
-      {!!(!Platform.supportsTouch && isFocused) && <CardFocusIndicator />}
-      {!!notification.saved && <CardSavedIndicator />}
-    </View>
+    <CardWithLink
+      type="notifications"
+      swipeable={swipeable}
+      repoIsKnown={repoIsKnown}
+      ownerIsKnown={ownerIsKnown}
+      item={notification}
+      columnId={columnId}
+      cachedCardProps={cachedCardProps}
+    />
   )
 })
 

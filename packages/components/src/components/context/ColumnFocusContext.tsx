@@ -134,6 +134,23 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   )
 
   useEmitter(
+    'FOCUS_ON_COLUMN_ITEM',
+    payload => {
+      if (valueRef.current.focusedColumnId === (payload.columnId || null))
+        return
+
+      emitter.emit('FOCUS_ON_COLUMN', {
+        animated: false,
+        columnId: payload.columnId || '',
+        focusOnVisibleItem: false,
+        highlight: false,
+        scrollTo: false,
+      })
+    },
+    [],
+  )
+
+  useEmitter(
     'SCROLL_DOWN_COLUMN',
     payload => {
       if (

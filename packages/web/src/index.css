@@ -54,3 +54,8 @@ input:focus {
 [data-touchable="true"][data-touchable-disabled="true"] {
   cursor: not-allowed;
 }
+
+[data-card-link="true"]:focus {
+  outline: none;
+  outline-color: transparent;
+}

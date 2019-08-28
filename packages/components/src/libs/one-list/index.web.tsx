@@ -17,11 +17,11 @@ const ItemRow = React.memo(
   (props: {
     index: number
     item: any
-    key: string
+    itemKey: string
     renderItem: OneListProps<any>['renderItem']
   }) => {
-    const { index, item, key, renderItem } = props
-    return <Fragment key={key}>{renderItem({ index, item })}</Fragment>
+    const { index, item, itemKey, renderItem } = props
+    return <Fragment key={itemKey}>{renderItem({ index, item })}</Fragment>
   },
 )
 
@@ -85,7 +85,7 @@ const Row = React.memo(
           <ItemRow
             index={dataIndex}
             item={data[dataIndex]}
-            key={
+            itemKey={
               getItemKey
                 ? getItemKey(data[dataIndex], dataIndex)
                 : `react-window-item-row-${dataIndex}`
@@ -301,13 +301,13 @@ export const OneList = (React.memo(
                   <VariableSizeList
                     ref={variableSizeListRef}
                     key="variable-size-list"
-                    direction={horizontal ? 'horizontal' : 'vertical'}
                     estimatedItemSize={estimatedItemSize}
                     height={horizontal ? '100%' : height}
                     itemCount={itemCount}
                     itemData={itemData}
                     itemKey={itemKey}
                     itemSize={itemSize}
+                    layout={horizontal ? 'horizontal' : 'vertical'}
                     onItemsRendered={onItemsRendered}
                     overscanCount={overscanCount}
                     width={horizontal ? width : '100%'}

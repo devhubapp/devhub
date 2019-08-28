@@ -1,6 +1,7 @@
 import { PixelRatio } from 'react-native'
 
 import {
+  Column,
   ColumnSubscription,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
@@ -84,7 +85,6 @@ export interface BaseCardProps {
     imageURL: string
     linkURL: string
   }
-  link: string
   date: string
   githubApp?: {
     ownerId?: number | string | undefined
@@ -95,8 +95,10 @@ export interface BaseCardProps {
     name: GitHubIcon
     color?: keyof ThemeColors
   }
+  id: string | number
   isPrivate: boolean
   isRead: boolean
+  link: string
   subitems?: Array<{
     avatar:
       | {
@@ -109,6 +111,7 @@ export interface BaseCardProps {
   subtitle?: string
   text?: string
   title: string
+  type: Column['type']
 }
 
 function getRepoText({
@@ -147,6 +150,8 @@ export function getCardPropsForItem(
     repoIsKnown,
   }: { ownerIsKnown: boolean; repoIsKnown: boolean },
 ): BaseCardProps {
+  const id = item.id
+
   switch (type) {
     case 'activity': {
       const event = item as EnhancedGitHubEvent
@@ -276,6 +281,7 @@ export function getCardPropsForItem(
                 avatar: actorAvatar,
                 date,
                 icon,
+                id,
                 isPrivate,
                 isRead,
                 link:
@@ -288,12 +294,14 @@ export function getCardPropsForItem(
                 subtitle: undefined,
                 text: actionText,
                 title: actorUsername,
+                type,
               }
             : {
                 action: actorAction,
                 avatar: repoAvatar,
                 date,
                 icon,
+                id,
                 isPrivate,
                 isRead,
                 link: forkURL || repoURL,
@@ -301,6 +309,7 @@ export function getCardPropsForItem(
                 subtitle: undefined,
                 text: repoOwnerName,
                 title: repoName!,
+                type,
               }
         }
 
@@ -316,6 +325,7 @@ export function getCardPropsForItem(
                 : repoAvatar,
               date,
               icon,
+              id,
               isPrivate,
               isRead,
               link:
@@ -331,6 +341,7 @@ export function getCardPropsForItem(
                 issueOrPullRequestNumber: issueOrPullRequest.number,
               }),
               title: issueOrPullRequest.title,
+              type,
             }
           }
 
@@ -352,6 +363,7 @@ export function getCardPropsForItem(
               },
               date,
               icon,
+              id,
               isPrivate,
               isRead,
               link:
@@ -372,6 +384,7 @@ export function getCardPropsForItem(
                     issueOrPullRequestNumber: undefined,
                   }),
               title: commit.message,
+              type,
             }
           }
 
@@ -393,6 +406,7 @@ export function getCardPropsForItem(
               avatar: repoAvatar,
               date,
               icon,
+              id,
               isPrivate,
               isRead,
               link:
@@ -443,6 +457,7 @@ export function getCardPropsForItem(
                 repoIsKnown: false,
               }),
               title: repoName!,
+              type,
             }
           }
 
@@ -452,6 +467,7 @@ export function getCardPropsForItem(
               avatar: repoAvatar,
               date,
               icon,
+              id,
               isPrivate,
               isRead,
               link: release.html_url || fixURL(release.url),
@@ -470,6 +486,7 @@ export function getCardPropsForItem(
                 repoIsKnown,
               }),
               title: release.name || release.tag_name,
+              type,
             }
           }
 
@@ -478,6 +495,7 @@ export function getCardPropsForItem(
             avatar: repoAvatar,
             date,
             icon,
+            id,
             isPrivate,
             isRead,
             link:
@@ -507,6 +525,7 @@ export function getCardPropsForItem(
               repoIsKnown: false,
             }),
             title: repoName!,
+            type,
           }
         }
       }
@@ -548,6 +567,7 @@ export function getCardPropsForItem(
             },
         date: issueOrPullRequest.updated_at || issueOrPullRequest.created_at,
         icon,
+        id,
         isPrivate,
         isRead,
         link: fixURL(issueOrPullRequest.html_url, {
@@ -563,6 +583,7 @@ export function getCardPropsForItem(
           issueOrPullRequestNumber: issueOrPullRequest.number,
         }),
         title: issueOrPullRequest.title,
+        type,
       }
     }
 
@@ -620,6 +641,7 @@ export function getCardPropsForItem(
         },
         date: notification.updated_at,
         icon,
+        id,
         isPrivate,
         isRead,
         link: fixURL(subject.latest_comment_url || subject.url, {
@@ -638,6 +660,7 @@ export function getCardPropsForItem(
             (issueOrPullRequest && issueOrPullRequest.number) || undefined,
         }),
         title: subject.title,
+        type,
         githubApp: isPrivateAndCantSee
           ? {
               ownerId: repo.owner && repo.owner.id,
