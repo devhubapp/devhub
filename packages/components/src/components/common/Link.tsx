@@ -234,6 +234,7 @@ export const Link = React.forwardRef<TouchableOpacity, LinkProps>(
 
     if (!renderTouchable)
       return <ThemedView ref={containerRef} {...finalProps} />
+
     return <TouchableOpacity ref={containerRef} {...finalProps} />
   },
 )

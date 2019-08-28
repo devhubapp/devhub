@@ -38,7 +38,7 @@ export function tryFocus(ref: any) {
     if (!(node.tabIndex >= 0)) node.tabIndex = -1
 
     node.focus({ preventScroll: true })
-    return true
+    return node
   }
 
   return false

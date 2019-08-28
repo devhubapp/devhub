@@ -1,11 +1,13 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 import { View } from 'react-native'
+import { useDispatch } from 'react-redux'
 
 import { Column, EnhancedItem } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { useIsItemFocused } from '../../hooks/use-is-item-focused'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
+import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
@@ -41,6 +43,8 @@ export const CardWithLink = React.memo(
     const focusIndicatorRef = useRef<View>(null)
     const isFocusedRef = useRef(false)
 
+    const dispatch = useDispatch()
+
     const { CardComponent, cardProps } = useMemo(() => {
       const _cardProps =
         cachedCardProps ||
@@ -59,6 +63,17 @@ export const CardWithLink = React.memo(
 
     const isReadRef = useRef(cardProps.isRead)
     isReadRef.current = cardProps.isRead
+
+    const onPress = useCallback(() => {
+      dispatch(
+        actions.markItemsAsReadOrUnread({
+          type,
+          itemIds: [item.id],
+          localOnly: true,
+          unread: false,
+        }),
+      )
+    }, [])
 
     const handleFocusChange = useCallback(
       (value, disableDomFocus?: boolean) => {
@@ -82,7 +97,12 @@ export const CardWithLink = React.memo(
           })
 
           if (Platform.OS === 'web' && value && changed && !disableDomFocus) {
-            tryFocus(ref.current)
+            const node = tryFocus(ref.current)
+
+            // Workaround to fix onPress not being called when pressing the Enter key
+            // I think react-native-web is removing the onClick from links
+            // @see https://github.com/necolas/react-native-web/blob/36dacb2052efdab2a28655773dc76934157d9134/packages/react-native-web/src/exports/createElement/index.js#L69-L79
+            if (node) node.onclick = onPress
           }
         }
 
@@ -128,6 +148,7 @@ export const CardWithLink = React.memo(
         enableBackgroundHover={false}
         enableForegroundHover={false}
         href={cardProps.link}
+        onPress={onPress}
         openOnNewTab
         style={sharedStyles.relative}
         onFocus={() => {
