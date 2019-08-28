@@ -9,7 +9,8 @@ import { sharedStyles } from '../../styles/shared'
 import { tryFocus } from '../../utils/helpers/shared'
 import { BaseCard } from './BaseCard'
 import { BaseCardProps, getCardPropsForItem } from './BaseCard.shared'
-import { CardBorder } from './partials/CardBorder'
+import { CardFocusIndicator } from './partials/CardFocusIndicator'
+import { CardSavedIndicator } from './partials/CardSavedIndicator'
 
 export interface NotificationCardProps {
   cachedCardProps?: BaseCardProps | undefined
@@ -56,7 +57,8 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
   return (
     <View ref={ref} style={sharedStyles.relative}>
       {CardComponent}
-      {!!(!Platform.supportsTouch && isFocused) && <CardBorder />}
+      {!!(!Platform.supportsTouch && isFocused) && <CardFocusIndicator />}
+      {!!notification.saved && <CardSavedIndicator />}
     </View>
   )
 })

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 
 import { ThemedView } from '../../themed/ThemedView'
 
-export interface CardBorderProps {}
+export interface CardFocusIndicatorProps {}
 
 const styles = StyleSheet.create({
   cardBorder: {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export function CardBorder() {
+export function CardFocusIndicator(_props: CardFocusIndicatorProps) {
   return (
     <ThemedView
       backgroundColor="primaryBackgroundColor"
