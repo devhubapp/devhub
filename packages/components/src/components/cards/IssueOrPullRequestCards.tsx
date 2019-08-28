@@ -74,30 +74,30 @@ export const IssueOrPullRequestCards = React.memo(
     const {
       OverrideRenderComponent,
       data,
-      firstVisibleItemIndexRef,
       footer,
       getItemSize,
       header,
       itemSeparator,
       onVisibleItemsChanged,
       refreshControl,
+      visibleItemIndexesRef,
     } = useCardsProps({
-      column,
-      columnIndex,
-      fetchNextPage,
-      items,
-      lastFetchedAt,
-      ownerIsKnown,
-      refresh,
-      repoIsKnown,
       type: 'issue_or_pr',
+      repoIsKnown,
+      refresh,
+      ownerIsKnown,
+      lastFetchedAt,
+      items,
+      fetchNextPage,
+      columnIndex,
+      column,
     })
 
     useCardsKeyboard(listRef, {
       columnId: column.id,
-      firstVisibleItemIndexRef,
       items,
       type: 'issue_or_pr',
+      visibleItemIndexesRef,
     })
 
     const renderItem = useCallback<

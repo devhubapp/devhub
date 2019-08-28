@@ -55,13 +55,13 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
     OverrideRenderComponent,
     data,
-    firstVisibleItemIndexRef,
     footer,
     getItemSize,
     header,
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
+    visibleItemIndexesRef,
   } = useCardsProps({
     column,
     columnIndex,
@@ -76,9 +76,9 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   useCardsKeyboard(listRef, {
     columnId: column.id,
-    firstVisibleItemIndexRef,
     items,
     type: 'notifications',
+    visibleItemIndexesRef,
   })
 
   const renderItem = useCallback<

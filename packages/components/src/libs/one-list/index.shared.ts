@@ -2,6 +2,8 @@ import React from 'react'
 import { FlatListProps } from 'react-native'
 
 export interface OneListInstance {
+  scrollToStart: () => void
+  scrollToEnd: () => void
   scrollToIndex: (
     index: number,
     payload?: { alignment?: 'start' | 'center' | 'end' | 'smart' },

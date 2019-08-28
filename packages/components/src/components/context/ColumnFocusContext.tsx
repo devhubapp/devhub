@@ -58,6 +58,8 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
+      if (valueRef.current.focusedColumnId !== fixedFocusedColumnId) return
+
       emitter.emit('FOCUS_ON_COLUMN', {
         animated: false,
         columnId: fixedFocusedColumnId,
@@ -92,16 +94,11 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   useEmitter(
     'FOCUS_ON_PREVIOUS_COLUMN',
     payload => {
-      const focusedColumnIndex = columnIds
-        ? columnIds.findIndex(
-            id => id === (valueRef.current.focusedColumnId || columnIds[0]),
-          )
-        : -1
-
       const previousColumnIndex = Math.max(
         0,
-        Math.min(focusedColumnIndex - 1, columnIds.length - 1),
+        Math.min(valueRef.current.focusedColumnIndex - 1, columnIds.length - 1),
       )
+      if (previousColumnIndex === valueRef.current.focusedColumnIndex) return
 
       emitter.emit('FOCUS_ON_COLUMN', {
         ...payload,
@@ -114,16 +111,11 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   useEmitter(
     'FOCUS_ON_NEXT_COLUMN',
     payload => {
-      const focusedColumnIndex = columnIds
-        ? columnIds.findIndex(
-            id => id === (valueRef.current.focusedColumnId || columnIds[0]),
-          )
-        : -1
-
       const nextColumnIndex = Math.max(
         0,
-        Math.min(focusedColumnIndex + 1, columnIds.length - 1),
+        Math.min(valueRef.current.focusedColumnIndex + 1, columnIds.length - 1),
       )
+      if (nextColumnIndex === valueRef.current.focusedColumnIndex) return
 
       emitter.emit('FOCUS_ON_COLUMN', {
         ...payload,

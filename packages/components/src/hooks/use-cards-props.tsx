@@ -66,7 +66,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     new WeakMap<EnhancedItem, BaseCardProps>(),
   )
   const sizeCacheMapRef = useRef(new WeakMap<EnhancedItem, number>())
-  const firstVisibleItemIndexRef = useRef(-1)
+  const visibleItemIndexesRef = useRef({ from: -1, to: -1 })
 
   const itemCardProps = useMemo<Array<BaseCardProps | undefined>>(() => {
     const newCacheMap = new WeakMap()
@@ -192,8 +192,8 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   const onVisibleItemsChanged = useCallback<
     NonNullable<OneListProps<DataItemT<ItemT>>['onVisibleItemsChanged']>
-  >(fromIndex => {
-    firstVisibleItemIndexRef.current = fromIndex
+  >((from, to) => {
+    visibleItemIndexesRef.current = { from, to }
   }, [])
 
   const refreshControl = useMemo(
@@ -238,7 +238,6 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   return {
     OverrideRenderComponent,
     data,
-    firstVisibleItemIndexRef,
     footer,
     getItemSize,
     header,
@@ -246,5 +245,6 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
+    visibleItemIndexesRef,
   }
 }

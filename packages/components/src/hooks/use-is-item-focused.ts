@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { useEmitter } from './use-emitter'
 import { useForceRerender } from './use-force-rerender'
@@ -10,12 +10,13 @@ export function useIsItemFocused(
   columnId: string,
   itemId: string | number,
   callback?: (isItemFocused: boolean) => void,
+  { skipFirstCallback = false }: { skipFirstCallback?: boolean } = {},
 ) {
   const forceRerender = useForceRerender()
 
-  const isFocusedRef = useRef(
-    focusedColumnId === columnId && focusedItemId === itemId,
-  )
+  const isFocusedRef = useRef(false)
+  isFocusedRef.current =
+    focusedColumnId === columnId && focusedItemId === itemId
 
   useEmitter(
     'FOCUS_ON_COLUMN_ITEM',
@@ -36,6 +37,11 @@ export function useIsItemFocused(
     },
     [columnId, itemId, callback],
   )
+
+  useEffect(() => {
+    if (callback && isFocusedRef.current && !skipFirstCallback)
+      callback(isFocusedRef.current)
+  })
 
   return isFocusedRef.current
 }

@@ -11,6 +11,12 @@ export { OneListProps }
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
     React.useImperativeHandle(ref, () => ({
+      scrollToStart: () => {
+        flatListRef.current!.scrollToOffset({ animated: false, offset: 0 })
+      },
+      scrollToEnd: () => {
+        flatListRef.current!.scrollToEnd({ animated: false })
+      },
       scrollToIndex: (index, params) => {
         const alignment = params ? params.alignment : 'center'
 

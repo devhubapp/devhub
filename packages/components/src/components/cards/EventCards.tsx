@@ -52,13 +52,13 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   const {
     OverrideRenderComponent,
     data,
-    firstVisibleItemIndexRef,
     footer,
     getItemSize,
     header,
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
+    visibleItemIndexesRef,
   } = useCardsProps({
     column,
     columnIndex,
@@ -73,9 +73,9 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   useCardsKeyboard(listRef, {
     columnId: column.id,
-    firstVisibleItemIndexRef,
     items,
     type: 'activity',
+    visibleItemIndexesRef,
   })
 
   const renderItem = useCallback<

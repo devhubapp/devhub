@@ -117,12 +117,25 @@ const Row = React.memo(
 
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
-    React.useImperativeHandle(ref, () => ({
-      scrollToIndex: (index, params) => {
-        const alignment = params ? params.alignment : 'smart'
-        variableSizeListRef.current!.scrollToItem(index, alignment)
-      },
-    }))
+    React.useImperativeHandle(
+      ref,
+      () => ({
+        scrollToStart: () => {
+          variableSizeListRef.current!.scrollTo(0)
+        },
+        scrollToEnd: () => {
+          variableSizeListRef.current!.scrollToItem(
+            props.data.length - 1,
+            'start',
+          )
+        },
+        scrollToIndex: (index, params) => {
+          const alignment = params ? params.alignment : 'smart'
+          variableSizeListRef.current!.scrollToItem(index, alignment)
+        },
+      }),
+      [props.data.length],
+    )
 
     const {
       ListEmptyComponent,
