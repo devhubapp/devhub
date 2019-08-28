@@ -87,7 +87,7 @@
     "electron-notarize": "0.1.1",
     "nodemon": "1.19.1",
     "tslint": "5.14.0",
-    "typescript": "3.5.1",
+    "typescript": "3.6.2",
     "wait-on": "3.2.0"
   }
 }
