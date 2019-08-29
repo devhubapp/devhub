@@ -44,7 +44,7 @@ export function isDefaultAppSchema() {
 export function showWindow(win: BrowserWindow) {
   if (win.isMinimized()) win.restore()
   if (win.isVisible()) win.focus()
-  else win.show()
+  win.show()
 }
 
 export function getCenterPosition(obj: BrowserWindow | Tray) {

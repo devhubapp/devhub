@@ -5511,10 +5511,10 @@ electron-updater@4.1.2:
     pako "^1.0.10"
     semver "^6.2.0"
 
-electron@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.npmjs.org/electron/-/electron-6.0.0.tgz#03712d461ac73cdf920b2336d6560d6c6b7f19cc"
-  integrity sha512-JVHj0dYtvVFrzVk1TgvrdXJSyLpdvlWNLhtG8ItYZsyg9XbCOQ9OoPfgLm04FjMzKMzEl4YIN0PfGC02MTx3PQ==
+electron@6.0.5:
+  version "6.0.5"
+  resolved "https://registry.npmjs.org/electron/-/electron-6.0.5.tgz#f4c25126001b91be6e935005577eb5427f11a50e"
+  integrity sha512-B3gjUvvXxVH4QnmGEMYne83lG2XJNbNe0FPwVDhzA9FkapnBgvrsE/Fz6NFXTaZm6zSdC2ut1j38rfSTFvUtDA==
   dependencies:
     "@types/node" "^10.12.18"
     electron-download "^4.1.0"

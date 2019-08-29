@@ -81,7 +81,7 @@
     "@types/jsonfile": "5.0.0",
     "@types/mkdirp": "0.5.2",
     "dotenv": "8.0.0",
-    "electron": "6.0.0",
+    "electron": "6.0.5",
     "electron-builder": "21.2.0",
     "electron-devtools-installer": "2.2.4",
     "electron-notarize": "0.1.1",
