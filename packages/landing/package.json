@@ -1,6 +1,6 @@
 {
   "name": "@devhub/landing",
-  "version": "0.93.0",
+  "version": "0.94.0",
   "private": false,
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "prepare": "cd ."
   },
   "dependencies": {
-    "@devhub/core": "0.93.0",
+    "@devhub/core": "0.94.0",
     "@zeit/next-css": "1.0.1",
     "autoprefixer": "9.6.1",
     "classnames": "2.2.6",

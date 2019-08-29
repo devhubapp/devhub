@@ -1,6 +1,6 @@
 {
   "name": "devhub",
-  "version": "0.93.0",
+  "version": "0.94.0",
   "private": true,
   "author": {
     "name": "Bruno Lemos",
@@ -38,8 +38,8 @@
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
   "dependencies": {
-    "@devhub/core": "0.93.0",
-    "@devhub/landing": "0.93.0",
+    "@devhub/core": "0.94.0",
+    "@devhub/landing": "0.94.0",
     "next": "9.0.3",
     "opencollective-postinstall": "2.0.2"
   },
