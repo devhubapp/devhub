@@ -17,7 +17,7 @@
     "build:skipweb": "yarn build:base && yarn build:web:post && yarn build:electron",
     "build:web": "pushd \"../web\" && yarn build && popd",
     "build:web:post": "shx cp -Rf ../web/dist dist/web",
-    "clean": "shx rm -rf build && shx cp -Rf build-persist build && shx rm -rf dist",
+    "clean": "shx rm -f *.tsbuildinfo && shx rm -rf build && shx cp -Rf build-persist build && shx rm -rf dist && mkdirp dist",
     "compile": "tsc -b --incremental",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",

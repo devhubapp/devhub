@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "compile": "tsc -b --incremental",
-    "clean": "shx rm -rf dist/* && shx rm -f *.tsbuildinfo",
+    "clean": "shx rm -f *.tsbuildinfo && shx rm -rf dist && mkdirp dist",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package"
@@ -25,6 +25,7 @@
     "@octokit/webhooks": "5.3.3",
     "@types/fbemitter": "2.0.32",
     "@types/lodash": "4.14.123",
+    "mkdirp": "0.5.1",
     "prettier": "1.16.4",
     "tslint": "5.14.0",
     "tslint-config-airbnb": "5.11.1",

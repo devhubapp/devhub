@@ -5,7 +5,7 @@
   "main": "dist",
   "scripts": {
     "compile": "tsc -b --incremental",
-    "clean": "shx rm -rf dist/* && shx rm -f *.tsbuildinfo",
+    "clean": "shx rm -f *.tsbuildinfo && shx rm -rf dist/*",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package"
