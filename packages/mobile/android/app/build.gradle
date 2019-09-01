@@ -163,6 +163,7 @@ dependencies {
     implementation project(':react-native-gesture-handler')
     implementation project(':bugsnag-react-native')
     implementation project(':react-native-inappbrowser-reborn')
+    implementation project(':react-native-safe-area-context')
 }
 
 // Run this once to be able to run the application with BUCK

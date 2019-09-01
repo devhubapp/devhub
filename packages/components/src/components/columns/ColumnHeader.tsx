@@ -2,9 +2,12 @@ import React, { ReactNode } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
+import { useReduxState } from '../../hooks/use-redux-state'
+import { useSafeArea } from '../../libs/safe-area-view'
+import * as selectors from '../../redux/selectors'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
 import { Separator } from '../common/Separator'
-import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'
+import { ThemedView } from '../themed/ThemedView'
 
 export function getColumnHeaderThemeColors(): {
   normal: keyof ThemeColors
@@ -12,7 +15,7 @@ export function getColumnHeaderThemeColors(): {
   selected: keyof ThemeColors
 } {
   return {
-    normal: 'backgroundColor',
+    normal: 'backgroundColor', // backgroundColor
     hover: 'backgroundColorLess1',
     selected: 'backgroundColorLess2',
   }
@@ -39,10 +42,19 @@ const styles = StyleSheet.create({
 export function ColumnHeader(props: ColumnHeaderProps) {
   const { children, noPadding, style, ...otherProps } = props
 
+  const safeAreaInsets = useSafeArea()
+  const bannerMessage = useReduxState(selectors.bannerMessageSelector)
+
   return (
-    <ThemedSafeAreaView
+    <ThemedView
       backgroundColor={getColumnHeaderThemeColors().normal}
-      style={styles.container}
+      style={[
+        styles.container,
+        {
+          paddingTop:
+            bannerMessage && bannerMessage.message ? 0 : safeAreaInsets.top,
+        },
+      ]}
     >
       <View
         {...otherProps}
@@ -56,6 +68,6 @@ export function ColumnHeader(props: ColumnHeaderProps) {
       </View>
 
       {!!children && <Separator horizontal />}
-    </ThemedSafeAreaView>
+    </ThemedView>
   )
 }

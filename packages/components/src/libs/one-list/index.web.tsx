@@ -1,4 +1,10 @@
-import React, { Fragment, useLayoutEffect, useMemo, useRef } from 'react'
+import React, {
+  Fragment,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { View } from 'react-native'
 import {
   ListChildComponentProps,
@@ -12,6 +18,14 @@ import { AutoSizer } from '../auto-sizer'
 import { OneListInstance, OneListProps } from './index.shared'
 
 export { OneListProps }
+
+const defaultSafeAreaInsets: OneListProps<any>['safeAreaInsets'] = {
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+}
+export const OneListSafeAreaContext = React.createContext(defaultSafeAreaInsets)
 
 const ItemRow = React.memo(
   (props: {
@@ -39,7 +53,8 @@ interface ItemData {
 
 const Row = React.memo(
   React.forwardRef<any, ListChildComponentProps>((props, rowRef) => {
-    const { index, style } = props
+    const { index, style: _style } = props
+
     const {
       data,
       footer,
@@ -51,6 +66,20 @@ const Row = React.memo(
       itemSeparator,
       renderItem,
     } = props.data as ItemData
+
+    const safeAreaInsets = useContext(OneListSafeAreaContext)
+
+    const style = {
+      ..._style,
+      top:
+        typeof safeAreaInsets.top === 'number'
+          ? `${parseFloat(`${_style.top || 0}`) + safeAreaInsets.top}px`
+          : _style.top,
+      left:
+        typeof safeAreaInsets.left === 'number'
+          ? `${parseFloat(`${_style.left || 0}`) + safeAreaInsets.left}px`
+          : _style.left,
+    }
 
     if (innerHeaderSize && index === 0 && header) {
       return (
@@ -115,6 +144,38 @@ const Row = React.memo(
   }),
 )
 
+const innerElementType = React.forwardRef<
+  any,
+  {
+    [key: string]: any
+    style: { width?: string | number; height?: string | number }
+  }
+>((props, ref) => {
+  const { style: _style, ...otherProps } = props
+
+  const safeAreaInsets = useContext(OneListSafeAreaContext)
+
+  const style = {
+    ..._style,
+    width:
+      typeof safeAreaInsets.left === 'number' ||
+      typeof safeAreaInsets.right === 'number'
+        ? `${parseFloat(`${_style.width || 0}`) +
+            (safeAreaInsets.left || 0) +
+            (safeAreaInsets.right || 0)}px`
+        : _style.width,
+    height:
+      typeof safeAreaInsets.top === 'number' ||
+      typeof safeAreaInsets.bottom === 'number'
+        ? `${parseFloat(`${_style.height || 0}`) +
+            (safeAreaInsets.top || 0) +
+            (safeAreaInsets.bottom || 0)}px`
+        : _style.height,
+  }
+
+  return <div ref={ref} style={style} {...otherProps} />
+})
+
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
     React.useImperativeHandle(
@@ -151,12 +212,16 @@ export const OneList = (React.memo(
       overscanCount,
       pointerEvents,
       renderItem,
+      safeAreaInsets,
 
       // TODO
       // refreshControl,
     } = props
 
     const variableSizeListRef = useRef<VariableSizeList>(null)
+    const variableSizeListInnerRef = useRef<
+      React.HTMLAttributes<React.ReactHTMLElement<HTMLDivElement>>
+    >(null)
 
     const itemSeparatorSize =
       itemSeparator && itemSeparator.Component && itemSeparator.size > 0
@@ -311,22 +376,28 @@ export const OneList = (React.memo(
                   (horizontal && width > 0) ||
                   (!horizontal && height > 0)
                 ) && (
-                  <VariableSizeList
-                    ref={variableSizeListRef}
-                    key="variable-size-list"
-                    estimatedItemSize={estimatedItemSize}
-                    height={horizontal ? '100%' : height}
-                    itemCount={itemCount}
-                    itemData={itemData}
-                    itemKey={itemKey}
-                    itemSize={itemSize}
-                    layout={horizontal ? 'horizontal' : 'vertical'}
-                    onItemsRendered={onItemsRendered}
-                    overscanCount={overscanCount}
-                    width={horizontal ? width : '100%'}
+                  <OneListSafeAreaContext.Provider
+                    value={safeAreaInsets || defaultSafeAreaInsets}
                   >
-                    {Row}
-                  </VariableSizeList>
+                    <VariableSizeList
+                      ref={variableSizeListRef}
+                      innerRef={variableSizeListInnerRef}
+                      key="variable-size-list"
+                      estimatedItemSize={estimatedItemSize}
+                      height={horizontal ? '100%' : height}
+                      innerElementType={innerElementType}
+                      itemCount={itemCount}
+                      itemData={itemData}
+                      itemKey={itemKey}
+                      itemSize={itemSize}
+                      layout={horizontal ? 'horizontal' : 'vertical'}
+                      onItemsRendered={onItemsRendered}
+                      overscanCount={overscanCount}
+                      width={horizontal ? width : '100%'}
+                    >
+                      {Row}
+                    </VariableSizeList>
+                  </OneListSafeAreaContext.Provider>
                 )
               }
             </AutoSizer>

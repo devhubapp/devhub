@@ -15,6 +15,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
+import { useSafeArea } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -41,7 +42,7 @@ import { Spacer } from '../common/Spacer'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
-import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'
+import { ThemedView } from '../themed/ThemedView'
 import { shouldRenderFAB } from './FABRenderer'
 
 const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
@@ -70,9 +71,10 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
   const flatListRef = useRef<FlatList<string>>(null)
 
+  const safeAreaInsets = useSafeArea()
   const { appViewMode } = useAppViewMode()
-  const { sizename } = useAppLayout()
   const { focusedColumnId, focusedColumnIndex } = useFocusedColumn()
+  const { appOrientation, sizename } = useAppLayout()
 
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
@@ -150,9 +152,21 @@ export const Sidebar = React.memo((props: SidebarProps) => {
   }
 
   return (
-    <ThemedSafeAreaView
+    <ThemedView
       backgroundColor={getColumnHeaderThemeColors().normal}
-      style={{ zIndex: zIndex || 1000 }}
+      style={[
+        { zIndex: zIndex || 1000 },
+        appOrientation === 'landscape'
+          ? {
+              paddingBottom: safeAreaInsets.bottom,
+              paddingLeft: safeAreaInsets.left,
+            }
+          : {
+              paddingBottom: safeAreaInsets.bottom,
+              paddingLeft: safeAreaInsets.left,
+              paddingRight: safeAreaInsets.right,
+            },
+      ]}
     >
       <View
         style={[
@@ -237,8 +251,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                   }
                   hoverBackgroundThemeColor={
                     isModalOpen('ADD_COLUMN')
-                      ? theme => getColumnHeaderThemeColors().selected
-                      : theme => getColumnHeaderThemeColors().hover
+                      ? getColumnHeaderThemeColors().selected
+                      : getColumnHeaderThemeColors().hover
                   }
                   hoverForegroundThemeColor={
                     getItemProps({ highlight: isModalOpen('ADD_COLUMN') })
@@ -289,8 +303,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
                 }
                 hoverBackgroundThemeColor={
                   isModalOpen('SETTINGS')
-                    ? theme => getColumnHeaderThemeColors().selected
-                    : theme => getColumnHeaderThemeColors().hover
+                    ? getColumnHeaderThemeColors().selected
+                    : getColumnHeaderThemeColors().hover
                 }
                 hoverForegroundThemeColor={
                   getItemProps({ highlight: isModalOpen('SETTINGS') })
@@ -448,8 +462,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
             analyticsLabel="sidebar_settings"
             hoverBackgroundThemeColor={
               isModalOpen('SETTINGS')
-                ? theme => getColumnHeaderThemeColors().selected
-                : theme => getColumnHeaderThemeColors().hover
+                ? getColumnHeaderThemeColors().selected
+                : getColumnHeaderThemeColors().hover
             }
             enableBackgroundHover={
               getItemProps({ highlight: isModalOpen('SETTINGS') })
@@ -551,7 +565,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
         <SectionSpacer />
       </View>
-    </ThemedSafeAreaView>
+    </ThemedView>
   )
 })
 
@@ -623,8 +637,8 @@ const SidebarColumnItem = React.memo(
         foregroundThemeColor={foregroundThemeColor}
         hoverBackgroundThemeColor={
           highlight
-            ? theme => getColumnHeaderThemeColors().selected
-            : theme => getColumnHeaderThemeColors().hover
+            ? getColumnHeaderThemeColors().selected
+            : getColumnHeaderThemeColors().hover
         }
         hoverForegroundThemeColor={hoverForegroundThemeColor}
         iconName={headerDetails.icon}

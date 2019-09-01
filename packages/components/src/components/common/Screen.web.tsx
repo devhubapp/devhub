@@ -1,14 +1,16 @@
-import React, { ReactNode, useLayoutEffect } from 'react'
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import React, { ReactNode, useLayoutEffect, useRef } from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { Theme, ThemeColors } from '@devhub/core'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { useTheme } from '../context/ThemeContext'
+import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'
 import { ThemedView } from '../themed/ThemedView'
 
 export interface ScreenProps {
   children?: ReactNode
-  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header'
+  enableSafeArea?: boolean
+  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header' | 'transparent'
   style?: StyleProp<ViewStyle>
 }
 
@@ -19,7 +21,14 @@ const styles = StyleSheet.create({
 })
 
 export const Screen = React.memo((props: ScreenProps) => {
-  const { statusBarBackgroundThemeColor, ...viewProps } = props
+  const {
+    enableSafeArea = true,
+    statusBarBackgroundThemeColor,
+    style,
+    ...viewProps
+  } = props
+
+  const ref = useRef<View>(null)
 
   const theme = useTheme()
 
@@ -30,11 +39,19 @@ export const Screen = React.memo((props: ScreenProps) => {
     })
   }, [statusBarBackgroundThemeColor, theme])
 
-  return (
-    <ThemedView
-      {...viewProps}
+  return enableSafeArea ? (
+    <ThemedSafeAreaView
+      ref={ref}
       backgroundColor="backgroundColor"
-      style={[styles.container, props.style]}
+      {...viewProps}
+      style={[styles.container, style]}
+    />
+  ) : (
+    <ThemedView
+      ref={ref}
+      backgroundColor="backgroundColor"
+      {...viewProps}
+      style={[styles.container, style]}
     />
   )
 })
@@ -46,10 +63,11 @@ function updateStyles({
   statusBarBackgroundThemeColor,
 }: {
   theme: Theme
-  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header'
+  statusBarBackgroundThemeColor?: ScreenProps['statusBarBackgroundThemeColor']
 }) {
   const themeColor: keyof ThemeColors =
-    statusBarBackgroundThemeColor === 'header'
+    statusBarBackgroundThemeColor === 'header' ||
+    statusBarBackgroundThemeColor === 'transparent'
       ? getColumnHeaderThemeColors().normal
       : statusBarBackgroundThemeColor || 'backgroundColor'
 

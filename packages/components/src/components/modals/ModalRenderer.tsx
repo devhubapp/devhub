@@ -9,12 +9,10 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { analytics } from '../../libs/analytics'
 import { Platform } from '../../libs/platform'
-import { SafeAreaView } from '../../libs/safe-area-view'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
-import { SpringAnimatedSafeAreaView } from '../animated/spring/SpringAnimatedSafeAreaView'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { ColumnSeparator } from '../columns/ColumnSeparator'
 import { separatorThickSize } from '../common/Separator'
@@ -192,7 +190,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   return (
     <>
       {!!overlayTransition && (
-        <SpringAnimatedSafeAreaView
+        <SpringAnimatedView
           collapsable={false}
           style={[
             StyleSheet.absoluteFill,
@@ -215,11 +213,11 @@ export function ModalRenderer(props: ModalRendererProps) {
             onPress={() => closeAllModals()}
             tabIndex={-1}
           />
-        </SpringAnimatedSafeAreaView>
+        </SpringAnimatedView>
       )}
 
       {!!modalTransitions.length && (
-        <SafeAreaView
+        <View
           collapsable={false}
           style={[
             sharedStyles.absolute,
@@ -287,7 +285,7 @@ export function ModalRenderer(props: ModalRendererProps) {
                 </SpringAnimatedView>
               ),
           )}
-        </SafeAreaView>
+        </View>
       )}
     </>
   )

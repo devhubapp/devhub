@@ -13,15 +13,16 @@ import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
 import { ThemedSafeAreaView } from '../themed/ThemedSafeAreaView'
 import { ThemedView } from '../themed/ThemedView'
 import { ConditionalWrap } from './ConditionalWrap'
 
 export interface ScreenProps {
   children?: ReactNode
-  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header'
+  enableSafeArea?: boolean
+  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header' | 'transparent'
   style?: StyleProp<ViewStyle>
-  useSafeArea?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -35,8 +36,8 @@ const styles = StyleSheet.create({
 
 export function Screen(props: ScreenProps) {
   const {
+    enableSafeArea = true,
     statusBarBackgroundThemeColor,
-    useSafeArea = true,
     style,
     ...viewProps
   } = props
@@ -56,6 +57,12 @@ export function Screen(props: ScreenProps) {
     }
   }, [])
 
+  // return (
+  //   <View style={{ flex: 1, backgroundColor: 'orange' }}>
+  //     <StatusBar backgroundColor="#00FF00" />
+  //   </View>
+  // )
+
   return (
     <ConditionalWrap
       condition
@@ -70,7 +77,7 @@ export function Screen(props: ScreenProps) {
         })
       }
     >
-      {useSafeArea ? (
+      {enableSafeArea ? (
         <ThemedSafeAreaView
           backgroundColor="backgroundColor"
           {...viewProps}
@@ -92,18 +99,21 @@ function updateStyles({
   statusBarBackgroundThemeColor,
 }: {
   theme: Theme
-  statusBarBackgroundThemeColor?: keyof ThemeColors | 'header'
+  statusBarBackgroundThemeColor?: ScreenProps['statusBarBackgroundThemeColor']
 }) {
   StatusBar.setBarStyle(theme.isDark ? 'light-content' : 'dark-content')
 
   if (Platform.OS === 'android') {
-    const themeColor: keyof ThemeColors =
+    const themeColor: keyof ThemeColors | 'transparent' =
       statusBarBackgroundThemeColor === 'header'
         ? getColumnHeaderThemeColors().normal
         : statusBarBackgroundThemeColor || 'backgroundColor'
 
-    const color = theme[themeColor]
+    const color = getThemeColorOrItself(theme, themeColor, {
+      enableCSSVariable: false,
+    })!
 
     StatusBar.setBackgroundColor(color, false)
+    StatusBar.setTranslucent(color === 'transparent')
   }
 }

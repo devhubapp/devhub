@@ -61,6 +61,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
+    safeAreaInsets,
     visibleItemIndexesRef,
   } = useCardsProps({
     column,
@@ -162,6 +163,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         pointerEvents={pointerEvents}
         refreshControl={refreshControl}
         renderItem={renderItem}
+        safeAreaInsets={safeAreaInsets}
       />
     </View>
   )

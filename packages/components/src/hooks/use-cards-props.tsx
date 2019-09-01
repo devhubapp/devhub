@@ -32,7 +32,9 @@ import {
   columnLoadingIndicatorSize,
 } from '../components/columns/ColumnLoadingIndicator'
 import { RefreshControl } from '../components/common/RefreshControl'
+import { useAppLayout } from '../components/context/LayoutContext'
 import { OneListProps } from '../libs/one-list'
+import { useSafeArea } from '../libs/safe-area-view'
 import { FlatListItemLayout } from '../utils/types'
 
 export interface DataItemT<ItemT extends EnhancedItem> {
@@ -67,6 +69,9 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   )
   const sizeCacheMapRef = useRef(new WeakMap<EnhancedItem, number>())
   const visibleItemIndexesRef = useRef({ from: -1, to: -1 })
+
+  const appSafeAreaInsets = useSafeArea()
+  const { appOrientation } = useAppLayout()
 
   const itemCardProps = useMemo<Array<BaseCardProps | undefined>>(() => {
     const newCacheMap = new WeakMap()
@@ -190,6 +195,15 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     cardsFooterProps.refresh,
   ])
 
+  const safeAreaInsets: OneListProps<
+    DataItemT<ItemT>
+  >['safeAreaInsets'] = useMemo(
+    () => ({
+      bottom: appOrientation === 'landscape' ? appSafeAreaInsets.bottom : 0,
+    }),
+    [appOrientation, appSafeAreaInsets.bottom],
+  )
+
   const onVisibleItemsChanged = useCallback<
     NonNullable<OneListProps<DataItemT<ItemT>>['onVisibleItemsChanged']>
   >((from, to) => {
@@ -245,6 +259,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
+    safeAreaInsets,
     visibleItemIndexesRef,
   }
 }

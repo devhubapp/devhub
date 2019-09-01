@@ -3,6 +3,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import { HelmetProvider } from '../libs/helmet'
+import { SafeAreaProvider } from '../libs/safe-area-view'
 import { configureStore } from '../redux/store'
 import { ColumnFiltersProvider } from './context/ColumnFiltersContext'
 import { ColumnFocusProvider } from './context/ColumnFocusContext'
@@ -27,7 +28,9 @@ export function AppProviders(props: AppProvidersProps) {
               <ColumnFocusProvider>
                 <ColumnFiltersProvider>
                   <ColumnWidthProvider>
-                    <ThemeProvider>{props.children}</ThemeProvider>
+                    <ThemeProvider>
+                      <SafeAreaProvider>{props.children}</SafeAreaProvider>
+                    </ThemeProvider>
                   </ColumnWidthProvider>
                 </ColumnFiltersProvider>
               </ColumnFocusProvider>

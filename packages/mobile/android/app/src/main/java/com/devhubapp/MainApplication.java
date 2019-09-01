@@ -15,6 +15,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +47,8 @@ public class MainApplication extends Application implements ReactApplication {
             new LinearGradientPackage(),
             new RNGestureHandlerPackage(),
             BugsnagReactNative.getPackage(),
-            new RNInAppBrowserPackage()
+            new RNInAppBrowserPackage(),
+            new SafeAreaContextPackage()
       );
     }
 

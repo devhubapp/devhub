@@ -1,6 +1,7 @@
 import React from 'react'
 import { FlatListProps } from 'react-native'
 
+// TODO: take safeAreaInsets into consideration when scrolling to item
 export interface OneListInstance {
   scrollToStart: () => void
   scrollToEnd: () => void
@@ -38,6 +39,12 @@ export interface OneListProps<ItemT> {
   overscanCount: number
   pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto'
   renderItem: (info: { item: ItemT; index: number }) => React.ReactElement
+  safeAreaInsets?: {
+    top?: number
+    bottom?: number
+    left?: number
+    right?: number
+  }
 
   // TODO: Support refreshControl on web
   refreshControl?: FlatListProps<any>['refreshControl']

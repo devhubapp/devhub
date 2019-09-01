@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react'
+import { View } from 'react-native'
 
 import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
-import { SafeAreaView } from '../../libs/safe-area-view'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
@@ -43,7 +43,7 @@ export function ColumnsRenderer() {
     }
 
     return (
-      <SafeAreaView style={[sharedStyles.flex, sharedStyles.horizontal]}>
+      <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
         <>
           {!!enableSharedFiltersView && (
             <ColumnFiltersRenderer
@@ -69,7 +69,7 @@ export function ColumnsRenderer() {
             swipeable={!constants.DISABLE_SWIPEABLE_CARDS}
           />
         </>
-      </SafeAreaView>
+      </View>
     )
   }
 

@@ -9,6 +9,7 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import { OneList, OneListProps } from '../../libs/one-list'
+import { useSafeArea } from '../../libs/safe-area-view'
 import * as selectors from '../../redux/selectors'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
@@ -26,8 +27,9 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const { pointerEvents } = props
 
   const listRef = useRef<typeof OneList>(null)
-  const { sizename } = useAppLayout()
+  const { appOrientation, sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
+  const appSafeAreaInsets = useSafeArea()
   const columnWidth = useColumnWidth()
   const columnIds = useReduxState(selectors.columnIdsSelector)
 
@@ -95,6 +97,14 @@ export const Columns = React.memo((props: ColumnsProps) => {
     [onVisibleItemsChanged],
   )
 
+  const safeAreaInsets: OneListProps<string>['safeAreaInsets'] = useMemo(
+    () => ({
+      left: appOrientation === 'landscape' ? 0 : appSafeAreaInsets.left,
+      right: appSafeAreaInsets.right,
+    }),
+    [appOrientation, appSafeAreaInsets.right],
+  )
+
   return (
     <OneList
       ref={listRef}
@@ -108,6 +118,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       overscanCount={3}
       pointerEvents={pointerEvents}
       renderItem={renderItem}
+      safeAreaInsets={safeAreaInsets}
     />
   )
 })

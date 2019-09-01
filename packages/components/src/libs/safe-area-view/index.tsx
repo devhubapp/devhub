@@ -1,3 +1,15 @@
-import { View as SafeAreaView } from 'react-native'
+import {
+  SafeAreaConsumer,
+  SafeAreaContext,
+  SafeAreaProvider,
+  useSafeArea,
+} from 'react-native-safe-area-context'
+import SafeAreaView from 'react-native-safe-area-view'
 
-export { SafeAreaView }
+export {
+  SafeAreaConsumer,
+  SafeAreaContext,
+  SafeAreaProvider,
+  SafeAreaView,
+  useSafeArea,
+}

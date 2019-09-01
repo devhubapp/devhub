@@ -8,7 +8,6 @@ import { AppKeyboardShortcuts } from '../components/AppKeyboardShortcuts'
 import { AppBannerMessage } from '../components/banners/AppBannerMessage'
 import { ColumnSeparator } from '../components/columns/ColumnSeparator'
 import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
-import { ConditionalWrap } from '../components/common/ConditionalWrap'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
 import {
@@ -24,7 +23,6 @@ import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
 import { Linking } from '../libs/linking'
-import { SafeAreaView } from '../libs/safe-area-view'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { clearQueryStringFromURL } from '../utils/helpers/auth'
@@ -97,8 +95,6 @@ export const MainScreen = React.memo(() => {
     }
   }, [])
 
-  const horizontalSidebar = appOrientation === 'portrait'
-
   useEmitter(
     'FOCUS_ON_COLUMN',
     () => {
@@ -122,7 +118,10 @@ export const MainScreen = React.memo(() => {
     <>
       <AppKeyboardShortcuts />
 
-      <Screen statusBarBackgroundThemeColor="header" useSafeArea={false}>
+      <Screen
+        statusBarBackgroundThemeColor="transparent"
+        enableSafeArea={false}
+      >
         <AppBannerMessage />
 
         <View
@@ -130,50 +129,35 @@ export const MainScreen = React.memo(() => {
             styles.container,
             {
               flexDirection:
-                appOrientation === 'landscape' ? 'row' : 'column-reverse',
+                appOrientation === 'portrait' ? 'column-reverse' : 'row',
             },
           ]}
         >
           <Sidebar
             key="main-screen-sidebar"
-            horizontal={horizontalSidebar}
+            horizontal={appOrientation === 'portrait'}
             zIndex={1000}
           />
 
-          {horizontalSidebar ? (
+          {appOrientation === 'portrait' ? (
             <Separator horizontal zIndex={1000} />
           ) : (
             <ColumnSeparator zIndex={1000} />
           )}
 
-          <ConditionalWrap
-            key="main-screen-content-container-conditional-wrap"
-            condition
-            wrap={children =>
-              appOrientation === 'landscape' ? (
-                <SafeAreaView
-                  key="main-screen-content-container"
-                  style={styles.innerContainer}
-                  children={children}
-                />
-              ) : (
-                <View
-                  key="main-screen-content-container"
-                  style={styles.innerContainer}
-                  children={children}
-                />
-              )
-            }
+          <View
+            key="main-screen-content-container"
+            style={styles.innerContainer}
           >
             <ModalRenderer
               key="modal-renderer"
-              renderSeparator={!horizontalSidebar}
+              renderSeparator={appOrientation === 'landscape'}
             />
 
             <ColumnsRenderer key="columns-renderer" />
-            {/* <ColumnArrowSwitcher key="column-arrow-switcher-renderer" /> */}
+
             <FABRenderer key="fab-renderer" />
-          </ConditionalWrap>
+          </View>
         </View>
       </Screen>
     </>

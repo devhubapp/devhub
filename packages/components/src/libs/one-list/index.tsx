@@ -10,26 +10,30 @@ export { OneListProps }
 
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
-    React.useImperativeHandle(ref, () => ({
-      scrollToStart: () => {
-        flatListRef.current!.scrollToOffset({ animated: false, offset: 0 })
-      },
-      scrollToEnd: () => {
-        flatListRef.current!.scrollToEnd({ animated: false })
-      },
-      scrollToIndex: (index, params) => {
-        const alignment = params ? params.alignment : 'center'
+    React.useImperativeHandle(
+      ref,
+      () => ({
+        scrollToStart: () => {
+          flatListRef.current!.scrollToOffset({ animated: false, offset: 0 })
+        },
+        scrollToEnd: () => {
+          flatListRef.current!.scrollToEnd({ animated: false })
+        },
+        scrollToIndex: (index, params) => {
+          const alignment = params ? params.alignment : 'center'
 
-        // TODO: Implement 'smart' alignment like react-window
-        flatListRef.current!.scrollToIndex({
-          animated: false,
-          index,
-          viewOffset: 0,
-          viewPosition:
-            alignment === 'start' ? 0 : alignment === 'end' ? 1 : 0.5,
-        })
-      },
-    }))
+          // TODO: Implement 'smart' alignment like react-window
+          flatListRef.current!.scrollToIndex({
+            animated: false,
+            index,
+            viewOffset: 0,
+            viewPosition:
+              alignment === 'start' ? 0 : alignment === 'end' ? 1 : 0.5,
+          })
+        },
+      }),
+      [],
+    )
 
     const flatListRef = useRef<FlatList<any>>(null)
 
@@ -48,6 +52,7 @@ export const OneList = (React.memo(
       pointerEvents,
       refreshControl,
       renderItem,
+      safeAreaInsets,
     } = props
 
     const getItemLayout = useMemo<
@@ -103,6 +108,24 @@ export const OneList = (React.memo(
         )
       }
     }, [onVisibleItemsChanged])
+
+    const contentContainerStyle = useMemo<
+      FlatListProps<any>['contentContainerStyle']
+    >(() => {
+      if (!safeAreaInsets) return undefined
+
+      return {
+        paddingTop: safeAreaInsets.top,
+        paddingBottom: safeAreaInsets.bottom,
+        paddingLeft: safeAreaInsets.left,
+        paddingRight: safeAreaInsets.right,
+      }
+    }, [
+      safeAreaInsets && safeAreaInsets.top,
+      safeAreaInsets && safeAreaInsets.bottom,
+      safeAreaInsets && safeAreaInsets.left,
+      safeAreaInsets && safeAreaInsets.right,
+    ])
 
     return (
       <View
@@ -184,6 +207,7 @@ export const OneList = (React.memo(
                           }
                         : undefined
                     }
+                    contentContainerStyle={contentContainerStyle}
                     data={data}
                     getItemLayout={getItemLayout}
                     horizontal={horizontal}

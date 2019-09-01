@@ -1,13 +1,18 @@
-<resources>
-
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="SplashScreenTheme" parent="SplashScreen_SplashTheme">
+        <item name="android:navigationBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:statusBarColor" tools:targetApi="21">@android:color/transparent</item>
         <item name="android:windowBackground">@color/primary_dark</item>
         <item name="colorPrimary">@color/primary_dark</item>
         <item name="colorPrimaryDark">@color/status_bar_color</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:navigationBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:statusBarColor" tools:targetApi="21">@android:color/transparent</item>
         <item name="android:windowBackground">@color/background_color_dark</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="28">shortEdges</item>
+        <item name="android:windowTranslucentNavigation" tools:targetApi="19">true</item>
         <item name="colorPrimary">@color/background_color_dark</item>
         <item name="colorPrimaryDark">@color/background_color_dark</item>
     </style>

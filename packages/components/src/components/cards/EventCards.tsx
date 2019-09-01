@@ -58,6 +58,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
+    safeAreaInsets,
     visibleItemIndexesRef,
   } = useCardsProps({
     column,
@@ -159,6 +160,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         pointerEvents={pointerEvents}
         refreshControl={refreshControl}
         renderItem={renderItem}
+        safeAreaInsets={safeAreaInsets}
       />
     </View>
   )

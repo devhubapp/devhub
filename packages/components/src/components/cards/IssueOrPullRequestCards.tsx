@@ -80,6 +80,7 @@ export const IssueOrPullRequestCards = React.memo(
       itemSeparator,
       onVisibleItemsChanged,
       refreshControl,
+      safeAreaInsets,
       visibleItemIndexesRef,
     } = useCardsProps({
       type: 'issue_or_pr',
@@ -231,6 +232,7 @@ export const IssueOrPullRequestCards = React.memo(
           pointerEvents={pointerEvents}
           refreshControl={refreshControl}
           renderItem={renderItem}
+          safeAreaInsets={safeAreaInsets}
         />
       </View>
     )

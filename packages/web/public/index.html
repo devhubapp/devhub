@@ -37,7 +37,7 @@
   <meta name="msapplication-navbutton-color" content="#1F2229">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="msapplication-starturl" content="https://devhubapp.com/">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
 
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
 
@@ -67,7 +67,9 @@
     if (window.location.href.indexOf('//www.') >= 0) {
       window.location.href = window.location.href.replace('//www.', '//')
     }
-    /*
+  </script>
+
+  <!-- <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker
@@ -87,8 +89,7 @@
           })
       })
     }
-    */
-  </script>
+  </script> -->
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-52350759-2"></script>
   <script>
