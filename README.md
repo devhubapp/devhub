@@ -19,19 +19,19 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 
 ### Desktop
 
-![DevHub Desktop](https://user-images.githubusercontent.com/619186/60048043-9bd77300-96a1-11e9-96c3-ad4ebd33e550.jpg)
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/63945240-59d40000-ca49-11e9-98c1-353225f8dcf6.jpg)
 
 
 #### Menubar
 
-![DevHub Menubar](static/menubar-co.jpg)
+![DevHub Menubar](static/screenshots/devhub-desktop-menubar-banner.jpg)
 
 ### Mobile
 
 <p align="center">
-  <img alt="DevHub Mobile - Notifications" height="620" src="https://user-images.githubusercontent.com/619186/60048202-012b6400-96a2-11e9-9996-4ee048cdd403.jpg" />
-  <img alt="DevHub Mobile - Notification Filters" height="620" src="https://user-images.githubusercontent.com/619186/60048203-012b6400-96a2-11e9-93f5-0989839be64e.jpg" />
-  <img alt="DevHub Mobile - Issues & Pull Requests" height="620" src="https://user-images.githubusercontent.com/619186/60048249-1e603280-96a2-11e9-9961-c91b73ca1c8c.jpg" />
+  <img alt="DevHub Mobile - Notifications" height="620" src="static/screenshots/iphone-notifications-dark.jpg" />
+  <img alt="DevHub Mobile - Notification Filters" height="620" src="static/screenshots/iphone-notifications-filters-dark.jpg" />
+  <img alt="DevHub Mobile - Repository activity" height="620" src="static/screenshots/iphone-events-dark.jpg" />
 </p>
 
 <br/>

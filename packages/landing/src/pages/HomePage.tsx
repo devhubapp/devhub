@@ -43,12 +43,12 @@ export default function HomePage(_props: HomePageProps) {
               >
                 <img
                   alt="DevHub desktop screenshot"
-                  src="/static/screenshots/desktop-zoomed-light.jpg"
+                  src="/static/screenshots/devhub-desktop-zoomed-light.jpg"
                   className="visible-light-theme absolute inset-0 object-cover rounded"
                 />
                 <img
                   alt="DevHub desktop screenshot"
-                  src="/static/screenshots/desktop-zoomed-dark.jpg"
+                  src="/static/screenshots/devhub-desktop-zoomed-dark.jpg"
                   className="visible-dark-theme absolute inset-0 object-cover rounded"
                 />
               </div>

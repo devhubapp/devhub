@@ -99,7 +99,7 @@ export default function UsedByCompaniesBlock(
         </div>
 
         <p className="text-xs text-muted-65 italic">
-          Not affiliated with these companies. Used by some of their
+          Not affiliated with these companies. Actively used by some of their
           individuals.
         </p>
       </div>

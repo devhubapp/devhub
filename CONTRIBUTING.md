@@ -21,11 +21,12 @@ If the feature is big, open an issue first for discussion.
 
 - `git clone git@github.com:devhubapp/devhub.git`
 - `yarn`
+- `cd packages/mobile/ios && pod install && cd -`
 - `yarn dev`
 
 That's it. It will start three workers: `TypeScript compilation watcher`, `Web server` (create-react-app) and the `Mobile server` (react-native packager). The browser will open automatically.
 
->  Alternatives to `yarn dev`: `yarn dev:web`, `yarn dev:desktop`, `yarn dev:mobile`
+>  Alternatives to `yarn dev`: `yarn dev:web`, `yarn dev:desktop`, `yarn dev:mobile`, `yarn dev:landing`
 
 To open the mobile projects, use:
 
