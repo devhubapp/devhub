@@ -14,6 +14,7 @@ export interface OneListInstance {
 export interface OneListProps<ItemT> {
   ListEmptyComponent?: React.ComponentType
   data: ItemT[]
+  disableVirtualization?: boolean
   estimatedItemSize: number
   footer?: {
     Component: React.ComponentType

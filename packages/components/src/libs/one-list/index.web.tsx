@@ -15,6 +15,7 @@ import {
 import { usePrevious } from '../../hooks/use-previous'
 import { sharedStyles } from '../../styles/shared'
 import { AutoSizer } from '../auto-sizer'
+import { OneList as OneListFlatList } from './index.native'
 import { OneListInstance, OneListProps } from './index.shared'
 
 export { OneListProps }
@@ -178,6 +179,10 @@ const innerElementType = React.forwardRef<
 
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
+    if (props.disableVirtualization) {
+      return <OneListFlatList ref={ref} {...props} />
+    }
+
     React.useImperativeHandle(
       ref,
       () => ({

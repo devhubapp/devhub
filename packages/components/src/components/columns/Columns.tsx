@@ -110,6 +110,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       ref={listRef}
       key="columns-list"
       data={columnIds}
+      disableVirtualization
       estimatedItemSize={getItemSize(columnIds[0], 0) || columnWidth}
       getItemKey={keyExtractor}
       getItemSize={getItemSize}

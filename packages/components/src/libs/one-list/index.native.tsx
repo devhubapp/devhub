@@ -40,6 +40,7 @@ export const OneList = (React.memo(
     const {
       ListEmptyComponent,
       data,
+      disableVirtualization,
       estimatedItemSize,
       footer,
       getItemKey,
@@ -127,6 +128,13 @@ export const OneList = (React.memo(
       safeAreaInsets && safeAreaInsets.right,
     ])
 
+    const viewabilityConfig = useMemo(
+      () => ({
+        itemVisiblePercentThreshold: 1,
+      }),
+      [],
+    )
+
     return (
       <View
         pointerEvents={pointerEvents}
@@ -209,6 +217,7 @@ export const OneList = (React.memo(
                     }
                     contentContainerStyle={contentContainerStyle}
                     data={data}
+                    disableVirtualization={disableVirtualization}
                     getItemLayout={getItemLayout}
                     horizontal={horizontal}
                     keyExtractor={keyExtractor}
@@ -216,6 +225,7 @@ export const OneList = (React.memo(
                     onScrollToIndexFailed={onScrollToIndexFailed}
                     onViewableItemsChanged={onViewableItemsChanged}
                     refreshControl={refreshControl}
+                    removeClippedSubviews={!disableVirtualization}
                     renderItem={renderItem}
                     scrollEventThrottle={16}
                     style={{
@@ -223,7 +233,7 @@ export const OneList = (React.memo(
                       height: horizontal ? '100%' : height,
                     }}
                     updateCellsBatchingPeriod={0}
-                    viewabilityConfig={{ itemVisiblePercentThreshold: 1 }}
+                    viewabilityConfig={viewabilityConfig}
                     windowSize={
                       1 +
                       (estimatedItemSize > 0 && overscanCount > 0
