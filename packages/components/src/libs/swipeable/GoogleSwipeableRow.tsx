@@ -1,7 +1,8 @@
 import React from 'react'
-import { Animated, StyleSheet, Vibration } from 'react-native'
+import { Animated, StyleSheet } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 
 import { GitHubIcon } from '@devhub/core'
 import { Octicons as Icon } from '../../libs/vector-icons'
@@ -137,7 +138,10 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
           if (fullAction) {
             fullAction.onPress()
             if (this.swipeable.current) this.swipeable.current.close()
-            Vibration.vibrate(1000)
+            ReactNativeHapticFeedback.trigger('selection', {
+              enableVibrateFallback: true,
+              ignoreAndroidSystemSettings: true,
+            })
           }
         }}
         onSwipeableRightWillOpen={() => {
@@ -145,7 +149,10 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
           if (fullAction) {
             fullAction.onPress()
             if (this.swipeable.current) this.swipeable.current.close()
-            Vibration.vibrate(1000)
+            ReactNativeHapticFeedback.trigger('selection', {
+              enableVibrateFallback: true,
+              ignoreAndroidSystemSettings: true,
+            })
           }
         }}
         renderLeftActions={this.renderLeftActions}

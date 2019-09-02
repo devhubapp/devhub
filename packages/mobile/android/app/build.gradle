@@ -164,6 +164,7 @@ dependencies {
     implementation project(':bugsnag-react-native')
     implementation project(':react-native-inappbrowser-reborn')
     implementation project(':react-native-safe-area-context')
+    implementation project(':react-native-haptic-feedback')
 }
 
 // Run this once to be able to run the application with BUCK
