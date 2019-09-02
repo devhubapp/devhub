@@ -12938,18 +12938,10 @@ react-native-linear-gradient@2.5.4:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.4.tgz#dce133526f5a5510a639af94544f1ed0c984bd1e"
   integrity sha512-FF1NhlerA4uBiS0gFIHa4FBp8/aftv4vPj14Y47lGNkYjSI94tnI6oYO3EfUxXjEyCUPiOVNKZOB9kScyjc5Ew==
 
-react-native-safe-area-context@0.3.5, react-native-safe-area-context@~0.3.0:
+react-native-safe-area-context@0.3.5:
   version "0.3.5"
   resolved "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-0.3.5.tgz#1bfe0d1d4f5fb3462c07e3337d2f71eb1932c570"
   integrity sha512-nh3Q4mmPmaCr1q0hHsReWXL8nlYKXOtLpPNeN57V1bB/QyJ7zL0nYR6c0cDR2/wPBA/DNm4wNllUAT842xb2zw==
-
-react-native-safe-area-view@1.0.0-alpha.0:
-  version "1.0.0-alpha.0"
-  resolved "https://registry.npmjs.org/react-native-safe-area-view/-/react-native-safe-area-view-1.0.0-alpha.0.tgz#5367978ad5b9403907fa2d2c908f75bab7adfc92"
-  integrity sha512-Xiq9Sd7ZWhHtFVeRrcqWAz6UItL+VV8p4flr1mKSXtc+yimciLjdPWp/etFjsuqc4Cyld2ZeVT8YuLwKioODQQ==
-  dependencies:
-    hoist-non-react-statics "^2.3.1"
-    react-native-safe-area-context "~0.3.0"
 
 react-native-screens@1.0.0-alpha.22:
   version "1.0.0-alpha.22"

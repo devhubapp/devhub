@@ -1,9 +1,10 @@
 import _ from 'lodash'
 import React, { RefObject, useCallback, useRef } from 'react'
-import { SafeAreaView, StyleProp, ViewProps, ViewStyle } from 'react-native'
+import { StyleProp, ViewProps, ViewStyle } from 'react-native'
 
 import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import { usePrevious } from '../../hooks/use-previous'
+import { SafeAreaView } from '../../libs/safe-area-view'
 import { useThemeCallback } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 

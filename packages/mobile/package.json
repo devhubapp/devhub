@@ -23,7 +23,6 @@
     "react-native-haptic-feedback": "1.8.2",
     "react-native-inappbrowser-reborn": "2.0.0",
     "react-native-safe-area-context": "0.3.5",
-    "react-native-safe-area-view": "1.0.0-alpha.0",
     "react-native-screens": "1.0.0-alpha.22",
     "react-native-store-review": "0.1.5"
   },
