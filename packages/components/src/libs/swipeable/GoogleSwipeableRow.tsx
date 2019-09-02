@@ -5,7 +5,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 
 import { GitHubIcon } from '@devhub/core'
-import { Octicons as Icon } from '../../libs/vector-icons'
+import { MaterialIcons, Octicons } from '../../libs/vector-icons'
 import {
   BaseSwipeableRow,
   BaseSwipeableRowAction,
@@ -17,14 +17,22 @@ export { defaultWidth } from './BaseSwipeableRow'
 
 const iconSize = 20
 
-export interface GoogleSwipeableRowAction extends BaseSwipeableRowAction {
-  icon: GitHubIcon
-  label: undefined
-}
+export type GoogleSwipeableRowAction = BaseSwipeableRowAction &
+  (
+    | {
+        iconFamily: 'octicons'
+        icon: GitHubIcon
+      }
+    | {
+        iconFamily: 'material'
+        icon: string
+      })
 
-export interface GoogleSwipeableRowProps extends BaseSwipeableRowProps {}
+export interface GoogleSwipeableRowProps
+  extends BaseSwipeableRowProps<GoogleSwipeableRowAction> {}
 
-const AnimatedIcon = Animated.createAnimatedComponent(Icon)
+const AnimatedOcticons = Animated.createAnimatedComponent(Octicons)
+const AnimatedMaterialIcons = Animated.createAnimatedComponent(MaterialIcons)
 
 export class GoogleSwipeableRow extends BaseSwipeableRow<
   GoogleSwipeableRowProps,
@@ -59,19 +67,24 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
       this.close()
     }
 
+    const AnimatedIcon =
+      action.iconFamily === 'material'
+        ? AnimatedMaterialIcons
+        : AnimatedOcticons
+
     return (
       <RectButton
         key={`swipeable-button-action-${action.key}`}
         style={[
           styles.baseActionContainer,
-          { alignItems: 'center', backgroundColor: action.color },
+          { alignItems: 'center', backgroundColor: action.backgroundColor },
         ]}
         onPress={pressHandler}
       >
         <AnimatedIcon
           name={action.icon}
           size={iconSize}
-          color={action.textColor || '#FFFFFF'}
+          color={action.foregroundColor || '#FF0000'}
           style={[styles.actionIcon, { transform: [transform] }] as any}
         />
       </RectButton>
@@ -102,6 +115,11 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
       this.close()
     }
 
+    const AnimatedIcon =
+      action.iconFamily === 'material'
+        ? AnimatedMaterialIcons
+        : AnimatedOcticons
+
     return (
       <RectButton
         key={`swipeable-full-action-${action.key}`}
@@ -109,7 +127,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
           styles.baseActionContainer,
           {
             alignItems: placement === 'LEFT' ? 'flex-start' : 'flex-end',
-            backgroundColor: action.color,
+            backgroundColor: action.backgroundColor,
           },
         ]}
         onPress={pressHandler}
@@ -117,7 +135,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
         <AnimatedIcon
           name={action.icon}
           size={iconSize}
-          color={action.textColor || '#FFFFFF'}
+          color={action.foregroundColor || '#FF0000'}
           style={[styles.actionIcon, { transform: [transform] }] as any}
         />
       </RectButton>

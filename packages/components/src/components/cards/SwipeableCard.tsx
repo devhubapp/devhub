@@ -52,13 +52,15 @@ export function SwipeableCard<ItemT extends EnhancedItem>(
     <SwipeableRow
       leftActions={[
         {
-          color:
+          backgroundColor:
             theme[
               getCardBackgroundThemeColor({
                 isDark: theme.isDark,
                 isMuted: !isRead,
               })
             ],
+          foregroundColor: theme.foregroundColor,
+          iconFamily: 'octicons',
           icon: isRead ? 'mail' : 'mail-read',
           key: 'read',
           label: 'Read',
@@ -68,9 +70,16 @@ export function SwipeableCard<ItemT extends EnhancedItem>(
       ]}
       rightActions={[
         {
-          color: props.item.saved
-            ? theme.backgroundColorDarker2
-            : theme.primaryBackgroundColor,
+          ...(props.item.saved
+            ? {
+                backgroundColor: theme.backgroundColorDarker2,
+                foregroundColor: theme.foregroundColor,
+              }
+            : {
+                backgroundColor: theme.primaryBackgroundColor,
+                foregroundColor: theme.primaryForegroundColor,
+              }),
+          iconFamily: 'material',
           icon: 'bookmark',
           key: 'bookmark',
           label: 'Bookmark',

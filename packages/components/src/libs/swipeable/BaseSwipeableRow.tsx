@@ -1,4 +1,3 @@
-import { GitHubIcon } from '@devhub/core'
 import React, { PureComponent, ReactNode } from 'react'
 import { Animated, View } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
@@ -7,12 +6,10 @@ import { sharedStyles } from '../../styles/shared'
 export type BaseActionType = 'BUTTON' | 'FULL'
 
 export interface BaseSwipeableRowAction {
-  color: string
-  icon?: GitHubIcon
+  backgroundColor: string
+  foregroundColor: string
   key: string
-  label?: string
   onPress: () => void
-  textColor?: string
   type?: BaseActionType
   width?: number
 }

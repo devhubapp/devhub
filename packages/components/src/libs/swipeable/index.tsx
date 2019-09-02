@@ -1,14 +1,12 @@
 import { ReactNode } from 'react'
 
-import {
-  BaseSwipeableRow,
-  BaseSwipeableRowAction,
-  BaseSwipeableRowProps,
-} from './BaseSwipeableRow'
+import { AppleSwipeableRowProps } from './AppleSwipeableRow'
+import { BaseSwipeableRow, BaseSwipeableRowAction } from './BaseSwipeableRow'
+import { GoogleSwipeableRowProps } from './GoogleSwipeableRow'
 
 export interface SwipeableRowAction extends BaseSwipeableRowAction {}
 
-export interface SwipeableRowProps extends BaseSwipeableRowProps {}
+export type SwipeableRowProps = GoogleSwipeableRowProps | AppleSwipeableRowProps
 
 export class SwipeableRow extends BaseSwipeableRow<
   SwipeableRowProps,

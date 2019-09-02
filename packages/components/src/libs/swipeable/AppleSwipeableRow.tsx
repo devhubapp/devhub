@@ -14,7 +14,6 @@ import {
 export { defaultWidth } from './BaseSwipeableRow'
 
 export interface AppleSwipeableRowAction extends BaseSwipeableRowAction {
-  icon: undefined
   label: string
 }
 
@@ -61,13 +60,16 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
           onPress={pressHandler}
           style={[
             styles.baseActionContainer,
-            { backgroundColor: action.color, width: action.width },
+            { backgroundColor: action.backgroundColor, width: action.width },
           ]}
         >
           <Text
             style={[
               styles.actionText,
-              { alignSelf: 'center', color: action.textColor || '#FFFFFF' },
+              {
+                alignSelf: 'center',
+                color: action.foregroundColor || '#FF0000',
+              },
             ]}
           >
             {action.label}
@@ -104,7 +106,7 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
         key={`swipeable-full-action-${action.key}`}
         style={[
           styles.baseActionContainer,
-          { backgroundColor: action.color, minWidth: action.width },
+          { backgroundColor: action.backgroundColor, minWidth: action.width },
         ]}
         onPress={pressHandler}
       >
@@ -113,7 +115,7 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
             styles.actionText,
             {
               alignSelf: placement === 'LEFT' ? 'flex-start' : 'flex-end',
-              color: action.textColor || '#FFFFFF',
+              color: action.foregroundColor || '#FF0000',
               transform: [transform],
             },
           ]}
