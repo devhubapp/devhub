@@ -15,6 +15,7 @@ import {
 import { usePrevious } from '../../hooks/use-previous'
 import { sharedStyles } from '../../styles/shared'
 import { AutoSizer } from '../auto-sizer'
+import { bugsnag } from '../bugsnag'
 import { OneList as OneListFlatList } from './index.native'
 import { OneListInstance, OneListProps } from './index.shared'
 
@@ -187,17 +188,32 @@ export const OneList = (React.memo(
       ref,
       () => ({
         scrollToStart: () => {
-          variableSizeListRef.current!.scrollTo(0)
+          try {
+            variableSizeListRef.current!.scrollTo(0)
+          } catch (error) {
+            console.error(error)
+            bugsnag.notify(error)
+          }
         },
         scrollToEnd: () => {
-          variableSizeListRef.current!.scrollToItem(
-            props.data.length - 1,
-            'start',
-          )
+          try {
+            variableSizeListRef.current!.scrollToItem(
+              props.data.length - 1,
+              'start',
+            )
+          } catch (error) {
+            console.error(error)
+            bugsnag.notify(error)
+          }
         },
         scrollToIndex: (index, params) => {
-          const alignment = params ? params.alignment : 'smart'
-          variableSizeListRef.current!.scrollToItem(index, alignment)
+          try {
+            const alignment = params ? params.alignment : 'smart'
+            variableSizeListRef.current!.scrollToItem(index, alignment)
+          } catch (error) {
+            console.error(error)
+            bugsnag.notify(error)
+          }
         },
       }),
       [props.data.length],

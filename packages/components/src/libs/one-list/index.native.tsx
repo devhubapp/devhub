@@ -14,22 +14,37 @@ export const OneList = (React.memo(
       ref,
       () => ({
         scrollToStart: () => {
-          flatListRef.current!.scrollToOffset({ animated: false, offset: 0 })
+          try {
+            flatListRef.current!.scrollToOffset({ animated: false, offset: 0 })
+          } catch (error) {
+            console.error(error)
+            bugsnag.notify(error)
+          }
         },
         scrollToEnd: () => {
-          flatListRef.current!.scrollToEnd({ animated: false })
+          try {
+            flatListRef.current!.scrollToEnd({ animated: false })
+          } catch (error) {
+            console.error(error)
+            bugsnag.notify(error)
+          }
         },
         scrollToIndex: (index, params) => {
-          const alignment = params ? params.alignment : 'center'
+          try {
+            const alignment = params ? params.alignment : 'center'
 
-          // TODO: Implement 'smart' alignment like react-window
-          flatListRef.current!.scrollToIndex({
-            animated: false,
-            index,
-            viewOffset: 0,
-            viewPosition:
-              alignment === 'start' ? 0 : alignment === 'end' ? 1 : 0.5,
-          })
+            // TODO: Implement 'smart' alignment like react-window
+            flatListRef.current!.scrollToIndex({
+              animated: false,
+              index,
+              viewOffset: 0,
+              viewPosition:
+                alignment === 'start' ? 0 : alignment === 'end' ? 1 : 0.5,
+            })
+          } catch (error) {
+            console.error(error)
+            bugsnag.notify(error)
+          }
         },
       }),
       [],
@@ -55,6 +70,9 @@ export const OneList = (React.memo(
       renderItem,
       safeAreaInsets,
     } = props
+
+    const onVisibleItemsChangedRef = useRef(onVisibleItemsChanged)
+    onVisibleItemsChangedRef.current = onVisibleItemsChanged
 
     const getItemLayout = useMemo<
       NonNullable<FlatListProps<any>['getItemLayout']>
@@ -94,21 +112,21 @@ export const OneList = (React.memo(
     const onViewableItemsChanged = useMemo<
       FlatListProps<any>['onViewableItemsChanged']
     >(() => {
-      if (!onVisibleItemsChanged) return undefined
-
       return ({ viewableItems }) => {
+        if (!onVisibleItemsChangedRef.current) return undefined
+
         const visibleIndexes = viewableItems
           .filter(v => v.isViewable && typeof v.index === 'number')
           .map(v => v.index!)
 
-        if (!visibleIndexes.length) onVisibleItemsChanged(-1, -1)
+        if (!visibleIndexes.length) onVisibleItemsChangedRef.current(-1, -1)
 
-        onVisibleItemsChanged(
+        onVisibleItemsChangedRef.current(
           Math.min(...visibleIndexes),
           Math.max(...visibleIndexes),
         )
       }
-    }, [onVisibleItemsChanged])
+    }, [])
 
     const contentContainerStyle = useMemo<
       FlatListProps<any>['contentContainerStyle']
