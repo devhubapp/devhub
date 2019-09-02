@@ -37,7 +37,10 @@
       "name": "devhub"
     },
     "linux": {
-      "icon": "icons/icon.png"
+      "icon": "icons/icon.png",
+      "target": [{
+        "target": "AppImage"
+      }]
     },
     "mac": {
       "category": "public.app-category.developer-tools",
