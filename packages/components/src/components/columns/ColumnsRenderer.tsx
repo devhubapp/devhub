@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react'
 import { View } from 'react-native'
 
-import { constants } from '@devhub/core'
-import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
@@ -34,44 +32,42 @@ export function ColumnsRenderer() {
   )
 
   if (!columnIds.length) {
-    return <NoColumns fullWidth />
+    return <NoColumns />
   }
 
-  if (appViewMode === 'single-column') {
-    if (!focusedColumnId) {
-      return <NoFocusedColumn />
-    }
+  if (appViewMode === 'single-column' && !focusedColumnId) {
+    return <NoFocusedColumn />
+  }
 
-    return (
-      <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
-        <>
-          {!!enableSharedFiltersView && (
-            <ColumnFiltersRenderer
-              key="column-options-renderer"
-              columnId={focusedColumnId}
-              fixedPosition="right"
-              fixedWidth={fixedWidth}
-              forceOpenAll
-              inlineMode={inlineMode}
-              isOpen={isSharedFiltersOpened}
-              shouldRenderHeader="yes"
-              startWithFiltersExpanded
-              close={closeSharedFiltersView}
-            />
-          )}
-
-          <ColumnContainer
-            key="single-column-container"
-            columnId={focusedColumnId}
-            pointerEvents={
-              isSharedFiltersOpened && !inlineMode ? 'none' : undefined
-            }
-            swipeable={!constants.DISABLE_SWIPEABLE_CARDS}
+  return (
+    <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
+      <>
+        {appViewMode === 'single-column' && !!enableSharedFiltersView && (
+          <ColumnFiltersRenderer
+            key="column-options-renderer"
+            columnId={focusedColumnId!}
+            fixedPosition="right"
+            fixedWidth={fixedWidth}
+            forceOpenAll
+            inlineMode={inlineMode}
+            isOpen={isSharedFiltersOpened}
+            shouldRenderHeader="yes"
+            startWithFiltersExpanded
+            close={closeSharedFiltersView}
           />
-        </>
-      </View>
-    )
-  }
+        )}
 
-  return <Columns />
+        <Columns
+          key="columns"
+          pointerEvents={
+            appViewMode === 'single-column' &&
+            isSharedFiltersOpened &&
+            !inlineMode
+              ? 'none'
+              : undefined
+          }
+        />
+      </>
+    </View>
+  )
 }

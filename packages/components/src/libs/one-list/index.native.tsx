@@ -233,6 +233,8 @@ export const OneList = (React.memo(
                           }
                         : undefined
                     }
+                    alwaysBounceHorizontal={false}
+                    alwaysBounceVertical={false}
                     contentContainerStyle={contentContainerStyle}
                     data={data}
                     disableVirtualization={disableVirtualization}

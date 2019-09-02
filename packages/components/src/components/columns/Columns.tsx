@@ -12,6 +12,7 @@ import { OneList, OneListProps } from '../../libs/one-list'
 import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
 import * as selectors from '../../redux/selectors'
+import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 
@@ -28,11 +29,26 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const { pointerEvents } = props
 
   const listRef = useRef<typeof OneList>(null)
+  const appSafeAreaInsets = useSafeArea()
+  const _columnIds = useReduxState(selectors.columnIdsSelector)
+  const columnWidth = useColumnWidth()
   const { appOrientation, sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
-  const appSafeAreaInsets = useSafeArea()
-  const columnWidth = useColumnWidth()
-  const columnIds = useReduxState(selectors.columnIdsSelector)
+  const { focusedColumnId } = useFocusedColumn()
+
+  const columnIds = useMemo(
+    () =>
+      appViewMode === 'single-column'
+        ? focusedColumnId
+          ? [focusedColumnId]
+          : []
+        : _columnIds,
+    [
+      (appViewMode === 'single-column' ? [focusedColumnId] : _columnIds).join(
+        ',',
+      ),
+    ],
+  )
 
   useEmitter(
     'FOCUS_ON_COLUMN',
@@ -42,7 +58,10 @@ export const Columns = React.memo((props: ColumnsProps) => {
       if (!payload.columnId) return
 
       if (payload.scrollTo) {
-        listRef.current.scrollToIndex(columnIds.indexOf(payload.columnId), {
+        const index = columnIds.indexOf(payload.columnId)
+        if (!(index >= 0)) return
+
+        listRef.current.scrollToIndex(index, {
           // animated: payload.animated,
           alignment: 'smart',
         })
@@ -80,8 +99,8 @@ export const Columns = React.memo((props: ColumnsProps) => {
   >(
     (fromIndex, toIndex) => {
       if (appViewMode !== 'single-column') return
-
       if (!(fromIndex >= 0 && fromIndex === toIndex)) return
+      if (columnIds[fromIndex] === focusedColumnId) return
 
       emitter.emit('FOCUS_ON_COLUMN', {
         animated: false,
@@ -91,7 +110,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
         scrollTo: false,
       })
     },
-    [appViewMode],
+    [appViewMode, columnIds.join(','), focusedColumnId],
   )
 
   const debouncedOnVisibleItemsChanged = useMemo(
@@ -113,7 +132,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       key="columns-list"
       data={columnIds}
       disableVirtualization
-      estimatedItemSize={getItemSize(columnIds[0], 0) || columnWidth}
+      estimatedItemSize={columnWidth}
       getItemKey={keyExtractor}
       getItemSize={getItemSize}
       horizontal

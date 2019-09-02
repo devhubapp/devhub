@@ -18,7 +18,6 @@ export interface ColumnProps extends ViewProps {
   backgroundColor?: keyof ThemeColors | ((theme: Theme) => string | undefined)
   children?: ReactNode
   columnId: string
-  fullWidth?: boolean
   pagingEnabled?: boolean
   renderLeftSeparator?: boolean
   renderRightSeparator?: boolean
@@ -31,7 +30,6 @@ export const Column = React.memo(
       backgroundColor = 'backgroundColor',
       children,
       columnId,
-      fullWidth,
       pagingEnabled,
       renderLeftSeparator,
       renderRightSeparator,
@@ -98,11 +96,9 @@ export const Column = React.memo(
         backgroundColor={backgroundColor}
         style={[
           sharedStyles.horizontal,
-          {
-            height: '100%',
-            overflow: 'hidden',
-          },
-          fullWidth ? sharedStyles.flex : { width: columnWidth },
+          { width: columnWidth },
+          sharedStyles.fullHeight,
+          sharedStyles.overflowHidden,
           style,
         ]}
       >

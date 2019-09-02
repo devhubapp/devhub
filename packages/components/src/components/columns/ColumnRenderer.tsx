@@ -231,7 +231,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       key={`column-renderer-${column.id}-inner-container`}
       backgroundColor={getColumnCardThemeColors({ isDark: false }).column}
       columnId={column.id}
-      fullWidth={appViewMode === 'single-column'}
       pagingEnabled={pagingEnabled}
       renderLeftSeparator={renderLeftSeparator}
       renderRightSeparator={renderRightSeparator}
