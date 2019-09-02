@@ -10,7 +10,6 @@ export interface NotificationCardProps {
   notification: EnhancedGitHubNotification
   ownerIsKnown: boolean
   repoIsKnown: boolean
-  swipeable: boolean
 }
 
 export const NotificationCard = React.memo((props: NotificationCardProps) => {
@@ -20,13 +19,11 @@ export const NotificationCard = React.memo((props: NotificationCardProps) => {
     notification,
     ownerIsKnown,
     repoIsKnown,
-    swipeable,
   } = props
 
   return (
     <CardWithLink
       type="notifications"
-      swipeable={swipeable}
       repoIsKnown={repoIsKnown}
       ownerIsKnown={ownerIsKnown}
       item={notification}

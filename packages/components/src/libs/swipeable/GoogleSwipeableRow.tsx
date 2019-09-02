@@ -1,10 +1,10 @@
 import React from 'react'
-import { Animated, StyleSheet } from 'react-native'
+import { Animated, StyleSheet, Vibration } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
 import { GitHubIcon } from '@devhub/core'
-import { MaterialIcons as Icon } from '../../libs/vector-icons'
+import { Octicons as Icon } from '../../libs/vector-icons'
 import {
   BaseSwipeableRow,
   BaseSwipeableRowAction,
@@ -13,6 +13,8 @@ import {
 } from './BaseSwipeableRow'
 
 export { defaultWidth } from './BaseSwipeableRow'
+
+const iconSize = 20
 
 export interface GoogleSwipeableRowAction extends BaseSwipeableRowAction {
   icon: GitHubIcon
@@ -28,8 +30,6 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
   void,
   GoogleSwipeableRowAction
 > {
-  _swipeableRow = null
-
   renderButtonAction = (
     action: GoogleSwipeableRowAction,
     {
@@ -56,7 +56,6 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
     const pressHandler = () => {
       action.onPress()
       this.close()
-      // alert(action.label)
     }
 
     return (
@@ -70,7 +69,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
       >
         <AnimatedIcon
           name={action.icon}
-          size={30}
+          size={iconSize}
           color={action.textColor || '#FFFFFF'}
           style={[styles.actionIcon, { transform: [transform] }] as any}
         />
@@ -116,7 +115,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
       >
         <AnimatedIcon
           name={action.icon}
-          size={30}
+          size={iconSize}
           color={action.textColor || '#FFFFFF'}
           style={[styles.actionIcon, { transform: [transform] }] as any}
         />
@@ -130,9 +129,25 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
     return (
       <Swipeable
         {...props}
-        ref={this.updateRef}
+        ref={this.swipeable}
         friction={2}
         leftThreshold={80}
+        onSwipeableLeftWillOpen={() => {
+          const fullAction = props.leftActions.find(a => a.type === 'FULL')
+          if (fullAction) {
+            fullAction.onPress()
+            if (this.swipeable.current) this.swipeable.current.close()
+            Vibration.vibrate(1000)
+          }
+        }}
+        onSwipeableRightWillOpen={() => {
+          const fullAction = props.rightActions.find(a => a.type === 'FULL')
+          if (fullAction) {
+            fullAction.onPress()
+            if (this.swipeable.current) this.swipeable.current.close()
+            Vibration.vibrate(1000)
+          }
+        }}
         renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions}
         rightThreshold={40}
@@ -152,6 +167,6 @@ const styles = StyleSheet.create({
   actionIcon: {
     backgroundColor: 'transparent',
     marginHorizontal: 10,
-    width: 30,
+    width: iconSize,
   },
 })

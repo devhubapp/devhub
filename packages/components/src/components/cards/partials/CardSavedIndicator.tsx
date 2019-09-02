@@ -9,13 +9,15 @@ export interface CardSavedProps {
   style?: ThemedViewProps['style']
 }
 
+const size = contentPadding
+
 const styles = StyleSheet.create({
   indicator: {
     position: 'absolute',
     top: 0,
     right: 0,
-    width: contentPadding * (2 / 3),
-    height: contentPadding * (2 / 3),
+    width: size,
+    height: size,
     zIndex: 1000,
   },
 })
@@ -29,7 +31,7 @@ export const CardSavedIndicator = React.forwardRef<View, CardSavedProps>(
         <Triangle
           color="primaryBackgroundColor"
           degree={-90}
-          size={contentPadding * (2 / 3)}
+          size={size}
           type="border"
         />
       </View>

@@ -9,7 +9,7 @@ import { OneList, OneListProps } from '../../libs/one-list'
 import { sharedStyles } from '../../styles/shared'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard, NotificationCardProps } from './NotificationCard'
-import { SwipeableNotificationCard } from './SwipeableNotificationCard'
+import { SwipeableCard } from './SwipeableCard'
 
 type ItemT = EnhancedGitHubNotification
 
@@ -89,13 +89,13 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       if (swipeable) {
         return (
           <View style={{ height }}>
-            <SwipeableNotificationCard
+            <SwipeableCard
+              type="notifications"
               cachedCardProps={cachedCardProps}
               columnId={column.id}
-              notification={item}
+              item={item}
               ownerIsKnown={ownerIsKnown}
               repoIsKnown={repoIsKnown}
-              swipeable={swipeable}
             />
           </View>
         )
@@ -110,7 +110,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
               notification={item}
               ownerIsKnown={ownerIsKnown}
               repoIsKnown={repoIsKnown}
-              swipeable={swipeable}
             />
           </View>
         </ErrorBoundary>

@@ -9,7 +9,7 @@ import { OneList, OneListProps } from '../../libs/one-list'
 import { sharedStyles } from '../../styles/shared'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { EventCard, EventCardProps } from './EventCard'
-import { SwipeableEventCard } from './SwipeableEventCard'
+import { SwipeableCard } from './SwipeableCard'
 
 type ItemT = EnhancedGitHubEvent
 
@@ -86,13 +86,13 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       if (swipeable) {
         return (
           <View style={{ height }}>
-            <SwipeableEventCard
+            <SwipeableCard
+              type="activity"
               cachedCardProps={cachedCardProps}
               columnId={column.id}
-              event={item}
+              item={item}
               ownerIsKnown={ownerIsKnown}
               repoIsKnown={repoIsKnown}
-              swipeable={swipeable}
             />
           </View>
         )
@@ -107,7 +107,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
               event={item}
               ownerIsKnown={ownerIsKnown}
               repoIsKnown={repoIsKnown}
-              swipeable={swipeable}
             />
           </View>
         </ErrorBoundary>

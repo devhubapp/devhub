@@ -26,8 +26,6 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
   void,
   AppleSwipeableRowAction
 > {
-  _swipeableRow = null
-
   renderButtonAction = (
     action: AppleSwipeableRowAction,
     {
@@ -132,7 +130,7 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
     return (
       <Swipeable
         {...props}
-        ref={this.updateRef}
+        ref={this.swipeable}
         friction={2}
         leftThreshold={30}
         renderLeftActions={this.renderLeftActions}

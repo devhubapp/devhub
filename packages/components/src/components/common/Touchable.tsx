@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import {
+  TouchableHighlightProps,
   TouchableOpacity,
   TouchableOpacityProps,
   TouchableWithoutFeedbackProps,
@@ -10,7 +11,8 @@ import { findNode } from '../../utils/helpers/shared'
 
 export interface TouchableProps
   extends TouchableWithoutFeedbackProps,
-    TouchableOpacityProps {
+    TouchableOpacityProps,
+    TouchableHighlightProps {
   TouchableComponent: any
   analyticsAction?: 'press' | 'toggle' | string | undefined
   analyticsCategory?: 'button' | 'checkbox' | 'link' | string | undefined

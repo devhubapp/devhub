@@ -21,7 +21,7 @@ import {
   IssueOrPullRequestCard,
   IssueOrPullRequestCardProps,
 } from './IssueOrPullRequestCard'
-import { SwipeableIssueOrPullRequestCard } from './SwipeableIssueOrPullRequestCard'
+import { SwipeableCard } from './SwipeableCard'
 
 type ItemT = EnhancedGitHubIssueOrPullRequest
 
@@ -108,13 +108,13 @@ export const IssueOrPullRequestCards = React.memo(
         if (swipeable) {
           return (
             <View style={{ height }}>
-              <SwipeableIssueOrPullRequestCard
+              <SwipeableCard
+                type="issue_or_pr"
                 cachedCardProps={cachedCardProps}
                 columnId={column.id}
-                issueOrPullRequest={item}
+                item={item}
                 ownerIsKnown={ownerIsKnown}
                 repoIsKnown={repoIsKnown}
-                swipeable={swipeable}
               />
             </View>
           )
@@ -129,7 +129,6 @@ export const IssueOrPullRequestCards = React.memo(
                 issueOrPullRequest={item}
                 ownerIsKnown={ownerIsKnown}
                 repoIsKnown={repoIsKnown}
-                swipeable={swipeable}
               />
             </View>
           </ErrorBoundary>

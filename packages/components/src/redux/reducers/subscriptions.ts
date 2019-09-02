@@ -337,9 +337,7 @@ export const subscriptionsReducer: Reducer<State> = (
               }
             } else if (action.type === 'SAVE_ITEMS_FOR_LATER') {
               subscription.data.items![index].saved =
-                action.payload.save === 'toggle'
-                  ? !subscription.data.items![index].saved
-                  : action.payload.save !== false
+                action.payload.save !== false
             }
           })
         })

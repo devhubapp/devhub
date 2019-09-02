@@ -1,5 +1,10 @@
 import React, { useCallback, useMemo, useRef } from 'react'
-import { View } from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { Column, EnhancedItem } from '@devhub/core'
@@ -21,10 +26,10 @@ import { CardSavedIndicator } from './partials/CardSavedIndicator'
 export interface CardWithLinkProps<ItemT extends EnhancedItem> {
   cachedCardProps?: BaseCardProps | undefined
   columnId: string
+  isInsideSwipeable?: boolean
   item: ItemT
   ownerIsKnown: boolean
   repoIsKnown: boolean
-  swipeable: boolean
   type: Column['type']
 }
 
@@ -33,6 +38,7 @@ export const CardWithLink = React.memo(
     const {
       cachedCardProps,
       columnId,
+      isInsideSwipeable,
       item,
       ownerIsKnown,
       repoIsKnown,
@@ -152,6 +158,9 @@ export const CardWithLink = React.memo(
     return (
       <Link
         ref={ref}
+        TouchableComponent={
+          isInsideSwipeable ? GestureHandlerCardTouchable : NormalCardTouchable
+        }
         backgroundThemeColor={theme =>
           getCardBackgroundThemeColor({
             isDark: theme.isDark,
@@ -196,3 +205,40 @@ export const CardWithLink = React.memo(
 )
 
 CardWithLink.displayName = 'CardWithLink'
+
+const GestureHandlerTouchableOpacity = Platform.select({
+  android: () => require('react-native-gesture-handler').TouchableOpacity,
+  ios: () => require('react-native-gesture-handler').TouchableOpacity,
+  default: () => require('react-native').TouchableOpacity,
+})()
+
+const GestureHandlerCardTouchable = React.forwardRef<
+  View,
+  TouchableOpacityProps
+>((props, ref) => {
+  return (
+    <View ref={ref} style={props.style}>
+      <GestureHandlerTouchableOpacity
+        activeOpacity={1}
+        {...props}
+        style={StyleSheet.flatten([
+          props.style,
+          { backgroundColor: 'transparent' },
+        ])}
+      />
+    </View>
+  )
+})
+
+const NormalCardTouchable = React.forwardRef<View, TouchableOpacityProps>(
+  (props, ref) => {
+    return (
+      <View ref={ref} style={props.style}>
+        <TouchableOpacity
+          {...props}
+          style={[props.style, { backgroundColor: 'transparent' }]}
+        />
+      </View>
+    )
+  },
+)

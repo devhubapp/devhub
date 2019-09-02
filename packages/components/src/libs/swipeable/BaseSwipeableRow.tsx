@@ -1,3 +1,4 @@
+import { GitHubIcon } from '@devhub/core'
 import React, { PureComponent, ReactNode } from 'react'
 import { Animated, View } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
@@ -7,7 +8,7 @@ export type BaseActionType = 'BUTTON' | 'FULL'
 
 export interface BaseSwipeableRowAction {
   color: string
-  icon?: string
+  icon?: GitHubIcon
   key: string
   label?: string
   onPress: () => void
@@ -36,7 +37,7 @@ export abstract class BaseSwipeableRow<
   BaseSwipeableRowProps<IAction> & P,
   BaseSwipeableRowBaseState & S
 > {
-  _swipeableRow: Swipeable | null = null
+  swipeable = React.createRef<Swipeable>()
 
   abstract renderButtonAction: (
     action: IAction,
@@ -126,12 +127,8 @@ export abstract class BaseSwipeableRow<
     )
   }
 
-  updateRef = (ref: Swipeable) => {
-    this._swipeableRow = ref
-  }
-
   close = () => {
-    if (this._swipeableRow) this._swipeableRow.close()
+    if (this.swipeable.current) this.swipeable.current!.close()
   }
 
   abstract render(): ReactNode

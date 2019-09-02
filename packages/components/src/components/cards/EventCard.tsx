@@ -10,23 +10,14 @@ export interface EventCardProps {
   event: EnhancedGitHubEvent
   ownerIsKnown: boolean
   repoIsKnown: boolean
-  swipeable: boolean
 }
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const {
-    cachedCardProps,
-    columnId,
-    event,
-    ownerIsKnown,
-    repoIsKnown,
-    swipeable,
-  } = props
+  const { cachedCardProps, columnId, event, ownerIsKnown, repoIsKnown } = props
 
   return (
     <CardWithLink
       type="activity"
-      swipeable={swipeable}
       repoIsKnown={repoIsKnown}
       ownerIsKnown={ownerIsKnown}
       item={event}

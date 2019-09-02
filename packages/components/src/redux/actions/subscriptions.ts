@@ -69,7 +69,7 @@ export function fetchSubscriptionFailure<E extends Error>(
 
 export function saveItemsForLater(payload: {
   itemIds: Array<string | number>
-  save?: boolean | 'toggle'
+  save?: boolean
 }) {
   return createAction('SAVE_ITEMS_FOR_LATER', payload)
 }

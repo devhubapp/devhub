@@ -1,6 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const resolve = require('resolve')
 const webpack = require('webpack')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
@@ -12,6 +11,7 @@ const appIncludes = [
   resolveApp('src'),
   resolveApp('../core/src'),
   resolveApp('../components/src'),
+  resolveApp('../../node_modules/react-native-gesture-handler/'),
 ]
 
 module.exports = function override(config, env) {

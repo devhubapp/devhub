@@ -9,6 +9,7 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import { OneList, OneListProps } from '../../libs/one-list'
+import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
 import * as selectors from '../../redux/selectors'
 import { useColumnWidth } from '../context/ColumnWidthContext'
@@ -51,9 +52,10 @@ export const Columns = React.memo((props: ColumnsProps) => {
   )
 
   const pagingEnabled = sizename < '3-large'
-  const swipeable = constants.DISABLE_SWIPEABLE_CARDS
-    ? false
-    : appViewMode === 'single-column'
+  const swipeable =
+    !constants.DISABLE_SWIPEABLE_CARDS &&
+    appViewMode === 'single-column' &&
+    (Platform.OS === 'ios' || Platform.OS === 'android')
 
   const renderItem: OneListProps<string>['renderItem'] = useCallback(
     ({ item: columnId }) => {
