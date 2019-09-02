@@ -11,6 +11,8 @@ matrix:
     - os: linux
       services: docker
       language: generic
+      sudo: required
+      dist: xenial
 
 cache:
   directories:
@@ -29,7 +31,7 @@ script:
         electronuserland/builder:wine \
         /bin/bash -c "yarn --pure-lockfile && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --linux --win"
     else
-      yarn --pure-lockfile && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --mac && yarn now --local-config ./now.app.json --target production && yarn now --local-config ./now.beta.json --target production --token $NOW_TOKEN
+      yarn --pure-lockfile && yarn workspace @devhub/web build && yarn workspace @devhub/desktop build:skipweb --mac && yarn now --local-config ./now.app.json --target production --token $NOW_TOKEN && yarn now --local-config ./now.beta.json --target production --token $NOW_TOKEN
     fi
 
 before_cache:
