@@ -30,25 +30,11 @@ export const Columns = React.memo((props: ColumnsProps) => {
 
   const listRef = useRef<typeof OneList>(null)
   const appSafeAreaInsets = useSafeArea()
-  const _columnIds = useReduxState(selectors.columnIdsSelector)
+  const columnIds = useReduxState(selectors.columnIdsSelector)
   const columnWidth = useColumnWidth()
   const { appOrientation, sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
   const { focusedColumnId } = useFocusedColumn()
-
-  const columnIds = useMemo(
-    () =>
-      appViewMode === 'single-column'
-        ? focusedColumnId
-          ? [focusedColumnId]
-          : []
-        : _columnIds,
-    [
-      (appViewMode === 'single-column' ? [focusedColumnId] : _columnIds).join(
-        ',',
-      ),
-    ],
-  )
 
   useEmitter(
     'FOCUS_ON_COLUMN',
@@ -70,10 +56,10 @@ export const Columns = React.memo((props: ColumnsProps) => {
     [columnIds],
   )
 
-  const pagingEnabled = sizename < '3-large'
+  const pagingEnabled = appViewMode === 'single-column'
+
   const swipeable =
     !constants.DISABLE_SWIPEABLE_CARDS &&
-    appViewMode === 'single-column' &&
     (Platform.OS === 'ios' || Platform.OS === 'android')
 
   const renderItem: OneListProps<string>['renderItem'] = useCallback(
@@ -131,13 +117,14 @@ export const Columns = React.memo((props: ColumnsProps) => {
       ref={listRef}
       key="columns-list"
       data={columnIds}
-      disableVirtualization
+      disableVirtualization={Platform.OS === 'web'}
       estimatedItemSize={columnWidth}
       getItemKey={keyExtractor}
       getItemSize={getItemSize}
       horizontal
       onVisibleItemsChanged={debouncedOnVisibleItemsChanged}
-      overscanCount={3}
+      overscanCount={1}
+      pagingEnabled={pagingEnabled}
       pointerEvents={pointerEvents}
       renderItem={renderItem}
       safeAreaInsets={safeAreaInsets}

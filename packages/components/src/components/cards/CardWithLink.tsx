@@ -235,6 +235,7 @@ const NormalCardTouchable = React.forwardRef<View, TouchableOpacityProps>(
     return (
       <View ref={ref} style={props.style}>
         <TouchableOpacity
+          activeOpacity={Platform.supportsTouch ? 1 : undefined}
           {...props}
           style={[props.style, { backgroundColor: 'transparent' }]}
         />

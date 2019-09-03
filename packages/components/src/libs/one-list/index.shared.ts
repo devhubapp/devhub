@@ -38,7 +38,9 @@ export interface OneListProps<ItemT> {
   }
   onVisibleItemsChanged?: (fromIndex: number, toIndex: number) => void
   overscanCount: number
+  pagingEnabled?: boolean
   pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto'
+  refreshControl?: FlatListProps<any>['refreshControl'] // TODO: Web support
   renderItem: (info: { item: ItemT; index: number }) => React.ReactElement
   safeAreaInsets?: {
     top?: number
@@ -46,7 +48,5 @@ export interface OneListProps<ItemT> {
     left?: number
     right?: number
   }
-
-  // TODO: Support refreshControl on web
-  refreshControl?: FlatListProps<any>['refreshControl']
+  snapToAlignment?: 'start' | 'center' | 'end'
 }

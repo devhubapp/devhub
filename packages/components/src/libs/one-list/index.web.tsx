@@ -50,7 +50,9 @@ interface ItemData {
   innerHeaderSize: number
   itemCount: number
   itemSeparator?: OneListProps<any>['itemSeparator']
+  pagingEnabled: OneListProps<any>['pagingEnabled']
   renderItem: OneListProps<any>['renderItem']
+  snapToAlignment: OneListProps<any>['snapToAlignment']
 }
 
 const Row = React.memo(
@@ -66,13 +68,18 @@ const Row = React.memo(
       innerHeaderSize,
       itemCount,
       itemSeparator,
+      pagingEnabled,
       renderItem,
+      snapToAlignment,
     } = props.data as ItemData
 
     const safeAreaInsets = useContext(OneListSafeAreaContext)
 
     const style = {
       ..._style,
+      ...(pagingEnabled
+        ? { scrollSnapAlign: snapToAlignment || 'start' }
+        : undefined),
       top:
         typeof safeAreaInsets.top === 'number'
           ? `${parseFloat(`${_style.top || 0}`) + safeAreaInsets.top}px`
@@ -231,12 +238,12 @@ export const OneList = (React.memo(
       itemSeparator,
       onVisibleItemsChanged,
       overscanCount,
+      pagingEnabled,
       pointerEvents,
+      // refreshControl, // TODO
       renderItem,
       safeAreaInsets,
-
-      // TODO
-      // refreshControl,
+      snapToAlignment,
     } = props
 
     const variableSizeListRef = useRef<VariableSizeList>(null)
@@ -342,6 +349,16 @@ export const OneList = (React.memo(
       }
     }, [itemCount, itemSize, previousItemCount, previousItemSize])
 
+    const style = useMemo(
+      () =>
+        pagingEnabled
+          ? {
+              scrollSnapType: horizontal ? 'x mandatory' : 'y mandatory',
+            }
+          : undefined,
+      [pagingEnabled, horizontal],
+    )
+
     const itemData = useMemo<ItemData>(
       () => ({
         data,
@@ -352,7 +369,9 @@ export const OneList = (React.memo(
         innerHeaderSize,
         itemCount,
         itemSeparator,
+        pagingEnabled,
         renderItem,
+        snapToAlignment,
       }),
       [
         data,
@@ -363,7 +382,9 @@ export const OneList = (React.memo(
         innerHeaderSize,
         itemCount,
         itemSeparator,
+        pagingEnabled,
         renderItem,
+        snapToAlignment,
       ],
     )
 
@@ -415,6 +436,7 @@ export const OneList = (React.memo(
                       onItemsRendered={onItemsRendered}
                       overscanCount={overscanCount}
                       width={horizontal ? width : '100%'}
+                      style={style}
                     >
                       {Row}
                     </VariableSizeList>

@@ -65,10 +65,12 @@ export const OneList = (React.memo(
       itemSeparator,
       onVisibleItemsChanged,
       overscanCount = 1,
+      pagingEnabled,
       pointerEvents,
       refreshControl,
       renderItem,
       safeAreaInsets,
+      snapToAlignment,
     } = props
 
     const onVisibleItemsChangedRef = useRef(onVisibleItemsChanged)
@@ -148,7 +150,7 @@ export const OneList = (React.memo(
 
     const viewabilityConfig = useMemo(
       () => ({
-        itemVisiblePercentThreshold: 1,
+        itemVisiblePercentThreshold: 10,
       }),
       [],
     )
@@ -237,6 +239,7 @@ export const OneList = (React.memo(
                     alwaysBounceVertical={false}
                     contentContainerStyle={contentContainerStyle}
                     data={data}
+                    data-paging-enabled-fix={pagingEnabled}
                     disableVirtualization={disableVirtualization}
                     getItemLayout={getItemLayout}
                     horizontal={horizontal}
@@ -244,10 +247,12 @@ export const OneList = (React.memo(
                     maxToRenderPerBatch={2}
                     onScrollToIndexFailed={onScrollToIndexFailed}
                     onViewableItemsChanged={onViewableItemsChanged}
+                    pagingEnabled={pagingEnabled}
                     refreshControl={refreshControl}
                     removeClippedSubviews={!disableVirtualization}
                     renderItem={renderItem}
                     scrollEventThrottle={16}
+                    snapToAlignment={snapToAlignment}
                     style={{
                       width: horizontal ? width : '100%',
                       height: horizontal ? '100%' : height,

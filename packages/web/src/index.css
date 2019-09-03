@@ -59,3 +59,8 @@ input:focus {
   outline: none;
   outline-color: transparent;
 }
+
+/* https://github.com/necolas/react-native-web/issues/1299 */
+[data-paging-enabled-fix="true"]  > div > div > div {
+  height: 100%;
+}

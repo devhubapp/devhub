@@ -193,11 +193,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           analyticsLabel="move_column_right"
           disabled={columnIndex === columnIds.length - 1}
           fixedIconSize
-          iconName={
-            appOrientation === 'landscape' && appViewMode === 'single-column'
-              ? 'chevron-down'
-              : 'chevron-right'
-          }
+          iconName="chevron-right"
           onPress={() =>
             dispatch(
               actions.moveColumn({
