@@ -5,6 +5,7 @@ import { Keyboard, ScrollView, View } from 'react-native'
 import * as Yup from 'yup'
 
 import {
+  ActivityColumnFilters,
   ActivityColumnSubscription,
   ActivityColumnSubscriptionCreation,
   AddColumnDetailsPayload,
@@ -805,6 +806,7 @@ function getNewColumnAndSubscriptions(
     case 'notifications': {
       const type = _type as NotificationColumnSubscription['type']
       const subtype = _subtype as NotificationColumnSubscription['subtype']
+      const _newColumnFilters = newColumnFilters as NotificationColumnFilters
 
       switch (subtype) {
         case 'REPO_NOTIFICATIONS':
@@ -827,9 +829,9 @@ function getNewColumnAndSubscriptions(
                 ? 'REPO_NOTIFICATIONS'
                 : undefined,
           })
-          ;(newColumnFilters as NotificationColumnFilters).notifications =
-            (newColumnFilters as NotificationColumnFilters).notifications || {}
-          ;(newColumnFilters as NotificationColumnFilters).notifications!.participating =
+          _newColumnFilters.notifications =
+            _newColumnFilters.notifications || {}
+          _newColumnFilters.notifications!.participating =
             newSubscription.params.participating
 
           break
@@ -842,6 +844,8 @@ function getNewColumnAndSubscriptions(
     case 'issue_or_pr': {
       const type = _type as IssueOrPullRequestColumnSubscription['type']
       const subtype = _subtype as IssueOrPullRequestColumnSubscription['subtype']
+
+      const _newColumnFilters = newColumnFilters as IssueOrPullRequestColumnFilters
 
       switch (subtype) {
         case 'ISSUES':
@@ -886,7 +890,6 @@ function getNewColumnAndSubscriptions(
             subtype,
           })
 
-          const _newColumnFilters = newColumnFilters as IssueOrPullRequestColumnFilters
           _newColumnFilters.involves = newSubscription.params.involves
           _newColumnFilters.subjectTypes = newSubscription.params.subjectType
             ? { [newSubscription.params.subjectType]: true }
@@ -905,6 +908,17 @@ function getNewColumnAndSubscriptions(
       const type = _type as ActivityColumnSubscription['type']
       const subtype = _subtype as ActivityColumnSubscription['subtype']
 
+      const _newColumnFilters = newColumnFilters as ActivityColumnFilters
+
+      function filterBotsForksAndStarsOut() {
+        _newColumnFilters.bot = false
+        _newColumnFilters.activity = _newColumnFilters.activity || {}
+        _newColumnFilters.activity.actions =
+          _newColumnFilters.activity.actions || {}
+        _newColumnFilters.activity.actions.forked = false
+        _newColumnFilters.activity.actions.starred = false
+      }
+
       switch (subtype) {
         case 'ORG_PUBLIC_EVENTS':
         case 'USER_ORG_EVENTS': {
@@ -919,6 +933,7 @@ function getNewColumnAndSubscriptions(
             type,
             subtype,
           })
+          filterBotsForksAndStarsOut()
 
           break
         }
@@ -933,6 +948,7 @@ function getNewColumnAndSubscriptions(
             type,
             subtype,
           })
+          filterBotsForksAndStarsOut()
 
           break
         }
@@ -952,6 +968,7 @@ function getNewColumnAndSubscriptions(
             type,
             subtype,
           })
+          filterBotsForksAndStarsOut()
 
           break
         }
