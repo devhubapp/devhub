@@ -8,6 +8,7 @@ import { OneList } from '../libs/one-list'
 import * as actions from '../redux/actions'
 import { useEmitter } from './use-emitter'
 import useKeyPressCallback from './use-key-press-callback'
+import useMultiKeyPressCallback from './use-multi-key-press-callback'
 
 export function useCardsKeyboard(
   listRef: RefObject<typeof OneList>,
@@ -102,6 +103,13 @@ export function useCardsKeyboard(
       selectedItemIndexRef.current = items.findIndex(
         i => !!(i && i.id === selectedItemIdRef.current),
       )
+
+      if (
+        payload.scrollTo &&
+        listRef.current &&
+        selectedItemIndexRef.current >= 0
+      )
+        listRef.current.scrollToIndex(selectedItemIndexRef.current)
     },
     [columnId, items],
   )
@@ -129,11 +137,10 @@ export function useCardsKeyboard(
       selectedItemIdRef.current = newValue
       selectedItemIndexRef.current = newValue ? newIndex : -1
 
-      listRef.current.scrollToIndex(newIndex)
-
       emitter.emit('FOCUS_ON_COLUMN_ITEM', {
         columnId,
         itemId: selectedItemIdRef.current,
+        scrollTo: true,
       })
     },
     [columnId, items],
@@ -205,7 +212,7 @@ export function useCardsKeyboard(
           save: !selectedItem.saved,
         }),
       )
-    }, [columnId, items]),
+    }, [items]),
   )
 
   useKeyPressCallback(
@@ -225,6 +232,71 @@ export function useCardsKeyboard(
           unread: isItemRead(selectedItem),
         }),
       )
-    }, [columnId, items]),
+    }, [items]),
+  )
+
+  useKeyPressCallback(
+    ' ',
+    useCallback(() => {
+      if (!isColumnFocusedRef.current) return
+      if (!(listRef && listRef.current)) return
+
+      if (!hasVisibleItems()) {
+        listRef.current.scrollToStart()
+        return
+      }
+
+      const visibleItemsCount =
+        visibleItemIndexesRef!.current!.to -
+        visibleItemIndexesRef!.current!.from +
+        1
+
+      const scrollToIndex = Math.min(
+        visibleItemIndexesRef!.current!.to + visibleItemsCount,
+        items.length - 1,
+      )
+
+      listRef.current.scrollToIndex(scrollToIndex, { alignment: 'start' })
+
+      if (items[scrollToIndex] && items[scrollToIndex]!.id) {
+        emitter.emit('FOCUS_ON_COLUMN_ITEM', {
+          columnId,
+          itemId: items[scrollToIndex]!.id,
+          scrollTo: false,
+        })
+      }
+    }, [items]),
+  )
+
+  useMultiKeyPressCallback(
+    ['Shift', ' '],
+    useCallback(() => {
+      if (!isColumnFocusedRef.current) return
+      if (!(listRef && listRef.current)) return
+
+      if (!hasVisibleItems()) {
+        listRef.current.scrollToStart()
+        return
+      }
+
+      const visibleItemsCount =
+        visibleItemIndexesRef!.current!.to -
+        visibleItemIndexesRef!.current!.from +
+        1
+
+      const scrollToIndex = Math.max(
+        0,
+        visibleItemIndexesRef!.current!.from - visibleItemsCount,
+      )
+      listRef.current.scrollToIndex(scrollToIndex, { alignment: 'start' })
+
+      if (items[scrollToIndex] && items[scrollToIndex]!.id) {
+        emitter.emit('FOCUS_ON_COLUMN_ITEM', {
+          columnId,
+          itemId: items[scrollToIndex]!.id,
+          scrollTo: false,
+        })
+      }
+    }, [items]),
   )
 }

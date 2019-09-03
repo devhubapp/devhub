@@ -29,6 +29,11 @@ export const keyboardShortcutsById = {
   goToNthColumn: { keys: ['1...9'], description: 'Go to the nth column' },
   goToLastColumn: { keys: ['0'], description: 'Go to the last column' },
   openItemLink: { keys: ['Enter'], description: 'Open link of selected item' },
+  scrollToNextPage: { keys: ['Space'], description: 'Scroll to next page' },
+  scrollToPreviousPage: {
+    keys: ['Shift Space'],
+    description: 'Scroll to previous page',
+  },
   selectPreviousItem: { keys: ['↑', 'J'], description: 'Select previous item' },
   selectNextItem: { keys: ['↓', 'K'], description: 'Select next item' },
   selectPreviousColumn: {
@@ -65,6 +70,8 @@ export const keyboardShortcuts = [
   keyboardShortcutsById.goToNthColumn,
   keyboardShortcutsById.goToLastColumn,
   keyboardShortcutsById.openItemLink,
+  keyboardShortcutsById.scrollToNextPage,
+  keyboardShortcutsById.scrollToPreviousPage,
   keyboardShortcutsById.selectPreviousItem,
   keyboardShortcutsById.selectNextItem,
   keyboardShortcutsById.selectPreviousColumn,
