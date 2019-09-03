@@ -1236,6 +1236,14 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@brunolemos/react-window-without-virtualization@1.8.5-withoutvirtualization.1":
+  version "1.8.5-withoutvirtualization.1"
+  resolved "https://registry.npmjs.org/@brunolemos/react-window-without-virtualization/-/react-window-without-virtualization-1.8.5-withoutvirtualization.1.tgz#96be98baef2c3a7006d33c27c69a09ef901dfba4"
+  integrity sha512-h7MNKkwDY89v6LWInL2CzYpBUzkNPN6bQdCq8Yxlf8GPecoFw4/9qs1Qe9qYLZiS0+3AvdkokMTonE6QS7owbw==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    memoize-one ">=3.1.1 <6"
+
 "@bugsnag/browser@^6.1.0":
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/@bugsnag/browser/-/browser-6.2.0.tgz#8588303053b51e5f3c371271ea13a0b468ed5f37"

@@ -1,3 +1,4 @@
+import { VariableSizeList as VariableSizeListWithoutVirtualization } from '@brunolemos/react-window-without-virtualization'
 import React, {
   Fragment,
   useContext,
@@ -16,7 +17,6 @@ import { usePrevious } from '../../hooks/use-previous'
 import { sharedStyles } from '../../styles/shared'
 import { AutoSizer } from '../auto-sizer'
 import { bugsnag } from '../bugsnag'
-import { OneList as OneListFlatList } from './index.native'
 import { OneListInstance, OneListProps } from './index.shared'
 
 export { OneListProps }
@@ -187,9 +187,9 @@ const innerElementType = React.forwardRef<
 
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
-    if (props.disableVirtualization) {
-      return <OneListFlatList ref={ref} {...props} />
-    }
+    const List = props.disableVirtualization
+      ? VariableSizeListWithoutVirtualization
+      : VariableSizeList
 
     React.useImperativeHandle(
       ref,
@@ -421,7 +421,7 @@ export const OneList = (React.memo(
                   <OneListSafeAreaContext.Provider
                     value={safeAreaInsets || defaultSafeAreaInsets}
                   >
-                    <VariableSizeList
+                    <List
                       ref={variableSizeListRef}
                       innerRef={variableSizeListInnerRef}
                       key="variable-size-list"
@@ -439,7 +439,7 @@ export const OneList = (React.memo(
                       style={style}
                     >
                       {Row}
-                    </VariableSizeList>
+                    </List>
                   </OneListSafeAreaContext.Provider>
                 )
               }

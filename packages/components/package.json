@@ -11,6 +11,7 @@
     "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {
+    "@brunolemos/react-window-without-virtualization": "1.8.5-withoutvirtualization.1",
     "@bugsnag/js": "6.1.0",
     "@bugsnag/plugin-react": "6.1.0",
     "@devhub/core": "0.94.0",
