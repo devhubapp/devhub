@@ -36,7 +36,7 @@ export function createThemeFromColor(
   const isDark = luminance <= 0.4
 
   let primaryBackgroundColor = '#49D3B4'
-  let primaryForegroundColor = '#141C26'
+  let primaryForegroundColor = '#0D2621'
 
   if (override) {
     if (override.primaryBackgroundColor)

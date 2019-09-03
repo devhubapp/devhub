@@ -5,7 +5,7 @@
     <color name="status_bar_color">@color/background_color_dark</color>
 
     <color name="brand_background">#49d3b4</color>
-    <color name="brand_foreground">#141C26</color>
+    <color name="brand_foreground">#0D2621</color>
 
     <color name="background_color_dark">#1F2229</color>
     <color name="foreground_color_dark">#FFFFFF</color>
