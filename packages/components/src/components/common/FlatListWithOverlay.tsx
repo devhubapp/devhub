@@ -12,16 +12,10 @@ export interface FlatListWithOverlayProps<TItem>
 
 export const FlatListWithOverlay = React.forwardRef(
   (props: FlatListWithOverlayProps<any>, ref: any) => {
-    const {
-      horizontal,
-      overlayThemeColor = 'backgroundColor',
-      ...restProps
-    } = props
-
     return (
       <ScrollViewWithOverlay
         ref={ref}
-        {...restProps}
+        {...props}
         ScrollViewComponent={FlatList}
       />
     )

@@ -139,6 +139,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
           ref={ref}
           horizontal={horizontal}
           scrollEventThrottle={16}
+          updateCellsBatchingPeriod={0}
           {...restProps}
           collapsable={false}
           onContentSizeChange={onContentSizeChange}

@@ -36,6 +36,7 @@ import {
   ColumnHeaderItemProps,
 } from '../columns/ColumnHeaderItem'
 import { Avatar } from '../common/Avatar'
+import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
@@ -234,7 +235,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
         <SectionSpacer />
 
-        <FlatList
+        <FlatListWithOverlay
           ref={flatListRef}
           ListHeaderComponent={
             !(columnIds && columnIds.length) && !large ? (
@@ -370,6 +371,7 @@ export const Sidebar = React.memo((props: SidebarProps) => {
               ...info,
             })
           }}
+          // overlayThemeColor="primaryBackgroundColor" // TODO: Use brand color if unread item is hidden
           overScrollMode="never"
           style={sharedStyles.flex}
           removeClippedSubviews={false}
