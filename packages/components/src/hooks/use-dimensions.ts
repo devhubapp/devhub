@@ -23,6 +23,9 @@ export function useDimensions(only?: 'width' | 'height') {
 
     dimensionsRef.current.width = width
     dimensionsRef.current.height = height
+
+    if (__DEV__) console.debug(`[DIMENSIONS] ${width}x${height}`) // tslint:disable-line no-console
+
     forceRerender()
   }
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Dimensions } from 'react-native'
 import { useDimensions } from '../../hooks/use-dimensions'
 
@@ -34,8 +34,15 @@ AppLayoutContext.displayName = 'AppLayoutContext'
 export function AppLayoutProvider(props: AppLayoutProviderProps) {
   const dimensions = useDimensions()
 
+  const _appLayout = getAppLayout(dimensions)
+  const appLayout = useMemo(() => getAppLayout(dimensions), [
+    _appLayout.appOrientation,
+    _appLayout.deviceOrientation,
+    _appLayout.sizename,
+  ])
+
   return (
-    <AppLayoutContext.Provider value={getAppLayout(dimensions)}>
+    <AppLayoutContext.Provider value={appLayout}>
       {props.children}
     </AppLayoutContext.Provider>
   )
