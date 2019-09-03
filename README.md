@@ -24,14 +24,14 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 
 #### Menubar
 
-![DevHub Menubar](static/screenshots/devhub-desktop-menubar-banner.jpg)
+![DevHub Menubar](landing/static/screenshots/devhub-desktop-menubar-banner.jpg)
 
 ### Mobile
 
 <p align="center">
-  <img alt="DevHub Mobile - Notifications" height="620" src="static/screenshots/iphone-notifications-dark.jpg" />
-  <img alt="DevHub Mobile - Notification Filters" height="620" src="static/screenshots/iphone-notifications-filters-dark.jpg" />
-  <img alt="DevHub Mobile - Repository activity" height="620" src="static/screenshots/iphone-events-dark.jpg" />
+  <img alt="DevHub Mobile - Notifications" height="620" src="landing/static/screenshots/iphone-notifications-dark.jpg" />
+  <img alt="DevHub Mobile - Notification Filters" height="620" src="landing/static/screenshots/iphone-notifications-filters-dark.jpg" />
+  <img alt="DevHub Mobile - Repository activity" height="620" src="landing/static/screenshots/iphone-events-dark.jpg" />
 </p>
 
 <br/>

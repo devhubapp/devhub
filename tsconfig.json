@@ -14,7 +14,7 @@
     "node_modules"
   ],
   "include": [
-    "next-env.d.ts"
+    "landing/next-env.d.ts"
   ],
   "references": [
     {
