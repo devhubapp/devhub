@@ -174,7 +174,7 @@ export function useCardsKeyboard(
 
       emitter.emit('FOCUS_ON_COLUMN_ITEM', {
         columnId,
-        itemId: selectedItemIdRef.current,
+        itemId: selectedItemIdRef.current!,
       })
     },
     [columnId, items],

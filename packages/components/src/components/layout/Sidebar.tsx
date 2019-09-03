@@ -649,7 +649,7 @@ const SidebarColumnItem = React.memo(
           if (currentOpenedModal) closeAllModals()
 
           emitter.emit('FOCUS_ON_COLUMN', {
-            animated: !small || !currentOpenedModal,
+            animated: !currentOpenedModal,
             columnId: column.id,
             highlight: !small,
             scrollTo: true,

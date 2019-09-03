@@ -2,12 +2,16 @@ import React from 'react'
 import { FlatListProps } from 'react-native'
 
 // TODO: take safeAreaInsets into consideration when scrolling to item
+// TODO: support "animated" param on web
 export interface OneListInstance {
-  scrollToStart: () => void
-  scrollToEnd: () => void
+  scrollToStart: (params?: { animated?: boolean }) => void
+  scrollToEnd: (params?: { animated?: boolean }) => void
   scrollToIndex: (
     index: number,
-    payload?: { alignment?: 'start' | 'center' | 'end' | 'smart' },
+    payload?: {
+      animated?: boolean
+      alignment?: 'start' | 'center' | 'end' | 'smart'
+    },
   ) => void
 }
 

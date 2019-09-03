@@ -48,7 +48,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
         if (!(index >= 0)) return
 
         listRef.current.scrollToIndex(index, {
-          // animated: payload.animated,
+          animated: payload.animated,
           alignment: 'smart',
         })
       }

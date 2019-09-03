@@ -13,17 +13,17 @@ export const OneList = (React.memo(
     React.useImperativeHandle(
       ref,
       () => ({
-        scrollToStart: () => {
+        scrollToStart: ({ animated }: { animated?: boolean } = {}) => {
           try {
-            flatListRef.current!.scrollToOffset({ animated: false, offset: 0 })
+            flatListRef.current!.scrollToOffset({ animated, offset: 0 })
           } catch (error) {
             console.error(error)
             bugsnag.notify(error)
           }
         },
-        scrollToEnd: () => {
+        scrollToEnd: ({ animated }: { animated?: boolean } = {}) => {
           try {
-            flatListRef.current!.scrollToEnd({ animated: false })
+            flatListRef.current!.scrollToEnd({ animated })
           } catch (error) {
             console.error(error)
             bugsnag.notify(error)
@@ -35,7 +35,7 @@ export const OneList = (React.memo(
 
             // TODO: Implement 'smart' alignment like react-window
             flatListRef.current!.scrollToIndex({
-              animated: false,
+              animated: !!(params && params.animated),
               index,
               viewOffset: 0,
               viewPosition:
