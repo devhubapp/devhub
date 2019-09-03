@@ -53,10 +53,8 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
 
   return (
     <SpringAnimatedView
-      hidden={animatedStyles.height.interpolate(
-        // TODO: Fix type
-        (value: number | 'auto') =>
-          (value === 'auto' || value > 0 ? false : true) as any,
+      hidden={animatedStyles.height.to(
+        value => (value === 'auto' || value > 0 ? false : true) as any,
       )}
       style={[
         sharedStyles.overflowHidden,
@@ -64,17 +62,16 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
           height:
             isOpen && wasOpen === isOpen && hasCompletedAnimationRef.current
               ? 'auto'
-              : animatedStyles.height.interpolate((value: number | 'auto') =>
+              : animatedStyles.height.to(value =>
                   value === 'auto' ? value : value > 0 ? Math.floor(value) : 0,
                 ),
-          opacity: animatedStyles.height.interpolate((value: number | 'auto') =>
+          opacity: animatedStyles.height.to(value =>
             value === 'auto' || value > 0 ? 1 : 0,
           ),
 
           // [web] disable keyboard focus for this tree when accordion is collapsed
-          ['visibility' as any]: animatedStyles.height.interpolate(
-            (value: number | 'auto') =>
-              value === 'auto' || value > 0 ? 'visible' : 'hidden',
+          ['visibility' as any]: animatedStyles.height.to(value =>
+            value === 'auto' || value > 0 ? 'visible' : 'hidden',
           ),
           ['willChange' as any]: 'height',
         },
