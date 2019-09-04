@@ -195,13 +195,15 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
           <Spacer width={contentPadding / 2} />
 
-          <ThemedText
-            color="foregroundColor"
-            numberOfLines={1}
-            style={{ fontWeight: '500' }}
-          >
-            {title}
-          </ThemedText>
+          {!!title && (
+            <ThemedText
+              color="foregroundColor"
+              numberOfLines={1}
+              style={{ fontWeight: '500' }}
+            >
+              {title}
+            </ThemedText>
+          )}
 
           <Spacer flex={1} minWidth={contentPadding / 2} />
 
@@ -219,7 +221,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             </ThemedText>
           )}
 
-          {right}
+          {!!right && right}
 
           {!!onToggle && (
             <>

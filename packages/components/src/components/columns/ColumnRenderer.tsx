@@ -344,7 +344,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         key="column-options-renderer"
         columnId={columnId}
         fixedPosition="right"
-        forceOpenAll
         header="header"
         type="local"
       />

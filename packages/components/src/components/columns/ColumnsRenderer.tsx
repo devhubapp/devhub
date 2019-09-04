@@ -35,9 +35,7 @@ export function ColumnsRenderer() {
           key="column-options-renderer"
           columnId="focused"
           fixedPosition="right"
-          forceOpenAll
           header="header"
-          startWithFiltersExpanded
           type="shared"
         />
       ),

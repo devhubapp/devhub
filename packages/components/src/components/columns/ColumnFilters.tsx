@@ -9,6 +9,7 @@ import {
   filterRecordHasAnyForcedValue,
   filterRecordWithThisValueCount,
   getEventActionMetadata,
+  getFilterCountMetadata,
   getFilteredItems,
   getItemInbox,
   getItemsFilterMetadata,
@@ -491,14 +492,14 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     ? () => toggleOpenedOptionCategory('saved_for_later')
                     : undefined
                 }
-                // right={
-                //   savedForLater === true
-                //     ? 'Saved only'
-                //     : savedForLater === false
-                //     ? 'Excluded'
-                //     : 'Included'
-                // }
-                title="Saved for later"
+                right={
+                  savedForLater === true
+                    ? 'Only'
+                    : savedForLater === false
+                    ? 'Excluded'
+                    : ''
+                }
+                title="Bookmarked"
               >
                 <Checkbox
                   analyticsLabel="save_for_later"
@@ -513,7 +514,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     sharedColumnOptionsStyles.checkboxSquareContainer
                   }
                   enableIndeterminateState
-                  label="Saved for later"
+                  label="Bookmarked"
                   onChange={checked => {
                     setColumnSavedFilter({
                       columnId: column.id,
@@ -563,13 +564,13 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     ? () => toggleOpenedOptionCategory('unread')
                     : undefined
                 }
-                // right={
-                //   isReadChecked && !isUnreadChecked
-                //     ? 'Read'
-                //     : !isReadChecked && isUnreadChecked
-                //     ? 'Unread'
-                //     : 'All'
-                // }
+                right={
+                  isReadChecked && !isUnreadChecked
+                    ? 'Read'
+                    : !isReadChecked && isUnreadChecked
+                    ? 'Unread'
+                    : ''
+                }
                 title="Read status"
               >
                 <Checkbox
@@ -653,11 +654,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               defaultBooleanValue,
             )
             const hasForcedValue = filterRecordHasAnyForcedValue(filters)
-            // const countMetadata = getFilterCountMetadata(
-            //   filters,
-            //   stateTypeOptions.length,
-            //   defaultBooleanValue,
-            // )
+            const countMetadata = getFilterCountMetadata(
+              filters,
+              stateTypeOptions.length,
+              defaultBooleanValue,
+            )
 
             const supportsOnlyOne = true // column.type === 'issue_or_pr'
 
@@ -702,11 +703,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : undefined
                 }
                 title="State"
-                // right={
-                //   filterRecordHasAnyForcedValue(filters)
-                //     ? `${countMetadata.checked}/${countMetadata.total}`
-                //     : 'All'
-                // }
+                right={
+                  filterRecordHasAnyForcedValue(filters)
+                    ? `${countMetadata.checked}/${countMetadata.total}`
+                    : ''
+                }
               >
                 {stateTypeOptions.map(item => {
                   const checked =
@@ -796,13 +797,9 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : undefined
                 }
                 title="Draft"
-                // right={
-                //   draft === true
-                //     ? 'Draft only'
-                //     : draft === false
-                //     ? 'Excluded'
-                //     : 'Included'
-                // }
+                right={
+                  draft === true ? 'Only' : draft === false ? 'Excluded' : ''
+                }
               >
                 <Checkbox
                   key="draft-type-option"
@@ -861,13 +858,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : undefined
                 }
                 title="Bots"
-                // right={
-                //   bot === true
-                //     ? 'Bots only'
-                //     : bot === false
-                //     ? 'Excluded'
-                //     : 'Included'
-                // }
+                right={bot === true ? 'Only' : bot === false ? 'Excluded' : ''}
               >
                 <Checkbox
                   key="bot-type-option"
@@ -931,11 +922,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               defaultBooleanValue,
             )
             const hasForcedValue = filterRecordHasAnyForcedValue(filters)
-            // const countMetadata = getFilterCountMetadata(
-            //   filters,
-            //   subjectTypeOptions.length,
-            //   defaultBooleanValue,
-            // )
+            const countMetadata = getFilterCountMetadata(
+              filters,
+              subjectTypeOptions.length,
+              defaultBooleanValue,
+            )
 
             // const filteredItemsMetadata = getItemsFilterMetadata(
             //   column.type,
@@ -962,11 +953,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : undefined
                 }
                 title="Subject type"
-                // right={
-                //   filterRecordHasAnyForcedValue(filters)
-                //     ? `${countMetadata.checked}/${countMetadata.total}`
-                //     : 'All'
-                // }
+                right={
+                  filterRecordHasAnyForcedValue(filters)
+                    ? `${countMetadata.checked}/${countMetadata.total}`
+                    : ''
+                }
               >
                 {subjectTypeOptions.map(item => {
                   const checked =
@@ -1044,11 +1035,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               defaultBooleanValue,
             )
             const hasForcedValue = filterRecordHasAnyForcedValue(filters)
-            // const countMetadata = getFilterCountMetadata(
-            //   filters,
-            //   notificationReasonOptions.length,
-            //   defaultBooleanValue,
-            // )
+            const countMetadata = getFilterCountMetadata(
+              filters,
+              notificationReasonOptions.length,
+              defaultBooleanValue,
+            )
 
             // const filteredItemsMetadata = getItemsFilterMetadata(
             //   column.type,
@@ -1081,11 +1072,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : undefined
                 }
                 title="Subscription reason"
-                // right={
-                //   filterRecordHasAnyForcedValue(filters)
-                //     ? `${countMetadata.checked}/${countMetadata.total}`
-                //     : 'All'
-                // }
+                right={
+                  filterRecordHasAnyForcedValue(filters)
+                    ? `${countMetadata.checked}/${countMetadata.total}`
+                    : ''
+                }
               >
                 {notificationReasonOptions.map(item => {
                   const checked =
@@ -1159,11 +1150,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               defaultBooleanValue,
             )
             const hasForcedValue = filterRecordHasAnyForcedValue(filters)
-            // const countMetadata = getFilterCountMetadata(
-            //   filters,
-            //   eventActionOptions.length,
-            //   defaultBooleanValue,
-            // )
+            const countMetadata = getFilterCountMetadata(
+              filters,
+              eventActionOptions.length,
+              defaultBooleanValue,
+            )
 
             // const filteredItemsMetadata = getItemsFilterMetadata(
             //   column.type,
@@ -1196,11 +1187,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : undefined
                 }
                 title="Event action"
-                // right={
-                //   filterRecordHasAnyForcedValue(filters)
-                //     ? `${countMetadata.checked}/${countMetadata.total}`
-                //     : 'All'
-                // }
+                right={
+                  filterRecordHasAnyForcedValue(filters)
+                    ? `${countMetadata.checked}/${countMetadata.total}`
+                    : ''
+                }
               >
                 {eventActionOptions.map(item => {
                   const checked =
@@ -1296,13 +1287,13 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     ? () => toggleOpenedOptionCategory('privacy')
                     : undefined
                 }
-                // right={
-                //   isPrivateChecked && !isPublicChecked
-                //     ? 'Private'
-                //     : !isPrivateChecked && isPublicChecked
-                //     ? 'Public'
-                //     : 'All'
-                // }
+                right={
+                  isPrivateChecked && !isPublicChecked
+                    ? 'Private'
+                    : !isPrivateChecked && isPublicChecked
+                    ? 'Public'
+                    : ''
+                }
                 title="Privacy"
               >
                 <Checkbox
@@ -1396,11 +1387,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               ),
             )
 
-            // const ownerCountMetadata = getFilterCountMetadata(
-            //   ownerFilters,
-            //   owners.length,
-            //   defaultBooleanValue,
-            // )
+            const ownerCountMetadata = getFilterCountMetadata(
+              ownerFilters,
+              owners.length,
+              defaultBooleanValue,
+            )
 
             return (
               <ColumnOptionsRow
@@ -1420,11 +1411,13 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : undefined
                 }
                 title="Repositories"
-                // right={
-                //   ownerFilterHasForcedValue || repoFilterHasForcedValue
-                //     ? `${ownerCountMetadata.checked}/${ownerCountMetadata.total}`
-                //     : 'All'
-                // }
+                right={
+                  ownerFilterHasForcedValue || repoFilterHasForcedValue
+                    ? `${ownerCountMetadata.checked}/${
+                        ownerCountMetadata.total
+                      }`
+                    : ''
+                }
               >
                 {owners.map(owner => {
                   const ownerItem =
