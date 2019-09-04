@@ -25,7 +25,7 @@ export interface NotificationCardsProps
   items: ItemT[]
   lastFetchedAt: string | undefined
   ownerIsKnown: boolean
-  pointerEvents: ViewProps['pointerEvents']
+  pointerEvents?: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
   swipeable: boolean
@@ -125,7 +125,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       return (
         <EmptyCards
           clearMessage="No new notifications!"
-          column={column}
+          columnId={column.id}
           disableLoadingIndicator
           errorMessage={errorMessage}
           fetchNextPage={fetchNextPage}

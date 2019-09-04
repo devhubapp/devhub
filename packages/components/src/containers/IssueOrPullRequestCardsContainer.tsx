@@ -16,6 +16,7 @@ import {
 } from '../components/cards/IssueOrPullRequestCards'
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { ButtonLink } from '../components/common/ButtonLink'
+import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
@@ -27,14 +28,24 @@ import { sharedStyles } from '../styles/shared'
 import { contentPadding } from '../styles/variables'
 import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
-export type IssueOrPullRequestCardsContainerProps = Omit<
-  IssueOrPullRequestCardsProps,
-  'errorMessage' | 'items' | 'fetchNextPage' | 'lastFetchedAt' | 'refresh'
->
+export interface IssueOrPullRequestCardsContainerProps
+  extends Omit<
+    IssueOrPullRequestCardsProps,
+    | 'column'
+    | 'errorMessage'
+    | 'items'
+    | 'fetchNextPage'
+    | 'lastFetchedAt'
+    | 'refresh'
+  > {
+  columnId: string
+}
 
 export const IssueOrPullRequestCardsContainer = React.memo(
   (props: IssueOrPullRequestCardsContainerProps) => {
-    const { column, ...otherProps } = props
+    const { columnId, ...otherProps } = props
+
+    const { column } = useColumn(columnId)
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -43,8 +54,8 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     // TODO: Support multiple subscriptions per column.
     const mainSubscription = useReduxState(
       useCallback(
-        state => selectors.columnSubscriptionSelector(state, column.id),
-        [column.id],
+        state => selectors.columnSubscriptionSelector(state, columnId),
+        [columnId],
       ),
     ) as IssueOrPullRequestColumnSubscription | undefined
 
@@ -79,9 +90,9 @@ export const IssueOrPullRequestCardsContainer = React.memo(
 
     const { allItems, filteredItems } = useColumnData<
       EnhancedGitHubIssueOrPullRequest
-    >(column.id, { mergeSimilar: false })
+    >(columnId, { mergeSimilar: false })
 
-    const clearedAt = column.filters && column.filters.clearedAt
+    const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderIssueOrPullRequestDate(allItems)
 
     const canFetchMore =
@@ -92,21 +103,21 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
         fetchColumnSubscriptionRequest({
-          columnId: column.id,
+          columnId,
           params: {
             page: page || 1,
-            perPage: getDefaultPaginationPerPage(column.type),
+            perPage: getDefaultPaginationPerPage('issue_or_pr'),
           },
           replaceAllItems: false,
         })
       },
-      [fetchColumnSubscriptionRequest, column.id],
+      [fetchColumnSubscriptionRequest, columnId],
     )
 
     const fetchNextPage = useCallback(() => {
       const size = allItems.length
 
-      const perPage = getDefaultPaginationPerPage(column.type)
+      const perPage = getDefaultPaginationPerPage('issue_or_pr')
       const currentPage = Math.ceil(size / perPage)
 
       const nextPage = (currentPage || 0) + 1
@@ -129,7 +140,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       if (ownerResponse.loadingState === 'loading') {
         return (
           <EmptyCards
-            column={column}
+            columnId={columnId}
             fetchNextPage={undefined}
             loadState="loading"
             refresh={undefined}
@@ -219,10 +230,12 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       )
     }
 
+    if (!column) return null
+
     return (
       <IssueOrPullRequestCards
         {...otherProps}
-        key={`issue-or-pr-cards-${column.id}`}
+        key={`issue-or-pr-cards-${columnId}`}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}

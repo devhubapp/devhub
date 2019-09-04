@@ -11,20 +11,31 @@ import {
   NotificationCardsProps,
 } from '../components/cards/NotificationCards'
 import { NoTokenView } from '../components/cards/NoTokenView'
+import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 
-export type NotificationCardsContainerProps = Omit<
-  NotificationCardsProps,
-  'errorMessage' | 'fetchNextPage' | 'items' | 'lastFetchedAt' | 'refresh'
->
+export interface NotificationCardsContainerProps
+  extends Omit<
+    NotificationCardsProps,
+    | 'column'
+    | 'errorMessage'
+    | 'fetchNextPage'
+    | 'items'
+    | 'lastFetchedAt'
+    | 'refresh'
+  > {
+  columnId: string
+}
 
 export const NotificationCardsContainer = React.memo(
   (props: NotificationCardsContainerProps) => {
-    const { column, ...otherProps } = props
+    const { columnId, ...otherProps } = props
+
+    const { column } = useColumn(columnId)
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
@@ -33,8 +44,8 @@ export const NotificationCardsContainer = React.memo(
     // TODO: Support multiple subscriptions per column.
     const mainSubscription = useReduxState(
       useCallback(
-        state => selectors.columnSubscriptionSelector(state, column.id),
-        [column.id],
+        state => selectors.columnSubscriptionSelector(state, columnId),
+        [columnId],
       ),
     ) as NotificationColumnSubscription | undefined
 
@@ -46,9 +57,9 @@ export const NotificationCardsContainer = React.memo(
 
     const { allItems, filteredItems } = useColumnData<
       EnhancedGitHubNotification
-    >(column.id, { mergeSimilar: false })
+    >(columnId, { mergeSimilar: false })
 
-    const clearedAt = column.filters && column.filters.clearedAt
+    const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderNotificationDate(allItems)
 
     const canFetchMore =
@@ -59,21 +70,21 @@ export const NotificationCardsContainer = React.memo(
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
         fetchColumnSubscriptionRequest({
-          columnId: column.id,
+          columnId,
           params: {
             page: page || 1,
-            perPage: getDefaultPaginationPerPage(column.type),
+            perPage: getDefaultPaginationPerPage('notifications'),
           },
           replaceAllItems: false,
         })
       },
-      [fetchColumnSubscriptionRequest, column.id],
+      [fetchColumnSubscriptionRequest, columnId],
     )
 
     const fetchNextPage = useCallback(() => {
       const size = allItems.length
 
-      const perPage = getDefaultPaginationPerPage(column.type)
+      const perPage = getDefaultPaginationPerPage('notifications')
       const currentPage = Math.ceil(size / perPage)
 
       const nextPage = (currentPage || 0) + 1
@@ -97,10 +108,12 @@ export const NotificationCardsContainer = React.memo(
       return <NoTokenView githubAppType="oauth" />
     }
 
+    if (!column) return null
+
     return (
       <NotificationCards
         {...otherProps}
-        key={`notification-cards-${column.id}`}
+        key={`notification-cards-${columnId}`}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}

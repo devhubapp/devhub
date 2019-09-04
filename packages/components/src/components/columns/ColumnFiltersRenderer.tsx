@@ -1,9 +1,11 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
 import { constants } from '@devhub/core'
 import { useTransition } from 'react-spring/native'
-import { useColumn } from '../../hooks/use-column'
+import { useEmitter } from '../../hooks/use-emitter'
+import { useForceRerender } from '../../hooks/use-force-rerender'
+import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { columnHeaderHeight, contentPadding } from '../../styles/variables'
@@ -13,6 +15,7 @@ import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
+import { getCurrentFocusedColumnId } from '../context/ColumnFocusContext'
 import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { ColumnFilters } from './ColumnFilters'
 import { ColumnHeader } from './ColumnHeader'
@@ -20,37 +23,88 @@ import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnSeparator } from './ColumnSeparator'
 
 export interface ColumnFiltersRendererProps {
-  close: (() => void) | undefined
-  columnId: string
+  columnId: string | 'focused'
   fixedPosition?: 'left' | 'right'
-  fixedWidth?: number | undefined
   forceOpenAll?: boolean
-  inlineMode?: boolean
-  isOpen: boolean
-  shouldRenderHeader?: 'yes' | 'no' | 'spacing-only'
+  header?: 'header' | 'spacing' | 'none'
   startWithFiltersExpanded?: boolean
+  type: 'shared' | 'local'
 }
 
 export const ColumnFiltersRenderer = React.memo(
   (props: ColumnFiltersRendererProps) => {
     const {
-      close,
-      columnId,
+      columnId: _columnIdOrFocused,
       fixedPosition,
-      fixedWidth,
       forceOpenAll,
-      inlineMode,
-      isOpen,
-      shouldRenderHeader,
+      header,
       startWithFiltersExpanded,
+      type,
     } = props
 
-    const { column, columnIndex } = useColumn(columnId)
+    const columnId =
+      _columnIdOrFocused === 'focused'
+        ? getCurrentFocusedColumnId()
+        : _columnIdOrFocused
 
-    const { enableSharedFiltersView } = useColumnFilters()
+    const forceRerender = useForceRerender()
+
+    const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
+
+    const {
+      enableSharedFiltersView,
+      fixedWidth,
+      inlineMode,
+      isSharedFiltersOpened: _isSharedFiltersOpened,
+    } = useColumnFilters()
+
+    const isOpen = enableSharedFiltersView
+      ? _isSharedFiltersOpened
+      : _isLocalFiltersOpened
+    const renderFilter = !!(
+      (type === 'shared' && enableSharedFiltersView) ||
+      (type === 'local' && !enableSharedFiltersView && !inlineMode)
+    )
+
+    function focusColumn() {
+      if (_columnIdOrFocused === 'focused') return
+
+      if (!columnId) return
+
+      emitter.emit('FOCUS_ON_COLUMN', {
+        columnId,
+        highlight: false,
+        scrollTo: false,
+      })
+    }
+
+    const close = () => {
+      focusColumn()
+
+      if (!columnId) return
+      emitter.emit('TOGGLE_COLUMN_FILTERS', { columnId })
+    }
+
+    useEmitter(
+      'FOCUS_ON_COLUMN',
+      payload => {
+        if (_columnIdOrFocused === 'focused' && columnId !== payload.columnId)
+          forceRerender()
+      },
+      [_columnIdOrFocused, columnId],
+    )
+
+    useEmitter(
+      'TOGGLE_COLUMN_FILTERS',
+      payload => {
+        if (payload.columnId !== columnId) return
+        if (enableSharedFiltersView) return
+        setIsLocalFiltersOpened(v => !v)
+      },
+      [columnId, enableSharedFiltersView],
+    )
 
     const immediate = constants.DISABLE_ANIMATIONS
-
     const overlayTransition = useTransition<boolean, any>(
       isOpen ? [true] : [],
       isOpen ? ['column-options-overlay'] : [],
@@ -73,11 +127,7 @@ export const ColumnFiltersRenderer = React.memo(
 
     const absolutePositionTransitions = useTransition<boolean, any>(
       [true],
-      [
-        `column-options-renderer-${
-          enableSharedFiltersView ? 'shared' : columnId
-        }`,
-      ],
+      [`column-options-renderer-${type === 'shared' ? 'shared' : columnId}`],
       enableAbsolutePositionAnimation &&
         (!inlineMode && fixedPosition && fixedWidth)
         ? {
@@ -111,7 +161,8 @@ export const ColumnFiltersRenderer = React.memo(
       | typeof absolutePositionTransitions[0]
       | undefined
 
-    if (!column) return null
+    if (!renderFilter) return null
+    if (!columnId) return null
 
     const key =
       (absolutePositionTransition && absolutePositionTransition.key) ||
@@ -221,7 +272,7 @@ export const ColumnFiltersRenderer = React.memo(
               : 'box-none'
           }
         >
-          {shouldRenderHeader === 'yes' ? (
+          {header === 'header' ? (
             <ColumnHeader>
               <ColumnHeaderItem
                 analyticsLabel={undefined}
@@ -250,7 +301,7 @@ export const ColumnFiltersRenderer = React.memo(
                 />
               )}
             </ColumnHeader>
-          ) : shouldRenderHeader === 'spacing-only' ? (
+          ) : header === 'spacing' ? (
             <Spacer height={columnHeaderHeight} pointerEvents="none" />
           ) : null}
 
@@ -261,9 +312,8 @@ export const ColumnFiltersRenderer = React.memo(
             )}
           >
             <ColumnFilters
-              key={`column-options-${column.type}`}
-              column={column}
-              columnIndex={columnIndex}
+              key={`column-options-${columnId}`}
+              columnId={columnId}
               forceOpenAll={forceOpenAll}
               startWithFiltersExpanded={startWithFiltersExpanded}
             />

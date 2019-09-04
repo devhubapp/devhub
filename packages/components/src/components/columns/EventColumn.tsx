@@ -16,7 +16,7 @@ export interface EventColumnProps
 
 export const EventColumn = React.memo((props: EventColumnProps) => {
   const {
-    column,
+    columnId,
     columnIndex,
     headerDetails,
     pagingEnabled,
@@ -27,8 +27,8 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
   const Children = useMemo<ColumnRendererProps['children']>(
     () => (
       <EventCardsContainer
-        key={`event-cards-container-${column.id}`}
-        column={column}
+        key={`event-cards-container-${columnId}`}
+        columnId={columnId}
         columnIndex={columnIndex}
         ownerIsKnown={!!(headerDetails && headerDetails.ownerIsKnown)}
         pointerEvents={pointerEvents}
@@ -37,7 +37,7 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
       />
     ),
     [
-      column,
+      columnId,
       pointerEvents,
       swipeable,
       headerDetails && headerDetails.ownerIsKnown,
@@ -49,12 +49,13 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
 
   return (
     <ColumnRenderer
-      key={`event-column-${column.id}-inner`}
+      key={`event-column-${columnId}-inner`}
       avatarRepo={headerDetails.avatarProps && headerDetails.avatarProps.repo}
       avatarUsername={
         headerDetails.avatarProps && headerDetails.avatarProps.username
       }
-      column={column}
+      columnId={columnId}
+      columnType="activity"
       columnIndex={columnIndex}
       icon={headerDetails.icon}
       owner={headerDetails.owner}

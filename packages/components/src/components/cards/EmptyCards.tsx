@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, View } from 'react-native'
 
-import { Column, EnhancedLoadState } from '@devhub/core'
+import { EnhancedLoadState } from '@devhub/core'
 import { useColumnLoadingState } from '../../hooks/use-column-loading-state'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
@@ -54,7 +54,7 @@ export const defaultCardFooterHeight =
 export interface EmptyCardsProps {
   clearEmoji?: GitHubEmoji | null
   clearMessage?: string
-  column: Column
+  columnId: string
   disableLoadingIndicator?: boolean
   emoji?: GitHubEmoji | null
   errorButtonView?: GenericMessageWithButtonViewProps['buttonView']
@@ -69,7 +69,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   const {
     clearEmoji = randomEmoji,
     clearMessage = randomClearMessage,
-    column,
+    columnId,
     disableLoadingIndicator,
     emoji = 'warning',
     errorButtonView,
@@ -80,7 +80,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     refresh,
   } = props
 
-  const _loadState = useColumnLoadingState(column.id)
+  const _loadState = useColumnLoadingState(columnId)
   const loadState = _loadStateProp || _loadState
 
   const clearEmojiURL = clearEmoji ? getEmojiImageURL(clearEmoji) : undefined

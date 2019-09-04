@@ -3,7 +3,6 @@ import React, { Fragment, useMemo, useRef, useState } from 'react'
 import { View } from 'react-native'
 
 import {
-  Column,
   columnHasAnyFilter,
   eventActions,
   eventSubjectTypes,
@@ -31,6 +30,7 @@ import {
   notificationSubjectTypes,
   ThemeColors,
 } from '@devhub/core'
+import { useColumn } from '../../hooks/use-column'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { Platform } from '../../libs/platform'
@@ -87,8 +87,7 @@ const notificationReasonOptions = notificationReasons
   .sort(metadataSortFn)
 
 export interface ColumnFiltersProps {
-  column: Column
-  columnIndex: number
+  columnId: string
   forceOpenAll?: boolean
   startWithFiltersExpanded?: boolean
 }
@@ -112,10 +111,12 @@ const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
 }
 
 export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
-  const { column, forceOpenAll, startWithFiltersExpanded } = props
+  const { columnId, forceOpenAll, startWithFiltersExpanded } = props
+
+  const { column } = useColumn(columnId)
 
   const { allItems, filteredItems } = useColumnData(
-    column.id,
+    columnId,
     getFilteredItemsOptions,
   )
 
@@ -125,12 +126,13 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
     ownerFilters,
     ownerFiltersWithRepos,
     repoFilters,
-  } = useMemo(() => getOwnerAndRepoFormattedFilter(column.filters), [
-    column.filters,
+  } = useMemo(() => getOwnerAndRepoFormattedFilter(column && column.filters), [
+    column && column.filters,
   ])
 
   const ownerOrRepoFilteredItemsMetadata = useMemo(
     () =>
+      column &&
       getItemsFilterMetadata(
         column.type,
         getFilteredItems(
@@ -147,39 +149,55 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
           forceIncludeTheseRepos: allForcedRepos,
         },
       ),
-    [column.type, allItems, column.filters, allForcedOwners, allForcedRepos],
+    [
+      column && column.type,
+      allItems,
+      column && column.filters,
+      allForcedOwners,
+      allForcedRepos,
+    ],
   )
 
-  const _owners = Object.keys(ownerOrRepoFilteredItemsMetadata.owners || {})
-  const _shouldShowOwnerOrRepoFilters =
+  const _owners = Object.keys(
+    (ownerOrRepoFilteredItemsMetadata &&
+      ownerOrRepoFilteredItemsMetadata.owners) ||
+      {},
+  )
+  const _shouldShowOwnerOrRepoFilters = !!(
     _owners.length >= 1 ||
     (_owners.length === 1 &&
+      ownerOrRepoFilteredItemsMetadata &&
       ownerOrRepoFilteredItemsMetadata.owners[_owners[0]].repos &&
       Object.keys(ownerOrRepoFilteredItemsMetadata.owners[_owners[0]].repos)
         .length >= 1)
+  )
 
   const involvingUsers = useMemo(
     () =>
       _.sortBy(
         Object.keys(
-          (column.filters &&
+          (column &&
+            column.filters &&
             (column.filters as IssueOrPullRequestColumnFilters).involves) ||
             {},
         ),
       ),
     [
-      column.filters &&
+      column &&
+        column.filters &&
         (column.filters as IssueOrPullRequestColumnFilters).involves,
     ],
   )
 
-  const _shouldShowInvolvesFilter =
+  const _shouldShowInvolvesFilter = !!(
+    column &&
     column.type === 'issue_or_pr' &&
     !!involvingUsers &&
     involvingUsers.length >= 1
+  )
 
   const _allColumnOptionCategories: Array<ColumnFilterCategory | false> = [
-    column.type === 'notifications' && 'inbox',
+    !!column && column.type === 'notifications' && 'inbox',
     'saved_for_later',
     'unread',
     'state',
@@ -187,9 +205,9 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
     'bot',
     _shouldShowInvolvesFilter && 'involves',
     'subject_types',
-    column.type === 'activity' && 'event_action',
-    column.type === 'notifications' && 'notification_reason',
-    column.type === 'notifications' && 'privacy',
+    !!column && column.type === 'activity' && 'event_action',
+    !!column && column.type === 'notifications' && 'notification_reason',
+    !!column && column.type === 'notifications' && 'privacy',
     _shouldShowOwnerOrRepoFilters && 'repos',
   ]
 
@@ -236,6 +254,8 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
     actions.setColummSubjectTypeFilter,
   )
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
+
+  if (!column) return null
 
   const toggleOpenedOptionCategory = (optionCategory: ColumnFilterCategory) => {
     setOpenedOptionCategories(set => {
@@ -1369,7 +1389,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
             )
 
             const owners = _.sortBy(
-              Object.keys(ownerOrRepoFilteredItemsMetadata.owners),
+              Object.keys(
+                (ownerOrRepoFilteredItemsMetadata &&
+                  ownerOrRepoFilteredItemsMetadata.owners) ||
+                  {},
+              ),
             )
 
             // const ownerCountMetadata = getFilterCountMetadata(
@@ -1404,6 +1428,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               >
                 {owners.map(owner => {
                   const ownerItem =
+                    ownerOrRepoFilteredItemsMetadata &&
                     ownerOrRepoFilteredItemsMetadata.owners[owner]
                   if (!ownerItem) return null
 

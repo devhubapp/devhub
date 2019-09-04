@@ -37,7 +37,7 @@ export interface IssueOrPullRequestCardsProps
   items: ItemT[]
   lastFetchedAt: string | undefined
   ownerIsKnown: boolean
-  pointerEvents: ViewProps['pointerEvents']
+  pointerEvents?: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
   swipeable: boolean
@@ -91,11 +91,11 @@ export const IssueOrPullRequestCards = React.memo(
       items,
       fetchNextPage,
       columnIndex,
-      column,
+      column: column!,
     })
 
     useCardsKeyboard(listRef, {
-      columnId: column.id,
+      columnId: (column && column.id)!,
       items,
       type: 'issue_or_pr',
       visibleItemIndexesRef,
@@ -155,7 +155,7 @@ export const IssueOrPullRequestCards = React.memo(
         if (maybeInvalidFilters) {
           return (
             <EmptyCards
-              column={column}
+              columnId={column.id}
               disableLoadingIndicator
               emoji={emptyFilters ? 'desert' : 'squirrel'}
               errorButtonView={
@@ -193,7 +193,7 @@ export const IssueOrPullRequestCards = React.memo(
 
         return (
           <EmptyCards
-            column={column}
+            columnId={column.id}
             disableLoadingIndicator
             errorMessage={errorMessage}
             fetchNextPage={fetchNextPage}

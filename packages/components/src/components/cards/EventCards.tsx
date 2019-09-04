@@ -22,7 +22,7 @@ export interface EventCardsProps
   items: ItemT[]
   lastFetchedAt: string | undefined
   ownerIsKnown: boolean
-  pointerEvents: ViewProps['pointerEvents']
+  pointerEvents?: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   repoIsKnown: boolean
   swipeable: boolean
@@ -122,7 +122,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       return (
         <EmptyCards
           clearMessage="No new events!"
-          column={column}
+          columnId={column.id}
           disableLoadingIndicator
           errorMessage={errorMessage}
           fetchNextPage={fetchNextPage}

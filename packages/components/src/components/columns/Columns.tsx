@@ -17,8 +17,7 @@ import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { NoColumns } from './NoColumns'
 
-export interface ColumnsProps
-  extends Pick<OneListProps<string>, 'pointerEvents'> {
+export interface ColumnsProps {
   contentContainerStyle?: StyleProp<ViewStyle>
 }
 
@@ -27,13 +26,11 @@ function keyExtractor(columnId: string) {
 }
 
 export const Columns = React.memo((props: ColumnsProps) => {
-  const { pointerEvents } = props
-
   const listRef = useRef<typeof OneList>(null)
   const appSafeAreaInsets = useSafeArea()
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const columnWidth = useColumnWidth()
-  const { appOrientation, sizename } = useAppLayout()
+  const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
   const { focusedColumnId } = useFocusedColumn()
 
@@ -69,12 +66,11 @@ export const Columns = React.memo((props: ColumnsProps) => {
         <ColumnContainer
           columnId={columnId}
           pagingEnabled={pagingEnabled}
-          pointerEvents={pointerEvents}
           swipeable={swipeable}
         />
       )
     },
-    [pagingEnabled, pointerEvents, swipeable],
+    [pagingEnabled, swipeable],
   )
 
   const getItemSize = useCallback<
@@ -127,7 +123,6 @@ export const Columns = React.memo((props: ColumnsProps) => {
       onVisibleItemsChanged={debouncedOnVisibleItemsChanged}
       overscanCount={1}
       pagingEnabled={pagingEnabled}
-      pointerEvents={pointerEvents}
       renderItem={renderItem}
       safeAreaInsets={safeAreaInsets}
     />

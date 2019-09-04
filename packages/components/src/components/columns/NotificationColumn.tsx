@@ -20,7 +20,7 @@ export interface NotificationColumnProps
 export const NotificationColumn = React.memo(
   (props: NotificationColumnProps) => {
     const {
-      column,
+      columnId,
       columnIndex,
       headerDetails,
       pagingEnabled,
@@ -31,8 +31,8 @@ export const NotificationColumn = React.memo(
     const Children = useMemo<ColumnRendererProps['children']>(
       () => (
         <NotificationCardsContainer
-          key={`notification-cards-container-${column.id}`}
-          column={column}
+          key={`notification-cards-container-${columnId}`}
+          columnId={columnId}
           columnIndex={columnIndex}
           ownerIsKnown={!!(headerDetails && headerDetails.ownerIsKnown)}
           pointerEvents={pointerEvents}
@@ -41,7 +41,7 @@ export const NotificationColumn = React.memo(
         />
       ),
       [
-        column,
+        columnId,
         columnIndex,
         pointerEvents,
         swipeable,
@@ -54,13 +54,14 @@ export const NotificationColumn = React.memo(
 
     return (
       <ColumnRenderer
-        key={`notification-column-${column.id}-inner`}
+        key={`notification-column-${columnId}-inner`}
         avatarRepo={headerDetails.avatarProps && headerDetails.avatarProps.repo}
         avatarUsername={
           headerDetails.avatarProps && headerDetails.avatarProps.username
         }
-        column={column}
+        columnId={columnId}
         columnIndex={columnIndex}
+        columnType="notifications"
         icon={headerDetails.icon}
         owner={headerDetails.owner}
         pagingEnabled={pagingEnabled}

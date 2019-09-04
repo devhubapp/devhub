@@ -1,5 +1,4 @@
 import React from 'react'
-import { ViewProps } from 'react-native'
 
 import { EventColumn } from '../components/columns/EventColumn'
 import { IssueOrPullRequestColumn } from '../components/columns/IssueOrPullRequestColumn'
@@ -11,11 +10,10 @@ export interface ColumnContainerProps {
   columnId: string
   pagingEnabled?: boolean
   swipeable: boolean
-  pointerEvents: ViewProps['pointerEvents']
 }
 
 export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
-  const { columnId, pagingEnabled, pointerEvents, swipeable } = props
+  const { columnId, pagingEnabled, swipeable } = props
 
   const { column, columnIndex, headerDetails } = useColumn(columnId)
 
@@ -26,11 +24,10 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
       return (
         <EventColumn
           key={`event-column-${column.id}`}
-          column={column}
+          columnId={column.id}
           columnIndex={columnIndex}
           headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
-          pointerEvents={pointerEvents}
           swipeable={swipeable}
         />
       )
@@ -40,11 +37,10 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
       return (
         <IssueOrPullRequestColumn
           key={`issue-or-pr-column-${column.id}`}
-          column={column}
+          columnId={column.id}
           columnIndex={columnIndex}
           headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
-          pointerEvents={pointerEvents}
           swipeable={swipeable}
         />
       )
@@ -54,11 +50,10 @@ export const ColumnContainer = React.memo((props: ColumnContainerProps) => {
       return (
         <NotificationColumn
           key={`notification-column-${column.id}`}
-          column={column}
+          columnId={column.id}
           columnIndex={columnIndex}
           headerDetails={headerDetails}
           pagingEnabled={pagingEnabled}
-          pointerEvents={pointerEvents}
           swipeable={swipeable}
         />
       )

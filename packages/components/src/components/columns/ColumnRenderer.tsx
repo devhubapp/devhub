@@ -1,8 +1,8 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import {
-  Column as ColumnType,
+  Column as ColumnT,
   columnHasAnyFilter,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
@@ -15,18 +15,17 @@ import {
   isNotificationPrivate,
   ThemeColors,
 } from '@devhub/core'
+import { useDispatch, useStore } from 'react-redux'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumnData } from '../../hooks/use-column-data'
-import { useEmitter } from '../../hooks/use-emitter'
-import { useReduxAction } from '../../hooks/use-redux-action'
 import { AutoSizer } from '../../libs/auto-sizer'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
 import { Spacer } from '../common/Spacer'
-import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { Column } from './Column'
 import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
@@ -81,8 +80,9 @@ export interface ColumnRendererProps {
   avatarRepo?: string
   avatarUsername?: string
   children: React.ReactNode
-  column: ColumnType
+  columnId: string
   columnIndex: number
+  columnType: ColumnT['type']
   icon: GitHubIcon
   owner: string | undefined
   pagingEnabled?: boolean
@@ -97,8 +97,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     avatarRepo,
     avatarUsername,
     children,
-    column,
+    columnId,
     columnIndex,
+    columnType,
     icon,
     owner,
     pagingEnabled,
@@ -109,35 +110,11 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   } = props
 
   const columnOptionsRef = useRef<ColumnOptionsAccordion>(null)
-
-  const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
-
-  const {
-    enableSharedFiltersView,
-    fixedWidth,
-    inlineMode,
-    isSharedFiltersOpened: _isSharedFiltersOpened,
-  } = useColumnFilters()
-
-  const isFiltersOpened = enableSharedFiltersView
-    ? _isSharedFiltersOpened
-    : _isLocalFiltersOpened
-
   const { appOrientation } = useAppLayout()
-
   const { appViewMode } = useAppViewMode()
-
-  useEmitter(
-    'TOGGLE_COLUMN_FILTERS',
-    payload => {
-      if (payload.columnId !== column.id) return
-      if (enableSharedFiltersView) return
-      setIsLocalFiltersOpened(v => !v)
-    },
-    [column.id, enableSharedFiltersView],
-  )
-
-  const { filteredItems } = useColumnData(column.id, { mergeSimilar: false })
+  const { filteredItems } = useColumnData(columnId, { mergeSimilar: false })
+  const dispatch = useDispatch()
+  const store = useStore()
 
   const clearableItems = (filteredItems as any[]).filter(
     (
@@ -154,56 +131,33 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
   const isFreeTrial =
     !hasValidPaidPlan &&
-    (column.type === 'activity'
+    (columnType === 'activity'
       ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
           isEventPrivate(item),
         )
-      : column.type === 'notifications'
+      : columnType === 'notifications'
       ? (filteredItems as any[]).some(
           (item: EnhancedGitHubNotification) =>
             isNotificationPrivate(item) && !!item.enhanced,
         )
       : false) // TODO: Handle for IssueOrPullRequest Column
 
-  const setColumnClearedAtFilter = useReduxAction(
-    actions.setColumnClearedAtFilter,
-  )
-
-  const markItemsAsReadOrUnread = useReduxAction(
-    actions.markItemsAsReadOrUnread,
-  )
-
-  const markAllNotificationsAsReadOrUnread = useReduxAction(
-    actions.markAllNotificationsAsReadOrUnread,
-  )
-
-  const markRepoNotificationsAsReadOrUnread = useReduxAction(
-    actions.markRepoNotificationsAsReadOrUnread,
-  )
-
-  const fetchColumnSubscriptionRequest = useReduxAction(
-    actions.fetchColumnSubscriptionRequest,
-  )
-
   const refresh = useCallback(() => {
-    fetchColumnSubscriptionRequest({
-      columnId: column.id,
-      params: { page: 1, perPage: getDefaultPaginationPerPage(column.type) },
-      replaceAllItems: false,
-    })
-  }, [fetchColumnSubscriptionRequest, column.id])
+    dispatch(
+      actions.fetchColumnSubscriptionRequest({
+        columnId,
+        params: { page: 1, perPage: getDefaultPaginationPerPage(columnType) },
+        replaceAllItems: false,
+      }),
+    )
+  }, [columnId])
 
   function focusColumn() {
     emitter.emit('FOCUS_ON_COLUMN', {
-      columnId: column.id,
+      columnId,
       highlight: false,
       scrollTo: false,
     })
-  }
-
-  const toggleFilters = () => {
-    focusColumn()
-    emitter.emit('TOGGLE_COLUMN_FILTERS', { columnId: column.id })
   }
 
   const toggleOptions = () => {
@@ -230,14 +184,14 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
   return (
     <Column
-      key={`column-renderer-${column.id}-inner-container`}
+      key={`column-renderer-${columnId}-inner-container`}
       backgroundColor={getColumnCardThemeColors({ isDark: false }).column}
-      columnId={column.id}
+      columnId={columnId}
       pagingEnabled={pagingEnabled}
       renderLeftSeparator={renderLeftSeparator}
       renderRightSeparator={renderRightSeparator}
     >
-      <ColumnHeader key={`column-renderer-${column.id}-header`}>
+      <ColumnHeader key={`column-renderer-${columnId}-header`}>
         <ColumnHeaderItem
           analyticsLabel={undefined}
           avatarProps={
@@ -263,12 +217,14 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
           fixedIconSize
           iconName="check"
           onPress={() => {
-            setColumnClearedAtFilter({
-              columnId: column.id,
-              clearedAt: clearableItems.length
-                ? new Date().toISOString()
-                : null,
-            })
+            dispatch(
+              actions.setColumnClearedAtFilter({
+                columnId,
+                clearedAt: clearableItems.length
+                  ? new Date().toISOString()
+                  : null,
+              }),
+            )
 
             focusColumn()
 
@@ -294,37 +250,43 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               (item: EnhancedItem) => item && item.id,
             )
 
-            const hasAnyFilter = columnHasAnyFilter(column.type, {
-              ...column.filters,
+            const column = selectors.columnSelector(store.getState(), columnId)
+
+            const hasAnyFilter = columnHasAnyFilter(columnType, {
+              ...(column && column.filters),
               clearedAt: undefined,
             })
 
             // column doesnt have any filter,
             // so lets mark ALL notifications on github as read at once,
             // instead of marking only the visible items one by one
-            if (column.type === 'notifications' && !hasAnyFilter && !unread) {
+            if (columnType === 'notifications' && !hasAnyFilter && !unread) {
               if (repoIsKnown) {
                 if (owner && repo) {
-                  markRepoNotificationsAsReadOrUnread({
-                    owner,
-                    repo,
-                    unread,
-                  })
+                  dispatch(
+                    actions.markRepoNotificationsAsReadOrUnread({
+                      owner,
+                      repo,
+                      unread,
+                    }),
+                  )
 
                   return
                 }
               } else {
-                markAllNotificationsAsReadOrUnread({ unread })
+                dispatch(actions.markAllNotificationsAsReadOrUnread({ unread }))
                 return
               }
             }
 
             // mark only the visible items as read/unread one by one
-            markItemsAsReadOrUnread({
-              type: column.type,
-              itemIds: visibleItemIds,
-              unread,
-            })
+            dispatch(
+              actions.markItemsAsReadOrUnread({
+                type: columnType,
+                itemIds: visibleItemIds,
+                unread,
+              }),
+            )
 
             focusColumn()
           }}
@@ -369,7 +331,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             <View style={StyleSheet.absoluteFill}>
               <ColumnOptionsAccordion
                 ref={columnOptionsRef}
-                columnId={column.id}
+                columnId={columnId}
               />
 
               <View style={{ width, height }}>{children}</View>
@@ -378,18 +340,14 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         </AutoSizer>
       </View>
 
-      {!inlineMode && !enableSharedFiltersView && (
-        <ColumnFiltersRenderer
-          key="column-options-renderer"
-          close={toggleFilters}
-          columnId={column.id}
-          fixedPosition="right"
-          fixedWidth={fixedWidth}
-          forceOpenAll
-          isOpen={isFiltersOpened}
-          shouldRenderHeader="yes"
-        />
-      )}
+      <ColumnFiltersRenderer
+        key="column-options-renderer"
+        columnId={columnId}
+        fixedPosition="right"
+        forceOpenAll
+        header="header"
+        type="local"
+      />
 
       {!!isFreeTrial && <FreeTrialHeaderMessage />}
     </Column>

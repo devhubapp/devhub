@@ -12,6 +12,7 @@ export interface IssueOrPullRequestColumnProps
     IssueOrPullRequestCardsContainerProps,
     'ownerIsKnown' | 'repoIsKnown'
   > {
+  columnId: string
   columnIndex: number
   headerDetails: ReturnType<typeof getColumnHeaderDetails>
   pagingEnabled?: boolean
@@ -20,7 +21,7 @@ export interface IssueOrPullRequestColumnProps
 export const IssueOrPullRequestColumn = React.memo(
   (props: IssueOrPullRequestColumnProps) => {
     const {
-      column,
+      columnId,
       columnIndex,
       headerDetails,
       pagingEnabled,
@@ -31,8 +32,8 @@ export const IssueOrPullRequestColumn = React.memo(
     const Children = useMemo<ColumnRendererProps['children']>(
       () => (
         <IssueOrPullRequestCardsContainer
-          key={`issue-or-pr-cards-container-${column.id}`}
-          column={column}
+          key={`issue-or-pr-cards-container-${columnId}`}
+          columnId={columnId}
           columnIndex={columnIndex}
           ownerIsKnown={!!(headerDetails && headerDetails.ownerIsKnown)}
           pointerEvents={pointerEvents}
@@ -41,7 +42,7 @@ export const IssueOrPullRequestColumn = React.memo(
         />
       ),
       [
-        column,
+        columnId,
         pointerEvents,
         swipeable,
         headerDetails && headerDetails.ownerIsKnown,
@@ -53,13 +54,14 @@ export const IssueOrPullRequestColumn = React.memo(
 
     return (
       <ColumnRenderer
-        key={`issue-or-pr-column-${column.id}-inner`}
+        key={`issue-or-pr-column-${columnId}-inner`}
         avatarRepo={headerDetails.avatarProps && headerDetails.avatarProps.repo}
         avatarUsername={
           headerDetails.avatarProps && headerDetails.avatarProps.username
         }
-        column={column}
+        columnId={columnId}
         columnIndex={columnIndex}
+        columnType="issue_or_pr"
         icon={headerDetails.icon}
         owner={headerDetails.owner}
         pagingEnabled={pagingEnabled}

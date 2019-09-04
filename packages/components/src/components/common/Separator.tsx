@@ -117,6 +117,7 @@ export const Separator = React.memo((props: SeparatorProps) => {
         absoluteStyle,
         !!zIndex && { zIndex },
       ]}
+      pointerEvents="none"
     >
       {!!backgroundThemeColor1 && (
         <ThemedView

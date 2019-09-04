@@ -13,6 +13,7 @@ import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { ButtonLink } from '../components/common/ButtonLink'
+import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxAction } from '../hooks/use-redux-action'
@@ -24,24 +25,33 @@ import { sharedStyles } from '../styles/shared'
 import { contentPadding } from '../styles/variables'
 import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
-export type EventCardsContainerProps = Omit<
-  EventCardsProps,
-  'errorMessage' | 'fetchNextPage' | 'items' | 'lastFetchedAt' | 'refresh'
->
+export interface EventCardsContainerProps
+  extends Omit<
+    EventCardsProps,
+    | 'column'
+    | 'errorMessage'
+    | 'fetchNextPage'
+    | 'items'
+    | 'lastFetchedAt'
+    | 'refresh'
+  > {
+  columnId: string
+}
 
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
-    const { column, ...otherProps } = props
+    const { columnId, ...otherProps } = props
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
+    const { column } = useColumn(columnId)
 
     // TODO: Support multiple subscriptions per column.
     const mainSubscription = useReduxState(
       useCallback(
-        state => selectors.columnSubscriptionSelector(state, column.id),
-        [column.id],
+        state => selectors.columnSubscriptionSelector(state, columnId),
+        [columnId],
       ),
     ) as ActivityColumnSubscription | undefined
 
@@ -84,14 +94,14 @@ export const EventCardsContainer = React.memo(
 
     useEffect(() => {
       subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-    }, [column.subscriptionIds.join(',')])
+    }, [column && column.subscriptionIds.join(',')])
 
     const { allItems, filteredItems } = useColumnData<EnhancedGitHubEvent>(
-      column.id,
+      columnId,
       { mergeSimilar: false },
     )
 
-    const clearedAt = column.filters && column.filters.clearedAt
+    const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderEventDate(allItems)
 
     const canFetchMore =
@@ -102,21 +112,21 @@ export const EventCardsContainer = React.memo(
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
         fetchColumnSubscriptionRequest({
-          columnId: column.id,
+          columnId,
           params: {
             page: page || 1,
-            perPage: getDefaultPaginationPerPage(column.type),
+            perPage: getDefaultPaginationPerPage('activity'),
           },
           replaceAllItems: false,
         })
       },
-      [fetchColumnSubscriptionRequest, column.id],
+      [fetchColumnSubscriptionRequest, columnId],
     )
 
     const fetchNextPage = useCallback(() => {
       const size = allItems.length
 
-      const perPage = getDefaultPaginationPerPage(column.type)
+      const perPage = getDefaultPaginationPerPage('activity')
       const currentPage = Math.ceil(size / perPage)
 
       const nextPage = (currentPage || 0) + 1
@@ -152,7 +162,7 @@ export const EventCardsContainer = React.memo(
       if (ownerResponse.loadingState === 'loading') {
         return (
           <EmptyCards
-            column={column}
+            columnId={columnId}
             fetchNextPage={undefined}
             loadState="loading"
             refresh={undefined}
@@ -242,10 +252,12 @@ export const EventCardsContainer = React.memo(
       )
     }
 
+    if (!column) return null
+
     return (
       <EventCards
         {...otherProps}
-        key={`event-cards-${column.id}`}
+        key={`event-cards-${columnId}`}
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}

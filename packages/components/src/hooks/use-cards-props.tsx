@@ -54,7 +54,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   repoIsKnown,
   type,
 }: {
-  column: Column
+  column: Column | undefined
   columnIndex: number
   fetchNextPage: CardsFooterProps['fetchNextPage']
   items: ItemT[] | undefined
@@ -159,20 +159,24 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       sticky: true,
       Component: () => (
         <View>
-          <CardsSearchHeader
-            key={`cards-search-header-column-${column.id}`}
-            columnId={column.id}
-          />
+          {!!column && (
+            <>
+              <CardsSearchHeader
+                key={`cards-search-header-column-${column.id}`}
+                columnId={column.id}
+              />
 
-          <ColumnLoadingIndicator columnId={column.id} />
+              <ColumnLoadingIndicator columnId={column.id} />
+            </>
+          )}
         </View>
       ),
     }
-  }, [column.id])
+  }, [column && column.id])
 
   const cardsFooterProps: CardsFooterProps = {
-    clearedAt: column.filters && column.filters.clearedAt,
-    columnId: column.id,
+    clearedAt: column && column.filters && column.filters.clearedAt,
+    columnId: (column && column.id)!,
     fetchNextPage,
     isEmpty: !(items && items.length > 0),
     refresh,
@@ -232,10 +236,12 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const OverrideRenderComponent = useMemo<
     React.ComponentType | undefined
   >(() => {
+    if (!column) return undefined
+
     if (isOverColumnLimit) {
       return () => (
         <EmptyCards
-          column={column}
+          columnId={column.id}
           errorMessage={`You have reached the limit of ${
             constants.COLUMNS_LIMIT
           } columns. This is to maintain a healthy usage of the GitHub API.`}
