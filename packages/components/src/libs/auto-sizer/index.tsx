@@ -1,3 +1,4 @@
+import throttle from 'lodash/throttle'
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { Platform, StyleSheet, View, ViewProps } from 'react-native'
 
@@ -43,7 +44,7 @@ export function AutoSizer(props: AutoSizerProps) {
   })
 
   const onResize = useCallback(
-    ({ width, height }: { width: number; height: number }) => {
+    throttle(({ width, height }: { width: number; height: number }) => {
       widthRef.current = disableWidth ? 0 : width || 0
       heightRef.current = disableHeight ? 0 : height || 0
 
@@ -56,7 +57,7 @@ export function AutoSizer(props: AutoSizerProps) {
 
       setResult(newResult)
       if (_onResize) _onResize(newResult)
-    },
+    }, 50),
     [disableWidth, disableHeight, _onResize, result.width, result.height],
   )
 

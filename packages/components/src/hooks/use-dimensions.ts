@@ -1,3 +1,4 @@
+import throttle from 'lodash/throttle'
 import { useEffect, useRef } from 'react'
 import { Dimensions, ScaledSize } from 'react-native'
 
@@ -18,7 +19,7 @@ export function useDimensions(only?: 'width' | 'height') {
     )
   }
 
-  function setDimensions(width: number, height: number) {
+  function _setDimensions(width: number, height: number) {
     if (!hasChanged(width, height)) return
 
     dimensionsRef.current.width = width
@@ -28,6 +29,7 @@ export function useDimensions(only?: 'width' | 'height') {
 
     forceRerender()
   }
+  const setDimensions = throttle(_setDimensions, 50)
 
   useEffect(() => {
     const handler = ({ window }: { window: ScaledSize }) => {
