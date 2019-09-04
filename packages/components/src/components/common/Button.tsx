@@ -1,274 +1,217 @@
-import { getLuminance, rgba } from 'polished'
-import React, { useCallback, useLayoutEffect, useRef } from 'react'
-import { ViewProps } from 'react-native'
-import { AnimatedProps, useSpring } from 'react-spring/native'
+import React, { useCallback, useRef } from 'react'
+import { StyleSheet, View, ViewProps } from 'react-native'
 
-import { constants, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
-import { contentPadding } from '../../styles/variables'
-import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
-import {
-  SpringAnimatedActivityIndicator,
-  SpringAnimatedActivityIndicatorProps,
-} from '../animated/spring/SpringAnimatedActivityIndicator'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import {
-  SpringAnimatedTouchableOpacity,
-  SpringAnimatedTouchableOpacityProps,
-} from '../animated/spring/SpringAnimatedTouchableOpacity'
-import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
-import { useTheme } from '../context/ThemeContext'
+import { sharedStyles } from '../../styles/shared'
+import { getTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
+import {
+  ThemedActivityIndicator,
+  ThemedActivityIndicatorProps,
+} from '../themed/ThemedActivityIndicator'
+import { ThemedText } from '../themed/ThemedText'
+import {
+  ThemedTouchableHighlight,
+  ThemedTouchableHighlightProps,
+} from '../themed/ThemedTouchableHighlight'
+import { ThemedView } from '../themed/ThemedView'
+
+export interface ButtonProps extends ThemedTouchableHighlightProps {
+  children: React.ReactNode
+  contentContainerStyle?: ViewProps['style']
+  loading?: boolean
+  loadingIndicatorStyle?: ThemedActivityIndicatorProps['style']
+  round?: boolean
+  size?: number
+  type?: 'primary' | 'neutral' | 'danger'
+}
 
 export const defaultButtonSize = 40
 
-export interface ButtonProps extends SpringAnimatedTouchableOpacityProps {
-  backgroundThemeColor?: keyof ThemeColors
-  children:
-    | string
-    | React.ReactNode
-    | ((params: {
-        springAnimatedStyles: AnimatedProps<{
-          touchableBackgroundColor: string
-          touchableBorderColor: string
-          innerContainerBackgroundColor: string
-          textColor: string
-        }>
-      }) => React.ReactNode)
-  contentContainerStyle?: ViewProps['style']
-  disabled?: boolean
-  fontSize?: number
-  foregroundThemeColor?: keyof ThemeColors
-  hoverBackgroundThemeColor?: keyof ThemeColors
-  hoverForegroundThemeColor?: keyof ThemeColors
-  loading?: boolean
-  loadingIndicatorStyle?: SpringAnimatedActivityIndicatorProps['style']
-  onPress: SpringAnimatedTouchableOpacityProps['onPress']
-  round?: boolean
-  showBorder?: boolean
-  size?: number | null
-  transparent?: boolean
-}
-
-export const Button = React.memo((props: ButtonProps) => {
+export function Button(props: ButtonProps) {
   const {
-    backgroundThemeColor,
     children,
     contentContainerStyle,
-    disabled,
-    fontSize,
-    foregroundThemeColor,
-    hoverBackgroundThemeColor,
-    hoverForegroundThemeColor,
     loading,
     loadingIndicatorStyle,
     round = true,
-    showBorder,
-    size: _size,
+    size = defaultButtonSize,
     style,
-    transparent,
+    type = 'neutral',
     ...otherProps
   } = props
 
-  const size =
-    typeof _size === 'number' || _size === null
-      ? _size || undefined
-      : defaultButtonSize
+  const containerViewRef = useRef<View>(null)
+  const innerTouchableRef = useRef<ThemedTouchableHighlight>(null)
+  const textRef = useRef<ThemedText>(null)
 
-  const cacheRef = useRef({
-    isHovered: false,
-    isPressing: false,
-  })
+  const {
+    backgroundThemeColor,
+    foregroundThemeColor,
+    backgroundHoverThemeColor,
+    foregroundHoverThemeColor,
+  } = getButtonColors(type)
 
-  const theme = useTheme()
+  useHover(
+    containerViewRef,
+    useCallback(
+      isHovered => {
+        if (!innerTouchableRef.current) return
 
-  const getStyles = useCallback(
-    ({ forceImmediate }: { forceImmediate: boolean }) => {
-      const { isHovered: _isHovered, isPressing } = cacheRef.current
+        const theme = getTheme()
+        innerTouchableRef.current.setNativeProps({
+          style: {
+            backgroundColor: isHovered
+              ? backgroundHoverThemeColor
+                ? getThemeColorOrItself(theme, backgroundHoverThemeColor, {
+                    enableCSSVariable: true,
+                  })
+                : theme.isDark
+                ? theme.backgroundColorTransparent10
+                : theme.foregroundColorTransparent10
+              : 'transparent',
+          },
+        })
 
-      const isHovered = _isHovered && !disabled
-
-      const immediate =
-        forceImmediate || constants.DISABLE_ANIMATIONS || Platform.supportsTouch
-
-      const backgroundColor = getThemeColorOrItself(
-        theme,
-        backgroundThemeColor || 'backgroundColorLess1',
-      )!
-      const hoverBackgroundColor = getThemeColorOrItself(
-        theme,
-        hoverBackgroundThemeColor ||
-          (transparent && backgroundThemeColor) ||
-          (!backgroundThemeColor && 'backgroundColorLess2') ||
-          undefined,
-      )
-      const foregroundColor =
-        (!transparent &&
-          `${backgroundColor}`.toLowerCase() ===
-            `${theme.primaryBackgroundColor}`.toLowerCase() &&
-          theme.primaryForegroundColor) ||
-        (foregroundThemeColor &&
-          getThemeColorOrItself(theme, foregroundThemeColor)) ||
-        (transparent
-          ? Math.abs(
-              getLuminance(backgroundColor) -
-                getLuminance(theme.foregroundColor),
-            ) <= 0.5
-            ? backgroundColor
-            : isHovered || isPressing
-            ? theme.foregroundColor
-            : theme.foregroundColorMuted65
-          : theme.foregroundColor)
-
-      const hoverForegroundColor =
-        (`${hoverBackgroundColor ||
-          (transparent && backgroundColor) ||
-          ''}`.toLowerCase() ===
-          `${theme.primaryBackgroundColor}`.toLowerCase() &&
-          theme.primaryForegroundColor) ||
-        (hoverForegroundThemeColor &&
-          getThemeColorOrItself(theme, hoverForegroundThemeColor)) ||
-        foregroundColor
-
-      const textColor =
-        isHovered || isPressing ? hoverForegroundColor : foregroundColor
-
-      return {
-        config: getDefaultReactSpringAnimationConfig(),
-        immediate,
-        touchableBackgroundColor: transparent
-          ? isHovered || isPressing
-            ? backgroundColor
-            : rgba(backgroundColor, 0)
-          : backgroundColor,
-        touchableBorderColor:
-          isHovered || isPressing
-            ? hoverBackgroundColor || backgroundColor
-            : backgroundColor,
-        innerContainerBackgroundColor:
-          isHovered || isPressing
-            ? hoverBackgroundColor ||
-              (transparent ? rgba(backgroundColor, 0) : rgba(textColor, 0.1))
-            : rgba(
-                transparent
-                  ? hoverBackgroundColor || backgroundColor
-                  : backgroundColor,
-                0,
-              ),
-        textColor,
-      }
-    },
-    [
-      backgroundThemeColor,
-      disabled,
-      foregroundThemeColor,
-      hoverBackgroundThemeColor,
-      hoverForegroundThemeColor,
-      showBorder,
-      theme,
-      transparent,
-    ],
+        if (!textRef.current) return
+        textRef.current.setNativeProps({
+          style: {
+            color:
+              isHovered && foregroundHoverThemeColor
+                ? getThemeColorOrItself(theme, foregroundHoverThemeColor, {
+                    enableCSSVariable: true,
+                  })
+                : getThemeColorOrItself(
+                    theme,
+                    foregroundThemeColor || 'foregroundColor',
+                    {
+                      enableCSSVariable: true,
+                    },
+                  ),
+          },
+        })
+      },
+      [
+        backgroundThemeColor,
+        foregroundThemeColor,
+        backgroundHoverThemeColor,
+        foregroundHoverThemeColor,
+      ],
+    ),
   )
-
-  const [springAnimatedStyles, setSpringAnimatedStyles] = useSpring<
-    ReturnType<typeof getStyles>
-  >(() => getStyles({ forceImmediate: true }))
-
-  const updateStyles = useCallback(
-    ({ forceImmediate }: { forceImmediate: boolean }) => {
-      setSpringAnimatedStyles(getStyles({ forceImmediate }))
-    },
-    [getStyles],
-  )
-
-  const touchableRef = useRef(null)
-  const initialIsHovered = useHover(touchableRef, isHovered => {
-    if (cacheRef.current.isHovered === isHovered) return
-    cacheRef.current.isHovered = isHovered
-    updateStyles({ forceImmediate: false })
-  })
-  cacheRef.current.isHovered = initialIsHovered
-
-  const isFirstRendeRef = useRef(true)
-  useLayoutEffect(() => {
-    if (isFirstRendeRef.current) {
-      isFirstRendeRef.current = false
-      return
-    }
-
-    updateStyles({ forceImmediate: true })
-  }, [updateStyles])
 
   return (
-    <SpringAnimatedTouchableOpacity
-      ref={touchableRef}
-      {...otherProps}
-      activeOpacity={Platform.supportsTouch ? 1 : otherProps.activeOpacity}
-      disabled={disabled}
-      onPressIn={() => {
-        if (!Platform.supportsTouch) return
-
-        cacheRef.current.isPressing = true
-        updateStyles({ forceImmediate: true })
-      }}
-      onPressOut={() => {
-        if (!Platform.supportsTouch) return
-
-        cacheRef.current.isPressing = false
-        updateStyles({ forceImmediate: true })
-      }}
+    <ThemedView
+      ref={containerViewRef}
+      backgroundColor={backgroundThemeColor}
       style={[
-        {
-          height: size,
-          backgroundColor: springAnimatedStyles.touchableBackgroundColor,
-          borderColor: springAnimatedStyles.touchableBorderColor,
-          borderWidth: showBorder ? 2 : 0,
-          borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
-        },
+        styles.button,
+        { height: size },
+        round && { borderRadius: size / 2 },
         style,
       ]}
     >
-      <SpringAnimatedView
-        style={[
-          {
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: size,
-            paddingHorizontal: contentPadding,
-            backgroundColor: springAnimatedStyles.innerContainerBackgroundColor,
-            borderWidth: 0,
-            borderRadius: round ? (size || defaultButtonSize) / 2 : 0,
-          },
-          contentContainerStyle,
-        ]}
-      >
-        {loading ? (
-          <SpringAnimatedActivityIndicator
-            color={springAnimatedStyles.textColor}
-            size="small"
-            style={loadingIndicatorStyle}
-          />
-        ) : typeof children === 'string' ? (
-          <SpringAnimatedText
-            style={{
-              lineHeight: Platform.select({ web: fontSize }),
-              fontSize,
-              fontWeight: '500',
-              color: springAnimatedStyles.textColor,
-            }}
+      <>
+        <ThemedTouchableHighlight
+          ref={innerTouchableRef}
+          backgroundColor={undefined}
+          underlayColor={backgroundHoverThemeColor}
+          {...otherProps}
+          style={[
+            sharedStyles.fullWidth,
+            sharedStyles.fullHeight,
+            round && { borderRadius: size / 2 },
+            loading && sharedStyles.hidden,
+          ]}
+        >
+          <View
+            style={[
+              sharedStyles.center,
+              sharedStyles.fullWidth,
+              sharedStyles.fullHeight,
+              sharedStyles.paddingHorizontal,
+              round && { borderRadius: size / 2 },
+              contentContainerStyle,
+            ]}
           >
-            {children}
-          </SpringAnimatedText>
-        ) : typeof children === 'function' ? (
-          children({ springAnimatedStyles })
-        ) : (
-          children
-        )}
-      </SpringAnimatedView>
-    </SpringAnimatedTouchableOpacity>
-  )
-})
+            {typeof children === 'string' ? (
+              <ThemedText
+                ref={textRef}
+                color={foregroundThemeColor}
+                style={[
+                  styles.text,
+                  Platform.OS === 'web' && { lineHeight: size },
+                ]}
+              >
+                {children}
+              </ThemedText>
+            ) : (
+              children
+            )}
+          </View>
+        </ThemedTouchableHighlight>
 
-Button.displayName = 'Button'
+        {!!loading && (
+          <View
+            style={[StyleSheet.absoluteFill, sharedStyles.center]}
+            pointerEvents="none"
+          >
+            <ThemedActivityIndicator
+              color={foregroundThemeColor}
+              size="small"
+              style={loadingIndicatorStyle}
+            />
+          </View>
+        )}
+      </>
+    </ThemedView>
+  )
+}
+
+export function getButtonColors(
+  type?: ButtonProps['type'],
+): {
+  backgroundThemeColor: keyof ThemeColors
+  foregroundThemeColor: keyof ThemeColors
+  backgroundHoverThemeColor: keyof ThemeColors
+  foregroundHoverThemeColor: keyof ThemeColors
+} {
+  switch (type) {
+    case 'danger':
+      return {
+        backgroundThemeColor: 'backgroundColorLess1',
+        foregroundThemeColor: 'foregroundColor',
+        backgroundHoverThemeColor: 'red',
+        foregroundHoverThemeColor: 'white',
+      }
+
+    case 'primary':
+      return {
+        backgroundThemeColor: 'primaryBackgroundColor',
+        foregroundThemeColor: 'primaryForegroundColor',
+        backgroundHoverThemeColor: 'primaryBackgroundColor',
+        foregroundHoverThemeColor: 'primaryForegroundColor',
+      }
+
+    default:
+      return {
+        backgroundThemeColor: 'backgroundColorLess1',
+        foregroundThemeColor: 'foregroundColor',
+        backgroundHoverThemeColor: 'backgroundColorLess2',
+        foregroundHoverThemeColor: 'foregroundColor',
+      }
+  }
+}
+
+const styles = StyleSheet.create({
+  button: {
+    position: 'relative',
+    overflow: 'hidden',
+  },
+
+  text: {
+    fontWeight: '500',
+  },
+})

@@ -47,6 +47,10 @@ input:focus {
   cursor: default;
 }
 
+a [data-touchable] {
+  cursor: pointer;
+}
+
 [data-touchable="true"][data-touchable-onpress="true"] {
   cursor: pointer;
 }

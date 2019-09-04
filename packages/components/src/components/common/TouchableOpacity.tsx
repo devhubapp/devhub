@@ -22,4 +22,4 @@ export const TouchableOpacity = React.forwardRef<
 
 TouchableOpacity.displayName = 'TouchableOpacity'
 
-export type TouchableOpacity = TouchableOpacityOriginal
+export type TouchableOpacity = Touchable

@@ -37,6 +37,8 @@ export const ThemedText = React.forwardRef<Text, ThemedTextProps>(
 
 ThemedText.displayName = 'ThemedText'
 
+export type ThemedText = Text
+
 function getStyle(
   theme: Theme,
   {

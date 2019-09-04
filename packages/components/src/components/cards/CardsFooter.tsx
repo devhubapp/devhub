@@ -83,8 +83,6 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
               if (refresh) refresh()
             }}
             round
-            showBorder
-            transparent
           />
         </View>
       ) : null}

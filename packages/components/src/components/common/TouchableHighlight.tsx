@@ -22,4 +22,4 @@ export const TouchableHighlight = React.forwardRef<
 
 TouchableHighlight.displayName = 'TouchableHighlight'
 
-export type TouchableHighlight = TouchableHighlightOriginal
+export type TouchableHighlight = Touchable

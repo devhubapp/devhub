@@ -3,10 +3,10 @@ import { StyleSheet, TextProps, View } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
 import { contentPadding } from '../../styles/variables'
-import { SpringAnimatedIcon } from '../animated/spring/SpringAnimatedIcon'
-import { SpringAnimatedText } from '../animated/spring/SpringAnimatedText'
-import { Button, ButtonProps } from '../common/Button'
+import { Button, ButtonProps, getButtonColors } from '../common/Button'
 import { useAppLayout } from '../context/LayoutContext'
+import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
 import { Spacer } from './Spacer'
 
 export interface GitHubLoginButtonProps
@@ -74,62 +74,57 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
 
   const { sizename } = useAppLayout()
 
+  const { foregroundThemeColor } = getButtonColors('primary')
+
   return (
     <Button
       {...otherProps}
-      backgroundThemeColor="primaryBackgroundColor"
+      contentContainerStyle={styles.contentContainer}
       size={50}
       style={[styles.button, sizename === '1-small' && { width: '100%' }]}
-      contentContainerStyle={styles.contentContainer}
+      type="primary"
     >
-      {({ springAnimatedStyles }) => (
-        <>
-          {!!leftIcon && (
-            <>
-              <SpringAnimatedIcon
-                name={leftIcon}
-                size={20}
-                style={{ color: springAnimatedStyles.textColor }}
-              />
+      <>
+        {!!leftIcon && (
+          <>
+            <ThemedIcon
+              color={foregroundThemeColor}
+              name={leftIcon}
+              size={20}
+            />
 
-              <Spacer width={contentPadding / 2} />
-            </>
+            <Spacer width={contentPadding / 2} />
+          </>
+        )}
+
+        <View>
+          {!!title && (
+            <ThemedText
+              color={foregroundThemeColor}
+              {...textProps}
+              style={[styles.title, textProps.style]}
+            >
+              {title}
+            </ThemedText>
           )}
+        </View>
 
-          <View>
-            {!!title && (
-              <SpringAnimatedText
-                {...textProps}
-                style={[
-                  styles.title,
-                  textProps.style,
-                  { color: springAnimatedStyles.textColor },
-                ]}
-              >
-                {title}
-              </SpringAnimatedText>
+        {!!rightIcon && (
+          <View style={[styles.iconWrapper, { paddingRight: contentPadding }]}>
+            {!!rightIcon && (
+              <>
+                <Spacer width={contentPadding / 2} />
+
+                <ThemedIcon
+                  color={foregroundThemeColor}
+                  name={rightIcon}
+                  size={20}
+                />
+              </>
             )}
           </View>
-
-          {!!rightIcon && (
-            <View
-              style={[styles.iconWrapper, { paddingRight: contentPadding }]}
-            >
-              {!!rightIcon && (
-                <>
-                  <Spacer width={contentPadding / 2} />
-
-                  <SpringAnimatedIcon
-                    name={rightIcon}
-                    size={20}
-                    style={{ color: springAnimatedStyles.textColor }}
-                  />
-                </>
-              )}
-            </View>
-          )}
-        </>
-      )}
+        )}
+      </>
     </Button>
   )
 }
