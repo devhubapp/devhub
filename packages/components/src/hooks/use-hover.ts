@@ -1,4 +1,5 @@
-import { RefObject, useEffect, useRef } from 'react'
+import debounce from 'lodash/debounce'
+import { RefObject, useCallback, useEffect, useRef } from 'react'
 
 import { Platform } from '../libs/platform'
 import { findNode } from '../utils/helpers/shared'
@@ -13,22 +14,29 @@ export function useHover(
 
   if (Platform.supportsTouch) return false
 
+  const resolve = useCallback(
+    debounce(
+      (value: boolean) => {
+        if (cacheRef.current === value) return
+        cacheRef.current = value
+
+        if (callback) {
+          callback(value)
+          return
+        }
+
+        forceRerender()
+      },
+      5,
+      { leading: false, trailing: true },
+    ),
+    [],
+  )
+
   useEffect(() => {
     const node = findNode(ref)
 
     if (!(node && typeof node.addEventListener === 'function')) return
-
-    const resolve = (value: boolean) => {
-      if (cacheRef.current === value) return
-      cacheRef.current = value
-
-      if (callback) {
-        callback(value)
-        return
-      }
-
-      forceRerender()
-    }
 
     const handleMouseOver = () => resolve(true)
     const handleMouseOut = () => resolve(false)
