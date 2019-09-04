@@ -15,6 +15,7 @@ import * as selectors from '../../redux/selectors'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { NoColumns } from './NoColumns'
 
 export interface ColumnsProps
   extends Pick<OneListProps<string>, 'pointerEvents'> {
@@ -118,6 +119,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       key="columns-list"
       data={columnIds}
       disableVirtualization={Platform.OS === 'web'}
+      ListEmptyComponent={NoColumns}
       estimatedItemSize={columnWidth}
       getItemKey={keyExtractor}
       getItemSize={getItemSize}

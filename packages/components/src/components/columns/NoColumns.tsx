@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { sharedStyles } from '../../styles/shared'
 import { GenericMessageWithButtonView } from '../cards/GenericMessageWithButtonView'
 import { Column, ColumnProps } from './Column'
 
@@ -10,7 +11,7 @@ export function NoColumns(props: NoColumnsProps) {
     <Column
       columnId=""
       {...props}
-      style={[{ alignItems: 'center', justifyContent: 'center' }, props.style]}
+      style={[sharedStyles.center, sharedStyles.fullWidth, props.style]}
     >
       <GenericMessageWithButtonView
         buttonView={undefined}

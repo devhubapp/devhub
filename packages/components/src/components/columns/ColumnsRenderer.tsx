@@ -10,7 +10,6 @@ import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { useFocusedColumn } from '../context/ColumnFocusContext'
 import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
 import { Columns } from './Columns'
-import { NoColumns } from './NoColumns'
 import { NoFocusedColumn } from './NoFocusedColumn'
 
 export interface ColumnsRendererProps {}
@@ -31,31 +30,29 @@ export function ColumnsRenderer() {
     [focusedColumnId],
   )
 
-  if (!columnIds.length) {
-    return <NoColumns />
-  }
-
-  if (appViewMode === 'single-column' && !focusedColumnId) {
+  if (appViewMode === 'single-column' && !focusedColumnId && columnIds.length) {
     return <NoFocusedColumn />
   }
 
   return (
     <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
       <>
-        {appViewMode === 'single-column' && !!enableSharedFiltersView && (
-          <ColumnFiltersRenderer
-            key="column-options-renderer"
-            columnId={focusedColumnId!}
-            fixedPosition="right"
-            fixedWidth={fixedWidth}
-            forceOpenAll
-            inlineMode={inlineMode}
-            isOpen={isSharedFiltersOpened}
-            shouldRenderHeader="yes"
-            startWithFiltersExpanded
-            close={closeSharedFiltersView}
-          />
-        )}
+        {appViewMode === 'single-column' &&
+          !!enableSharedFiltersView &&
+          columnIds.length && (
+            <ColumnFiltersRenderer
+              key="column-options-renderer"
+              columnId={focusedColumnId!}
+              fixedPosition="right"
+              fixedWidth={fixedWidth}
+              forceOpenAll
+              inlineMode={inlineMode}
+              isOpen={isSharedFiltersOpened}
+              shouldRenderHeader="yes"
+              startWithFiltersExpanded
+              close={closeSharedFiltersView}
+            />
+          )}
 
         <Columns
           key="columns"
