@@ -2,6 +2,7 @@ import React, { StrictMode } from 'react'
 
 import '../libs/analytics'
 
+import { ErrorBoundary } from '../libs/bugsnag'
 import { AppNavigator } from '../navigation/AppNavigator'
 import { enableNetworkInterceptors } from '../network-interceptor'
 import { AppGlobalStyles } from './AppGlobalStyles'
@@ -16,14 +17,16 @@ enableNetworkInterceptors()
 export function App() {
   return (
     <StrictMode>
-      <AppProviders>
-        <AppGlobalStyles key="app-global-styles" />
-        <AppNavigator key="app-navigator" />
+      <ErrorBoundary>
+        <AppProviders>
+          <AppGlobalStyles key="app-global-styles" />
+          <AppNavigator key="app-navigator" />
 
-        <UnreadCountProvider>
-          <AppIconBadge />
-        </UnreadCountProvider>
-      </AppProviders>
+          <UnreadCountProvider>
+            <AppIconBadge />
+          </UnreadCountProvider>
+        </AppProviders>
+      </ErrorBoundary>
     </StrictMode>
   )
 }
