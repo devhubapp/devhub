@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 
 import {
   Column as ColumnType,
@@ -18,6 +19,7 @@ import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { AutoSizer } from '../../libs/auto-sizer'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
@@ -106,7 +108,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     title,
   } = props
 
-  const columnOptionsRef = useRef<{ toggle: () => void }>(null)
+  const columnOptionsRef = useRef<ColumnOptionsAccordion>(null)
 
   const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
 
@@ -348,7 +350,33 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         />
       </ColumnHeader>
 
-      <ColumnOptionsAccordion ref={columnOptionsRef} columnId={column.id} />
+      <View
+        style={[
+          sharedStyles.flex,
+          sharedStyles.fullWidth,
+          sharedStyles.fullHeight,
+        ]}
+      >
+        <AutoSizer
+          style={[
+            sharedStyles.relative,
+            sharedStyles.flex,
+            sharedStyles.fullWidth,
+            sharedStyles.fullHeight,
+          ]}
+        >
+          {({ width, height }) => (
+            <View style={StyleSheet.absoluteFill}>
+              <ColumnOptionsAccordion
+                ref={columnOptionsRef}
+                columnId={column.id}
+              />
+
+              <View style={{ width, height }}>{children}</View>
+            </View>
+          )}
+        </AutoSizer>
+      </View>
 
       {!inlineMode && !enableSharedFiltersView && (
         <ColumnFiltersRenderer
@@ -362,8 +390,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
           shouldRenderHeader="yes"
         />
       )}
-
-      {children}
 
       {!!isFreeTrial && <FreeTrialHeaderMessage />}
     </Column>
