@@ -53,9 +53,6 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
 
   return (
     <SpringAnimatedView
-      hidden={animatedStyles.height.to(
-        value => (value === 'auto' || value > 0 ? false : true) as any,
-      )}
       style={[
         sharedStyles.overflowHidden,
         {

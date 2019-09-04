@@ -53,7 +53,7 @@ export const ColumnFiltersRenderer = React.memo(
 
     const overlayTransition = useTransition<boolean, any>(
       isOpen ? [true] : [],
-      () => 'column-options-overlay',
+      isOpen ? ['column-options-overlay'] : [],
       {
         reset: false,
         unique: true,
@@ -72,14 +72,12 @@ export const ColumnFiltersRenderer = React.memo(
     )
 
     const absolutePositionTransitions = useTransition<boolean, any>(
-      isOpen || enableSharedFiltersView ? [true] : [],
-      isOpen
-        ? [
-            `column-options-renderer-${
-              enableSharedFiltersView ? 'shared' : columnId
-            }`,
-          ]
-        : [],
+      [true],
+      [
+        `column-options-renderer-${
+          enableSharedFiltersView ? 'shared' : columnId
+        }`,
+      ],
       enableAbsolutePositionAnimation &&
         (!inlineMode && fixedPosition && fixedWidth)
         ? {
@@ -87,22 +85,16 @@ export const ColumnFiltersRenderer = React.memo(
             immediate: constants.DISABLE_ANIMATIONS,
             unique: true,
             from: {
-              [fixedPosition]:
-                -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+              [fixedPosition]: -fixedWidth,
             },
             leave: {
-              [fixedPosition]:
-                -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+              [fixedPosition]: -fixedWidth,
             },
             enter: {
-              [fixedPosition]: isOpen
-                ? 0
-                : -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+              [fixedPosition]: isOpen ? 0 : -fixedWidth,
             },
             update: {
-              [fixedPosition]: isOpen
-                ? 0
-                : -fixedWidth - Platform.select({ default: 0, ios: 40 }),
+              [fixedPosition]: isOpen ? 0 : -fixedWidth,
             },
           }
         : {
@@ -121,10 +113,9 @@ export const ColumnFiltersRenderer = React.memo(
 
     if (!column) return null
 
-    if (!(absolutePositionTransition && absolutePositionTransition.item))
-      return null
-
-    const key = absolutePositionTransition.key || 'column-options-renderer'
+    const key =
+      (absolutePositionTransition && absolutePositionTransition.key) ||
+      'column-options-renderer'
     return (
       <Fragment key={`${key}-inner-container`}>
         {!!overlayTransition && !inlineMode && !!close && (
@@ -135,8 +126,8 @@ export const ColumnFiltersRenderer = React.memo(
               StyleSheet.absoluteFill,
               {
                 zIndex: 200,
-                opacity: overlayTransition.props.opacity.interpolate(
-                  (opacity: number) => Number(opacity.toFixed(2)),
+                opacity: overlayTransition.props.opacity.to((opacity: number) =>
+                  Number(opacity.toFixed(2)),
                 ),
               },
             ]}
@@ -162,24 +153,12 @@ export const ColumnFiltersRenderer = React.memo(
 
         <SpringAnimatedView
           collapsable={false}
-          hidden={
-            enableAbsolutePositionAnimation &&
-            absolutePositionTransition.props &&
-            fixedPosition &&
-            fixedWidth
-              ? fixedPosition === 'left' || fixedPosition === 'right'
-                ? // TODO: Fix types
-                  absolutePositionTransition.props[fixedPosition].to(
-                    value => (fixedWidth + value <= 0 ? true : false) as any,
-                  )
-                : false
-              : false
-          }
           style={[
             !inlineMode && StyleSheet.absoluteFill,
             !inlineMode && {
               opacity:
                 enableAbsolutePositionAnimation &&
+                absolutePositionTransition &&
                 absolutePositionTransition.props &&
                 fixedPosition &&
                 fixedWidth
@@ -191,6 +170,7 @@ export const ColumnFiltersRenderer = React.memo(
                   : 1,
               visibility:
                 enableAbsolutePositionAnimation &&
+                absolutePositionTransition &&
                 absolutePositionTransition.props &&
                 fixedPosition &&
                 fixedWidth
@@ -203,14 +183,18 @@ export const ColumnFiltersRenderer = React.memo(
                   : 'visible',
             },
             enableAbsolutePositionAnimation &&
+              absolutePositionTransition &&
+              absolutePositionTransition.props &&
               absolutePositionTransition.props.left && {
-                left: absolutePositionTransition.props.left.interpolate(
-                  (left: number) => Math.floor(left),
+                left: absolutePositionTransition.props.left.to((left: number) =>
+                  Math.floor(left),
                 ),
               },
             enableAbsolutePositionAnimation &&
+              absolutePositionTransition &&
+              absolutePositionTransition.props &&
               absolutePositionTransition.props.right && {
-                right: absolutePositionTransition.props.right.interpolate(
+                right: absolutePositionTransition.props.right.to(
                   (right: number) => Math.floor(right),
                 ),
               },
@@ -227,6 +211,7 @@ export const ColumnFiltersRenderer = React.memo(
             Platform.OS === 'web' &&
             Platform.realOS !== 'ios' &&
             enableAbsolutePositionAnimation &&
+            absolutePositionTransition &&
             absolutePositionTransition.props &&
             fixedPosition &&
             fixedWidth
