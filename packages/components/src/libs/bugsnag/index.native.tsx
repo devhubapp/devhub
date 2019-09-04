@@ -3,7 +3,7 @@ import _ from 'lodash'
 import React from 'react'
 
 import { constants } from '@devhub/core'
-import { BugnsagCrossPlatform } from './'
+import { BugnsagCrossPlatform, ErrorBoundaryProps, ErrorBoundaryState } from '.'
 import { hideTokenFromString } from './index.shared'
 // import { overrideConsoleError } from './index.shared'
 
@@ -50,21 +50,37 @@ export const bugsnag: BugnsagCrossPlatform = {
 
 // overrideConsoleError(bugsnag)
 
-export class ErrorBoundary extends React.Component {
-  static getDerivedStateFromError() {
-    return { hasError: true }
+export class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  static getDerivedStateFromError(error?: Error) {
+    return {
+      error,
+      info: { componentStack: error && error.stack },
+    }
   }
 
   state = {
-    hasError: false,
+    error: undefined,
+    info: undefined,
   }
 
-  componentDidCatch(error: any) {
-    bugsnag.notify(error)
+  componentDidCatch(error?: Error) {
+    if (error) bugsnag.notify(error)
   }
 
   render() {
-    if (this.state.hasError) return null
-    return this.props.children
+    const { FallbackComponent, children } = this.props
+    const { error, info } = this.state
+
+    if (error) {
+      if (FallbackComponent)
+        return <FallbackComponent error={error} info={info} />
+
+      return null
+    }
+
+    return children
   }
 }

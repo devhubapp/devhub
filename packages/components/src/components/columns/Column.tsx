@@ -1,12 +1,16 @@
 import React, { ReactNode, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import url from 'url'
 
 import { Theme, ThemeColors } from '@devhub/core'
 import { useEmitter } from '../../hooks/use-emitter'
+import { ErrorBoundary, ErrorBoundaryProps } from '../../libs/bugsnag'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { tryFocus } from '../../utils/helpers/shared'
+import { GenericMessageWithButtonView } from '../cards/GenericMessageWithButtonView'
+import { ButtonLink } from '../common/ButtonLink'
 import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { ThemedView } from '../themed/ThemedView'
@@ -103,7 +107,11 @@ export const Column = React.memo(
         ]}
       >
         {!!renderLeftSeparator && <ColumnSeparator half />}
-        <View style={sharedStyles.flex}>{children}</View>
+        <View style={sharedStyles.flex}>
+          <ErrorBoundary FallbackComponent={ColumErrorFallbackComponent}>
+            {children}
+          </ErrorBoundary>
+        </View>
         {!!renderRightSeparator && <ColumnSeparator half />}
 
         <ThemedView
@@ -128,3 +136,35 @@ export const Column = React.memo(
 )
 
 Column.displayName = 'Column'
+
+const ColumErrorFallbackComponent: ErrorBoundaryProps['FallbackComponent'] = props => {
+  const { error, info } = props
+
+  return (
+    <ThemedView style={sharedStyles.flex}>
+      <View
+        style={[sharedStyles.flex, sharedStyles.center, sharedStyles.padding]}
+      >
+        <GenericMessageWithButtonView
+          buttonView={
+            <ButtonLink
+              analyticsLabel="column_error_boundary_open_issue_github"
+              children="Open issue on GitHub"
+              href={`https://github.com/devhubapp/devhub/issues/new?title=${url.format(
+                (error && error.message) || 'Column view crashed',
+              )}&body=${url.format(
+                (info && info.componentStack) ||
+                  (info && JSON.stringify(info)) ||
+                  '',
+              )}`}
+              openOnNewTab
+            />
+          }
+          emoji="warning"
+          subtitle="Please open an issue on GitHub."
+          title="This view has crashed"
+        />
+      </View>
+    </ThemedView>
+  )
+}

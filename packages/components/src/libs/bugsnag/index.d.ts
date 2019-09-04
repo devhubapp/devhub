@@ -1,4 +1,4 @@
-import { ComponentClass } from 'react'
+import React from 'react'
 
 export interface BugnsagCrossPlatform {
   clearUser(): void
@@ -8,4 +8,15 @@ export interface BugnsagCrossPlatform {
 }
 
 export const bugsnag: BugnsagCrossPlatform
-export const ErrorBoundary: ComponentClass
+
+export interface ErrorBoundaryState {
+  error?: Error
+  info?: {
+    componentStack?: string
+  }
+}
+
+export interface ErrorBoundaryProps {
+  FallbackComponent?: React.ComponentType<ErrorBoundaryState>
+}
+export const ErrorBoundary: React.ComponentClass<ErrorBoundaryProps>
