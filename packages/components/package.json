@@ -29,7 +29,7 @@
     "qs": "6.6.0",
     "react": "16.9.0",
     "react-helmet-async": "0.2.0",
-    "react-native": "0.59.8",
+    "react-native": "0.59.10",
     "react-native-firebase": "5.5.4",
     "react-native-gesture-handler": "1.1.0",
     "react-native-linear-gradient": "2.5.4",

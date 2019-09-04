@@ -18,7 +18,7 @@
     "@devhub/components": "0.94.1",
     "metro-react-native-babel-preset": "0.53.1",
     "react": "16.9.0",
-    "react-native": "0.59.8",
+    "react-native": "0.59.10",
     "react-native-firebase": "5.5.4",
     "react-native-haptic-feedback": "1.8.2",
     "react-native-inappbrowser-reborn": "2.0.0",
