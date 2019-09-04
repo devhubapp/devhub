@@ -225,7 +225,7 @@ export const LoginScreen = React.memo(() => {
             openOnNewTab
             style={styles.footerLink}
             textProps={{
-              color: 'foregroundColorMuted40',
+              color: 'foregroundColorMuted65',
               style: styles.footerLinkText,
             }}
           >
@@ -266,7 +266,7 @@ export const LoginScreen = React.memo(() => {
               openOnNewTab
               style={styles.footerLink}
               textProps={{
-                color: 'foregroundColorMuted40',
+                color: 'foregroundColorMuted65',
                 style: styles.footerLinkText,
               }}
             >
@@ -287,7 +287,7 @@ export const LoginScreen = React.memo(() => {
               openOnNewTab
               style={styles.footerLink}
               textProps={{
-                color: 'foregroundColorMuted40',
+                color: 'foregroundColorMuted65',
                 style: styles.footerLinkText,
               }}
             >
@@ -308,7 +308,7 @@ export const LoginScreen = React.memo(() => {
               openOnNewTab
               style={styles.footerLink}
               textProps={{
-                color: 'foregroundColorMuted40',
+                color: 'foregroundColorMuted65',
                 style: styles.footerLinkText,
               }}
             >

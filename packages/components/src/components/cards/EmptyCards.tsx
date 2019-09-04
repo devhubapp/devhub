@@ -130,7 +130,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       >
         {!!clearMessage && (
           <ThemedText
-            color="foregroundColorMuted40"
+            color="foregroundColorMuted65"
             style={[
               sharedStyles.textCenter,
               {

@@ -48,7 +48,17 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
       {!isEmpty && <CardItemSeparator />}
 
       {fetchNextPage ? (
-        <View>
+        <View
+          style={
+            isEmpty
+              ? {
+                  paddingVertical:
+                    fabSpacing + (fabSize - defaultButtonSize) / 2,
+                  paddingHorizontal: contentPadding,
+                }
+              : undefined
+          }
+        >
           <Button
             analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
             children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
@@ -59,7 +69,7 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
             }
             loading={loadState === 'loading_more'}
             onPress={fetchNextPage}
-            round={false}
+            round={isEmpty}
           />
         </View>
       ) : clearedAt ? (
@@ -107,12 +117,16 @@ export function getCardsFooterSize({
 }) {
   const { sizename } = getAppLayout()
 
+  const buttonVerticalSpacing =
+    (fabSpacing + (fabSize - defaultButtonSize) / 2) * 2 + defaultButtonSize
   return (
-    (isEmpty ? cardItemSeparatorSize : 0) +
+    (isEmpty ? 0 : cardItemSeparatorSize) +
     (hasFetchNextPage
-      ? defaultButtonSize
+      ? isEmpty
+        ? buttonVerticalSpacing
+        : 0
       : clearedAt
-      ? (fabSpacing + (fabSize - defaultButtonSize) / 2) * 2 + defaultButtonSize
+      ? buttonVerticalSpacing
       : 0) +
     (!isEmpty && shouldRenderFAB({ sizename }) ? fabSize + 2 * fabSpacing : 0)
   )
