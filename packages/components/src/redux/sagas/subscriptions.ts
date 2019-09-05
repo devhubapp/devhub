@@ -549,13 +549,13 @@ function* onMarkItemsAsReadOrUnread(
     typeof actions.markItemsAsReadOrUnread
   >,
 ) {
-  const { itemIds, localOnly, type, unread: _unread } = action.payload
+  const { itemIds, localOnly, type, unread } = action.payload
 
   if (localOnly) return
 
   // GitHub api does not support marking as unread yet :(
   // @see https://github.com/octokit/rest.js/issues/1232
-  if (!_unread) return
+  if (unread) return
 
   if (type !== 'notifications') return
   if (!(itemIds && itemIds.length)) return
