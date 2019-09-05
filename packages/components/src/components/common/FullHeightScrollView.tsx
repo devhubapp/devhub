@@ -26,11 +26,12 @@ export const FullHeightScrollView = React.memo(
         {...otherProps}
         onContentSizeChange={(w, h) => {
           if (onContentSizeChange) onContentSizeChange(w, h)
-          setContentHeight(h)
+          if (h !== contentHeight) setContentHeight(h)
         }}
         onLayout={e => {
           if (onLayout) onLayout(e)
-          setContainerHeight(e.nativeEvent.layout.height)
+          if (e.nativeEvent.layout.height !== containerHeight)
+            setContainerHeight(e.nativeEvent.layout.height)
         }}
         contentContainerStyle={[
           contentHeight > 0 &&
@@ -41,6 +42,7 @@ export const FullHeightScrollView = React.memo(
 
           contentContainerStyle,
         ]}
+        style={[sharedStyles.fullHeight, style]}
       >
         {children}
       </ScrollView>

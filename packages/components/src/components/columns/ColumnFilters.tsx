@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Fragment, useMemo, useRef, useState } from 'react'
-import { View } from 'react-native'
+import { View, ScrollView } from 'react-native'
 
 import {
   columnHasAnyFilter,
@@ -309,7 +309,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
       backgroundColor={getColumnHeaderThemeColors().normal}
       style={sharedStyles.flex}
     >
-      <FullHeightScrollView
+      <ScrollView
         alwaysBounceHorizontal={false}
         alwaysBounceVertical
         bounces
@@ -1576,11 +1576,11 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               </ColumnOptionsRow>
             )
           })()}
-      </FullHeightScrollView>
+      </ScrollView>
 
       <Separator horizontal />
 
-      <Spacer flex={1} minHeight={contentPadding / 2} />
+      <Spacer height={contentPadding / 2} />
 
       <View
         style={{
