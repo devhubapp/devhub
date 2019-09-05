@@ -10,7 +10,7 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { CardItemSeparator } from '../cards/partials/CardItemSeparator'
-import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
+import { IconButton } from '../common/IconButton'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { ThemedText } from '../themed/ThemedText'
@@ -34,7 +34,13 @@ export function AppBannerMessage() {
         },
       ]}
     >
-      <View style={[sharedStyles.fullWidth, sharedStyles.horizontal]}>
+      <View
+        style={[
+          sharedStyles.fullWidth,
+          sharedStyles.horizontal,
+          sharedStyles.alignItemsCenter,
+        ]}
+      >
         <Spacer width={contentPadding / 2} />
         <View style={{ width: 18 + contentPadding }} />
         <Spacer width={contentPadding / 2} />
@@ -72,24 +78,14 @@ export function AppBannerMessage() {
 
         <Spacer width={contentPadding / 2} />
 
-        <View
-          style={[
-            sharedStyles.center,
-            {
-              width: 18 + contentPadding,
-            },
-          ]}
-        >
-          <ColumnHeaderItem
-            iconName="x"
-            noPadding
-            onPress={() => closeBannerMessage(bannerMessage.id)}
-            size={18}
-            tooltip="Dismiss"
-          />
+        <IconButton
+          name="x"
+          onPress={() => closeBannerMessage(bannerMessage.id)}
+          size={18}
+          tooltip="Dismiss"
+        />
 
-          <Spacer width={contentPadding / 2} />
-        </View>
+        <Spacer width={contentPadding / 2} />
       </View>
 
       <CardItemSeparator />

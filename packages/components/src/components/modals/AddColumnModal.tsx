@@ -31,6 +31,7 @@ import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
 import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 
 export interface AddColumnModalProps {
@@ -256,15 +257,7 @@ function AddColumnModalItem({
           },
         ]}
       >
-        <ColumnHeaderItem
-          analyticsLabel={undefined}
-          fixedIconSize
-          iconName={icon}
-          iconStyle={{ lineHeight: undefined }}
-          noPadding
-          size={18}
-          tooltip={undefined}
-        />
+        <ThemedIcon color="foregroundColor" name={icon} size={18} />
 
         <Spacer width={contentPadding / 2} />
 

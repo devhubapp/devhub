@@ -13,16 +13,20 @@ export interface ThemedIconProps
   themeTransformer?: ThemeTransformer
 }
 
-export const ThemedIcon = (props: ThemedIconProps) => {
-  const { color: _color, themeTransformer, ...otherProps } = props
+export const ThemedIcon = React.memo(
+  React.forwardRef<Octicons, ThemedIconProps>((props, ref) => {
+    const { color: _color, themeTransformer, ...otherProps } = props
 
-  const theme = useTheme({ themeTransformer })
+    const theme = useTheme({ themeTransformer })
 
-  const color = getThemeColorOrItself(theme, _color, {
-    enableCSSVariable: true,
-  })
+    const color = getThemeColorOrItself(theme, _color, {
+      enableCSSVariable: true,
+    })
 
-  return <Octicons {...otherProps} color={color} />
-}
+    return <Octicons ref={ref} {...otherProps} color={color} />
+  }),
+)
 
 ThemedIcon.displayName = 'ThemedIcon'
+
+export type ThemedIcon = Octicons

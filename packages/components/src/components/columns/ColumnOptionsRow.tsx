@@ -4,6 +4,7 @@ import { View, ViewStyle } from 'react-native'
 import { GitHubIcon } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
+import { sharedStyles } from '../../styles/shared'
 import {
   columnHeaderItemContentSize,
   contentPadding,
@@ -139,16 +140,15 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
       >
         <View
           style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              alignContent: 'center',
-              padding: contentPadding,
-            },
+            sharedStyles.horizontalAndVerticallyAligned,
+            sharedStyles.paddingVertical,
+            sharedStyles.paddingHorizontalHalf,
             !!isOpen && !onToggle && { paddingBottom: contentPadding / 2 },
             containerStyle,
           ]}
         >
+          <Spacer width={contentPadding / 3} />
+
           <ThemedIcon
             color="foregroundColor"
             name={iconName}
@@ -205,6 +205,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                   textAlign: 'center',
                 }}
               />
+
+              <Spacer width={contentPadding / 2} />
             </>
           )}
         </View>

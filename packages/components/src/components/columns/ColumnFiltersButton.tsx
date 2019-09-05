@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react'
 
 import { emitter } from '../../libs/emitter'
 import { contentPadding } from '../../styles/variables'
-import { ColumnHeaderItem } from './ColumnHeaderItem'
+import { IconButton } from '../common/IconButton'
 
 export interface ColumnFiltersButtonProps {
   columnId: string
@@ -37,12 +37,11 @@ export const ColumnFiltersButton = React.memo(
     )
 
     return (
-      <ColumnHeaderItem
+      <IconButton
         key="column-filters-toggle-button"
         analyticsAction="toggle"
         analyticsLabel="column_filters"
-        fixedIconSize
-        iconName="settings"
+        name="settings"
         onPress={onPress}
         style={style}
         tooltip="Filters"

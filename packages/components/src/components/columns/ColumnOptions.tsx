@@ -12,6 +12,7 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallerTextSize } from '../../styles/variables'
 import { Checkbox, defaultCheckboxSize } from '../common/Checkbox'
+import { IconButton } from '../common/IconButton'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
@@ -19,7 +20,6 @@ import { useAppLayout } from '../context/LayoutContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
-import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { sharedColumnOptionsStyles } from './options/shared'
 
 export interface ColumnOptionsProps {
@@ -162,15 +162,15 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
       <View
         style={[
           sharedStyles.horizontal,
-          { paddingHorizontal: contentPadding / 2 },
+          sharedStyles.paddingVertical,
+          sharedStyles.paddingHorizontalHalf,
         ]}
       >
-        <ColumnHeaderItem
+        <IconButton
           key="column-options-button-move-column-left"
           analyticsLabel="move_column_left"
           disabled={columnIndex === 0}
-          fixedIconSize
-          iconName="chevron-left"
+          name="chevron-left"
           onPress={() =>
             dispatch(
               actions.moveColumn({
@@ -188,12 +188,11 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           })`}
         />
 
-        <ColumnHeaderItem
+        <IconButton
           key="column-options-button-move-column-right"
           analyticsLabel="move_column_right"
           disabled={columnIndex === columnIds.length - 1}
-          fixedIconSize
-          iconName="chevron-right"
+          name="chevron-right"
           onPress={() =>
             dispatch(
               actions.moveColumn({
@@ -217,16 +216,15 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
 
         <Spacer flex={1} />
 
-        <ColumnHeaderItem
+        <IconButton
           key="column-options-button-remove-column"
           analyticsLabel="remove_column"
-          fixedIconSize
-          iconName="trashcan"
+          name="trashcan"
           onPress={() =>
             dispatch(actions.deleteColumn({ columnId, columnIndex }))
           }
-          text=""
           tooltip="Remove column"
+          type="danger"
         />
       </View>
 

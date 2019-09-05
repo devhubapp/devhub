@@ -58,40 +58,42 @@ export function Button(props: ButtonProps) {
     containerViewRef,
     useCallback(
       isHovered => {
-        if (!innerTouchableRef.current) return
-
         const theme = getTheme()
-        innerTouchableRef.current.setNativeProps({
-          style: {
-            backgroundColor: isHovered
-              ? backgroundHoverThemeColor
-                ? getThemeColorOrItself(theme, backgroundHoverThemeColor, {
-                    enableCSSVariable: true,
-                  })
-                : theme.isDark
-                ? theme.backgroundColorTransparent10
-                : theme.foregroundColorTransparent10
-              : 'transparent',
-          },
-        })
 
-        if (!textRef.current) return
-        textRef.current.setNativeProps({
-          style: {
-            color:
-              isHovered && foregroundHoverThemeColor
-                ? getThemeColorOrItself(theme, foregroundHoverThemeColor, {
-                    enableCSSVariable: true,
-                  })
-                : getThemeColorOrItself(
-                    theme,
-                    foregroundThemeColor || 'foregroundColor',
-                    {
+        if (innerTouchableRef.current) {
+          innerTouchableRef.current.setNativeProps({
+            style: {
+              backgroundColor: isHovered
+                ? backgroundHoverThemeColor
+                  ? getThemeColorOrItself(theme, backgroundHoverThemeColor, {
                       enableCSSVariable: true,
-                    },
-                  ),
-          },
-        })
+                    })
+                  : theme.isDark
+                  ? theme.backgroundColorTransparent10
+                  : theme.foregroundColorTransparent10
+                : 'transparent',
+            },
+          })
+        }
+
+        if (textRef.current) {
+          textRef.current.setNativeProps({
+            style: {
+              color:
+                isHovered && foregroundHoverThemeColor
+                  ? getThemeColorOrItself(theme, foregroundHoverThemeColor, {
+                      enableCSSVariable: true,
+                    })
+                  : getThemeColorOrItself(
+                      theme,
+                      foregroundThemeColor || 'foregroundColor',
+                      {
+                        enableCSSVariable: true,
+                      },
+                    ),
+            },
+          })
+        }
       },
       [
         backgroundThemeColor,

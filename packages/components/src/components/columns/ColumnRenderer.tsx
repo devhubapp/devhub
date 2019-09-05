@@ -25,6 +25,7 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
+import { IconButton } from '../common/IconButton'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { Column } from './Column'
@@ -209,13 +210,12 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
         <Spacer width={contentPadding / 2} />
 
-        <ColumnHeaderItem
+        <IconButton
           key="column-options-button-clear-column"
           analyticsLabel={
             clearableItems.length ? 'clear_column' : 'unclear_column'
           }
-          fixedIconSize
-          iconName="check"
+          name="check"
           onPress={() => {
             dispatch(
               actions.setColumnClearedAtFilter({
@@ -231,18 +231,16 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             if (!clearableItems.length) refresh()
           }}
           style={{
-            paddingHorizontal: contentPadding / 3,
             opacity: clearableItems.length ? 1 : 0.5,
           }}
           tooltip={clearableItems.length ? 'Clear items' : 'Show cleared items'}
         />
 
-        <ColumnHeaderItem
+        <IconButton
           key="column-options-button-toggle-mark-as-read"
           analyticsLabel={!hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'}
           disabled={!filteredItems.length}
-          fixedIconSize
-          iconName={!hasOneUnreadItem ? 'mail-read' : 'mail'}
+          name={!hasOneUnreadItem ? 'mail-read' : 'mail'}
           onPress={() => {
             const unread = !hasOneUnreadItem
 
@@ -290,24 +288,17 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
             focusColumn()
           }}
-          style={{
-            paddingHorizontal: contentPadding / 3,
-          }}
           tooltip={
             !hasOneUnreadItem ? 'Mark all as unread' : 'Mark all as read'
           }
         />
 
-        <ColumnHeaderItem
+        <IconButton
           key="column-options-toggle-button"
           analyticsAction="toggle"
           analyticsLabel="column_options"
-          fixedIconSize
-          iconName="gear"
+          name="gear"
           onPress={toggleOptions}
-          style={{
-            paddingHorizontal: contentPadding / 3,
-          }}
           tooltip="Options"
         />
       </ColumnHeader>

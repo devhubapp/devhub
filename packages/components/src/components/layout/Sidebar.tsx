@@ -95,8 +95,8 @@ export const Sidebar = React.memo((props: SidebarProps) => {
     })
   }, [focusedColumnIndex, flatListRef.current])
 
-  const small = sizename === '1-small'
   const large = sizename >= '3-large'
+  const small = !large
 
   const showLabel = !!horizontal
   const showFixedSettingsButton = !horizontal || columnIds.length >= 4

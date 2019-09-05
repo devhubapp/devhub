@@ -35,6 +35,8 @@ const styles = StyleSheet.create({
   innerContainer: {
     alignSelf: 'stretch',
     flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
     height: columnHeaderHeight,
   },
 })

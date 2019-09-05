@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  TouchableOpacity as TouchableOpacityOriginal,
+  TouchableWithoutFeedback as TouchableWithoutFeedbackOriginal,
   View,
 } from 'react-native'
 
@@ -13,16 +13,19 @@ export const TouchableWithoutFeedback = React.forwardRef<
   Touchable | View,
   TouchableWithoutFeedbackProps
 >((props, ref) => {
+  const { children, style, ...otherProps } = props
+
   return (
     <Touchable
       ref={ref}
-      TouchableComponent={TouchableOpacityOriginal}
-      activeOpacity={1}
-      {...props}
-    />
+      TouchableComponent={TouchableWithoutFeedbackOriginal}
+      {...otherProps}
+    >
+      <View style={style}>{children}</View>
+    </Touchable>
   )
 })
 
 TouchableWithoutFeedback.displayName = 'TouchableWithoutFeedback'
 
-export type TouchableWithoutFeedback = TouchableOpacityOriginal
+export type TouchableWithoutFeedback = Touchable

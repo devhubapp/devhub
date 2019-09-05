@@ -13,6 +13,7 @@ import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animat
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
+import { IconButton } from '../common/IconButton'
 import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { getCurrentFocusedColumnId } from '../context/ColumnFocusContext'
@@ -280,23 +281,19 @@ export const ColumnFiltersRenderer = React.memo(
                 iconName="settings"
                 subtitle=""
                 title="filters"
-                style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
+                style={[sharedStyles.flex, sharedStyles.alignItemsFlexStart]}
                 tooltip={undefined}
               />
 
               <Spacer flex={1} />
 
               {!inlineMode && !!close && (
-                <ColumnHeaderItem
+                <IconButton
                   key="column-flters-close-button"
                   analyticsAction={undefined}
                   analyticsLabel={undefined}
-                  fixedIconSize
-                  iconName="x"
+                  name="x"
                   onPress={() => close()}
-                  style={{
-                    paddingHorizontal: contentPadding / 3,
-                  }}
                   tooltip="Close"
                 />
               )}

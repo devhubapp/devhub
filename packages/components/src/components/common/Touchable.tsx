@@ -12,7 +12,8 @@ import { findNode } from '../../utils/helpers/shared'
 export interface TouchableProps
   extends TouchableWithoutFeedbackProps,
     TouchableOpacityProps,
-    TouchableHighlightProps {
+    TouchableHighlightProps,
+    TouchableWithoutFeedbackProps {
   TouchableComponent: any
   analyticsAction?: 'press' | 'toggle' | string | undefined
   analyticsCategory?: 'button' | 'checkbox' | 'link' | string | undefined

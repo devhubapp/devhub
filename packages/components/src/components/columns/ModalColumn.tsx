@@ -9,6 +9,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
 import { findNode, tryFocus } from '../../utils/helpers/shared'
+import { IconButton } from '../common/IconButton'
 import { Spacer } from '../common/Spacer'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { Column } from './Column'
@@ -71,14 +72,17 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
     <Column ref={columnRef} columnId={name} style={{ zIndex: 900 }}>
       <ColumnHeader>
         {!!showBackButton && (
-          <ColumnHeaderItem
-            analyticsLabel="modal"
-            analyticsAction="back"
-            fixedIconSize
-            iconName="chevron-left"
-            onPress={() => popModal()}
-            tooltip={`Back (${keyboardShortcutsById.goBack.keys[0]})`}
-          />
+          <>
+            <IconButton
+              analyticsLabel="modal"
+              analyticsAction="back"
+              name="chevron-left"
+              onPress={() => popModal()}
+              tooltip={`Back (${keyboardShortcutsById.goBack.keys[0]})`}
+            />
+
+            <Spacer width={contentPadding / 2} />
+          </>
         )}
 
         <ColumnHeaderItem
@@ -94,11 +98,10 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         <Spacer flex={1} />
 
         {!hideCloseButton && (
-          <ColumnHeaderItem
+          <IconButton
             analyticsAction="close"
             analyticsLabel="modal"
-            fixedIconSize
-            iconName="x"
+            name="x"
             onPress={() => closeAllModals()}
             tooltip={
               showBackButton
