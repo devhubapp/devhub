@@ -59,9 +59,9 @@ export function CounterMetadata(props: CounterMetadataProps) {
   } = props
 
   const backgroundColor =
-    _backgroundColor || (unread ? 'backgroundColorLess2' : undefined)
+    _backgroundColor || (unread ? 'backgroundColorLess3' : undefined)
 
-  const borderColor = !unread ? 'backgroundColorLess2' : undefined
+  const borderColor = !unread ? 'backgroundColorLess3' : undefined
 
   const isCustomBackground = !!(
     backgroundColor && !backgroundColor.startsWith('backgroundColor')
@@ -69,7 +69,7 @@ export function CounterMetadata(props: CounterMetadataProps) {
   const mutedColorOpacity = isCustomBackground ? mutedOpacity : 1
   const foregroundMutedColor = isCustomBackground
     ? 'foregroundColor'
-    : 'foregroundColorMuted40'
+    : 'foregroundColorMuted65'
 
   const firstNumberMetadata: NumberMetadata | undefined =
     unread !== undefined && unread > 0

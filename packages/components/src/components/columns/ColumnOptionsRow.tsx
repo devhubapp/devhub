@@ -2,6 +2,7 @@ import React, { useCallback, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
+import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -64,23 +65,29 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
   const viewRef = useRef<View>(null)
 
+  const isOpenRef = useDynamicRef(isOpen)
+
   const cacheRef = useRef({
     isHovered: false,
     isPressing: false,
   })
 
-  const getStyles = useCallback(() => {
+  const getBackgroundThemeColor = useCallback(() => {
     const { isHovered, isPressing } = cacheRef.current
 
+    return enableBackgroundHover &&
+      (isHovered || isPressing || isOpenRef.current)
+      ? getColumnHeaderThemeColors().hover
+      : getColumnHeaderThemeColors().normal
+  }, [enableBackgroundHover])
+
+  const getStyles = useCallback(() => {
     const theme = getTheme()
 
     return {
-      backgroundColor:
-        enableBackgroundHover && (isHovered || isPressing || isOpen)
-          ? theme[getColumnHeaderThemeColors().hover]
-          : theme[getColumnHeaderThemeColors().normal],
+      backgroundColor: theme[getBackgroundThemeColor()],
     }
-  }, [enableBackgroundHover, isOpen])
+  }, [getBackgroundThemeColor])
 
   const updateStyles = useCallback(() => {
     if (!viewRef.current) return
@@ -95,16 +102,13 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
       cacheRef.current.isHovered = isHovered
       updateStyles()
 
-      if (openOnHover && onToggle && !isOpen) onToggle()
+      if (openOnHover && onToggle && !isOpenRef.current) onToggle()
     },
   )
   cacheRef.current.isHovered = initialIsHovered
 
   return (
-    <ThemedView
-      ref={viewRef}
-      backgroundColor={enableBackgroundHover ? 'backgroundColor' : undefined}
-    >
+    <ThemedView ref={viewRef} backgroundColor={getBackgroundThemeColor()}>
       <ConditionalWrap
         condition={!!onToggle}
         wrap={child =>

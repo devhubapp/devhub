@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { Fragment, useMemo, useRef, useState } from 'react'
+import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 
 import {
@@ -255,29 +255,34 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   )
   const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
 
-  if (!column) return null
+  const toggleOpenedOptionCategory = useCallback(
+    (optionCategory: ColumnFilterCategory) => {
+      setOpenedOptionCategories(_set => {
+        const set = new Set(_set)
+        const isOpen = set.has(optionCategory)
+        if (allowOnlyOneCategoryToBeOpenedRef.current) set.clear()
+        isOpen ? set.delete(optionCategory) : set.add(optionCategory)
 
-  const toggleOpenedOptionCategory = (optionCategory: ColumnFilterCategory) => {
-    setOpenedOptionCategories(set => {
-      const isOpen = set.has(optionCategory)
-      if (allowOnlyOneCategoryToBeOpenedRef.current) set.clear()
-      isOpen ? set.delete(optionCategory) : set.add(optionCategory)
+        if (set.size === 0) allowOnlyOneCategoryToBeOpenedRef.current = true
 
-      if (set.size === 0) allowOnlyOneCategoryToBeOpenedRef.current = true
-
-      return new Set(set)
-    })
-  }
+        return set
+      })
+    },
+    [],
+  )
 
   const allItemsMetadata = useMemo(
-    () => getItemsFilterMetadata(column.type, allItems),
-    [column.type, allItems],
+    () => getItemsFilterMetadata(column ? column.type : 'activity', allItems),
+    [column && column.type, allItems],
   )
 
   const filteredItemsMetadata = useMemo(
-    () => getItemsFilterMetadata(column.type, filteredItems),
-    [column.type, filteredItems],
+    () =>
+      getItemsFilterMetadata(column ? column.type : 'activity', filteredItems),
+    [column && column.type, filteredItems],
   )
+
+  if (!column) return null
 
   const inbox = getItemInbox(column.type, column.filters)
 
