@@ -119,12 +119,7 @@ export const CardWithLink = React.memo(
         isFocusedRef.current = value
 
         if (Platform.OS === 'web' && value && changed && !disableDomFocus) {
-          const node = tryFocus(ref.current)
-
-          // Workaround to fix onPress not being called when pressing the Enter key
-          // I think react-native-web is removing the onClick from links
-          // @see https://github.com/necolas/react-native-web/blob/36dacb2052efdab2a28655773dc76934157d9134/packages/react-native-web/src/exports/createElement/index.js#L69-L79
-          if (node) node.onclick = onPress
+          tryFocus(ref.current)
         }
 
         updateStyles()
@@ -221,6 +216,7 @@ const GestureHandlerCardTouchable = React.forwardRef<
   return (
     <View ref={ref} style={props.style}>
       <GestureHandlerTouchableOpacity
+        accessible={false}
         activeOpacity={1}
         {...props}
         style={StyleSheet.flatten([
@@ -237,6 +233,7 @@ const NormalCardTouchable = React.forwardRef<View, TouchableOpacityProps>(
     return (
       <View ref={ref} style={props.style}>
         <TouchableOpacity
+          accessible={false}
           activeOpacity={Platform.supportsTouch ? 1 : undefined}
           {...props}
           style={[props.style, { backgroundColor: 'transparent' }]}

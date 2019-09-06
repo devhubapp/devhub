@@ -21,6 +21,7 @@ namespace JSX {
       | 'main' // main
       | 'navigation' // nav
       | 'region' // section
+    accessible?: boolean
     className?: string
     tabIndex?: number
   }

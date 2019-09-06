@@ -75,6 +75,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   useCardsKeyboard(listRef, {
     columnId: column.id,
     items,
+    ownerIsKnown,
+    repoIsKnown,
     type: 'activity',
     visibleItemIndexesRef,
   })

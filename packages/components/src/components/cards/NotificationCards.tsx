@@ -78,6 +78,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   useCardsKeyboard(listRef, {
     columnId: column.id,
     items,
+    ownerIsKnown,
+    repoIsKnown,
     type: 'notifications',
     visibleItemIndexesRef,
   })

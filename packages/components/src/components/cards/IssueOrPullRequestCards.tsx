@@ -97,6 +97,8 @@ export const IssueOrPullRequestCards = React.memo(
     useCardsKeyboard(listRef, {
       columnId: (column && column.id)!,
       items,
+      ownerIsKnown,
+      repoIsKnown,
       type: 'issue_or_pr',
       visibleItemIndexesRef,
     })
