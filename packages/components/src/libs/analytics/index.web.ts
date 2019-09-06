@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { InteractionManager } from 'react-native'
 
 import { constants } from '@devhub/core'
 import { Platform } from '../platform'
@@ -47,11 +48,13 @@ export const analytics: Analytics = {
   },
 
   trackEvent(category, action, label, value, payload) {
-    gtagAndLog('event', action, {
-      event_category: category,
-      event_label: label,
-      value,
-      ...payload,
+    InteractionManager.runAfterInteractions(() => {
+      gtagAndLog('event', action, {
+        event_category: category,
+        event_label: label,
+        value,
+        ...payload,
+      })
     })
   },
 

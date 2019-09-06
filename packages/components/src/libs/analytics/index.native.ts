@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { InteractionManager } from 'react-native'
 import * as firebase from 'react-native-firebase'
 
 import { constants } from '@devhub/core'
@@ -32,21 +33,23 @@ export const analytics: Analytics = {
   },
 
   trackEvent(category, action, label, value, payload = {}) {
-    // TODO: Test this and fix
-    const customDimensions = _.isPlainObject(payload)
-      ? payload
-      : typeof payload === 'string' || typeof payload === 'number'
-      ? ({ payload } as any)
-      : {}
+    InteractionManager.runAfterInteractions(() => {
+      // TODO: Test this and fix
+      const customDimensions = _.isPlainObject(payload)
+        ? payload
+        : typeof payload === 'string' || typeof payload === 'number'
+        ? ({ payload } as any)
+        : {}
 
-    Object.assign(customDimensions, _dimensions)
+      Object.assign(customDimensions, _dimensions)
 
-    if (__DEV__) log('event', category, action)
-    firebase.analytics().logEvent(action.replace(/\//g, '_'), {
-      event_category: category,
-      event_label: label,
-      value,
-      ...payload,
+      if (__DEV__) log('event', category, action)
+      firebase.analytics().logEvent(action.replace(/\//g, '_'), {
+        event_category: category,
+        event_label: label,
+        value,
+        ...payload,
+      })
     })
   },
 
