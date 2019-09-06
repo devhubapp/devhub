@@ -1,5 +1,6 @@
 import immer from 'immer'
 import _ from 'lodash'
+import { REHYDRATE } from 'redux-persist'
 
 import {
   ColumnSubscription,
@@ -31,6 +32,26 @@ export const subscriptionsReducer: Reducer<State> = (
   action,
 ) => {
   switch (action.type) {
+    case REHYDRATE as any: {
+      const { err, payload } = action as any
+
+      const subscriptions: State = err
+        ? state
+        : (payload && payload.subscriptions) || state
+
+      return immer(subscriptions, draft => {
+        const keys = Object.keys(draft.byId)
+        if (!(keys && keys.length)) return
+
+        keys.forEach(id => {
+          const subscription = draft.byId[id]
+          if (!(subscription && subscription.data)) return
+
+          subscription.data.loadState = 'not_loaded'
+        })
+      })
+    }
+
     case 'CLEANUP_SUBSCRIPTIONS_DATA': {
       return immer(state, draft => {
         draft.allIds = draft.allIds || []

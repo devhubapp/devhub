@@ -73,6 +73,11 @@ export const githubInstallationsReducer: Reducer<State> = (
         // }
       })
 
+    case 'REFRESH_INSTALLATIONS_NOOP':
+      return immer(state, draft => {
+        if (draft.loadState === 'loading') draft.loadState = 'loaded'
+      })
+
     case 'REFRESH_INSTALLATIONS_FAILURE':
       return immer(state, draft => {
         draft.error = `${(action.error && action.error.message) ||
