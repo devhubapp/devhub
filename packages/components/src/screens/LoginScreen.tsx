@@ -32,6 +32,7 @@ const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disa
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignSelf: 'center',
     maxWidth: 400,
     width: '100%',
   },
