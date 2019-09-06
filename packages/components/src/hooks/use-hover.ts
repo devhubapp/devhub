@@ -30,7 +30,7 @@ export function useHover(
       5,
       { leading: false, trailing: true },
     ),
-    [],
+    [callback],
   )
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export function useHover(
       node.removeEventListener('mouseover', handleMouseOver)
       node.removeEventListener('mouseout', handleMouseOut)
     }
-  }, [ref && ref.current, callback])
+  }, [ref && ref.current, resolve])
 
   return cacheRef.current
 }
