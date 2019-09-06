@@ -64,18 +64,17 @@ export const Touchable = React.forwardRef(
       if (!tooltip && node.removeAttribute) node.removeAttribute('title')
     }, [touchableRef.current, tooltip])
 
-    const onPress: typeof _onPress =
-      analyticsAction || analyticsCategory || analyticsLabel || analyticsValue
-        ? e => {
-            analytics.trackEvent(
-              analyticsCategory || 'button',
-              analyticsAction || 'press',
-              analyticsLabel,
-              analyticsValue,
-            )
-            if (_onPress) _onPress(e)
-          }
-        : _onPress
+    const onPress: typeof _onPress = analyticsLabel
+      ? e => {
+          analytics.trackEvent(
+            analyticsCategory || 'button',
+            analyticsAction || 'press',
+            analyticsLabel,
+            analyticsValue,
+          )
+          if (_onPress) _onPress(e)
+        }
+      : _onPress
 
     const onLongPress: typeof _onLongPress =
       _onLongPress ||

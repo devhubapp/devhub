@@ -34,7 +34,6 @@ export function SubHeader(props: SubHeaderProps) {
     >
       {!!iconName && (
         <ColumnHeaderItem
-          analyticsLabel={undefined}
           fixedIconSize
           iconName={iconName}
           noPadding

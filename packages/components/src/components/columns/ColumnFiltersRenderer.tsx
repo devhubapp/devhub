@@ -8,7 +8,7 @@ import { useForceRerender } from '../../hooks/use-force-rerender'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
-import { columnHeaderHeight, contentPadding } from '../../styles/variables'
+import { columnHeaderHeight } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
@@ -186,8 +186,6 @@ export const ColumnFiltersRenderer = React.memo(
             pointerEvents="box-none"
           >
             <ThemedTouchableOpacity
-              analyticsAction="close_via_overlay"
-              analyticsLabel="column_filters"
               activeOpacity={1}
               backgroundColor="backgroundColorMore1"
               style={[
@@ -276,7 +274,6 @@ export const ColumnFiltersRenderer = React.memo(
           {header === 'header' ? (
             <ColumnHeader>
               <ColumnHeaderItem
-                analyticsLabel={undefined}
                 fixedIconSize
                 iconName="settings"
                 subtitle=""
@@ -290,8 +287,6 @@ export const ColumnFiltersRenderer = React.memo(
               {!inlineMode && !!close && (
                 <IconButton
                   key="column-flters-close-button"
-                  analyticsAction={undefined}
-                  analyticsLabel={undefined}
                   name="x"
                   onPress={() => close()}
                   tooltip="Close"

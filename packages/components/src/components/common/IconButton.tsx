@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
 import { IconProps } from 'react-native-vector-icons/Icon'

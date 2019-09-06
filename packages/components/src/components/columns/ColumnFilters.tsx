@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Fragment, useMemo, useRef, useState } from 'react'
-import { View, ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import {
   columnHasAnyFilter,
@@ -52,7 +52,6 @@ import {
   CounterMetadata,
   CounterMetadataProps,
 } from '../common/CounterMetadata'
-import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { ThemedText } from '../themed/ThemedText'
@@ -361,7 +360,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="involves"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={false}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
@@ -419,7 +417,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   // return (
                   //   <Checkbox
                   //     key={`involves-user-option-${user}`}
-                  //     analyticsLabel={undefined}
                   //     checked={checked}
                   //     containerStyle={
                   //       sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
@@ -480,7 +477,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="saved_for_later"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={typeof savedForLater === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
@@ -502,7 +498,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 title="Bookmarked"
               >
                 <Checkbox
-                  analyticsLabel="save_for_later"
                   checked={
                     typeof savedForLater === 'boolean' ? savedForLater : null
                   }
@@ -544,7 +539,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="read_status"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={
                   !!(
@@ -574,7 +568,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 title="Read status"
               >
                 <Checkbox
-                  analyticsLabel="read"
                   checked={
                     isReadChecked && isUnreadChecked ? null : isReadChecked
                   }
@@ -606,7 +599,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 />
 
                 <Checkbox
-                  analyticsLabel="unread"
                   checked={
                     isReadChecked && isUnreadChecked ? null : isUnreadChecked
                   }
@@ -674,7 +666,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="state_options_row"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
@@ -723,7 +714,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   return (
                     <Checkbox
                       key={`state-type-option-${item.state}`}
-                      analyticsLabel={undefined}
                       checked={checked}
                       checkedBackgroundThemeColor={item.color}
                       circle={supportsOnlyOne}
@@ -784,7 +774,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="draft_options_row"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={typeof draft === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
@@ -803,7 +792,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               >
                 <Checkbox
                   key="draft-type-option"
-                  analyticsLabel={undefined}
                   checked={typeof draft === 'boolean' ? draft : null}
                   checkedBackgroundThemeColor="gray"
                   containerStyle={
@@ -845,7 +833,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="bot_options_row"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={typeof bot === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
@@ -862,7 +849,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               >
                 <Checkbox
                   key="bot-type-option"
-                  analyticsLabel={undefined}
                   checked={typeof bot === 'boolean' ? bot : null}
                   containerStyle={
                     sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
@@ -940,7 +926,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="subject_types"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
@@ -978,7 +963,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       key={`notification-subject-type-option-${
                         item.subjectType
                       }`}
-                      analyticsLabel={undefined}
                       checked={checked}
                       checkedBackgroundThemeColor={item.color}
                       containerStyle={
@@ -1059,7 +1043,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="notification_reason"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
@@ -1090,7 +1073,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   return (
                     <Checkbox
                       key={`notification-reason-option-${item.reason}`}
-                      analyticsLabel={undefined}
                       checked={checked}
                       checkedBackgroundThemeColor={item.color}
                       containerStyle={
@@ -1174,7 +1156,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="event_action"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
@@ -1207,7 +1188,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   return (
                     <Checkbox
                       key={`event-type-option-${item.action}`}
-                      analyticsLabel={undefined}
                       checked={checked}
                       containerStyle={
                         sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
@@ -1268,7 +1248,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="privacy"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={
                   !!column.filters &&
@@ -1297,7 +1276,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 title="Privacy"
               >
                 <Checkbox
-                  analyticsLabel="public"
                   checked={
                     isPublicChecked && isPrivateChecked ? null : isPublicChecked
                   }
@@ -1327,7 +1305,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 />
 
                 <Checkbox
-                  analyticsLabel="private"
                   checked={
                     isPublicChecked && isPrivateChecked
                       ? null
@@ -1395,7 +1372,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             return (
               <ColumnOptionsRow
-                analyticsLabel="repositories"
                 enableBackgroundHover={allowToggleCategories}
                 hasChanged={
                   // column.type !== 'issue_or_pr' &&
@@ -1455,7 +1431,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     <Fragment key={`owner-option-fragment-${owner}`}>
                       <Checkbox
                         key={`owner-option-${owner}`}
-                        analyticsLabel={undefined}
                         checked={ownerChecked}
                         containerStyle={
                           sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
@@ -1524,7 +1499,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                         return (
                           <Checkbox
                             key={`owner-repo-option-${owner}/${repo}`}
-                            analyticsLabel={undefined}
                             checked={disabled ? false : repoChecked}
                             containerStyle={[
                               sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding,
@@ -1589,7 +1563,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
         }}
       >
         <Button
-          analyticsLabel="clear_column_filters"
           children="Reset filters"
           disabled={
             !columnHasAnyFilter(column.type, {

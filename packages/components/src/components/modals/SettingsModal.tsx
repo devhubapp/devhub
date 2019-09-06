@@ -218,8 +218,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
           <Spacer height={contentPadding / 2} />
 
           <Button
-            key="adbanced-button"
-            analyticsLabel=""
+            key="advanced-button"
             onPress={() => pushModal({ name: 'ADVANCED_SETTINGS' })}
           >
             Show advanced settings

@@ -86,7 +86,6 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         )}
 
         <ColumnHeaderItem
-          analyticsLabel={undefined}
           {...otherProps}
           iconName={undefined}
           style={[showBackButton && { padding: 0 }]}
@@ -113,7 +112,6 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
 
         {right && (
           <ColumnHeaderItem
-            analyticsLabel={undefined}
             noPadding
             style={{
               paddingHorizontal: contentPadding / 2,

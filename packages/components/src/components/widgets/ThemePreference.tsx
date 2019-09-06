@@ -46,7 +46,6 @@ export const ThemePreference = React.memo(() => {
 
     return (
       <Checkbox
-        analyticsLabel={undefined}
         key={`theme-item-checkbox-${theme.id}`}
         checked={selected ? (currentThemeId === 'auto' ? null : true) : false}
         circle

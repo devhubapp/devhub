@@ -183,7 +183,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
           <ColumnHeader noPadding>
             <ColumnHeaderItem
               activeOpacity={getItemProps({ highlight: false }).activeOpacity}
-              analyticsLabel={undefined}
               foregroundThemeColor={
                 getItemProps({ highlight: false }).foregroundThemeColor
               }
@@ -516,7 +515,6 @@ export const Sidebar = React.memo((props: SidebarProps) => {
 
             <ColumnHeaderItem
               activeOpacity={getItemProps({ highlight: false }).activeOpacity}
-              analyticsLabel={undefined}
               foregroundThemeColor={
                 getItemProps({ highlight: false }).foregroundThemeColor
               }

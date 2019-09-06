@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 })
 
 export interface CheckboxProps {
-  analyticsLabel: TouchableOpacityProps['analyticsLabel']
+  analyticsLabel?: TouchableOpacityProps['analyticsLabel']
   checked?: boolean | null
   circle?: boolean
   containerStyle?: StyleProp<ViewStyle>

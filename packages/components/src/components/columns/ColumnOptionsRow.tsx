@@ -24,7 +24,7 @@ import { ThemedView } from '../themed/ThemedView'
 import { getColumnHeaderThemeColors } from './ColumnHeader'
 
 export interface ColumnOptionsRowProps {
-  analyticsLabel: TouchableOpacityProps['analyticsLabel']
+  analyticsLabel?: TouchableOpacityProps['analyticsLabel']
   children: React.ReactNode
   containerStyle?: ViewStyle
   contentContainerStyle?: ViewStyle

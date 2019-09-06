@@ -21,11 +21,7 @@ export const ButtonLink = React.memo((props: ButtonLinkProps) => {
         href={href}
         openOnNewTab={openOnNewTab}
       >
-        <Button
-          {...otherProps}
-          analyticsLabel={undefined}
-          onPress={undefined}
-        />
+        <Button {...otherProps} onPress={undefined} />
       </Link>
     )
   }

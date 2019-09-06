@@ -194,7 +194,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     >
       <ColumnHeader key={`column-renderer-${columnId}-header`}>
         <ColumnHeaderItem
-          analyticsLabel={undefined}
           avatarProps={
             avatarRepo || avatarUsername
               ? { repo: avatarRepo, username: avatarUsername }

@@ -415,7 +415,6 @@ export const AddColumnDetailsModal = React.memo(
       return (
         <View key={`add-column-details-form-item-${formItemOption}`}>
           <Checkbox
-            analyticsLabel={`add_column_details_${formItemOption}`}
             checked={formikProps.values[formItemOption]}
             containerStyle={
               sharedColumnOptionsStyles.fullWidthCheckboxContainer

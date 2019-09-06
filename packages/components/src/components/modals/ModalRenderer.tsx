@@ -201,8 +201,6 @@ export function ModalRenderer(props: ModalRendererProps) {
           ]}
         >
           <ThemedTouchableOpacity
-            analyticsAction="close_via_overlay"
-            analyticsLabel="modal"
             activeOpacity={1}
             backgroundColor="backgroundColorMore1"
             style={[

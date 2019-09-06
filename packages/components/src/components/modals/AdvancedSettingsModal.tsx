@@ -349,7 +349,7 @@ export const AdvancedSettingsModal = React.memo(
             <Button
               key="delete-account-button"
               analyticsAction="delete_account"
-              analyticsLabel=""
+              analyticsLabel="delete_account"
               disabled={isDeletingAccount || isLoggingIn}
               loading={isDeletingAccount}
               onPress={() =>

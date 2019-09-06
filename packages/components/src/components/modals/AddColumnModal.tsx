@@ -19,7 +19,6 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
-import { ColumnHeaderItem } from '../columns/ColumnHeaderItem'
 import { ModalColumn } from '../columns/ModalColumn'
 import { fabSize } from '../common/FAB'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
@@ -222,7 +221,6 @@ function AddColumnModalItem({
     <SpringAnimatedTouchableOpacity
       ref={touchableRef}
       activeOpacity={Platform.supportsTouch ? 1 : undefined}
-      analyticsLabel={undefined}
       disabled={disabled || !payload}
       onPress={
         payload
