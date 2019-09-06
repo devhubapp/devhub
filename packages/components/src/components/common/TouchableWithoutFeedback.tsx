@@ -21,7 +21,9 @@ export const TouchableWithoutFeedback = React.forwardRef<
       TouchableComponent={TouchableWithoutFeedbackOriginal}
       {...otherProps}
     >
-      <View style={style}>{children}</View>
+      <View style={[style, props.disabled && { opacity: 0.5 }]}>
+        {children}
+      </View>
     </Touchable>
   )
 })
