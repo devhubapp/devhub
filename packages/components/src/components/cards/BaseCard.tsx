@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    flex: 1,
+    flexGrow: 1,
     lineHeight: sizes.rightTextLineHeight,
     fontSize: smallerTextSize,
     fontWeight: '400',
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    flex: 1,
+    flexGrow: 1,
     lineHeight: sizes.rightTextLineHeight,
     fontSize: smallerTextSize,
     fontWeight: '300',
