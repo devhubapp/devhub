@@ -63,58 +63,52 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
   const subtitle = _right && typeof _right === 'string' ? _right : undefined
   const right = subtitle ? undefined : _right
 
-  const viewRef = useRef<View>(null)
-
+  const containerRef = useRef<View>(null)
+  const innerRef = useRef<View>(null)
   const isOpenRef = useDynamicRef(isOpen)
-
-  const cacheRef = useRef({
-    isHovered: false,
-    isPressing: false,
-  })
-
-  const getBackgroundThemeColor = useCallback(() => {
-    const { isHovered, isPressing } = cacheRef.current
-
-    return enableBackgroundHover &&
-      (isHovered || isPressing || isOpenRef.current)
-      ? getColumnHeaderThemeColors().hover
-      : getColumnHeaderThemeColors().normal
-  }, [enableBackgroundHover])
-
-  const getStyles = useCallback(() => {
-    const theme = getTheme()
-
-    return {
-      backgroundColor: theme[getBackgroundThemeColor()],
-    }
-  }, [getBackgroundThemeColor])
+  const isHoveredRef = useRef(false)
+  const isPressingRef = useRef(false)
 
   const updateStyles = useCallback(() => {
-    if (!viewRef.current) return
-    viewRef.current.setNativeProps({ style: getStyles() })
-  }, [getStyles])
+    if (!innerRef.current) return
 
-  const touchableRef = useRef(null)
-  const initialIsHovered = useHover(
-    onToggle ? touchableRef : null,
-    isHovered => {
-      if (cacheRef.current.isHovered === isHovered) return
-      cacheRef.current.isHovered = isHovered
-      updateStyles()
+    const theme = getTheme()
+    innerRef.current.setNativeProps({
+      style: {
+        backgroundColor:
+          enableBackgroundHover &&
+          !isOpenRef.current &&
+          (isHoveredRef.current || isPressingRef.current)
+            ? theme[getColumnHeaderThemeColors().hover]
+            : 'transparent',
+      },
+    })
+  }, [enableBackgroundHover])
 
-      if (openOnHover && onToggle && !isOpenRef.current) onToggle()
-    },
-  )
-  cacheRef.current.isHovered = initialIsHovered
+  const initialIsHovered = useHover(onToggle ? innerRef : null, isHovered => {
+    if (isHoveredRef.current === isHovered) return
+    isHoveredRef.current = isHovered
+    updateStyles()
+
+    if (openOnHover && onToggle && !isOpenRef.current) onToggle()
+  })
+  isHoveredRef.current = initialIsHovered
 
   return (
-    <ThemedView ref={viewRef} backgroundColor={getBackgroundThemeColor()}>
+    <ThemedView
+      ref={containerRef}
+      backgroundColor={
+        enableBackgroundHover && isOpen
+          ? getColumnHeaderThemeColors().hover
+          : getColumnHeaderThemeColors().normal
+      }
+    >
       <ConditionalWrap
         condition={!!onToggle}
         wrap={child =>
           onToggle ? (
             <TouchableOpacity
-              ref={touchableRef}
+              ref={innerRef as any}
               activeOpacity={1}
               analyticsAction={isOpen ? 'hide' : 'show'}
               analyticsCategory="option_row"
@@ -124,21 +118,19 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
               }}
               onPressIn={() => {
                 if (!Platform.supportsTouch) return
-
-                cacheRef.current.isPressing = true
+                isPressingRef.current = true
                 updateStyles()
               }}
               onPressOut={() => {
                 if (!Platform.supportsTouch) return
-
-                cacheRef.current.isPressing = false
+                isPressingRef.current = false
                 updateStyles()
               }}
             >
               {child}
             </TouchableOpacity>
           ) : (
-            <View>{child}</View>
+            <View ref={innerRef}>{child}</View>
           )
         }
       >
