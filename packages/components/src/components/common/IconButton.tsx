@@ -164,7 +164,12 @@ export function IconButton(props: IconButtonProps) {
         />
 
         <ThemedText ref={textRef} color={foregroundThemeColor}>
-          <Octicons name={name} size={size} style={sharedStyles.textCenter} />
+          <Octicons
+            name={name}
+            selectable={false}
+            size={size}
+            style={sharedStyles.textCenter}
+          />
         </ThemedText>
       </>
     </TouchableWithoutFeedback>
