@@ -243,6 +243,14 @@ export const OneList = (React.memo(
                     disableVirtualization={disableVirtualization}
                     getItemLayout={getItemLayout}
                     horizontal={horizontal}
+                    initialNumToRender={
+                      1 +
+                      Math.ceil(
+                        horizontal
+                          ? width / estimatedItemSize
+                          : height / estimatedItemSize,
+                      )
+                    }
                     keyExtractor={keyExtractor}
                     maxToRenderPerBatch={2}
                     onScrollToIndexFailed={onScrollToIndexFailed}

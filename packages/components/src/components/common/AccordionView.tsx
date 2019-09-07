@@ -1,5 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { LayoutChangeEvent, ScrollView, View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  InteractionManager,
+  LayoutChangeEvent,
+  ScrollView,
+  View,
+} from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import { constants } from '@devhub/core'
@@ -21,9 +26,9 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
   const { children, isOpen } = props
 
   const hasCompletedAnimationRef = useRef(false)
-
   const wasOpen = usePrevious(isOpen)
   const [size, setSize] = useState<number | 'auto'>(isOpen ? 'auto' : 0)
+  const [isRenderEnabled, setIsRenderEnabled] = useState(isOpen)
 
   const immediate = constants.DISABLE_ANIMATIONS
   const animatedStyles = useSpring<any>({
@@ -51,8 +56,18 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
     handleContentSizeChange(width, height)
   }, [])
 
+  useEffect(() => {
+    if (isRenderEnabled) return
+    InteractionManager.runAfterInteractions(() => {
+      setIsRenderEnabled(true)
+    })
+  }, [])
+
   return (
     <SpringAnimatedView
+      hidden={animatedStyles.height.to(
+        value => (value === 'auto' || value > 0 ? false : true) as any,
+      )}
       style={[
         sharedStyles.overflowHidden,
         {
@@ -75,7 +90,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
       ]}
     >
       {Platform.OS === 'web' ? (
-        <View onLayout={onLayout}>{children}</View>
+        <View onLayout={onLayout}>{!!isRenderEnabled && children}</View>
       ) : (
         <ScrollView
           bounces={false}
@@ -84,7 +99,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
-          {children}
+          {!!isRenderEnabled && children}
         </ScrollView>
       )}
     </SpringAnimatedView>
