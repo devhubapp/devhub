@@ -82,7 +82,7 @@ export function fromInstallationRepository(
         node_id?: string | undefined | null
         language?: string | undefined | null
         permissions?: any
-        html_url: string | undefined | null
+        html_url?: string | undefined | null
       }
     | undefined,
 ): InstallationRepository | null {
