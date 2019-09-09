@@ -61,8 +61,8 @@ export interface DatabaseUser {
   }
   createdAt: string
   updatedAt: string
-  loginActivity?: LoginActivity[]
   lastLoginAt: string
+  loginCount: number
   plan: DatabaseUserPlan
   planHistory: DatabaseUserPlan[]
   stripe?:

@@ -3,7 +3,7 @@ export interface StripePlan {
   object: 'plan'
   active: boolean
   aggregate_usage: 'sum' | 'last_during_period' | 'last_ever' | 'max' | null
-  amount: number
+  amount: number | null
   billing_scheme: 'per_unit' | 'tiered'
   created: number
   currency: string
