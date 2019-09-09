@@ -8,14 +8,14 @@ import { AppKeyboardShortcuts } from '../components/AppKeyboardShortcuts'
 import { AppBannerMessage } from '../components/banners/AppBannerMessage'
 import { ColumnSeparator } from '../components/columns/ColumnSeparator'
 import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
+import { FABRenderer } from '../components/common/FABRenderer'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
+import { SidebarOrBottomBar } from '../components/common/SidebarOrBottomBar'
 import {
   APP_LAYOUT_BREAKPOINTS,
   useAppLayout,
 } from '../components/context/LayoutContext'
-import { FABRenderer } from '../components/layout/FABRenderer'
-import { Sidebar } from '../components/layout/Sidebar'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { useAppVisibility } from '../hooks/use-app-visibility'
 import { useEmitter } from '../hooks/use-emitter'
@@ -133,10 +133,9 @@ export const MainScreen = React.memo(() => {
             },
           ]}
         >
-          <Sidebar
+          <SidebarOrBottomBar
             key="main-screen-sidebar"
-            horizontal={appOrientation === 'portrait'}
-            zIndex={1000}
+            type={appOrientation === 'portrait' ? 'bottombar' : 'sidebar'}
           />
 
           {appOrientation === 'portrait' ? (

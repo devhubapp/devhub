@@ -55,9 +55,11 @@ export const NotificationColumn = React.memo(
     return (
       <ColumnRenderer
         key={`notification-column-${columnId}-inner`}
-        avatarRepo={headerDetails.avatarProps && headerDetails.avatarProps.repo}
-        avatarUsername={
-          headerDetails.avatarProps && headerDetails.avatarProps.username
+        avatarImageURL={
+          headerDetails.avatarProps && headerDetails.avatarProps.imageURL
+        }
+        avatarLinkURL={
+          headerDetails.avatarProps && headerDetails.avatarProps.linkURL
         }
         columnId={columnId}
         columnIndex={columnIndex}

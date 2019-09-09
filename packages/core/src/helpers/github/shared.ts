@@ -52,9 +52,11 @@ import {
   getNotificationSubjectType,
 } from './notifications'
 import {
+  defaultBaseURL,
   getBaseUrlFromOtherUrl,
   getCommitShaFromUrl,
   getRepoFullNameFromUrl,
+  getRepoUrlFromFullName,
 } from './url'
 
 const GITHUB_USERNAME_REGEX_PATTERN =
@@ -129,17 +131,32 @@ export function isDraft(
   return !!pullRequest.draft || pullRequest.mergeable_state === 'draft'
 }
 
-export function getUserURLFromObject(user: {
-  login: string
-  avatar_url: string
-  url?: string
-  html_url?: string
-}): string | undefined {
-  if (user.html_url) return user.html_url
-  if (!user.login) return undefined
+export function getUserURLFromLogin(
+  login: string,
+  { baseURL }: { baseURL: string | undefined },
+): string | undefined {
+  if (!login) return undefined
+  return `${baseURL || defaultBaseURL}/${login}`
+}
 
-  const _baseURL = getBaseUrlFromOtherUrl(user.url) || 'https://github.com'
-  return `${_baseURL}/${user.login}`
+export function getUserURLFromObject(
+  user: {
+    login: string
+  } & (
+    | {
+        url: string
+        html_url?: string
+      }
+    | {
+        url?: string
+        html_url: string
+      }),
+): string | undefined {
+  if (user.html_url) return user.html_url
+
+  return getUserURLFromLogin(user.login, {
+    baseURL: getBaseUrlFromOtherUrl(user.url),
+  })
 }
 
 export function getUserAvatarByAvatarURL(
@@ -166,7 +183,7 @@ export function getUserAvatarByUsername(
   getPixelSizeForLayoutSizeFn?: (size: number) => number,
 ) {
   return username
-    ? `${baseURL || 'https://github.com/'}${username}.png?size=${getSteppedSize(
+    ? `${baseURL || 'https://github.com'}/${username}.png?size=${getSteppedSize(
         size,
         undefined,
         getPixelSizeForLayoutSizeFn,
@@ -363,15 +380,23 @@ export function getUniqueIdForSubscription(subscription: {
   }
 }
 
+type HeaderDetailsAvatarProps =
+  | {
+      imageURL: string
+      linkURL: string
+      type: 'org' | 'repo' | 'user'
+    }
+  | undefined
 export function getColumnHeaderDetails(
   column: Column | undefined,
   subscription: ColumnSubscription | undefined,
+  {
+    baseURL = defaultBaseURL,
+    loggedUsername,
+  }: { baseURL?: string | undefined; loggedUsername: string | undefined },
 ):
   | {
-      avatarProps?: {
-        repo?: string
-        username: string
-      }
+      avatarProps?: HeaderDetailsAvatarProps
       icon: GitHubIcon
       owner?: string
       repo?: string
@@ -383,6 +408,14 @@ export function getColumnHeaderDetails(
   | undefined {
   if (!column) return undefined
 
+  function isSameUsernameFromLoggedUser(username: string | undefined) {
+    return (
+      loggedUsername &&
+      username &&
+      loggedUsername.toLowerCase() === username.toLowerCase()
+    )
+  }
+
   switch (column && column.type) {
     case 'activity': {
       const s = (subscription || {}) as Partial<ActivityColumnSubscription>
@@ -390,8 +423,13 @@ export function getColumnHeaderDetails(
       switch (s.subtype) {
         case 'ORG_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: s.params!.org },
+            avatarProps: {
+              imageURL: getUserAvatarByUsername(s.params!.org, { baseURL }),
+              linkURL: getUserURLFromLogin(s.params!.org!, { baseURL })!,
+              type: 'org',
+            },
             icon: 'organization',
+            owner: s.params!.org,
             ownerIsKnown: true,
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -409,10 +447,15 @@ export function getColumnHeaderDetails(
         }
         case 'REPO_EVENTS': {
           return {
-            avatarProps: {
-              repo: s.params!.repo,
-              username: s.params!.owner,
-            },
+            avatarProps: isSameUsernameFromLoggedUser(s.params!.owner)
+              ? undefined
+              : {
+                  imageURL: getUserAvatarByUsername(s.params!.owner, {
+                    baseURL,
+                  }),
+                  linkURL: `${baseURL}/${s.params!.owner}/${s.params!.repo}`,
+                  type: 'repo',
+                },
             icon: 'repo',
             ownerIsKnown: true,
             repoIsKnown: true,
@@ -424,10 +467,15 @@ export function getColumnHeaderDetails(
         }
         case 'REPO_NETWORK_EVENTS': {
           return {
-            avatarProps: {
-              repo: s.params!.repo,
-              username: s.params!.owner,
-            },
+            avatarProps: isSameUsernameFromLoggedUser(s.params!.owner)
+              ? undefined
+              : {
+                  imageURL: getUserAvatarByUsername(s.params!.owner, {
+                    baseURL,
+                  }),
+                  linkURL: `${baseURL}/${s.params!.owner}/${s.params!.repo}`,
+                  type: 'repo',
+                },
             icon: 'repo',
             ownerIsKnown: false,
             repoIsKnown: false,
@@ -439,8 +487,19 @@ export function getColumnHeaderDetails(
         }
         case 'USER_EVENTS': {
           return {
-            avatarProps: { username: s.params!.username },
+            avatarProps: isSameUsernameFromLoggedUser(s.params!.username)
+              ? undefined
+              : {
+                  imageURL: getUserAvatarByUsername(s.params!.username, {
+                    baseURL,
+                  }),
+                  linkURL: getUserURLFromLogin(s.params!.username, {
+                    baseURL,
+                  })!,
+                  type: 'user',
+                },
             icon: 'person',
+            owner: s.params!.username,
             ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -449,8 +508,13 @@ export function getColumnHeaderDetails(
         }
         case 'USER_ORG_EVENTS': {
           return {
-            avatarProps: { username: s.params!.org },
+            avatarProps: {
+              imageURL: getUserAvatarByUsername(s.params!.org, { baseURL }),
+              linkURL: getUserURLFromLogin(s.params!.org!, { baseURL })!,
+              type: 'org',
+            },
             icon: 'organization',
+            owner: s.params!.org,
             ownerIsKnown: true,
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -459,8 +523,19 @@ export function getColumnHeaderDetails(
         }
         case 'USER_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: s.params!.username },
+            avatarProps: isSameUsernameFromLoggedUser(s.params!.username)
+              ? undefined
+              : {
+                  imageURL: getUserAvatarByUsername(s.params!.username, {
+                    baseURL,
+                  }),
+                  linkURL: getUserURLFromLogin(s.params!.username, {
+                    baseURL,
+                  })!,
+                  type: 'user',
+                },
             icon: 'person',
+            owner: s.params!.username,
             ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -470,8 +545,19 @@ export function getColumnHeaderDetails(
         case 'USER_RECEIVED_EVENTS':
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           return {
-            avatarProps: { username: s.params!.username },
+            avatarProps: isSameUsernameFromLoggedUser(s.params!.username)
+              ? undefined
+              : {
+                  imageURL: getUserAvatarByUsername(s.params!.username, {
+                    baseURL,
+                  }),
+                  linkURL: getUserURLFromLogin(s.params!.username, {
+                    baseURL,
+                  })!,
+                  type: 'user',
+                },
             icon: 'home',
+            owner: s.params!.username,
             ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: 'Dashboard',
@@ -553,14 +639,21 @@ export function getColumnHeaderDetails(
           : undefined) ||
         []
 
-      const avatarProps = {
-        repo: ownerAndRepo.repo,
-        username:
-          (ownerAndRepo.repo && ownerAndRepo.owner) ||
-          owner ||
-          usernames[0] ||
-          '',
-      }
+      const avatarUsername =
+        (ownerAndRepo.repo && ownerAndRepo.owner) || owner || usernames[0] || ''
+      const avatarProps: HeaderDetailsAvatarProps =
+        avatarUsername && !isSameUsernameFromLoggedUser(avatarUsername)
+          ? {
+              imageURL: getUserAvatarByUsername(avatarUsername, { baseURL }),
+              linkURL: ownerAndRepo.repo
+                ? getRepoUrlFromFullName(
+                    `${avatarUsername}/${ownerAndRepo.repo}`,
+                    { baseURL },
+                  )!
+                : getUserURLFromLogin(avatarUsername, { baseURL })!,
+              type: ownerAndRepo.repo ? 'repo' : 'user',
+            }
+          : undefined
 
       switch (s && s.subtype) {
         case 'ISSUES':
@@ -619,14 +712,14 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle:
               s && s.params && s.params.participating
-                ? 'participating'
+                ? 'Participating'
                 : isReadFilterChecked(column && column.filters) &&
                   isUnreadFilterChecked(column && column.filters)
-                ? 'all'
+                ? 'All'
                 : isUnreadFilterChecked(column && column.filters)
-                ? 'unread'
+                ? 'Unread'
                 : isReadFilterChecked(column && column.filters)
-                ? 'read'
+                ? 'Read'
                 : '',
             title: 'Notifications',
           }

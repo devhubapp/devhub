@@ -276,16 +276,18 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
     if (!tooltip && node.removeAttribute) node.removeAttribute('title')
   }, [containerRef.current, tooltip])
 
-  const _username = useReduxState(selectors.currentGitHubUsernameSelector)
+  const currentLoggedUsername = useReduxState(
+    selectors.currentGitHubUsernameSelector,
+  )
 
   const avatarProps = _avatarProps || (EMPTY_OBJ as Partial<AvatarProps>)
 
   const label = `${_label || ''}`.trim()
 
   const username =
-    _username &&
+    currentLoggedUsername &&
     avatarProps.username &&
-    _username.toLowerCase() === avatarProps.username.toLowerCase()
+    currentLoggedUsername.toLowerCase() === avatarProps.username.toLowerCase()
       ? undefined
       : avatarProps.username
 
@@ -354,7 +356,7 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
                 />
               )}
 
-              {!!username ? (
+              {!!(username || (avatarProps && avatarProps.avatarUrl)) ? (
                 <Avatar
                   isBot={false}
                   linkURL=""

@@ -9,9 +9,9 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
+import { fabSpacing, shouldRenderFAB } from '../common/FABRenderer'
 import { Spacer } from '../common/Spacer'
 import { getAppLayout, useAppLayout } from '../context/LayoutContext'
-import { fabSpacing, shouldRenderFAB } from '../layout/FABRenderer'
 import {
   CardItemSeparator,
   cardItemSeparatorSize,

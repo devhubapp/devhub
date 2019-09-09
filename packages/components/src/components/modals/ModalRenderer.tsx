@@ -103,7 +103,7 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const immediate =
     constants.DISABLE_ANIMATIONS ||
-    (sizename === '1-small' &&
+    (sizename <= '2-medium' &&
     ((isSettings && !previouslyOpenedModal) ||
       (!currentOpenedModal && wasSettings)) &&
     columnIds.length > 0
@@ -113,7 +113,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   const size = columnWidth + (renderSeparator ? separatorThickSize : 0)
 
   const overlayTransition = useTransition<boolean, any>(
-    currentOpenedModal && sizename > '1-small' ? [true] : [],
+    currentOpenedModal && sizename > '2-medium' ? [true] : [],
     () => 'modal-overlay',
     {
       reset: false,
@@ -171,7 +171,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   )
 
   const separatorTransitions = useTransition<string, any>(
-    renderSeparator && sizename !== '1-small' && modalStack.length
+    renderSeparator && sizename !== '2-medium' && modalStack.length
       ? [modalStack[0].name]
       : [],
     item => `modal-separator-${item}`,

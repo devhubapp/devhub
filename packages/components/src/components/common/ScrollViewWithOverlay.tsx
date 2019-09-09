@@ -9,6 +9,7 @@ import {
   ViewProps,
 } from 'react-native'
 
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import {
   TransparentTextOverlay,
@@ -17,11 +18,12 @@ import {
 
 export interface ScrollViewWithOverlayProps extends ScrollViewProps {
   ScrollViewComponent?: typeof ScrollView | typeof FlatList | any
+  bottomOrRightOverlayThemeColor?: TransparentTextOverlayProps['themeColor']
   children?: React.ReactNode
   containerStyle?: ViewProps['style']
-  overlayThemeColor?: TransparentTextOverlayProps['themeColor']
   overlaySize?: TransparentTextOverlayProps['size']
   overlaySpacing?: TransparentTextOverlayProps['spacing']
+  topOrLeftOverlayThemeColor?: TransparentTextOverlayProps['themeColor']
 }
 
 export const ScrollViewWithOverlay = React.forwardRef(
@@ -32,7 +34,8 @@ export const ScrollViewWithOverlay = React.forwardRef(
       horizontal,
       overlaySize = contentPadding,
       overlaySpacing,
-      overlayThemeColor = 'backgroundColor',
+      topOrLeftOverlayThemeColor = 'backgroundColor',
+      bottomOrRightOverlayThemeColor = 'backgroundColor',
       ...restProps
     } = props
 
@@ -77,7 +80,9 @@ export const ScrollViewWithOverlay = React.forwardRef(
       ) {
         isLeftOrTopOverlayVisible.current = shouldShowLeftOrTopOverlay
         leftOrTopOverlayRef.current.setNativeProps({
-          style: { opacity: shouldShowLeftOrTopOverlay ? 1 : 0 },
+          style: {
+            opacity: shouldShowLeftOrTopOverlay ? 1 : 0,
+          },
         })
       }
 
@@ -131,10 +136,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
     }
 
     return (
-      <View
-        collapsable={false}
-        style={[{ position: 'relative', flex: 1 }, containerStyle]}
-      >
+      <View collapsable={false} style={[sharedStyles.relative, containerStyle]}>
         <ScrollViewComponent
           ref={ref}
           horizontal={horizontal}
@@ -152,7 +154,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
           containerStyle={StyleSheet.absoluteFill}
           size={overlaySize}
           spacing={overlaySpacing}
-          themeColor={overlayThemeColor}
+          themeColor={topOrLeftOverlayThemeColor}
           to={horizontal ? 'right' : 'bottom'}
         />
 
@@ -161,7 +163,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
           containerStyle={StyleSheet.absoluteFill}
           size={overlaySize}
           spacing={overlaySpacing}
-          themeColor={overlayThemeColor}
+          themeColor={bottomOrRightOverlayThemeColor}
           to={horizontal ? 'left' : 'top'}
         />
       </View>

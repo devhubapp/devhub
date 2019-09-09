@@ -1,6 +1,7 @@
 import { Column, getColumnHeaderDetails } from '@devhub/core'
 import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
+import { currentGitHubUsernameSelector } from './github'
 import { createArraySelector, createDeepEqualSelector } from './helpers'
 import { subscriptionSelector } from './subscriptions'
 
@@ -12,6 +13,11 @@ export const columnSelector = (state: RootState, id: string) => {
   const byId = s(state).byId
   return (byId && byId[id]) || undefined
 }
+
+// export const columnIdsSelector = createSelector(
+//   (state: RootState) => s(state).allIds || EMPTY_ARRAY,
+//   columnIds => columnIds.slice(0, 2),
+// )
 
 export const columnIdsSelector = (state: RootState) =>
   s(state).allIds || EMPTY_ARRAY
@@ -57,5 +63,8 @@ export const createColumnHeaderDetailsSelector = () =>
       const subscription = columnSubscriptionSelector(state, columnId)
       return subscription
     },
-    (column, subscription) => getColumnHeaderDetails(column, subscription),
+    (state: RootState, columnId: string) =>
+      currentGitHubUsernameSelector(state),
+    (column, subscription, loggedUsername) =>
+      getColumnHeaderDetails(column, subscription, { loggedUsername }),
   )

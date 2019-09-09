@@ -15,9 +15,9 @@ export function getColumnHeaderThemeColors(): {
   selected: keyof ThemeColors
 } {
   return {
-    normal: 'backgroundColor', // backgroundColor
+    normal: 'backgroundColor',
     hover: 'backgroundColorLess1',
-    selected: 'backgroundColorLess2',
+    selected: 'backgroundColorLess1',
   }
 }
 

@@ -94,7 +94,8 @@ export const LabelsView = (props: LabelsViewProps) => {
                 <ScrollViewWithOverlay
                   ref={scrollViewRef}
                   horizontal
-                  overlayThemeColor={backgroundThemeColor}
+                  topOrLeftOverlayThemeColor={backgroundThemeColor}
+                  bottomOrRightOverlayThemeColor={backgroundThemeColor}
                 >
                   {c}
                 </ScrollViewWithOverlay>

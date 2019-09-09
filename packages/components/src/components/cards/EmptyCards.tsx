@@ -11,8 +11,8 @@ import {
 } from '../../utils/helpers/github/emojis'
 import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
+import { fabSpacing } from '../common/FABRenderer'
 import { Spacer } from '../common/Spacer'
-import { fabSpacing } from '../layout/FABRenderer'
 import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'
 import { ThemedText } from '../themed/ThemedText'
 import {

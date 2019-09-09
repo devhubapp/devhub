@@ -48,7 +48,6 @@ export function FABRenderer() {
   const { isSharedFiltersOpened } = useColumnFilters()
   const { sizename } = useAppLayout()
   const keyboardVisibility = useKeyboardVisibility()
-  const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const replaceModal = useReduxAction(actions.replaceModal)
@@ -63,8 +62,6 @@ export function FABRenderer() {
     return null
 
   if (!currentOpenedModal) {
-    if (!columnIds.length) return null
-
     /*
     Animated.timing(addOrCloseAnimatedRef.current, {
       toValue: 0,

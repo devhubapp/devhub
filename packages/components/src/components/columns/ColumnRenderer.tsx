@@ -78,8 +78,8 @@ export function getCardBackgroundThemeColor({
 }
 
 export interface ColumnRendererProps {
-  avatarRepo?: string
-  avatarUsername?: string
+  avatarImageURL?: string
+  avatarLinkURL?: string
   children: React.ReactNode
   columnId: string
   columnIndex: number
@@ -95,8 +95,8 @@ export interface ColumnRendererProps {
 
 export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const {
-    avatarRepo,
-    avatarUsername,
+    avatarImageURL,
+    avatarLinkURL,
     children,
     columnId,
     columnIndex,
@@ -195,8 +195,8 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       <ColumnHeader key={`column-renderer-${columnId}-header`}>
         <ColumnHeaderItem
           avatarProps={
-            avatarRepo || avatarUsername
-              ? { repo: avatarRepo, username: avatarUsername }
+            avatarImageURL || avatarLinkURL
+              ? { avatarUrl: avatarImageURL, linkURL: avatarLinkURL }
               : undefined
           }
           fixedIconSize

@@ -125,7 +125,7 @@ export function Button(props: ButtonProps) {
             sharedStyles.fullWidth,
             sharedStyles.fullHeight,
             round && { borderRadius: size / 2 },
-            loading && sharedStyles.hidden,
+            loading && sharedStyles.opacity0,
           ]}
         >
           <View

@@ -2,11 +2,12 @@ import { GitHubRepo } from '../../types'
 
 export interface GitHubURLOptions {
   addBottomAnchor?: boolean
+  baseURL?: string
   commentId?: number
   issueOrPullRequestNumber?: number
 }
 
-export const baseURL = 'https://github.com'
+export const defaultBaseURL = 'https://github.com'
 
 export function getCommentIdFromUrl(url: string) {
   if (!url) return null
@@ -100,11 +101,20 @@ export const getRepoFullNameFromUrl = (url: string): string | undefined =>
       ) || [])[4] || undefined
     : undefined
 
-export const getRepoUrlFromOtherUrl = (url: string): string | undefined => {
-  const _baseURL = getBaseUrlFromOtherUrl(url)
-  const _repoFullName = getRepoFullNameFromUrl(url)
+export const getRepoUrlFromFullName = (
+  repoFullName: string,
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
+): string | undefined => {
+  return baseURL && repoFullName && repoFullName.split('/').length === 2
+    ? `${baseURL}/${repoFullName}`
+    : undefined
+}
 
-  return _baseURL && _repoFullName ? `${_baseURL}/${_repoFullName}` : undefined
+export const getRepoUrlFromOtherUrl = (url: string): string | undefined => {
+  const baseURL = getBaseUrlFromOtherUrl(url)
+  const repoFullName = getRepoFullNameFromUrl(url)
+
+  return getRepoUrlFromFullName(repoFullName || '', { baseURL })
 }
 
 export const getRepoFullNameFromObject = (
@@ -117,7 +127,10 @@ export const getRepoFullNameFromObject = (
 
 export const getGitHubURLForUser = (
   username: string,
-  { isBot }: { isBot?: boolean } = {},
+  {
+    baseURL = defaultBaseURL,
+    isBot,
+  }: { baseURL?: string; isBot?: boolean } = {},
 ) => (username ? `${baseURL}/${isBot ? 'apps/' : ''}${username}` : undefined)
 
 const objToQueryParams = (obj: { [key: string]: string | number }) =>
@@ -125,14 +138,18 @@ const objToQueryParams = (obj: { [key: string]: string | number }) =>
     .map(key => `${key}=${obj[key]}`)
     .join('&')
 
-export const getGitHubSearchURL = (queryParams: {
-  [key: string]: string | number
-}) => (queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : '')
+export const getGitHubSearchURL = (
+  queryParams: {
+    [key: string]: string | number
+  },
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
+) => (queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : '')
 
 export const getGitHubURLForBranch = (
   ownerName: string,
   repoName: string,
   branch: string,
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) =>
   ownerName && repoName && branch
     ? `${baseURL}/${ownerName}/${repoName}/tree/${branch}`
@@ -142,6 +159,7 @@ export const getGitHubURLForRelease = (
   ownerName: string,
   repoName: string,
   tagName: string | undefined,
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) =>
   ownerName && repoName
     ? tagName
@@ -149,18 +167,23 @@ export const getGitHubURLForRelease = (
       : `${baseURL}/${ownerName}/${repoName}/releases`
     : ''
 
-export const getGitHubURLForRepo = (ownerName: string, repoName: string) =>
-  ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}` : undefined
+export const getGitHubURLForRepo = (
+  ownerName: string,
+  repoName: string,
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
+) => (ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}` : undefined)
 
 export const getGitHubURLForRepoInvitation = (
   ownerName: string,
   repoName: string,
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) =>
   ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}/invitations` : ''
 
 export const getGitHubURLForSecurityAlert = (
   ownerName: string,
   repoName: string,
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) =>
   ownerName && repoName
     ? `${baseURL}/${ownerName}/${repoName}/network/alerts`
@@ -202,6 +225,7 @@ export function githubHTMLUrlFromAPIUrl(
   isMobile: boolean,
   {
     addBottomAnchor,
+    baseURL = defaultBaseURL,
     commentId,
     issueOrPullRequestNumber,
   }: GitHubURLOptions = {},
@@ -277,6 +301,7 @@ export function fixURLForPlatform(
   if (!url) return ''
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
+  const baseURL = (options && options.baseURL) || defaultBaseURL
   let uri =
     url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url
 

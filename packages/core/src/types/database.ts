@@ -1,11 +1,6 @@
 import { PlanID } from '../utils'
 import { Column, ColumnSubscription } from './devhub'
-import {
-  GitHubTokenDetails,
-  GraphQLGitHubUser,
-  Installation,
-  LoginActivity,
-} from './graphql'
+import { GitHubTokenDetails, GraphQLGitHubUser, Installation } from './graphql'
 import { StripeSubscription } from './stripe'
 
 export interface DatabaseUserPlan {

@@ -102,3 +102,5 @@ function updateStyle(
   ref.current.setNativeProps({ style: newStyle })
   previousStyleRef.current = newStyle
 }
+
+export type ThemedView = View

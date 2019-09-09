@@ -12,5 +12,3 @@ export const columnHeaderItemContentSize = 17
 export const columnHeaderItemContentBiggerSize = columnHeaderItemContentSize + 2
 export const columnHeaderHeight =
   contentPadding * 2 + columnHeaderItemContentSize
-export const sidebarSize =
-  contentPadding * 2 + columnHeaderItemContentBiggerSize

@@ -38,11 +38,11 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
   return (
     <ModalColumn
-      hideCloseButton={sizename === '1-small'}
+      hideCloseButton={sizename <= '2-medium'}
       iconName="gear"
       name="SETTINGS"
       right={
-        sizename === '1-small' && username ? (
+        sizename <= '2-medium' && username ? (
           <Avatar
             backgroundColorLoading=""
             shape="circle"
@@ -112,7 +112,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
           </SubHeader>
         ) : Platform.OS === 'web' &&
           !Platform.isElectron &&
-          sizename !== '1-small' ? (
+          sizename < '2-medium' ? (
           <SubHeader title="Download desktop app">
             <Spacer flex={1} />
 
