@@ -6,10 +6,7 @@ import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
 import { OcticonIconProps, Octicons } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
-import {
-  columnHeaderItemContentSize,
-  contentPadding,
-} from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import { getTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
 import { ThemedText } from '../themed/ThemedText'
@@ -26,7 +23,7 @@ export interface IconButtonProps extends TouchableWithoutFeedbackProps {
   type?: 'primary' | 'neutral' | 'danger'
 }
 
-export const defaultIconButtonSize = columnHeaderItemContentSize
+export const defaultIconButtonSize = 17
 
 export function IconButton(props: IconButtonProps) {
   const {

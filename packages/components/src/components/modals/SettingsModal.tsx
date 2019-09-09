@@ -39,7 +39,6 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   return (
     <ModalColumn
       hideCloseButton={sizename <= '2-medium'}
-      iconName="gear"
       name="SETTINGS"
       right={
         sizename <= '2-medium' && username ? (

@@ -25,13 +25,10 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
-import { IconButton } from '../common/IconButton'
-import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { Column } from './Column'
 import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
 import { ColumnHeader } from './ColumnHeader'
-import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnOptionsAccordion } from './ColumnOptionsAccordion'
 
 export function getColumnCardThemeColors({
@@ -192,115 +189,123 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       renderLeftSeparator={renderLeftSeparator}
       renderRightSeparator={renderRightSeparator}
     >
-      <ColumnHeader key={`column-renderer-${columnId}-header`}>
-        <ColumnHeaderItem
-          avatarProps={
-            avatarImageURL || avatarLinkURL
-              ? { avatarUrl: avatarImageURL, linkURL: avatarLinkURL }
-              : undefined
-          }
-          fixedIconSize
-          iconName={icon}
-          style={[sharedStyles.flex, { alignItems: 'flex-start' }]}
-          subtitle={`${subtitle || ''}`.toLowerCase()}
-          title={`${title || ''}`.toLowerCase()}
-          tooltip={undefined}
-        />
-
-        <Spacer width={contentPadding / 2} />
-
-        <IconButton
-          key="column-options-button-clear-column"
-          analyticsLabel={
-            clearableItems.length ? 'clear_column' : 'unclear_column'
-          }
-          name="check"
-          onPress={() => {
-            dispatch(
-              actions.setColumnClearedAtFilter({
-                columnId,
-                clearedAt: clearableItems.length
-                  ? new Date().toISOString()
-                  : null,
-              }),
-            )
-
-            focusColumn()
-
-            if (!clearableItems.length) refresh()
-          }}
-          style={{
-            opacity: clearableItems.length ? 1 : 0.5,
-          }}
-          tooltip={clearableItems.length ? 'Clear items' : 'Show cleared items'}
-        />
-
-        <IconButton
-          key="column-options-button-toggle-mark-as-read"
-          analyticsLabel={!hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'}
-          disabled={!filteredItems.length}
-          name={!hasOneUnreadItem ? 'mail-read' : 'mail'}
-          onPress={() => {
-            const unread = !hasOneUnreadItem
-
-            const visibleItemIds = (filteredItems as any[]).map(
-              (item: EnhancedItem) => item && item.id,
-            )
-
-            const column = selectors.columnSelector(store.getState(), columnId)
-
-            const hasAnyFilter = columnHasAnyFilter(columnType, {
-              ...(column && column.filters),
-              clearedAt: undefined,
-            })
-
-            // column doesnt have any filter,
-            // so lets mark ALL notifications on github as read at once,
-            // instead of marking only the visible items one by one
-            if (columnType === 'notifications' && !hasAnyFilter && !unread) {
-              if (repoIsKnown) {
-                if (owner && repo) {
-                  dispatch(
-                    actions.markRepoNotificationsAsReadOrUnread({
-                      owner,
-                      repo,
-                      unread,
-                    }),
-                  )
-
-                  return
-                }
-              } else {
-                dispatch(actions.markAllNotificationsAsReadOrUnread({ unread }))
-                return
+      <ColumnHeader
+        key={`column-renderer-${columnId}-header`}
+        title={title}
+        subtitle={subtitle}
+        style={{ paddingRight: contentPadding / 2 }}
+        {...(avatarImageURL
+          ? { avatar: { imageURL: avatarImageURL, linkURL: avatarLinkURL! } }
+          : { icon })}
+        right={
+          <>
+            <ColumnHeader.Button
+              key="column-options-button-clear-column"
+              analyticsLabel={
+                clearableItems.length ? 'clear_column' : 'unclear_column'
               }
-            }
+              name="check"
+              onPress={() => {
+                dispatch(
+                  actions.setColumnClearedAtFilter({
+                    columnId,
+                    clearedAt: clearableItems.length
+                      ? new Date().toISOString()
+                      : null,
+                  }),
+                )
 
-            // mark only the visible items as read/unread one by one
-            dispatch(
-              actions.markItemsAsReadOrUnread({
-                type: columnType,
-                itemIds: visibleItemIds,
-                unread,
-              }),
-            )
+                focusColumn()
 
-            focusColumn()
-          }}
-          tooltip={
-            !hasOneUnreadItem ? 'Mark all as unread' : 'Mark all as read'
-          }
-        />
+                if (!clearableItems.length) refresh()
+              }}
+              style={{
+                opacity: clearableItems.length ? 1 : 0.5,
+              }}
+              tooltip={
+                clearableItems.length ? 'Clear items' : 'Show cleared items'
+              }
+            />
 
-        <IconButton
-          key="column-options-toggle-button"
-          analyticsAction="toggle"
-          analyticsLabel="column_options"
-          name="gear"
-          onPress={toggleOptions}
-          tooltip="Options"
-        />
-      </ColumnHeader>
+            <ColumnHeader.Button
+              key="column-options-button-toggle-mark-as-read"
+              analyticsLabel={
+                !hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'
+              }
+              disabled={!filteredItems.length}
+              name={!hasOneUnreadItem ? 'mail-read' : 'mail'}
+              onPress={() => {
+                const unread = !hasOneUnreadItem
+
+                const visibleItemIds = (filteredItems as any[]).map(
+                  (item: EnhancedItem) => item && item.id,
+                )
+
+                const column = selectors.columnSelector(
+                  store.getState(),
+                  columnId,
+                )
+
+                const hasAnyFilter = columnHasAnyFilter(columnType, {
+                  ...(column && column.filters),
+                  clearedAt: undefined,
+                })
+
+                // column doesnt have any filter,
+                // so lets mark ALL notifications on github as read at once,
+                // instead of marking only the visible items one by one
+                if (
+                  columnType === 'notifications' &&
+                  !hasAnyFilter &&
+                  !unread
+                ) {
+                  if (repoIsKnown) {
+                    if (owner && repo) {
+                      dispatch(
+                        actions.markRepoNotificationsAsReadOrUnread({
+                          owner,
+                          repo,
+                          unread,
+                        }),
+                      )
+
+                      return
+                    }
+                  } else {
+                    dispatch(
+                      actions.markAllNotificationsAsReadOrUnread({ unread }),
+                    )
+                    return
+                  }
+                }
+
+                // mark only the visible items as read/unread one by one
+                dispatch(
+                  actions.markItemsAsReadOrUnread({
+                    type: columnType,
+                    itemIds: visibleItemIds,
+                    unread,
+                  }),
+                )
+
+                focusColumn()
+              }}
+              tooltip={
+                !hasOneUnreadItem ? 'Mark all as unread' : 'Mark all as read'
+              }
+            />
+
+            <ColumnHeader.Button
+              key="column-options-toggle-button"
+              analyticsAction="toggle"
+              analyticsLabel="column_options"
+              name="gear"
+              onPress={toggleOptions}
+              tooltip="Options"
+            />
+          </>
+        }
+      />
 
       <View
         style={[

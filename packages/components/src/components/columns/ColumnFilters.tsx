@@ -37,10 +37,8 @@ import { useReduxAction } from '../../hooks/use-redux-action'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
-import {
-  columnHeaderItemContentSize,
-  contentPadding,
-} from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
+import { columnHeaderItemContentSize } from '../columns/ColumnHeader'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
 import {

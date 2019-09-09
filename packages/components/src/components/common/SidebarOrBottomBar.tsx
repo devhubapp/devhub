@@ -39,12 +39,14 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import {
-  columnHeaderHeight,
   contentPadding,
   mutedOpacity,
   smallerTextSize,
 } from '../../styles/variables'
-import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
+import {
+  columnHeaderHeight,
+  getColumnHeaderThemeColors,
+} from '../columns/ColumnHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { getTheme, useTheme } from '../context/ThemeContext'
 import { ThemedIcon } from '../themed/ThemedIcon'

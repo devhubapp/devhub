@@ -7,20 +7,16 @@ import { useEmitter } from '../../hooks/use-emitter'
 import { useForceRerender } from '../../hooks/use-force-rerender'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
-import { sharedStyles } from '../../styles/shared'
-import { columnHeaderHeight } from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
-import { IconButton } from '../common/IconButton'
-import { Spacer } from '../common/Spacer'
 import { useColumnFilters } from '../context/ColumnFiltersContext'
 import { getCurrentFocusedColumnId } from '../context/ColumnFocusContext'
 import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { ColumnFilters } from './ColumnFilters'
 import { ColumnHeader } from './ColumnHeader'
-import { ColumnHeaderItem } from './ColumnHeaderItem'
 import { ColumnSeparator } from './ColumnSeparator'
 
 export interface ColumnFiltersRendererProps {
@@ -272,29 +268,24 @@ export const ColumnFiltersRenderer = React.memo(
           }
         >
           {header === 'header' ? (
-            <ColumnHeader>
-              <ColumnHeaderItem
-                fixedIconSize
-                iconName="settings"
-                subtitle=""
-                title="filters"
-                style={[sharedStyles.flex, sharedStyles.alignItemsFlexStart]}
-                tooltip={undefined}
-              />
-
-              <Spacer flex={1} />
-
-              {!inlineMode && !!close && (
-                <IconButton
-                  key="column-flters-close-button"
-                  name="x"
-                  onPress={() => close()}
-                  tooltip="Close"
-                />
-              )}
-            </ColumnHeader>
+            <ColumnHeader
+              icon="settings"
+              title="Filters"
+              right={
+                !inlineMode &&
+                !!close && (
+                  <ColumnHeader.Button
+                    key="column-flters-close-button"
+                    name="x"
+                    onPress={() => close()}
+                    tooltip="Close"
+                  />
+                )
+              }
+              style={{ paddingRight: contentPadding / 2 }}
+            />
           ) : header === 'spacing' ? (
-            <Spacer height={columnHeaderHeight} pointerEvents="none" />
+            <ColumnHeader avatar={undefined as any} title="" icon={undefined} />
           ) : null}
 
           <ConditionalWrap

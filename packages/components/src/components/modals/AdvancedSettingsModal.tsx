@@ -86,7 +86,6 @@ export const AdvancedSettingsModal = React.memo(
     return (
       <ModalColumn
         hideCloseButton={sizename === '1-small'}
-        iconName="gear"
         name="ADVANCED_SETTINGS"
         showBackButton={showBackButton}
         title="Advanced settings"

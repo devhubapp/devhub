@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { columnHeaderItemContentSize } from '../../styles/variables'
 import { Checkbox, CheckboxProps } from '../common/Checkbox'
+import { columnHeaderItemContentSize } from './ColumnHeader'
 import { ColumnOptionsRow, ColumnOptionsRowProps } from './ColumnOptionsRow'
 import { sharedColumnOptionsStyles } from './options/shared'
 

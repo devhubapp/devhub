@@ -6,10 +6,7 @@ import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
-import {
-  columnHeaderItemContentSize,
-  contentPadding,
-} from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
 import { Separator } from '../common/Separator'
@@ -22,7 +19,10 @@ import { getTheme } from '../context/ThemeContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
-import { getColumnHeaderThemeColors } from './ColumnHeader'
+import {
+  columnHeaderItemContentSize,
+  getColumnHeaderThemeColors,
+} from './ColumnHeader'
 
 export interface ColumnOptionsRowProps {
   analyticsLabel?: TouchableOpacityProps['analyticsLabel']

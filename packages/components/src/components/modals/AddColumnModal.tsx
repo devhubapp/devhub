@@ -276,7 +276,6 @@ export function AddColumnModal(props: AddColumnModalProps) {
 
   return (
     <ModalColumn
-      iconName="plus"
       name="ADD_COLUMN"
       showBackButton={showBackButton}
       title="Add Column"

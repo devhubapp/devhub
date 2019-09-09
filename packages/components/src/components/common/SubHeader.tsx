@@ -3,18 +3,15 @@ import React from 'react'
 import { View } from 'react-native'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import {
-  ColumnHeaderItem,
-  ColumnHeaderItemProps,
-} from '../columns/ColumnHeaderItem'
+import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
 import { H2 } from './H2'
 import { Spacer } from './Spacer'
 
 export interface SubHeaderProps {
   children?: React.ReactNode
-  iconName?: ColumnHeaderItemProps['iconName']
+  iconName?: ThemedIconProps['name']
   muted?: boolean
-  title?: ColumnHeaderItemProps['title']
+  title?: string
 }
 
 export function SubHeader(props: SubHeaderProps) {
@@ -27,28 +24,21 @@ export function SubHeader(props: SubHeaderProps) {
         sharedStyles.justifyContentFlexStart,
         sharedStyles.alignSelfStretch,
         sharedStyles.alignItemsCenter,
-        {
-          padding: contentPadding,
-        },
+        sharedStyles.padding,
       ]}
     >
       {!!iconName && (
-        <ColumnHeaderItem
-          fixedIconSize
-          iconName={iconName}
-          noPadding
-          size={18}
-          titleStyle={{ fontWeight: '400' }}
-          tooltip={undefined}
-        />
+        <ThemedIcon color="foregroundColor" name={iconName} size={18} />
       )}
 
-      {!!iconName && !!title && <Spacer width={contentPadding / 2} />}
-
       {!!title && (
-        <H2 muted={muted} withMargin={false}>
-          {title}
-        </H2>
+        <>
+          {!!iconName && <Spacer width={contentPadding / 2} />}
+
+          <H2 muted={muted} withMargin={false}>
+            {title}
+          </H2>
+        </>
       )}
 
       {children}
