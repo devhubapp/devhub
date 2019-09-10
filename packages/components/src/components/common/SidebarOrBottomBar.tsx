@@ -568,7 +568,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
         hoverListRef={hoverListRef}
         number={columnIndex + 1}
         onPress={onPress}
-        selected={isColumnFocused}
+        selected={isColumnFocused && !currentOpenedModal}
         showUnreadIndicator={hasUnread}
         subtitle={headerDetails.subtitle}
         title={headerDetails.title}
@@ -694,9 +694,9 @@ export const SidebarOrBottomBarItem = React.memo(
                     : 'transparent',
                 opacity: horizontal
                   ? isHovered || selected
-                    ? 1
+                    ? undefined
                     : mutedOpacity
-                  : 1,
+                  : undefined,
               },
             })
           }
