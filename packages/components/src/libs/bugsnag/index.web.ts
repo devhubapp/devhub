@@ -32,7 +32,7 @@ export const bugsnag: BugnsagCrossPlatform = {
     client.notify(error, {
       beforeSend: r => {
         if (r.request.url) {
-          r.request.url = hideTokenFromString(r.request.url)
+          r.request.url = hideTokenFromString(r.request.url)!
         }
 
         r.metaData = Object.assign(r.metaData || {}, metadata, {
@@ -44,7 +44,7 @@ export const bugsnag: BugnsagCrossPlatform = {
 
         try {
           const safeMetadata = JSON.parse(
-            hideTokenFromString(JSON.stringify(r.metaData)),
+            hideTokenFromString(JSON.stringify(r.metaData))!,
           )
           if (safeMetadata) r.metaData = safeMetadata
         } catch (e) {

@@ -34,7 +34,7 @@ export const bugsnag: BugnsagCrossPlatform = {
 
       try {
         const safeMetadata = JSON.parse(
-          hideTokenFromString(JSON.stringify(r.metadata)),
+          hideTokenFromString(JSON.stringify(r.metadata))!,
         )
         if (safeMetadata) r.metadata = safeMetadata
       } catch (e) {

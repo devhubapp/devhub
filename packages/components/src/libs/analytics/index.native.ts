@@ -3,6 +3,7 @@ import { InteractionManager } from 'react-native'
 import * as firebase from 'react-native-firebase'
 
 import { constants } from '@devhub/core'
+import { hideTokenFromString } from '../bugsnag/index.shared'
 import { Platform } from '../platform'
 import { Analytics, DevHubAnalyticsCustomDimensions } from './'
 import { formatDimensions } from './helpers'
@@ -34,22 +35,21 @@ export const analytics: Analytics = {
 
   trackEvent(category, action, label, value, payload = {}) {
     InteractionManager.runAfterInteractions(() => {
-      // TODO: Test this and fix
-      const customDimensions = _.isPlainObject(payload)
-        ? payload
-        : typeof payload === 'string' || typeof payload === 'number'
-        ? ({ payload } as any)
-        : {}
-
-      Object.assign(customDimensions, _dimensions)
-
-      if (__DEV__) log('event', category, action)
-      firebase.analytics().logEvent(action.replace(/\//g, '_'), {
-        event_category: category,
-        event_label: label,
-        value,
-        ...payload,
-      })
+      if (__DEV__)
+        log(
+          'event',
+          category,
+          action,
+          hideTokenFromString(label || '')!.substr(0, 100),
+        )
+      firebase
+        .analytics()
+        .logEvent(hideTokenFromString(action || '')!.replace(/\//g, '_'), {
+          event_category: hideTokenFromString(category),
+          event_label: hideTokenFromString(label || '')!.substr(0, 100),
+          value,
+          ...payload,
+        })
     })
   },
 

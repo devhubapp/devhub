@@ -26,7 +26,7 @@ export function overrideConsoleError(bugsnag: BugnsagCrossPlatform) {
 }
 */
 
-export function hideTokenFromString(str: string) {
+export function hideTokenFromString(str: string | undefined) {
   if (!(str && typeof str === 'string')) return str
   return str.replace(
     /((token=|token[\"]?[:]?[\"]?|Authorization[\"]?:)[\\]?["']?)([A-Za-z0-9\.\-_ ]+)/gi,

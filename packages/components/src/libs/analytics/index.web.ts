@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { InteractionManager } from 'react-native'
 
 import { constants } from '@devhub/core'
+import { hideTokenFromString } from '../bugsnag/index.shared'
 import { Platform } from '../platform'
 import { Analytics, DevHubAnalyticsCustomDimensions } from './'
 import { formatDimensions } from './helpers'
@@ -49,9 +50,9 @@ export const analytics: Analytics = {
 
   trackEvent(category, action, label, value, payload) {
     InteractionManager.runAfterInteractions(() => {
-      gtagAndLog('event', action, {
-        event_category: category,
-        event_label: label,
+      gtagAndLog('event', hideTokenFromString(action), {
+        event_category: hideTokenFromString(category),
+        event_label: hideTokenFromString(label || '')!.substr(0, 100),
         value,
         ...payload,
       })
