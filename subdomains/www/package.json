@@ -8,7 +8,7 @@
     "build": "cd .",
     "clean": "cd .",
     "compile": "cd .",
-    "deploy": "now  --target production",
+    "deploy": "now  --prod",
     "format": "prettier --write '{.,src/**}/*.js'",
     "lint": "eslint src",
     "prepare": "cd ."
@@ -16,6 +16,6 @@
   "dependencies": {},
   "devDependencies": {
     "eslint": "5.9.0",
-    "now": "16.1.1"
+    "now": "16.2.0"
   }
 }

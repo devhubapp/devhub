@@ -806,8 +806,8 @@
 
 "@devhub/core@npm:@brunolemos/devhub-core@0.94.2":
   version "0.94.2"
-  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.94.2.tgz#70853f48e86aa1ebb42583b21b0b78c815a7ec6b"
-  integrity sha512-r1glGTRA6zR7pG0GPNBHwwQv52G1r65uTFoNwWyXSmP0wf3+ed/9g9RXrT5CqiPqI9NmeB/C0aQYlvETEYCvYg==
+  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.94.2.tgz#de7dd34c31261e9f574aa82f4c767b7f6054f9c2"
+  integrity sha512-NCcub7oHHhTDYDZoe4KksxtKQ3tMequ9zsMz8RY0bGBvUH9mvrRBT3YceWOY1DVnCo9+J8sBoDHeyj6m7Lh6Lw==
   dependencies:
     "@octokit/rest" "16.20.0"
     axios "0.18.0"
@@ -3929,6 +3929,11 @@ normalize.css@^8.0.1:
   version "8.0.1"
   resolved "https://registry.npmjs.org/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
   integrity sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==
+
+now@16.2.0:
+  version "16.2.0"
+  resolved "https://registry.npmjs.org/now/-/now-16.2.0.tgz#5f778a335e4da2ffa1f0e3754cc6c765b6685a99"
+  integrity sha512-yzPtLJj7O1ngH3uNqEN6Eq3pR4rfBvq9qYRzG+whfhhQ8NA8molLwLVTPIlCLJuPu8zQnv48bJs2+EYs+n1NOA==
 
 npm-bundled@^1.0.1:
   version "1.0.6"

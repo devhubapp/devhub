@@ -6,8 +6,10 @@
   "scripts": {
     "clean": "shx rm -f *.tsbuildinfo && shx rm -rf dist && mkdirp dist",
     "compile": "cd .",
+    "deploy": "yarn now",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
+    "now": "now",
     "prepare": "cd .",
     "start": "next"
   },
@@ -34,6 +36,7 @@
     "@types/stripe-v3": "3.1.6",
     "@types/styled-jsx": "2.2.8",
     "mkdirp": "0.5.1",
+    "now": "16.2.0",
     "prettier": "1.16.4",
     "tslint": "5.14.0",
     "tslint-config-airbnb": "5.11.1",

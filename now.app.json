@@ -1,7 +1,7 @@
 {
   "public": true,
   "name": "devhub-app",
-  "alias": "devhubapp.com",
+  "alias": "app.devhubapp.com",
   "version": 2,
   "builds": [
     { "src": "packages/web/dist/**", "use": "@now/static" }
