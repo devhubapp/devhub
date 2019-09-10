@@ -31,8 +31,8 @@ export function init() {
   })
 
   menubarWindowState = windowStateKeeper({
-    defaultWidth: 385,
-    defaultHeight: 635,
+    defaultWidth: 380,
+    defaultHeight: 670,
     file: `menubar-window-display-${display.id}.json`,
     fullScreen: false,
   })

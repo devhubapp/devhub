@@ -1,6 +1,7 @@
 import Store from 'electron-store'
 
 import * as constants from './constants'
+import * as ipc from './ipc'
 
 export const store = new Store({
   defaults: {
@@ -12,5 +13,8 @@ export const store = new Store({
 })
 
 if (!constants.FEATURE_FLAGS.LOCK_ON_CENTER && store.get('lockOnCenter')) {
-  store.set('lockOnCenter', false)
+  ipc.emit('update-settings', {
+    settings: 'lockOnCenter',
+    value: false,
+  })
 }

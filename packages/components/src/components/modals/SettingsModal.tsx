@@ -22,6 +22,7 @@ import { SubHeader } from '../common/SubHeader'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
+import { DesktopPreferences } from '../widgets/DesktopPreferences'
 import { ThemePreference } from '../widgets/ThemePreference'
 
 export interface SettingsModalProps {
@@ -60,6 +61,13 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         bounces
         style={sharedStyles.flex}
       >
+        {!!Platform.isElectron && (
+          <>
+            <DesktopPreferences />
+            <Spacer height={contentPadding} />
+          </>
+        )}
+
         <ThemePreference />
 
         {/* <Spacer height={contentPadding * 2} />

@@ -55,27 +55,3 @@ export function getCenterPosition(obj: BrowserWindow | Tray) {
 
   return { x, y }
 }
-
-export function enableDesktopMode() {
-  config.store.set('isMenuBarMode', false)
-
-  const mainWindow = window.getMainWindow()
-  if (mainWindow.isFullScreen()) {
-    mainWindow.setFullScreen(false)
-    setTimeout(window.updateOrRecreateWindow, 1000)
-  } else {
-    window.updateOrRecreateWindow()
-  }
-}
-
-export function enableMenuBarMode() {
-  config.store.set('isMenuBarMode', true)
-
-  const mainWindow = window.getMainWindow()
-  if (mainWindow.isFullScreen()) {
-    mainWindow.setFullScreen(false)
-    setTimeout(window.updateOrRecreateWindow, 1000)
-  } else {
-    window.updateOrRecreateWindow()
-  }
-}

@@ -28,15 +28,7 @@ function init() {
     'openAtLoginChangeCount',
   ) as number
   if (!(openAtLoginChangeCount >= 1)) {
-    app.setLoginItemSettings({
-      openAtLogin: true,
-      openAsHidden: true,
-    })
-
-    config.store.set(
-      'openAtLoginChangeCount',
-      (openAtLoginChangeCount || 0) + 1,
-    )
+    ipc.emit('update-settings', { settings: 'openAtLogin', value: true })
   }
 
   const gotTheLock = app.requestSingleInstanceLock()
