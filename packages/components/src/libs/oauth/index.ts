@@ -32,8 +32,6 @@ export async function executeOAuth(
   const params = getUrlParamsIfMatches(url, redirectUri)
   // console.log('[OAUTH] URL params:', params)
 
-  if (typeof Browser.dismiss === 'function') Browser.dismiss()
-
   if (!(params && params.app_token && params.github_token)) {
     throw new Error('Login failed: No access token received.')
   }
