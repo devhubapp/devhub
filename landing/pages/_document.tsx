@@ -6,7 +6,7 @@ const shortDescriptionContent =
   "Take back control of your GitHub workflow. Manage notifications, apply filters, save custom searches and don't miss anything important."
 const fullDescription = `${shortDescriptionTitle}. ${shortDescriptionContent}`
 const screenshot =
-  'https://user-images.githubusercontent.com/619186/63945240-59d40000-ca49-11e9-98c1-353225f8dcf6.jpg'
+  'https://devhubapp.com/static/screenshots/devhub-desktop-zoomed-dark.jpg'
 
 export default class Document extends NextDocument {
   render() {
