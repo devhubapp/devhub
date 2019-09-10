@@ -33,11 +33,12 @@ export const DEFAULT_GITHUB_OAUTH_SCOPES = ['notifications', 'user:email']
 export const APPSTORE_ID = '1191864199'
 export const GOOGLEPLAY_ID = 'com.devhubapp'
 
-export const API_BASE_URL = 'https://api.devhubapp.com'
-export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
-
+export const LANDING_BASE_URL = 'https://devhubapp.com'
+export const APP_BASE_URL = 'https://app.devhubapp.com'
 export const DEVHUB_BETA_URL = 'https://beta.devhubapp.com'
+export const API_BASE_URL = 'https://api.devhubapp.com'
 export const SLACK_INVITE_LINK = 'https://slack.devhubapp.com'
+export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
 
 export const APP_DEEP_LINK_SCHEMA = 'devhub'
 export const APP_DEEP_LINK_URLS = {

@@ -23,6 +23,11 @@ export const appTokenSelector = (state: RootState) =>
 export const currentUserSelector = (state: RootState) =>
   isLoggedSelector(state) ? s(state).user : undefined
 
+export const currentUserPlanSelector = (state: RootState) => {
+  const user = currentUserSelector(state)
+  return user && user.plan
+}
+
 export const currentUserIdSelector = (state: RootState) => {
   const user = currentUserSelector(state)
   return (user && user._id) || undefined

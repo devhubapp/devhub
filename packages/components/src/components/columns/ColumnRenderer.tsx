@@ -18,6 +18,7 @@ import {
 import { useDispatch, useStore } from 'react-redux'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumnData } from '../../hooks/use-column-data'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { AutoSizer } from '../../libs/auto-sizer'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../../redux/actions'
@@ -111,6 +112,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
   const { filteredItems } = useColumnData(columnId, { mergeSimilar: false })
+  const plan = useReduxState(selectors.currentUserPlanSelector)
   const dispatch = useDispatch()
   const store = useStore()
 
@@ -125,20 +127,27 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     },
   )
 
-  const hasValidPaidPlan = false // TODO
+  const hasValidPaidPlan =
+    plan &&
+    plan.amount > 0 &&
+    (plan.status === 'active' || plan.status === 'trialing')
 
-  const isFreeTrial =
-    !hasValidPaidPlan &&
-    (columnType === 'activity'
-      ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
-          isEventPrivate(item),
-        )
-      : columnType === 'notifications'
-      ? (filteredItems as any[]).some(
-          (item: EnhancedGitHubNotification) =>
-            isNotificationPrivate(item) && !!item.enhanced,
-        )
-      : false) // TODO: Handle for IssueOrPullRequest Column
+  const showFreeTrialBanner =
+    ((!hasValidPaidPlan ||
+      (plan && !plan.featureFlags.enablePrivateRepositories)) &&
+      (columnType === 'activity'
+        ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
+            isEventPrivate(item),
+          )
+        : columnType === 'notifications'
+        ? (filteredItems as any[]).some(
+            (item: EnhancedGitHubNotification) =>
+              isNotificationPrivate(item) && !!item.enhanced,
+          )
+        : false)) || // TODO: Handle for IssueOrPullRequest Column
+    (plan &&
+      plan.featureFlags.columnsLimit >= 1 &&
+      plan.featureFlags.columnsLimit < columnIndex + 1)
 
   const refresh = useCallback(() => {
     dispatch(
@@ -343,7 +352,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         type="local"
       />
 
-      {!!isFreeTrial && <FreeTrialHeaderMessage />}
+      {!!showFreeTrialBanner && <FreeTrialHeaderMessage />}
     </Column>
   )
 })
