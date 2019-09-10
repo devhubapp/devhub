@@ -112,9 +112,13 @@ export default class Document extends NextDocument {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'UA-52350759-6');
+            if ((window.location.search || '').includes('producthunt')) {
+              gtag('event', 'donthuntme')
+            }
           `,
             }}
           />
+          <script async defer src="/static/js/donthuntme.js" />
         </Head>
 
         <body

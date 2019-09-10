@@ -97,7 +97,7 @@ function redirectToPH() {
       style:
         '    font-size: 15px;' +
         '    line-height: 25px;' +
-        '    color: #999;' +
+        '    color: #666;' +
         '    font-weight: 200;' +
         '    margin: 10px 0 20px;' +
         '    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;',
