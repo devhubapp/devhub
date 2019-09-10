@@ -51,7 +51,7 @@ export async function checkForUpdatesAndNotify() {
 
       const notification = new Notification({
         title: '🚀 New version available',
-        body: `${app.getName()} v${version} has been downloaded. Tap to install.`,
+        body: `${app.getName()} v${version} has been downloaded. Restart the app to get the update.`,
       })
 
       notification.addListener('click', () => {
