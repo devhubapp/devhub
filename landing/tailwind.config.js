@@ -1,6 +1,17 @@
-const _ = require('lodash')
-
 const { staticColorFields } = require('@devhub/core')
+
+// for some reason the build fails when using require('./src/helpers')
+// so I copy pasted the method here for now
+function toKebabCase(str) {
+  if (!(str && typeof str === 'string')) return ''
+
+  const matches = str.match(
+    /[A-Z]{2,}(?=[A-Z][a-z]+|\b)|[A-Z]?[a-z]+|[A-Z]|[0-9]+/g,
+  )
+  if (!(matches && matches.length)) return str
+
+  return matches.map(s => s.toLowerCase()).join('-')
+}
 
 module.exports = {
   theme: {
@@ -13,7 +24,7 @@ module.exports = {
       ...Object.assign(
         {},
         ...staticColorFields.map(color => ({
-          [_.kebabCase(color)]: `var(--theme-${_.kebabCase(color)})`,
+          [toKebabCase(color)]: `var(--theme-${toKebabCase(color)})`,
         })),
       ),
       bg: {

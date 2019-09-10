@@ -1,8 +1,8 @@
-import _ from 'lodash'
 import React, { useMemo } from 'react'
 
 import { Theme, themeColorFields } from '@devhub/core/dist'
 import { useTheme } from '../../context/ThemeContext'
+import { toKebabCase } from '../../helpers'
 
 function getStyles(params: { theme: Theme }) {
   const { theme: t } = params
@@ -16,12 +16,12 @@ function getStyles(params: { theme: Theme }) {
 
     body {
       ${themeColorFields
-        .map(field => `--theme-${_.kebabCase(field)}:${t[field]};`)
+        .map(field => `--theme-${toKebabCase(field)}:${t[field]};`)
         .join('\n')}
       ${themeColorFields
         .map(
           field =>
-            `--theme-inverted-${_.kebabCase(field)}:${invertedTheme[field]};`,
+            `--theme-inverted-${toKebabCase(field)}:${invertedTheme[field]};`,
         )
         .join('\n')}
     }

@@ -134,3 +134,14 @@ export function getTrialTimeLeftLabel(endAt: string) {
   if (days < 1) return `${Math.ceil(days * 24)}h left`
   return `${Math.ceil(days)} days left`
 }
+
+export function toKebabCase(str: string) {
+  if (!(str && typeof str === 'string')) return ''
+
+  const matches = str.match(
+    /[A-Z]{2,}(?=[A-Z][a-z]+|\b)|[A-Z]?[a-z]+|[A-Z]|[0-9]+/g,
+  )
+  if (!(matches && matches.length)) return str
+
+  return matches.map(s => s.toLowerCase()).join('-')
+}
