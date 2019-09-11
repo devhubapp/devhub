@@ -7,6 +7,7 @@ import {
   constants,
   EnhancedItem,
   getDateSmallText,
+  isItemRead,
 } from '@devhub/core'
 import {
   BaseCardProps,
@@ -143,12 +144,12 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     NonNullable<OneListProps<DataItemT<ItemT>>['itemSeparator']>
   >(
     () => ({
-      size: cardItemSeparatorSize,
       Component: ({ leading }) => (
         <CardItemSeparator
           leadingItem={leading && leading.item && leading.item.item}
         />
       ),
+      size: cardItemSeparatorSize,
     }),
     [cardItemSeparatorSize],
   )
@@ -178,23 +179,36 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     clearedAt: column && column.filters && column.filters.clearedAt,
     columnId: (column && column.id)!,
     fetchNextPage,
+    isCardSeparatorMuted:
+      items && items[items.length - 1] && !isItemRead(items[items.length - 1])
+        ? false
+        : true,
     isEmpty: !(items && items.length > 0),
     refresh,
   }
   const footer = useMemo<OneListProps<DataItemT<ItemT>>['footer']>(() => {
+    const sticky =
+      !cardsFooterProps.fetchNextPage && !!cardsFooterProps.clearedAt
+
     return {
       size: getCardsFooterSize({
         clearedAt: cardsFooterProps.clearedAt,
         hasFetchNextPage: !!cardsFooterProps.fetchNextPage,
         isEmpty: cardsFooterProps.isEmpty,
       }),
-      sticky: false,
-      Component: () => <CardsFooter {...cardsFooterProps} />,
+      sticky,
+      Component: () => (
+        <CardsFooter
+          {...cardsFooterProps}
+          isCardSeparatorMuted={cardsFooterProps.isCardSeparatorMuted || sticky}
+        />
+      ),
     }
   }, [
     cardsFooterProps.clearedAt,
     cardsFooterProps.columnId,
     cardsFooterProps.fetchNextPage,
+    cardsFooterProps.isCardSeparatorMuted,
     cardsFooterProps.isEmpty,
     cardsFooterProps.refresh,
   ])
