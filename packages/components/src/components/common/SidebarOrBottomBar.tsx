@@ -640,14 +640,16 @@ export const SidebarOrBottomBarItem = React.memo(
           >
             {!!n && (
               <>
-                <ThemedText color="foregroundColorMuted65">{n}</ThemedText>
+                <ThemedText color="foregroundColorMuted65" selectable={false}>
+                  {n}
+                </ThemedText>
                 <Spacer width={contentPadding / 2} />
               </>
             )}
 
             {!!title && (
               <>
-                <ThemedText color="foregroundColor">
+                <ThemedText color="foregroundColor" selectable={false}>
                   {title.toLowerCase()}
                 </ThemedText>
                 <Spacer width={contentPadding / 2} />
@@ -656,7 +658,7 @@ export const SidebarOrBottomBarItem = React.memo(
 
             {!!subtitle && (
               <>
-                <ThemedText color="foregroundColorMuted65">
+                <ThemedText color="foregroundColorMuted65" selectable={false}>
                   {subtitle.toLowerCase()}
                 </ThemedText>
                 <Spacer width={contentPadding / 2} />

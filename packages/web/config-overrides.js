@@ -11,6 +11,7 @@ const appIncludes = [
   resolveApp('src'),
   resolveApp('../core/src'),
   resolveApp('../components/src'),
+  resolveApp('../../node_modules/react-native-vector-icons/'),
   resolveApp('../../node_modules/react-native-gesture-handler/'),
 ]
 
