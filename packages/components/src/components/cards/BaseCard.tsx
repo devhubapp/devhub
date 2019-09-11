@@ -209,6 +209,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               <View style={styles.smallAvatarContainer}>
                 <Avatar
                   avatarUrl={action.avatar.imageURL}
+                  disableLink={action.avatar.linkURL === link}
                   linkURL={action.avatar.linkURL}
                   style={styles.avatar}
                   size={smallAvatarSize}
@@ -234,6 +235,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
           <View style={styles.avatarContainer}>
             <Avatar
               avatarUrl={avatar.imageURL}
+              disableLink={avatar.linkURL === link}
               linkURL={avatar.linkURL}
               style={styles.avatar}
               size={avatarSize}
@@ -330,6 +332,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                   {subitem.avatar && subitem.avatar.imageURL && (
                     <Avatar
                       avatarUrl={subitem.avatar.imageURL}
+                      disableLink={subitem.avatar.linkURL === link}
                       linkURL={subitem.avatar.linkURL}
                       style={styles.avatar}
                       size={smallAvatarSize}
