@@ -3,6 +3,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { ThemeColors } from '@devhub/core'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { emitter } from '../../libs/emitter'
 import { useSafeArea } from '../../libs/safe-area-view'
 import * as selectors from '../../redux/selectors'
 import { contentPadding } from '../../styles/variables'
@@ -10,6 +11,7 @@ import { Avatar } from '../common/Avatar'
 import { IconButton, IconButtonProps } from '../common/IconButton'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
+import { TouchableWithoutFeedback } from '../common/TouchableWithoutFeedback'
 import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
@@ -28,6 +30,7 @@ export function getColumnHeaderThemeColors(): {
 
 export interface ColumnHeaderProps {
   avatar?: { imageURL: string; linkURL: string }
+  columnId?: string
   icon?: ThemedIconProps['name']
   left?: ReactNode
   right?: ReactNode
@@ -43,6 +46,7 @@ export const columnHeaderHeight =
 export function ColumnHeader(props: ColumnHeaderProps) {
   const {
     avatar,
+    columnId,
     icon,
     left,
     right,
@@ -68,67 +72,77 @@ export function ColumnHeader(props: ColumnHeaderProps) {
         },
       ]}
     >
-      <View
-        style={[
-          styles.innerContainer,
-          !left && { paddingLeft: (contentPadding * 2) / 3 },
-          !right && { paddingRight: (contentPadding * 2) / 3 },
-          style,
-        ]}
+      <TouchableWithoutFeedback
+        onPress={
+          columnId
+            ? () => {
+                emitter.emit('SCROLL_TOP_COLUMN', { columnId })
+              }
+            : undefined
+        }
       >
-        {!!left && (
-          <>
-            {left}
-            <Spacer width={contentPadding / 2} />
-          </>
-        )}
-
-        <View style={styles.mainContentContainer}>
-          {avatar && avatar.imageURL ? (
+        <View
+          style={[
+            styles.innerContainer,
+            !left && { paddingLeft: (contentPadding * 2) / 3 },
+            !right && { paddingRight: (contentPadding * 2) / 3 },
+            style,
+          ]}
+        >
+          {!!left && (
             <>
-              <Avatar
-                avatarUrl={avatar.imageURL}
-                linkURL={avatar.linkURL}
-                shape="circle"
-                size={columnHeaderItemContentSize}
-              />
-              <Spacer width={contentPadding / 2} />
-            </>
-          ) : icon ? (
-            <>
-              <ThemedIcon
-                color="foregroundColor"
-                name={icon}
-                size={columnHeaderItemContentSize}
-              />
-              <Spacer width={contentPadding / 2} />
-            </>
-          ) : null}
-
-          {!!title && (
-            <>
-              <ThemedText color="foregroundColor" style={styles.title}>
-                {title}
-              </ThemedText>
+              {left}
               <Spacer width={contentPadding / 2} />
             </>
           )}
 
-          {!!subtitle && (
-            <>
-              <ThemedText
-                color="foregroundColorMuted65"
-                style={styles.subtitle}
-              >
-                {subtitle}
-              </ThemedText>
-              <Spacer width={contentPadding / 2} />
-            </>
-          )}
+          <View style={styles.mainContentContainer}>
+            {avatar && avatar.imageURL ? (
+              <>
+                <Avatar
+                  avatarUrl={avatar.imageURL}
+                  linkURL={avatar.linkURL}
+                  shape="circle"
+                  size={columnHeaderItemContentSize}
+                />
+                <Spacer width={contentPadding / 2} />
+              </>
+            ) : icon ? (
+              <>
+                <ThemedIcon
+                  color="foregroundColor"
+                  name={icon}
+                  size={columnHeaderItemContentSize}
+                />
+                <Spacer width={contentPadding / 2} />
+              </>
+            ) : null}
+
+            {!!title && (
+              <>
+                <ThemedText color="foregroundColor" style={styles.title}>
+                  {title}
+                </ThemedText>
+                <Spacer width={contentPadding / 2} />
+              </>
+            )}
+
+            {!!subtitle && (
+              <>
+                <ThemedText
+                  color="foregroundColorMuted65"
+                  style={styles.subtitle}
+                >
+                  {subtitle}
+                </ThemedText>
+                <Spacer width={contentPadding / 2} />
+              </>
+            )}
+          </View>
+
+          {right}
         </View>
-
-        {right}
-      </View>
+      </TouchableWithoutFeedback>
 
       <Separator horizontal />
     </ThemedView>

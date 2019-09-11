@@ -531,16 +531,11 @@ export const SidebarOrBottomBarColumnItem = React.memo(
       headerDetails && headerDetails.icon,
     ])
 
-    const firstItemId = filteredItems && filteredItems[0] && filteredItems[0].id
     const onPress = useCallback(() => {
       if (currentOpenedModal) dispatch(actions.closeAllModals())
 
       if (isColumnFocused) {
-        emitter.emit('FOCUS_ON_COLUMN_ITEM', {
-          columnId,
-          itemId: firstItemId,
-          scrollTo: true,
-        })
+        emitter.emit('SCROLL_TOP_COLUMN', { columnId })
       } else {
         emitter.emit('FOCUS_ON_COLUMN', {
           animated: !currentOpenedModal,
@@ -549,7 +544,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
           scrollTo: true,
         })
       }
-    }, [!!currentOpenedModal, firstItemId, isColumnFocused, small])
+    }, [!!currentOpenedModal, isColumnFocused, small])
 
     const hasUnread =
       !!column &&

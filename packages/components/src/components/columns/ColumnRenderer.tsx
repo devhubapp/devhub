@@ -200,6 +200,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     >
       <ColumnHeader
         key={`column-renderer-${columnId}-header`}
+        columnId={columnId}
         title={title}
         subtitle={subtitle}
         style={{ paddingRight: contentPadding / 2 }}

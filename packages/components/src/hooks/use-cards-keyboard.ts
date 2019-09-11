@@ -120,6 +120,25 @@ export function useCardsKeyboard(
     [columnId, items],
   )
 
+  const firstItemId = items && items[0] && items[0].id
+  useEmitter(
+    'SCROLL_TOP_COLUMN',
+    payload => {
+      if (payload.columnId !== columnId) return
+
+      emitter.emit('FOCUS_ON_COLUMN_ITEM', {
+        columnId,
+        itemId: firstItemId || null,
+        scrollTo: true,
+      })
+
+      if (!firstItemId && listRef.current) {
+        listRef.current.scrollToStart()
+      }
+    },
+    [columnId, firstItemId],
+  )
+
   useEmitter(
     'SCROLL_UP_COLUMN',
     (payload: { columnId: string }) => {
