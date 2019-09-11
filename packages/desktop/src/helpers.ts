@@ -1,10 +1,8 @@
 import { app, BrowserWindow, Tray } from 'electron'
 import path from 'path'
 
-import * as config from './config'
 import * as constants from './constants'
 import { __DEV__ } from './libs/electron-is-dev'
-import * as window from './window'
 
 export function registerAppSchema() {
   unregisterAppSchema()

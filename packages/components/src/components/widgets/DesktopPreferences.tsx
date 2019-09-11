@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
 
-import { useForceRerender } from '../../hooks/use-force-rerender'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'

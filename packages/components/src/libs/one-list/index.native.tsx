@@ -213,24 +213,32 @@ export const OneList = (React.memo(
                                 : -1
 
                             return (
-                              <itemSeparator.Component
-                                leading={
-                                  leadingIndex >= 0
-                                    ? {
-                                        index: leadingIndex,
-                                        item: data[leadingIndex],
-                                      }
-                                    : undefined
-                                }
-                                trailing={
-                                  trailingIndex >= 0
-                                    ? {
-                                        index: trailingIndex,
-                                        item: data[trailingIndex],
-                                      }
-                                    : undefined
-                                }
-                              />
+                              <>
+                                {!!(
+                                  itemSeparator &&
+                                  itemSeparator.size &&
+                                  itemSeparator.Component
+                                ) && (
+                                  <itemSeparator.Component
+                                    leading={
+                                      leadingIndex >= 0
+                                        ? {
+                                            index: leadingIndex,
+                                            item: data[leadingIndex],
+                                          }
+                                        : undefined
+                                    }
+                                    trailing={
+                                      trailingIndex >= 0
+                                        ? {
+                                            index: trailingIndex,
+                                            item: data[trailingIndex],
+                                          }
+                                        : undefined
+                                    }
+                                  />
+                                )}
+                              </>
                             )
                           }
                         : undefined

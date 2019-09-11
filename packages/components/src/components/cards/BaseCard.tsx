@@ -18,6 +18,10 @@ import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { BaseCardProps, sizes } from './BaseCard.shared'
+import {
+  CardItemSeparator,
+  cardItemSeparatorSize,
+} from './partials/CardItemSeparator'
 import { InstallGitHubAppText } from './partials/rows/InstallGitHubAppText'
 
 const styles = StyleSheet.create({
@@ -168,6 +172,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     avatar,
     date,
     githubApp,
+    height,
     icon,
     id,
     isPrivate,
@@ -190,9 +195,14 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
   return (
     <View
       key={`base-card-container-${type}-${id}-inner`}
-      style={styles.container}
+      style={[styles.container, { height }]}
     >
-      <View style={styles.innerContainer}>
+      <View
+        style={[
+          styles.innerContainer,
+          { height: height - cardItemSeparatorSize },
+        ]}
+      >
         {!!(action && action.text) && (
           <>
             <View style={styles.actionContainer}>
@@ -363,6 +373,8 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
           </>
         )}
       </View>
+
+      <CardItemSeparator muted={isRead} />
     </View>
   )
 })

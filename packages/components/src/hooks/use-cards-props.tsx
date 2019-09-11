@@ -7,7 +7,6 @@ import {
   constants,
   EnhancedItem,
   getDateSmallText,
-  isItemRead,
 } from '@devhub/core'
 import {
   BaseCardProps,
@@ -24,10 +23,7 @@ import {
   CardsSearchHeader,
 } from '../components/cards/CardsSearchHeader'
 import { EmptyCards } from '../components/cards/EmptyCards'
-import {
-  CardItemSeparator,
-  cardItemSeparatorSize,
-} from '../components/cards/partials/CardItemSeparator'
+import { cardItemSeparatorSize } from '../components/cards/partials/CardItemSeparator'
 import {
   ColumnLoadingIndicator,
   columnLoadingIndicatorSize,
@@ -140,19 +136,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     }))
   }, [items])
 
-  const itemSeparator = useMemo<
-    NonNullable<OneListProps<DataItemT<ItemT>>['itemSeparator']>
-  >(
-    () => ({
-      Component: ({ leading }) => (
-        <CardItemSeparator
-          leadingItem={leading && leading.item && leading.item.item}
-        />
-      ),
-      size: cardItemSeparatorSize,
-    }),
-    [cardItemSeparatorSize],
-  )
+  const itemSeparator = undefined
 
   const header = useMemo<OneListProps<DataItemT<ItemT>>['header']>(() => {
     return {
@@ -179,10 +163,6 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     clearedAt: column && column.filters && column.filters.clearedAt,
     columnId: (column && column.id)!,
     fetchNextPage,
-    isCardSeparatorMuted:
-      items && items[items.length - 1] && !isItemRead(items[items.length - 1])
-        ? false
-        : true,
     isEmpty: !(items && items.length > 0),
     refresh,
   }
@@ -197,18 +177,12 @@ export function useCardsProps<ItemT extends EnhancedItem>({
         isEmpty: cardsFooterProps.isEmpty,
       }),
       sticky,
-      Component: () => (
-        <CardsFooter
-          {...cardsFooterProps}
-          isCardSeparatorMuted={cardsFooterProps.isCardSeparatorMuted || sticky}
-        />
-      ),
+      Component: () => <CardsFooter {...cardsFooterProps} />,
     }
   }, [
     cardsFooterProps.clearedAt,
     cardsFooterProps.columnId,
     cardsFooterProps.fetchNextPage,
-    cardsFooterProps.isCardSeparatorMuted,
     cardsFooterProps.isEmpty,
     cardsFooterProps.refresh,
   ])

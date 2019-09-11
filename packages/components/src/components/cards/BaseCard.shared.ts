@@ -44,6 +44,7 @@ import {
   smallTextSize,
 } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
+import { cardItemSeparatorSize } from './partials/CardItemSeparator'
 
 const _iconContainerSize = 19
 const _actionFontSize = smallerTextSize
@@ -91,6 +92,7 @@ export interface BaseCardProps {
     repoId?: number | string | undefined
     text?: string
   }
+  height: number
   icon: {
     name: GitHubIcon
     color?: keyof ThemeColors
@@ -142,14 +144,14 @@ function getRepoText({
   return repoNameOrFullName
 }
 
-export function getCardPropsForItem(
+function _getCardPropsForItem(
   type: ColumnSubscription['type'],
   item: EnhancedItem,
   {
     ownerIsKnown,
     repoIsKnown,
   }: { ownerIsKnown: boolean; repoIsKnown: boolean },
-): BaseCardProps {
+): Omit<BaseCardProps, 'height'> {
   const id = item.id
 
   switch (type) {
@@ -630,7 +632,7 @@ export function getCardPropsForItem(
 
       const repoURL = repo.html_url || getRepoUrlFromOtherUrl(repo.url)
 
-      const defaultProps: BaseCardProps = {
+      const defaultProps: Omit<BaseCardProps, 'height'> = {
         action: undefined,
         avatar: {
           imageURL:
@@ -746,7 +748,16 @@ export function getCardPropsForItem(
   }
 }
 
-export function getCardSizeForProps(props: BaseCardProps): number {
+export function getCardPropsForItem(
+  ...args: Parameters<typeof _getCardPropsForItem>
+): BaseCardProps {
+  const props = _getCardPropsForItem(...args)
+  return { ...props, height: getCardSizeForProps(props) }
+}
+
+export function getCardSizeForProps(
+  props: Omit<BaseCardProps, 'height'>,
+): number {
   return (
     sizes.cardPadding * 2 +
     Math.max(
@@ -765,7 +776,8 @@ export function getCardSizeForProps(props: BaseCardProps): number {
       : 0) +
     (props.githubApp
       ? sizes.githubAppMessageContainerHeight + sizes.verticalSpaceSize
-      : 0)
+      : 0) +
+    cardItemSeparatorSize
   )
 }
 
