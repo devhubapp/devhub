@@ -122,7 +122,7 @@ export default function DownloadPage(_props: DownloadPageProps) {
                   type={os === 'linux' ? 'primary' : 'neutral'}
                   className={swClasses.button}
                   download
-                  href={`https://github.com/devhubapp/devhub/releases/download/v${version}/devhub-${version}-x86_64.AppImage`}
+                  href={`https://github.com/devhubapp/devhub/releases/download/v${version}/DevHub-${version}.AppImage`}
                 >
                   Download for Linux
                 </Button>
