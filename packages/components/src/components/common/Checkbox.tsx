@@ -4,7 +4,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, smallerTextSize } from '../../styles/variables'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
@@ -73,7 +73,7 @@ export function Checkbox(props: CheckboxProps) {
     analyticsLabel,
     circle,
     containerStyle,
-    disabled,
+    disabled: _disabled,
     enableIndeterminateState = false,
     label,
     labelTooltip,
@@ -88,6 +88,8 @@ export function Checkbox(props: CheckboxProps) {
     uncheckedBackgroundThemeColor = 'backgroundColorLess4',
     // uncheckedForegroundThemeColor = 'foregroundColor',
   } = props
+
+  const disabled = _disabled || !onChange
 
   const lastBooleanRef = useRef(
     typeof props.checked === 'boolean'
@@ -131,7 +133,7 @@ export function Checkbox(props: CheckboxProps) {
       analyticsLabel={analyticsLabel}
       disabled={disabled}
       onPress={disabled ? undefined : handleOnChange}
-      style={[styles.container, containerStyle]}
+      style={[styles.container, containerStyle, sharedStyles.opacity100]}
     >
       <View
         style={[
@@ -141,6 +143,7 @@ export function Checkbox(props: CheckboxProps) {
             height: Math.max(20, size + 4),
             borderRadius: circle ? size / 2 : checkboxBorderRadius,
           },
+          disabled && sharedStyles.muted,
           squareContainerStyle,
         ]}
       >
@@ -214,10 +217,10 @@ export function Checkbox(props: CheckboxProps) {
       <Spacer width={checkboxLabelSpacing} />
 
       {!!left && (
-        <>
+        <View style={disabled && sharedStyles.muted}>
           {left}
           <Spacer width={checkboxLabelSpacing} />
-        </>
+        </View>
       )}
 
       {!!label && (
@@ -226,11 +229,12 @@ export function Checkbox(props: CheckboxProps) {
             sharedStyles.flex,
             sharedStyles.horizontalAndVerticallyAligned,
             sharedStyles.justifyContentSpaceBetween,
+            typeof label !== 'string' && disabled && sharedStyles.muted,
           ]}
         >
           {typeof label === 'string' ? (
             <ThemedText
-              color="foregroundColor"
+              color={disabled ? 'foregroundColorMuted40' : 'foregroundColor'}
               numberOfLines={1}
               style={[sharedStyles.flex, { lineHeight: size }]}
               {...!!labelTooltip &&
@@ -246,12 +250,20 @@ export function Checkbox(props: CheckboxProps) {
         </View>
       )}
 
-      {!!right && (
-        <>
-          <Spacer width={contentPadding / 2} />
-          {right}
-        </>
-      )}
+      {!!right &&
+        (typeof right === 'string' ? (
+          <ThemedText
+            color={disabled ? 'foregroundColorMuted40' : 'foregroundColor'}
+            style={{ fontSize: smallerTextSize }}
+          >
+            {right}
+          </ThemedText>
+        ) : (
+          <View style={disabled && sharedStyles.muted}>
+            <Spacer width={contentPadding / 2} />
+            {right}
+          </View>
+        ))}
     </TouchableOpacity>
   )
 }

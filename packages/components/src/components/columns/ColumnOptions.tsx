@@ -18,7 +18,6 @@ import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
-import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { sharedColumnOptionsStyles } from './options/shared'
 
@@ -33,7 +32,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
   const { columnId } = props
 
   const dispatch = useDispatch()
-  const columnIds = useReduxState(selectors.columnIdsSelector)
+  const columnsCount = useReduxState(selectors.columnCountSelector)
 
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
@@ -108,56 +107,28 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         />
       )}
 
-      <Checkbox
-        analyticsLabel="column_option_push_notification"
-        checked={false}
-        containerStyle={
-          sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
-        }
-        defaultValue={false}
-        disabled
-        squareContainerStyle={sharedColumnOptionsStyles.checkboxSquareContainer}
-        enableIndeterminateState={false}
-        label={
-          <Link
-            analyticsLabel="column_option_push_notification_soon_link"
-            openOnNewTab
-            href="https://github.com/devhubapp/devhub/issues/51"
-            style={sharedStyles.flex}
-          >
-            <ThemedText
-              color="foregroundColor"
-              numberOfLines={1}
-              style={[sharedStyles.flex, { lineHeight: defaultCheckboxSize }]}
-            >
-              Enable push notifications
-            </ThemedText>
-          </Link>
-        }
-        onChange={_checked => {
-          // dispatch(
-          //   actions.setColumnOption({
-          //     columnId,
-          //     option: 'enablePushNotifications',
-          //     value,
-          //   }),
-          // )
-        }}
-        right={
-          <Link
-            analyticsLabel="column_option_push_notification_soon_link"
-            openOnNewTab
-            href="https://github.com/devhubapp/devhub/issues/51"
-          >
-            <ThemedText
-              color="foregroundColor"
-              style={{ fontSize: smallerTextSize }}
-            >
-              SOON
-            </ThemedText>
-          </Link>
-        }
-      />
+      <Link
+        analyticsLabel="column_option_mobile_push_notifications_soon_link"
+        openOnNewTab
+        href="https://github.com/devhubapp/devhub/issues/51"
+      >
+        <Checkbox
+          analyticsLabel="column_option_mobile_push_notification"
+          checked={false}
+          containerStyle={
+            sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
+          }
+          defaultValue={false}
+          disabled
+          enableIndeterminateState={false}
+          label="Mobile push notifications"
+          onChange={undefined}
+          right="SOON"
+          squareContainerStyle={
+            sharedColumnOptionsStyles.checkboxSquareContainer
+          }
+        />
+      </Link>
 
       <View
         style={[
@@ -191,7 +162,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         <IconButton
           key="column-options-button-move-column-right"
           analyticsLabel="move_column_right"
-          disabled={columnIndex === columnIds.length - 1}
+          disabled={columnIndex === columnsCount - 1}
           name="chevron-right"
           onPress={() =>
             dispatch(
@@ -201,13 +172,13 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
                 columnIndex: columnIndex + 1,
                 highlight:
                   appViewMode === 'multi-column' ||
-                  columnIndex === columnIds.length - 1,
+                  columnIndex === columnsCount - 1,
                 scrollTo: true,
               }),
             )
           }
           style={{
-            opacity: columnIndex === columnIds.length - 1 ? 0.5 : 1,
+            opacity: columnIndex === columnsCount - 1 ? 0.5 : 1,
           }}
           tooltip={`Move column right (${
             keyboardShortcutsById.moveColumnRight.keys[0]

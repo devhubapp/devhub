@@ -48,11 +48,19 @@ export function IconButton(props: IconButtonProps) {
   const disabledRef = useDynamicRef(_disabled)
 
   const {
-    foregroundThemeColor,
+    foregroundThemeColor: _foregroundThemeColor,
     tintBackgroundHoveredOpacity,
     tintBackgroundPressedOpacity,
     tintThemeColor,
   } = getIconButtonColors(type)
+
+  const handleDisabledOpacityInternally =
+    _foregroundThemeColor === 'foregroundColor'
+
+  const foregroundThemeColor: typeof _foregroundThemeColor =
+    handleDisabledOpacityInternally && disabledRef.current
+      ? 'foregroundColorMuted40'
+      : _foregroundThemeColor
 
   const updateStyles = useCallback(() => {
     const theme = getTheme()
@@ -91,13 +99,9 @@ export function IconButton(props: IconButtonProps) {
               ? getThemeColorOrItself(theme, tintThemeColor, {
                   enableCSSVariable: true,
                 })
-              : getThemeColorOrItself(
-                  theme,
-                  foregroundThemeColor || 'foregroundColor',
-                  {
-                    enableCSSVariable: true,
-                  },
-                ),
+              : getThemeColorOrItself(theme, foregroundThemeColor, {
+                  enableCSSVariable: true,
+                }),
         },
       })
     }
@@ -144,6 +148,7 @@ export function IconButton(props: IconButtonProps) {
           height: size + contentPadding,
           borderRadius: (size + contentPadding) / 2,
         },
+        handleDisabledOpacityInternally && sharedStyles.opacity100,
         style,
       ]}
     >

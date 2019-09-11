@@ -546,7 +546,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
       }
     }, [!!currentOpenedModal, isColumnFocused, small])
 
-    const hasUnread =
+    const showUnreadIndicator =
       !!column &&
       getColumnOption(column, 'enableInAppUnreadIndicator', Platform.OS)
         ? filteredItems.some(item => !isItemRead(item))
@@ -559,8 +559,8 @@ export const SidebarOrBottomBarColumnItem = React.memo(
         : undefined
 
     useEffect(() => {
-      columnIndexUnreadMapperRef.current.set(columnIndex, hasUnread)
-    }, [columnIndex, hasUnread])
+      columnIndexUnreadMapperRef.current.set(columnIndex, showUnreadIndicator)
+    }, [columnIndex, showUnreadIndicator])
 
     if (!(column && columnIndex >= 0 && headerDetails)) return null
 
@@ -573,7 +573,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
         number={columnIndex + 1}
         onPress={onPress}
         selected={isColumnFocused && !currentOpenedModal}
-        showUnreadIndicator={hasUnread}
+        showUnreadIndicator={showUnreadIndicator}
         subtitle={headerDetails.subtitle}
         title={headerDetails.title}
         unreadIndicatorColor={unreadIndicatorColor}

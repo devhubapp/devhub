@@ -214,6 +214,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               analyticsLabel={
                 clearableItems.length ? 'clear_column' : 'unclear_column'
               }
+              disabled={!clearableItems.length}
               name="check"
               onPress={() => {
                 dispatch(
@@ -228,9 +229,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 focusColumn()
 
                 if (!clearableItems.length) refresh()
-              }}
-              style={{
-                opacity: clearableItems.length ? 1 : 0.5,
               }}
               tooltip={
                 clearableItems.length ? 'Clear items' : 'Show cleared items'

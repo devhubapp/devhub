@@ -14,13 +14,11 @@ export const columnSelector = (state: RootState, id: string) => {
   return (byId && byId[id]) || undefined
 }
 
-// export const columnIdsSelector = createSelector(
-//   (state: RootState) => s(state).allIds || EMPTY_ARRAY,
-//   columnIds => columnIds.slice(0, 2),
-// )
-
 export const columnIdsSelector = (state: RootState) =>
   s(state).allIds || EMPTY_ARRAY
+
+export const columnCountSelector = (state: RootState) =>
+  columnIdsSelector(state).length
 
 export const columnsArrSelector = createArraySelector(
   (state: RootState) => columnIdsSelector(state),
