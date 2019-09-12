@@ -24,7 +24,7 @@ export const DISABLE_SWIPEABLE_CARDS = false
 export const DEFAULT_DARK_THEME: ThemeName = 'dark-gray'
 export const DEFAULT_LIGHT_THEME: ThemeName = 'light-white'
 export const DEFAULT_THEME_PAIR: ThemePair = {
-  id: 'auto',
+  id: DEFAULT_DARK_THEME,
   color: '',
 }
 
