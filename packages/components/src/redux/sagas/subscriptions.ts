@@ -41,6 +41,7 @@ import {
   mergeNotificationsPreservingEnhancement,
 } from '@devhub/core'
 
+import { InteractionManager } from 'react-native'
 import { bugsnag } from '../../libs/bugsnag'
 import {
   getActivity,
@@ -169,6 +170,8 @@ function* init() {
 }
 
 function* cleanupSubscriptions() {
+  yield call(InteractionManager.runAfterInteractions)
+
   const allSubscriptionIds: string[] = yield select(
     selectors.subscriptionIdsSelector,
   )
@@ -200,6 +203,8 @@ function* onAddColumn(
     typeof actions.addColumnAndSubscriptions
   >,
 ) {
+  yield call(InteractionManager.runAfterInteractions)
+
   const state = yield select()
 
   const column = selectors.columnSelector(state, action.payload.column.id)
@@ -487,6 +492,8 @@ function* onFetchRequest(
     }
 
     const githubAPIHeaders = getGitHubAPIHeadersFromHeader(headers)
+
+    yield call(InteractionManager.runAfterInteractions)
 
     yield put(
       actions.fetchSubscriptionSuccess({

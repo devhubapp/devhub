@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 
 import { constants } from '@devhub/core'
@@ -7,7 +7,7 @@ import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
-import { emitter } from '../../libs/emitter'
+import { emitter, EmitterTypes } from '../../libs/emitter'
 import { OneList, OneListProps } from '../../libs/one-list'
 import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
@@ -33,6 +33,10 @@ export const Columns = React.memo((props: ColumnsProps) => {
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
   const { focusedColumnId } = useFocusedColumn()
+  const useFailedColumnFocusRef = useRef({
+    payload: null as EmitterTypes['FOCUS_ON_COLUMN'] | null,
+    lastTriedAt: null as number | null,
+  })
 
   useEmitter(
     'FOCUS_ON_COLUMN',
@@ -41,18 +45,43 @@ export const Columns = React.memo((props: ColumnsProps) => {
       if (!(columnIds && columnIds.length)) return
       if (!payload.columnId) return
 
-      if (payload.scrollTo) {
-        const index = columnIds.indexOf(payload.columnId)
-        if (!(index >= 0)) return
+      if (!payload.scrollTo) return
 
-        listRef.current.scrollToIndex(index, {
-          animated: payload.animated,
-          alignment: 'smart',
-        })
+      const index = columnIds.indexOf(payload.columnId)
+      if (!(index >= 0)) {
+        useFailedColumnFocusRef.current = { payload, lastTriedAt: Date.now() }
+        return
       }
+      useFailedColumnFocusRef.current = { payload: null, lastTriedAt: null }
+
+      listRef.current.scrollToIndex(index, {
+        animated: payload.animated,
+        alignment: 'smart',
+      })
     },
     [columnIds],
   )
+
+  useEffect(() => {
+    if (!listRef.current) return
+    if (!(columnIds && columnIds.length)) return
+    if (
+      !(
+        useFailedColumnFocusRef.current.payload &&
+        useFailedColumnFocusRef.current.payload.columnId &&
+        useFailedColumnFocusRef.current.lastTriedAt &&
+        Date.now() - useFailedColumnFocusRef.current.lastTriedAt <= 10000
+      )
+    )
+      return
+
+    const index = columnIds.indexOf(
+      useFailedColumnFocusRef.current.payload.columnId,
+    )
+    if (!(index >= 0)) return
+
+    emitter.emit('FOCUS_ON_COLUMN', useFailedColumnFocusRef.current.payload)
+  }, [columnIds.join(',')])
 
   const pagingEnabled = appViewMode === 'single-column'
 

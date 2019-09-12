@@ -1,4 +1,5 @@
-import { all, delay, put, select, takeLatest } from 'redux-saga/effects'
+import { InteractionManager } from 'react-native'
+import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
   ActivityColumnSubscriptionCreation,
@@ -153,7 +154,7 @@ function* onAddColumn(
 ) {
   const columnId = action.payload.column.id
 
-  yield delay(300)
+  yield call(InteractionManager.runAfterInteractions)
 
   emitter.emit('FOCUS_ON_COLUMN', {
     animated: true,
