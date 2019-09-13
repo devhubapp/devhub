@@ -8,6 +8,7 @@ export const store = new Store({
     enablePushNotifications: true,
     enablePushNotificationsSound: true,
     isMenuBarMode: false,
+    isMenuBarModeChangedAt: null,
     launchCount: 0,
     lockOnCenter: false,
     openAtLoginChangeCount: 0,

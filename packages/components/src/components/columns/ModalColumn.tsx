@@ -110,7 +110,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
             )}
 
             {right && (
-              <View style={sharedStyles.paddingHorizontalHalf}>{right}</View>
+              <View style={sharedStyles.paddingHorizontal}>{right}</View>
             )}
           </>
         }

@@ -396,6 +396,7 @@ export function getWindowMenuItems() {
       label: 'Close',
       accelerator: 'CmdOrCtrl+W',
       click() {
+        if (!mainWindow) return
         mainWindow.hide()
       },
     },
@@ -410,6 +411,8 @@ export function getWindowMenuItems() {
       enabled,
       checked: mainWindow && mainWindow.isMaximized(),
       click(item) {
+        if (!mainWindow) return
+
         helpers.showWindow(mainWindow)
 
         if (item.checked) mainWindow.maximize()
@@ -417,7 +420,9 @@ export function getWindowMenuItems() {
       },
     },
     {
-      visible: !config.store.get('isMenuBarMode') || mainWindow.isFullScreen(),
+      visible:
+        !config.store.get('isMenuBarMode') ||
+        (mainWindow && mainWindow.isFullScreen()),
       role: 'togglefullscreen',
     },
   ]
@@ -436,6 +441,7 @@ export function getTrayMenuItems() {
       label: 'Open',
       visible: !isCurrentWindow,
       click() {
+        if (!mainWindow) return
         helpers.showWindow(mainWindow)
       },
     },
@@ -493,7 +499,7 @@ export function updateMenu() {
     })
 
     const mainWindow = window.getMainWindow()
-    mainWindow.setTouchBar(touchBar)
+    if (mainWindow) mainWindow.setTouchBar(touchBar)
   }
 
   const _dock = dock.getDock()

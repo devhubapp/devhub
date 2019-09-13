@@ -11,7 +11,7 @@ import * as menu from './menu'
 import * as screen from './screen'
 import * as tray from './tray'
 
-let mainWindow: BrowserWindow
+let mainWindow: BrowserWindow | undefined
 let mainWindowState: WindowState
 let menubarWindowState: WindowState
 
@@ -31,7 +31,7 @@ export function init() {
   })
 
   menubarWindowState = windowStateKeeper({
-    defaultWidth: 380,
+    defaultWidth: 372,
     defaultHeight: 677,
     file: `menubar-window-display-${display.id}.json`,
     fullScreen: false,
@@ -87,16 +87,24 @@ export function createWindow() {
   })
 
   win.on('blur', () => {
-    const isSameDisplay = screen.getDisplayFromCursor().id === screenId
+    function shouldHide() {
+      const isSameDisplay = screen.getDisplayFromCursor().id === screenId
 
-    setTimeout(() => {
-      if (
+      return (
         isSameDisplay &&
         config.store.get('isMenuBarMode') &&
+        config.store.get('isMenuBarModeChangedAt') &&
+        Date.now() - (config.store.get('isMenuBarModeChangedAt') as number) >
+          1000 &&
         !win.isDestroyed()
-      ) {
-        win.hide()
-      }
+      )
+    }
+
+    if (!shouldHide()) return
+
+    setTimeout(() => {
+      if (!shouldHide()) return
+      win.hide()
     }, 200)
   })
 
@@ -106,7 +114,7 @@ export function createWindow() {
   })
 
   win.on('leave-full-screen', () => {
-    if (!mainWindow.isFocused()) return
+    if (!(mainWindow && mainWindow.isFocused())) return
     update()
   })
 
@@ -124,7 +132,7 @@ export function getBrowserWindowOptions() {
         ? undefined
         : path.join(__dirname, '../assets/icons/icon.png'),
     resizable: true,
-    show: false,
+    show: !!(getMainWindow() && getMainWindow()!.isVisible()),
     title: 'DevHub',
     webPreferences: {
       affinity: 'main-window',
@@ -186,6 +194,8 @@ export function updateOrRecreateWindow() {
 }
 
 function updateBrowserWindowOptions() {
+  if (!mainWindow) return
+
   const options = getBrowserWindowOptions()
 
   const maximize =

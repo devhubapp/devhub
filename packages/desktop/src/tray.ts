@@ -39,6 +39,11 @@ export function createTray() {
   tray.on('click', () => {
     const mainWindow = window.getMainWindow()
 
+    if (!mainWindow) {
+      showTrayContextPopup()
+      return
+    }
+
     if (mainWindow.isFullScreen()) {
       showTrayContextPopup()
       return
@@ -85,6 +90,7 @@ export function updateTrayHightlightMode() {
   const mainWindow = window.getMainWindow()
   tray.setHighlightMode(
     config.store.get('isMenuBarMode') &&
+      mainWindow &&
       mainWindow.isVisible() &&
       mainWindow.isFocused() &&
       !mainWindow.isFullScreen()

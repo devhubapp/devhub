@@ -66,6 +66,8 @@ export async function imageURLToNativeImage(imageURL: string | undefined) {
     return nativeImage.createFromBuffer(Buffer.from(arrayBuffer))
   } catch (error) {
     console.error(error)
-    if (__DEV__) dialog.showMessageBox(getMainWindow(), { message: `${error}` })
+    if (__DEV__ && getMainWindow()) {
+      dialog.showMessageBox(getMainWindow()!, { message: `${error}` })
+    }
   }
 }

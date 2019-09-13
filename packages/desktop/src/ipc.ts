@@ -110,30 +110,22 @@ export function register() {
         }
 
         case 'isMenuBarMode': {
-          if (value) {
-            config.store.set('isMenuBarMode', true)
+          config.store.set('isMenuBarMode', !!value)
+          config.store.set('isMenuBarModeChangedAt', Date.now())
 
-            if (mainWindow.isFullScreen()) {
-              mainWindow.setFullScreen(false)
-              setTimeout(window.updateOrRecreateWindow, 1000)
-            } else {
-              window.updateOrRecreateWindow()
-            }
+          if (mainWindow && mainWindow.isFullScreen()) {
+            mainWindow.setFullScreen(false)
+            setTimeout(window.updateOrRecreateWindow, 1000)
           } else {
-            config.store.set('isMenuBarMode', false)
-
-            if (mainWindow.isFullScreen()) {
-              mainWindow.setFullScreen(false)
-              setTimeout(window.updateOrRecreateWindow, 1000)
-            } else {
-              window.updateOrRecreateWindow()
-            }
+            window.updateOrRecreateWindow()
           }
           break
         }
 
         case 'lockOnCenter': {
           config.store.set('lockOnCenter', value)
+
+          if (!mainWindow) return
 
           if (value) {
             if (!config.store.get('isMenuBarMode')) {
@@ -165,7 +157,7 @@ export function register() {
         }
       }
 
-      mainWindow.webContents.send('update-settings', payload)
+      if (mainWindow) mainWindow.webContents.send('update-settings', payload)
     },
   )
 
@@ -189,7 +181,11 @@ export function register() {
         if (imageURL) icon = await helpers.imageURLToNativeImage(imageURL)
       } catch (error) {
         console.error(error)
-        dialog.showMessageBox(window.getMainWindow(), { message: `${error}` })
+        if (window.getMainWindow()) {
+          dialog.showMessageBox(window.getMainWindow()!, {
+            message: `${error}`,
+          })
+        }
       }
 
       const notification = new Notification({
@@ -204,9 +200,11 @@ export function register() {
         notification.addListener('click', e => {
           e.preventDefault()
 
-          window
-            .getMainWindow()
-            .webContents.send('redux', payload.onClickDispatchAction)
+          if (window.getMainWindow()) {
+            window
+              .getMainWindow()!
+              .webContents.send('redux', payload.onClickDispatchAction)
+          }
         })
       }
 

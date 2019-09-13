@@ -113,12 +113,12 @@ export function ModalRenderer(props: ModalRendererProps) {
   const size = columnWidth + (renderSeparator ? separatorThickSize : 0)
 
   const overlayTransition = useTransition<boolean, any>(
-    currentOpenedModal && sizename > '2-medium' ? [true] : [],
+    currentOpenedModal ? [true] : [],
     () => 'modal-overlay',
     {
       reset: false,
       unique: true,
-      immediate,
+      immediate: immediate || sizename <= '2-medium',
       config: getDefaultReactSpringAnimationConfig({ precision: 0.01 }),
       from: { opacity: 0 },
       enter: { opacity: 0.75 },
