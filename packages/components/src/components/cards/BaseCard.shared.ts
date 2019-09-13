@@ -212,7 +212,7 @@ export function getCardPropsForItem(
 
       const repoURL = fixURL(
         repos[0].html_url || getRepoUrlFromOtherUrl(repos[0].url),
-      )
+      )!
       const repoImageURL =
         (repos[0].owner && getUserAvatarFromObject(repos[0].owner)) ||
         (repoURL &&
@@ -331,7 +331,7 @@ export function getCardPropsForItem(
               link:
                 (_comment && (_comment.html_url || fixURL(_comment.url))) ||
                 issueOrPullRequest.html_url ||
-                fixURL(issueOrPullRequest.url),
+                fixURL(issueOrPullRequest.url)!,
               subitems,
               subtitle: undefined,
               text: getRepoText({
@@ -470,7 +470,7 @@ export function getCardPropsForItem(
               id,
               isPrivate,
               isRead,
-              link: release.html_url || fixURL(release.url),
+              link: release.html_url || fixURL(release.url)!,
               subitems: [],
               subtitle: trimNewLinesAndSpaces(stripMarkdown(release.body), 120),
               text: getRepoText({
@@ -573,7 +573,7 @@ export function getCardPropsForItem(
         link: fixURL(issueOrPullRequest.html_url, {
           addBottomAnchor: issueOrPullRequest.comments > 0,
           issueOrPullRequestNumber: issueOrPullRequest.number,
-        }),
+        })!,
         subitems: undefined,
         subtitle: undefined,
         text: getRepoText({
@@ -644,12 +644,19 @@ export function getCardPropsForItem(
         id,
         isPrivate,
         isRead,
-        link: fixURL(subject.latest_comment_url || subject.url, {
-          addBottomAnchor: true,
-          commentId:
-            (_comment && _comment.id && Number(_comment.id)) || undefined,
-          issueOrPullRequestNumber,
-        }),
+        link:
+          fixURL(subject.url, {
+            addBottomAnchor: true,
+            commentId:
+              (_comment && _comment.id && Number(_comment.id)) || undefined,
+            issueOrPullRequestNumber,
+          }) ||
+          fixURL(subject.url, {
+            addBottomAnchor: true,
+            commentId:
+              (_comment && _comment.id && Number(_comment.id)) || undefined,
+            issueOrPullRequestNumber,
+          })!,
         subitems,
         subtitle: undefined,
         text: getRepoText({

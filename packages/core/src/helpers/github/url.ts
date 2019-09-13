@@ -229,7 +229,7 @@ export function githubHTMLUrlFromAPIUrl(
     commentId,
     issueOrPullRequestNumber,
   }: GitHubURLOptions = {},
-): string {
+): string | undefined {
   if (!apiURL) return ''
 
   const [, type, restOfURL] = apiURL.match(
@@ -245,6 +245,9 @@ export function githubHTMLUrlFromAPIUrl(
 
     if (restOfURL2[0]) {
       switch (type2) {
+        case 'comments':
+          return undefined
+
         case 'commits': {
           if (commentId) {
             return `${baseURL}/${repoFullName}/commit/${
@@ -302,13 +305,13 @@ export function fixURLForPlatform(
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
   const baseURL = (options && options.baseURL) || defaultBaseURL
-  let uri =
+  let uri: string | undefined =
     url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url
 
   if (uri.indexOf('api.github.com') >= 0)
     uri = githubHTMLUrlFromAPIUrl(uri, isMobile, options)
 
-  return options && options.addBottomAnchor
+  return options && options.addBottomAnchor && uri
     ? appBottomAnchorIfPossible(uri, isMobile)
     : uri
 }
