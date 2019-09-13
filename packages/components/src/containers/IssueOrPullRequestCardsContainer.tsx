@@ -35,7 +35,7 @@ export interface IssueOrPullRequestCardsContainerProps
     | 'errorMessage'
     | 'items'
     | 'fetchNextPage'
-    | 'lastFetchedAt'
+    | 'lastFetchedSuccessfullyAt'
     | 'refresh'
   > {
   columnId: string
@@ -240,7 +240,9 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
-        lastFetchedAt={mainSubscription.data.lastFetchedAt}
+        lastFetchedSuccessfullyAt={
+          mainSubscription.data.lastFetchedSuccessfullyAt
+        }
         refresh={refresh}
       />
     )

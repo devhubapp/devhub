@@ -69,12 +69,14 @@ function notify() {
 }
 
 export function register() {
-  autoUpdater.on('error', () => {
+  autoUpdater.removeAllListeners('error')
+  autoUpdater.addListener('error', () => {
     updateInfo = { ...updateInfo, state: 'error', date: Date.now() }
     menu.updateMenu()
   })
 
-  autoUpdater.on('checking-for-update', () => {
+  autoUpdater.removeAllListeners('checking-for-update')
+  autoUpdater.addListener('checking-for-update', () => {
     updateInfo = {
       ...updateInfo,
       state: 'checking-for-update',
@@ -83,7 +85,8 @@ export function register() {
     menu.updateMenu()
   })
 
-  autoUpdater.on('update-not-available', () => {
+  autoUpdater.removeAllListeners('update-not-available')
+  autoUpdater.addListener('update-not-available', () => {
     const fromManualCheck =
       updateInfo.lastManuallyCheckedAt &&
       Date.now() - updateInfo.lastManuallyCheckedAt < 10000
@@ -102,12 +105,14 @@ export function register() {
     }
   })
 
-  autoUpdater.on('update-available', () => {
+  autoUpdater.removeAllListeners('update-available')
+  autoUpdater.addListener('update-available', () => {
     updateInfo = { ...updateInfo, state: 'update-available', date: Date.now() }
     menu.updateMenu()
   })
 
-  autoUpdater.on('download-progress', e => {
+  autoUpdater.removeAllListeners('download-progress')
+  autoUpdater.addListener('download-progress', e => {
     updateInfo = {
       ...updateInfo,
       state: 'downloading',
@@ -117,7 +122,8 @@ export function register() {
     menu.updateMenu()
   })
 
-  autoUpdater.on('update-downloaded', info => {
+  autoUpdater.removeAllListeners('update-downloaded')
+  autoUpdater.addListener('update-downloaded', info => {
     updateInfo = {
       ...updateInfo,
       state: 'update-downloaded',

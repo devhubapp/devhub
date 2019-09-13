@@ -23,6 +23,7 @@ function setupBrowserExtensions() {
 
 function init() {
   app.setName('DevHub')
+  // app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
   const openAtLoginChangeCount = config.store.get(
     'openAtLoginChangeCount',
@@ -37,7 +38,7 @@ function init() {
     return
   }
 
-  app.on('second-instance', (event, argv, _workingDirectory) => {
+  app.addListener('second-instance', (event, argv, _workingDirectory) => {
     const mainWindow = window.getMainWindow()
     if (!mainWindow) return
 
@@ -46,7 +47,7 @@ function init() {
     app.emit('open-url', event, argv.pop() || '')
   })
 
-  app.on('ready', () => {
+  app.addListener('ready', () => {
     config.store.set(
       'launchCount',
       (config.store.get('launchCount', 0) as number) + 1,
@@ -82,7 +83,7 @@ function init() {
     }
   })
 
-  app.on('window-all-closed', async () => {
+  app.addListener('window-all-closed', async () => {
     if (updater.getUpdateInfo().state === 'update-downloaded') {
       try {
         const mainWindow = window.getMainWindow()
@@ -99,12 +100,13 @@ function init() {
     }
   })
 
-  app.on('activate', () => {
+  app.addListener('activate', () => {
     window.updateOrRecreateWindow()
   })
 
-  app.on('web-contents-created', (_event, webContents) => {
-    webContents.on(
+  app.addListener('web-contents-created', (_event, webContents) => {
+    webContents.removeAllListeners('new-window')
+    webContents.addListener(
       'new-window',
       (event, uri, _frameName, _disposition, _options) => {
         if (
@@ -119,7 +121,7 @@ function init() {
     )
   })
 
-  app.on('open-url', (_event, uri) => {
+  app.addListener('open-url', (_event, uri) => {
     const mainWindow = window.getMainWindow()
     if (!mainWindow) return
 

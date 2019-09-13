@@ -35,7 +35,9 @@ function* init() {
     const isLogged = selectors.isLoggedSelector(state)
     if (!isLogged) continue
 
-    const lastFetchedAt = selectors.installationsLastFetchedAtSelector(state)
+    const lastFetchedAt = selectors.installationsLastFetchedRequestAtSelector(
+      state,
+    )
     const fetchedNMinutesAgo = lastFetchedAt
       ? (new Date().valueOf() - new Date(lastFetchedAt).valueOf()) / 1000 / 60
       : undefined

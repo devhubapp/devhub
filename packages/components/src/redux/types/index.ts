@@ -1,4 +1,4 @@
-import { Dispatch, Reducer as ReduxReducer } from 'redux'
+import { Dispatch, MiddlewareAPI, Reducer as ReduxReducer } from 'redux'
 
 import { ExtractActionFromActionCreator } from './base'
 
@@ -15,6 +15,6 @@ export type RootState = typeof rootReducer extends ReduxReducer<infer S>
   ? S
   : never
 
-export type Middleware = () => (
-  next: Dispatch<AllActions>,
-) => (action: AllActions) => any
+export type Middleware = (
+  store: MiddlewareAPI,
+) => (next: Dispatch<AllActions>) => (action: AllActions) => any

@@ -1,14 +1,25 @@
 import React, { ReactNode } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
+import {
+  activePlans,
+  constants,
+  formatPrice,
+  getColumnOption,
+  ThemeColors,
+} from '@devhub/core'
+import { useColumn } from '../../hooks/use-column'
+import { useDesktopOptions } from '../../hooks/use-desktop-options'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
+import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
 import * as selectors from '../../redux/selectors'
-import { contentPadding } from '../../styles/variables'
+import { sharedStyles } from '../../styles/shared'
+import { contentPadding, smallerTextSize } from '../../styles/variables'
 import { Avatar } from '../common/Avatar'
 import { IconButton, IconButtonProps } from '../common/IconButton'
+import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { TouchableWithoutFeedback } from '../common/TouchableWithoutFeedback'
@@ -60,6 +71,24 @@ export function ColumnHeader(props: ColumnHeaderProps) {
 
   const safeAreaInsets = useSafeArea()
   const bannerMessage = useReduxState(selectors.bannerMessageSelector)
+  const plan = useReduxState(selectors.currentUserPlanSelector)
+  const { column } = useColumn(columnId || '')
+  const {
+    enablePushNotifications: enableDesktopPushNotifications,
+  } = useDesktopOptions()
+
+  const enableDesktopPushNotificationsOption = getColumnOption(
+    column,
+    'enableDesktopPushNotifications',
+    {
+      Platform,
+      plan,
+    },
+  )
+
+  const cheapestPlanWithNotifications = activePlans
+    .sort((a, b) => a.amount - b.amount)
+    .find(p => p.featureFlags.enablePushNotifications)
 
   return (
     <ThemedView
@@ -136,6 +165,107 @@ export function ColumnHeader(props: ColumnHeaderProps) {
                   {subtitle}
                 </ThemedText>
                 <Spacer width={contentPadding / 2} />
+
+                {Platform.OS === 'web' &&
+                  (!enableDesktopPushNotificationsOption.platformSupports ||
+                    !enableDesktopPushNotificationsOption.hasAccess ||
+                    enableDesktopPushNotificationsOption.value) && (
+                    <>
+                      <Link
+                        analyticsLabel="column_header_push_notifications_cta"
+                        hitSlop={{
+                          top: contentPadding,
+                          bottom: contentPadding,
+                          left: contentPadding,
+                          right: contentPadding,
+                        }}
+                        href={
+                          !enableDesktopPushNotificationsOption.platformSupports
+                            ? `${constants.LANDING_BASE_URL}/download`
+                            : !enableDesktopPushNotificationsOption.hasAccess
+                            ? `${constants.LANDING_BASE_URL}/pricing`
+                            : ''
+                        }
+                        openOnNewTab
+                        style={sharedStyles.relative}
+                      >
+                        <ThemedIcon
+                          color="foregroundColorMuted40"
+                          name="bell"
+                          size={smallerTextSize}
+                          {...Platform.select({
+                            web: {
+                              title:
+                                enableDesktopPushNotificationsOption.hasAccess &&
+                                enableDesktopPushNotificationsOption.value
+                                  ? `${
+                                      enableDesktopPushNotificationsOption.hasAccess ===
+                                      'trial'
+                                        ? '[TRIAL] '
+                                        : ''
+                                    }Push Notifications are enabled for this column${
+                                      enableDesktopPushNotificationsOption.platformSupports
+                                        ? Platform.isElectron &&
+                                          !enableDesktopPushNotifications
+                                          ? ', but disabled on this device.'
+                                          : '.'
+                                        : ', but not supported on this platform. ' +
+                                            'Download the Desktop app to have access to it.' +
+                                            enableDesktopPushNotificationsOption.hasAccess ===
+                                          'trial'
+                                        ? ' \n\nPS: You are currently on a free trial, enjoy it!'
+                                        : ''
+                                    }`
+                                  : !enableDesktopPushNotificationsOption.platformSupports
+                                  ? 'Push Notifications are not supported on this platform.' +
+                                    ' Download the Desktop app to have access to it.' +
+                                    (enableDesktopPushNotificationsOption.hasAccess ===
+                                    'trial'
+                                      ? ' \n\nPS: You are currently on a free trial, enjoy it!'
+                                      : '')
+                                  : !enableDesktopPushNotificationsOption.hasAccess &&
+                                    cheapestPlanWithNotifications &&
+                                    cheapestPlanWithNotifications.amount
+                                  ? `Unlock Push Notifications and other features for ${formatPrice(
+                                      cheapestPlanWithNotifications.amount,
+                                      cheapestPlanWithNotifications.currency,
+                                    )}/${
+                                      cheapestPlanWithNotifications.interval
+                                    }`
+                                  : '',
+                            },
+                          })}
+                        />
+
+                        {!!(
+                          !enableDesktopPushNotificationsOption.hasAccess ||
+                          !enableDesktopPushNotificationsOption.platformSupports ||
+                          (Platform.isElectron &&
+                            !enableDesktopPushNotifications)
+                        ) && (
+                          <ThemedView
+                            style={[
+                              StyleSheet.absoluteFill,
+                              sharedStyles.center,
+                            ]}
+                            pointerEvents="none"
+                          >
+                            <ThemedView
+                              backgroundColor="lightRed"
+                              style={{
+                                width: 1,
+                                height: smallerTextSize + 4,
+                                transform: [{ rotateZ: '45deg' }],
+                              }}
+                              pointerEvents="none"
+                            />
+                          </ThemedView>
+                        )}
+                      </Link>
+
+                      <Spacer width={contentPadding / 2} />
+                    </>
+                  )}
               </>
             )}
           </View>

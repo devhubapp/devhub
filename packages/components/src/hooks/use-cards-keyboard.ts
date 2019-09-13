@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import { Column, EnhancedItem, isItemRead } from '@devhub/core'
 import { getCardPropsForItem } from '../components/cards/BaseCard.shared'
 import { getCurrentFocusedColumnId } from '../components/context/ColumnFocusContext'
-import { Browser } from '../libs/browser'
 import { emitter } from '../libs/emitter'
 import { OneList } from '../libs/one-list'
 import * as actions from '../redux/actions'
@@ -231,22 +230,18 @@ export function useCardsKeyboard(
         items.find(item => item && item.id === selectedItemIdRef.current)
       if (!selectedItem) return
 
-      setTimeout(() => {
-        dispatch(
-          actions.markItemsAsReadOrUnread({
-            type,
-            itemIds: [selectedItem.id],
-            localOnly: true,
-            unread: false,
-          }),
-        )
-      }, 500)
-
-      Browser.openURLOnNewTab(
-        getCardPropsForItem(type, selectedItem, { ownerIsKnown, repoIsKnown })
-          .link,
+      dispatch(
+        actions.openItem({
+          columnType: type,
+          columnId,
+          itemId: selectedItem.id,
+          link: getCardPropsForItem(type, selectedItem, {
+            ownerIsKnown,
+            repoIsKnown,
+          }).link,
+        }),
       )
-    }, [items, type, ownerIsKnown, repoIsKnown]),
+    }, [items, type, columnId, ownerIsKnown, repoIsKnown]),
   )
 
   useKeyPressCallback(

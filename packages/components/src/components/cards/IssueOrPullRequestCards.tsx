@@ -35,7 +35,7 @@ export interface IssueOrPullRequestCardsProps
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: ItemT[]
-  lastFetchedAt: string | undefined
+  lastFetchedSuccessfullyAt: string | undefined
   ownerIsKnown: boolean
   pointerEvents?: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
@@ -55,7 +55,7 @@ export const IssueOrPullRequestCards = React.memo(
       errorMessage,
       fetchNextPage,
       items,
-      lastFetchedAt,
+      lastFetchedSuccessfullyAt,
       ownerIsKnown,
       pointerEvents,
       refresh,
@@ -87,7 +87,7 @@ export const IssueOrPullRequestCards = React.memo(
       repoIsKnown,
       refresh,
       ownerIsKnown,
-      lastFetchedAt,
+      lastFetchedSuccessfullyAt,
       items,
       fetchNextPage,
       columnIndex,

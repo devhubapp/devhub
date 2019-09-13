@@ -231,3 +231,5 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
     />
   )
 })
+
+export type Link = ThemedView | ThemedText | Touchable

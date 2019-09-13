@@ -199,7 +199,7 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
-        // subscription.data.lastFetchedAt = new Date().toISOString()
+        subscription.data.lastFetchedAt = new Date().toISOString()
 
         const { page } = action.payload.params
         const prevLoadState = subscription.data.loadState
@@ -228,6 +228,7 @@ export const subscriptionsReducer: Reducer<State> = (
           subscription.data.canFetchMore = action.payload.canFetchMore
         subscription.data.errorMessage = undefined
         subscription.data.lastFetchedAt = new Date().toISOString()
+        subscription.data.lastFetchedSuccessfullyAt = new Date().toISOString()
         subscription.data.loadState = 'loaded'
 
         const prevItems = (subscription.data.items || []) as any
@@ -276,6 +277,7 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
+        subscription.data.lastFetchedAt = new Date().toISOString()
         subscription.data.errorMessage = action.error && action.error.message
         if (action.error && Array.isArray((action.error as any).errors)) {
           const errors = (action.error as any).errors
@@ -289,7 +291,6 @@ export const subscriptionsReducer: Reducer<State> = (
             }: ${errors}`.trim()
           }
         }
-        subscription.data.lastFetchedAt = new Date().toISOString()
         subscription.data.loadState = 'error'
 
         if (

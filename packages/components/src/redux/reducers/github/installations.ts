@@ -14,6 +14,7 @@ export interface State {
 
   error?: string | null
   lastFetchedAt: string | null
+  lastFetchedSuccessfullyAt: string | null
   loadState: LoadState
   updatedAt: string | null
 }
@@ -28,6 +29,7 @@ const initialState: State = {
 
   error: null,
   lastFetchedAt: null,
+  lastFetchedSuccessfullyAt: null,
   loadState: 'not_loaded',
   updatedAt: null,
 }
@@ -46,6 +48,8 @@ export const githubInstallationsReducer: Reducer<State> = (
     case 'REFRESH_INSTALLATIONS_SUCCESS':
       return immer(state, draft => {
         draft.error = null
+        draft.lastFetchedAt = new Date().toISOString()
+        draft.lastFetchedSuccessfullyAt = new Date().toISOString()
         draft.loadState = 'loaded'
         draft.updatedAt = new Date().toISOString()
 
@@ -80,6 +84,7 @@ export const githubInstallationsReducer: Reducer<State> = (
 
     case 'REFRESH_INSTALLATIONS_FAILURE':
       return immer(state, draft => {
+        draft.lastFetchedAt = new Date().toISOString()
         draft.error = `${(action.error && action.error.message) ||
           action.error}`
         draft.loadState = 'error'

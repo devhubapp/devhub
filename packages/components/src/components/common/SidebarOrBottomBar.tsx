@@ -10,6 +10,7 @@ import {
   FlatList,
   FlatListProps,
   ImageStyle,
+  PixelRatio,
   StyleSheet,
   TextStyle,
   View,
@@ -359,9 +360,13 @@ export const SidebarOrBottomBar = React.memo(
                       <Avatar
                         avatarUrl={
                           user!.avatarUrl ||
-                          getUserAvatarByUsername(user!.login, {
-                            baseURL: undefined,
-                          })
+                          getUserAvatarByUsername(
+                            user!.login,
+                            {
+                              baseURL: undefined,
+                            },
+                            PixelRatio.getPixelSizeForLayoutSize,
+                          )
                         }
                         disableLink
                         shape="circle"
@@ -459,9 +464,13 @@ export const SidebarOrBottomBar = React.memo(
                   ]}
                 >
                   <Avatar
-                    avatarUrl={getUserAvatarByUsername('devhubapp', {
-                      baseURL: undefined,
-                    })}
+                    avatarUrl={getUserAvatarByUsername(
+                      'devhubapp',
+                      {
+                        baseURL: undefined,
+                      },
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    )}
                     disableLink
                     shape="circle"
                     size={sidebarAvatarSize}
@@ -500,6 +509,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
 
     const dispatch = useDispatch()
     const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
+    const plan = useReduxState(selectors.currentUserPlanSelector)
 
     const small = sizename <= '2-medium'
 
@@ -548,13 +558,41 @@ export const SidebarOrBottomBarColumnItem = React.memo(
 
     const showUnreadIndicator =
       !!column &&
-      getColumnOption(column, 'enableInAppUnreadIndicator', Platform.OS)
+      getColumnOption(column, 'enableInAppUnreadIndicator', { Platform, plan })
+        .hasAccess &&
+      getColumnOption(column, 'enableInAppUnreadIndicator', { Platform, plan })
+        .platformSupports &&
+      getColumnOption(column, 'enableInAppUnreadIndicator', { Platform, plan })
+        .value
         ? filteredItems.some(item => !isItemRead(item))
         : false
 
     const unreadIndicatorColor =
       column &&
-      getColumnOption(column, 'enableAppIconUnreadIndicator', Platform.OS)
+      ((getColumnOption(column, 'enableAppIconUnreadIndicator', {
+        Platform,
+        plan,
+      }).hasAccess &&
+        getColumnOption(column, 'enableAppIconUnreadIndicator', {
+          Platform,
+          plan,
+        }).platformSupports &&
+        getColumnOption(column, 'enableAppIconUnreadIndicator', {
+          Platform,
+          plan,
+        }).value) ||
+        (getColumnOption(column, 'enableDesktopPushNotifications', {
+          Platform,
+          plan,
+        }).hasAccess &&
+          getColumnOption(column, 'enableDesktopPushNotifications', {
+            Platform,
+            plan,
+          }).platformSupports &&
+          getColumnOption(column, 'enableDesktopPushNotifications', {
+            Platform,
+            plan,
+          }).value))
         ? 'lightRed'
         : undefined
 

@@ -253,7 +253,7 @@ export function Checkbox(props: CheckboxProps) {
       {!!right &&
         (typeof right === 'string' ? (
           <ThemedText
-            color={disabled ? 'foregroundColorMuted40' : 'foregroundColor'}
+            color="foregroundColorMuted40"
             style={{ fontSize: smallerTextSize }}
           >
             {right}

@@ -32,7 +32,7 @@ export interface EventCardsContainerProps
     | 'errorMessage'
     | 'fetchNextPage'
     | 'items'
-    | 'lastFetchedAt'
+    | 'lastFetchedSuccessfullyAt'
     | 'refresh'
   > {
   columnId: string
@@ -262,7 +262,9 @@ export const EventCardsContainer = React.memo(
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
-        lastFetchedAt={mainSubscription.data.lastFetchedAt}
+        lastFetchedSuccessfullyAt={
+          mainSubscription.data.lastFetchedSuccessfullyAt
+        }
         refresh={refresh}
       />
     )

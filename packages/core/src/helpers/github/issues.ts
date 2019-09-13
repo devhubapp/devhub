@@ -105,7 +105,16 @@ export function mergeIssueOrPullRequestPreservingEnhancement(
 }
 
 export function getIssueOrPullRequestState(
-  item: GitHubIssueOrPullRequest | undefined,
+  item:
+    | {
+        state?: GitHubIssueOrPullRequest['state']
+        pull_request?: object
+        merged?: GitHubPullRequest['merged']
+        merged_at?: GitHubPullRequest['merged_at']
+        html_url?: GitHubPullRequest['html_url']
+        url?: GitHubPullRequest['url']
+      }
+    | undefined,
 ): GitHubStateType | null {
   if (!item) return null
 

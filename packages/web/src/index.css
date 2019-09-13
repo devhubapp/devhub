@@ -59,6 +59,10 @@ a [data-touchable] {
   cursor: not-allowed;
 }
 
+a > [data-touchable="true"][data-touchable-disabled="true"] {
+  cursor: unset;
+}
+
 [data-card-link="true"]:focus {
   outline: none;
   outline-color: transparent;

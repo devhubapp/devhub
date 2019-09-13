@@ -5,23 +5,35 @@ import {
   SwitchProps as SwitchPropsOriginal,
 } from 'react-native'
 
+import { Theme, ThemeColors } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
 import { Platform } from '../../libs/platform'
 import { useTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
 
 export interface SwitchProps extends SwitchPropsOriginal {
   analyticsLabel: string | undefined
   analyticsValue?: number | undefined
   analyticsPayload?: Record<string, string | number | undefined> | undefined
+  color?: keyof ThemeColors | ((theme: Theme) => string)
 }
 
-export function Switch({
-  analyticsLabel,
-  analyticsValue,
-  onValueChange: _onValueChange,
-  ...props
-}: SwitchProps) {
+export function Switch(props: SwitchProps) {
+  const {
+    analyticsLabel,
+    analyticsValue,
+    color: _color,
+    onValueChange: _onValueChange,
+    ...otherProps
+  } = props
+
   const theme = useTheme()
+
+  const color = getThemeColorOrItself(
+    theme,
+    _color || 'primaryBackgroundColor',
+    { enableCSSVariable: false },
+  )!
 
   const onValueChange: typeof _onValueChange =
     analyticsLabel && _onValueChange
@@ -41,21 +53,21 @@ export function Switch({
       onValueChange={onValueChange}
       {...Platform.select({
         android: {
-          thumbColor: props.value ? theme.primaryBackgroundColor : 'gray',
+          thumbColor: otherProps.value ? color : 'gray',
           trackColor: {
             false: 'lightgray',
-            true: lighten(0.4, theme.primaryBackgroundColor),
+            true: lighten(0.4, color),
           },
         },
         ios: {
-          trackColor: { false: '', true: theme.primaryBackgroundColor },
+          trackColor: { false: '', true: color },
         },
         web: {
           activeThumbColor: '#FFFFFF',
-          onTintColor: theme.primaryBackgroundColor,
+          onTintColor: color,
         },
       })}
-      {...props}
+      {...otherProps}
     />
   )
 }

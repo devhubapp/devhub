@@ -127,14 +127,12 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     },
   )
 
-  const hasValidPaidPlan =
-    plan &&
-    plan.amount > 0 &&
-    (plan.status === 'active' || plan.status === 'trialing')
-
   const showFreeTrialBanner =
-    ((!hasValidPaidPlan ||
-      (plan && !plan.featureFlags.enablePrivateRepositories)) &&
+    (!(
+      plan &&
+      (plan.status === 'active' || plan.status === 'trialing') &&
+      plan.featureFlags.enablePrivateRepositories
+    ) &&
       (columnType === 'activity'
         ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
             isEventPrivate(item),

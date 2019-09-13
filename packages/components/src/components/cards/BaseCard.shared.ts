@@ -17,24 +17,32 @@ import {
   getGitHubNotificationSubItems,
   getGitHubSearchURL,
   getIssueOrPullRequestIconAndColor,
+  getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
   getItemSubjectType,
   getNotificationIconAndColor,
   getOwnerAndRepo,
   getRepoFullNameFromUrl,
   getRepoUrlFromOtherUrl,
+  getUserAvatarByAvatarURL,
   getUserAvatarByEmail,
+  getUserAvatarByUsername,
   getUserAvatarFromObject,
   getUserURLFromObject,
   GitHubIcon,
+  GitHubPullRequest,
   GitHubPushEvent,
+  isDraft,
   isIssueOrPullRequestPrivate,
   isItemRead,
+  isPullRequest,
+  ItemPushNotification,
   stripMarkdown,
   ThemeColors,
   trimNewLinesAndSpaces,
-  tryGetUsernameFromGitHubEmail,
 } from '@devhub/core'
+import * as actions from '../../redux/actions'
+import { ExtractActionFromActionCreator } from '../../redux/types/base'
 import {
   avatarSize,
   contentPadding,
@@ -216,9 +224,19 @@ function _getCardPropsForItem(
         repos[0].html_url || getRepoUrlFromOtherUrl(repos[0].url),
       )!
       const repoImageURL =
-        (repos[0].owner && getUserAvatarFromObject(repos[0].owner)) ||
-        (repoURL &&
-          `${getBaseUrlFromOtherUrl(repoURL)}/${repoOwnerName}.png`) ||
+        (repos[0].owner &&
+          getUserAvatarFromObject(
+            repos[0].owner,
+            {},
+            PixelRatio.getPixelSizeForLayoutSize,
+          )) ||
+        getUserAvatarByUsername(
+          repoOwnerName || '',
+          {
+            baseURL: getBaseUrlFromOtherUrl(repoURL),
+          },
+          PixelRatio.getPixelSizeForLayoutSize,
+        ) ||
         ''
 
       const forkURL = fixURL(
@@ -226,7 +244,11 @@ function _getCardPropsForItem(
       )
 
       const actorAvatar: BaseCardProps['avatar'] = {
-        imageURL: getUserAvatarFromObject(actor)!,
+        imageURL: getUserAvatarFromObject(
+          actor,
+          {},
+          PixelRatio.getPixelSizeForLayoutSize,
+        )!,
         linkURL: getUserURLFromObject(actor)!,
       }
 
@@ -249,7 +271,11 @@ function _getCardPropsForItem(
               return [
                 {
                   avatar: {
-                    imageURL: getUserAvatarFromObject(_comment.user)!,
+                    imageURL: getUserAvatarFromObject(
+                      _comment.user,
+                      {},
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    )!,
                     linkURL: getUserURLFromObject(_comment.user)!,
                   },
                   text: trimmerBody,
@@ -321,7 +347,11 @@ function _getCardPropsForItem(
               action: actorActionOrUndefined,
               avatar: ownerIsKnown
                 ? {
-                    imageURL: getUserAvatarFromObject(issueOrPullRequest.user)!,
+                    imageURL: getUserAvatarFromObject(
+                      issueOrPullRequest.user,
+                      {},
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    )!,
                     linkURL: getUserURLFromObject(issueOrPullRequest.user)!,
                   }
                 : repoAvatar,
@@ -353,9 +383,13 @@ function _getCardPropsForItem(
             return {
               action: actorActionOrUndefined,
               avatar: {
-                imageURL: getUserAvatarByEmail(commit.author.email, {
-                  baseURL: getBaseUrlFromOtherUrl(commit.url),
-                }),
+                imageURL: getUserAvatarByEmail(
+                  commit.author.email,
+                  {
+                    baseURL: getBaseUrlFromOtherUrl(commit.url),
+                  },
+                  PixelRatio.getPixelSizeForLayoutSize,
+                ),
                 linkURL: commit.author.email
                   ? getGitHubSearchURL({
                       q: commit.author.email,
@@ -374,10 +408,7 @@ function _getCardPropsForItem(
               subitems,
               subtitle: undefined,
               text: repoIsKnown
-                ? tryGetUsernameFromGitHubEmail(commit.author.email) ||
-                  (commit.author.name && commit.author.email
-                    ? `${commit.author.name} <${commit.author.email}>`
-                    : commit.author.name || commit.author.email)
+                ? branchOrTagName
                 : getRepoText({
                     branchOrTagName,
                     repoFullName,
@@ -385,11 +416,10 @@ function _getCardPropsForItem(
                     repoIsKnown,
                     issueOrPullRequestNumber: undefined,
                   }),
-              title: commit.message,
+              title: trimNewLinesAndSpaces(commit.message, 120),
               type,
             }
           }
-
           if (commits && commits.length > 1) {
             const _event = event as GitHubPushEvent
 
@@ -412,7 +442,9 @@ function _getCardPropsForItem(
               isPrivate,
               isRead,
               link:
-                _event.payload.before && _event.payload.head
+                (_comment && _comment.html_url) || total === 1
+                  ? getCommitUrlFromOtherUrl(commits[0].url)!
+                  : _event.payload.before && _event.payload.head
                   ? getCommitCompareUrlFromRefs(
                       _event.payload.before,
                       _event.payload.head,
@@ -428,9 +460,13 @@ function _getCardPropsForItem(
                 .slice(0, sliceSize)
                 .map<NonNullable<BaseCardProps['subitems']>[0]>(commit => ({
                   avatar: {
-                    imageURL: getUserAvatarByEmail(commit.author.email, {
-                      baseURL: getBaseUrlFromOtherUrl(commit.url),
-                    }),
+                    imageURL: getUserAvatarByEmail(
+                      commit.author.email,
+                      {
+                        baseURL: getBaseUrlFromOtherUrl(commit.url),
+                      },
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    ),
                     linkURL: commit.author.email
                       ? getGitHubSearchURL({
                           q: commit.author.email,
@@ -438,7 +474,7 @@ function _getCardPropsForItem(
                         })
                       : '',
                   },
-                  text: commit.message,
+                  text: trimNewLinesAndSpaces(commit.message, 120),
                 }))
                 .concat(
                   hasMoreCount
@@ -451,14 +487,14 @@ function _getCardPropsForItem(
                     : [],
                 ),
               subtitle: undefined,
-              text: getRepoText({
-                branchOrTagName,
+              text: branchOrTagName || 'master',
+              title: getRepoText({
+                branchOrTagName: undefined,
                 issueOrPullRequestNumber: undefined,
                 ownerIsKnown: false,
-                repoFullName: repoOwnerName,
+                repoFullName,
                 repoIsKnown: false,
-              }),
-              title: repoName!,
+              })!,
               type,
             }
           }
@@ -541,7 +577,7 @@ function _getCardPropsForItem(
           issueOrPullRequest.url ||
           issueOrPullRequest.html_url,
       )
-      const { owner: repoOwnerName } = getOwnerAndRepo(repoFullName)
+      const { owner: repoOwnerName } = getOwnerAndRepo(repoFullName || '')
 
       const iconDetails = getIssueOrPullRequestIconAndColor(
         getIssueOrPullRequestSubjectType(issueOrPullRequest) || 'Issue',
@@ -556,13 +592,23 @@ function _getCardPropsForItem(
         action: undefined,
         avatar: ownerIsKnown
           ? {
-              imageURL: getUserAvatarFromObject(issueOrPullRequest.user)!,
+              imageURL: getUserAvatarFromObject(
+                issueOrPullRequest.user,
+                {},
+                PixelRatio.getPixelSizeForLayoutSize,
+              )!,
               linkURL: getUserURLFromObject(issueOrPullRequest.user)!,
             }
           : {
-              imageURL: `${getBaseUrlFromOtherUrl(
-                issueOrPullRequest.html_url || issueOrPullRequest.url,
-              )}/${repoOwnerName}.png`,
+              imageURL: getUserAvatarByUsername(
+                repoOwnerName || '',
+                {
+                  baseURL: getBaseUrlFromOtherUrl(
+                    issueOrPullRequest.html_url || issueOrPullRequest.url,
+                  ),
+                },
+                PixelRatio.getPixelSizeForLayoutSize,
+              ),
               linkURL: getRepoUrlFromOtherUrl(
                 issueOrPullRequest.html_url || issueOrPullRequest.url,
               )!,
@@ -622,7 +668,11 @@ function _getCardPropsForItem(
         return [
           {
             avatar: {
-              imageURL: getUserAvatarFromObject(_comment.user)!,
+              imageURL: getUserAvatarFromObject(
+                _comment.user,
+                {},
+                PixelRatio.getPixelSizeForLayoutSize,
+              )!,
               linkURL: getUserURLFromObject(_comment.user)!,
             },
             text: trimmerBody,
@@ -631,13 +681,25 @@ function _getCardPropsForItem(
       })()
 
       const repoURL = repo.html_url || getRepoUrlFromOtherUrl(repo.url)
+      const { owner: repoOwnerName } = getOwnerAndRepo(repoFullName)
 
       const defaultProps: Omit<BaseCardProps, 'height'> = {
         action: undefined,
         avatar: {
           imageURL:
-            (repo.owner && getUserAvatarFromObject(repo.owner)) ||
-            (repoURL && `${repoURL}.png`) ||
+            (repo.owner &&
+              getUserAvatarFromObject(
+                repo.owner,
+                {},
+                PixelRatio.getPixelSizeForLayoutSize,
+              )) ||
+            getUserAvatarByUsername(
+              repoOwnerName!,
+              {
+                baseURL: getBaseUrlFromOtherUrl(repoURL),
+              },
+              PixelRatio.getPixelSizeForLayoutSize,
+            ) ||
             '',
           linkURL: repoURL || '',
         },
@@ -668,7 +730,7 @@ function _getCardPropsForItem(
           issueOrPullRequestNumber:
             (issueOrPullRequest && issueOrPullRequest.number) || undefined,
         }),
-        title: subject.title,
+        title: trimNewLinesAndSpaces(subject.title, 120),
         type,
         githubApp: isPrivateAndCantSee
           ? {
@@ -685,14 +747,22 @@ function _getCardPropsForItem(
             ...(commit &&
               ((commit.author && {
                 avatar: {
-                  imageURL: getUserAvatarFromObject(commit.author)!,
+                  imageURL: getUserAvatarFromObject(
+                    commit.author,
+                    {},
+                    PixelRatio.getPixelSizeForLayoutSize,
+                  )!,
                   linkURL: getUserURLFromObject(commit.author)!,
                 },
               }) || {
                 avatar: {
-                  imageURL: getUserAvatarByEmail(commit.commit.author.email, {
-                    baseURL: getBaseUrlFromOtherUrl(commit.url),
-                  }),
+                  imageURL: getUserAvatarByEmail(
+                    commit.commit.author.email,
+                    {
+                      baseURL: getBaseUrlFromOtherUrl(commit.url),
+                    },
+                    PixelRatio.getPixelSizeForLayoutSize,
+                  ),
                   linkURL: commit.commit.author.email
                     ? getGitHubSearchURL({
                         q: commit.commit.author.email,
@@ -711,7 +781,11 @@ function _getCardPropsForItem(
             ...(ownerIsKnown &&
               issueOrPullRequest && {
                 avatar: {
-                  imageURL: getUserAvatarFromObject(issueOrPullRequest.user)!,
+                  imageURL: getUserAvatarFromObject(
+                    issueOrPullRequest.user,
+                    {},
+                    PixelRatio.getPixelSizeForLayoutSize,
+                  )!,
                   linkURL: getUserURLFromObject(issueOrPullRequest.user)!,
                 },
               }),
@@ -785,4 +859,249 @@ export function getCardSizeForItem(
   ...args: Parameters<typeof getCardPropsForItem>
 ): number {
   return getCardSizeForProps(getCardPropsForItem(...args))
+}
+
+export interface CardPushNotification
+  extends ItemPushNotification<
+    ExtractActionFromActionCreator<typeof actions.openItem>
+  > {}
+export function getCardPushNotificationItem(
+  column: Pick<Column, 'type' | 'id'>,
+  item: EnhancedItem,
+  {
+    ownerIsKnown,
+    repoIsKnown,
+  }: { ownerIsKnown: boolean; repoIsKnown: boolean },
+): CardPushNotification {
+  const cardProps = getCardPropsForItem(column.type, item, {
+    ownerIsKnown,
+    repoIsKnown,
+  })
+
+  const onClickDispatchAction: CardPushNotification['onClickDispatchAction'] = {
+    type: 'OPEN_ITEM',
+    payload: {
+      columnType: column.type,
+      columnId: column.id,
+      itemId: item.id,
+      link: cardProps.link,
+    },
+  }
+
+  const notificationSize = 100
+
+  switch (column.type) {
+    case 'activity': {
+      const event = item as EnhancedGitHubEvent
+
+      const {
+        actor,
+        branchOrTagName,
+        comment: _comment,
+        commits,
+        isBranchMainEvent,
+        issueOrPullRequest,
+        release,
+        repoFullName,
+      } = getGitHubEventSubItems(event)
+
+      const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
+        appendColon: false,
+        commitIsKnown: false,
+        includeBranch: false,
+        includeFork: false,
+        includeRepo: false,
+        includeTag: false,
+        includeUser: true,
+        issueOrPullRequestIsKnown: false,
+        ownerIsKnown: false,
+        repoIsKnown: false,
+      }
+      const {
+        actionText: _actionText,
+        action: actionType,
+        subjectType,
+      } = getEventMetadata(event, actionTextOptions)
+
+      const actionText = `${_actionText
+        .substr(0, 1)
+        .toLowerCase()}${_actionText.substr(1)}`
+
+      const actorUsername = actor.display_login || actor.login
+
+      const actionTextOrUndefined =
+        _comment &&
+        _comment.body &&
+        (actionType === 'commented' || actionType === 'reviewed') &&
+        (subjectType === 'Commit' ? !!commits[0] : true)
+          ? undefined
+          : actionText
+
+      const _texts = [
+        actionTextOrUndefined
+          ? `@${actorUsername} ${actionTextOrUndefined}`
+          : undefined,
+
+        (issueOrPullRequest && issueOrPullRequest.title) ||
+          (commits &&
+            commits.length === 1 &&
+            commits[0] &&
+            commits[0].message &&
+            trimNewLinesAndSpaces(stripMarkdown(commits[0].message), 80)) ||
+          (release && (release.name || release.tag_name)) ||
+          undefined,
+        commits &&
+          commits.length > 1 &&
+          commits
+            .map(
+              commit =>
+                commit &&
+                commit.message &&
+                trimNewLinesAndSpaces(stripMarkdown(commit.message), 80),
+            )
+            .filter(Boolean)
+            .join('\n'),
+        _comment &&
+          _comment.body &&
+          trimNewLinesAndSpaces(
+            stripMarkdown(`@${_comment.user.login}: "${_comment.body}"`),
+            80,
+          ),
+      ]
+        .map(text => (text && trimNewLinesAndSpaces(text, 80)) || '')
+        .filter(Boolean)
+
+      const texts = _texts
+        .slice(0, 1)
+        .concat(
+          getRepoText({
+            branchOrTagName: isBranchMainEvent ? branchOrTagName : undefined,
+            repoFullName,
+            ownerIsKnown: false,
+            repoIsKnown: false,
+            issueOrPullRequestNumber:
+              issueOrPullRequest && issueOrPullRequest.number,
+          })!,
+        )
+        .concat(_texts.slice(1))
+        .filter(Boolean)
+
+      return {
+        title: texts[0]!,
+        subtitle: texts.length > 2 ? texts[1]! : undefined,
+        body: texts.slice(texts.length > 2 ? 2 : 1).join('\n'),
+        imageURL:
+          (_comment &&
+            getUserAvatarFromObject(
+              _comment.user,
+              { size: notificationSize },
+              PixelRatio.getPixelSizeForLayoutSize,
+            )) ||
+          getUserAvatarByAvatarURL(
+            cardProps.avatar.imageURL,
+            { size: notificationSize },
+            PixelRatio.getPixelSizeForLayoutSize,
+          ),
+        onClickDispatchAction,
+      }
+    }
+
+    case 'issue_or_pr': {
+      const issueOrPullRequest = item as EnhancedGitHubIssueOrPullRequest
+
+      const repoURL =
+        issueOrPullRequest.repository_url ||
+        getRepoUrlFromOtherUrl(
+          issueOrPullRequest.html_url || issueOrPullRequest.url,
+        )
+      const repoFullName = getRepoFullNameFromUrl(
+        repoURL || issueOrPullRequest.url || issueOrPullRequest.html_url,
+      )
+
+      return {
+        title: trimNewLinesAndSpaces(issueOrPullRequest.title, 80),
+        subtitle: undefined,
+        body: [
+          getRepoText({
+            repoFullName,
+            ownerIsKnown: false,
+            repoIsKnown: false,
+            issueOrPullRequestNumber: issueOrPullRequest.number,
+          })!,
+          getIssueOrPullRequestState(issueOrPullRequest)
+            ? `Status: ${getIssueOrPullRequestState(issueOrPullRequest)} ${
+                isPullRequest(issueOrPullRequest)
+                  ? isDraft(issueOrPullRequest as GitHubPullRequest)
+                    ? 'draft pull request'
+                    : 'pull request'
+                  : 'issue'
+              }`
+            : '',
+        ]
+          .filter(Boolean)
+          .join('\n'),
+        imageURL: getUserAvatarByAvatarURL(
+          cardProps.avatar.imageURL,
+          { size: notificationSize },
+          PixelRatio.getPixelSizeForLayoutSize,
+        ),
+        onClickDispatchAction,
+      }
+    }
+
+    case 'notifications': {
+      const notification = item as EnhancedGitHubNotification
+
+      const {
+        comment: _comment,
+        issueOrPullRequest,
+        release,
+        repoFullName,
+        subject,
+      } = getGitHubNotificationSubItems(notification)
+
+      return {
+        title: trimNewLinesAndSpaces(subject.title, 80),
+        subtitle: getRepoText({
+          repoFullName,
+          ownerIsKnown: false,
+          repoIsKnown: false,
+          issueOrPullRequestNumber:
+            issueOrPullRequest && issueOrPullRequest.number,
+        })!,
+        body:
+          (release &&
+            release.body &&
+            trimNewLinesAndSpaces(stripMarkdown(release.body), 80)) ||
+          (_comment &&
+            _comment.body &&
+            trimNewLinesAndSpaces(
+              stripMarkdown(`@${_comment.user.login}: "${_comment.body}"`),
+              80,
+            )) ||
+          (issueOrPullRequest && getIssueOrPullRequestState(issueOrPullRequest)
+            ? `Status: ${getIssueOrPullRequestState(issueOrPullRequest)} ${
+                isPullRequest(issueOrPullRequest)
+                  ? isDraft(issueOrPullRequest as GitHubPullRequest)
+                    ? 'draft pull request'
+                    : 'pull request'
+                  : 'issue'
+              }`
+            : ''),
+        imageURL:
+          (_comment &&
+            getUserAvatarFromObject(
+              _comment.user,
+              { size: notificationSize },
+              PixelRatio.getPixelSizeForLayoutSize,
+            )) ||
+          getUserAvatarByAvatarURL(
+            cardProps.avatar.imageURL,
+            { size: notificationSize },
+            PixelRatio.getPixelSizeForLayoutSize,
+          ),
+        onClickDispatchAction,
+      }
+    }
+  }
 }

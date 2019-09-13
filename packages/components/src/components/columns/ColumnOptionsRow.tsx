@@ -138,13 +138,11 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
           style={[
             sharedStyles.horizontalAndVerticallyAligned,
             sharedStyles.paddingVertical,
-            sharedStyles.paddingHorizontalHalf,
+            { paddingHorizontal: (contentPadding * 2) / 3 },
             !!isOpen && !onToggle && { paddingBottom: contentPadding / 2 },
             containerStyle,
           ]}
         >
-          <Spacer width={contentPadding / 3} />
-
           <ThemedIcon
             color="foregroundColor"
             name={iconName}
@@ -202,7 +200,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                 }}
               />
 
-              <Spacer width={contentPadding / 2} />
+              <Spacer width={contentPadding / 3} />
             </>
           )}
         </View>

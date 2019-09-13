@@ -20,7 +20,7 @@ export interface EventCardsProps
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   items: ItemT[]
-  lastFetchedAt: string | undefined
+  lastFetchedSuccessfullyAt: string | undefined
   ownerIsKnown: boolean
   pointerEvents?: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
@@ -39,7 +39,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     errorMessage,
     fetchNextPage,
     items,
-    lastFetchedAt,
+    lastFetchedSuccessfullyAt,
     ownerIsKnown,
     pointerEvents,
     refresh,
@@ -65,7 +65,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     columnIndex,
     fetchNextPage,
     items,
-    lastFetchedAt,
+    lastFetchedSuccessfullyAt,
     ownerIsKnown,
     refresh,
     repoIsKnown,

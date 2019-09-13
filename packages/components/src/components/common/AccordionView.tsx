@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  AppState,
   InteractionManager,
   LayoutChangeEvent,
   ScrollView,
@@ -64,10 +65,14 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
 
   useEffect(() => {
     if (isRenderEnabled) return
-    InteractionManager.runAfterInteractions(() => {
+    if (AppState.currentState === 'active') {
+      InteractionManager.runAfterInteractions(() => {
+        setIsRenderEnabled(true)
+      })
+    } else {
       setIsRenderEnabled(true)
-    })
-  }, [])
+    }
+  }, [isRenderEnabled])
 
   const Content = useMemo(
     () =>

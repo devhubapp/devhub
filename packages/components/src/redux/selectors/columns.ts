@@ -1,4 +1,10 @@
-import { Column, getColumnHeaderDetails } from '@devhub/core'
+import { PixelRatio } from 'react-native'
+
+import {
+  Column,
+  ColumnSubscription,
+  getColumnHeaderDetails,
+} from '@devhub/core'
 import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { currentGitHubUsernameSelector } from './github'
@@ -43,7 +49,7 @@ export const columnSubscriptionsSelector = createArraySelector(
       .map(subscriptionId =>
         subscriptionSelector({ subscriptions } as any, subscriptionId),
       )
-      .filter(Boolean),
+      .filter(Boolean) as ColumnSubscription[],
 )
 
 export const columnSubscriptionSelector = (
@@ -58,11 +64,16 @@ export const createColumnHeaderDetailsSelector = () =>
       const column = columnSelector(state, columnId)
       if (!column) return undefined
 
-      const subscription = columnSubscriptionSelector(state, columnId)
-      return subscription
+      const subscriptions = columnSubscriptionsSelector(state, columnId)
+      return subscriptions
     },
-    (state: RootState, columnId: string) =>
+    (state: RootState, _columnId: string) =>
       currentGitHubUsernameSelector(state),
-    (column, subscription, loggedUsername) =>
-      getColumnHeaderDetails(column, subscription, { loggedUsername }),
+    (column, subscriptions, loggedUsername) =>
+      getColumnHeaderDetails(
+        column,
+        subscriptions,
+        { loggedUsername },
+        PixelRatio.getPixelSizeForLayoutSize,
+      ),
   )

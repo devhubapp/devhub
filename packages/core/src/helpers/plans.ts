@@ -43,3 +43,17 @@ export function getUserPlan(user: DatabaseUser): UserPlan {
 
   return userPlan
 }
+
+export function formatPrice(
+  valueInCents: number,
+  currency: string,
+  locale = 'en-US',
+) {
+  const formatter = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency || 'usd',
+  })
+
+  const value = formatter.format(valueInCents / 100)
+  return value.endsWith('.00') ? value.slice(0, -3) : value
+}

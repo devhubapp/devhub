@@ -18,6 +18,7 @@ import {
   GitHubStateType,
   IssueOrPullRequestColumnFilters,
   NotificationColumnFilters,
+  UserPlan,
 } from '../types'
 import { getOwnerAndRepoFormattedFilter } from './filters'
 import {
@@ -122,9 +123,9 @@ export function getDateSmallText(date: MomentInput, includeExactTime = false) {
 
 // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)
 export function getSteppedSize(
-  size?: number,
-  sizeSteps = 50,
-  getPixelSizeForLayoutSizeFn?: (size: number) => number,
+  size: number | undefined,
+  sizeSteps: number | undefined = 50,
+  getPixelSizeForLayoutSizeFn: ((size: number) => number) | undefined,
 ) {
   const steppedSize =
     typeof size === 'number'
@@ -936,29 +937,78 @@ export function getItemInbox(type: Column['type'], filters: Column['filters']) {
 }
 
 export function getColumnOption<O extends keyof ColumnOptions>(
-  column: Column,
+  column: Column | undefined,
   option: O,
-  platform: 'web' | 'ios' | 'android' | 'macos' | 'windows',
-): ColumnOptions[O] | undefined {
-  if (!(column && column.type)) return undefined
+  {
+    Platform,
+    plan,
+  }: {
+    Platform: { OS: 'web' | 'ios' | 'android'; isElectron: boolean }
+    plan:
+      | Pick<UserPlan, 'amount' | 'featureFlags' | 'status'>
+      | null
+      | undefined
+  },
+): {
+  hasAccess: boolean | 'trial'
+  platformSupports: boolean
+  value: ColumnOptions[O] | undefined
+} {
+  if (!(column && column.type))
+    return { hasAccess: false, platformSupports: false, value: undefined }
 
   if (option === 'enableAppIconUnreadIndicator') {
-    return column.options &&
-      typeof column.options.enableAppIconUnreadIndicator === 'boolean'
-      ? column.options.enableAppIconUnreadIndicator
-      : platform === 'web'
-      ? column.type === 'notifications'
-      : false
+    return {
+      hasAccess: true,
+      platformSupports: true,
+      value:
+        column.options &&
+        typeof column.options.enableAppIconUnreadIndicator === 'boolean'
+          ? column.options.enableAppIconUnreadIndicator
+          : Platform.OS === 'web'
+          ? column.type === 'notifications'
+          : false,
+    }
   }
 
   if (option === 'enableInAppUnreadIndicator') {
-    return column.options &&
-      typeof column.options.enableInAppUnreadIndicator === 'boolean'
-      ? column.options.enableInAppUnreadIndicator
-      : true
+    return {
+      hasAccess: true,
+      platformSupports: Platform.OS === 'web',
+      value:
+        column.options &&
+        typeof column.options.enableInAppUnreadIndicator === 'boolean'
+          ? column.options.enableInAppUnreadIndicator
+          : true,
+    }
   }
 
-  return column.options && column.options[option]
+  if (option === 'enableDesktopPushNotifications') {
+    return {
+      hasAccess: !!(plan &&
+      (plan.status === 'active' || plan.status === 'trialing') &&
+      plan.featureFlags &&
+      plan.featureFlags.enablePushNotifications
+        ? plan.status === 'trialing' && !plan.amount
+          ? 'trial'
+          : true
+        : false),
+      platformSupports: Platform.isElectron,
+      value:
+        column.options &&
+        typeof column.options.enableDesktopPushNotifications === 'boolean'
+          ? column.options.enableDesktopPushNotifications
+          : Platform.isElectron
+          ? column.type === 'notifications'
+          : false,
+    }
+  }
+
+  return {
+    hasAccess: false,
+    platformSupports: false,
+    value: column.options && column.options[option],
+  }
 }
 
 export function fixDateToISO(

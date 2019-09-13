@@ -1,8 +1,10 @@
-import { app, BrowserWindow, Tray } from 'electron'
+import { app, BrowserWindow, dialog, nativeImage, Tray } from 'electron'
+import fetch from 'electron-fetch'
 import path from 'path'
 
 import * as constants from './constants'
 import { __DEV__ } from './libs/electron-is-dev'
+import { getMainWindow } from './window'
 
 export function registerAppSchema() {
   unregisterAppSchema()
@@ -52,4 +54,18 @@ export function getCenterPosition(obj: BrowserWindow | Tray) {
   const y = Math.round(bounds.y + bounds.height / 2)
 
   return { x, y }
+}
+
+export async function imageURLToNativeImage(imageURL: string | undefined) {
+  if (!imageURL) return undefined
+
+  try {
+    const response = await fetch(imageURL)
+    const arrayBuffer = await response.arrayBuffer()
+
+    return nativeImage.createFromBuffer(Buffer.from(arrayBuffer))
+  } catch (error) {
+    console.error(error)
+    if (__DEV__) dialog.showMessageBox(getMainWindow(), { message: `${error}` })
+  }
 }

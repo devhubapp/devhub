@@ -25,7 +25,7 @@ export interface NotificationCardsContainerProps
     | 'errorMessage'
     | 'fetchNextPage'
     | 'items'
-    | 'lastFetchedAt'
+    | 'lastFetchedSuccessfullyAt'
     | 'refresh'
   > {
   columnId: string
@@ -118,7 +118,9 @@ export const NotificationCardsContainer = React.memo(
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         items={filteredItems}
-        lastFetchedAt={mainSubscription.data.lastFetchedAt}
+        lastFetchedSuccessfullyAt={
+          mainSubscription.data.lastFetchedSuccessfullyAt
+        }
         refresh={refresh}
       />
     )

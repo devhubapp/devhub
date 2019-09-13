@@ -16,7 +16,7 @@ export const sharedColumnOptionsStyles = StyleSheet.create({
     alignSelf: 'stretch',
     maxWidth: '100%',
     paddingVertical: contentPadding / 4,
-    paddingHorizontal: contentPadding,
+    paddingHorizontal: (contentPadding * 2) / 3,
   },
 
   checkboxSquareContainer: {

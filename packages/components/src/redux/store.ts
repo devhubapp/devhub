@@ -11,6 +11,7 @@ import createSagaMiddleware from 'redux-saga'
 import { registerSelectors } from 'reselect-tools'
 
 import { analyticsMiddleware } from './middlewares/analytics'
+import { electronMiddleware } from './middlewares/electron'
 import migrations from './migrations'
 import { rootReducer } from './reducers'
 import { rootSaga } from './sagas'
@@ -49,7 +50,9 @@ export function configureStore(key = 'root') {
 
   const store = createStore(
     persistedReducer,
-    composeWithDevTools(applyMiddleware(analyticsMiddleware, sagaMiddleware)),
+    composeWithDevTools(
+      applyMiddleware(analyticsMiddleware, sagaMiddleware, electronMiddleware),
+    ),
   )
 
   const persistor = persistStore(store)

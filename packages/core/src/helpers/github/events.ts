@@ -104,6 +104,7 @@ export function getEventMetadata(
   options:
     | {
         appendColon?: boolean
+        commitIsKnown?: boolean
         includeBranch?: boolean
         includeFork?: boolean
         includeRepo?: boolean
@@ -121,6 +122,7 @@ export function getEventMetadata(
 } {
   const {
     appendColon,
+    commitIsKnown,
     includeBranch,
     includeFork,
     includeRepo,
@@ -400,7 +402,7 @@ export function getEventMetadata(
           action: 'added',
           actionText:
             includeUser && username
-              ? `Added ${username} to ${repositoryTextWithColon}`
+              ? `Added @${username} to ${repositoryTextWithColon}`
               : `Added a user to ${repositoryTextWithColon}`,
           subjectType: 'User',
         }
@@ -542,7 +544,12 @@ export function getEventMetadata(
 
         const branch = getNameFromRef(event.payload.ref)
         const pushedText = event.forced ? 'Force pushed' : 'Pushed'
-        const commitText = count > 1 ? ` ${count} commits` : ' a commit'
+        const commitText =
+          count > 1
+            ? ` ${count} commits`
+            : commitIsKnown
+            ? ' this commit'
+            : ' a commit'
         const branchText = includeBranch && branch ? ` to ${branch}` : ''
 
         return {

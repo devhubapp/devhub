@@ -108,6 +108,7 @@ export interface ColumnSubscriptionData<Item extends EnhancedItem> {
   errorMessage?: string
   canFetchMore?: boolean
   lastFetchedAt?: string
+  lastFetchedSuccessfullyAt?: string
 }
 
 export type ActivityColumnSubscription = {
@@ -265,7 +266,7 @@ export type ColumnFilters =
 export interface ColumnOptions {
   enableInAppUnreadIndicator?: boolean
   enableAppIconUnreadIndicator?: boolean
-  // enableDesktopPushNotifications?: boolean
+  enableDesktopPushNotifications?: boolean
   // enableMobilePushNotifications?: boolean
 }
 
@@ -549,3 +550,13 @@ export interface Plan {
 }
 
 export interface UserPlan extends GraphQLUserPlan {}
+
+export interface ItemPushNotification<
+  A extends { type: string; payload: any } = { type: string; payload: any }
+> {
+  title: string
+  subtitle?: string
+  body: string
+  imageURL?: string
+  onClickDispatchAction?: A
+}

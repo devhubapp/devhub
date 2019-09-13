@@ -5,7 +5,7 @@ import { contentPadding } from '../../styles/variables'
 import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
 
 export type H3Props = TextProps & {
-  children: string
+  children: string | React.ReactNode
   color?: ThemedTextProps['color']
   withMargin?: boolean
 }

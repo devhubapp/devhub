@@ -1,5 +1,7 @@
 import {
+  Column,
   ColumnSubscription,
+  EnhancedItem,
   GitHubAPIHeaders,
   GitHubAppTokenType,
 } from '@devhub/core'
@@ -106,4 +108,13 @@ export function cleanupSubscriptionsData(
   } = {},
 ) {
   return createAction('CLEANUP_SUBSCRIPTIONS_DATA', payload)
+}
+
+export function openItem(payload: {
+  columnId: Column['id']
+  columnType: Column['type']
+  itemId: EnhancedItem['id']
+  link: string | undefined
+}) {
+  return createAction('OPEN_ITEM', payload)
 }

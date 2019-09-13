@@ -45,7 +45,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   columnIndex,
   fetchNextPage,
   items,
-  lastFetchedAt,
+  lastFetchedSuccessfullyAt,
   ownerIsKnown,
   refresh,
   repoIsKnown,
@@ -55,7 +55,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   columnIndex: number
   fetchNextPage: CardsFooterProps['fetchNextPage']
   items: ItemT[] | undefined
-  lastFetchedAt: string | undefined
+  lastFetchedSuccessfullyAt: string | undefined
   ownerIsKnown: boolean
   refresh: CardsFooterProps['refresh']
   repoIsKnown: boolean
@@ -205,17 +205,20 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const refreshControl = useMemo(
     () => (
       <RefreshControl
-        intervalRefresh={lastFetchedAt}
+        intervalRefresh={lastFetchedSuccessfullyAt}
         onRefresh={refresh}
         refreshing={false}
         title={
-          lastFetchedAt
-            ? `Last updated ${getDateSmallText(lastFetchedAt, true)}`
+          lastFetchedSuccessfullyAt
+            ? `Last updated ${getDateSmallText(
+                lastFetchedSuccessfullyAt,
+                true,
+              )}`
             : 'Pull to refresh'
         }
       />
     ),
-    [lastFetchedAt, refresh],
+    [lastFetchedSuccessfullyAt, refresh],
   )
 
   const isOverColumnLimit = !!(

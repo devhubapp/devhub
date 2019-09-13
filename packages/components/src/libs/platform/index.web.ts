@@ -2,6 +2,7 @@ import { Platform as _Platform } from 'react-native'
 
 import {
   PlataformSelectSpecificsEnhanced,
+  PlatformName,
   PlatformRealOS,
   PlatformSelectOptions,
 } from './index.shared'
@@ -84,6 +85,7 @@ export const Platform = {
   ..._Platform,
   isElectron: isElectron(),
   isStandalone: (window.navigator as any).standalone,
+  OS: _Platform.OS as PlatformName,
   selectUsingRealOS<T>(
     specifics: PlataformSelectSpecificsEnhanced<T>,
     { fallbackToWeb = true }: PlatformSelectOptions = {},

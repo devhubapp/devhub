@@ -74,17 +74,15 @@ export const CardWithLink = React.memo(
     const onPress = useCallback(() => {
       isHoveredRef.current = false
 
-      setTimeout(() => {
-        dispatch(
-          actions.markItemsAsReadOrUnread({
-            type,
-            itemIds: [item.id],
-            localOnly: true,
-            unread: false,
-          }),
-        )
-      }, 500)
-    }, [])
+      dispatch(
+        actions.openItem({
+          columnType: type,
+          columnId,
+          itemId: item.id,
+          link: undefined,
+        }),
+      )
+    }, [type, columnId, item.id])
 
     const updateStyles = useCallback(() => {
       if (ref.current) {

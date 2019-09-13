@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Column, getColumnOption } from '@devhub/core'
+import { activePlans, Column, constants, getColumnOption } from '@devhub/core'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
@@ -10,8 +10,9 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, smallerTextSize } from '../../styles/variables'
-import { Checkbox, defaultCheckboxSize } from '../common/Checkbox'
+import { contentPadding } from '../../styles/variables'
+import { Checkbox } from '../common/Checkbox'
+import { ConditionalWrap } from '../common/ConditionalWrap'
 import { IconButton } from '../common/IconButton'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
@@ -33,12 +34,42 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
 
   const dispatch = useDispatch()
   const columnsCount = useReduxState(selectors.columnCountSelector)
+  const plan = useReduxState(selectors.currentUserPlanSelector)
 
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
   const { column, columnIndex } = useColumn(columnId)
 
   if (!column) return null
+
+  const enableAppIconUnreadIndicatorOption = getColumnOption(
+    column,
+    'enableAppIconUnreadIndicator',
+    {
+      Platform,
+      plan,
+    },
+  )
+  const enableInAppUnreadIndicatorOption = getColumnOption(
+    column,
+    'enableInAppUnreadIndicator',
+    {
+      Platform,
+      plan,
+    },
+  )
+  const enableDesktopPushNotificationsOption = getColumnOption(
+    column,
+    'enableDesktopPushNotifications',
+    {
+      Platform,
+      plan,
+    },
+  )
+
+  const cheapestPlanWithNotifications = activePlans
+    .sort((a, b) => a.amount - b.amount)
+    .find(p => p.featureFlags.enablePushNotifications)
 
   return (
     <ThemedView
@@ -49,15 +80,15 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
 
       <Checkbox
         analyticsLabel="column_option_in_app_unread_indicator"
-        checked={getColumnOption(
-          column,
-          'enableInAppUnreadIndicator',
-          Platform.OS,
-        )}
+        checked={
+          enableInAppUnreadIndicatorOption.hasAccess &&
+          enableInAppUnreadIndicatorOption.value
+        }
         containerStyle={
           sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
         }
         defaultValue
+        disabled={!enableInAppUnreadIndicatorOption.hasAccess}
         squareContainerStyle={sharedColumnOptionsStyles.checkboxSquareContainer}
         enableIndeterminateState={false}
         label={`Show unread indicator at ${
@@ -77,15 +108,15 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
       {Platform.OS === 'web' && (
         <Checkbox
           analyticsLabel="column_option_app_icon_unread_indicator"
-          checked={getColumnOption(
-            column,
-            'enableAppIconUnreadIndicator',
-            Platform.OS,
-          )}
+          checked={
+            enableAppIconUnreadIndicatorOption.hasAccess &&
+            enableAppIconUnreadIndicatorOption.value
+          }
           containerStyle={
             sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
           }
           defaultValue={column.type === 'notifications'}
+          disabled={!enableAppIconUnreadIndicatorOption.hasAccess}
           squareContainerStyle={
             sharedColumnOptionsStyles.checkboxSquareContainer
           }
@@ -107,35 +138,133 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         />
       )}
 
-      <Link
-        analyticsLabel="column_option_mobile_push_notifications_soon_link"
-        openOnNewTab
-        href="https://github.com/devhubapp/devhub/issues/51"
+      <ConditionalWrap
+        condition={
+          !enableDesktopPushNotificationsOption.platformSupports ||
+          !enableDesktopPushNotificationsOption.hasAccess
+        }
+        wrap={c =>
+          enableDesktopPushNotificationsOption.platformSupports ? (
+            enableDesktopPushNotificationsOption.hasAccess ? null : (
+              <Link
+                analyticsLabel="column_option_desktop_push_notifications_pro_link"
+                children={c}
+                openOnNewTab
+                href={`${constants.LANDING_BASE_URL}/pricing`}
+              />
+            )
+          ) : (
+            <Link
+              analyticsLabel="column_option_desktop_push_notifications_download_link"
+              children={c}
+              openOnNewTab
+              href={`${constants.LANDING_BASE_URL}/download`}
+            />
+          )
+        }
       >
         <Checkbox
-          analyticsLabel="column_option_mobile_push_notification"
-          checked={false}
+          analyticsLabel="column_option_desktop_push_notification"
+          checked={
+            enableDesktopPushNotificationsOption.hasAccess &&
+            enableDesktopPushNotificationsOption.value
+          }
           containerStyle={
             sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
           }
-          defaultValue={false}
-          disabled
-          enableIndeterminateState={false}
-          label="Mobile push notifications"
-          onChange={undefined}
-          right="SOON"
+          defaultValue={column.type === 'notifications'}
+          disabled={!enableDesktopPushNotificationsOption.hasAccess}
           squareContainerStyle={
             sharedColumnOptionsStyles.checkboxSquareContainer
           }
+          enableIndeterminateState={false}
+          label="Desktop push notifications"
+          onChange={value => {
+            dispatch(
+              actions.setColumnOption({
+                columnId,
+                option: 'enableDesktopPushNotifications',
+                value,
+              }),
+            )
+          }}
+          right={
+            !enableDesktopPushNotificationsOption.platformSupports
+              ? 'DOWNLOAD'
+              : !enableDesktopPushNotificationsOption.hasAccess &&
+                cheapestPlanWithNotifications
+              ? 'UNLOCK'
+              : enableDesktopPushNotificationsOption.hasAccess === 'trial'
+              ? 'ON TRIAL'
+              : null
+          }
         />
-      </Link>
+      </ConditionalWrap>
+
+      <Spacer height={contentPadding / 2} />
+
+      {!!(
+        enableDesktopPushNotificationsOption.platformSupports &&
+        !enableDesktopPushNotificationsOption.hasAccess &&
+        cheapestPlanWithNotifications &&
+        cheapestPlanWithNotifications.amount
+      ) ? (
+        <>
+          {/* <Link
+            analyticsLabel="column_option_desktop_unlock_more_link"
+            enableForegroundHover
+            openOnNewTab
+            href={`${constants.LANDING_BASE_URL}/pricing`}
+            textProps={{
+              color: 'foregroundColorMuted65',
+              style: [
+                sharedStyles.center,
+                sharedStyles.marginVerticalHalf,
+                sharedStyles.marginHorizontal,
+                sharedStyles.textCenter,
+                { fontSize: smallerTextSize },
+              ],
+            }}
+          >
+            {`Unlock desktop notifications for ${formatPrice(
+              cheapestPlanWithNotifications.amount,
+              cheapestPlanWithNotifications.currency,
+            )}/${cheapestPlanWithNotifications.interval}`.toUpperCase()}
+          </Link> */}
+
+          <Spacer height={contentPadding / 2} />
+        </>
+      ) : (
+        <Spacer height={contentPadding / 2} />
+      )}
+
+      {(Platform.realOS === 'ios' || Platform.realOS === 'android') && (
+        <Link
+          analyticsLabel="column_option_mobile_push_notifications_soon_link"
+          openOnNewTab
+          href="https://github.com/devhubapp/devhub/issues/51"
+        >
+          <Checkbox
+            analyticsLabel="column_option_mobile_push_notification"
+            checked={false}
+            containerStyle={
+              sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
+            }
+            defaultValue={false}
+            disabled
+            enableIndeterminateState={false}
+            label="Mobile push notifications"
+            onChange={undefined}
+            right="SOON"
+            squareContainerStyle={
+              sharedColumnOptionsStyles.checkboxSquareContainer
+            }
+          />
+        </Link>
+      )}
 
       <View
-        style={[
-          sharedStyles.horizontal,
-          sharedStyles.paddingVertical,
-          sharedStyles.paddingHorizontalHalf,
-        ]}
+        style={[sharedStyles.horizontal, sharedStyles.paddingHorizontalHalf]}
       >
         <IconButton
           key="column-options-button-move-column-left"
@@ -198,6 +327,8 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           type="danger"
         />
       </View>
+
+      <Spacer height={contentPadding} />
 
       <Separator horizontal />
     </ThemedView>

@@ -1,4 +1,4 @@
-import { InteractionManager } from 'react-native'
+import { AppState, InteractionManager } from 'react-native'
 import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
@@ -154,7 +154,8 @@ function* onAddColumn(
 ) {
   const columnId = action.payload.column.id
 
-  yield call(InteractionManager.runAfterInteractions)
+  if (AppState.currentState === 'active')
+    yield call(InteractionManager.runAfterInteractions)
 
   emitter.emit('FOCUS_ON_COLUMN', {
     animated: true,

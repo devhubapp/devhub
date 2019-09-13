@@ -15,3 +15,8 @@ export const FEATURE_FLAGS = {
 }
 
 export const FRAME_IS_DIFFERENT_BETWEEN_MODES = process.platform !== 'darwin'
+
+// License: https://notificationsounds.com/notification-sounds/unsure-566
+export const notificationSoundPath = __DEV__
+  ? path.join(__dirname, '../assets/sounds/notification.mp3')
+  : path.join(process.resourcesPath!, 'assets/sounds/notification.mp3')
