@@ -316,6 +316,27 @@ export const SidebarOrBottomBar = React.memo(
       [],
     )
 
+    const PreferencesItem = (
+      <SidebarOrBottomBarItem
+        horizontal={horizontal}
+        icon="gear"
+        onPress={() =>
+          small && currentOpenedModal && currentOpenedModal.name === 'SETTINGS'
+            ? columnIds.length === 0
+              ? dispatch(actions.closeAllModals())
+              : undefined
+            : dispatch(actions.replaceModal({ name: 'SETTINGS' }))
+        }
+        selected={isModalOpen('SETTINGS')}
+        title="Preferences"
+      />
+    )
+    const renderPreferencesItemInline = !!(
+      horizontal &&
+      small &&
+      columnIds.length <= 3
+    )
+
     return (
       <SidebarHoverItemContextProvider>
         <ThemedView
@@ -389,6 +410,9 @@ export const SidebarOrBottomBar = React.memo(
               ]}
             >
               <FlatListWithOverlay
+                ListFooterComponent={
+                  renderPreferencesItemInline ? () => PreferencesItem : null
+                }
                 bottomOrRightOverlayThemeColor={
                   overlayThemeColorsRef.current.bottomOrRight
                 }
@@ -435,21 +459,7 @@ export const SidebarOrBottomBar = React.memo(
               />
             )}
 
-            <SidebarOrBottomBarItem
-              horizontal={horizontal}
-              icon="gear"
-              onPress={() =>
-                small &&
-                currentOpenedModal &&
-                currentOpenedModal.name === 'SETTINGS'
-                  ? columnIds.length === 0
-                    ? dispatch(actions.closeAllModals())
-                    : undefined
-                  : dispatch(actions.replaceModal({ name: 'SETTINGS' }))
-              }
-              selected={isModalOpen('SETTINGS')}
-              title="Preferences"
-            />
+            {!renderPreferencesItemInline && PreferencesItem}
 
             {!(horizontal && small) && (
               <SidebarOrBottomBarItem horizontal={horizontal} title="">
