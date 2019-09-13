@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react'
+import React, { Fragment } from 'react'
 
 import '../libs/analytics'
 
@@ -12,11 +12,13 @@ import { UnreadCountProvider } from './context/UnreadCountContext'
 
 enableNetworkInterceptors()
 
-// TODO: Fix StrictMode warnings
+// TODO: Enable StrictMode after react-native fixes it
 // @see https://github.com/facebook/react-native/issues/22186
+const StrictModePlaceholder = Fragment
+
 export function App() {
   return (
-    <StrictMode>
+    <StrictModePlaceholder>
       <ErrorBoundary>
         <AppProviders>
           <AppGlobalStyles key="app-global-styles" />
@@ -27,6 +29,6 @@ export function App() {
           </UnreadCountProvider>
         </AppProviders>
       </ErrorBoundary>
-    </StrictMode>
+    </StrictModePlaceholder>
   )
 }
