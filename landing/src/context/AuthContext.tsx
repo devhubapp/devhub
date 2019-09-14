@@ -8,7 +8,11 @@ import React, {
   useState,
 } from 'react'
 
-import { constants, getDefaultUserPlan, UserPlan } from '@devhub/core/dist'
+import {
+  constants,
+  getDefaultUserPlan,
+  UserPlan,
+} from '@brunolemos/devhub-core/dist'
 import { getDefaultDevHubHeaders } from '../helpers'
 
 export interface AuthProviderProps {

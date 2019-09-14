@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Elements, StripeProvider } from 'react-stripe-elements'
 
-import { activePlans, Plan } from '@devhub/core/dist'
+import { activePlans, Plan } from '@brunolemos/devhub-core/dist'
 import Link from 'next/link'
 import { Select } from '../components/common/Select'
 import LandingLayout from '../components/layouts/LandingLayout'

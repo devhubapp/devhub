@@ -1,4 +1,4 @@
-const { staticColorFields } = require('@devhub/core')
+const { staticColorFields } = require('@brunolemos/devhub-core')
 
 // for some reason the build fails when using require('./src/helpers')
 // so I copy pasted the method here for now

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { allPlansObj } from '@devhub/core/dist'
+import { allPlansObj } from '@brunolemos/devhub-core/dist'
 import Button from '../components/common/buttons/Button'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { useAuth } from '../context/AuthContext'

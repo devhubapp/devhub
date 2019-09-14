@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import { activePlans } from '@devhub/core/dist'
+import { activePlans } from '@brunolemos/devhub-core/dist'
 import Link from 'next/link'
 import { PricingPlanBlock } from './PricingPlanBlock'
 

@@ -804,7 +804,7 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@devhub/core@npm:@brunolemos/devhub-core@0.95.0":
+"@brunolemos/devhub-core@0.95.0":
   version "0.95.0"
   resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.95.0.tgz#3bb3ce19a9e0cbd54a2c958d23e5a6f1b14ffea7"
   integrity sha512-7pLePXIIG5y/GMBwIUK7MupNFQTne4+I7xNbafvyjhIltc6FfprbH3Q+lcIGBU7RHFBJwYVJW+oNkLnkXC7yfw==

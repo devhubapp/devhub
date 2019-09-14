@@ -14,7 +14,7 @@
     "start": "next"
   },
   "dependencies": {
-    "@devhub/core": "npm:@brunolemos/devhub-core@0.95.0",
+    "@brunolemos/devhub-core": "0.95.0",
     "@zeit/next-css": "1.0.1",
     "autoprefixer": "9.6.1",
     "classnames": "2.2.6",

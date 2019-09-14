@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { GitHubAppType } from '@devhub/core/dist'
+import { GitHubAppType } from '@brunolemos/devhub-core/dist'
 import { useAuth } from '../../../context/AuthContext'
 import { useOAuth } from '../../../hooks/use-oauth'
 import Button from '../../common/buttons/Button'
