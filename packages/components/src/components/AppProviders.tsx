@@ -21,7 +21,7 @@ export interface AppProvidersProps {
 export function AppProviders(props: AppProvidersProps) {
   return (
     <HelmetProvider>
-      <ReduxProvider store={store}>
+      <ReduxProvider store={store as any}>
         <PersistGate loading={null} persistor={persistor}>
           <DeepLinkProvider>
             <AppLayoutProvider>

@@ -36,7 +36,7 @@
     "react-native-screens": "1.0.0-alpha.22",
     "react-native-splash-screen": "3.2.0",
     "react-native-vector-icons": "6.4.2",
-    "react-redux": "7.1.0",
+    "react-redux": "7.1.1",
     "react-spring": "9.0.0-beta.34",
     "react-test-renderer": "16.9.0",
     "react-window": "1.8.5",
