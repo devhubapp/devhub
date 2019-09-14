@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@types/fbemitter": "2.0.32",
+    "@types/google.analytics": "0.0.40",
     "@types/gravatar": "1.8.0",
     "@types/hoist-non-react-statics": "3.3.0",
     "@types/jest": "24.0.11",

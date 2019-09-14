@@ -1,14 +1,17 @@
 import _ from 'lodash'
 
-import { DevHubAnalyticsCustomDimensions } from './'
+export function sanitizeDimensionValue(value: any) {
+  if (typeof value === 'string') return value
+  if (typeof value === 'boolean' || typeof value === 'number') return `${value}`
+  if (value) return `${value}`
+  return null
+}
 
-export function formatDimensions(
-  dimensions: Partial<DevHubAnalyticsCustomDimensions>,
+export function sanitizeDimensions<D extends Partial<Record<string, any>>>(
+  dimensions: D,
 ) {
-  return _.mapValues(dimensions, d => {
-    if (typeof d === 'string') return d
-    if (typeof d === 'boolean' || typeof d === 'number') return `${d}`
-    if (d) return `${d}`
-    return null
-  }) as Record<keyof DevHubAnalyticsCustomDimensions, string | null>
+  return _.mapValues(dimensions, sanitizeDimensionValue) as Record<
+    keyof D,
+    'string' | null
+  >
 }

@@ -8,7 +8,6 @@ export interface Analytics {
     action: string,
     label?: string,
     value?: number,
-    payload?: Record<string, string | number | undefined>,
   ): void
   trackModalView(modalName: string): void
   trackScreenView(screenName: string): void

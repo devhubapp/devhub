@@ -91,19 +91,12 @@
     }
   </script> -->
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-52350759-2"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    if ((window.location.search || '').includes('producthunt')) {
-      gtag('event', 'donthuntme')
-    }
+  window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+  // see file: packages/components/src/libs/analytics/index.web.ts
   </script>
+  <script async src='https://www.google-analytics.com/analytics.js'></script>
 
-  <script async defer src="%PUBLIC_URL%/static/js/donthuntme.js"></script>
-
+  <script async src="%PUBLIC_URL%/static/js/donthuntme.js"></script>
 </body>
-
 </html>
