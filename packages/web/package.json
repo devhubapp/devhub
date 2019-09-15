@@ -44,7 +44,7 @@
     "tslint-config-prettier": "1.18.0",
     "tslint-react": "3.6.0",
     "typescript": "3.6.2",
-    "webpack-bundle-analyzer": "3.1.0"
+    "webpack-bundle-analyzer": "3.3.2"
   },
   "eslintConfig": {
     "extends": "react-app"
