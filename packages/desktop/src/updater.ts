@@ -2,6 +2,7 @@ import { app, dialog, Notification } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 import * as menu from './menu'
+import * as window from './window'
 
 let updateInfo: {
   state:
@@ -15,6 +16,7 @@ let updateInfo: {
   date: number
   progress?: number
   lastManuallyCheckedAt?: number
+  version?: string
 } = {
   state: 'not-checked',
   date: Date.now(),
@@ -36,40 +38,34 @@ export function getAutoUpdater() {
   return autoUpdater
 }
 
+let shouldNotify = false
 export async function checkForUpdatesAndNotify() {
   try {
-    const result = await autoUpdater.checkForUpdates()
-    if (!(result && result.downloadPromise)) return result
-
-    try {
-      await result.downloadPromise
-
-      const version =
-        result.updateInfo.version && result.updateInfo.version.startsWith('v')
-          ? result.updateInfo.version.slice(1)
-          : result.updateInfo.version
-
-      const notification = new Notification({
-        title: '🚀 New version available',
-        body: `${app.getName()} v${version} has been downloaded. Restart the app to get the update.`,
-      })
-
-      notification.addListener('click', () => {
-        autoUpdater.autoInstallOnAppQuit = true
-        app.relaunch()
-        app.quit()
-      })
-
-      notification.show()
-    } catch (error) {
-      console.error(error)
-    }
-
-    return result
+    await autoUpdater.checkForUpdates()
+    shouldNotify = true
   } catch (error) {
     console.error(error)
-    return null
   }
+}
+
+function notify() {
+  const version =
+    updateInfo.version && updateInfo.version.startsWith('v')
+      ? updateInfo.version.slice(1)
+      : updateInfo.version
+
+  const notification = new Notification({
+    title: version
+      ? `🚀 ${app.getName()} v${version} is now available`
+      : '🚀 New version available',
+    body: 'Restart the app to update it.',
+  })
+
+  notification.on('click', e => {
+    autoUpdater.quitAndInstall()
+  })
+
+  notification.show()
 }
 
 export function register() {
@@ -121,8 +117,15 @@ export function register() {
     menu.updateMenu()
   })
 
-  autoUpdater.on('update-downloaded', () => {
-    updateInfo = { ...updateInfo, state: 'update-downloaded', date: Date.now() }
+  autoUpdater.on('update-downloaded', info => {
+    updateInfo = {
+      ...updateInfo,
+      state: 'update-downloaded',
+      date: Date.now(),
+      version: info && info.version,
+    }
     menu.updateMenu()
+
+    if (shouldNotify) notify()
   })
 }

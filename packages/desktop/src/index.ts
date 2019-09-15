@@ -82,7 +82,18 @@ function init() {
     }
   })
 
-  app.on('window-all-closed', () => {
+  app.on('window-all-closed', async () => {
+    if (updater.getUpdateInfo().state === 'update-downloaded') {
+      try {
+        const mainWindow = window.getMainWindow()
+        if (mainWindow) await mainWindow.webContents.session.clearCache()
+      } catch (error) {
+        console.error(error)
+      }
+      app.quit()
+      return
+    }
+
     if (process.platform !== 'darwin') {
       app.quit()
     }
