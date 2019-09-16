@@ -19,7 +19,7 @@ export interface ThemeProviderState {
 
 const defaultLightTheme = themes['light-white']!
 const defaultDarkTheme = themes['dark-gray']!
-const defaultTheme = loadTheme({ id: 'auto' })
+const defaultTheme = defaultDarkTheme
 
 export const ThemeContext = React.createContext<ThemeProviderState>({
   theme: defaultTheme,
