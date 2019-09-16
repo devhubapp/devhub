@@ -502,7 +502,7 @@ export function getFilteredNotifications(
       if (
         filters.notifications &&
         filters.notifications.participating &&
-        item.reason === 'subscribed'
+        (item.reason === 'subscribed' || item.reason === 'security_alert')
       )
         return false
 
