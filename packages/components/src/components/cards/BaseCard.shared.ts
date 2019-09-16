@@ -362,7 +362,10 @@ function _getCardPropsForItem(
               isPrivate,
               isRead,
               link:
-                (_comment && (_comment.html_url || fixURL(_comment.url))) ||
+                (_comment &&
+                  fixURL(_comment.html_url || _comment.url, {
+                    commentIsInline: !!(_comment && _comment.path),
+                  })) ||
                 issueOrPullRequest.html_url ||
                 fixURL(issueOrPullRequest.url)!,
               subitems,
@@ -404,7 +407,10 @@ function _getCardPropsForItem(
               isPrivate,
               isRead,
               link:
-                (_comment && _comment.html_url) ||
+                (_comment &&
+                  fixURL(_comment.html_url || _comment.url, {
+                    commentIsInline: !!(_comment && _comment.path),
+                  })) ||
                 getCommitUrlFromOtherUrl(commit.url)!,
               subitems,
               subtitle: undefined,
@@ -443,7 +449,11 @@ function _getCardPropsForItem(
               isPrivate,
               isRead,
               link:
-                (_comment && _comment.html_url) || total === 1
+                (_comment &&
+                  fixURL(_comment.html_url || _comment.url, {
+                    commentIsInline: !!(_comment && _comment.path),
+                  })) ||
+                total === 1
                   ? getCommitUrlFromOtherUrl(commits[0].url)!
                   : _event.payload.before && _event.payload.head
                   ? getCommitCompareUrlFromRefs(
@@ -538,7 +548,10 @@ function _getCardPropsForItem(
             isPrivate,
             isRead,
             link:
-              (_comment && _comment.html_url) ||
+              (_comment &&
+                fixURL(_comment.html_url || _comment.url, {
+                  commentIsInline: !!(_comment && _comment.path),
+                })) ||
               ('html_url' in event && event.html_url) ||
               ((subjectType === 'Repository' ||
                 subjectType === 'RepositoryInvitation' ||
@@ -716,12 +729,14 @@ function _getCardPropsForItem(
             addBottomAnchor: true,
             commentId:
               (_comment && _comment.id && Number(_comment.id)) || undefined,
+            commentIsInline: !!(_comment && _comment.path),
             issueOrPullRequestNumber,
           }) ||
           fixURL(subject.url, {
             addBottomAnchor: true,
             commentId:
               (_comment && _comment.id && Number(_comment.id)) || undefined,
+            commentIsInline: !!(_comment && _comment.path),
             issueOrPullRequestNumber,
           }) ||
           repoURL!,

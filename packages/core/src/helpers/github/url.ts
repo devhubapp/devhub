@@ -4,6 +4,7 @@ export interface GitHubURLOptions {
   addBottomAnchor?: boolean
   baseURL?: string
   commentId?: number
+  commentIsInline?: boolean
   issueOrPullRequestNumber?: number
 }
 
@@ -221,6 +222,7 @@ export function githubHTMLUrlFromAPIUrl(
     addBottomAnchor,
     baseURL = defaultBaseURL,
     commentId,
+    commentIsInline,
     issueOrPullRequestNumber,
   }: GitHubURLOptions = {},
 ): string | undefined {
@@ -244,9 +246,9 @@ export function githubHTMLUrlFromAPIUrl(
 
         case 'commits': {
           if (commentId) {
-            return `${baseURL}/${repoFullName}/commit/${
-              restOfURL2[0]
-            }#commitcomment-${commentId}`
+            return `${baseURL}/${repoFullName}/commit/${restOfURL2[0]}#${
+              commentIsInline ? 'r' : 'commitcomment-'
+            }${commentId}`
           }
 
           return `${baseURL}/${repoFullName}/commit/${restOfURL2.join('/')}`
@@ -304,6 +306,9 @@ export function fixURLForPlatform(
 
   if (uri.indexOf('api.github.com') >= 0)
     uri = githubHTMLUrlFromAPIUrl(uri, isMobile, options)
+
+  if (options && options.commentIsInline && uri)
+    uri = uri.replace('commitcomment-', 'r')
 
   return options && options.addBottomAnchor && uri
     ? appBottomAnchorIfPossible(uri, isMobile)
