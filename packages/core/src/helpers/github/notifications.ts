@@ -90,7 +90,7 @@ export function getNotificationIconAndColor(
     case 'RepositoryVulnerabilityAlert':
       return {
         icon: 'alert',
-        color: 'red',
+        color: 'orange',
         tooltip: 'Repository vulnerability alert',
       }
     default: {

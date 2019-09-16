@@ -180,14 +180,8 @@ export const getGitHubURLForRepoInvitation = (
 ) =>
   ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}/invitations` : ''
 
-export const getGitHubURLForSecurityAlert = (
-  ownerName: string,
-  repoName: string,
-  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
-) =>
-  ownerName && repoName
-    ? `${baseURL}/${ownerName}/${repoName}/network/alerts`
-    : ''
+export const getGitHubURLForSecurityAlert = (repoURL: string | undefined) =>
+  repoURL ? `${repoURL}/network/alerts` : undefined
 
 export const getGitHubAvatarURLFromPayload = (
   payload: any,

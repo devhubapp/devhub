@@ -16,6 +16,7 @@ import {
   getGitHubEventSubItems,
   getGitHubNotificationSubItems,
   getGitHubSearchURL,
+  getGitHubURLForSecurityAlert,
   getIssueOrPullRequestIconAndColor,
   getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
@@ -709,6 +710,8 @@ function _getCardPropsForItem(
         isPrivate,
         isRead,
         link:
+          (subject.type === 'RepositoryVulnerabilityAlert' &&
+            getGitHubURLForSecurityAlert(repoURL)) ||
           fixURL(subject.url, {
             addBottomAnchor: true,
             commentId:
@@ -720,7 +723,8 @@ function _getCardPropsForItem(
             commentId:
               (_comment && _comment.id && Number(_comment.id)) || undefined,
             issueOrPullRequestNumber,
-          })!,
+          }) ||
+          repoURL!,
         subitems,
         subtitle: undefined,
         text: getRepoText({
