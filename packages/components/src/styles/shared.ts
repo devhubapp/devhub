@@ -8,6 +8,7 @@ export const sharedStyles = StyleSheet.create({
   relative: { position: 'relative' },
   flex: { flex: 1 },
   flexGrow: { flexGrow: 1 },
+  flexNoGrow: { flexGrow: 0 },
   flexWrap: { flexWrap: 'wrap' },
   flexNoWrap: { flexWrap: 'nowrap' },
   horizontal: { flexDirection: 'row' },

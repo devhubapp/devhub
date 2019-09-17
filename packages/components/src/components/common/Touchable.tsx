@@ -18,7 +18,6 @@ export interface TouchableProps
   analyticsAction?: 'press' | 'toggle' | string | undefined
   analyticsCategory?: 'button' | 'checkbox' | 'link' | string | undefined
   analyticsLabel?: string | undefined
-  analyticsPayload?: Record<string, string | number | undefined> | undefined
   analyticsValue?: number | undefined
   children?: React.ReactNode
   selectable?: boolean

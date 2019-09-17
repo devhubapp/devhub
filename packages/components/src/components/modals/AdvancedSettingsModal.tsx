@@ -1,8 +1,8 @@
+import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
 import React, { useState } from 'react'
 import { ScrollView, View } from 'react-native'
+import { useDispatch } from 'react-redux'
 
-import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
-import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { confirm } from '../../libs/confirm'
@@ -38,6 +38,7 @@ export const AdvancedSettingsModal = React.memo(
       null,
     )
 
+    const dispatch = useDispatch()
     const existingAppToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
@@ -47,10 +48,6 @@ export const AdvancedSettingsModal = React.memo(
     )
     const isDeletingAccount = useReduxState(selectors.isDeletingAccountSelector)
     const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
-
-    const deleteAccountRequest = useReduxAction(actions.deleteAccountRequest)
-    const loginRequest = useReduxAction(actions.loginRequest)
-    const pushModal = useReduxAction(actions.pushModal)
 
     async function startOAuth(githubAppType: GitHubAppType) {
       try {
@@ -67,7 +64,7 @@ export const AdvancedSettingsModal = React.memo(
         clearOAuthQueryParams()
         if (!appToken) throw new Error('No app token')
 
-        loginRequest({ appToken })
+        dispatch(actions.loginRequest({ appToken }))
         setExecutingOAuth(null)
       } catch (error) {
         const description = 'OAuth execution failed'
@@ -105,7 +102,9 @@ export const AdvancedSettingsModal = React.memo(
                     width: 52,
                     paddingHorizontal: contentPadding,
                   }}
-                  onPress={() => pushModal({ name: 'KEYBOARD_SHORTCUTS' })}
+                  onPress={() =>
+                    dispatch(actions.pushModal({ name: 'KEYBOARD_SHORTCUTS' }))
+                  }
                   size={32}
                 >
                   <ThemedIcon
@@ -359,7 +358,8 @@ export const AdvancedSettingsModal = React.memo(
                   {
                     cancelLabel: 'Cancel',
                     confirmLabel: 'Delete',
-                    confirmCallback: () => deleteAccountRequest(),
+                    confirmCallback: () =>
+                      dispatch(actions.deleteAccountRequest()),
                     destructive: true,
                   },
                 )
@@ -367,6 +367,18 @@ export const AdvancedSettingsModal = React.memo(
               type="danger"
             >
               Delete account
+            </Button>
+
+            <Spacer height={contentPadding / 2} />
+
+            <Button
+              key="logout-button"
+              analyticsCategory="engagement"
+              analyticsAction="logout"
+              analyticsLabel=""
+              onPress={() => dispatch(actions.logout())}
+            >
+              Logout
             </Button>
           </View>
         </ScrollView>

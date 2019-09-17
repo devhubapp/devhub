@@ -1,22 +1,31 @@
+import {
+  activePlans,
+  constants,
+  formatPrice,
+  getPlanFeatureDetails,
+} from '@devhub/core'
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
+import { useDispatch } from 'react-redux'
 
-import { activePlans, constants, formatPrice } from '@devhub/core'
 import { useDesktopOptions } from '../../hooks/use-desktop-options'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
+import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, radius } from '../../styles/variables'
+import { Button } from '../common/Button'
+import { ButtonLink } from '../common/ButtonLink'
 import { H3 } from '../common/H3'
-import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { Switch } from '../common/Switch'
-import { ThemedText } from '../themed/ThemedText'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedView } from '../themed/ThemedView'
 
 export const DesktopPreferences = React.memo(() => {
+  const dispatch = useDispatch()
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const {
     enablePushNotifications,
@@ -24,14 +33,10 @@ export const DesktopPreferences = React.memo(() => {
     isMenuBarMode,
   } = useDesktopOptions()
 
-  if (!Platform.isElectron) return null
-
-  const hasAccessToPushNotifications = !!(
-    plan &&
-    (plan.status === 'active' || plan.status === 'trialing') &&
-    plan.featureFlags &&
-    plan.featureFlags.enablePushNotifications
-  )
+  const hasAccessToPushNotifications = getPlanFeatureDetails({
+    Platform,
+    plan,
+  }).enableDesktopPushNotifications.hasAccess
 
   const cheapestPlanWithNotifications = activePlans
     .sort((a, b) => a.amount - b.amount)
@@ -39,7 +44,26 @@ export const DesktopPreferences = React.memo(() => {
 
   return (
     <View>
-      <SubHeader title="Desktop options" />
+      <SubHeader title="Desktop options">
+        {!Platform.isElectron && (
+          <>
+            <Spacer flex={1} />
+
+            <ButtonLink
+              analyticsLabel="download_desktop_app"
+              href={constants.DEVHUB_LINKS.DOWNLOAD_PAGE}
+              openOnNewTab
+              size={32}
+            >
+              <ThemedIcon
+                color="foregroundColor"
+                name="desktop-download"
+                size={16}
+              />
+            </ButtonLink>
+          </>
+        )}
+      </SubHeader>
 
       <View style={{ paddingHorizontal: contentPadding }}>
         <View
@@ -52,13 +76,14 @@ export const DesktopPreferences = React.memo(() => {
           <H3>Menubar mode</H3>
           <Switch
             analyticsLabel="desktop_menubar_mode"
+            disabled={!Platform.isElectron}
             onValueChange={value =>
               window.ipc.send('update-settings', {
                 settings: 'isMenuBarMode',
                 value,
               })
             }
-            value={isMenuBarMode}
+            value={!!(Platform.isElectron && isMenuBarMode)}
           />
         </View>
 
@@ -75,13 +100,14 @@ export const DesktopPreferences = React.memo(() => {
           <Switch
             analyticsLabel="desktop_push_notifications"
             color={!hasAccessToPushNotifications ? 'red' : undefined}
+            disabled={!Platform.isElectron}
             onValueChange={value =>
               window.ipc.send('update-settings', {
                 settings: 'enablePushNotifications',
                 value,
               })
             }
-            value={enablePushNotifications}
+            value={!!(Platform.isElectron && enablePushNotifications)}
           />
         </View>
 
@@ -97,7 +123,7 @@ export const DesktopPreferences = React.memo(() => {
           <Switch
             analyticsLabel="desktop_push_notifications_sound"
             color={!hasAccessToPushNotifications ? 'red' : undefined}
-            disabled={!enablePushNotifications}
+            disabled={!Platform.isElectron || !enablePushNotifications}
             onValueChange={value =>
               window.ipc.send('update-settings', {
                 settings: 'enablePushNotificationsSound',
@@ -106,12 +132,17 @@ export const DesktopPreferences = React.memo(() => {
             }
             value={
               // hasAccessToPushNotifications &&
-              enablePushNotifications && enablePushNotificationsSound
+              !!(
+                Platform.isElectron &&
+                enablePushNotifications &&
+                enablePushNotificationsSound
+              )
             }
           />
         </View>
 
         {!!(
+          Platform.isElectron &&
           !hasAccessToPushNotifications &&
           enablePushNotifications &&
           cheapestPlanWithNotifications
@@ -123,24 +154,25 @@ export const DesktopPreferences = React.memo(() => {
               backgroundColor="backgroundColorLess1"
               style={[sharedStyles.alignSelfStretch, { borderRadius: radius }]}
             >
-              <Link
+              <Button
                 analyticsLabel="desktop_preferences_push_notifications_cta"
-                enableForegroundHover
-                href={`${constants.LANDING_BASE_URL}/pricing`}
-                openOnNewTab
-                textProps={{
-                  color: 'foregroundColor',
-                  style: [
-                    sharedStyles.alignSelfStretch,
-                    sharedStyles.alignSelfCenter,
-                    sharedStyles.textCenter,
-                    sharedStyles.padding,
-                  ],
+                size="auto"
+                onPress={() => {
+                  dispatch(
+                    actions.pushModal({
+                      name: 'PRICING',
+                      params: {
+                        highlightFeature: 'enablePushNotifications',
+                        // initialSelectedPlanId: cheapestPlanWithNotifications.id,
+                      },
+                    }),
+                  )
                 }}
+                textStyle={{ fontWeight: '300' }}
               >{`Unlock Push Notifications and other features for ${formatPrice(
                 cheapestPlanWithNotifications.amount,
                 cheapestPlanWithNotifications.currency,
-              )}/${cheapestPlanWithNotifications.interval}`}</Link>
+              )}/${cheapestPlanWithNotifications.interval}`}</Button>
             </ThemedView>
           </>
         )}

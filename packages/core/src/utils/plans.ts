@@ -12,6 +12,13 @@ export type ActivePlanID =
   | '5d4b8e4de70bd8c61c13a6a9'
   | '5d4b8e85d123d1d770d93825'
 
+export type FeatureFlagId =
+  | 'columnsLimit'
+  | 'enableFilters'
+  | 'enableSync'
+  | 'enablePrivateRepositories'
+  | 'enablePushNotifications'
+
 export const allPlansObj: Record<PlanID, Plan> = {
   '5d4b8e3a853f050addb5fe12': {
     id: '5d4b8e3a853f050addb5fe12',
@@ -28,12 +35,20 @@ export const allPlansObj: Record<PlanID, Plan> = {
     trialPeriodDays: 0,
 
     featureLabels: [
-      { label: 'Up to 5 columns', available: true },
-      { label: 'All filters', available: true },
-      { label: 'Sync between devices', available: false },
-      { label: 'Private repositorites', available: false },
-      { label: 'Push Notifications', available: false },
-      { label: 'More than 5 columns', available: false },
+      { id: 'columnsLimit', label: 'Up to 5 columns', available: true },
+      { id: 'enableFilters', label: 'All filters', available: true },
+      { id: 'enableSync', label: 'Sync between devices', available: false },
+      {
+        id: 'enablePrivateRepositories',
+        label: 'Private repositorites',
+        available: false,
+      },
+      {
+        id: 'enablePushNotifications',
+        label: 'Push Notifications',
+        available: false,
+      },
+      { id: 'columnsLimit', label: 'More than 5 columns', available: false },
     ],
 
     featureFlags: {
@@ -59,12 +74,20 @@ export const allPlansObj: Record<PlanID, Plan> = {
     trialPeriodDays: 7,
 
     featureLabels: [
-      { label: 'Up to 10 columns', available: true },
-      { label: 'All filters', available: true },
-      { label: 'Sync between devices', available: true },
-      { label: 'Private repositorites', available: true },
-      { label: 'Push Notifications', available: true },
-      { label: 'More than 10 columns', available: false },
+      { id: 'columnsLimit', label: 'Up to 10 columns', available: true },
+      { id: 'enableFilters', label: 'All filters', available: true },
+      { id: 'enableSync', label: 'Sync between devices', available: true },
+      {
+        id: 'enablePrivateRepositories',
+        label: 'Private repositorites',
+        available: true,
+      },
+      {
+        id: 'enablePushNotifications',
+        label: 'Push Notifications',
+        available: true,
+      },
+      { id: 'columnsLimit', label: 'More than 10 columns', available: false },
     ],
 
     featureFlags: {
@@ -89,12 +112,20 @@ export const allPlansObj: Record<PlanID, Plan> = {
     intervalCount: 1,
     trialPeriodDays: 7,
     featureLabels: [
-      { label: 'Up to 15 columns', available: true },
-      { label: 'All filters', available: true },
-      { label: 'Sync between devices', available: true },
-      { label: 'Private repositorites', available: true },
-      { label: 'Push Notifications', available: true },
-      { label: 'More than 15 columns', available: false },
+      { id: 'columnsLimit', label: 'Up to 15 columns', available: true },
+      { id: 'enableFilters', label: 'All filters', available: true },
+      { id: 'enableSync', label: 'Sync between devices', available: true },
+      {
+        id: 'enablePrivateRepositories',
+        label: 'Private repositorites',
+        available: true,
+      },
+      {
+        id: 'enablePushNotifications',
+        label: 'Push Notifications',
+        available: true,
+      },
+      { id: 'columnsLimit', label: 'More than 15 columns', available: false },
     ],
 
     featureFlags: {
@@ -119,11 +150,19 @@ export const allPlansObj: Record<PlanID, Plan> = {
     intervalCount: 1,
     trialPeriodDays: 7,
     featureLabels: [
-      { label: 'Up to 20 columns', available: true },
-      { label: 'All filters', available: true },
-      { label: 'Sync between devices', available: true },
-      { label: 'Private repositorites', available: true },
-      { label: 'Push Notifications', available: true },
+      { id: 'columnsLimit', label: 'Up to 20 columns', available: true },
+      { id: 'enableFilters', label: 'All filters', available: true },
+      { id: 'enableSync', label: 'Sync between devices', available: true },
+      {
+        id: 'enablePrivateRepositories',
+        label: 'Private repositorites',
+        available: true,
+      },
+      {
+        id: 'enablePushNotifications',
+        label: 'Push Notifications',
+        available: true,
+      },
     ],
 
     featureFlags: {
@@ -137,6 +176,8 @@ export const allPlansObj: Record<PlanID, Plan> = {
 }
 
 export const defaultFreePlan = allPlansObj['5d4b8e3a853f050addb5fe12']
+
+export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
   defaultFreePlan,

@@ -1,20 +1,35 @@
+import { Plan } from '@devhub/core'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 
-import { constants } from '@devhub/core'
-import { Browser } from '../../libs/browser'
+import * as actions from '../../redux/actions'
 import { HeaderMessage } from './HeaderMessage'
 
-export function FreeTrialHeaderMessage() {
+export interface FreeTrialHeaderMessageProps {
+  message?: string
+  relatedFeature?: keyof Plan['featureFlags']
+}
+
+export function FreeTrialHeaderMessage(props: FreeTrialHeaderMessageProps) {
+  const { message = 'Free trial. Learn more.', relatedFeature } = props
+
+  const dispatch = useDispatch()
+
   return (
     <HeaderMessage
       analyticsLabel="about_free_trial_column"
       backgroundColor="primaryBackgroundColor"
       color="primaryForegroundColor"
       onPress={() =>
-        Browser.openURLOnNewTab(`${constants.LANDING_BASE_URL}/pricing`)
+        dispatch(
+          actions.pushModal({
+            name: 'PRICING',
+            params: { highlightFeature: relatedFeature },
+          }),
+        )
       }
     >
-      Free trial. Learn more.
+      {message}
     </HeaderMessage>
   )
 }

@@ -5,8 +5,8 @@ import * as ipc from './ipc'
 
 export const store = new Store({
   defaults: {
-    enablePushNotifications: true,
-    enablePushNotificationsSound: true,
+    enablePushNotifications: undefined,
+    enablePushNotificationsSound: undefined,
     isMenuBarMode: false,
     isMenuBarModeChangedAt: null,
     launchCount: 0,

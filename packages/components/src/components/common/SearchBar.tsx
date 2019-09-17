@@ -13,7 +13,7 @@ export interface SearchBarProps extends ThemedTextInputProps {
   containerBackgroundThemeColor?: ThemedViewProps['backgroundColor']
 }
 
-const defaultSize = 34
+const defaultSize = 36
 export const searchBarTotalHeight =
   defaultSize + (contentPadding / 2) * 2 + separatorSize
 

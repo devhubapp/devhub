@@ -11,8 +11,11 @@ import { getThemeColorOrItself } from './helpers'
 
 export interface ThemedTouchableOpacityProps
   extends Omit<TouchableOpacityProps, 'style'> {
+  borderColor?: keyof ThemeColors | ((theme: Theme) => string)
   backgroundColor?: keyof ThemeColors | ((theme: Theme) => string)
-  style?: StyleProp<Omit<TouchableOpacityProps['style'], 'backgroundColor'>>
+  style?: StyleProp<
+    Omit<TouchableOpacityProps['style'], 'backgroundColor' | 'borderColor'>
+  >
   themeTransformer?: ThemeTransformer
 }
 
@@ -22,6 +25,7 @@ export const ThemedTouchableOpacity = React.forwardRef<
 >((props, ref) => {
   const {
     backgroundColor: _backgroundColor,
+    borderColor: _borderColor,
     style,
     themeTransformer,
     ...otherProps
@@ -33,11 +37,15 @@ export const ThemedTouchableOpacity = React.forwardRef<
     enableCSSVariable: true,
   })
 
+  const borderColor = getThemeColorOrItself(theme, _borderColor, {
+    enableCSSVariable: true,
+  })
+
   return (
     <TouchableOpacity
       {...otherProps}
       ref={ref}
-      style={[style, { backgroundColor }]}
+      style={[style, { backgroundColor, borderColor }]}
     />
   )
 })

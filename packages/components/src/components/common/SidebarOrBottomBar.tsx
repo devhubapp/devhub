@@ -18,6 +18,7 @@ import {
 } from 'react-native'
 
 import {
+  constants,
   getColumnOption,
   getUserAvatarByUsername,
   getUserURLFromLogin,
@@ -465,7 +466,7 @@ export const SidebarOrBottomBar = React.memo(
               <SidebarOrBottomBarItem horizontal={horizontal} title="">
                 <Link
                   analyticsLabel="sidebar_devhub_logo"
-                  href="https://github.com/devhubapp/devhub"
+                  href={constants.DEVHUB_LINKS.GITHUB_REPOSITORY}
                   openOnNewTab
                   style={[
                     sharedStyles.fullWidth,

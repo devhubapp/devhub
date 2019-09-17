@@ -47,7 +47,7 @@ export function PricingPlans(_props: PricingPlansProps) {
       <div className="text-center">
         <Link href="/account">
           <a className="text-xs text-muted-65 text-center">
-            Already subscribed? Manage your subscription
+            Already on a paid plan? Manage your account
           </a>
         </Link>
       </div>

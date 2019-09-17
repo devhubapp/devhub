@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import qs from 'qs'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -54,7 +55,7 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
           break
         }
 
-        case suffixMap.redux_action: {
+        case suffixMap.redux: {
           if (suffixes[1]) {
             dispatch({ type: suffixes[1] })
             break
@@ -63,6 +64,23 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
 
         case suffixMap.preferences: {
           pushModal({ name: 'SETTINGS' })
+          break
+        }
+
+        case suffixMap.pricing: {
+          const { initialSelectedPlanId, highlightFeature } = getQueryParams(
+            suffixes[1],
+          )
+          pushModal({
+            name: 'PRICING',
+            params: { initialSelectedPlanId, highlightFeature },
+          })
+          break
+        }
+
+        case suffixMap.subscribe: {
+          const { planId } = getQueryParams(suffixes[1])
+          pushModal({ name: 'SUBSCRIBE', params: { planId } })
           break
         }
 
@@ -82,3 +100,12 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
 
 export const DeepLinkConsumer = DeepLinkContext.Consumer
 ;(DeepLinkConsumer as any).displayName = 'DeepLinkConsumer'
+
+function getQueryParams(url: string) {
+  if (!(url && typeof url === 'string')) return {}
+
+  const matches = url.match(/[^\?]+\??(.+)/)
+  if (!(matches && matches[1])) return {}
+
+  return qs.parse(matches[1])
+}

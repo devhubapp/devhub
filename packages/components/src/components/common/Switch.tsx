@@ -14,7 +14,6 @@ import { getThemeColorOrItself } from '../themed/helpers'
 export interface SwitchProps extends SwitchPropsOriginal {
   analyticsLabel: string | undefined
   analyticsValue?: number | undefined
-  analyticsPayload?: Record<string, string | number | undefined> | undefined
   color?: keyof ThemeColors | ((theme: Theme) => string)
 }
 
@@ -50,6 +49,8 @@ export function Switch(props: SwitchProps) {
 
   return (
     <SwitchComponent
+      data-switch
+      data-switch-disabled={!!props.disabled}
       onValueChange={onValueChange}
       {...Platform.select({
         android: {

@@ -270,8 +270,9 @@ export function githubHTMLUrlFromAPIUrl(
             issueOrPullRequestNumber &&
             (commentId || (restOfURL2[0] === 'comments' && restOfURL2[1]))
           ) {
-            return `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}#discussion_r${commentId ||
-              restOfURL2[1]}`
+            return `${baseURL}/${repoFullName}/pull/${issueOrPullRequestNumber}#${
+              commentIsInline ? 'discussion_r' : 'issuecomment-'
+            }${commentId || restOfURL2[1]}`
           }
 
           return `${baseURL}/${repoFullName}/pull/${restOfURL2.join('/')}`

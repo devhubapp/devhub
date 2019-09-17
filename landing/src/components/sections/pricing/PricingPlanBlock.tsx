@@ -19,20 +19,28 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   const { authData } = useAuth()
 
-  const isMyPlan = authData.plan && authData.plan.id === plan.id
+  const isMyPlan = authData && authData.plan && authData.plan.id === plan.id
 
   const banner =
+    authData &&
     authData.plan &&
-    authData.plan.amount > 0 &&
+    authData.plan.id &&
     activePlans.find(p => p.id === authData.plan!.id)
       ? isMyPlan
-        ? 'Your plan'
+        ? 'Current plan'
         : true
       : _banner
 
   return (
     <section className="pricing-plan flex flex-col flex-shrink-0 w-64">
-      <div className="m-1 bg-more-1 shadow border border-primary rounded">
+      <div
+        className={classNames(
+          'm-1 bg-more-1 shadow border rounded',
+          banner && typeof banner === 'string'
+            ? 'border-primary'
+            : 'border-bg-more-2',
+        )}
+      >
         {banner === true ? (
           <div className="text-sm leading-normal py-1 px-6 text-center font-semibold">
             &nbsp;

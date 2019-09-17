@@ -55,10 +55,12 @@ a [data-touchable] {
   cursor: pointer;
 }
 
+[data-switch="true"][data-switch-disabled="true"],
 [data-touchable="true"][data-touchable-disabled="true"] {
   cursor: not-allowed;
 }
 
+[data-touchable="true"][data-touchable-disabled="false"][data-touchable-onpress="true"] > [data-touchable="true"][data-touchable-disabled="true"],
 a > [data-touchable="true"][data-touchable-disabled="true"] {
   cursor: unset;
 }

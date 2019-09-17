@@ -2,7 +2,6 @@ import { app, dialog, Notification } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 import * as menu from './menu'
-import * as window from './window'
 
 let updateInfo: {
   state:

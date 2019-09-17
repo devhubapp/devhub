@@ -25,7 +25,10 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { FreeTrialHeaderMessage } from '../common/FreeTrialHeaderMessage'
+import {
+  FreeTrialHeaderMessage,
+  FreeTrialHeaderMessageProps,
+} from '../common/FreeTrialHeaderMessage'
 import { useAppLayout } from '../context/LayoutContext'
 import { Column } from './Column'
 import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
@@ -127,7 +130,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     },
   )
 
-  const showFreeTrialBanner =
+  const showBannerForPaidFeature: FreeTrialHeaderMessageProps | undefined =
     (!(
       plan &&
       (plan.status === 'active' || plan.status === 'trialing') &&
@@ -142,10 +145,18 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             (item: EnhancedGitHubNotification) =>
               isNotificationPrivate(item) && !!item.enhanced,
           )
-        : false)) || // TODO: Handle for IssueOrPullRequest Column
+        : // TODO: Handle for IssueOrPullRequest Column
+          undefined) && {
+        message: 'Tap to unlock Private Repositories.',
+        relatedFeature: 'enablePrivateRepositories',
+      }) ||
     (plan &&
       plan.featureFlags.columnsLimit >= 1 &&
-      plan.featureFlags.columnsLimit < columnIndex + 1)
+      columnIndex + 1 >= plan.featureFlags.columnsLimit && {
+        message: 'Columns limit exceeded. Tap to unlock.',
+        relatedFeature: 'columnsLimit',
+      }) ||
+    undefined
 
   const refresh = useCallback(() => {
     dispatch(
@@ -349,7 +360,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         type="local"
       />
 
-      {!!showFreeTrialBanner && <FreeTrialHeaderMessage />}
+      {!!showBannerForPaidFeature && (
+        <FreeTrialHeaderMessage {...showBannerForPaidFeature} />
+      )}
     </Column>
   )
 })

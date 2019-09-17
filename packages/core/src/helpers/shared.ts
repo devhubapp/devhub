@@ -936,6 +936,42 @@ export function getItemInbox(type: Column['type'], filters: Column['filters']) {
   return 'all'
 }
 
+export function getPlanFeatureDetails({
+  Platform,
+  plan,
+}: {
+  Platform: { OS: 'web' | 'ios' | 'android'; isElectron: boolean }
+  plan: Pick<UserPlan, 'amount' | 'featureFlags' | 'status'> | null | undefined
+}): Record<
+  keyof ColumnOptions,
+  {
+    hasAccess: boolean | 'trial'
+    platformSupports: boolean
+  }
+> {
+  return {
+    enableAppIconUnreadIndicator: {
+      hasAccess: true,
+      platformSupports: true,
+    },
+    enableInAppUnreadIndicator: {
+      hasAccess: true,
+      platformSupports: Platform.OS === 'web',
+    },
+    enableDesktopPushNotifications: {
+      hasAccess: !!(plan &&
+      (plan.status === 'active' || plan.status === 'trialing') &&
+      plan.featureFlags &&
+      plan.featureFlags.enablePushNotifications
+        ? plan.status === 'trialing' && !plan.amount
+          ? 'trial'
+          : true
+        : false),
+      platformSupports: Platform.isElectron,
+    },
+  }
+}
+
 export function getColumnOption<O extends keyof ColumnOptions>(
   column: Column | undefined,
   option: O,
@@ -957,10 +993,11 @@ export function getColumnOption<O extends keyof ColumnOptions>(
   if (!(column && column.type))
     return { hasAccess: false, platformSupports: false, value: undefined }
 
+  const details = getPlanFeatureDetails({ Platform, plan })
+
   if (option === 'enableAppIconUnreadIndicator') {
     return {
-      hasAccess: true,
-      platformSupports: true,
+      ...details.enableAppIconUnreadIndicator,
       value:
         column.options &&
         typeof column.options.enableAppIconUnreadIndicator === 'boolean'
@@ -973,8 +1010,7 @@ export function getColumnOption<O extends keyof ColumnOptions>(
 
   if (option === 'enableInAppUnreadIndicator') {
     return {
-      hasAccess: true,
-      platformSupports: Platform.OS === 'web',
+      ...details.enableInAppUnreadIndicator,
       value:
         column.options &&
         typeof column.options.enableInAppUnreadIndicator === 'boolean'
@@ -985,15 +1021,7 @@ export function getColumnOption<O extends keyof ColumnOptions>(
 
   if (option === 'enableDesktopPushNotifications') {
     return {
-      hasAccess: !!(plan &&
-      (plan.status === 'active' || plan.status === 'trialing') &&
-      plan.featureFlags &&
-      plan.featureFlags.enablePushNotifications
-        ? plan.status === 'trialing' && !plan.amount
-          ? 'trial'
-          : true
-        : false),
-      platformSupports: Platform.isElectron,
+      ...details.enableDesktopPushNotifications,
       value:
         column.options &&
         typeof column.options.enableDesktopPushNotifications === 'boolean'

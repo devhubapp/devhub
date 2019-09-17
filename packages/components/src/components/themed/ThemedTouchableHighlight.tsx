@@ -43,8 +43,8 @@ export const ThemedTouchableHighlight = React.forwardRef<
     <TouchableHighlight
       {...otherProps}
       ref={ref}
-      underlayColor={underlayColor}
-      style={[style, { backgroundColor }]}
+      underlayColor={underlayColor || backgroundColor || 'transparent'}
+      style={[style, { backgroundColor: backgroundColor || 'transparent' }]}
     />
   )
 })

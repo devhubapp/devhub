@@ -1,6 +1,6 @@
 import Octokit from '@octokit/rest'
 
-import { PlanID } from '../utils'
+import { FeatureFlagId, PlanID } from '../utils'
 import {
   GitHubAppType,
   GitHubComment,
@@ -399,12 +399,23 @@ export type ModalPayload =
       params?: undefined
     }
   | {
+      name: 'PRICING'
+      params?: {
+        initialSelectedPlanId?: PlanID | undefined
+        highlightFeature?: keyof Plan['featureFlags']
+      }
+    }
+  | {
       name: 'SETTINGS'
       params?: undefined
     }
   | {
       name: 'SETUP_GITHUB_ENTERPRISE'
       params?: undefined
+    }
+  | {
+      name: 'SUBSCRIBE'
+      params: { planId: PlanID | undefined }
     }
 
 export type ModalPayloadWithIndex = ModalPayload & { index: number }
@@ -536,6 +547,7 @@ export interface Plan {
   intervalCount: number
 
   featureLabels: Array<{
+    id: FeatureFlagId
     label: string
     available: boolean
   }>

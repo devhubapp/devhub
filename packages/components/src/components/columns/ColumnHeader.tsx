@@ -1,19 +1,20 @@
-import React, { ReactNode } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-
 import {
   activePlans,
-  constants,
   formatPrice,
   getColumnOption,
   ThemeColors,
 } from '@devhub/core'
+import React, { ReactNode } from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { useDispatch } from 'react-redux'
+
 import { useColumn } from '../../hooks/use-column'
 import { useDesktopOptions } from '../../hooks/use-desktop-options'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
+import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallerTextSize } from '../../styles/variables'
@@ -70,6 +71,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
   const subtitle = `${_subtitle || ''}`.toLowerCase()
 
   const safeAreaInsets = useSafeArea()
+  const dispatch = useDispatch()
   const bannerMessage = useReduxState(selectors.bannerMessageSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const { column } = useColumn(columnId || '')
@@ -179,14 +181,24 @@ export function ColumnHeader(props: ColumnHeaderProps) {
                           left: contentPadding,
                           right: contentPadding,
                         }}
-                        href={
-                          !enableDesktopPushNotificationsOption.platformSupports
-                            ? `${constants.LANDING_BASE_URL}/download`
-                            : !enableDesktopPushNotificationsOption.hasAccess
-                            ? `${constants.LANDING_BASE_URL}/pricing`
-                            : ''
+                        onPress={
+                          !enableDesktopPushNotificationsOption.platformSupports ||
+                          !enableDesktopPushNotificationsOption.hasAccess
+                            ? () => {
+                                dispatch(
+                                  actions.pushModal({
+                                    name: 'PRICING',
+                                    params: {
+                                      highlightFeature:
+                                        'enablePushNotifications',
+                                      // initialSelectedPlanId:
+                                      //   cheapestPlanWithNotifications.id,
+                                    },
+                                  }),
+                                )
+                              }
+                            : undefined
                         }
-                        openOnNewTab
                         style={sharedStyles.relative}
                       >
                         <ThemedIcon

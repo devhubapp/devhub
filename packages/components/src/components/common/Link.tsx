@@ -192,7 +192,7 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
         } as any,
 
         web: {
-          accessibilityRole: 'link',
+          accessibilityRole: href ? 'link' : 'button',
           href,
           onPress,
           selectable: true,

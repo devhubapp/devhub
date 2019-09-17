@@ -31,7 +31,7 @@ export interface TextInputProps extends Omit<TextInputOriginalProps, 'style'> {
   themeTransformer?: ThemeTransformer
 }
 
-export const defaultTextInputHeight = 36
+export const defaultTextInputHeight = 40
 
 export const TextInput = React.forwardRef(
   (props: TextInputProps, receivedRef: any) => {

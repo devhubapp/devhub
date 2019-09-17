@@ -220,7 +220,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           loading={formState.isSubmiting}
           onClick={handleSubmit}
         >
-          {`Unlock features for ${formatPrice(plan.amount, plan.currency)}/${
+          {`Unlock for ${formatPrice(plan.amount, plan.currency)}/${
             plan.interval
           }`}
         </Button>

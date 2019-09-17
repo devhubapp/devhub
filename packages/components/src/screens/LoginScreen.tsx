@@ -222,7 +222,7 @@ export const LoginScreen = React.memo(() => {
           <Link
             analyticsCategory="loginscreen"
             analyticsLabel="logo"
-            href="https://github.com/devhubapp/devhub"
+            href={constants.DEVHUB_LINKS.GITHUB_REPOSITORY}
             openOnNewTab
             style={styles.footerLink}
             textProps={{
@@ -263,7 +263,7 @@ export const LoginScreen = React.memo(() => {
             <Link
               analyticsCategory="loginscreen"
               analyticsLabel="twitter"
-              href="https://twitter.com/devhub_app"
+              href={constants.DEVHUB_LINKS.TWITTER_PROFILE}
               openOnNewTab
               style={styles.footerLink}
               textProps={{
@@ -284,7 +284,7 @@ export const LoginScreen = React.memo(() => {
             <Link
               analyticsCategory="loginscreen"
               analyticsLabel="github"
-              href="https://github.com/devhubapp/devhub"
+              href={constants.DEVHUB_LINKS.GITHUB_REPOSITORY}
               openOnNewTab
               style={styles.footerLink}
               textProps={{
@@ -305,7 +305,7 @@ export const LoginScreen = React.memo(() => {
             <Link
               analyticsCategory="loginscreen"
               analyticsLabel="app_version"
-              href="https://github.com/devhubapp/devhub/releases"
+              href={`${constants.DEVHUB_LINKS.GITHUB_REPOSITORY}/releases`}
               openOnNewTab
               style={styles.footerLink}
               textProps={{

@@ -149,8 +149,17 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
               <Link
                 analyticsLabel="column_option_desktop_push_notifications_pro_link"
                 children={c}
-                openOnNewTab
-                href={`${constants.LANDING_BASE_URL}/pricing`}
+                onPress={() => {
+                  dispatch(
+                    actions.pushModal({
+                      name: 'PRICING',
+                      params: cheapestPlanWithNotifications && {
+                        highlightFeature: 'enablePushNotifications',
+                        // initialSelectedPlanId: cheapestPlanWithNotifications.id,
+                      },
+                    }),
+                  )
+                }}
               />
             )
           ) : (
@@ -213,8 +222,17 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           {/* <Link
             analyticsLabel="column_option_desktop_unlock_more_link"
             enableForegroundHover
-            openOnNewTab
-            href={`${constants.LANDING_BASE_URL}/pricing`}
+            onPress={() => {
+              dispatch(
+                actions.pushModal({
+                  name: 'PRICING',
+                  params: cheapestPlanWithNotifications && {
+                    highlightFeature: 'enablePushNotifications',
+                    // initialSelectedPlanId: cheapestPlanWithNotifications.id,
+                  },
+                }),
+              )
+            }}
             textProps={{
               color: 'foregroundColorMuted65',
               style: [
