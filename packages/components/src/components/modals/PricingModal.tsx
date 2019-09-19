@@ -1,4 +1,4 @@
-import { activePlans, constants, Plan, PlanID } from '@devhub/core'
+import { activePlans, allPlans, constants, Plan, PlanID } from '@devhub/core'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, FlatListProps, InteractionManager, View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -51,6 +51,14 @@ export function PricingModal(props: PricingModalProps) {
       ? 'columnsLimit'
       : undefined)
 
+  const userPlanDetails =
+    userPlan && userPlan.id && allPlans.find(p => p.id === userPlan.id)
+  const userPlanStillExist = !!(
+    userPlan &&
+    userPlan.id &&
+    activePlans.find(p => p.id === userPlan.id)
+  )
+
   const [selectedPlanId, setSelectedPlanId] = useState<PlanID | undefined>(
     () =>
       (initialSelectedPlanId &&
@@ -61,9 +69,7 @@ export function PricingModal(props: PricingModalProps) {
       activePlans.find(p => p.featureFlags[_highlightFeature] === true)
         ? activePlans.find(p => p.featureFlags[_highlightFeature] === true)!.id
         : undefined) ||
-      (userPlan && userPlan.id) ||
-      (activePlans.find(p => p.amount > 0) &&
-        activePlans.find(p => p.amount > 0)!.id) ||
+      (userPlan && userPlanStillExist && userPlan.id) ||
       undefined,
   )
 
@@ -150,6 +156,21 @@ export function PricingModal(props: PricingModalProps) {
       title="Unlock features"
     >
       <FullHeightScrollView style={sharedStyles.flex}>
+        {!!userPlanDetails && !userPlanStillExist && (
+          <>
+            <SubHeader title="CURRENT PLAN" />
+
+            <PricingPlanBlock
+              key="pricing-current-plan"
+              banner={userPlanDetails.label}
+              plan={userPlanDetails}
+              width="100%"
+            />
+
+            <Spacer height={contentPadding} />
+          </>
+        )}
+
         <SubHeader title="SELECT A PLAN" />
 
         <Spacer height={contentPadding} />

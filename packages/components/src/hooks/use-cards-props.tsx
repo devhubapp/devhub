@@ -291,7 +291,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                 }}
               />
             }
-            errorMessage={`You have reached the limit of ${
+            errorMessage={`You have exceeded the limit of ${
               plan!.featureFlags.columnsLimit
             } columns.`}
             errorTitle="Limit exceeded"

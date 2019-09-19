@@ -1,7 +1,7 @@
 import React from 'react'
 import { Platform, Text, View } from 'react-native'
 
-import { activePlans, formatPrice, Plan } from '@devhub/core'
+import { formatPrice, Plan } from '@devhub/core'
 import { useReduxState } from '../../../hooks/use-redux-state'
 import * as selectors from '../../../redux/selectors'
 import { sharedStyles } from '../../../styles/shared'
@@ -43,10 +43,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
 
   const banner =
-    userPlan &&
-    userPlan.id &&
-    activePlans.find(p => p.id === userPlan!.id) &&
-    userPlan!.id === plan.id
+    userPlan && userPlan.id && userPlan!.id === plan.id
       ? 'Current plan'
       : _banner
 
