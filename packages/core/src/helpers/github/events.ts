@@ -288,12 +288,22 @@ export function getEventMetadata(
             event.payload.pages[0] &&
             event.payload.pages[0].action
         ) {
-          case 'created':
+          case 'created': {
             return {
               action: 'created',
               actionText: `Created ${pagesText}${colonText}`,
               subjectType: 'Wiki',
             }
+          }
+
+          case 'edited': {
+            return {
+              action: 'updated',
+              actionText: `Edited ${pagesText}${colonText}`,
+              subjectType: 'Wiki',
+            }
+          }
+
           default:
             return {
               action: 'updated',

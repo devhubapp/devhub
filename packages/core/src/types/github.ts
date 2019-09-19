@@ -264,6 +264,7 @@ export interface GitHubPage {
   page_name: string
   sha: string
   title: string
+  summary?: string | null
   html_url: string
   url: string
 }

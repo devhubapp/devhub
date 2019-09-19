@@ -30,6 +30,7 @@ import {
   getUserAvatarByUsername,
   getUserAvatarFromObject,
   getUserURLFromObject,
+  GitHubGollumEvent,
   GitHubIcon,
   GitHubPullRequest,
   GitHubPushEvent,
@@ -178,6 +179,7 @@ function _getCardPropsForItem(
         isRead,
         isTagMainEvent,
         issueOrPullRequest,
+        pages,
         release,
         repoFullName,
         repos,
@@ -366,8 +368,7 @@ function _getCardPropsForItem(
                   fixURL(_comment.html_url || _comment.url, {
                     commentIsInline: !!(_comment && _comment.path),
                   })) ||
-                issueOrPullRequest.html_url ||
-                fixURL(issueOrPullRequest.url)!,
+                fixURL(issueOrPullRequest.html_url || issueOrPullRequest.url)!,
               subitems,
               subtitle: undefined,
               text: getRepoText({
@@ -506,6 +507,48 @@ function _getCardPropsForItem(
                 repoFullName,
                 repoIsKnown: false,
               })!,
+              type,
+            }
+          }
+
+          if (
+            pages &&
+            pages.length >= 1 &&
+            pages[0] &&
+            (pages[0].title || pages[0]!.page_name)
+          ) {
+            const firstLink = pages
+              .map(p => fixURL(p.html_url))
+              .filter(Boolean)[0]
+
+            return {
+              action: actorActionOrUndefined,
+              avatar: repoAvatar,
+              date,
+              icon,
+              id,
+              isPrivate,
+              isRead,
+              link:
+                firstLink &&
+                pages.length === 1 &&
+                pages[0].sha &&
+                pages[0].action !== 'created'
+                  ? `${firstLink}/_compare/${pages[0].sha}`
+                  : firstLink || '',
+              subitems: undefined,
+              subtitle: trimNewLinesAndSpaces(
+                stripMarkdown(pages[0].summary || ''),
+                120,
+              ),
+              text: getRepoText({
+                branchOrTagName: undefined,
+                issueOrPullRequestNumber: undefined,
+                ownerIsKnown,
+                repoFullName,
+                repoIsKnown,
+              })!,
+              title: pages[0].title || pages[0].page_name,
               type,
             }
           }
