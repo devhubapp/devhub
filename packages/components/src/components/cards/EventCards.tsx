@@ -4,6 +4,7 @@ import { View, ViewProps } from 'react-native'
 import { Column, EnhancedGitHubEvent } from '@devhub/core'
 import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
 import { DataItemT, useCardsProps } from '../../hooks/use-cards-props'
+import { BlurView } from '../../libs/blur-view/BlurView'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { OneList, OneListProps } from '../../libs/one-list'
 import { sharedStyles } from '../../styles/shared'
@@ -50,7 +51,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   const listRef = React.useRef<typeof OneList>(null)
 
   const {
-    OverrideRenderComponent,
+    OverrideRender,
     data,
     footer,
     getItemSize,
@@ -74,7 +75,10 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   useCardsKeyboard(listRef, {
     columnId: column.id,
-    items,
+    items:
+      OverrideRender && OverrideRender.Component && OverrideRender.overlay
+        ? []
+        : items,
     ownerIsKnown,
     repoIsKnown,
     type: 'activity',
@@ -121,6 +125,9 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     NonNullable<OneListProps<DataItemT<ItemT>>['ListEmptyComponent']>
   >(
     () => () => {
+      if (OverrideRender && OverrideRender.Component && OverrideRender.overlay)
+        return null
+
       return (
         <EmptyCards
           clearMessage="No new events!"
@@ -137,17 +144,30 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       items.length ? undefined : errorMessage,
       items.length ? undefined : fetchNextPage,
       items.length ? undefined : refresh,
+      items.length
+        ? undefined
+        : !!(
+            OverrideRender &&
+            OverrideRender.Component &&
+            OverrideRender.overlay
+          ),
     ],
   )
 
-  if (OverrideRenderComponent) return <OverrideRenderComponent />
+  if (OverrideRender && OverrideRender.Component && !OverrideRender.overlay)
+    return <OverrideRender.Component />
 
   return (
-    <View style={sharedStyles.flex}>
+    <View style={[sharedStyles.relative, sharedStyles.flex]}>
       <OneList
         ref={listRef}
         key="event-cards-list"
         ListEmptyComponent={ListEmptyComponent}
+        containerStyle={
+          OverrideRender && OverrideRender.Component && OverrideRender.overlay
+            ? sharedStyles.superMuted
+            : undefined
+        }
         data={data}
         estimatedItemSize={getItemSize(data[0], 0) || 89}
         footer={footer}
@@ -158,11 +178,25 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         itemSeparator={itemSeparator}
         onVisibleItemsChanged={onVisibleItemsChanged}
         overscanCount={1}
-        pointerEvents={pointerEvents}
+        pointerEvents={
+          OverrideRender && OverrideRender.Component && OverrideRender.overlay
+            ? 'none'
+            : pointerEvents
+        }
         refreshControl={refreshControl}
         renderItem={renderItem}
         safeAreaInsets={safeAreaInsets}
       />
+
+      {!!(
+        OverrideRender &&
+        OverrideRender.Component &&
+        OverrideRender.overlay
+      ) && (
+        <BlurView intensity={8} style={sharedStyles.absoluteFill}>
+          <OverrideRender.Component />
+        </BlurView>
+      )}
     </View>
   )
 })

@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { useCallback, useMemo } from 'react'
 
+import { constants } from '@devhub/core'
 import * as selectors from '../redux/selectors'
 import { useReduxState } from './use-redux-state'
 
@@ -12,6 +13,8 @@ export function useColumn(columnId: string) {
   const columnIndex = useReduxState(selectors.columnIdsSelector).indexOf(
     columnId,
   )
+
+  const plan = useReduxState(selectors.currentUserPlanSelector)
 
   const columnHeaderDetailsSelector = useMemo(
     () => selectors.createColumnHeaderDetailsSelector(),
@@ -25,9 +28,14 @@ export function useColumn(columnId: string) {
     ]),
   )
 
+  const hasCrossedColumnsLimit =
+    columnIndex + 1 > constants.COLUMNS_LIMIT ||
+    !!(plan && columnIndex + 1 > plan.featureFlags.columnsLimit)
+
   return {
     column,
     columnIndex,
+    hasCrossedColumnsLimit,
     headerDetails,
   }
 }

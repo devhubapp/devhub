@@ -191,6 +191,7 @@ export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
     const {
       ListEmptyComponent,
+      containerStyle,
       data,
       estimatedItemSize,
       footer,
@@ -199,6 +200,7 @@ export const OneList = (React.memo(
       header,
       horizontal,
       itemSeparator,
+      listStyle,
       onVisibleItemsChanged,
       overscanCount,
       pagingEnabled,
@@ -380,14 +382,14 @@ export const OneList = (React.memo(
       }
     }, [itemCount, itemSize, previousItemCount, previousItemSize])
 
-    const style = useMemo(
+    const style = useMemo<VariableSizeListProps['style']>(
       () =>
         pagingEnabled
           ? {
               scrollSnapType: horizontal ? 'x mandatory' : 'y mandatory',
             }
           : undefined,
-      [pagingEnabled, horizontal],
+      [horizontal, listStyle, pagingEnabled],
     )
 
     const itemData = useMemo<ItemData>(
@@ -426,6 +428,7 @@ export const OneList = (React.memo(
           sharedStyles.flex,
           sharedStyles.fullWidth,
           sharedStyles.fullHeight,
+          containerStyle,
         ]}
       >
         {header &&
@@ -440,6 +443,7 @@ export const OneList = (React.memo(
             sharedStyles.flex,
             sharedStyles.fullWidth,
             sharedStyles.fullHeight,
+            listStyle,
           ]}
         >
           {data.length > 0 ? (

@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react'
 import { EnhancedItem, getFilteredItems } from '@devhub/core'
 import * as selectors from '../redux/selectors'
 import { EMPTY_ARRAY } from '../utils/constants'
+import { useColumn } from './use-column'
 import { useReduxState } from './use-redux-state'
 
 export function useColumnData<ItemT extends EnhancedItem>(
@@ -19,9 +20,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
     [columnId],
   )
 
-  const column = useReduxState(
-    useCallback(state => selectors.columnSelector(state, columnId), [columnId]),
-  )
+  const { column, hasCrossedColumnsLimit } = useColumn(columnId)
 
   const allItems = useReduxState(
     useCallback(
@@ -32,24 +31,32 @@ export function useColumnData<ItemT extends EnhancedItem>(
           return EMPTY_ARRAY
         return subscriptionsDataSelector(state, column.subscriptionIds)
       },
-      [column && column.subscriptionIds && column.subscriptionIds.join(',')],
+      [
+        hasCrossedColumnsLimit,
+        column && column.subscriptionIds && column.subscriptionIds.join(','),
+      ],
     ),
   ) as ItemT[]
 
   const filteredItems = useMemo(() => {
-    if (!column) return allItems
-    return getFilteredItems(column.type, allItems, column.filters, {
+    if (!(column && allItems && allItems.length)) return allItems || EMPTY_ARRAY
+
+    const items = getFilteredItems(column.type, allItems, column.filters, {
       mergeSimilar: !!mergeSimilar,
     })
+    if (hasCrossedColumnsLimit) return items.slice(0, 10)
+    return items
   }, [
-    column && column.type,
     allItems,
     column && column.filters,
+    column && column.type,
+    hasCrossedColumnsLimit,
     mergeSimilar,
   ]) as ItemT[]
 
   return {
     allItems,
     filteredItems,
+    hasCrossedColumnsLimit,
   }
 }

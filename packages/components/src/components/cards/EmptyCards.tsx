@@ -127,6 +127,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
             padding: contentPadding,
           },
         ]}
+        pointerEvents="box-none"
       >
         {!!clearMessage && (
           <ThemedText
@@ -158,7 +159,10 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   }
 
   return (
-    <View style={[sharedStyles.flex, sharedStyles.center]}>
+    <View
+      style={[sharedStyles.flex, sharedStyles.center]}
+      pointerEvents="box-none"
+    >
       {renderContent()}
     </View>
   )

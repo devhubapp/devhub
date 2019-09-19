@@ -57,6 +57,10 @@ export function PricingModal(props: PricingModalProps) {
       activePlans.find(p => p.id === initialSelectedPlanId)
         ? initialSelectedPlanId
         : undefined) ||
+      (_highlightFeature &&
+      activePlans.find(p => p.featureFlags[_highlightFeature] === true)
+        ? activePlans.find(p => p.featureFlags[_highlightFeature] === true)!.id
+        : undefined) ||
       (userPlan && userPlan.id) ||
       (activePlans.find(p => p.amount > 0) &&
         activePlans.find(p => p.amount > 0)!.id) ||

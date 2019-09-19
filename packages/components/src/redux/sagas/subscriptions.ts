@@ -100,7 +100,7 @@ function* init() {
     const isLogged = selectors.isLoggedSelector(state)
     if (!isLogged) continue
 
-    const subscriptions = selectors.subscriptionsArrSelector(state)
+    const subscriptions = selectors.allSubscriptionsArrSelector(state)
     if (!(subscriptions && subscriptions.length)) continue
 
     const github = selectors.githubAPIHeadersSelector(state)

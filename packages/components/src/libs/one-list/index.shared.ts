@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatListProps } from 'react-native'
+import { FlatListProps, ViewProps } from 'react-native'
 
 // TODO: take safeAreaInsets into consideration when scrolling to item
 // TODO: support "animated" param on web
@@ -17,6 +17,7 @@ export interface OneListInstance {
 
 export interface OneListProps<ItemT> {
   ListEmptyComponent?: React.ComponentType
+  containerStyle?: ViewProps['style']
   data: ItemT[]
   disableVirtualization?: boolean
   estimatedItemSize: number
@@ -40,6 +41,7 @@ export interface OneListProps<ItemT> {
     }>
     size: number
   }
+  listStyle?: ViewProps['style']
   onVisibleItemsChanged?: (fromIndex: number, toIndex: number) => void
   overscanCount: number
   pagingEnabled?: boolean

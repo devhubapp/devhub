@@ -936,7 +936,7 @@ export function getItemInbox(type: Column['type'], filters: Column['filters']) {
   return 'all'
 }
 
-export function getPlanFeatureDetails({
+export function getColumnOptionMetadata({
   Platform,
   plan,
 }: {
@@ -993,7 +993,7 @@ export function getColumnOption<O extends keyof ColumnOptions>(
   if (!(column && column.type))
     return { hasAccess: false, platformSupports: false, value: undefined }
 
-  const details = getPlanFeatureDetails({ Platform, plan })
+  const details = getColumnOptionMetadata({ Platform, plan })
 
   if (option === 'enableAppIconUnreadIndicator') {
     return {

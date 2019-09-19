@@ -1,13 +1,15 @@
-import React, { useCallback, useMemo, useRef } from 'react'
-import { View } from 'react-native'
-
 import {
+  activePlans,
   Column,
   ColumnSubscription,
   constants,
   EnhancedItem,
   getDateSmallText,
 } from '@devhub/core'
+import React, { useCallback, useMemo, useRef } from 'react'
+import { View } from 'react-native'
+
+import { useDispatch } from 'react-redux'
 import {
   BaseCardProps,
   getCardPropsForItem,
@@ -28,11 +30,15 @@ import {
   ColumnLoadingIndicator,
   columnLoadingIndicatorSize,
 } from '../components/columns/ColumnLoadingIndicator'
+import { Button } from '../components/common/Button'
 import { RefreshControl } from '../components/common/RefreshControl'
 import { useAppLayout } from '../components/context/LayoutContext'
 import { OneListProps } from '../libs/one-list'
 import { useSafeArea } from '../libs/safe-area-view'
+import * as actions from '../redux/actions'
+import * as selectors from '../redux/selectors'
 import { FlatListItemLayout } from '../utils/types'
+import { useReduxState } from './use-redux-state'
 
 export interface DataItemT<ItemT extends EnhancedItem> {
   cachedCardProps: BaseCardProps
@@ -69,6 +75,16 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   const appSafeAreaInsets = useSafeArea()
   const { appOrientation } = useAppLayout()
+
+  const dispatch = useDispatch()
+  const plan = useReduxState(selectors.currentUserPlanSelector)
+
+  const isOverPlanColumnLimit = !!(
+    plan && columnIndex + 1 > plan.featureFlags.columnsLimit
+  )
+  const isOverMaxColumnLimit = !!(
+    columnIndex >= 0 && columnIndex + 1 > constants.COLUMNS_LIMIT
+  )
 
   const itemCardProps = useMemo<Array<BaseCardProps | undefined>>(() => {
     const newCacheMap = new WeakMap()
@@ -167,6 +183,8 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     refresh,
   }
   const footer = useMemo<OneListProps<DataItemT<ItemT>>['footer']>(() => {
+    if (isOverMaxColumnLimit || isOverPlanColumnLimit) return undefined
+
     const sticky =
       !cardsFooterProps.fetchNextPage && !!cardsFooterProps.clearedAt
 
@@ -185,6 +203,8 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     cardsFooterProps.fetchNextPage,
     cardsFooterProps.isEmpty,
     cardsFooterProps.refresh,
+    isOverMaxColumnLimit,
+    isOverPlanColumnLimit,
   ])
 
   const safeAreaInsets: OneListProps<
@@ -221,33 +241,79 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     [lastFetchedSuccessfullyAt, refresh],
   )
 
-  const isOverColumnLimit = !!(
-    columnIndex >= 0 && columnIndex + 1 > constants.COLUMNS_LIMIT
-  )
-  const OverrideRenderComponent = useMemo<
-    React.ComponentType | undefined
-  >(() => {
-    if (!column) return undefined
+  const OverrideRender = useMemo<{
+    Component: React.ComponentType | undefined
+    overlay?: boolean
+  }>(() => {
+    if (!(column && column.id)) return { Component: undefined, overlay: false }
 
-    if (isOverColumnLimit) {
-      return () => (
-        <EmptyCards
-          columnId={column.id}
-          errorMessage={`You have reached the limit of ${
-            constants.COLUMNS_LIMIT
-          } columns. This is to maintain a healthy usage of the GitHub API.`}
-          errorTitle="Too many columns"
-          fetchNextPage={undefined}
-          refresh={undefined}
-        />
-      )
+    if (isOverMaxColumnLimit) {
+      return {
+        Component: () => (
+          <EmptyCards
+            columnId={column.id}
+            errorMessage={`You have reached the limit of ${
+              constants.COLUMNS_LIMIT
+            } columns. This is to maintain a healthy usage of the GitHub API.`}
+            errorTitle="Too many columns"
+            fetchNextPage={undefined}
+            loadState="error"
+            refresh={undefined}
+          />
+        ),
+        overlay: false,
+      }
     }
 
-    return undefined
-  }, [column, isOverColumnLimit])
+    if (isOverPlanColumnLimit) {
+      return {
+        Component: () => (
+          <EmptyCards
+            columnId={column.id}
+            emoji="rocket"
+            errorButtonView={
+              <Button
+                analyticsLabel="unlock_more_columns_button"
+                children="Unlock more columns"
+                onPress={() => {
+                  const nextPlan = activePlans.find(
+                    p => p.featureFlags.columnsLimit > columnIndex + 1,
+                  )
+                  dispatch(
+                    actions.pushModal({
+                      name: 'PRICING',
+                      params: {
+                        highlightFeature: 'columnsLimit',
+                        initialSelectedPlanId: nextPlan && nextPlan.id,
+                      },
+                    }),
+                  )
+                }}
+              />
+            }
+            errorMessage={`You have reached the limit of ${
+              plan!.featureFlags.columnsLimit
+            } columns.`}
+            errorTitle="Limit exceeded"
+            fetchNextPage={undefined}
+            loadState="error"
+            refresh={undefined}
+          />
+        ),
+        overlay: true,
+      }
+    }
+
+    return { Component: undefined, overlay: false }
+  }, [
+    column && column.id,
+    columnIndex,
+    isOverMaxColumnLimit,
+    isOverPlanColumnLimit,
+  ])
 
   return {
-    OverrideRenderComponent,
+    OverrideRender,
     data,
     footer,
     getItemSize,

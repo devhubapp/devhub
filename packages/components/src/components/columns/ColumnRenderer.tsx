@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native'
 import {
   Column as ColumnT,
   columnHasAnyFilter,
+  constants,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
@@ -114,7 +115,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const columnOptionsRef = useRef<ColumnOptionsAccordion>(null)
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
-  const { filteredItems } = useColumnData(columnId, { mergeSimilar: false })
+  const { hasCrossedColumnsLimit, filteredItems } = useColumnData(columnId, {
+    mergeSimilar: false,
+  })
+  const columnsCount = useReduxState(selectors.columnCountSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const dispatch = useDispatch()
   const store = useStore()
@@ -152,8 +156,10 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       }) ||
     (plan &&
       plan.featureFlags.columnsLimit >= 1 &&
-      columnIndex + 1 >= plan.featureFlags.columnsLimit && {
-        message: 'Columns limit exceeded. Tap to unlock.',
+      columnIndex + 1 === plan.featureFlags.columnsLimit &&
+      columnIndex + 1 === columnsCount &&
+      plan.featureFlags.columnsLimit < constants.COLUMNS_LIMIT && {
+        message: 'Columns limit reached. Tap for more.',
         relatedFeature: 'columnsLimit',
       }) ||
     undefined
@@ -223,7 +229,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               analyticsLabel={
                 clearableItems.length ? 'clear_column' : 'unclear_column'
               }
-              disabled={!clearableItems.length}
+              disabled={hasCrossedColumnsLimit || !clearableItems.length}
               name="check"
               onPress={() => {
                 dispatch(
@@ -239,9 +245,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
                 if (!clearableItems.length) refresh()
               }}
-              tooltip={
-                clearableItems.length ? 'Clear items' : 'Show cleared items'
-              }
+              tooltip="Clear items"
             />
 
             <ColumnHeader.Button
@@ -249,7 +253,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               analyticsLabel={
                 !hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'
               }
-              disabled={!filteredItems.length}
+              disabled={hasCrossedColumnsLimit || !filteredItems.length}
               name={!hasOneUnreadItem ? 'mail-read' : 'mail'}
               onPress={() => {
                 const unread = !hasOneUnreadItem

@@ -33,7 +33,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const notificationsLastShowedAtRef = useRef<string | null>(null) // TODO: persist this value
   const loggedUsername = useReduxState(selectors.currentGitHubUsernameSelector)
   const _columns = useReduxState(selectors.columnsArrSelector)
-  const subscriptions = useReduxState(selectors.subscriptionsArrSelector)
+  const subscriptions = useReduxState(selectors.userSubscriptionsArrSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const {
     enablePushNotifications: enableDesktopPushNotifications,

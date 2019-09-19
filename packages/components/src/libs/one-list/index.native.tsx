@@ -54,6 +54,7 @@ export const OneList = (React.memo(
 
     const {
       ListEmptyComponent,
+      containerStyle,
       data,
       disableVirtualization,
       estimatedItemSize,
@@ -63,6 +64,7 @@ export const OneList = (React.memo(
       header,
       horizontal,
       itemSeparator,
+      listStyle,
       onVisibleItemsChanged,
       overscanCount = 1,
       pagingEnabled,
@@ -162,6 +164,7 @@ export const OneList = (React.memo(
           sharedStyles.flex,
           sharedStyles.fullWidth,
           sharedStyles.fullHeight,
+          containerStyle,
         ]}
       >
         {header &&
@@ -269,10 +272,13 @@ export const OneList = (React.memo(
                     renderItem={renderItem}
                     scrollEventThrottle={16}
                     snapToAlignment={snapToAlignment}
-                    style={{
-                      width: horizontal ? width : '100%',
-                      height: horizontal ? '100%' : height,
-                    }}
+                    style={[
+                      listStyle,
+                      {
+                        width: horizontal ? width : '100%',
+                        height: horizontal ? '100%' : height,
+                      },
+                    ]}
                     updateCellsBatchingPeriod={0}
                     viewabilityConfig={viewabilityConfig}
                     windowSize={

@@ -3,6 +3,7 @@ export const smallAvatarSize = 16
 
 export const contentPadding = 16
 export const mutedOpacity = 0.6
+export const superMutedOpacity = 0.1
 export const radius = 4
 
 export const normalTextSize = 14

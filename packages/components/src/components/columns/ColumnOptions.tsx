@@ -38,7 +38,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
 
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
-  const { column, columnIndex } = useColumn(columnId)
+  const { column, columnIndex, hasCrossedColumnsLimit } = useColumn(columnId)
 
   if (!column) return null
 
@@ -81,6 +81,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
       <Checkbox
         analyticsLabel="column_option_in_app_unread_indicator"
         checked={
+          !hasCrossedColumnsLimit &&
           enableInAppUnreadIndicatorOption.hasAccess &&
           enableInAppUnreadIndicatorOption.value
         }
@@ -88,7 +89,9 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
         }
         defaultValue
-        disabled={!enableInAppUnreadIndicatorOption.hasAccess}
+        disabled={
+          hasCrossedColumnsLimit || !enableInAppUnreadIndicatorOption.hasAccess
+        }
         squareContainerStyle={sharedColumnOptionsStyles.checkboxSquareContainer}
         enableIndeterminateState={false}
         label={`Show unread indicator at ${
@@ -109,6 +112,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         <Checkbox
           analyticsLabel="column_option_app_icon_unread_indicator"
           checked={
+            !hasCrossedColumnsLimit &&
             enableAppIconUnreadIndicatorOption.hasAccess &&
             enableAppIconUnreadIndicatorOption.value
           }
@@ -116,7 +120,10 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
             sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
           }
           defaultValue={column.type === 'notifications'}
-          disabled={!enableAppIconUnreadIndicatorOption.hasAccess}
+          disabled={
+            hasCrossedColumnsLimit ||
+            !enableAppIconUnreadIndicatorOption.hasAccess
+          }
           squareContainerStyle={
             sharedColumnOptionsStyles.checkboxSquareContainer
           }
@@ -140,11 +147,14 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
 
       <ConditionalWrap
         condition={
-          !enableDesktopPushNotificationsOption.platformSupports ||
-          !enableDesktopPushNotificationsOption.hasAccess
+          !hasCrossedColumnsLimit &&
+          (!enableDesktopPushNotificationsOption.platformSupports ||
+            !enableDesktopPushNotificationsOption.hasAccess)
         }
         wrap={c =>
-          enableDesktopPushNotificationsOption.platformSupports ? (
+          hasCrossedColumnsLimit ? (
+            c
+          ) : enableDesktopPushNotificationsOption.platformSupports ? (
             enableDesktopPushNotificationsOption.hasAccess ? null : (
               <Link
                 analyticsLabel="column_option_desktop_push_notifications_pro_link"
@@ -175,6 +185,7 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         <Checkbox
           analyticsLabel="column_option_desktop_push_notification"
           checked={
+            !hasCrossedColumnsLimit &&
             enableDesktopPushNotificationsOption.hasAccess &&
             enableDesktopPushNotificationsOption.value
           }
@@ -182,7 +193,10 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
             sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
           }
           defaultValue={column.type === 'notifications'}
-          disabled={!enableDesktopPushNotificationsOption.hasAccess}
+          disabled={
+            hasCrossedColumnsLimit ||
+            !enableDesktopPushNotificationsOption.hasAccess
+          }
           squareContainerStyle={
             sharedColumnOptionsStyles.checkboxSquareContainer
           }
@@ -198,7 +212,9 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
             )
           }}
           right={
-            !enableDesktopPushNotificationsOption.platformSupports
+            hasCrossedColumnsLimit
+              ? null
+              : !enableDesktopPushNotificationsOption.platformSupports
               ? 'DOWNLOAD'
               : !enableDesktopPushNotificationsOption.hasAccess &&
                 cheapestPlanWithNotifications
@@ -209,6 +225,31 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
           }
         />
       </ConditionalWrap>
+
+      {(Platform.realOS === 'ios' || Platform.realOS === 'android') && (
+        <Link
+          analyticsLabel="column_option_mobile_push_notifications_soon_link"
+          openOnNewTab
+          href="https://github.com/devhubapp/devhub/issues/51"
+        >
+          <Checkbox
+            analyticsLabel="column_option_mobile_push_notification"
+            checked={false}
+            containerStyle={
+              sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
+            }
+            defaultValue={false}
+            disabled
+            enableIndeterminateState={false}
+            label="Mobile push notifications"
+            onChange={undefined}
+            right="SOON"
+            squareContainerStyle={
+              sharedColumnOptionsStyles.checkboxSquareContainer
+            }
+          />
+        </Link>
+      )}
 
       <Spacer height={contentPadding / 2} />
 
@@ -256,38 +297,16 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         <Spacer height={contentPadding / 2} />
       )}
 
-      {(Platform.realOS === 'ios' || Platform.realOS === 'android') && (
-        <Link
-          analyticsLabel="column_option_mobile_push_notifications_soon_link"
-          openOnNewTab
-          href="https://github.com/devhubapp/devhub/issues/51"
-        >
-          <Checkbox
-            analyticsLabel="column_option_mobile_push_notification"
-            checked={false}
-            containerStyle={
-              sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
-            }
-            defaultValue={false}
-            disabled
-            enableIndeterminateState={false}
-            label="Mobile push notifications"
-            onChange={undefined}
-            right="SOON"
-            squareContainerStyle={
-              sharedColumnOptionsStyles.checkboxSquareContainer
-            }
-          />
-        </Link>
-      )}
-
       <View
         style={[sharedStyles.horizontal, sharedStyles.paddingHorizontalHalf]}
       >
         <IconButton
           key="column-options-button-move-column-left"
           analyticsLabel="move_column_left"
-          disabled={columnIndex === 0}
+          disabled={
+            columnIndex === 0 ||
+            !!(plan && columnIndex + 1 > plan.featureFlags.columnsLimit)
+          }
           name="chevron-left"
           onPress={() =>
             dispatch(
@@ -309,7 +328,11 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         <IconButton
           key="column-options-button-move-column-right"
           analyticsLabel="move_column_right"
-          disabled={columnIndex === columnsCount - 1}
+          disabled={
+            columnIndex + 1 >= columnsCount ||
+            columnIndex + 1 >= constants.COLUMNS_LIMIT ||
+            !!(plan && columnIndex + 1 > plan.featureFlags.columnsLimit - 1)
+          }
           name="chevron-right"
           onPress={() =>
             dispatch(

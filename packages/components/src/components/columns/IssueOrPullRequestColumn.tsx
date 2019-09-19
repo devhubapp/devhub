@@ -43,6 +43,7 @@ export const IssueOrPullRequestColumn = React.memo(
       ),
       [
         columnId,
+        columnIndex,
         pointerEvents,
         swipeable,
         headerDetails && headerDetails.ownerIsKnown,

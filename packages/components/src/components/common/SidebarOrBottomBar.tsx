@@ -524,7 +524,12 @@ export const SidebarOrBottomBarColumnItem = React.memo(
 
     const small = sizename <= '2-medium'
 
-    const { column, columnIndex, headerDetails } = useColumn(columnId)
+    const {
+      column,
+      columnIndex,
+      hasCrossedColumnsLimit,
+      headerDetails,
+    } = useColumn(columnId)
 
     const { filteredItems } = useColumnData(columnId, {
       mergeSimilar: false,
@@ -568,7 +573,8 @@ export const SidebarOrBottomBarColumnItem = React.memo(
     }, [!!currentOpenedModal, isColumnFocused, small])
 
     const showUnreadIndicator =
-      !!column &&
+      hasCrossedColumnsLimit ||
+      (!!column &&
       getColumnOption(column, 'enableInAppUnreadIndicator', { Platform, plan })
         .hasAccess &&
       getColumnOption(column, 'enableInAppUnreadIndicator', { Platform, plan })
@@ -576,36 +582,39 @@ export const SidebarOrBottomBarColumnItem = React.memo(
       getColumnOption(column, 'enableInAppUnreadIndicator', { Platform, plan })
         .value
         ? filteredItems.some(item => !isItemRead(item))
-        : false
+        : false)
 
-    const unreadIndicatorColor =
-      column &&
-      ((getColumnOption(column, 'enableAppIconUnreadIndicator', {
-        Platform,
-        plan,
-      }).hasAccess &&
-        getColumnOption(column, 'enableAppIconUnreadIndicator', {
-          Platform,
-          plan,
-        }).platformSupports &&
-        getColumnOption(column, 'enableAppIconUnreadIndicator', {
-          Platform,
-          plan,
-        }).value) ||
-        (getColumnOption(column, 'enableDesktopPushNotifications', {
+    const unreadIndicatorColor:
+      | keyof ThemeColors
+      | undefined = hasCrossedColumnsLimit
+      ? 'foregroundColorMuted65'
+      : column &&
+        ((getColumnOption(column, 'enableAppIconUnreadIndicator', {
           Platform,
           plan,
         }).hasAccess &&
-          getColumnOption(column, 'enableDesktopPushNotifications', {
+          getColumnOption(column, 'enableAppIconUnreadIndicator', {
             Platform,
             plan,
           }).platformSupports &&
-          getColumnOption(column, 'enableDesktopPushNotifications', {
+          getColumnOption(column, 'enableAppIconUnreadIndicator', {
             Platform,
             plan,
-          }).value))
-        ? 'lightRed'
-        : undefined
+          }).value) ||
+          (getColumnOption(column, 'enableDesktopPushNotifications', {
+            Platform,
+            plan,
+          }).hasAccess &&
+            getColumnOption(column, 'enableDesktopPushNotifications', {
+              Platform,
+              plan,
+            }).platformSupports &&
+            getColumnOption(column, 'enableDesktopPushNotifications', {
+              Platform,
+              plan,
+            }).value))
+      ? 'lightRed'
+      : undefined
 
     useEffect(() => {
       columnIndexUnreadMapperRef.current.set(columnIndex, showUnreadIndicator)

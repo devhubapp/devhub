@@ -194,7 +194,7 @@ async function syncUp(state: RootState) {
   if (!appToken) return
 
   const columns = selectors.columnsArrSelector(state)
-  const subscriptions = selectors.subscriptionsArrSelector(state)
+  const subscriptions = selectors.allSubscriptionsArrSelector(state)
 
   try {
     // TODO: Auto generate these typings

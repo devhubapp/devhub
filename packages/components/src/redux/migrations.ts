@@ -114,7 +114,7 @@ export default {
 
       const byId: Record<string, ColumnSubscription | undefined> = {}
 
-      selectors.subscriptionsArrSelector(draft).forEach(subscription => {
+      selectors.allSubscriptionsArrSelector(draft).forEach(subscription => {
         const {
           data: items,
           loadState,
@@ -146,7 +146,7 @@ export default {
       draft.subscriptions.allIds = draft.subscriptions.allIds || []
       draft.subscriptions.byId = draft.subscriptions.byId || {}
 
-      selectors.subscriptionsArrSelector(draft).forEach(subscription => {
+      selectors.allSubscriptionsArrSelector(draft).forEach(subscription => {
         if (
           !(
             subscription &&

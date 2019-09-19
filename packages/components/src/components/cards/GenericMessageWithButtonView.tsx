@@ -2,7 +2,11 @@ import React from 'react'
 import { Image, View, ViewProps } from 'react-native'
 
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  smallTextSize,
+} from '../../styles/variables'
 import {
   getEmojiImageURL,
   GitHubEmoji,
@@ -40,6 +44,7 @@ export const GenericMessageWithButtonView = React.memo(
           },
           style,
         ]}
+        pointerEvents="box-none"
       >
         {!!emojiImageURL && (
           <>
@@ -48,9 +53,9 @@ export const GenericMessageWithButtonView = React.memo(
               style={[
                 sharedStyles.alignSelfCenter,
                 {
-                  width: 24,
-                  height: 24,
-                  marginBottom: 4,
+                  width: normalTextSize * 2,
+                  height: normalTextSize * 2,
+                  marginBottom: contentPadding / 4,
                 },
               ]}
             />
@@ -64,8 +69,9 @@ export const GenericMessageWithButtonView = React.memo(
           style={[
             sharedStyles.textCenter,
             {
-              fontSize: 18,
-              fontWeight: '200',
+              lineHeight: normalTextSize + 4 + 2,
+              fontSize: normalTextSize + 4,
+              fontWeight: '600',
             },
           ]}
         >
@@ -81,8 +87,9 @@ export const GenericMessageWithButtonView = React.memo(
               style={[
                 sharedStyles.textCenter,
                 {
-                  fontSize: 13,
-                  fontWeight: '200',
+                  lineHeight: smallTextSize + 3,
+                  fontSize: smallTextSize,
+                  fontWeight: '300',
                 },
               ]}
             >

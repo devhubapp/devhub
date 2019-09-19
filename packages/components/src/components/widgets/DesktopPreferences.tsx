@@ -2,7 +2,7 @@ import {
   activePlans,
   constants,
   formatPrice,
-  getPlanFeatureDetails,
+  getColumnOptionMetadata,
 } from '@devhub/core'
 import React from 'react'
 import { View } from 'react-native'
@@ -22,6 +22,7 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { Switch } from '../common/Switch'
 import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 
 export const DesktopPreferences = React.memo(() => {
@@ -33,7 +34,7 @@ export const DesktopPreferences = React.memo(() => {
     isMenuBarMode,
   } = useDesktopOptions()
 
-  const hasAccessToPushNotifications = getPlanFeatureDetails({
+  const hasAccessToPushNotifications = getColumnOptionMetadata({
     Platform,
     plan,
   }).enableDesktopPushNotifications.hasAccess
@@ -44,7 +45,7 @@ export const DesktopPreferences = React.memo(() => {
 
   return (
     <View>
-      <SubHeader title="Desktop options">
+      <SubHeader title="Desktop">
         {!Platform.isElectron && (
           <>
             <Spacer flex={1} />
@@ -55,11 +56,15 @@ export const DesktopPreferences = React.memo(() => {
               openOnNewTab
               size={32}
             >
-              <ThemedIcon
-                color="foregroundColor"
-                name="desktop-download"
-                size={16}
-              />
+              <View style={[sharedStyles.center, sharedStyles.horizontal]}>
+                <ThemedIcon
+                  color="foregroundColor"
+                  name="desktop-download"
+                  size={16}
+                />
+                <Spacer width={contentPadding / 2} />
+                <ThemedText color="foregroundColor">Download</ThemedText>
+              </View>
             </ButtonLink>
           </>
         )}

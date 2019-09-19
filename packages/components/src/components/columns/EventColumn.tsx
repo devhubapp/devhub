@@ -38,6 +38,7 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
     ),
     [
       columnId,
+      columnIndex,
       pointerEvents,
       swipeable,
       headerDetails && headerDetails.ownerIsKnown,
