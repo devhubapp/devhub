@@ -15,7 +15,8 @@ export const OneList = (React.memo(
       () => ({
         scrollToStart: ({ animated }: { animated?: boolean } = {}) => {
           try {
-            flatListRef.current!.scrollToOffset({ animated, offset: 0 })
+            if (!flatListRef.current) return
+            flatListRef.current.scrollToOffset({ animated, offset: 0 })
           } catch (error) {
             console.error(error)
             bugsnag.notify(error)
@@ -23,7 +24,8 @@ export const OneList = (React.memo(
         },
         scrollToEnd: ({ animated }: { animated?: boolean } = {}) => {
           try {
-            flatListRef.current!.scrollToEnd({ animated })
+            if (!flatListRef.current) return
+            flatListRef.current.scrollToEnd({ animated })
           } catch (error) {
             console.error(error)
             bugsnag.notify(error)
@@ -31,10 +33,12 @@ export const OneList = (React.memo(
         },
         scrollToIndex: (index, params) => {
           try {
+            if (!flatListRef.current) return
+
             const alignment = params ? params.alignment : 'center'
 
             // TODO: Implement 'smart' alignment like react-window
-            flatListRef.current!.scrollToIndex({
+            flatListRef.current.scrollToIndex({
               animated: !!(params && params.animated),
               index,
               viewOffset: 0,

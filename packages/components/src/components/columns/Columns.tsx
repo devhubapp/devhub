@@ -5,6 +5,7 @@ import { StyleProp, ViewStyle } from 'react-native'
 import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
+import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter, EmitterTypes } from '../../libs/emitter'
@@ -37,6 +38,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
     payload: null as EmitterTypes['FOCUS_ON_COLUMN'] | null,
     lastTriedAt: null as number | null,
   })
+  const focusedColumnIdRef = useDynamicRef(focusedColumnId)
 
   useEmitter(
     'FOCUS_ON_COLUMN',
@@ -65,22 +67,32 @@ export const Columns = React.memo((props: ColumnsProps) => {
   useEffect(() => {
     if (!listRef.current) return
     if (!(columnIds && columnIds.length)) return
-    if (
-      !(
-        useFailedColumnFocusRef.current.payload &&
-        useFailedColumnFocusRef.current.payload.columnId &&
-        useFailedColumnFocusRef.current.lastTriedAt &&
-        Date.now() - useFailedColumnFocusRef.current.lastTriedAt <= 10000
-      )
-    )
-      return
 
-    const index = columnIds.indexOf(
-      useFailedColumnFocusRef.current.payload.columnId,
-    )
+    const id =
+      useFailedColumnFocusRef.current.payload &&
+      useFailedColumnFocusRef.current.payload.columnId &&
+      useFailedColumnFocusRef.current.lastTriedAt &&
+      Date.now() - useFailedColumnFocusRef.current.lastTriedAt <= 10000
+        ? useFailedColumnFocusRef.current.payload.columnId
+        : focusedColumnIdRef.current
+
+    const index = id ? columnIds.indexOf(id) : -1
+
     if (!(index >= 0)) return
 
-    emitter.emit('FOCUS_ON_COLUMN', useFailedColumnFocusRef.current.payload)
+    emitter.emit(
+      'FOCUS_ON_COLUMN',
+      useFailedColumnFocusRef.current.payload &&
+        id === useFailedColumnFocusRef.current.payload.columnId
+        ? useFailedColumnFocusRef.current.payload
+        : {
+            animated: true,
+            columnId: id!,
+            focusOnVisibleItem: true,
+            highlight: false,
+            scrollTo: true,
+          },
+    )
   }, [columnIds.join(',')])
 
   const pagingEnabled = appViewMode === 'single-column'

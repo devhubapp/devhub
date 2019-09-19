@@ -50,7 +50,7 @@ export function moveColumn(
   payload: {
     columnId: string
     columnIndex: number
-  } & EmitterTypes['FOCUS_ON_COLUMN'],
+  } & Omit<EmitterTypes['FOCUS_ON_COLUMN'], 'focusOnVisibleItem'>,
 ) {
   return createAction('MOVE_COLUMN', payload)
 }

@@ -181,10 +181,11 @@ function* onMoveColumn(
 
   emitter.emit('FOCUS_ON_COLUMN', {
     animated: true,
-    highlight: true,
+    highlight: false,
     scrollTo: true,
     ...action.payload,
     columnId,
+    focusOnVisibleItem: true,
   })
 }
 

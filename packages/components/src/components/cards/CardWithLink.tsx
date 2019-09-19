@@ -122,7 +122,7 @@ export const CardWithLink = React.memo(
 
         updateStyles()
       },
-      [],
+      [columnId],
     )
 
     useIsItemFocused(columnId, item.id, handleFocusChange)
@@ -175,10 +175,12 @@ export const CardWithLink = React.memo(
 
           handleFocusChange(true, true)
 
-          emitter.emit('FOCUS_ON_COLUMN_ITEM', {
-            columnId,
-            itemId: item.id,
-          })
+          if (!Platform.supportsTouch) {
+            emitter.emit('FOCUS_ON_COLUMN_ITEM', {
+              columnId,
+              itemId: item.id,
+            })
+          }
         }}
         onBlur={() => {
           handleFocusChange(false, true)

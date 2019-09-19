@@ -216,7 +216,8 @@ export const OneList = (React.memo(
       () => ({
         scrollToStart: () => {
           try {
-            variableSizeListRef.current!.scrollTo(0)
+            if (!variableSizeListRef.current) return
+            variableSizeListRef.current.scrollTo(0)
           } catch (error) {
             console.error(error)
             bugsnag.notify(error)
@@ -224,7 +225,8 @@ export const OneList = (React.memo(
         },
         scrollToEnd: () => {
           try {
-            variableSizeListRef.current!.scrollToItem(data.length - 1, 'start')
+            if (!variableSizeListRef.current) return
+            variableSizeListRef.current.scrollToItem(data.length - 1, 'start')
           } catch (error) {
             console.error(error)
             bugsnag.notify(error)
@@ -233,7 +235,8 @@ export const OneList = (React.memo(
         scrollToIndex: (index, params) => {
           try {
             const alignment = params ? params.alignment : 'smart'
-            variableSizeListRef.current!.scrollToItem(index, alignment)
+            if (!variableSizeListRef.current) return
+            variableSizeListRef.current.scrollToItem(index, alignment)
           } catch (error) {
             console.error(error)
             bugsnag.notify(error)

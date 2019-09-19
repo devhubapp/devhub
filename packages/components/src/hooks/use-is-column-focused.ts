@@ -1,23 +1,24 @@
 import { useState } from 'react'
 
+import { getCurrentFocusedColumnId } from '../components/context/ColumnFocusContext'
+import { useDynamicRef } from './use-dynamic-ref'
 import { useEmitter } from './use-emitter'
 
-let focusedColumnId: string
-
 export function useIsColumnFocused(columnId: string) {
-  const [isFocused, setIsFocused] = useState(focusedColumnId === columnId)
+  const [isFocused, setIsFocused] = useState(
+    getCurrentFocusedColumnId() === columnId,
+  )
 
+  const columnIdRef = useDynamicRef(columnId)
+  const isFocusedRef = useDynamicRef(isFocused)
   useEmitter(
     'FOCUS_ON_COLUMN',
     payload => {
-      focusedColumnId = payload.columnId
-
-      const newValue = focusedColumnId === columnId
-      if (isFocused === newValue) return
-
+      const newValue = payload.columnId === columnIdRef.current
+      if (isFocusedRef.current === newValue) return
       setIsFocused(newValue)
     },
-    [columnId, isFocused],
+    [],
   )
 
   return isFocused

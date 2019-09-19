@@ -570,7 +570,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
           scrollTo: true,
         })
       }
-    }, [!!currentOpenedModal, isColumnFocused, small])
+    }, [columnId, !!currentOpenedModal, isColumnFocused, small])
 
     const showUnreadIndicator =
       hasCrossedColumnsLimit ||
