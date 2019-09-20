@@ -15,6 +15,7 @@ import {
   GitHubPullRequest,
   NotificationPayloadEnhancement,
   ThemeColors,
+  UserPlan,
 } from '../../types'
 import { constants } from '../../utils'
 import { capitalize, isNotificationPrivate } from '../shared'
@@ -513,6 +514,7 @@ export function sortNotifications(
 
 export function getGitHubNotificationSubItems(
   notification: EnhancedGitHubNotification,
+  { plan }: { plan: UserPlan | null | undefined },
 ) {
   const {
     comment,
@@ -527,10 +529,13 @@ export function getGitHubNotificationSubItems(
   const isSaved = saved === true
   const isPrivate = isNotificationPrivate(notification)
 
-  const isPrivateAndCantSee =
-    isPrivate &&
-    // !hasPrivateAccess &&
-    !notification.enhanced
+  const canSee =
+    !isPrivate ||
+    !!(
+      plan &&
+      (plan.status === 'active' || plan.status === 'trialing') &&
+      plan.featureFlags.enablePrivateRepositories
+    )
 
   const commit =
     notification.commit ||
@@ -619,13 +624,13 @@ export function getGitHubNotificationSubItems(
   const isBot = getItemIsBot('notifications', notification)
 
   return {
+    canSee,
     comment,
     commit,
     createdAt,
     id,
     isBot,
     isPrivate,
-    isPrivateAndCantSee,
     isRead,
     isRepoInvitation,
     isSaved,

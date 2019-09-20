@@ -40,6 +40,7 @@ import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { FlatListItemLayout } from '../utils/types'
 import { useDimensions } from './use-dimensions'
+import { usePreviousRef } from './use-previous-ref'
 import { useReduxState } from './use-redux-state'
 
 export interface DataItemT<ItemT extends EnhancedItem> {
@@ -89,6 +90,9 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     columnIndex >= 0 && columnIndex + 1 > constants.COLUMNS_LIMIT
   )
 
+  const previousOwnerIsKnownRef = usePreviousRef(ownerIsKnown)
+  const previousPlanRef = usePreviousRef(plan)
+  const previousRepoIsKnownRef = usePreviousRef(repoIsKnown)
   const itemCardProps = useMemo<Array<BaseCardProps | undefined>>(() => {
     const newCacheMap = new WeakMap()
 
@@ -97,10 +101,19 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       return []
     }
 
+    if (
+      previousOwnerIsKnownRef.current !== ownerIsKnown ||
+      previousPlanRef.current !== plan ||
+      previousRepoIsKnownRef.current !== repoIsKnown
+    ) {
+      cardPropsCacheMapRef.current = newCacheMap
+    }
+
     const result = items.map<BaseCardProps>(item => {
       const cached = cardPropsCacheMapRef.current.get(item)
       const value =
-        cached || getCardPropsForItem(type, item, { ownerIsKnown, repoIsKnown })
+        cached ||
+        getCardPropsForItem(type, item, { ownerIsKnown, plan, repoIsKnown })
       newCacheMap.set(item, value)
 
       return value
@@ -109,7 +122,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     cardPropsCacheMapRef.current = newCacheMap
 
     return result
-  }, [items, ownerIsKnown, repoIsKnown])
+  }, [items, ownerIsKnown, plan, repoIsKnown])
 
   const itemLayouts = useMemo<Array<FlatListItemLayout | undefined>>(() => {
     const newCacheMap = new WeakMap()
@@ -117,6 +130,14 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     if (!(items && items.length)) {
       sizeCacheMapRef.current = newCacheMap
       return []
+    }
+
+    if (
+      previousOwnerIsKnownRef.current !== ownerIsKnown ||
+      previousPlanRef.current !== plan ||
+      previousRepoIsKnownRef.current !== repoIsKnown
+    ) {
+      sizeCacheMapRef.current = newCacheMap
     }
 
     let totalOffset = 0
@@ -138,7 +159,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     sizeCacheMapRef.current = newCacheMap
 
     return result
-  }, [itemCardProps, items, ownerIsKnown, repoIsKnown])
+  }, [itemCardProps, items, ownerIsKnown, plan, repoIsKnown])
 
   const getItemSize = useCallback<
     NonNullable<OneListProps<any>['getItemSize']>
@@ -153,7 +174,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       height: getItemSize(undefined, index),
       item,
     }))
-  }, [items])
+  }, [items, itemCardProps])
 
   const itemSeparator = undefined
 

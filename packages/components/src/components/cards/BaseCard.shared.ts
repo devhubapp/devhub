@@ -1,12 +1,15 @@
 import { PixelRatio } from 'react-native'
 
 import {
+  cheapestPlanWithNotifications,
   Column,
   ColumnSubscription,
+  constants,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   EnhancedItem,
+  formatPrice,
   getBaseUrlFromOtherUrl,
   getCommitCompareUrlFromRefs,
   getCommitCompareUrlFromUrls,
@@ -14,12 +17,11 @@ import {
   getEventIconAndColor,
   getEventMetadata,
   getGitHubEventSubItems,
+  getGitHubIssueOrPullRequestSubItems,
   getGitHubNotificationSubItems,
   getGitHubSearchURL,
   getGitHubURLForSecurityAlert,
-  getIssueOrPullRequestIconAndColor,
   getIssueOrPullRequestState,
-  getIssueOrPullRequestSubjectType,
   getItemSubjectType,
   getNotificationIconAndColor,
   getOwnerAndRepo,
@@ -30,18 +32,19 @@ import {
   getUserAvatarByUsername,
   getUserAvatarFromObject,
   getUserURLFromObject,
-  GitHubGollumEvent,
   GitHubIcon,
+  GitHubIssueOrPullRequest,
   GitHubPullRequest,
   GitHubPushEvent,
   isDraft,
-  isIssueOrPullRequestPrivate,
   isItemRead,
   isPullRequest,
   ItemPushNotification,
+  Plan,
   stripMarkdown,
   ThemeColors,
   trimNewLinesAndSpaces,
+  UserPlan,
 } from '@devhub/core'
 import * as actions from '../../redux/actions'
 import { ExtractActionFromActionCreator } from '../../redux/types/base'
@@ -63,7 +66,7 @@ const _subitemFontSize = smallTextSize
 const _subitemLineHeight = _subitemFontSize + 2
 export const sizes = {
   cardPadding: contentPadding * (2 / 3),
-  iconSize: _iconSize,
+  iconSize: PixelRatio.roundToNearestPixel(_iconSize),
   iconContainerSize: _iconContainerSize,
   avatarContainerWidth: PixelRatio.roundToNearestPixel(
     avatarSize + _iconContainerSize / 2,
@@ -110,9 +113,9 @@ export interface BaseCardProps {
     color?: keyof ThemeColors
   }
   id: string | number
-  isPrivate: boolean
   isRead: boolean
   link: string
+  showPrivateLock: boolean
   subitems?: Array<{
     avatar:
       | {
@@ -156,13 +159,65 @@ function getRepoText({
   return repoNameOrFullName
 }
 
+function getPrivateBannerCardProps(
+  type: ColumnSubscription['type'],
+  item: EnhancedItem,
+  props: Pick<BaseCardProps, 'avatar' | 'date'> & {
+    iconColor: BaseCardProps['icon']['color']
+  },
+): Omit<BaseCardProps, 'height'> {
+  const highlightFeature: keyof Plan['featureFlags'] =
+    'enablePrivateRepositories'
+
+  return {
+    action: undefined,
+    avatar: props.avatar,
+    date: props.date,
+    githubApp: undefined,
+    icon: { color: props.iconColor || 'red', name: 'lock' },
+    id: item.id,
+    isRead: isItemRead(item),
+    link: `${
+      constants.APP_DEEP_LINK_URLS.pricing
+    }?highlightFeature=${highlightFeature}`,
+    showPrivateLock: false,
+    subitems: undefined,
+    subtitle: undefined,
+    text:
+      cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
+        ? `Unlock private repos for ${formatPrice(
+            cheapestPlanWithNotifications.amount,
+            cheapestPlanWithNotifications.currency,
+          )}/${cheapestPlanWithNotifications.interval}`
+        : 'Tap to unlock private repos',
+    title:
+      type === 'activity'
+        ? 'Private event'
+        : type === 'notifications'
+        ? 'Private notification'
+        : type === 'issue_or_pr'
+        ? isPullRequest(item as GitHubIssueOrPullRequest)
+          ? isDraft(item as GitHubPullRequest)
+            ? 'Private Draft Pull Request'
+            : 'Private Pull Request'
+          : 'Private Issue'
+        : 'Private item',
+    type,
+  }
+}
+
 function _getCardPropsForItem(
   type: ColumnSubscription['type'],
   item: EnhancedItem,
   {
     ownerIsKnown,
+    plan,
     repoIsKnown,
-  }: { ownerIsKnown: boolean; repoIsKnown: boolean },
+  }: {
+    ownerIsKnown: boolean
+    plan: UserPlan | null | undefined
+    repoIsKnown: boolean
+  },
 ): Omit<BaseCardProps, 'height'> {
   const id = item.id
 
@@ -173,6 +228,7 @@ function _getCardPropsForItem(
       const {
         actor,
         branchOrTagName,
+        canSee,
         comment: _comment,
         commits,
         forkee,
@@ -186,7 +242,7 @@ function _getCardPropsForItem(
         repoFullName,
         repos,
         users,
-      } = getGitHubEventSubItems(event)
+      } = getGitHubEventSubItems(event, { plan })
 
       const date = event.created_at
 
@@ -264,6 +320,14 @@ function _getCardPropsForItem(
 
       const subjectType = getItemSubjectType('activity', event)
 
+      if (isPrivate && !canSee) {
+        return getPrivateBannerCardProps(type, item, {
+          avatar: actorAvatar || repoAvatar,
+          date,
+          iconColor: icon.color,
+        })
+      }
+
       const subitems =
         _comment && _comment.body
           ? ((): BaseCardProps['subitems'] | undefined => {
@@ -315,7 +379,6 @@ function _getCardPropsForItem(
                 date,
                 icon,
                 id,
-                isPrivate,
                 isRead,
                 link:
                   event.type === 'WatchEvent' && actorAvatar.linkURL
@@ -323,6 +386,7 @@ function _getCardPropsForItem(
                       ? actorAvatar.linkURL
                       : `${actorAvatar.linkURL}?tab=stars&q=${repoFullName}`
                     : forkURL || repoURL,
+                showPrivateLock: isPrivate,
                 subitems: undefined,
                 subtitle: undefined,
                 text: actionText,
@@ -335,9 +399,9 @@ function _getCardPropsForItem(
                 date,
                 icon,
                 id,
-                isPrivate,
                 isRead,
                 link: forkURL || repoURL,
+                showPrivateLock: isPrivate,
                 subitems: undefined,
                 subtitle: undefined,
                 text: repoOwnerName,
@@ -363,7 +427,6 @@ function _getCardPropsForItem(
               date,
               icon,
               id,
-              isPrivate,
               isRead,
               link:
                 (_comment &&
@@ -371,6 +434,7 @@ function _getCardPropsForItem(
                     commentIsInline: !!(_comment && _comment.path),
                   })) ||
                 fixURL(issueOrPullRequest.html_url || issueOrPullRequest.url)!,
+              showPrivateLock: isPrivate,
               subitems,
               subtitle: undefined,
               text: getRepoText({
@@ -407,7 +471,6 @@ function _getCardPropsForItem(
               date,
               icon,
               id,
-              isPrivate,
               isRead,
               link:
                 (_comment &&
@@ -415,6 +478,7 @@ function _getCardPropsForItem(
                     commentIsInline: !!(_comment && _comment.path),
                   })) ||
                 getCommitUrlFromOtherUrl(commit.url)!,
+              showPrivateLock: isPrivate,
               subitems,
               subtitle: undefined,
               text: repoIsKnown
@@ -449,7 +513,6 @@ function _getCardPropsForItem(
               date,
               icon,
               id,
-              isPrivate,
               isRead,
               link:
                 (_comment &&
@@ -470,6 +533,7 @@ function _getCardPropsForItem(
                         commits[commits.length - 1].url,
                       )!,
                     )!,
+              showPrivateLock: isPrivate,
               subitems: commits
                 .slice(0, sliceSize)
                 .map<NonNullable<BaseCardProps['subitems']>[0]>(commit => ({
@@ -529,7 +593,6 @@ function _getCardPropsForItem(
               date,
               icon,
               id,
-              isPrivate,
               isRead,
               link:
                 firstLink &&
@@ -538,6 +601,7 @@ function _getCardPropsForItem(
                 pages[0].action !== 'created'
                   ? `${firstLink}/_compare/${pages[0].sha}`
                   : firstLink || '',
+              showPrivateLock: isPrivate,
               subitems: undefined,
               subtitle: trimNewLinesAndSpaces(
                 stripMarkdown(pages[0].summary || ''),
@@ -562,9 +626,9 @@ function _getCardPropsForItem(
               date,
               icon,
               id,
-              isPrivate,
               isRead,
               link: release.html_url || fixURL(release.url)!,
+              showPrivateLock: isPrivate,
               subitems: [],
               subtitle: trimNewLinesAndSpaces(stripMarkdown(release.body), 120),
               text: getRepoText({
@@ -590,7 +654,6 @@ function _getCardPropsForItem(
             date,
             icon,
             id,
-            isPrivate,
             isRead,
             link:
               (_comment &&
@@ -609,6 +672,7 @@ function _getCardPropsForItem(
                   (isBranchMainEvent &&
                     `${repoURL}/tree/${branchOrTagName}`))) ||
               (__DEV__ ? '' : repoURL),
+            showPrivateLock: isPrivate,
             subitems,
             subtitle: undefined,
             text: getRepoText({
@@ -630,57 +694,64 @@ function _getCardPropsForItem(
 
     case 'issue_or_pr': {
       const issueOrPullRequest = item as EnhancedGitHubIssueOrPullRequest
+      const {
+        canSee,
+        iconDetails,
+        isPrivate,
+        isRead,
+        repoFullName,
+        repoOwnerName,
+      } = getGitHubIssueOrPullRequestSubItems(issueOrPullRequest, { plan })
 
-      const repoFullName = getRepoFullNameFromUrl(
-        issueOrPullRequest.repository_url ||
-          issueOrPullRequest.url ||
-          issueOrPullRequest.html_url,
-      )
-      const { owner: repoOwnerName } = getOwnerAndRepo(repoFullName || '')
+      const avatar: BaseCardProps['avatar'] = ownerIsKnown
+        ? {
+            imageURL: getUserAvatarFromObject(
+              issueOrPullRequest.user,
+              {},
+              PixelRatio.getPixelSizeForLayoutSize,
+            )!,
+            linkURL: getUserURLFromObject(issueOrPullRequest.user)!,
+          }
+        : {
+            imageURL: getUserAvatarByUsername(
+              repoOwnerName || '',
+              {
+                baseURL: getBaseUrlFromOtherUrl(
+                  issueOrPullRequest.html_url || issueOrPullRequest.url,
+                ),
+              },
+              PixelRatio.getPixelSizeForLayoutSize,
+            ),
+            linkURL: getRepoUrlFromOtherUrl(
+              issueOrPullRequest.html_url || issueOrPullRequest.url,
+            )!,
+          }
 
-      const iconDetails = getIssueOrPullRequestIconAndColor(
-        getIssueOrPullRequestSubjectType(issueOrPullRequest) || 'Issue',
-        issueOrPullRequest,
-      )
+      const date =
+        issueOrPullRequest.updated_at || issueOrPullRequest.created_at
+
       const icon = { name: iconDetails.icon, color: iconDetails.color }
 
-      const isRead = isItemRead(issueOrPullRequest)
-      const isPrivate = isIssueOrPullRequestPrivate(issueOrPullRequest)
+      if (isPrivate && !canSee) {
+        return getPrivateBannerCardProps(type, item, {
+          avatar,
+          date,
+          iconColor: icon.color,
+        })
+      }
 
       return {
         action: undefined,
-        avatar: ownerIsKnown
-          ? {
-              imageURL: getUserAvatarFromObject(
-                issueOrPullRequest.user,
-                {},
-                PixelRatio.getPixelSizeForLayoutSize,
-              )!,
-              linkURL: getUserURLFromObject(issueOrPullRequest.user)!,
-            }
-          : {
-              imageURL: getUserAvatarByUsername(
-                repoOwnerName || '',
-                {
-                  baseURL: getBaseUrlFromOtherUrl(
-                    issueOrPullRequest.html_url || issueOrPullRequest.url,
-                  ),
-                },
-                PixelRatio.getPixelSizeForLayoutSize,
-              ),
-              linkURL: getRepoUrlFromOtherUrl(
-                issueOrPullRequest.html_url || issueOrPullRequest.url,
-              )!,
-            },
-        date: issueOrPullRequest.updated_at || issueOrPullRequest.created_at,
+        avatar,
+        date,
         icon,
         id,
-        isPrivate,
         isRead,
         link: fixURL(issueOrPullRequest.html_url, {
           addBottomAnchor: issueOrPullRequest.comments > 0,
           issueOrPullRequestNumber: issueOrPullRequest.number,
         })!,
+        showPrivateLock: isPrivate,
         subitems: undefined,
         subtitle: undefined,
         text: getRepoText({
@@ -698,10 +769,10 @@ function _getCardPropsForItem(
       const notification = item as EnhancedGitHubNotification
 
       const {
+        canSee,
         comment: _comment,
         commit,
         isPrivate,
-        isPrivateAndCantSee,
         isRead,
         issueOrPullRequest,
         issueOrPullRequestNumber,
@@ -709,7 +780,7 @@ function _getCardPropsForItem(
         repo,
         repoFullName,
         subject,
-      } = getGitHubNotificationSubItems(notification)
+      } = getGitHubNotificationSubItems(notification, { plan })
 
       const iconDetails = getNotificationIconAndColor(
         notification,
@@ -765,7 +836,6 @@ function _getCardPropsForItem(
         date: notification.updated_at,
         icon,
         id,
-        isPrivate,
         isRead,
         link:
           (subject.type === 'RepositoryVulnerabilityAlert' &&
@@ -785,6 +855,7 @@ function _getCardPropsForItem(
             issueOrPullRequestNumber,
           }) ||
           repoURL!,
+        showPrivateLock: isPrivate,
         subitems,
         subtitle: undefined,
         text: getRepoText({
@@ -796,12 +867,21 @@ function _getCardPropsForItem(
         }),
         title: trimNewLinesAndSpaces(subject.title, 120),
         type,
-        githubApp: isPrivateAndCantSee
-          ? {
-              ownerId: repo.owner && repo.owner.id,
-              repoId: repo.id,
-            }
-          : undefined,
+        githubApp:
+          isPrivate && !notification.enhanced
+            ? {
+                ownerId: repo.owner && repo.owner.id,
+                repoId: repo.id,
+              }
+            : undefined,
+      }
+
+      if (isPrivate && !canSee) {
+        return getPrivateBannerCardProps(type, item, {
+          avatar: defaultProps.avatar,
+          date: defaultProps.date,
+          iconColor: defaultProps.icon.color,
+        })
       }
 
       switch (notification.subject.type) {
@@ -811,22 +891,24 @@ function _getCardPropsForItem(
             ...(commit &&
               ((commit.author && {
                 avatar: {
-                  imageURL: getUserAvatarFromObject(
-                    commit.author,
-                    {},
-                    PixelRatio.getPixelSizeForLayoutSize,
-                  )!,
+                  imageURL:
+                    getUserAvatarFromObject(
+                      commit.author,
+                      {},
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    ) || defaultProps.avatar.imageURL,
                   linkURL: getUserURLFromObject(commit.author)!,
                 },
               }) || {
                 avatar: {
-                  imageURL: getUserAvatarByEmail(
-                    commit.commit.author.email,
-                    {
-                      baseURL: getBaseUrlFromOtherUrl(commit.url),
-                    },
-                    PixelRatio.getPixelSizeForLayoutSize,
-                  ),
+                  imageURL:
+                    getUserAvatarByEmail(
+                      commit.commit.author.email,
+                      {
+                        baseURL: getBaseUrlFromOtherUrl(commit.url),
+                      },
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    ) || defaultProps.avatar.imageURL,
                   linkURL: commit.commit.author.email
                     ? getGitHubSearchURL({
                         q: commit.commit.author.email,
@@ -845,12 +927,15 @@ function _getCardPropsForItem(
             ...(ownerIsKnown &&
               issueOrPullRequest && {
                 avatar: {
-                  imageURL: getUserAvatarFromObject(
-                    issueOrPullRequest.user,
-                    {},
-                    PixelRatio.getPixelSizeForLayoutSize,
-                  )!,
-                  linkURL: getUserURLFromObject(issueOrPullRequest.user)!,
+                  imageURL:
+                    getUserAvatarFromObject(
+                      issueOrPullRequest.user,
+                      {},
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    ) || defaultProps.avatar.imageURL,
+                  linkURL:
+                    getUserURLFromObject(issueOrPullRequest.user) ||
+                    defaultProps.avatar.linkURL,
                 },
               }),
             ...(issueOrPullRequestNumber && {
@@ -934,11 +1019,17 @@ export function getCardPushNotificationItem(
   item: EnhancedItem,
   {
     ownerIsKnown,
+    plan,
     repoIsKnown,
-  }: { ownerIsKnown: boolean; repoIsKnown: boolean },
+  }: {
+    ownerIsKnown: boolean
+    plan: UserPlan | null | undefined
+    repoIsKnown: boolean
+  },
 ): CardPushNotification {
   const cardProps = getCardPropsForItem(column.type, item, {
     ownerIsKnown,
+    plan,
     repoIsKnown,
   })
 
@@ -967,7 +1058,7 @@ export function getCardPushNotificationItem(
         issueOrPullRequest,
         release,
         repoFullName,
-      } = getGitHubEventSubItems(event)
+      } = getGitHubEventSubItems(event, { plan })
 
       const actionTextOptions: Parameters<typeof getEventMetadata>[1] = {
         appendColon: false,
@@ -1122,7 +1213,7 @@ export function getCardPushNotificationItem(
         release,
         repoFullName,
         subject,
-      } = getGitHubNotificationSubItems(notification)
+      } = getGitHubNotificationSubItems(notification, { plan })
 
       return {
         title: trimNewLinesAndSpaces(subject.title, 80),

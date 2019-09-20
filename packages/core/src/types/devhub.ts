@@ -55,6 +55,7 @@ export interface IssuePayloadEnhancement
   extends ReadUnreadEnhancement,
     SaveForLaterEnhancement {
   merged?: undefined
+  private?: boolean
   enhanced?: boolean
 }
 
@@ -62,6 +63,7 @@ export interface PullRequestPayloadEnhancement
   extends ReadUnreadEnhancement,
     SaveForLaterEnhancement {
   merged?: boolean
+  private?: boolean
   enhanced?: boolean
 }
 

@@ -1,7 +1,8 @@
+import { User } from '@devhub/core'
+import immer from 'immer'
 import _ from 'lodash'
 import { REHYDRATE } from 'redux-persist'
 
-import { User } from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface AuthError {
@@ -75,14 +76,13 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
         error: action.error,
       }
 
-    case 'UPDATE_USER_DATA':
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          ...action.payload,
-        } as State['user'],
-      }
+    case 'UPDATE_USER_DATA': {
+      return immer(state, draft => {
+        if (action.payload.plan && draft.user) {
+          Object.assign(draft.user.plan, action.payload.plan)
+        }
+      })
+    }
 
     case 'DELETE_ACCOUNT_REQUEST':
       return {

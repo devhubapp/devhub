@@ -1,3 +1,4 @@
+import { constants, Theme, ThemeColors } from '@devhub/core'
 import React, {
   AnchorHTMLAttributes,
   useCallback,
@@ -7,7 +8,6 @@ import React, {
 } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { Theme, ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
@@ -168,6 +168,9 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
 
   const renderTouchable = href || onPress || allowEmptyLink
 
+  const isDeepLink =
+    href && href.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)
+
   let finalProps: any
   if (renderTouchable) {
     finalProps = {
@@ -192,9 +195,15 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
         } as any,
 
         web: {
-          accessibilityRole: href ? 'link' : 'button',
-          href,
-          onPress,
+          accessibilityRole: href && !isDeepLink ? 'link' : 'button',
+          href: isDeepLink ? undefined : href,
+          onPress: href
+            ? (e: any) => {
+                if (onPress) onPress(e)
+
+                if (isDeepLink && href) Linking.openURL(href)
+              }
+            : onPress,
           selectable: true,
           target: openOnNewTab ? '_blank' : '_self',
           ...otherProps,

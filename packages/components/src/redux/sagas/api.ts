@@ -73,7 +73,7 @@ function* onSyncDown() {
         me?: {
           columns?: User['columns']
           subscriptions: User['subscriptions']
-          plan: UserPlan
+          plan: UserPlan | null | undefined
         }
       }
       errors?: any[]

@@ -1,6 +1,6 @@
 import { activePlans, allPlans, constants, Plan, PlanID } from '@devhub/core'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { FlatList, FlatListProps, InteractionManager, View } from 'react-native'
+import { FlatList, FlatListProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -38,7 +38,7 @@ export function PricingModal(props: PricingModalProps) {
 
   const flatListRef = useRef<FlatList<Plan>>(null)
   const { sizename } = useAppLayout()
-  const isFirstPlanScrollRef = useRef(true)
+  const hasCalledOnLayoutRef = useRef(false)
   const dispatch = useDispatch()
   const appToken = useReduxState(selectors.appTokenSelector)
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
@@ -84,24 +84,19 @@ export function PricingModal(props: PricingModalProps) {
       if (!(index >= 0 && index < activePlans.length)) return
 
       flatListRef.current.scrollToOffset({
-        animated: !isFirstPlanScrollRef.current,
+        animated: hasCalledOnLayoutRef.current,
         offset: Math.max(
           0,
           index * defaultPricingBlockWidth -
             (columnWidth - defaultPricingBlockWidth) / 2,
         ),
       })
-      isFirstPlanScrollRef.current = false
     },
     [activePlans],
   )
 
   useEffect(() => {
     scrollToPlan(selectedPlanId)
-
-    InteractionManager.runAfterInteractions(() => {
-      scrollToPlan(selectedPlanId)
-    })
   }, [scrollToPlan, selectedPlanId])
 
   const getItemLayout = useCallback<
@@ -114,6 +109,15 @@ export function PricingModal(props: PricingModalProps) {
     }),
     [],
   )
+
+  const onLayout = useCallback<
+    NonNullable<FlatListProps<Plan>['onLayout']>
+  >(() => {
+    if (!hasCalledOnLayoutRef.current) {
+      scrollToPlan(selectedPlanId)
+      hasCalledOnLayoutRef.current = true
+    }
+  }, [scrollToPlan, selectedPlanId])
 
   const renderItem = useCallback<
     NonNullable<FlatListProps<Plan>['renderItem']>
@@ -182,6 +186,7 @@ export function PricingModal(props: PricingModalProps) {
           extraData={selectedPlanId}
           getItemLayout={getItemLayout}
           horizontal
+          onLayout={onLayout}
           onScrollToIndexFailed={onScrollToIndexFailed}
           renderItem={renderItem}
           style={[sharedStyles.flexNoGrow, sharedStyles.fullWidth]}

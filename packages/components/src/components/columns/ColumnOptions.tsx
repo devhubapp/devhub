@@ -1,6 +1,11 @@
 import React from 'react'
 
-import { activePlans, Column, constants, getColumnOption } from '@devhub/core'
+import {
+  cheapestPlanWithNotifications,
+  Column,
+  constants,
+  getColumnOption,
+} from '@devhub/core'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
@@ -66,10 +71,6 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
       plan,
     },
   )
-
-  const cheapestPlanWithNotifications = activePlans
-    .sort((a, b) => a.amount - b.amount)
-    .find(p => p.featureFlags.enablePushNotifications)
 
   return (
     <ThemedView

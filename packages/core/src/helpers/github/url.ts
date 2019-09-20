@@ -86,14 +86,26 @@ export function getReleaseIdFromUrl(url: string) {
 
 export const getBaseUrlFromOtherUrl = (
   url: string | undefined,
-): string | undefined =>
-  url
-    ? (
-        (url.match(
-          /([^:]+:\/\/[^\/]+)(\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^/#$]?)/i,
-        ) || [])[1] || ''
-      ).replace('/api.', '/') || undefined
-    : undefined
+): string | undefined => {
+  if (!(url && typeof url === 'string')) return undefined
+
+  return (
+    (
+      (url.match(
+        /([^:]+:\/\/[^\/]+)(\/(repos\/)?)([a-zA-Z0-9\-._]+\/[a-zA-Z0-9\-._]+[^/#$]?)/i,
+      ) || [])[1] || ''
+    ).replace('/api.', '/') || undefined
+  )
+}
+
+export const getBaseAPIUrlFromOtherAPIUrl = (
+  apiURL: string | undefined,
+): string | undefined => {
+  if (!(apiURL && typeof apiURL === 'string')) return undefined
+
+  const matches = apiURL.match(/([^:]+:\/\/[^\/]+)/i)
+  return (matches && matches[0]) || undefined
+}
 
 export const getRepoFullNameFromUrl = (url: string): string | undefined =>
   url

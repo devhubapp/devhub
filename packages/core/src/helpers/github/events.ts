@@ -26,6 +26,7 @@ import {
   GitHubUser,
   MultipleStarEvent,
   ThemeColors,
+  UserPlan,
 } from '../../types'
 import { constants } from '../../utils'
 import { isEventPrivate } from '../shared'
@@ -932,7 +933,10 @@ export function mergeEventPreservingEnhancement(
   })
 }
 
-export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
+export function getGitHubEventSubItems(
+  event: EnhancedGitHubEvent,
+  { plan }: { plan: UserPlan | null | undefined },
+) {
   const {
     actor,
     payload,
@@ -1021,6 +1025,14 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
   const isForcePush = isPush && (payload as GitHubPushEvent).forced
   const isPrivate = isEventPrivate(event)
 
+  const canSee =
+    !isPrivate ||
+    !!(
+      plan &&
+      (plan.status === 'active' || plan.status === 'trialing') &&
+      plan.featureFlags.enablePrivateRepositories
+    )
+
   const isBot = getItemIsBot('activity', event)
 
   // GitHub returns the wrong avatar_url for app bots on actor.avatar_url,
@@ -1036,6 +1048,7 @@ export function getGitHubEventSubItems(event: EnhancedGitHubEvent) {
     actor,
     avatarUrl,
     branchOrTagName,
+    canSee,
     comment,
     commitShas,
     commits,

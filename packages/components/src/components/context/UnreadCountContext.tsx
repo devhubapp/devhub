@@ -95,7 +95,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
             column.type,
             columnItems,
             { ...column.filters, unread: true },
-            { mergeSimilar: false },
+            { mergeSimilar: false, plan },
           )
     const columnHeader = getColumnHeaderDetails(
       column,
@@ -125,6 +125,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       ) {
         const pushNotification = getCardPushNotificationItem(column, item, {
           ownerIsKnown: !!(columnHeader && columnHeader.ownerIsKnown),
+          plan,
           repoIsKnown: !!(columnHeader && columnHeader.repoIsKnown),
         })
         if (

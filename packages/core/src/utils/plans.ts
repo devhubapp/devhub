@@ -185,3 +185,7 @@ export const activePlans: Array<Plan & { id: ActivePlanID }> = [
   allPlansObj['5d4b8e4de70bd8c61c13a6a9'],
   allPlansObj['5d4b8e85d123d1d770d93825'],
 ]
+
+export const cheapestPlanWithNotifications = activePlans
+  .sort((a, b) => a.amount - b.amount)
+  .find(p => p.featureFlags.enablePushNotifications)

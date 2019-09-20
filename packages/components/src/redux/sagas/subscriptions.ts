@@ -70,17 +70,18 @@ function* init() {
     const { action } = yield race({
       delay: delay(_isFirstTime ? 0 : 10 * 1000),
       action: take([
-        'LOGIN_SUCCESS',
         'LOGIN_FAILURE',
+        'LOGIN_SUCCESS',
         'LOGOUT',
-        'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
         'REFRESH_INSTALLATIONS_SUCCESS',
+        'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
       ]),
     })
 
     const forceFetchAll = !!(
-      (action && action.type === 'REFRESH_INSTALLATIONS_SUCCESS') ||
-      (_isFirstTime && initialAction.type === 'REFRESH_INSTALLATIONS_SUCCESS')
+      (_isFirstTime &&
+        initialAction.type === 'REFRESH_INSTALLATIONS_SUCCESS') ||
+      (action && action.type === 'REFRESH_INSTALLATIONS_SUCCESS')
     )
 
     const isFirstTime = _isFirstTime

@@ -2,6 +2,7 @@ import React, { useCallback, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import {
+  cheapestPlanWithNotifications,
   Column as ColumnT,
   columnHasAnyFilter,
   constants,
@@ -9,6 +10,7 @@ import {
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   EnhancedItem,
+  formatPrice,
   getDefaultPaginationPerPage,
   GitHubIcon,
   isEventPrivate,
@@ -135,34 +137,44 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   )
 
   const showBannerForPaidFeature: FreeTrialHeaderMessageProps | undefined =
-    (!(
-      plan &&
-      (plan.status === 'active' || plan.status === 'trialing') &&
-      plan.featureFlags.enablePrivateRepositories
-    ) &&
-      (columnType === 'activity'
-        ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
-            isEventPrivate(item),
-          )
-        : columnType === 'notifications'
-        ? (filteredItems as any[]).some(
-            (item: EnhancedGitHubNotification) =>
-              isNotificationPrivate(item) && !!item.enhanced,
-          )
-        : // TODO: Handle for IssueOrPullRequest Column
-          undefined) && {
-        message: 'Tap to unlock Private Repositories.',
-        relatedFeature: 'enablePrivateRepositories',
-      }) ||
-    (plan &&
-      plan.featureFlags.columnsLimit >= 1 &&
-      columnIndex + 1 === plan.featureFlags.columnsLimit &&
-      columnIndex + 1 === columnsCount &&
-      plan.featureFlags.columnsLimit < constants.COLUMNS_LIMIT && {
-        message: 'Columns limit reached. Tap for more.',
-        relatedFeature: 'columnsLimit',
-      }) ||
-    undefined
+    plan &&
+    plan.featureFlags.columnsLimit >= 1 &&
+    columnIndex + 1 > plan.featureFlags.columnsLimit
+      ? columnIndex + 1 === plan.featureFlags.columnsLimit &&
+        columnIndex + 1 === columnsCount &&
+        columnIndex + 1 <= constants.COLUMNS_LIMIT
+        ? {
+            message: 'Columns limit reached. Tap for more.',
+            relatedFeature: 'columnsLimit',
+          }
+        : undefined
+      : (!(
+          plan &&
+          (plan.status === 'active' || plan.status === 'trialing') &&
+          plan.featureFlags.enablePrivateRepositories
+        ) &&
+          (columnType === 'activity'
+            ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
+                isEventPrivate(item),
+              )
+            : columnType === 'notifications'
+            ? (filteredItems as any[]).some(
+                (item: EnhancedGitHubNotification) =>
+                  isNotificationPrivate(item) && !!item.enhanced,
+              )
+            : // TODO: Handle for IssueOrPullRequest Column
+              undefined) && {
+            message:
+              cheapestPlanWithNotifications &&
+              cheapestPlanWithNotifications.amount
+                ? `Unlock private repos for ${formatPrice(
+                    cheapestPlanWithNotifications.amount,
+                    cheapestPlanWithNotifications.currency,
+                  )}/${cheapestPlanWithNotifications.interval}`
+                : 'Tap to unlock Private Repositories',
+            relatedFeature: 'enablePrivateRepositories',
+          }) ||
+        undefined
 
   const refresh = useCallback(() => {
     dispatch(

@@ -22,7 +22,7 @@ export function logout() {
 }
 
 export function updateUserData(
-  payload: Partial<NonNullable<AuthState['user']>>,
+  payload: Pick<Partial<NonNullable<AuthState['user']>>, 'plan'>,
 ) {
   return createAction('UPDATE_USER_DATA', payload)
 }

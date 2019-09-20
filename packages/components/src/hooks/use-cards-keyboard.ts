@@ -7,9 +7,11 @@ import { getCurrentFocusedColumnId } from '../components/context/ColumnFocusCont
 import { emitter } from '../libs/emitter'
 import { OneList } from '../libs/one-list'
 import * as actions from '../redux/actions'
+import * as selectors from '../redux/selectors'
 import { useEmitter } from './use-emitter'
 import useKeyPressCallback from './use-key-press-callback'
 import useMultiKeyPressCallback from './use-multi-key-press-callback'
+import { useReduxState } from './use-redux-state'
 
 export function useCardsKeyboard(
   listRef: RefObject<typeof OneList>,
@@ -67,6 +69,8 @@ export function useCardsKeyboard(
   }
 
   const dispatch = useDispatch()
+
+  const plan = useReduxState(selectors.currentUserPlanSelector)
 
   useEmitter(
     'FOCUS_ON_COLUMN',
@@ -237,11 +241,12 @@ export function useCardsKeyboard(
           itemId: selectedItem.id,
           link: getCardPropsForItem(type, selectedItem, {
             ownerIsKnown,
+            plan,
             repoIsKnown,
           }).link,
         }),
       )
-    }, [items, type, columnId, ownerIsKnown, repoIsKnown]),
+    }, [items, type, columnId, ownerIsKnown, plan, repoIsKnown]),
   )
 
   useKeyPressCallback(

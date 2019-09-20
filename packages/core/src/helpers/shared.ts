@@ -12,7 +12,6 @@ import {
   EnhancedGitHubNotification,
   EnhancedItem,
   GitHubEventAction,
-  GitHubIssueOrPullRequest,
   GitHubItemSubjectType,
   GitHubNotification,
   GitHubStateType,
@@ -166,11 +165,10 @@ export function isNotificationPrivate(notification: GitHubNotification) {
   return !!(notification.repository && notification.repository.private)
 }
 
-// TODO: GitHub doesn't return this info apparently
 export function isIssueOrPullRequestPrivate(
-  _issueOrPullRequest: GitHubIssueOrPullRequest,
+  _issueOrPullRequest: EnhancedGitHubIssueOrPullRequest,
 ) {
-  return false
+  return !!(_issueOrPullRequest && _issueOrPullRequest.private)
 }
 
 export function deepMapper<T extends object, R = T>(

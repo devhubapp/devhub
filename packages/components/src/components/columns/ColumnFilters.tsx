@@ -34,8 +34,10 @@ import {
 import { useColumn } from '../../hooks/use-column'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useReduxAction } from '../../hooks/use-redux-action'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { columnHeaderItemContentSize } from '../columns/ColumnHeader'
@@ -104,14 +106,22 @@ export type ColumnFilterCategory =
   | 'subject_types'
   | 'unread'
 
-const getFilteredItemsOptions: Parameters<typeof getFilteredItems>[3] = {
-  mergeSimilar: false,
-}
-
 export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   const { columnId, forceOpenAll, startWithFiltersExpanded } = props
 
   const { column } = useColumn(columnId)
+
+  const plan = useReduxState(selectors.currentUserPlanSelector)
+
+  const getFilteredItemsOptions = useMemo<
+    Parameters<typeof getFilteredItems>[3]
+  >(
+    () => ({
+      mergeSimilar: false,
+      plan,
+    }),
+    [plan],
+  )
 
   const { allItems, filteredItems } = useColumnData(
     columnId,
@@ -145,6 +155,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
         {
           forceIncludeTheseOwners: allForcedOwners,
           forceIncludeTheseRepos: allForcedRepos,
+          plan,
         },
       ),
     [
@@ -153,6 +164,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
       column && column.filters,
       allForcedOwners,
       allForcedRepos,
+      plan,
     ],
   )
 
@@ -270,14 +282,19 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   )
 
   const allItemsMetadata = useMemo(
-    () => getItemsFilterMetadata(column ? column.type : 'activity', allItems),
-    [column && column.type, allItems],
+    () =>
+      getItemsFilterMetadata(column ? column.type : 'activity', allItems, {
+        plan,
+      }),
+    [column && column.type, allItems, plan],
   )
 
   const filteredItemsMetadata = useMemo(
     () =>
-      getItemsFilterMetadata(column ? column.type : 'activity', filteredItems),
-    [column && column.type, filteredItems],
+      getItemsFilterMetadata(column ? column.type : 'activity', filteredItems, {
+        plan,
+      }),
+    [column && column.type, filteredItems, plan],
   )
 
   if (!column) return null

@@ -1,3 +1,4 @@
+import { Column, EnhancedItem } from '@devhub/core'
 import React, { useCallback, useMemo, useRef } from 'react'
 import {
   StyleSheet,
@@ -7,12 +8,13 @@ import {
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 
-import { Column, EnhancedItem } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { useIsItemFocused } from '../../hooks/use-is-item-focused'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
@@ -52,11 +54,14 @@ export const CardWithLink = React.memo(
 
     const dispatch = useDispatch()
 
+    const plan = useReduxState(selectors.currentUserPlanSelector)
+
     const { CardComponent, cardProps } = useMemo(() => {
       const _cardProps =
         cachedCardProps ||
         getCardPropsForItem(type, item, {
           ownerIsKnown,
+          plan,
           repoIsKnown,
         })
 
@@ -66,7 +71,7 @@ export const CardWithLink = React.memo(
           <BaseCard key={`${type}-base-card-${item.id}`} {..._cardProps} />
         ),
       }
-    }, [cachedCardProps, item, ownerIsKnown, repoIsKnown])
+    }, [cachedCardProps, item, ownerIsKnown, plan, repoIsKnown])
 
     const isReadRef = useRef(cardProps.isRead)
     isReadRef.current = cardProps.isRead
@@ -82,7 +87,7 @@ export const CardWithLink = React.memo(
           link: undefined,
         }),
       )
-    }, [type, columnId, item.id])
+    }, [type, columnId, item.id, cardProps.link])
 
     const updateStyles = useCallback(() => {
       if (ref.current) {

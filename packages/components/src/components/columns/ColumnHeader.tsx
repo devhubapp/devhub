@@ -1,5 +1,5 @@
 import {
-  activePlans,
+  cheapestPlanWithNotifications,
   formatPrice,
   getColumnOption,
   ThemeColors,
@@ -87,10 +87,6 @@ export function ColumnHeader(props: ColumnHeaderProps) {
       plan,
     },
   )
-
-  const cheapestPlanWithNotifications = activePlans
-    .sort((a, b) => a.amount - b.amount)
-    .find(p => p.featureFlags.enablePushNotifications)
 
   return (
     <ThemedView

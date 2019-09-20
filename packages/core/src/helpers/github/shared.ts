@@ -28,6 +28,7 @@ import {
   ItemsFilterMetadata,
   NotificationColumnSubscription,
   ThemeColors,
+  UserPlan,
 } from '../../types'
 import { constants } from '../../utils'
 import {
@@ -1120,7 +1121,10 @@ export function getItemIssueOrPullRequest(
 export function getItemOwnersAndRepos(
   type: ColumnSubscription['type'],
   item: EnhancedItem | undefined,
-  { includeFork }: { includeFork?: boolean } = {},
+  {
+    includeFork,
+    plan,
+  }: { includeFork?: boolean; plan: UserPlan | null | undefined },
 ): Array<{ owner: string; repo: string }> {
   const mapResult: Record<string, any> = {}
 
@@ -1154,7 +1158,7 @@ export function getItemOwnersAndRepos(
   switch (type) {
     case 'activity': {
       const event = item as EnhancedGitHubEvent
-      const { repos, forkee } = getGitHubEventSubItems(event)
+      const { repos, forkee } = getGitHubEventSubItems(event, { plan })
 
       const _allRepos: GitHubRepo[] = [
         ...(repos || []),
@@ -1253,13 +1257,16 @@ export function getFilteredItems(
   filters: ColumnFilters | undefined,
   {
     mergeSimilar,
+    plan,
   }: {
     mergeSimilar: boolean
+    plan: UserPlan | null | undefined
   },
 ) {
   if (type === 'activity') {
     return getFilteredEvents(items as EnhancedGitHubEvent[], filters, {
       mergeSimilar,
+      plan,
     })
   }
 
@@ -1267,6 +1274,7 @@ export function getFilteredItems(
     return getFilteredIssueOrPullRequests(
       items as EnhancedGitHubIssueOrPullRequest[],
       filters,
+      { plan },
     )
   }
 
@@ -1274,6 +1282,7 @@ export function getFilteredItems(
     return getFilteredNotifications(
       items as EnhancedGitHubNotification[],
       filters,
+      { plan },
     )
   }
 
@@ -1326,10 +1335,12 @@ export function getItemsFilterMetadata(
   {
     forceIncludeTheseOwners = [],
     forceIncludeTheseRepos = [],
+    plan,
   }: {
     forceIncludeTheseOwners?: string[]
     forceIncludeTheseRepos?: string[]
-  } = {},
+    plan: UserPlan | null | undefined
+  },
 ): ItemsFilterMetadata {
   const result: ItemsFilterMetadata = getDefaultItemsFilterMetadata()
   ;(items || []).filter(Boolean).forEach(item => {
@@ -1349,7 +1360,7 @@ export function getItemsFilterMetadata(
     const eventAction = event && getEventMetadata(event).action
     const privacy = getItemPrivacy(type, item)
 
-    const ownersAndRepos = getItemOwnersAndRepos(type, item)
+    const ownersAndRepos = getItemOwnersAndRepos(type, item, { plan })
 
     function updateNestedCounter(objRef: ItemFilterCountMetadata) {
       if (read) objRef.read++
@@ -1453,6 +1464,7 @@ export function getItemsFilterMetadata(
 export function getItemSearchableStrings(
   type: ColumnSubscription['type'],
   item: EnhancedItem,
+  { plan }: { plan: UserPlan | null | undefined },
 ): string[] {
   const strings: string[] = []
 
@@ -1466,7 +1478,7 @@ export function getItemSearchableStrings(
 
   const id = item.id
 
-  const ownersAndRepos = getItemOwnersAndRepos(type, item)
+  const ownersAndRepos = getItemOwnersAndRepos(type, item, { plan })
 
   strings.push(`${id || ''}`)
 
@@ -1528,7 +1540,7 @@ export function getItemSearchableStrings(
       // repos,
       // userIds,
       users,
-    } = getGitHubEventSubItems(event)
+    } = getGitHubEventSubItems(event, { plan })
 
     comment = _comment
     release = _release
@@ -1574,10 +1586,10 @@ export function getItemSearchableStrings(
       comment: _comment,
       commit,
       createdAt,
+      // canSee,
       // id,
       // isBot,
       // isPrivate,
-      // isPrivateAndCantSee,
       // isRead,
       // isRepoInvitation,
       // isSaved,
@@ -1589,7 +1601,7 @@ export function getItemSearchableStrings(
       // repoFullName,
       subject,
       updatedAt,
-    } = getGitHubNotificationSubItems(notification)
+    } = getGitHubNotificationSubItems(notification, { plan })
 
     comment = _comment
     release = _release as any // TODO: Fix type error

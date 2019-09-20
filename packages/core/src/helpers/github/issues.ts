@@ -12,6 +12,7 @@ import {
   GitHubStateType,
   IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestPayloadEnhancement,
+  UserPlan,
 } from '../../types'
 import { constants } from '../../utils'
 import {
@@ -19,14 +20,19 @@ import {
   getOwnerAndRepoFormattedFilter,
   itemPassesFilterRecord,
 } from '../filters'
-import { getSearchQueryTerms } from '../shared'
+import { getSearchQueryTerms, isIssueOrPullRequestPrivate } from '../shared'
 import {
   getIssueIconAndColor,
   getOwnerAndRepo,
   getPullRequestIconAndColor,
+  isItemRead,
   isPullRequest,
 } from './shared'
-import { getRepoFullNameFromUrl } from './url'
+import {
+  getBaseAPIUrlFromOtherAPIUrl,
+  getRepoFullNameFromUrl,
+  getRepoUrlFromOtherUrl,
+} from './url'
 
 export const issueOrPullRequestSubjectTypes: GitHubIssueOrPullRequestSubjectType[] = [
   'Issue',
@@ -88,6 +94,7 @@ export function mergeIssueOrPullRequestPreservingEnhancement(
       newItem.last_unread_at,
     ]),
     merged: existingItem.merged,
+    private: existingItem.private,
     saved: existingItem.saved,
     unread: existingItem.unread,
   }
@@ -194,10 +201,65 @@ export async function getIssueOrPullRequestsEnhancementMap(
     githubOAuthToken: string
   },
 ): Promise<Record<string, IssueOrPullRequestPayloadEnhancement>> {
+  const repoMetas = _.uniqBy(
+    items
+      .map(item => {
+        const repoURL = getRepoUrlFromOtherUrl(
+          item && (item.repository_url || item.url),
+        )
+
+        const { owner, repo } = getOwnerAndRepo(
+          getRepoFullNameFromUrl(repoURL || ''),
+        )
+
+        let repoAPIURL = getBaseAPIUrlFromOtherAPIUrl(item && item.url)
+        if (repoAPIURL && owner && repo)
+          repoAPIURL = `${repoAPIURL}/repos/${owner}/${repo}`
+
+        return { repoURL, repoAPIURL, owner, repo }
+      })
+      .filter(
+        meta =>
+          !!(
+            meta &&
+            meta.owner &&
+            meta.repo &&
+            meta.repoAPIURL &&
+            meta.repoURL
+          ),
+      ),
+    'repoAPIURL',
+  )
+
+  const repoPromises = repoMetas.map(
+    async ({ repoURL, repoAPIURL, owner, repo }) => {
+      const cacheValue = cache.get(repoURL!)
+      if (cacheValue && Date.now() - cacheValue.timestamp < 1000 * 60 * 60)
+        return cacheValue
+
+      const installationToken = getGitHubInstallationTokenForRepo(owner, repo)
+      const githubToken = installationToken || githubOAuthToken
+
+      try {
+        const { data } = await axios.get(
+          `${repoAPIURL}?access_token=${githubToken}`,
+        )
+        cache.set(repoURL!, { data, timestamp: Date.now() })
+      } catch (error) {
+        console.error('Failed to load repository.', repoAPIURL, repoURL, error)
+        cache.set(repoURL!, false)
+      }
+    },
+  )
+
+  await Promise.all(repoPromises)
+
   const promises = items.map(async item => {
-    const repoFullName = getRepoFullNameFromUrl(
+    const repoURL = getRepoUrlFromOtherUrl(
       item && (item.repository_url || item.url),
-    )
+    )!
+
+    const repoFullName = getRepoFullNameFromUrl(repoURL)
     const { owner, repo } = getOwnerAndRepo(repoFullName)
     if (!(owner && repo && item.number && item.url)) return
 
@@ -209,6 +271,11 @@ export async function getIssueOrPullRequestsEnhancementMap(
     const mergeUrl = `${item.url.replace('/issues/', '/pulls/')}/merge`
     const hasMergedCache = cache.has(mergeUrl)
     const mergedCache = cache.get(mergeUrl)
+
+    const repoCacheValue = cache.get(repoURL)
+    if (repoCacheValue && repoCacheValue.data) {
+      enhance.private = repoCacheValue.data.private
+    }
 
     if (
       getIssueOrPullRequestSubjectType(item) === 'PullRequest' &&
@@ -447,4 +514,44 @@ export function getGitHubIssueSearchQuery(
   }
 
   return queries.join(' ')
+}
+
+export function getGitHubIssueOrPullRequestSubItems(
+  issueOrPullRequest: EnhancedGitHubIssueOrPullRequest,
+  { plan }: { plan: UserPlan | null | undefined },
+) {
+  const repoFullName = getRepoFullNameFromUrl(
+    issueOrPullRequest.repository_url ||
+      issueOrPullRequest.url ||
+      issueOrPullRequest.html_url,
+  )
+  const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
+    repoFullName || '',
+  )
+
+  const iconDetails = getIssueOrPullRequestIconAndColor(
+    getIssueOrPullRequestSubjectType(issueOrPullRequest) || 'Issue',
+    issueOrPullRequest,
+  )
+
+  const isRead = isItemRead(issueOrPullRequest)
+  const isPrivate = isIssueOrPullRequestPrivate(issueOrPullRequest)
+
+  const canSee =
+    !isPrivate ||
+    !!(
+      plan &&
+      (plan.status === 'active' || plan.status === 'trialing') &&
+      plan.featureFlags.enablePrivateRepositories
+    )
+
+  return {
+    canSee,
+    iconDetails,
+    isPrivate,
+    isRead,
+    repoFullName,
+    repoName,
+    repoOwnerName,
+  }
 }

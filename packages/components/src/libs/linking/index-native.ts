@@ -1,5 +1,7 @@
+import { constants } from '@devhub/core'
 import { Linking as LinkingOriginal } from 'react-native'
 
+import { emitter } from '../emitter'
 import { Platform } from '../platform'
 import { LinkingCrossPlatform } from './index'
 
@@ -27,14 +29,29 @@ LinkingOriginal.addEventListener('url', e => {
 
 export const Linking: LinkingCrossPlatform = {
   addEventListener: LinkingOriginal.addEventListener.bind(LinkingOriginal),
-  canOpenURL: LinkingOriginal.canOpenURL.bind(LinkingOriginal),
+  canOpenURL: async url => {
+    if (url && url.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)) {
+      return true
+    }
+
+    const canOpenURL = LinkingOriginal.canOpenURL.bind(LinkingOriginal)
+    return canOpenURL(url)
+  },
   clearCurrentURL: () => {
     currentURL = ''
   },
   getCurrentURL:
     Platform.OS === 'web' ? () => window.location.href || '' : () => currentURL,
   getInitialURL: () => initialURL,
-  openURL: LinkingOriginal.openURL.bind(LinkingOriginal),
+  openURL: async url => {
+    if (url && url.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)) {
+      emitter.emit('DEEP_LINK', { url })
+      return
+    }
+
+    const openURL = LinkingOriginal.openURL.bind(LinkingOriginal)
+    return openURL(url)
+  },
   removeEventListener: LinkingOriginal.removeEventListener.bind(
     LinkingOriginal,
   ),

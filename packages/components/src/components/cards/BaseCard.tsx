@@ -53,6 +53,9 @@ const styles = StyleSheet.create({
   avatar: {},
 
   iconContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
@@ -62,22 +65,33 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
 
-  iconContainer__topRight: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
-
-  iconContainer__bottomRight: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-  },
-
   icon: {
     marginTop: StyleSheet.hairlineWidth,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: PixelRatio.roundToNearestPixel(
+      sizes.iconContainerSize * (sizes.iconSize / sizes.iconContainerSize),
+    ),
+  },
+
+  lockIconContainer: {
+    position: 'absolute',
+    top: 1,
+    right: 0,
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    width: sizes.iconContainerSize,
+    height: sizes.iconContainerSize,
+    borderRadius: sizes.iconContainerSize / 2,
+    borderWidth: 2,
+  },
+
+  lockIcon: {
+    marginTop: StyleSheet.hairlineWidth,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: sizes.iconSize,
   },
 
   title: {
@@ -172,9 +186,9 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     height,
     icon,
     id,
-    isPrivate,
     isRead,
     link,
+    showPrivateLock,
     subitems,
     subtitle,
     text,
@@ -238,20 +252,16 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               size={avatarSize}
             />
 
-            {!!isPrivate && (
+            {!!showPrivateLock && (
               <ThemedView
                 backgroundColor={backgroundThemeColor}
                 borderColor={backgroundThemeColor}
-                style={[styles.iconContainer, styles.iconContainer__topRight]}
+                style={styles.lockIconContainer}
               >
                 <ThemedIcon
                   name="lock"
-                  color={isRead ? 'foregroundColorMuted65' : 'foregroundColor'}
-                  size={PixelRatio.roundToNearestPixel(
-                    (sizes.iconContainerSize - 2) *
-                      ((sizes.iconSize - 2) / (sizes.iconContainerSize - 2)),
-                  )}
-                  style={styles.icon}
+                  color="foregroundColorMuted65"
+                  style={styles.lockIcon}
                 />
               </ThemedView>
             )}
@@ -259,7 +269,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
             <ThemedView
               backgroundColor={backgroundThemeColor}
               borderColor={backgroundThemeColor}
-              style={[styles.iconContainer, styles.iconContainer__bottomRight]}
+              style={styles.iconContainer}
             >
               <ThemedIcon
                 name={icon.name}
@@ -267,10 +277,6 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                   icon.color ||
                   (isRead ? 'foregroundColorMuted65' : 'foregroundColor')
                 }
-                size={PixelRatio.roundToNearestPixel(
-                  sizes.iconContainerSize *
-                    (sizes.iconSize / sizes.iconContainerSize),
-                )}
                 style={styles.icon}
               />
             </ThemedView>

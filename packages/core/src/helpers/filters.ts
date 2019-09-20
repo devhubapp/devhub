@@ -11,6 +11,7 @@ import {
   EnhancedItem,
   IssueOrPullRequestColumnFilters,
   NotificationColumnFilters,
+  UserPlan,
 } from '../types'
 import { constants } from '../utils'
 import {
@@ -220,6 +221,7 @@ export function itemPassesOwnerOrRepoFilter(
   ownerAndRepoFormattedFilter: ReturnType<
     typeof getOwnerAndRepoFormattedFilter
   >,
+  { plan }: { plan: UserPlan | null | undefined },
 ) {
   const {
     ownerFilterIsStrict,
@@ -233,7 +235,7 @@ export function itemPassesOwnerOrRepoFilter(
     ownerFilters &&
     ownerFiltersWithRepos &&
     repoFilters &&
-    !getItemOwnersAndRepos(type, item).every(or => {
+    !getItemOwnersAndRepos(type, item, { plan }).every(or => {
       const thisOwnerRepoFilters =
         ownerFiltersWithRepos &&
         ownerFiltersWithRepos[or.owner] &&
@@ -267,8 +269,9 @@ export function itemPassesStringSearchFilter(
   type: ColumnSubscription['type'],
   item: EnhancedItem,
   query: string | undefined,
+  { plan }: { plan: UserPlan | null | undefined },
 ) {
-  const itemStrings = getItemSearchableStrings(type, item)
+  const itemStrings = getItemSearchableStrings(type, item, { plan })
   const termsToSearchFor = getSearchQueryTerms(query)
 
   if (!(termsToSearchFor && termsToSearchFor.length)) return true
@@ -373,6 +376,7 @@ export function columnHasAnyFilter(
 export function getFilteredIssueOrPullRequests(
   items: EnhancedGitHubIssueOrPullRequest[],
   filters: IssueOrPullRequestColumnFilters | undefined,
+  { plan }: { plan: UserPlan | null | undefined },
 ) {
   let _items = sortIssuesOrPullRequests(items)
 
@@ -388,13 +392,14 @@ export function getFilteredIssueOrPullRequests(
           'issue_or_pr',
           item,
           ownerAndRepoFormattedFilter,
+          { plan },
         )
       )
         return false
 
       // since we call github's search endpoint,
       // let's let they handle this filter since they also consider all comments and other stuff
-      // if (!itemPassesStringSearchFilter('issue_or_pr', item, filters.query))
+      // if (!itemPassesStringSearchFilter('issue_or_pr', item, filters.query, { plan }))
       //   return false
 
       const isStateFilterStrict = filterRecordWithThisValueCount(
@@ -471,6 +476,7 @@ export function getFilteredIssueOrPullRequests(
 export function getFilteredNotifications(
   notifications: EnhancedGitHubNotification[],
   filters: NotificationColumnFilters | undefined,
+  { plan }: { plan: UserPlan | null | undefined },
 ) {
   let _notifications = sortNotifications(notifications)
 
@@ -492,11 +498,16 @@ export function getFilteredNotifications(
           'notifications',
           item,
           ownerAndRepoFormattedFilter,
+          { plan },
         )
       )
         return false
 
-      if (!itemPassesStringSearchFilter('notifications', item, filters.query))
+      if (
+        !itemPassesStringSearchFilter('notifications', item, filters.query, {
+          plan,
+        })
+      )
         return false
 
       if (
@@ -589,8 +600,10 @@ export function getFilteredEvents(
   filters: ActivityColumnFilters | undefined,
   {
     mergeSimilar,
+    plan,
   }: {
     mergeSimilar: boolean
+    plan: UserPlan | null | undefined
   },
 ) {
   let _events = sortEvents(events)
@@ -610,11 +623,14 @@ export function getFilteredEvents(
           'activity',
           item,
           ownerAndRepoFormattedFilter,
+          { plan },
         )
       )
         return false
 
-      if (!itemPassesStringSearchFilter('activity', item, filters.query))
+      if (
+        !itemPassesStringSearchFilter('activity', item, filters.query, { plan })
+      )
         return false
 
       const isStateFilterStrict = filterRecordWithThisValueCount(

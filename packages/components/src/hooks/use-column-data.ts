@@ -22,6 +22,8 @@ export function useColumnData<ItemT extends EnhancedItem>(
 
   const { column, hasCrossedColumnsLimit } = useColumn(columnId)
 
+  const plan = useReduxState(selectors.currentUserPlanSelector)
+
   const allItems = useReduxState(
     useCallback(
       state => {
@@ -43,6 +45,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
 
     const items = getFilteredItems(column.type, allItems, column.filters, {
       mergeSimilar: !!mergeSimilar,
+      plan,
     })
     if (hasCrossedColumnsLimit) return items.slice(0, 10)
     return items

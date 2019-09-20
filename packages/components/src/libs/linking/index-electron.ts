@@ -1,7 +1,7 @@
 // Source: https://github.com/PaulLeCam/react-native-electron/blob/master/src/apis/Linking.js
 
 import { LinkingCrossPlatform } from './index'
-import { Linking as LinkingOriginal } from './index-native'
+import { Linking as LinkingNative } from './index-native'
 
 const eventHandlers = new Map()
 
@@ -33,10 +33,10 @@ export const Linking: LinkingCrossPlatform = {
       : ''
   },
   getInitialURL() {
-    return LinkingOriginal.getInitialURL()
+    return LinkingNative.getInitialURL()
   },
   openURL: (url: string): Promise<void> => {
-    return LinkingOriginal.openURL(url)
+    return LinkingNative.openURL(url)
   },
   removeEventListener: (type: string, handler: any) => {
     if (!(type === 'url' && typeof handler === 'function')) return

@@ -1,5 +1,5 @@
 import {
-  activePlans,
+  cheapestPlanWithNotifications,
   constants,
   formatPrice,
   getColumnOptionMetadata,
@@ -38,10 +38,6 @@ export const DesktopPreferences = React.memo(() => {
     Platform,
     plan,
   }).enableDesktopPushNotifications.hasAccess
-
-  const cheapestPlanWithNotifications = activePlans
-    .sort((a, b) => a.amount - b.amount)
-    .find(p => p.featureFlags.enablePushNotifications)
 
   return (
     <View>
