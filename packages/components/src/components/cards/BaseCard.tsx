@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
 
-  iconContainer__bottomLeft: {
+  iconContainer__topRight: {
     position: 'absolute',
-    bottom: 0,
-    left: -sizes.iconContainerSize / 2,
+    top: 0,
+    right: 0,
   },
 
   iconContainer__bottomRight: {
@@ -76,9 +76,6 @@ const styles = StyleSheet.create({
 
   icon: {
     marginTop: StyleSheet.hairlineWidth,
-    fontSize: PixelRatio.roundToNearestPixel(
-      sizes.iconContainerSize * (14 / sizes.iconContainerSize),
-    ),
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -241,6 +238,24 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               size={avatarSize}
             />
 
+            {!!isPrivate && (
+              <ThemedView
+                backgroundColor={backgroundThemeColor}
+                borderColor={backgroundThemeColor}
+                style={[styles.iconContainer, styles.iconContainer__topRight]}
+              >
+                <ThemedIcon
+                  name="lock"
+                  color={isRead ? 'foregroundColorMuted65' : 'foregroundColor'}
+                  size={PixelRatio.roundToNearestPixel(
+                    (sizes.iconContainerSize - 2) *
+                      ((sizes.iconSize - 2) / (sizes.iconContainerSize - 2)),
+                  )}
+                  style={styles.icon}
+                />
+              </ThemedView>
+            )}
+
             <ThemedView
               backgroundColor={backgroundThemeColor}
               borderColor={backgroundThemeColor}
@@ -252,6 +267,10 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                   icon.color ||
                   (isRead ? 'foregroundColorMuted65' : 'foregroundColor')
                 }
+                size={PixelRatio.roundToNearestPixel(
+                  sizes.iconContainerSize *
+                    (sizes.iconSize / sizes.iconContainerSize),
+                )}
                 style={styles.icon}
               />
             </ThemedView>
@@ -311,11 +330,6 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                 numberOfLines={1}
                 style={styles.text}
               >
-                {!!isPrivate && (
-                  <>
-                    <ThemedIcon name="lock" />{' '}
-                  </>
-                )}
                 {text}
               </ThemedText>
             )}

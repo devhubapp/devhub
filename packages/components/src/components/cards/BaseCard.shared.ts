@@ -56,12 +56,14 @@ import {
 import { fixURL } from '../../utils/helpers/github/url'
 import { cardItemSeparatorSize } from './partials/CardItemSeparator'
 
-const _iconContainerSize = 19
+const _iconSize = normalTextSize
+const _iconContainerSize = _iconSize + 4
 const _actionFontSize = smallerTextSize
 const _subitemFontSize = smallTextSize
 const _subitemLineHeight = _subitemFontSize + 2
 export const sizes = {
   cardPadding: contentPadding * (2 / 3),
+  iconSize: _iconSize,
   iconContainerSize: _iconContainerSize,
   avatarContainerWidth: PixelRatio.roundToNearestPixel(
     avatarSize + _iconContainerSize / 2,
