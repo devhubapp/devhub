@@ -217,7 +217,7 @@ export function Checkbox(props: CheckboxProps) {
       <Spacer width={checkboxLabelSpacing} />
 
       {!!left && (
-        <View style={disabled && sharedStyles.muted}>
+        <View style={[sharedStyles.horizontal, disabled && sharedStyles.muted]}>
           {left}
           <Spacer width={checkboxLabelSpacing} />
         </View>
@@ -259,7 +259,9 @@ export function Checkbox(props: CheckboxProps) {
             {right}
           </ThemedText>
         ) : (
-          <View style={disabled && sharedStyles.muted}>
+          <View
+            style={[sharedStyles.horizontal, disabled && sharedStyles.muted]}
+          >
             <Spacer width={contentPadding / 2} />
             {right}
           </View>

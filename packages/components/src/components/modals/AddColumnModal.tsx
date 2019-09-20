@@ -255,7 +255,12 @@ function AddColumnModalItem({
           },
         ]}
       >
-        <ThemedIcon color="foregroundColor" name={icon} size={18} />
+        <ThemedIcon
+          color="foregroundColor"
+          name={icon}
+          size={18}
+          style={{ width: 20 }}
+        />
 
         <Spacer width={contentPadding / 2} />
 
