@@ -17,6 +17,7 @@ export function getStaticColors({
     pink: isDark ? '#FF6496' : '#FF5C91',
     purple: isDark ? '#A772Ef' : '#562992',
     red: isDark ? '#DE4A40' : '#FF3F34',
+    transparent: 'transparent',
     teal: isDark ? '#49D3B4' : '#43C3A7',
     white: '#FFFFFF',
     yellow: isDark ? '#FFDE57' : '#F1CC52',

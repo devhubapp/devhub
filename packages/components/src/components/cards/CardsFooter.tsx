@@ -12,6 +12,10 @@ import { fabSize } from '../common/FAB'
 import { fabSpacing, shouldRenderFAB } from '../common/FABRenderer'
 import { Spacer } from '../common/Spacer'
 import { getAppLayout, useAppLayout } from '../context/LayoutContext'
+import {
+  CardItemSeparator,
+  cardItemSeparatorSize,
+} from './partials/CardItemSeparator'
 
 export interface CardsFooterProps {
   clearedAt: string | undefined
@@ -64,7 +68,9 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
             loading={loadState === 'loading_more'}
             onPress={fetchNextPage}
             round={isEmpty}
+            type={isEmpty ? undefined : 'transparent'}
           />
+          {!isEmpty && <CardItemSeparator muted />}
         </View>
       ) : clearedAt ? (
         <View
@@ -118,7 +124,7 @@ export function getCardsFooterSize({
   return hasFetchNextPage
     ? isEmpty
       ? buttonVerticalSpacing
-      : defaultButtonSize
+      : defaultButtonSize + cardItemSeparatorSize
     : clearedAt
     ? buttonVerticalSpacing
     : !isEmpty && shouldRenderFAB({ sizename })

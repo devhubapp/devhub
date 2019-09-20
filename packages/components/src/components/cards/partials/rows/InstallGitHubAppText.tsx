@@ -77,6 +77,7 @@ export const InstallGitHubAppText = React.memo(
           <Link
             analyticsLabel="setup_github_app_from_card"
             disabled={showLoadingIndicator}
+            enableForegroundHover
             onPress={() => startOAuth()}
             style={styles.link}
             textProps={textProps}
@@ -89,6 +90,7 @@ export const InstallGitHubAppText = React.memo(
       return (
         <Link
           analyticsLabel="setup_github_app_from_card"
+          enableForegroundHover
           href={getGitHubAppInstallUri({
             repositoryIds: repoId ? [repoId] : [],
             suggestedTargetId: ownerId,

@@ -28,6 +28,7 @@ export interface StaticThemeColors {
   purple: string
   red: string
   teal: string
+  transparent: 'transparent'
   white: string
   yellow: string
 }

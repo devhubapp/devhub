@@ -27,7 +27,7 @@ export interface ButtonProps extends ThemedTouchableHighlightProps {
   round?: boolean
   size?: number | 'auto'
   textStyle?: ThemedTextProps['style']
-  type?: 'primary' | 'neutral' | 'danger'
+  type?: 'primary' | 'neutral' | 'danger' | 'transparent'
 }
 
 export const defaultButtonSize = 40
@@ -203,6 +203,14 @@ export function getButtonColors(
         foregroundThemeColor: 'primaryForegroundColor',
         backgroundHoverThemeColor: undefined,
         foregroundHoverThemeColor: 'primaryForegroundColor',
+      }
+
+    case 'transparent':
+      return {
+        backgroundThemeColor: 'transparent',
+        foregroundThemeColor: 'foregroundColor',
+        backgroundHoverThemeColor: 'backgroundColorLess1',
+        foregroundHoverThemeColor: 'foregroundColor',
       }
 
     default:

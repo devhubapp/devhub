@@ -8,8 +8,8 @@ import {
 } from '@devhub/core'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { View } from 'react-native'
-
 import { useDispatch } from 'react-redux'
+
 import {
   BaseCardProps,
   getCardPropsForItem,
@@ -26,6 +26,7 @@ import {
 } from '../components/cards/CardsSearchHeader'
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { cardItemSeparatorSize } from '../components/cards/partials/CardItemSeparator'
+import { columnHeaderHeight } from '../components/columns/ColumnHeader'
 import {
   ColumnLoadingIndicator,
   columnLoadingIndicatorSize,
@@ -38,6 +39,7 @@ import { useSafeArea } from '../libs/safe-area-view'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { FlatListItemLayout } from '../utils/types'
+import { useDimensions } from './use-dimensions'
 import { useReduxState } from './use-redux-state'
 
 export interface DataItemT<ItemT extends EnhancedItem> {
@@ -75,6 +77,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   const appSafeAreaInsets = useSafeArea()
   const { appOrientation } = useAppLayout()
+  const { height: windowHeight } = useDimensions('height')
 
   const dispatch = useDispatch()
   const plan = useReduxState(selectors.currentUserPlanSelector)
@@ -182,11 +185,17 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     isEmpty: !(items && items.length > 0),
     refresh,
   }
+  const sticky = !!(
+    !fetchNextPage &&
+    cardsFooterProps.clearedAt &&
+    itemLayouts[itemLayouts.length - 1] &&
+    itemLayouts[itemLayouts.length - 1]!.offset +
+      itemLayouts[itemLayouts.length - 1]!.length <
+      windowHeight - ((header && header.size) || 0) - columnHeaderHeight
+  )
+
   const footer = useMemo<OneListProps<DataItemT<ItemT>>['footer']>(() => {
     if (isOverMaxColumnLimit || isOverPlanColumnLimit) return undefined
-
-    const sticky =
-      !cardsFooterProps.fetchNextPage && !!cardsFooterProps.clearedAt
 
     return {
       size: getCardsFooterSize({
@@ -205,6 +214,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     cardsFooterProps.refresh,
     isOverMaxColumnLimit,
     isOverPlanColumnLimit,
+    sticky,
   ])
 
   const safeAreaInsets: OneListProps<
