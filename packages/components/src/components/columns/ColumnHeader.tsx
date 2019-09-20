@@ -21,6 +21,7 @@ import { contentPadding, smallerTextSize } from '../../styles/variables'
 import { Avatar } from '../common/Avatar'
 import { IconButton, IconButtonProps } from '../common/IconButton'
 import { Link } from '../common/Link'
+import { ScrollViewWithOverlay } from '../common/ScrollViewWithOverlay'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { TouchableWithoutFeedback } from '../common/TouchableWithoutFeedback'
@@ -52,8 +53,13 @@ export interface ColumnHeaderProps {
 }
 
 export const columnHeaderItemContentSize = 17
+const columnHeaderTitleSize = columnHeaderItemContentSize - 1
+const columnHeaderTitleLineHeight = columnHeaderTitleSize + 4
+const columnHeaderSubtitleSize = columnHeaderItemContentSize - 5
+const columnHeaderSubtitleLineHeight = columnHeaderSubtitleSize + 4
+
 export const columnHeaderHeight =
-  contentPadding * 2 + columnHeaderItemContentSize
+  contentPadding + columnHeaderTitleLineHeight + columnHeaderSubtitleLineHeight
 
 export function ColumnHeader(props: ColumnHeaderProps) {
   const {
@@ -123,160 +129,173 @@ export function ColumnHeader(props: ColumnHeaderProps) {
             </>
           )}
 
-          <View style={styles.mainContentContainer}>
+          <ScrollViewWithOverlay
+            horizontal
+            containerStyle={styles.mainContainer}
+            contentContainerStyle={styles.mainContentContainer}
+          >
             {avatar && avatar.imageURL ? (
               <>
                 <Avatar
                   avatarUrl={avatar.imageURL}
                   linkURL={avatar.linkURL}
                   shape="circle"
-                  size={columnHeaderItemContentSize}
+                  size={columnHeaderItemContentSize * 1.1}
                 />
-                <Spacer width={contentPadding / 2} />
+                <Spacer width={(contentPadding * 2) / 3} />
               </>
             ) : icon ? (
               <>
                 <ThemedIcon
                   color="foregroundColor"
                   name={icon}
-                  size={columnHeaderItemContentSize}
+                  size={columnHeaderItemContentSize * 1.1}
                 />
-                <Spacer width={contentPadding / 2} />
+                <Spacer width={(contentPadding * 2) / 3} />
               </>
             ) : null}
 
-            {!!title && (
-              <>
-                <ThemedText color="foregroundColor" style={styles.title}>
-                  {title}
-                </ThemedText>
-                <Spacer width={contentPadding / 2} />
-              </>
-            )}
+            <View>
+              {!!title && (
+                <>
+                  <ThemedText
+                    color="foregroundColor"
+                    numberOfLines={1}
+                    style={styles.title}
+                  >
+                    {title}
+                  </ThemedText>
 
-            {!!subtitle && (
-              <>
-                <ThemedText
-                  color="foregroundColorMuted65"
-                  style={styles.subtitle}
-                >
-                  {subtitle}
-                </ThemedText>
-                <Spacer width={contentPadding / 2} />
+                  <Spacer width={contentPadding / 2} />
+                </>
+              )}
 
-                {Platform.OS === 'web' &&
-                  (!enableDesktopPushNotificationsOption.platformSupports ||
-                    !enableDesktopPushNotificationsOption.hasAccess ||
-                    enableDesktopPushNotificationsOption.value) && (
-                    <>
-                      <Link
-                        analyticsLabel="column_header_push_notifications_cta"
-                        hitSlop={{
-                          top: contentPadding,
-                          bottom: contentPadding,
-                          left: contentPadding,
-                          right: contentPadding,
-                        }}
-                        onPress={
-                          !enableDesktopPushNotificationsOption.platformSupports ||
-                          !enableDesktopPushNotificationsOption.hasAccess
-                            ? () => {
-                                dispatch(
-                                  actions.pushModal({
-                                    name: 'PRICING',
-                                    params: {
-                                      highlightFeature:
-                                        'enablePushNotifications',
-                                      // initialSelectedPlanId:
-                                      //   cheapestPlanWithNotifications.id,
-                                    },
-                                  }),
-                                )
-                              }
-                            : undefined
-                        }
-                        style={sharedStyles.relative}
-                      >
-                        <ThemedIcon
-                          color="foregroundColorMuted40"
-                          name="bell"
-                          size={smallerTextSize}
-                          {...Platform.select({
-                            web: {
-                              title:
-                                enableDesktopPushNotificationsOption.hasAccess &&
-                                enableDesktopPushNotificationsOption.value
-                                  ? `${
-                                      enableDesktopPushNotificationsOption.hasAccess ===
+              {!!subtitle && (
+                <>
+                  <View style={sharedStyles.horizontal}>
+                    <ThemedText
+                      color="foregroundColorMuted65"
+                      numberOfLines={1}
+                      style={styles.subtitle}
+                    >
+                      {subtitle}
+                    </ThemedText>
+
+                    <Spacer width={contentPadding / 2} />
+
+                    {Platform.OS === 'web' &&
+                      (!enableDesktopPushNotificationsOption.platformSupports ||
+                        !enableDesktopPushNotificationsOption.hasAccess ||
+                        enableDesktopPushNotificationsOption.value) && (
+                        <Link
+                          analyticsLabel="column_header_push_notifications_cta"
+                          hitSlop={{
+                            top: contentPadding,
+                            bottom: contentPadding,
+                            left: contentPadding,
+                            right: contentPadding,
+                          }}
+                          onPress={
+                            !enableDesktopPushNotificationsOption.platformSupports ||
+                            !enableDesktopPushNotificationsOption.hasAccess
+                              ? () => {
+                                  dispatch(
+                                    actions.pushModal({
+                                      name: 'PRICING',
+                                      params: {
+                                        highlightFeature:
+                                          'enablePushNotifications',
+                                        // initialSelectedPlanId:
+                                        //   cheapestPlanWithNotifications.id,
+                                      },
+                                    }),
+                                  )
+                                }
+                              : undefined
+                          }
+                          style={sharedStyles.relative}
+                        >
+                          <ThemedIcon
+                            color="foregroundColorMuted40"
+                            name="bell"
+                            size={smallerTextSize}
+                            {...Platform.select({
+                              web: {
+                                title:
+                                  enableDesktopPushNotificationsOption.hasAccess &&
+                                  enableDesktopPushNotificationsOption.value
+                                    ? `${
+                                        enableDesktopPushNotificationsOption.hasAccess ===
+                                        'trial'
+                                          ? '[TRIAL] '
+                                          : ''
+                                      }Push Notifications are enabled for this column${
+                                        enableDesktopPushNotificationsOption.platformSupports
+                                          ? Platform.isElectron &&
+                                            !enableDesktopPushNotifications
+                                            ? ', but disabled on this device.'
+                                            : '.'
+                                          : ', but not supported on this platform. ' +
+                                              'Download the Desktop app to have access to it.' +
+                                              enableDesktopPushNotificationsOption.hasAccess ===
+                                            'trial'
+                                          ? ' \n\nPS: You are currently on a free trial, enjoy it!'
+                                          : ''
+                                      }`
+                                    : !enableDesktopPushNotificationsOption.platformSupports
+                                    ? 'Push Notifications are not supported on this platform.' +
+                                      ' Download the Desktop app to have access to it.' +
+                                      (enableDesktopPushNotificationsOption.hasAccess ===
                                       'trial'
-                                        ? '[TRIAL] '
-                                        : ''
-                                    }Push Notifications are enabled for this column${
-                                      enableDesktopPushNotificationsOption.platformSupports
-                                        ? Platform.isElectron &&
-                                          !enableDesktopPushNotifications
-                                          ? ', but disabled on this device.'
-                                          : '.'
-                                        : ', but not supported on this platform. ' +
-                                            'Download the Desktop app to have access to it.' +
-                                            enableDesktopPushNotificationsOption.hasAccess ===
-                                          'trial'
                                         ? ' \n\nPS: You are currently on a free trial, enjoy it!'
-                                        : ''
-                                    }`
-                                  : !enableDesktopPushNotificationsOption.platformSupports
-                                  ? 'Push Notifications are not supported on this platform.' +
-                                    ' Download the Desktop app to have access to it.' +
-                                    (enableDesktopPushNotificationsOption.hasAccess ===
-                                    'trial'
-                                      ? ' \n\nPS: You are currently on a free trial, enjoy it!'
-                                      : '')
-                                  : !enableDesktopPushNotificationsOption.hasAccess &&
-                                    cheapestPlanWithNotifications &&
-                                    cheapestPlanWithNotifications.amount
-                                  ? `Unlock Push Notifications and other features for ${formatPrice(
-                                      cheapestPlanWithNotifications.amount,
-                                      cheapestPlanWithNotifications.currency,
-                                    )}/${
-                                      cheapestPlanWithNotifications.interval
-                                    }`
-                                  : '',
-                            },
-                          })}
-                        />
+                                        : '')
+                                    : !enableDesktopPushNotificationsOption.hasAccess &&
+                                      cheapestPlanWithNotifications &&
+                                      cheapestPlanWithNotifications.amount
+                                    ? `Unlock Push Notifications and other features for ${formatPrice(
+                                        cheapestPlanWithNotifications.amount,
+                                        cheapestPlanWithNotifications.currency,
+                                      )}/${
+                                        cheapestPlanWithNotifications.interval
+                                      }`
+                                    : '',
+                              },
+                            })}
+                          />
 
-                        {!!(
-                          !enableDesktopPushNotificationsOption.hasAccess ||
-                          !enableDesktopPushNotificationsOption.platformSupports ||
-                          (Platform.isElectron &&
-                            !enableDesktopPushNotifications)
-                        ) && (
-                          <ThemedView
-                            style={[
-                              StyleSheet.absoluteFill,
-                              sharedStyles.center,
-                            ]}
-                            pointerEvents="none"
-                          >
+                          {!!(
+                            !enableDesktopPushNotificationsOption.hasAccess ||
+                            !enableDesktopPushNotificationsOption.platformSupports ||
+                            (Platform.isElectron &&
+                              !enableDesktopPushNotifications)
+                          ) && (
                             <ThemedView
-                              backgroundColor="lightRed"
-                              style={{
-                                width: 1,
-                                height: smallerTextSize + 4,
-                                transform: [{ rotateZ: '45deg' }],
-                              }}
+                              style={[
+                                StyleSheet.absoluteFill,
+                                sharedStyles.center,
+                              ]}
                               pointerEvents="none"
-                            />
-                          </ThemedView>
-                        )}
-                      </Link>
+                            >
+                              <ThemedView
+                                backgroundColor="lightRed"
+                                style={{
+                                  width: 1,
+                                  height: smallerTextSize + 4,
+                                  transform: [{ rotateZ: '45deg' }],
+                                }}
+                                pointerEvents="none"
+                              />
+                            </ThemedView>
+                          )}
+                        </Link>
+                      )}
+                  </View>
 
-                      <Spacer width={contentPadding / 2} />
-                    </>
-                  )}
-              </>
-            )}
-          </View>
+                  <Spacer width={contentPadding / 2} />
+                </>
+              )}
+            </View>
+          </ScrollViewWithOverlay>
 
           {right}
         </View>
@@ -294,7 +313,9 @@ export type ColumnHeaderButtonProps = IconButtonProps
 const styles = StyleSheet.create({
   container: {
     alignSelf: 'stretch',
+    maxWidth: '100%',
     height: 'auto',
+    overflow: 'hidden',
   },
 
   innerContainer: {
@@ -302,25 +323,31 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignContent: 'center',
     alignItems: 'center',
+    maxWidth: '100%',
     height: columnHeaderHeight,
+    overflow: 'hidden',
+  },
+
+  mainContainer: {
+    flex: 1,
+    maxWidth: '100%',
+    height: columnHeaderTitleLineHeight + columnHeaderSubtitleLineHeight,
+    overflow: 'hidden',
   },
 
   mainContentContainer: {
-    flex: 1,
-    alignSelf: 'stretch',
-    flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
-    height: '100%',
   },
 
   title: {
-    lineHeight: columnHeaderItemContentSize,
-    fontSize: columnHeaderItemContentSize - 1,
+    lineHeight: columnHeaderTitleLineHeight,
+    fontSize: columnHeaderTitleSize,
     fontWeight: '800',
   },
 
   subtitle: {
-    fontSize: columnHeaderItemContentSize - 5,
+    lineHeight: columnHeaderSubtitleLineHeight,
+    fontSize: columnHeaderSubtitleSize,
   },
 })
