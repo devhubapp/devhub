@@ -40,7 +40,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
       { id: 'enableSync', label: 'Sync between devices', available: false },
       {
         id: 'enablePrivateRepositories',
-        label: 'Private repositorites',
+        label: 'Private repositories',
         available: false,
       },
       {
@@ -79,7 +79,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
       { id: 'enableSync', label: 'Sync between devices', available: true },
       {
         id: 'enablePrivateRepositories',
-        label: 'Private repositorites',
+        label: 'Private repositories',
         available: true,
       },
       {
@@ -117,7 +117,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
       { id: 'enableSync', label: 'Sync between devices', available: true },
       {
         id: 'enablePrivateRepositories',
-        label: 'Private repositorites',
+        label: 'Private repositories',
         available: true,
       },
       {
@@ -155,7 +155,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
       { id: 'enableSync', label: 'Sync between devices', available: true },
       {
         id: 'enablePrivateRepositories',
-        label: 'Private repositorites',
+        label: 'Private repositories',
         available: true,
       },
       {
