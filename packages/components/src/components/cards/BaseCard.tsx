@@ -74,26 +74,6 @@ const styles = StyleSheet.create({
     ),
   },
 
-  lockIconContainer: {
-    position: 'absolute',
-    top: 1,
-    right: 0,
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    width: sizes.iconContainerSize,
-    height: sizes.iconContainerSize,
-    borderRadius: sizes.iconContainerSize / 2,
-    borderWidth: 2,
-  },
-
-  lockIcon: {
-    marginTop: StyleSheet.hairlineWidth,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: sizes.iconSize,
-  },
-
   title: {
     flex: 1,
     lineHeight: sizes.rightTextLineHeight,
@@ -252,20 +232,6 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               size={avatarSize}
             />
 
-            {!!showPrivateLock && (
-              <ThemedView
-                backgroundColor={backgroundThemeColor}
-                borderColor={backgroundThemeColor}
-                style={styles.lockIconContainer}
-              >
-                <ThemedIcon
-                  name="lock"
-                  color="foregroundColorMuted65"
-                  style={styles.lockIcon}
-                />
-              </ThemedView>
-            )}
-
             <ThemedView
               backgroundColor={backgroundThemeColor}
               borderColor={backgroundThemeColor}
@@ -314,6 +280,16 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                       >
                         {dateText}
                       </ThemedText>
+
+                      {!!showPrivateLock && (
+                        <>
+                          <Text children="  " />
+                          <ThemedIcon
+                            name="lock"
+                            color="foregroundColorMuted65"
+                          />
+                        </>
+                      )}
                     </>
                   )
                 }}
