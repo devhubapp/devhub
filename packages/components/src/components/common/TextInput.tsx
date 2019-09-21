@@ -6,7 +6,7 @@ import {
 
 import { ThemeTransformer } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, radius } from '../../styles/variables'
 import { useTheme } from '../context/ThemeContext'
 
 export interface TextInputProps extends Omit<TextInputOriginalProps, 'style'> {
@@ -38,12 +38,16 @@ export const TextInput = React.forwardRef(
     const {
       disableBlurOnEsc,
       fontSize = 14,
-      size = defaultTextInputHeight,
+      size: _size,
       style,
       textInputKey,
       themeTransformer,
       ..._otherProps
     } = props
+
+    const size =
+      _size ||
+      (props.multiline ? defaultTextInputHeight * 2 : defaultTextInputHeight)
 
     const [isFocused, setIsFocused] = useState(false)
 
@@ -60,7 +64,7 @@ export const TextInput = React.forwardRef(
       borderFocusColor = theme.primaryBackgroundColor,
       borderHoverColor = theme.backgroundColorDarker2,
       borderColor: _borderColor = theme.backgroundColorDarker1,
-      placeholderTextColor = theme.foregroundColorMuted40,
+      placeholderTextColor = theme.foregroundColorMuted65,
       textFocusColor = theme.foregroundColor,
       textHoverColor = theme.foregroundColorMuted65,
       textColor: _textColor = theme.foregroundColorMuted65,
@@ -111,9 +115,9 @@ export const TextInput = React.forwardRef(
             lineHeight: Math.min(fontSize + 4, size),
             height: size,
             margin: 0,
-            paddingVertical: 0,
+            paddingVertical: props.multiline ? contentPadding / 2 : 0,
             paddingHorizontal: contentPadding,
-            borderRadius: size / 2,
+            borderRadius: props.multiline ? radius : size / 2,
             borderWidth: 1,
             fontSize,
           },

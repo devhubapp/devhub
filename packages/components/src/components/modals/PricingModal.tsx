@@ -10,7 +10,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, smallTextSize } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
@@ -18,6 +18,7 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { ThemedText } from '../themed/ThemedText'
 import {
   defaultPricingBlockWidth,
   PricingPlanBlock,
@@ -237,6 +238,25 @@ export function PricingModal(props: PricingModalProps) {
                 : 'Select another plan'
               : 'Select a plan'}
           </Button>
+
+          <Spacer height={contentPadding} />
+
+          <ThemedText
+            color="foregroundColorMuted65"
+            style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
+          >
+            {userPlan &&
+            (userPlan.status === 'active' || userPlan.status === 'trialing') &&
+            userPlan.amount > 0
+              ? selectedPlan && !selectedPlan.amount
+                ? ''
+                : 'Thank you for being part of this 💚'
+              : selectedPlan && selectedPlan.amount
+              ? '💚'
+              : 'DevHub is made by a single person working on it full time. ' +
+                'It needs to be a sustainable project to exist. \n\n' +
+                'If you want DevHub to keep existing and being updated, consider purchasing a paid plan.'}
+          </ThemedText>
         </View>
 
         <Spacer height={contentPadding} />
