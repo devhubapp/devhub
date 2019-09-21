@@ -15,9 +15,8 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, smallerTextSize } from '../../styles/variables'
 import { Checkbox } from '../common/Checkbox'
-import { ConditionalWrap } from '../common/ConditionalWrap'
 import { IconButton } from '../common/IconButton'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
@@ -146,42 +145,12 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
         />
       )}
 
-      <ConditionalWrap
-        condition={
-          !hasCrossedColumnsLimit &&
-          (!enableDesktopPushNotificationsOption.platformSupports ||
-            !enableDesktopPushNotificationsOption.hasAccess)
-        }
-        wrap={c =>
-          hasCrossedColumnsLimit ? (
-            c
-          ) : enableDesktopPushNotificationsOption.platformSupports ? (
-            enableDesktopPushNotificationsOption.hasAccess ? null : (
-              <Link
-                analyticsLabel="column_option_desktop_push_notifications_pro_link"
-                children={c}
-                onPress={() => {
-                  dispatch(
-                    actions.pushModal({
-                      name: 'PRICING',
-                      params: cheapestPlanWithNotifications && {
-                        highlightFeature: 'enablePushNotifications',
-                        // initialSelectedPlanId: cheapestPlanWithNotifications.id,
-                      },
-                    }),
-                  )
-                }}
-              />
-            )
-          ) : (
-            <Link
-              analyticsLabel="column_option_desktop_push_notifications_download_link"
-              children={c}
-              openOnNewTab
-              href={`${constants.LANDING_BASE_URL}/download`}
-            />
-          )
-        }
+      <View
+        style={[
+          sharedStyles.horizontal,
+          sharedStyles.alignItemsCenter,
+          sharedStyles.fullWidth,
+        ]}
       >
         <Checkbox
           analyticsLabel="column_option_desktop_push_notification"
@@ -212,26 +181,80 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
               }),
             )
           }}
-          right={
-            hasCrossedColumnsLimit
-              ? null
-              : !enableDesktopPushNotificationsOption.platformSupports
-              ? 'DOWNLOAD'
-              : !enableDesktopPushNotificationsOption.hasAccess &&
-                cheapestPlanWithNotifications
-              ? 'UNLOCK'
-              : enableDesktopPushNotificationsOption.hasAccess === 'trial'
-              ? 'ON TRIAL'
-              : null
-          }
         />
-      </ConditionalWrap>
+
+        {hasCrossedColumnsLimit ? null : !enableDesktopPushNotificationsOption.platformSupports ? (
+          <Link
+            analyticsLabel="column_option_desktop_push_notifications_download_link"
+            enableForegroundHover
+            openOnNewTab
+            href={`${constants.LANDING_BASE_URL}/download`}
+            style={{ marginRight: contentPadding / 2 }}
+            textProps={{
+              color: 'foregroundColorMuted65',
+              style: { fontSize: smallerTextSize },
+            }}
+          >
+            DOWNLOAD
+          </Link>
+        ) : !enableDesktopPushNotificationsOption.hasAccess &&
+          cheapestPlanWithNotifications ? (
+          <Link
+            analyticsLabel="column_option_desktop_push_notifications_pro_link"
+            enableForegroundHover
+            onPress={() => {
+              dispatch(
+                actions.pushModal({
+                  name: 'PRICING',
+                  params: cheapestPlanWithNotifications && {
+                    highlightFeature: 'enablePushNotifications',
+                    // initialSelectedPlanId: cheapestPlanWithNotifications.id,
+                  },
+                }),
+              )
+            }}
+            style={{ marginRight: contentPadding / 2 }}
+            textProps={{
+              color: 'foregroundColorMuted65',
+              style: { fontSize: smallerTextSize },
+            }}
+          >
+            UNLOCK
+          </Link>
+        ) : enableDesktopPushNotificationsOption.hasAccess === 'trial' &&
+          (plan && plan.amount > 0) ? (
+          <Link
+            analyticsLabel="column_option_desktop_push_notifications_on_trial_link"
+            enableForegroundHover
+            onPress={() => {
+              dispatch(
+                actions.pushModal({
+                  name: 'PRICING',
+                  params: cheapestPlanWithNotifications && {
+                    highlightFeature: 'enablePushNotifications',
+                    initialSelectedPlanId: plan.id,
+                  },
+                }),
+              )
+            }}
+            style={{ marginRight: contentPadding / 2 }}
+            textProps={{
+              color: 'foregroundColorMuted65',
+              style: { fontSize: smallerTextSize },
+            }}
+          >
+            ON TRIAL
+          </Link>
+        ) : null}
+      </View>
 
       {(Platform.realOS === 'ios' || Platform.realOS === 'android') && (
-        <Link
-          analyticsLabel="column_option_mobile_push_notifications_soon_link"
-          openOnNewTab
-          href="https://github.com/devhubapp/devhub/issues/51"
+        <View
+          style={[
+            sharedStyles.horizontal,
+            sharedStyles.alignItemsCenter,
+            sharedStyles.fullWidth,
+          ]}
         >
           <Checkbox
             analyticsLabel="column_option_mobile_push_notification"
@@ -244,12 +267,25 @@ export const ColumnOptions = React.memo<ColumnOptionsProps>(props => {
             enableIndeterminateState={false}
             label="Mobile push notifications"
             onChange={undefined}
-            right="SOON"
             squareContainerStyle={
               sharedColumnOptionsStyles.checkboxSquareContainer
             }
           />
-        </Link>
+
+          <Link
+            analyticsLabel="column_option_mobile_push_notifications_soon_link"
+            enableForegroundHover
+            openOnNewTab
+            href="https://github.com/devhubapp/devhub/issues/51"
+            style={{ marginRight: contentPadding / 2 }}
+            textProps={{
+              color: 'foregroundColorMuted65',
+              style: { fontSize: smallerTextSize },
+            }}
+          >
+            SOON
+          </Link>
+        </View>
       )}
 
       <Spacer height={contentPadding / 2} />
