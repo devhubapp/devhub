@@ -59,8 +59,8 @@ import {
 import { fixURL } from '../../utils/helpers/github/url'
 import { cardItemSeparatorSize } from './partials/CardItemSeparator'
 
-const _iconSize = normalTextSize
-const _iconContainerSize = _iconSize + 4
+const _iconSize = smallAvatarSize - 4
+const _iconContainerSize = smallAvatarSize
 const _actionFontSize = smallerTextSize
 const _subitemFontSize = smallTextSize
 const _subitemLineHeight = _subitemFontSize + 2
@@ -69,11 +69,9 @@ export const sizes = {
   iconSize: PixelRatio.roundToNearestPixel(_iconSize),
   iconContainerSize: _iconContainerSize,
   avatarContainerWidth: PixelRatio.roundToNearestPixel(
-    avatarSize + _iconContainerSize / 2,
+    avatarSize + _iconContainerSize / 3,
   ),
-  avatarContainerHeight: PixelRatio.roundToNearestPixel(
-    avatarSize + _iconContainerSize / 4,
-  ),
+  avatarContainerHeight: PixelRatio.roundToNearestPixel(avatarSize),
   actionContainerHeight: Math.max(_actionFontSize, smallAvatarSize),
   actionFontSize: _actionFontSize,
   subitemContainerHeight: Math.max(_subitemLineHeight, smallAvatarSize),

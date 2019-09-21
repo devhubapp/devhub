@@ -250,7 +250,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
           <Spacer width={sizes.horizontalSpaceSize} />
 
-          <View style={sharedStyles.flex}>
+          <View style={[sharedStyles.flex, sharedStyles.alignSelfCenter]}>
             <Spacer height={sizes.rightInnerTopSpacing} />
 
             <View style={sharedStyles.horizontalAndVerticallyAligned}>

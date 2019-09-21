@@ -1,5 +1,5 @@
-export const avatarSize = 36
-export const smallAvatarSize = 16
+export const avatarSize = 40
+export const smallAvatarSize = 18
 
 export const contentPadding = 16
 export const mutedOpacity = 0.6
