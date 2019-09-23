@@ -14,11 +14,16 @@ export function playAudioFile(file: string) {
       'play',
       'omxplayer',
       'aplay',
-      'cmdmp3',
+      'powershell',
     ])
     if (!command) throw new Error('No executable found to play sounde.')
 
-    const process = spawn(command, [file], { stdio: 'ignore' })
+    // TODO: Fix delay on windows, it's taking a couple seconds to play
+    const args =
+      command === 'powershell'
+        ? ['-c', `(New-Object System.Media.SoundPlayer '${file}').PlaySync();`]
+        : [file]
+    const process = spawn(command, args, { stdio: 'ignore' })
     if (!process) throw new Error('Unable to spawn process .')
 
     return true
