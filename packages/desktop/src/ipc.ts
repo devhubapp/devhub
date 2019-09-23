@@ -1,11 +1,10 @@
+import { ItemPushNotification } from '@devhub/core'
 import { app, dialog, ipcMain, Notification } from 'electron'
 
-import { ItemPushNotification } from '@devhub/core'
 import * as config from './config'
 import * as constants from './constants'
 import { getDock } from './dock'
 import * as helpers from './helpers'
-import { playAudioFile } from './libs/play-sound'
 import * as tray from './tray'
 import * as window from './window'
 
@@ -97,14 +96,14 @@ export function register() {
         case 'enablePushNotifications': {
           config.store.set('enablePushNotifications', value)
           if (value && config.store.get('enablePushNotificationsSound'))
-            playAudioFile(constants.notificationSoundPath)
+            helpers.playNotificationSound()
           break
         }
 
         case 'enablePushNotificationsSound': {
           config.store.set('enablePushNotificationsSound', value)
 
-          if (value) playAudioFile(constants.notificationSoundPath)
+          if (value) helpers.playNotificationSound()
 
           break
         }
@@ -211,10 +210,15 @@ export function register() {
       notification.show()
 
       if (config.store.get('enablePushNotificationsSound') !== false) {
-        playAudioFile(constants.notificationSoundPath)
+        helpers.playNotificationSound()
       }
     },
   )
+
+  ipcMain.removeAllListeners('play-notification-sound')
+  ipcMain.addListener('play-notification-sound', () => {
+    helpers.playNotificationSound()
+  })
 }
 
 export function emit(

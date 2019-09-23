@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Elements, StripeProvider } from 'react-stripe-elements'
 
+import { InteractionManager } from 'react-native'
 import { STRIPE_PUBLIC_KEY, StripeLoaderProps } from './StripeLoader.shared'
 
 export function StripeLoader(props: StripeLoaderProps) {
@@ -22,7 +23,10 @@ export function StripeLoader(props: StripeLoaderProps) {
     let isMounted = true
     script.onload = () => {
       if (!(isMounted && window.Stripe)) return
-      setStripe(window.Stripe(STRIPE_PUBLIC_KEY))
+
+      InteractionManager.runAfterInteractions(() => {
+        setStripe(window.Stripe(STRIPE_PUBLIC_KEY))
+      })
     }
 
     document.head.appendChild(script)

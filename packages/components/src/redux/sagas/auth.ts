@@ -110,6 +110,8 @@ function* onLoginRequest(
                 currentPeriodStartAt
                 currentPeriodEndAt
 
+                reason
+
                 featureFlags {
                   columnsLimit
                   enableFilters

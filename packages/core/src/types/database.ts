@@ -32,6 +32,9 @@ export interface DatabaseUserPlan {
   currentPeriodStartAt: string | undefined
   currentPeriodEndAt: string | undefined
 
+  reason?: string | undefined
+  userPlansToKeepUsing?: boolean | null | undefined
+
   createdAt: string
   updatedAt: string
 }

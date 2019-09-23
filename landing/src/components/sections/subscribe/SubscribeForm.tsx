@@ -104,6 +104,8 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                   currentPeriodStartAt
                   currentPeriodEndAt
 
+                  reason
+
                   featureFlags {
                     columnsLimit
                     enableFilters

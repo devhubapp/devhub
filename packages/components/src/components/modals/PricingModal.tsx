@@ -127,7 +127,15 @@ export function PricingModal(props: PricingModalProps) {
       plan.amount > 0 ? (
         <PricingPlanBlock
           key={`pricing-plan-${plan.id}`}
-          banner={plan.cannonicalId === 'pro' ? 'Recommended' : true}
+          banner={
+            userPlan && userPlan.amount > plan.amount
+              ? true
+              : plan.cannonicalId === 'pro'
+              ? 'Recommended'
+              : plan.cannonicalId === 'starter'
+              ? 'Most popular'
+              : true
+          }
           highlightFeature={highlightFeature}
           isSelected={selectedPlanId === plan.id}
           onSelect={() => {
@@ -151,7 +159,7 @@ export function PricingModal(props: PricingModalProps) {
           showFeatures
         />
       ),
-    [selectedPlanId, highlightFeature],
+    [selectedPlanId, highlightFeature, userPlan && userPlan.amount],
   )
 
   return (
@@ -253,9 +261,7 @@ export function PricingModal(props: PricingModalProps) {
                 : 'Thank you for being part of this 💚'
               : selectedPlan && selectedPlan.amount
               ? '💚'
-              : 'DevHub is made by a single person working on it full time. ' +
-                'It needs to be a sustainable project to exist. \n\n' +
-                'If you want DevHub to keep existing and being updated, consider purchasing a paid plan.'}
+              : 'If you want DevHub to keep existing and being updated, consider purchasing a paid plan.'}
           </ThemedText>
         </View>
 

@@ -1,5 +1,5 @@
 import { activePlans, PlanID } from '@devhub/core'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
@@ -38,6 +38,13 @@ export function SubscribeModal(props: SubscribeModalProps) {
     if (!(plan && plan.id)) {
       dispatch(actions.popModal())
     }
+  }, [plan && plan.id])
+
+  const onSubscribeOrDowngrade = useCallback(() => {
+    if (!(plan && plan.id)) return
+    dispatch(
+      actions.replaceModal({ name: 'SUBSCRIBED', params: { planId: plan.id } }),
+    )
   }, [plan && plan.id])
 
   if (!(plan && plan.id))
@@ -142,7 +149,10 @@ export function SubscribeModal(props: SubscribeModalProps) {
         )}
 
         {!!(Platform.OS === 'web' && plan && plan.id) && (
-          <SubscribeForm planId={plan && plan.id} />
+          <SubscribeForm
+            planId={plan && plan.id}
+            onSubscribe={onSubscribeOrDowngrade}
+          />
         )}
       </FullHeightScrollView>
     </ModalColumn>

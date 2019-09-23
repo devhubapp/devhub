@@ -49,6 +49,10 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     Platform.isElectron && enableDesktopPushNotifications === false
   )
 
+  useEffect(() => {
+    notificationsLastShowedAtRef.current = new Date().toISOString()
+  }, [plan && plan.id])
+
   columns.forEach(column => {
     if (!column) return
 

@@ -14,7 +14,7 @@ export const HOSTNAME =
 export const IS_BETA =
   APP_VERSION.includes('beta') || (!!HOSTNAME && HOSTNAME.includes('beta'))
 
-export const COLUMNS_LIMIT = 20
+export const COLUMNS_LIMIT = 25
 export const MIN_COLUMN_WIDTH = 300
 export const MAX_COLUMN_WIDTH = 340
 

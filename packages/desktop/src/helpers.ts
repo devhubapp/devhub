@@ -4,6 +4,7 @@ import path from 'path'
 
 import * as constants from './constants'
 import { __DEV__ } from './libs/electron-is-dev'
+import { playAudioFile } from './libs/play-sound'
 import { getMainWindow } from './window'
 
 export function registerAppSchema() {
@@ -70,4 +71,17 @@ export async function imageURLToNativeImage(imageURL: string | undefined) {
       dialog.showMessageBox(getMainWindow()!, { message: `${error}` })
     }
   }
+}
+
+let lastNotificationSoundPlayedAt: string
+export function playNotificationSound() {
+  if (
+    lastNotificationSoundPlayedAt &&
+    Date.now() - new Date(lastNotificationSoundPlayedAt).getTime() < 3000
+  ) {
+    return
+  }
+
+  lastNotificationSoundPlayedAt = new Date().toISOString()
+  playAudioFile(constants.notificationSoundPath)
 }

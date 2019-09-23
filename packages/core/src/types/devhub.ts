@@ -419,6 +419,10 @@ export type ModalPayload =
       name: 'SUBSCRIBE'
       params: { planId: PlanID | undefined }
     }
+  | {
+      name: 'SUBSCRIBED'
+      params: { planId: PlanID }
+    }
 
 export type ModalPayloadWithIndex = ModalPayload & { index: number }
 

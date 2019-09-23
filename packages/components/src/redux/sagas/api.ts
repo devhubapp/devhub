@@ -107,6 +107,8 @@ function* onSyncDown() {
               currentPeriodStartAt
               currentPeriodEndAt
 
+              reason
+
               featureFlags {
                 columnsLimit
                 enableFilters

@@ -10,7 +10,7 @@ const pricingPlanComponents = activePlans.map(plan =>
   plan.amount > 0 ? (
     <PricingPlanBlock
       key={`pricing-plan-${plan.id}`}
-      banner={plan.cannonicalId === 'pro' ? 'Recommended' : true}
+      banner={plan.cannonicalId === 'starter' ? 'Most popular' : true}
       buttonLink={`/subscribe?plan=${plan.cannonicalId}`}
       plan={plan}
     />
