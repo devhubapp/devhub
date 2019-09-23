@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2181</string>
+	<string>2225</string>
 	<key>ENTRY_FILE</key>
 	<string>$(ENTRY_FILE)</string>
 	<key>LSRequiresIPhoneOS</key>
