@@ -49,6 +49,7 @@ const dimensionsMapper = {
   is_dev: 'dimension6',
   light_theme_id: 'dimension7',
   dark_theme_id: 'dimension8',
+  plan_amount: 'dimension9',
 } as Record<keyof DevHubAnalyticsCustomDimensions, string>
 
 // some changes are required to make ga work with the electron app

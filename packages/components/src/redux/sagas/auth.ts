@@ -207,6 +207,7 @@ function* updateLoggedUserOnTools() {
   const githubUser = selectors.currentGitHubUserSelector(state)
   const githubOAuthToken = selectors.githubOAuthTokenSelector(state)
   const githubAppToken = selectors.githubAppTokenSelector(state)
+  const plan = selectors.currentUserPlanSelector(state)
 
   github.authenticate(githubOAuthToken || githubAppToken || null)
 
@@ -214,6 +215,7 @@ function* updateLoggedUserOnTools() {
   analytics.setDimensions({
     dark_theme_id: preferredDarkThemePair.id,
     light_theme_id: preferredLightThemePair.id,
+    plan_amount: (plan && plan.amount) || 0,
     theme_id: themePair.id,
   })
   bugsnag.setUser(
@@ -320,7 +322,7 @@ export function* authSagas() {
   yield all([
     yield takeLatest(REHYDRATE, onRehydrate),
     yield takeLatest(
-      [REHYDRATE, 'LOGIN_SUCCESS', 'LOGOUT'],
+      [REHYDRATE, 'LOGIN_SUCCESS', 'LOGOUT', 'UPDATE_USER_DATA'],
       updateLoggedUserOnTools,
     ),
     yield takeLatest('LOGIN_REQUEST', onLoginRequest),

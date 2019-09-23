@@ -21,6 +21,7 @@ export interface DevHubAnalyticsCustomDimensions {
   is_dev: boolean
   is_electron: boolean
   light_theme_id?: string
+  plan_amount?: number
   theme_id?: string
   user_id?: string
 }
