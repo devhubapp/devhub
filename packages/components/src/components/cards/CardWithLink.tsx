@@ -173,22 +173,22 @@ export const CardWithLink = React.memo(
         enableForegroundHover={false}
         href={cardProps.link}
         onPress={onPress}
-        onLongPress={
-          isInsideSwipeable
-            ? undefined
-            : e => {
-                if (!Platform.supportsTouch) return
+        // onLongPress={
+        //   isInsideSwipeable
+        //     ? undefined
+        //     : e => {
+        //         if (!Platform.supportsTouch) return
 
-                e.preventDefault()
+        //         e.preventDefault()
 
-                dispatch(
-                  actions.saveItemsForLater({
-                    itemIds: [item.id],
-                    save: !item.saved,
-                  }),
-                )
-              }
-        }
+        //         dispatch(
+        //           actions.saveItemsForLater({
+        //             itemIds: [item.id],
+        //             save: !item.saved,
+        //           }),
+        //         )
+        //       }
+        // }
         openOnNewTab
         style={sharedStyles.relative}
         onFocus={() => {

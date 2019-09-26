@@ -19,7 +19,7 @@ export const MIN_COLUMN_WIDTH = 300
 export const MAX_COLUMN_WIDTH = 340
 
 export const DISABLE_ANIMATIONS = false
-export const DISABLE_SWIPEABLE_CARDS = true
+export const DISABLE_SWIPEABLE_CARDS = false
 
 export const DEFAULT_DARK_THEME: ThemeName = 'dark-gray'
 export const DEFAULT_LIGHT_THEME: ThemeName = 'light-white'

@@ -29,7 +29,7 @@ function keyExtractor(columnId: string) {
 export const Columns = React.memo((props: ColumnsProps) => {
   const listRef = useRef<typeof OneList>(null)
   const appSafeAreaInsets = useSafeArea()
-  const columnIds = useReduxState(selectors.columnIdsSelector)
+  const _columnIds = useReduxState(selectors.columnIdsSelector)
   const columnWidth = useColumnWidth()
   const { appOrientation } = useAppLayout()
   const { appViewMode } = useAppViewMode()
@@ -39,6 +39,20 @@ export const Columns = React.memo((props: ColumnsProps) => {
     lastTriedAt: null as number | null,
   })
   const focusedColumnIdRef = useDynamicRef(focusedColumnId)
+
+  const columnIds = useMemo(
+    () =>
+      appViewMode === 'single-column'
+        ? focusedColumnId
+          ? [focusedColumnId]
+          : []
+        : _columnIds,
+    [
+      (appViewMode === 'single-column' ? [focusedColumnId] : _columnIds).join(
+        ',',
+      ),
+    ],
+  )
 
   useEmitter(
     'FOCUS_ON_COLUMN',
