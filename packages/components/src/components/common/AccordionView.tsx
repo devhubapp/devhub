@@ -98,6 +98,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
         transition =>
           !!(transition && transition.item && transition.props) && (
             <SpringAnimatedView
+              key={transition.key}
               hidden={(transition.props.height.to as any)(
                 (value: 'auto' | number) =>
                   (value === 'auto' || value > 0 ? false : true) as any,

@@ -178,6 +178,7 @@ export const SidebarOrBottomBar = React.memo(
       ({ item: columnId }) => {
         return (
           <SidebarOrBottomBarColumnItem
+            key={`sidebar-or-bottom-bar-item-${columnId}`}
             columnId={columnId}
             columnIndexUnreadMapperRef={columnIndexUnreadMapperRef}
             horizontal={horizontal}
@@ -193,7 +194,9 @@ export const SidebarOrBottomBar = React.memo(
     >(
       ({ item: columnId }) => {
         return (
-          <SidebarHoverItemContext.Consumer>
+          <SidebarHoverItemContext.Consumer
+            key={`sidebar-or-bottom-bar-hover-item-${columnId}`}
+          >
             {({ hoveredColumnId, HoverContent }) =>
               hoveredColumnId === columnId ? (
                 HoverContent
@@ -624,6 +627,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
 
     return (
       <SidebarOrBottomBarItem
+        key={`sidebar-or-bottom-bar-column-item-${columnId}-inner`}
         {...avatarAndIconProps}
         columnId={columnId}
         horizontal={horizontal}
@@ -787,6 +791,7 @@ export const SidebarOrBottomBarItem = React.memo(
         wrap={c =>
           onPress ? (
             <ThemedTouchableWithoutFeedback
+              key={`sidebar-or-bottom-bar-item-${columnId}-inner`}
               backgroundColor={
                 selected && !horizontal
                   ? getColumnHeaderThemeColors().selected
@@ -798,6 +803,7 @@ export const SidebarOrBottomBarItem = React.memo(
             />
           ) : (
             <ThemedView
+              key={`sidebar-or-bottom-bar-item-${columnId}-inner`}
               backgroundColor={
                 selected && !horizontal
                   ? getColumnHeaderThemeColors().selected
