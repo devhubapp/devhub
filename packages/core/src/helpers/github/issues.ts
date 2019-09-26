@@ -396,7 +396,11 @@ export function getGitHubIssueSearchQuery(
           termArr.length === 2 ? ['', termArr[0], termArr[1]] : termArr
         if (!(value && typeof value === 'string')) return false
 
-        const searchTerm = key ? `${key}:${value}` : value
+        const searchTerm = key
+          ? `${key}:${value}`
+          : value.match(/^#([0-9]+)$/) && value.match(/^#([0-9]+)$/)![1]
+          ? value.match(/^#([0-9]+)$/)![1]!
+          : value
 
         return isNegated ? `NOT ${searchTerm}` : searchTerm
       })

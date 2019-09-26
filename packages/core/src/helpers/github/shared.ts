@@ -1491,9 +1491,9 @@ export function getItemSearchableStrings(
   if (issueOrPullRequest) {
     strings.push(`${issueOrPullRequest.body || ''}`)
     strings.push(`${issueOrPullRequest.created_at || ''}`)
-    strings.push(
-      `${(issueOrPullRequest.id && `#${issueOrPullRequest.id}`) || ''}`,
-    )
+    if (issueOrPullRequest.id) strings.push(`${issueOrPullRequest.id}`)
+    if (issueOrPullRequest.number) strings.push(`${issueOrPullRequest.number}`)
+    if (issueOrPullRequest.number) strings.push(`#${issueOrPullRequest.number}`)
     if (issueOrPullRequest.labels && issueOrPullRequest.labels.length) {
       issueOrPullRequest.labels.forEach(labelDetails => {
         const label = labelDetails && `${labelDetails.name || ''}`
