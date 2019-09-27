@@ -1033,7 +1033,12 @@ export function getGitHubEventSubItems(
       plan.featureFlags.enablePrivateRepositories
     )
 
-  const isBot = getItemIsBot('activity', event)
+  const isBot = getItemIsBot('activity', event, {
+    considerProfileBotsAsBots: false,
+  })
+  const isBotOrFakeBot = getItemIsBot('activity', event, {
+    considerProfileBotsAsBots: true,
+  })
 
   // GitHub returns the wrong avatar_url for app bots on actor.avatar_url,
   // but the correct avatar on payload.abc.user.avatar_url,
@@ -1042,7 +1047,7 @@ export function getGitHubEventSubItems(
     ? getGitHubAvatarURLFromPayload(payload, actor.id)
     : undefined
 
-  const avatarUrl = (isBot && botAvatarURL) || actor.avatar_url
+  const avatarUrl = botAvatarURL || actor.avatar_url
 
   return {
     actor,
@@ -1057,6 +1062,7 @@ export function getGitHubEventSubItems(
     forkee,
     id,
     isBot,
+    isBotOrFakeBot,
     isBranchMainEvent: isBranchMainEvent(event),
     isForcePush,
     isPrivate,

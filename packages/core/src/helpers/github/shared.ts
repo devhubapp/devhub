@@ -56,6 +56,7 @@ import {
   defaultBaseURL,
   getBaseUrlFromOtherUrl,
   getCommitShaFromUrl,
+  getGitHubSearchURL,
   getRepoFullNameFromUrl,
   getRepoUrlFromFullName,
 } from './url'
@@ -137,7 +138,31 @@ export function getUserURLFromLogin(
   { baseURL }: { baseURL: string | undefined },
 ): string | undefined {
   if (!login) return undefined
+
+  if (
+    getUsernameIsBot(login, {
+      considerProfileBotsAsBots: false,
+    })
+  ) {
+    return `${baseURL || defaultBaseURL}/apps/${login.replace('[bot]', '')}`
+  }
+
   return `${baseURL || defaultBaseURL}/${login}`
+}
+
+export function getUserURLFromEmail(
+  email: string,
+  { baseURL }: { baseURL: string | undefined },
+): string | undefined {
+  if (!email) return undefined
+
+  const { username } = tryGetIdAndUsernameFromGitHubEmail(email)
+  if (username) return getUserURLFromLogin(username, { baseURL })
+
+  return getGitHubSearchURL({
+    q: email,
+    type: 'Users',
+  })
 }
 
 export function getUserURLFromObject(
@@ -192,32 +217,69 @@ export function getUserAvatarByUsername(
     : ''
 }
 
+export function getUserAvatarById(
+  id: number | string,
+  { isBot, size }: { isBot: boolean; size?: number },
+  getPixelSizeForLayoutSizeFn: ((size: number) => number) | undefined,
+) {
+  if (!id) return ''
+
+  // github doesnt have a valid avatar url for bots.
+  // using b instead of u only because it shows a gray github logo
+  return `https://avatars.githubusercontent.com/${
+    isBot ? 'b' : 'u'
+  }/${id}?size=${getSteppedSize(size, undefined, getPixelSizeForLayoutSizeFn)}`
+}
+
 export function getUserAvatarFromObject(
-  user: { login: string; avatar_url: string; url?: string; html_url?: string },
+  user: {
+    id?: number | string
+    login: string
+    avatar_url: string
+    url?: string
+    html_url?: string
+  },
   { size }: { size?: number } = {},
   getPixelSizeForLayoutSizeFn: ((size: number) => number) | undefined,
 ) {
+  if (!(user.avatar_url || user.id || user.login)) return undefined
+
+  const baseURL =
+    getBaseUrlFromOtherUrl(user.html_url || user.url) || defaultBaseURL
+
+  const isBot = getUsernameIsBot(user.login)
+  if (user.id && (!user.login || isBot) && baseURL === defaultBaseURL) {
+    if (isBot && user.avatar_url && !user.avatar_url.includes('/u/'))
+      return user.avatar_url
+
+    return getUserAvatarById(
+      user.id,
+      { isBot, size },
+      getPixelSizeForLayoutSizeFn,
+    )
+  }
+
   if (user.avatar_url) return user.avatar_url
-  if (!user.login) return undefined
 
   return getUserAvatarByUsername(
     user.login,
-    {
-      baseURL: getBaseUrlFromOtherUrl(user.html_url || user.url),
-      size,
-    },
+    { baseURL, size },
     getPixelSizeForLayoutSizeFn,
   )
 }
 
-export function tryGetUsernameFromGitHubEmail(email?: string) {
-  if (!email) return ''
+export function tryGetIdAndUsernameFromGitHubEmail(
+  email?: string,
+): { id: string | undefined; username: string | undefined } {
+  if (!email) return { id: undefined, username: undefined }
 
   const emailSplit = email.split('@')
-  if (emailSplit.length === 2 && emailSplit[1] === 'users.noreply.github.com')
-    return (emailSplit[0] || '').split('+').pop()
+  if (emailSplit.length === 2 && emailSplit[1] === 'users.noreply.github.com') {
+    const [id, username] = (emailSplit[0] || '').split('+')
+    return { id, username }
+  }
 
-  return ''
+  return { id: undefined, username: undefined }
 }
 
 export function getUserAvatarByEmail(
@@ -234,13 +296,20 @@ export function getUserAvatarByEmail(
     undefined,
     getPixelSizeForLayoutSizeFn,
   )
-  const username = tryGetUsernameFromGitHubEmail(email)
-  if (username)
+
+  const { id, username } = tryGetIdAndUsernameFromGitHubEmail(email)
+  const isBot = getUsernameIsBot(username)
+  if (id && (!username || isBot) && (!baseURL || baseURL === defaultBaseURL)) {
+    return getUserAvatarById(id, { isBot, size }, getPixelSizeForLayoutSizeFn)
+  }
+
+  if (username) {
     return getUserAvatarByUsername(
       username,
       { baseURL, size: steppedSize },
       getPixelSizeForLayoutSizeFn,
     )
+  }
 
   const options = { size: `${steppedSize || ''}`, d: 'retro', ...otherOptions }
   return `https:${gravatar.url(email, options)}`.replace('??', '?')
@@ -1208,41 +1277,112 @@ export function getItemOwnersAndRepos(
   }
 }
 
+export function getUsernameIsBot(
+  username: string | undefined,
+  { considerProfileBotsAsBots = false } = {},
+) {
+  if (username && username.toLowerCase().indexOf('[bot]') >= 0) return true
+  if (
+    considerProfileBotsAsBots &&
+    username &&
+    username.toLowerCase().endsWith('bot')
+  )
+    return true
+  return false
+}
+
 export function getItemIsBot(
   type: ColumnSubscription['type'],
   item: EnhancedItem,
+  { considerProfileBotsAsBots = false } = {},
 ): boolean {
   if (!item) return false
+
+  function getIsBot(username: string | undefined) {
+    return getUsernameIsBot(username, { considerProfileBotsAsBots })
+  }
 
   switch (type) {
     case 'activity': {
       const event = item as EnhancedGitHubEvent
-      const { actor } = event
-      return !!(actor && actor.login && actor.login.indexOf('[bot]') >= 0)
+      const { actor, payload } = event
+
+      return (
+        getIsBot(actor && actor.login) ||
+        getIsBot(
+          (payload &&
+            'comment' in payload &&
+            payload.comment &&
+            payload.comment.user &&
+            payload.comment.user.login) ||
+            undefined,
+        ) ||
+        !!(
+          payload &&
+          'commits' in payload &&
+          payload.commits &&
+          payload.commits.every(
+            commit =>
+              !!(
+                getIsBot(
+                  tryGetIdAndUsernameFromGitHubEmail(
+                    commit && commit.author && commit.author.email,
+                  ).username,
+                ) || getIsBot(commit && commit.author && commit.author.name)
+              ),
+          )
+        ) ||
+        // getIsBot(
+        //   (payload &&
+        //     'release' in payload &&
+        //     payload.release &&
+        //     payload.release.author &&
+        //     payload.release.author.login) ||
+        //     undefined,
+        // ) ||
+        getIsBot(
+          (payload &&
+            'issue' in payload &&
+            payload.issue &&
+            payload.issue.user &&
+            payload.issue.user.login) ||
+            undefined,
+        ) ||
+        getIsBot(
+          (payload &&
+            'pull_request' in payload &&
+            payload.pull_request &&
+            payload.pull_request.user &&
+            payload.pull_request.user.login) ||
+            undefined,
+        ) ||
+        (payload &&
+          'ref' in payload &&
+          payload.ref &&
+          payload.ref.toLowerCase().includes('bot/')) ||
+        false
+      )
     }
 
     case 'issue_or_pr': {
       const issueOrPR = item as EnhancedGitHubIssueOrPullRequest
       const { user } = issueOrPR
-
-      return !!(user && user.login && user.login.indexOf('[bot]') >= 0)
+      return getIsBot(user && user.login)
     }
 
     case 'notifications': {
       const notification = item as EnhancedGitHubNotification
+      if (notification.reason === 'security_alert') return true
+
       const { comment, commit, release, issue, pullRequest } = notification
 
-      const actor =
-        (comment && comment.user) ||
-        (commit && commit.author) ||
-        (release && release.author) ||
-        (issue && issue.user) ||
-        (pullRequest && pullRequest.user) ||
-        null
-
       return (
-        !!(actor && actor.login && actor.login.indexOf('[bot]') >= 0) ||
-        notification.reason === 'security_alert'
+        getIsBot(comment && comment.user && comment.user.login) ||
+        getIsBot(commit && commit.author && commit.author.login) ||
+        getIsBot(release && release.author && release.author.login) ||
+        getIsBot(issue && issue.user && issue.user.login) ||
+        getIsBot(pullRequest && pullRequest.user && pullRequest.user.login) ||
+        false
       )
     }
 

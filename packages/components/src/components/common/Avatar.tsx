@@ -8,6 +8,7 @@ import {
   getUserAvatarByAvatarURL,
   getUserAvatarByEmail,
   getUserAvatarByUsername,
+  getUsernameIsBot,
 } from '@devhub/core'
 import {
   avatarSize,
@@ -30,7 +31,6 @@ export interface AvatarProps
   disableLink?: boolean
   email?: string
   hitSlop?: TouchableOpacityProps['hitSlop']
-  isBot?: boolean
   linkURL?: string
   muted?: boolean
   repo?: string
@@ -50,7 +50,6 @@ export function Avatar(props: AvatarProps) {
     disableLink,
     email,
     hitSlop,
-    isBot: _isBot,
     linkURL,
     muted,
     repo,
@@ -64,7 +63,9 @@ export function Avatar(props: AvatarProps) {
   } = props
 
   const finalSize = _size || (small ? smallAvatarSize : avatarSize)
-  const isBot = _isBot || Boolean(_username && _username.indexOf('[bot]') >= 0)
+  const isBot = getUsernameIsBot(_username, {
+    considerProfileBotsAsBots: false,
+  })
   const username = isBot ? _username!.replace('[bot]', '') : _username
 
   const avatarUrl = _avatarUrl

@@ -621,7 +621,12 @@ export function getGitHubNotificationSubItems(
 
   const repoFullName = getRepoFullNameFromObject(notification.repository)
 
-  const isBot = getItemIsBot('notifications', notification)
+  const isBot = getItemIsBot('notifications', notification, {
+    considerProfileBotsAsBots: false,
+  })
+  const isBotOrFakeBot = getItemIsBot('notifications', notification, {
+    considerProfileBotsAsBots: true,
+  })
 
   return {
     canSee,
@@ -630,6 +635,7 @@ export function getGitHubNotificationSubItems(
     createdAt,
     id,
     isBot,
+    isBotOrFakeBot,
     isPrivate,
     isRead,
     isRepoInvitation,

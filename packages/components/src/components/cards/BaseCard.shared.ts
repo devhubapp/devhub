@@ -19,7 +19,6 @@ import {
   getGitHubEventSubItems,
   getGitHubIssueOrPullRequestSubItems,
   getGitHubNotificationSubItems,
-  getGitHubSearchURL,
   getGitHubURLForSecurityAlert,
   getIssueOrPullRequestState,
   getItemSubjectType,
@@ -31,6 +30,7 @@ import {
   getUserAvatarByEmail,
   getUserAvatarByUsername,
   getUserAvatarFromObject,
+  getUserURLFromEmail,
   getUserURLFromObject,
   GitHubIcon,
   GitHubIssueOrPullRequest,
@@ -454,17 +454,15 @@ function _getCardPropsForItem(
               avatar: {
                 imageURL: getUserAvatarByEmail(
                   commit.author.email,
-                  {
-                    baseURL: getBaseUrlFromOtherUrl(commit.url),
-                  },
+                  { baseURL: getBaseUrlFromOtherUrl(commit.url) },
                   PixelRatio.getPixelSizeForLayoutSize,
                 ),
-                linkURL: commit.author.email
-                  ? getGitHubSearchURL({
-                      q: commit.author.email,
-                      type: 'Users',
-                    })
-                  : '',
+                linkURL:
+                  (commit.author.email &&
+                    getUserURLFromEmail(commit.author.email, {
+                      baseURL: getBaseUrlFromOtherUrl(commit.url),
+                    })) ||
+                  '',
               },
               date,
               icon,
@@ -538,17 +536,15 @@ function _getCardPropsForItem(
                   avatar: {
                     imageURL: getUserAvatarByEmail(
                       commit.author.email,
-                      {
-                        baseURL: getBaseUrlFromOtherUrl(commit.url),
-                      },
+                      { baseURL: getBaseUrlFromOtherUrl(commit.url) },
                       PixelRatio.getPixelSizeForLayoutSize,
                     ),
-                    linkURL: commit.author.email
-                      ? getGitHubSearchURL({
-                          q: commit.author.email,
-                          type: 'Users',
-                        })
-                      : '',
+                    linkURL:
+                      (commit.author.email &&
+                        getUserURLFromEmail(commit.author.email, {
+                          baseURL: getBaseUrlFromOtherUrl(commit.url),
+                        })) ||
+                      '',
                   },
                   text: trimNewLinesAndSpaces(commit.message, 120),
                 }))
@@ -907,12 +903,12 @@ function _getCardPropsForItem(
                       },
                       PixelRatio.getPixelSizeForLayoutSize,
                     ) || defaultProps.avatar.imageURL,
-                  linkURL: commit.commit.author.email
-                    ? getGitHubSearchURL({
-                        q: commit.commit.author.email,
-                        type: 'Users',
-                      })
-                    : '',
+                  linkURL:
+                    (commit.commit.author.email &&
+                      getUserURLFromEmail(commit.commit.author.email, {
+                        baseURL: getBaseUrlFromOtherUrl(commit.url),
+                      })) ||
+                    '',
                 },
               })),
           }
@@ -1108,8 +1104,8 @@ export function getCardPushNotificationItem(
           commits
             .map(
               commit =>
-                commit &&
                 commit.message &&
+                commit &&
                 trimNewLinesAndSpaces(stripMarkdown(commit.message), 80),
             )
             .filter(Boolean)

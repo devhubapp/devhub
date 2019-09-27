@@ -426,7 +426,8 @@ export function getFilteredIssueOrPullRequests(
 
       if (
         typeof filters.bot === 'boolean' &&
-        filters.bot !== getItemIsBot('issue_or_pr', item)
+        filters.bot !==
+          getItemIsBot('issue_or_pr', item, { considerProfileBotsAsBots: true })
       )
         return false
 
@@ -541,7 +542,10 @@ export function getFilteredNotifications(
 
       if (
         typeof filters.bot === 'boolean' &&
-        filters.bot !== getItemIsBot('notifications', item)
+        filters.bot !==
+          getItemIsBot('notifications', item, {
+            considerProfileBotsAsBots: true,
+          })
       )
         return false
 
@@ -657,7 +661,8 @@ export function getFilteredEvents(
 
       if (
         typeof filters.bot === 'boolean' &&
-        filters.bot !== getItemIsBot('activity', item)
+        filters.bot !==
+          getItemIsBot('activity', item, { considerProfileBotsAsBots: true })
       )
         return false
 
