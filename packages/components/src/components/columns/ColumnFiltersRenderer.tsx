@@ -112,6 +112,7 @@ export const ColumnFiltersRenderer = React.memo(
         immediate,
         from: { opacity: 0 },
         enter: { opacity: 0.75 },
+        update: { opacity: isOpen ? 0.75 : 0 },
         leave: { opacity: 0 },
       },
     )[0]
@@ -175,7 +176,7 @@ export const ColumnFiltersRenderer = React.memo(
               {
                 zIndex: 200,
                 opacity: overlayTransition.props.opacity.to((opacity: number) =>
-                  Number(opacity.toFixed(2)),
+                  Math.max(0, Math.min(Number(opacity.toFixed(2)), 0.75)),
                 ),
               },
             ]}
