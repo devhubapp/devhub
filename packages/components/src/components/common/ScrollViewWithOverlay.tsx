@@ -151,7 +151,10 @@ export const ScrollViewWithOverlay = React.forwardRef(
 
         <TransparentTextOverlay
           ref={leftOrTopOverlayRef}
-          containerStyle={StyleSheet.absoluteFill}
+          containerStyle={[
+            StyleSheet.absoluteFill,
+            !isLeftOrTopOverlayVisible.current && sharedStyles.opacity0,
+          ]}
           size={overlaySize}
           spacing={overlaySpacing}
           themeColor={topOrLeftOverlayThemeColor}
@@ -160,7 +163,10 @@ export const ScrollViewWithOverlay = React.forwardRef(
 
         <TransparentTextOverlay
           ref={rightOrBottomOverlayRef}
-          containerStyle={StyleSheet.absoluteFill}
+          containerStyle={[
+            StyleSheet.absoluteFill,
+            !isRightOrBottomOverlayVisible.current && sharedStyles.opacity0,
+          ]}
           size={overlaySize}
           spacing={overlaySpacing}
           themeColor={bottomOrRightOverlayThemeColor}
