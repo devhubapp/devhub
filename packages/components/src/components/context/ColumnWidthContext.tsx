@@ -31,7 +31,7 @@ export function ColumnWidthProvider(props: ColumnWidthProviderProps) {
 export const ColumnWidthConsumer = ColumnWidthContext.Consumer
 ;(ColumnWidthConsumer as any).displayName = 'ColumnWidthConsumer'
 
-function calculateColumnWidth({
+export function calculateColumnWidth({
   windowWidth,
   minWidth: _minWidth = constants.MIN_COLUMN_WIDTH,
   maxWidth: _maxWidth = constants.MAX_COLUMN_WIDTH,

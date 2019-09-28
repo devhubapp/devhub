@@ -1,8 +1,11 @@
 import immer from 'immer'
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Dimensions } from 'react-native'
 
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
+import { sizes as cardSizes } from '../cards/BaseCard.shared'
+import { calculateColumnWidth, useColumnWidth } from './ColumnWidthContext'
 import { useAppLayout } from './LayoutContext'
 
 export interface ColumnFiltersProviderProps {
@@ -18,7 +21,9 @@ export interface ColumnFiltersProviderState {
 
 const defaultValue: ColumnFiltersProviderState = {
   enableSharedFiltersView: false,
-  fixedWidth: 250,
+  fixedWidth: calculateColumnWidth({
+    windowWidth: Dimensions.get('window').width,
+  }),
   inlineMode: false,
   isSharedFiltersOpened: false,
 }
@@ -30,6 +35,7 @@ ColumnFiltersContext.displayName = 'ColumnFiltersContext'
 export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
   const { sizename } = useAppLayout()
   const { appViewMode } = useAppViewMode()
+  const columnWidth = useColumnWidth()
 
   const enableSharedFiltersView =
     appViewMode === 'single-column' || sizename === '1-small'
@@ -43,7 +49,11 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
 
   const valueCacheRef = useRef<ColumnFiltersProviderState>({
     enableSharedFiltersView,
-    fixedWidth: 250,
+    fixedWidth:
+      columnWidth -
+      (cardSizes.cardPadding +
+        cardSizes.avatarContainerWidth +
+        cardSizes.horizontalSpaceSize),
     inlineMode,
     isSharedFiltersOpened,
   })
