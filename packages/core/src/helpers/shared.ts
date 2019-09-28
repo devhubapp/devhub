@@ -950,11 +950,11 @@ export function getColumnOptionMetadata({
   return {
     enableAppIconUnreadIndicator: {
       hasAccess: true,
-      platformSupports: true,
+      platformSupports: Platform.OS === 'web',
     },
     enableInAppUnreadIndicator: {
       hasAccess: true,
-      platformSupports: Platform.OS === 'web',
+      platformSupports: true,
     },
     enableDesktopPushNotifications: {
       hasAccess: !!(plan &&
