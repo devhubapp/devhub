@@ -181,7 +181,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const header = useMemo<OneListProps<DataItemT<ItemT>>['header']>(() => {
     return {
       size: cardSearchTotalHeight + columnLoadingIndicatorSize,
-      sticky: true,
+      sticky: false,
       Component: () => (
         <View>
           {!!column && (
