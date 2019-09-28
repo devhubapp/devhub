@@ -169,15 +169,19 @@ const innerElementType = React.forwardRef<
   const style = {
     ..._style,
     width:
-      typeof safeAreaInsets.left === 'number' ||
-      typeof safeAreaInsets.right === 'number'
+      (typeof safeAreaInsets.left === 'number' && safeAreaInsets.left !== 0) ||
+      (typeof safeAreaInsets.right === 'number' &&
+        safeAreaInsets.right !== 0 &&
+        (!_style.width || typeof _style.width !== 'string'))
         ? `${parseFloat(`${_style.width || 0}`) +
             (safeAreaInsets.left || 0) +
             (safeAreaInsets.right || 0)}px`
         : _style.width,
     height:
-      typeof safeAreaInsets.top === 'number' ||
-      typeof safeAreaInsets.bottom === 'number'
+      (typeof safeAreaInsets.top === 'number' && safeAreaInsets.top !== 0) ||
+      (typeof safeAreaInsets.bottom === 'number' &&
+        safeAreaInsets.bottom !== 0 &&
+        (!_style.height || typeof _style.height !== 'string'))
         ? `${parseFloat(`${_style.height || 0}`) +
             (safeAreaInsets.top || 0) +
             (safeAreaInsets.bottom || 0)}px`
