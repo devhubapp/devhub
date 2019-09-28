@@ -345,13 +345,9 @@ export const OneList = (React.memo(
       if (!onVisibleItemsChanged) return undefined
 
       return ({ visibleStartIndex, visibleStopIndex }) => {
-        const dataIndexFix = innerHeaderSize ? -1 : 0
-        return onVisibleItemsChanged(
-          visibleStartIndex + dataIndexFix,
-          visibleStopIndex + dataIndexFix,
-        )
+        return onVisibleItemsChanged(visibleStartIndex, visibleStopIndex)
       }
-    }, [onVisibleItemsChanged, !!innerHeaderSize])
+    }, [onVisibleItemsChanged])
 
     const previousItemCount = usePrevious(itemCount)
     const previousItemSize = usePrevious(itemSize)
