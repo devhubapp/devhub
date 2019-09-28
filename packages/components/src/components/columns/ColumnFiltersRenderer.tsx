@@ -1,12 +1,14 @@
-import React, { Fragment, useState } from 'react'
-import { StyleSheet } from 'react-native'
-
 import { constants } from '@devhub/core'
+import React, { useCallback, useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+
 import { useTransition } from 'react-spring/native'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useForceRerender } from '../../hooks/use-force-rerender'
+import { useHover } from '../../hooks/use-hover'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
+import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -46,6 +48,8 @@ export const ColumnFiltersRenderer = React.memo(
 
     const forceRerender = useForceRerender()
 
+    const filtersViewRef = useRef<View>(null)
+
     const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
 
     const {
@@ -75,30 +79,52 @@ export const ColumnFiltersRenderer = React.memo(
       })
     }
 
-    const close = () => {
+    const close = useCallback(() => {
       focusColumn()
 
       if (!columnId) return
-      emitter.emit('TOGGLE_COLUMN_FILTERS', { columnId })
-    }
+      emitter.emit('TOGGLE_COLUMN_FILTERS', { columnId, isOpen: false })
+    }, [columnId])
 
     useEmitter(
       'FOCUS_ON_COLUMN',
       payload => {
         if (_columnIdOrFocused === 'focused' && columnId !== payload.columnId)
           forceRerender()
+
+        if (columnId !== payload.columnId && _isLocalFiltersOpened) close()
       },
-      [_columnIdOrFocused, columnId],
+      [_columnIdOrFocused, _isLocalFiltersOpened, columnId, close],
     )
 
     useEmitter(
       'TOGGLE_COLUMN_FILTERS',
       payload => {
-        if (payload.columnId !== columnId) return
         if (enableSharedFiltersView) return
-        setIsLocalFiltersOpened(v => !v)
+        setIsLocalFiltersOpened(
+          payload.columnId !== columnId
+            ? false
+            : typeof payload.isOpen === 'boolean'
+            ? payload.isOpen
+            : v => !v,
+        )
       },
       [columnId, enableSharedFiltersView],
+    )
+
+    const isHoveredRef = useRef(false)
+    useHover(
+      filtersViewRef,
+      useCallback(
+        isHovered => {
+          if (!isHovered && isHoveredRef.current) {
+            close()
+          }
+
+          isHoveredRef.current = isHovered
+        },
+        [close],
+      ),
     )
 
     const immediate = constants.DISABLE_ANIMATIONS
@@ -166,7 +192,59 @@ export const ColumnFiltersRenderer = React.memo(
       (absolutePositionTransition && absolutePositionTransition.key) ||
       'column-options-renderer'
     return (
-      <Fragment key={`${key}-inner-container`}>
+      <SpringAnimatedView
+        ref={filtersViewRef}
+        key={`${key}-inner-container`}
+        style={[
+          sharedStyles.fullWidth,
+          sharedStyles.fullHeight,
+
+          !inlineMode && StyleSheet.absoluteFill,
+          !inlineMode && {
+            opacity:
+              enableAbsolutePositionAnimation &&
+              absolutePositionTransition &&
+              absolutePositionTransition.props &&
+              fixedPosition &&
+              fixedWidth
+                ? fixedPosition === 'left' || fixedPosition === 'right'
+                  ? absolutePositionTransition.props[fixedPosition].to(
+                      (value: number) => (fixedWidth + value <= 0 ? 0 : 1),
+                    )
+                  : 1
+                : 1,
+            visibility:
+              enableAbsolutePositionAnimation &&
+              absolutePositionTransition &&
+              absolutePositionTransition.props &&
+              fixedPosition &&
+              fixedWidth
+                ? fixedPosition === 'left' || fixedPosition === 'right'
+                  ? absolutePositionTransition.props[fixedPosition].to(
+                      (value: number) =>
+                        fixedWidth + value <= 0 ? 'hidden' : 'visible',
+                    )
+                  : 'visible'
+                : 'visible',
+            zIndex: 200,
+          },
+        ]}
+        pointerEvents={
+          // prevent clicking on filters even when they are hidden behind column
+          // (only enabled for web desktop because this is causing bugs on ios safari)
+          Platform.OS === 'web' &&
+          Platform.realOS !== 'ios' &&
+          enableAbsolutePositionAnimation &&
+          absolutePositionTransition &&
+          absolutePositionTransition.props &&
+          fixedPosition &&
+          fixedWidth
+            ? absolutePositionTransition.props[fixedPosition].to(
+                (value: number) => (value < 0 ? 'none' : 'box-none'),
+              )
+            : 'box-none'
+        }
+      >
         {!!overlayTransition && !inlineMode && !!close && (
           <SpringAnimatedView
             key={`${key}-overlay-container`}
@@ -202,33 +280,6 @@ export const ColumnFiltersRenderer = React.memo(
           collapsable={false}
           style={[
             !inlineMode && StyleSheet.absoluteFill,
-            !inlineMode && {
-              opacity:
-                enableAbsolutePositionAnimation &&
-                absolutePositionTransition &&
-                absolutePositionTransition.props &&
-                fixedPosition &&
-                fixedWidth
-                  ? fixedPosition === 'left' || fixedPosition === 'right'
-                    ? absolutePositionTransition.props[fixedPosition].to(
-                        (value: number) => (fixedWidth + value <= 0 ? 0 : 1),
-                      )
-                    : 1
-                  : 1,
-              visibility:
-                enableAbsolutePositionAnimation &&
-                absolutePositionTransition &&
-                absolutePositionTransition.props &&
-                fixedPosition &&
-                fixedWidth
-                  ? fixedPosition === 'left' || fixedPosition === 'right'
-                    ? absolutePositionTransition.props[fixedPosition].to(
-                        (value: number) =>
-                          fixedWidth + value <= 0 ? 'hidden' : 'visible',
-                      )
-                    : 'visible'
-                  : 'visible',
-            },
             enableAbsolutePositionAnimation &&
               absolutePositionTransition &&
               absolutePositionTransition.props &&
@@ -252,21 +303,6 @@ export const ColumnFiltersRenderer = React.memo(
               zIndex: 200,
             },
           ]}
-          pointerEvents={
-            // prevent clicking on filters even when they are hidden behind column
-            // (only enabled for web desktop because this is causing bugs on ios safari)
-            Platform.OS === 'web' &&
-            Platform.realOS !== 'ios' &&
-            enableAbsolutePositionAnimation &&
-            absolutePositionTransition &&
-            absolutePositionTransition.props &&
-            fixedPosition &&
-            fixedWidth
-              ? absolutePositionTransition.props[fixedPosition].to(
-                  (value: number) => (value < 0 ? 'none' : 'box-none'),
-                )
-              : 'box-none'
-          }
         >
           {header === 'header' ? (
             <ColumnHeader
@@ -305,7 +341,7 @@ export const ColumnFiltersRenderer = React.memo(
         </SpringAnimatedView>
 
         {!!inlineMode && <ColumnSeparator />}
-      </Fragment>
+      </SpringAnimatedView>
     )
   },
 )
