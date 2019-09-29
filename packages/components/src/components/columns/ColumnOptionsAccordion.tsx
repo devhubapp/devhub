@@ -67,11 +67,6 @@ export const ColumnOptionsAccordion = React.memo(
         isSharedColumnOptionsOpen = appViewMode === 'single-column' && isOpen
       }, [appViewMode, isOpen])
 
-      useEffect(() => {
-        if (appViewMode === 'single-column') return
-        if (!isColumnFocused && isOpen) setIsOpen(false)
-      }, [appViewMode, isColumnFocused, isOpen])
-
       return useMemo(() => {
         if (!column) return null
 

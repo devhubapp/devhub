@@ -5,7 +5,6 @@ import { StyleSheet, View } from 'react-native'
 import { useTransition } from 'react-spring/native'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useForceRerender } from '../../hooks/use-force-rerender'
-import { useHover } from '../../hooks/use-hover'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -48,8 +47,6 @@ export const ColumnFiltersRenderer = React.memo(
 
     const forceRerender = useForceRerender()
 
-    const filtersViewRef = useRef<View>(null)
-
     const [_isLocalFiltersOpened, setIsLocalFiltersOpened] = useState(false)
 
     const {
@@ -91,8 +88,6 @@ export const ColumnFiltersRenderer = React.memo(
       payload => {
         if (_columnIdOrFocused === 'focused' && columnId !== payload.columnId)
           forceRerender()
-
-        if (columnId !== payload.columnId && _isLocalFiltersOpened) close()
       },
       [_columnIdOrFocused, _isLocalFiltersOpened, columnId, close],
     )
@@ -110,21 +105,6 @@ export const ColumnFiltersRenderer = React.memo(
         )
       },
       [columnId, enableSharedFiltersView],
-    )
-
-    const isHoveredRef = useRef(false)
-    useHover(
-      filtersViewRef,
-      useCallback(
-        isHovered => {
-          if (!isHovered && isHoveredRef.current) {
-            close()
-          }
-
-          isHoveredRef.current = isHovered
-        },
-        [close],
-      ),
     )
 
     const immediate = constants.DISABLE_ANIMATIONS
@@ -193,7 +173,6 @@ export const ColumnFiltersRenderer = React.memo(
       'column-options-renderer'
     return (
       <SpringAnimatedView
-        ref={filtersViewRef}
         key={`${key}-inner-container`}
         style={[
           sharedStyles.fullWidth,
