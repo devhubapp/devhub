@@ -38,6 +38,7 @@ export const TextInput = React.forwardRef(
     const {
       disableBlurOnEsc,
       fontSize = 14,
+      multiline,
       size: _size,
       style,
       textInputKey,
@@ -46,8 +47,7 @@ export const TextInput = React.forwardRef(
     } = props
 
     const size =
-      _size ||
-      (props.multiline ? defaultTextInputHeight * 2 : defaultTextInputHeight)
+      _size || (multiline ? defaultTextInputHeight * 2 : defaultTextInputHeight)
 
     const [isFocused, setIsFocused] = useState(false)
 
@@ -93,6 +93,8 @@ export const TextInput = React.forwardRef(
       <TextInputOriginal
         key={textInputKey}
         ref={ref}
+        multiline={multiline}
+        numberOfLines={multiline ? undefined : 1}
         placeholderTextColor={placeholderTextColor}
         {...otherProps}
         onBlur={e => {
@@ -115,9 +117,9 @@ export const TextInput = React.forwardRef(
             lineHeight: Math.min(fontSize + 4, size),
             height: size,
             margin: 0,
-            paddingVertical: props.multiline ? contentPadding / 2 : 0,
+            paddingVertical: multiline ? contentPadding / 2 : 0,
             paddingHorizontal: contentPadding,
-            borderRadius: props.multiline ? radius : size / 2,
+            borderRadius: multiline ? radius : size / 2,
             borderWidth: 1,
             fontSize,
           },

@@ -44,7 +44,7 @@ export interface IssueOrPullRequestCardsProps
   swipeable: boolean
 }
 
-function keyExtractor({ item }: DataItemT<ItemT>) {
+function getItemKey({ item }: DataItemT<ItemT>, _index: number) {
   return `issue-or-pr-card-${item.id}`
 }
 
@@ -233,7 +233,7 @@ export const IssueOrPullRequestCards = React.memo(
           data={data}
           estimatedItemSize={getItemSize(data[0], 0) || 89}
           footer={footer}
-          getItemKey={keyExtractor}
+          getItemKey={getItemKey}
           getItemSize={getItemSize}
           header={header}
           horizontal={false}

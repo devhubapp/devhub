@@ -1,3 +1,13 @@
+import {
+  constants,
+  getColumnOption,
+  getUserAvatarByUsername,
+  getUserURLFromLogin,
+  GitHubIcon,
+  isItemRead,
+  ModalPayload,
+  ThemeColors,
+} from '@devhub/core'
 import React, {
   useCallback,
   useContext,
@@ -16,18 +26,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-
-import {
-  constants,
-  getColumnOption,
-  getUserAvatarByUsername,
-  getUserURLFromLogin,
-  GitHubIcon,
-  isItemRead,
-  ModalPayload,
-  ThemeColors,
-} from '@devhub/core'
 import { useDispatch } from 'react-redux'
+
 import { useColumn } from '../../hooks/use-column'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useForceRerender } from '../../hooks/use-force-rerender'
@@ -50,7 +50,7 @@ import {
   getColumnHeaderThemeColors,
 } from '../columns/ColumnHeader'
 import { useAppLayout } from '../context/LayoutContext'
-import { getTheme, useTheme } from '../context/ThemeContext'
+import { getTheme } from '../context/ThemeContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedTouchableWithoutFeedback } from '../themed/ThemedTouchableWithoutFeedback'
@@ -65,6 +65,7 @@ import {
 import { Link } from './Link'
 import { Separator } from './Separator'
 import { Spacer } from './Spacer'
+import { defaultUnreadIndicatorSize, UnreadDot } from './UnreadDot'
 
 export interface SidebarOrBottomBarProps {
   type: 'sidebar' | 'bottombar'
@@ -72,14 +73,14 @@ export interface SidebarOrBottomBarProps {
 
 export const sidebarIconSize = 20
 export const sidebarAvatarSize = sidebarIconSize
-export const sidebarUnreadIndicatorSize = 12
+export const sidebarUnreadIndicatorSize = defaultUnreadIndicatorSize
 export const sidebarItemHeight = sidebarIconSize + (contentPadding * 3) / 2
 export const sidebarWidth = 50
 
 export const bottomBarIconSize = 20
 export const bottomBarAvatarSize = bottomBarIconSize
 export const bottomBarLabelSize = smallerTextSize - 2
-export const bottomBarUnreadIndicatorSize = 12
+export const bottomBarUnreadIndicatorSize = defaultUnreadIndicatorSize
 export const bottomBarItemWidth =
   sidebarIconSize + (contentPadding * 3) / 2 + 16
 export const bottomBarLabelContainerHeight =
@@ -844,7 +845,7 @@ export const SidebarOrBottomBarItem = React.memo(
             ) : null}
 
             {!!showUnreadIndicator && (
-              <SidebarOrBottomBarUnreadDot
+              <UnreadDot
                 ref={dotViewRef}
                 backgroundColor={unreadIndicatorColor}
                 borderColor={
@@ -852,7 +853,7 @@ export const SidebarOrBottomBarItem = React.memo(
                     ? getColumnHeaderThemeColors().selected
                     : getColumnHeaderThemeColors().normal
                 }
-                horizontal={horizontal}
+                style={styles.unreadIndicator}
               />
             )}
           </View>
@@ -877,37 +878,6 @@ export const SidebarOrBottomBarItem = React.memo(
 )
 
 SidebarOrBottomBarItem.displayName = 'SidebarOrBottomBarItem'
-
-interface SidebarOrBottomBarUnreadDotProps {
-  backgroundColor?: keyof ThemeColors
-  borderColor?: keyof ThemeColors
-  horizontal: boolean | undefined
-}
-const SidebarOrBottomBarUnreadDot = React.forwardRef<
-  ThemedView,
-  SidebarOrBottomBarUnreadDotProps
->((props, ref) => {
-  const { backgroundColor, borderColor, horizontal } = props
-
-  // workaround to re-render this component on theme change
-  // and fix the colors that were changed using setNativeProps
-  const theme = useTheme()
-
-  const styles = horizontal ? horizontalStyles : verticalStyles
-
-  return (
-    <View
-      ref={ref}
-      style={[
-        styles.unreadIndicator,
-        {
-          backgroundColor: theme[backgroundColor || 'backgroundColor'],
-          borderColor: theme[borderColor || 'backgroundColor'],
-        },
-      ]}
-    />
-  )
-})
 
 const verticalStyles = StyleSheet.create({
   container: {

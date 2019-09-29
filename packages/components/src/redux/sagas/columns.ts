@@ -270,6 +270,7 @@ function* onColumnSubscriptionFilterChange(
     | ExtractActionFromActionCreator<typeof actions.replaceColumnFilters>
     | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnInvolvesFilter>
+    | ExtractActionFromActionCreator<typeof actions.replaceColumnOwnerFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnOwnerFilter>
     | ExtractActionFromActionCreator<
         typeof actions.setColumnParticipatingFilter
@@ -351,6 +352,7 @@ function* onColumnSubscriptionFilterChange(
           owners:
             action.type === 'CLEAR_COLUMN_FILTERS' ||
             action.type === 'REPLACE_COLUMN_FILTERS' ||
+            action.type === 'REPLACE_COLUMN_OWNER_FILTER' ||
             action.type === 'SET_COLUMN_OWNER_FILTER' ||
             action.type === 'SET_COLUMN_REPO_FILTER'
               ? c.filters && c.filters.owners
@@ -445,6 +447,7 @@ export function* columnsSagas() {
       [
         'CLEAR_COLUMN_FILTERS',
         'REPLACE_COLUMN_FILTERS',
+        'REPLACE_COLUMN_OWNER_FILTER',
         'SET_COLUMN_DRAFT_FILTER',
         'SET_COLUMN_INVOLVES_FILTER',
         'SET_COLUMN_OWNER_FILTER',

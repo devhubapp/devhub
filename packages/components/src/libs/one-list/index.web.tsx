@@ -1,6 +1,7 @@
 import { VariableSizeList as VariableSizeListWithoutVirtualization } from '@brunolemos/react-window-without-virtualization'
 import React, {
   Fragment,
+  useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -15,6 +16,7 @@ import {
   VariableSizeListProps,
 } from 'react-window'
 
+import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { usePrevious } from '../../hooks/use-previous'
 import { sharedStyles } from '../../styles/shared'
 import { AutoSizer } from '../auto-sizer'
@@ -96,11 +98,7 @@ const Row = React.memo(
       return (
         <div
           ref={rowRef}
-          key={
-            getItemKey
-              ? getItemKey(data[index], index)
-              : `react-window-row-${index}`
-          }
+          key={`react-window-header-${header.Component.displayName}`}
           style={style}
         >
           <header.Component />
@@ -309,15 +307,18 @@ export const OneList = (React.memo(
       )
     }
 
-    const itemKey = useMemo<VariableSizeListProps['itemKey']>(() => {
-      return index => {
+    const itemCountRef = useDynamicRef(itemCount)
+    const itemKey = useCallback<NonNullable<VariableSizeListProps['itemKey']>>(
+      (index, _itemData: ItemData) => {
         if (innerHeaderSize && index === 0) return 'header'
-        if (innerFooterSize && index === itemCount - 1) return 'footer'
+        if (innerFooterSize && index === itemCountRef.current - 1)
+          return 'footer'
 
         const dataIndex = innerHeaderSize ? index - 1 : index
-        return getItemKey(data[dataIndex], dataIndex)
-      }
-    }, [data, getItemKey, itemCount])
+        return getItemKey(_itemData.data[dataIndex], dataIndex)
+      },
+      [getItemKey, innerHeaderSize, innerFooterSize],
+    )
 
     const itemSize = useMemo<VariableSizeListProps['itemSize']>(() => {
       return index => {
@@ -386,12 +387,18 @@ export const OneList = (React.memo(
     }, [itemCount, itemSize, previousItemCount, previousItemSize])
 
     const style = useMemo<VariableSizeListProps['style']>(
-      () =>
-        pagingEnabled
+      () => ({
+        ...(pagingEnabled
+          ? { scrollSnapType: horizontal ? 'x mandatory' : 'y mandatory' }
+          : {}),
+        ...(horizontal
           ? {
-              scrollSnapType: horizontal ? 'x mandatory' : 'y mandatory',
+              overscrollBehaviorX: 'contain',
             }
-          : undefined,
+          : {
+              overscrollBehaviorY: 'contain',
+            }),
+      }),
       [horizontal, listStyle, pagingEnabled],
     )
 

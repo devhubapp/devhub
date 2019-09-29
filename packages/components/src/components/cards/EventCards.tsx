@@ -29,7 +29,7 @@ export interface EventCardsProps
   swipeable: boolean
 }
 
-function keyExtractor({ item }: DataItemT<ItemT>) {
+function getItemKey({ item }: DataItemT<ItemT>, _index: number) {
   return `event-card-${item.id}`
 }
 
@@ -171,7 +171,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         data={data}
         estimatedItemSize={getItemSize(data[0], 0) || 89}
         footer={footer}
-        getItemKey={keyExtractor}
+        getItemKey={getItemKey}
         getItemSize={getItemSize}
         header={header}
         horizontal={false}

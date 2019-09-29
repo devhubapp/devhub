@@ -22,7 +22,7 @@ export interface ColumnsProps {
   contentContainerStyle?: StyleProp<ViewStyle>
 }
 
-function keyExtractor(columnId: string) {
+function getItemKey(columnId: string, _index: number) {
   return `column-container-${columnId}`
 }
 
@@ -172,7 +172,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       disableVirtualization={Platform.OS === 'web'}
       ListEmptyComponent={NoColumns}
       estimatedItemSize={columnWidth}
-      getItemKey={keyExtractor}
+      getItemKey={getItemKey}
       getItemSize={getItemSize}
       horizontal
       onVisibleItemsChanged={debouncedOnVisibleItemsChanged}

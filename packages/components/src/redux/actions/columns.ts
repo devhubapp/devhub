@@ -147,6 +147,13 @@ export function setColumnInvolvesFilter(payload: {
   return createAction('SET_COLUMN_INVOLVES_FILTER', payload)
 }
 
+export function replaceColumnOwnerFilter(payload: {
+  columnId: string
+  owner: string | null
+}) {
+  return createAction('REPLACE_COLUMN_OWNER_FILTER', payload)
+}
+
 export function setColumnOwnerFilter(payload: {
   columnId: string
   owner: string

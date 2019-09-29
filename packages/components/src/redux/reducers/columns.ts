@@ -430,11 +430,37 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = new Date().toISOString()
       })
 
+    case 'REPLACE_COLUMN_OWNER_FILTER':
+      return immer(state, draft => {
+        const { columnId, owner: _owner } = action.payload
+
+        const owner = `${_owner || ''}`.toLowerCase()
+
+        if (!draft.byId) return
+
+        const column = draft.byId[columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.owners = column.filters.owners || {}
+
+        column.filters.owners = {}
+
+        if (owner) {
+          column.filters.owners[owner] = {
+            value: true,
+            repos: {},
+          }
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
     case 'SET_COLUMN_OWNER_FILTER':
       return immer(state, draft => {
-        const { columnId, value } = action.payload
+        const { columnId, owner: _owner, value } = action.payload
 
-        const owner = `${action.payload.owner || ''}`.toLowerCase()
+        const owner = `${_owner || ''}`.toLowerCase()
 
         if (!draft.byId) return
 

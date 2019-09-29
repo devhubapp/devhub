@@ -5,6 +5,7 @@ import {
   constants,
   EnhancedItem,
   getDateSmallText,
+  getOwnerAndRepoFormattedFilter,
 } from '@devhub/core'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { View } from 'react-native'
@@ -20,6 +21,10 @@ import {
   CardsFooterProps,
   getCardsFooterSize,
 } from '../components/cards/CardsFooter'
+import {
+  CardsOwnerFilterBar,
+  cardsOwnerFilterBarTotalHeight,
+} from '../components/cards/CardsOwnerFilterBar'
 import {
   cardSearchTotalHeight,
   CardsSearchHeader,
@@ -38,6 +43,7 @@ import { OneListProps } from '../libs/one-list'
 import { useSafeArea } from '../libs/safe-area-view'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
+import { sharedStyles } from '../styles/shared'
 import { FlatListItemLayout } from '../utils/types'
 import { useDimensions } from './use-dimensions'
 import { usePreviousRef } from './use-previous-ref'
@@ -46,6 +52,7 @@ import { useReduxState } from './use-redux-state'
 export interface DataItemT<ItemT extends EnhancedItem> {
   cachedCardProps: BaseCardProps
   height: number
+  index: number
   item: ItemT
 }
 
@@ -55,7 +62,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   fetchNextPage,
   items,
   lastFetchedSuccessfullyAt,
-  ownerIsKnown,
+  ownerIsKnown: _ownerIsKnown,
   refresh,
   repoIsKnown,
   type,
@@ -89,6 +96,13 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const isOverMaxColumnLimit = !!(
     columnIndex >= 0 && columnIndex + 1 > constants.COLUMNS_LIMIT
   )
+
+  const { allIncludedOwners } = useMemo(
+    () => getOwnerAndRepoFormattedFilter(column && column.filters),
+    [column && column.filters && column.filters.owners],
+  )
+  const filteredToShowOnlyOneOwner = allIncludedOwners.length === 1
+  const ownerIsKnown = _ownerIsKnown || filteredToShowOnlyOneOwner
 
   const previousOwnerIsKnownRef = usePreviousRef(ownerIsKnown)
   const previousPlanRef = usePreviousRef(plan)
@@ -172,6 +186,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     return (items || []).map((item, index) => ({
       cachedCardProps: itemCardProps[index]!,
       height: getItemSize(undefined, index),
+      index,
       item,
     }))
   }, [items, itemCardProps])
@@ -179,25 +194,43 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const itemSeparator = undefined
 
   const header = useMemo<OneListProps<DataItemT<ItemT>>['header']>(() => {
+    const renderOwnerFilterBar = !!(
+      column &&
+      (!_ownerIsKnown || column.type === 'issue_or_pr')
+    )
+
     return {
-      size: cardSearchTotalHeight + columnLoadingIndicatorSize,
+      size: column
+        ? cardSearchTotalHeight +
+          (renderOwnerFilterBar ? cardsOwnerFilterBarTotalHeight : 0) +
+          columnLoadingIndicatorSize
+        : 0,
       sticky: false,
       Component: () => (
         <View>
           {!!column && (
             <>
-              <CardsSearchHeader
-                key={`cards-search-header-column-${column.id}`}
-                columnId={column.id}
-              />
+              <View style={[sharedStyles.relative, sharedStyles.fullWidth]}>
+                <CardsSearchHeader
+                  key={`cards-search-header-column-${column.id}`}
+                  columnId={column.id}
+                />
 
-              <ColumnLoadingIndicator columnId={column.id} />
+                <ColumnLoadingIndicator columnId={column.id} />
+              </View>
+
+              {!!renderOwnerFilterBar && (
+                <CardsOwnerFilterBar
+                  key={`cards-owner-filter-bar-column-${column.id}`}
+                  columnId={column.id}
+                />
+              )}
             </>
           )}
         </View>
       ),
     }
-  }, [column && column.id])
+  }, [column && column.id, column && column.type, _ownerIsKnown])
 
   const cardsFooterProps: CardsFooterProps = {
     clearedAt: column && column.filters && column.filters.clearedAt,

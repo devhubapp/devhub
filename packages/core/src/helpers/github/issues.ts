@@ -17,7 +17,6 @@ import {
 import { constants } from '../../utils'
 import {
   filterRecordHasAnyForcedValue,
-  getOwnerAndRepoFormattedFilter,
   itemPassesFilterRecord,
 } from '../filters'
 import { getSearchQueryTerms, isIssueOrPullRequestPrivate } from '../shared'
@@ -411,9 +410,7 @@ export function getGitHubIssueSearchQuery(
   }
 
   if (owners) {
-    const { ownerFiltersWithRepos } = getOwnerAndRepoFormattedFilter({ owners })
-
-    Object.entries(ownerFiltersWithRepos).forEach(([owner, ownerFilter]) => {
+    Object.entries(owners || {}).forEach(([owner, ownerFilter]) => {
       if (!(owner && ownerFilter)) return
 
       const reposToPush: string[] = []

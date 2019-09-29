@@ -4,16 +4,19 @@ import { useEmitter } from './use-emitter'
 
 export default function useMultiKeyPressCallback(
   targetKeys: string[],
-  callback: () => void,
+  onPress: () => void,
+  onRelease?: () => void,
   { caseSensitive = false, preventDefault = true } = {},
 ) {
   const pressedKeysRef = useRef(new Set<string>([]))
   const params = useRef({
     targetKeys: [] as string[],
-    callback: (() => undefined) as () => void,
+    onPress: (() => undefined) as () => void,
+    onRelease: (() => undefined) as (() => void) | undefined,
     preventDefault: true,
   })
   const timeoutRef = useRef<any>(0)
+  const calledOnPressRef = useRef(false)
 
   // clear all keys after some seconds without pressing any key
   // this is a workaround to fix the keyup event not being called sometimes
@@ -27,8 +30,8 @@ export default function useMultiKeyPressCallback(
   }
 
   useEffect(() => {
-    params.current = { targetKeys, callback, preventDefault }
-  }, [targetKeys.join(','), callback, preventDefault])
+    params.current = { targetKeys, onPress, onRelease, preventDefault }
+  }, [targetKeys.join(','), onPress, onRelease, preventDefault])
 
   const downHandler = useCallback(
     (e: KeyboardEvent) => {
@@ -46,7 +49,8 @@ export default function useMultiKeyPressCallback(
       if (hasPressedCombo) {
         if (params.current.preventDefault) e.preventDefault()
 
-        params.current.callback()
+        calledOnPressRef.current = true
+        params.current.onPress()
 
         const keys = Array.from(pressedKeysRef.current)
         setTimeout(() => {
@@ -61,8 +65,12 @@ export default function useMultiKeyPressCallback(
 
   const upHandler = useCallback((e: KeyboardEvent) => {
     pingTimeout()
-
     pressedKeysRef.current.delete(e.key)
+
+    if (calledOnPressRef.current) {
+      calledOnPressRef.current = false
+      if (params.current.onRelease) params.current.onRelease()
+    }
   }, [])
 
   useEffect(() => {

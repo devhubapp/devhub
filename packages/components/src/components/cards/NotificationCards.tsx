@@ -32,7 +32,7 @@ export interface NotificationCardsProps
   swipeable: boolean
 }
 
-function keyExtractor({ item }: DataItemT<ItemT>) {
+function getItemKey({ item }: DataItemT<ItemT>, _index: number) {
   return `notification-card-${item.id}`
 }
 
@@ -164,7 +164,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         data={data}
         estimatedItemSize={getItemSize(data[0], 0) || 89}
         footer={footer}
-        getItemKey={keyExtractor}
+        getItemKey={getItemKey}
         getItemSize={getItemSize}
         header={header}
         horizontal={false}

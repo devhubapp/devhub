@@ -4,6 +4,7 @@ import {
   hsl,
   invert,
   lighten,
+  mix,
   parseToHsl,
   rgba,
   setLightness,
@@ -34,6 +35,7 @@ export function createThemeFromColor(
 ): Theme {
   const luminance = getLuminance(color)
   const isDark = luminance <= 0.4
+  const staticColors = getStaticColors({ isDark })
 
   let primaryBackgroundColor = '#49D3B4'
   let primaryForegroundColor = '#0D2621'
@@ -104,6 +106,7 @@ export function createThemeFromColor(
     : backgroundColorLighther5
   const backgroundColorTransparent05 = rgba(backgroundColor, 0.05)
   const backgroundColorTransparent10 = rgba(backgroundColor, 0.1)
+  const backgroundColorTintedRed = mix(0.15, staticColors.red, backgroundColor)
 
   const foregroundColor = isDark
     ? setLightness(0.9, backgroundColorLess5)
@@ -159,6 +162,7 @@ export function createThemeFromColor(
     backgroundColorMore5,
     backgroundColorTransparent10,
     backgroundColorTransparent05,
+    backgroundColorTintedRed,
 
     foregroundColor,
     foregroundColorMuted10,
@@ -168,7 +172,7 @@ export function createThemeFromColor(
     foregroundColorTransparent05,
     foregroundColorTransparent10,
 
-    ...getStaticColors({ isDark }),
+    ...staticColors,
 
     ...override,
   })

@@ -51,6 +51,7 @@ module.exports = {
         'less-5': 'var(--theme-background-color-less-5)',
         'transparent-05': 'var(--theme-background-color-transparent-05)',
         'transparent-10': 'var(--theme-background-color-transparent-10)',
+        'tinted-red': 'var(--theme-background-color-tinted-red)',
       },
       text: {
         default: 'var(--theme-foreground-color)',
