@@ -990,6 +990,7 @@ function getNewColumnAndSubscriptions(
 
           if (subtype === 'USER_RECEIVED_EVENTS') {
             newColumnFilters.subjectTypes = newColumnFilters.subjectTypes || {
+              Commit: true,
               Release: true,
               Repository: true,
               Tag: true,

@@ -93,6 +93,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
         type: 'activity',
         filters: {
           subjectTypes: {
+            Commit: true,
             Release: true,
             Repository: true,
             Tag: true,
