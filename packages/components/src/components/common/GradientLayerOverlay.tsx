@@ -5,7 +5,17 @@ import { rgba } from 'polished'
 import { LinearGradient } from '../../libs/linear-gradient'
 import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 
-function getStyle(to: To, size: number, spacing = 0): ViewStyle {
+function getStyle({
+  to,
+  size,
+  spacing = 0,
+  radius = 0,
+}: {
+  to: To
+  size: number
+  spacing?: number | string
+  radius?: number
+}): ViewStyle {
   switch (to) {
     case 'top':
       return {
@@ -14,6 +24,10 @@ function getStyle(to: To, size: number, spacing = 0): ViewStyle {
         left: spacing,
         position: 'absolute',
         right: spacing,
+        borderTopLeftRadius: radius,
+        borderTopRightRadius: radius,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
       }
     case 'bottom':
       return {
@@ -22,6 +36,10 @@ function getStyle(to: To, size: number, spacing = 0): ViewStyle {
         position: 'absolute',
         right: spacing,
         top: 0,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: radius,
+        borderBottomRightRadius: radius,
       }
     case 'left':
       return {
@@ -30,6 +48,10 @@ function getStyle(to: To, size: number, spacing = 0): ViewStyle {
         right: 0,
         top: spacing,
         width: size,
+        borderTopLeftRadius: radius,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: radius,
+        borderBottomRightRadius: 0,
       }
     case 'right':
       return {
@@ -38,6 +60,10 @@ function getStyle(to: To, size: number, spacing = 0): ViewStyle {
         position: 'absolute',
         top: spacing,
         width: size,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: radius,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: radius,
       }
     default:
       return {}
@@ -89,12 +115,7 @@ export const GradientLayerOverlay = React.forwardRef(
         collapsable={false}
         colors={colors}
         pointerEvents="box-none"
-        style={[
-          getStyle(to, size, spacing),
-          Boolean(radius) && { borderRadius: radius },
-          { zIndex: 1 },
-          style,
-        ]}
+        style={[getStyle({ to, size, spacing, radius }), { zIndex: 1 }, style]}
         {...getProps(to)}
         {...otherProps}
       />

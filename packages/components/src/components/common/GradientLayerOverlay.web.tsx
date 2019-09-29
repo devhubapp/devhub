@@ -3,7 +3,19 @@ import { View, ViewStyle } from 'react-native'
 
 import { GradientLayerOverlayProps, To } from './GradientLayerOverlay.shared'
 
-function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
+function getStyle({
+  color,
+  to,
+  size,
+  spacing = 0,
+  radius = 0,
+}: {
+  color: string
+  to: To
+  size: number
+  spacing?: number | string
+  radius?: number
+}): ViewStyle {
   const getDefaultStyles = () => ({
     backgroundColor: color,
     WebkitMaskImage: `linear-gradient(to ${to}, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))`,
@@ -18,6 +30,10 @@ function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
         left: spacing,
         position: 'absolute',
         right: spacing,
+        borderTopLeftRadius: radius,
+        borderTopRightRadius: radius,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
       }
     case 'bottom':
       return {
@@ -27,6 +43,10 @@ function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
         position: 'absolute',
         right: spacing,
         top: 0,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: radius,
+        borderBottomRightRadius: radius,
       }
     case 'left':
       return {
@@ -36,6 +56,10 @@ function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
         position: 'absolute',
         top: spacing,
         width: size,
+        borderTopLeftRadius: radius,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: radius,
+        borderBottomRightRadius: 0,
       }
     case 'right':
       return {
@@ -45,6 +69,10 @@ function getStyle(color: string, to: To, size: number, spacing = 0): ViewStyle {
         left: 0,
         top: spacing,
         width: size,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: radius,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: radius,
       }
     default:
       return {}
@@ -64,8 +92,7 @@ export const GradientLayerOverlay = React.forwardRef(
         collapsable={false}
         pointerEvents="box-none"
         style={[
-          getStyle(color, to, size, spacing),
-          Boolean(radius) && { borderRadius: radius },
+          getStyle({ color, to, size, spacing, radius }),
           { zIndex: 1 },
           style,
         ]}

@@ -32,12 +32,28 @@ export const ScrollViewWithOverlay = React.forwardRef(
       ScrollViewComponent = ScrollView,
       containerStyle,
       horizontal,
-      overlaySize = contentPadding,
-      overlaySpacing,
+      overlaySize = contentPadding / 2,
+      overlaySpacing: _overlaySpacing,
       topOrLeftOverlayThemeColor = 'backgroundColor',
       bottomOrRightOverlayThemeColor = 'backgroundColor',
       ...restProps
     } = props
+
+    const overlaySpacing =
+      typeof _overlaySpacing === 'undefined'
+        ? topOrLeftOverlayThemeColor === 'primaryBackgroundColor' ||
+          bottomOrRightOverlayThemeColor === 'primaryBackgroundColor'
+          ? '20%'
+          : 0
+        : _overlaySpacing
+
+    const radius =
+      typeof _overlaySpacing === 'undefined'
+        ? topOrLeftOverlayThemeColor === 'primaryBackgroundColor' ||
+          bottomOrRightOverlayThemeColor === 'primaryBackgroundColor'
+          ? overlaySize
+          : 0
+        : 0
 
     const _defaultRef = useRef<ScrollView>(null)
     const ref = _ref || _defaultRef
@@ -155,6 +171,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
             StyleSheet.absoluteFill,
             !isLeftOrTopOverlayVisible.current && sharedStyles.opacity0,
           ]}
+          radius={radius}
           size={overlaySize}
           spacing={overlaySpacing}
           themeColor={topOrLeftOverlayThemeColor}
@@ -167,6 +184,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
             StyleSheet.absoluteFill,
             !isRightOrBottomOverlayVisible.current && sharedStyles.opacity0,
           ]}
+          radius={radius}
           size={overlaySize}
           spacing={overlaySpacing}
           themeColor={bottomOrRightOverlayThemeColor}
