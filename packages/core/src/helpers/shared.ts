@@ -361,6 +361,7 @@ export function getSubscriptionOwnerOrOrg(
 export function getSearchQueryFromFilter(
   type: Column['type'],
   filters: ColumnFilters | undefined,
+  { groupByKey = true } = { groupByKey: true },
 ): string {
   if (!(type && filters)) return ''
 
@@ -411,10 +412,15 @@ export function getSearchQueryFromFilter(
       else if (value === false) exclude.push(item)
     })
 
-    if (include.length)
-      queries.push(`${queryKey}:${_.sortBy(include).join(',')}`)
-    if (exclude.length)
-      queries.push(`-${queryKey}:${_.sortBy(exclude).join(',')}`)
+    if (include.length) {
+      if (groupByKey) queries.push(`${queryKey}:${_.sortBy(include).join(',')}`)
+      else include.forEach(value => queries.push(`${queryKey}:${value}`))
+    }
+    if (exclude.length) {
+      if (groupByKey)
+        queries.push(`-${queryKey}:${_.sortBy(exclude).join(',')}`)
+      else exclude.forEach(value => queries.push(`-${queryKey}:${value}`))
+    }
   }
 
   const inbox = getItemInbox(type, filters)
@@ -473,7 +479,28 @@ export function getSearchQueryFromFilter(
 
   // if (clearedAt) queries.push(`clear:${clearedAt}`)
 
-  if (query) queries.push(query)
+  const queryTerms = getSearchQueryTerms(query)
+  let remainingQuery = ''
+  const queryObj: Record<string, Record<string, boolean>> = {}
+  queryTerms.forEach(queryTerm => {
+    if (!queryTerm) return
+
+    if (queryTerm.length === 2) {
+      const [q, isNegated] = queryTerm
+      remainingQuery = `${remainingQuery.trim()} ${
+        isNegated ? '-' : ''
+      }${q}`.trim()
+    } else if (queryTerm.length === 3) {
+      const [k, v, isNegated] = queryTerm
+      queryObj[k] = queryObj[k] || {}
+      queryObj[k][v] = !isNegated
+    }
+  })
+  Object.entries(queryObj).forEach(([queryKey, filterRecord]) => {
+    handleRecordFilter(queryKey, filterRecord)
+  })
+
+  if (remainingQuery) queries.push(remainingQuery.trim())
 
   return queries.join(' ')
 }
@@ -878,6 +905,104 @@ export function getFilterFromSearchQuery(
     filters.query = `${unknownKeyValueQueries} ${filters.query}`.trim()
 
   return filters
+}
+
+type UsernameFilterKey =
+  | 'assignee'
+  | 'author'
+  | 'commenter'
+  | 'involves'
+  | 'mentions'
+  | 'org'
+  | 'owner'
+  | 'review-requested'
+  | 'reviewed-by'
+  | 'team'
+  | 'team-review-requested'
+  | 'user'
+export function getUsernamesFromFilter(
+  type: Column['type'],
+  filters: ColumnFilters | undefined,
+  {
+    blacklist = [],
+    whitelist = [
+      'assignee',
+      'author',
+      'commenter',
+      'involves',
+      'mentions',
+      'org',
+      'owner',
+      'review-requested',
+      'reviewed-by',
+      'team',
+      'team-review-requested',
+      'user',
+    ],
+  }: { blacklist?: UsernameFilterKey[]; whitelist?: UsernameFilterKey[] } = {},
+) {
+  const filtersQuery =
+    getSearchQueryFromFilter(type, filters, {
+      groupByKey: true,
+    }) || undefined
+  const queryTerms = getSearchQueryTerms(filtersQuery)
+
+  const usernameFilterKeys = whitelist.filter(key => !blacklist.includes(key))
+
+  const usernameQueryTerms = (_.sortBy(
+    queryTerms.filter(
+      queryTerm =>
+        queryTerm &&
+        queryTerm.length === 3 &&
+        usernameFilterKeys.includes(queryTerm[0] as any),
+    ),
+    ['0', '2'],
+  ) as any) as Array<[string, string, boolean]>
+  const usedUsernameFilterKeys = _.uniq(
+    usernameQueryTerms.map(queryTerm => queryTerm[0]),
+  )
+
+  const usernameFilterObjs: Record<
+    'including' | 'excluding',
+    Record<string, string[]>
+  > = {
+    including: {},
+    excluding: {},
+  }
+  usernameQueryTerms.forEach(queryTerm => {
+    const [key, value, isNegated] = queryTerm
+
+    if (isNegated) {
+      usernameFilterObjs.excluding[key] =
+        usernameFilterObjs.excluding[key] || []
+      usernameFilterObjs.excluding[key]!.push(value)
+    } else {
+      usernameFilterObjs.including[key] =
+        usernameFilterObjs.including[key] || []
+      usernameFilterObjs.including[key]!.push(value)
+    }
+  })
+
+  let includedUsernames: string[] = []
+  Object.entries(usernameFilterObjs.including).forEach(
+    ([_queryKey, _usernames]) => {
+      includedUsernames = _.uniq(includedUsernames.concat(_usernames))
+    },
+  )
+
+  let excludedUsernames: string[] = []
+  Object.entries(usernameFilterObjs.excluding).forEach(
+    ([_queryKey, _usernames]) => {
+      excludedUsernames = _.uniq(excludedUsernames.concat(_usernames))
+    },
+  )
+
+  return {
+    includedUsernames,
+    excludedUsernames,
+    usernameFilterKeys,
+    usedUsernameFilterKeys,
+  }
 }
 
 const _emptyItemsFromSubscriptions: EnhancedItem[] = []

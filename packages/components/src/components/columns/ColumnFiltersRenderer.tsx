@@ -1,6 +1,6 @@
 import { constants } from '@devhub/core'
-import React, { useCallback, useRef, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, { useCallback, useState } from 'react'
+import { StyleSheet } from 'react-native'
 
 import { useTransition } from 'react-spring/native'
 import { useEmitter } from '../../hooks/use-emitter'

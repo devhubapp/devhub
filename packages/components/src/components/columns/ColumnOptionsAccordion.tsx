@@ -8,7 +8,6 @@ import React, {
 
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
-import { useIsColumnFocused } from '../../hooks/use-is-column-focused'
 import { AccordionView } from '../common/AccordionView'
 import { ColumnOptions, ColumnOptionsProps } from './ColumnOptions'
 
@@ -32,7 +31,6 @@ export const ColumnOptionsAccordion = React.memo(
       const { columnId, isOpen: _isOpen } = props
 
       const { column } = useColumn(columnId)
-      const isColumnFocused = useIsColumnFocused(columnId)
       const { appViewMode } = useAppViewMode()
       const [isOpen, setIsOpen] = useState(
         _isOpen ||

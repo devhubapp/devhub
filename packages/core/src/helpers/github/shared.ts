@@ -39,6 +39,7 @@ import {
 } from '../filters'
 import {
   getSteppedSize,
+  getUsernamesFromFilter,
   isEventPrivate,
   isNotificationPrivate,
 } from '../shared'
@@ -144,7 +145,15 @@ export function getUserURLFromLogin(
       considerProfileBotsAsBots: false,
     })
   ) {
-    return `${baseURL || defaultBaseURL}/apps/${login.replace('[bot]', '')}`
+    const username = login.replace('[bot]', '').replace('app/', '')
+    return `${baseURL || defaultBaseURL}/apps/${username}`
+  }
+
+  // may be a team
+  if (login.includes('/')) {
+    return `${baseURL || defaultBaseURL}/orgs/${login.split('/')[0]}/teams/${
+      login.split('/')[1]
+    }`
   }
 
   return `${baseURL || defaultBaseURL}/${login}`
@@ -208,13 +217,20 @@ export function getUserAvatarByUsername(
   { baseURL, size }: { baseURL: string | undefined; size?: number },
   getPixelSizeForLayoutSizeFn: ((size: number) => number) | undefined,
 ) {
-  return username
-    ? `${baseURL || 'https://github.com'}/${username}.png?size=${getSteppedSize(
-        size,
-        undefined,
-        getPixelSizeForLayoutSizeFn,
-      )}`
-    : ''
+  const _username = `${username || ''}`
+    .trim()
+    .replace('[bot]', '')
+    .replace('app/', '')
+    .split('/')[0]
+  if (!_username) return ''
+
+  // Note: This doesn't work for bots
+  return `${baseURL ||
+    'https://github.com'}/${_username}.png?size=${getSteppedSize(
+    size,
+    undefined,
+    getPixelSizeForLayoutSizeFn,
+  )}`
 }
 
 export function getUserAvatarById(
@@ -702,48 +718,31 @@ export function getColumnHeaderDetails(
           ? getOwnerAndRepo(allIncludedRepos[0])
           : { owner: undefined, repo: undefined }
 
-      let suffix = ''
-
-      const involving =
-        s.params && s.params.involves
-          ? Object.keys(s.params.involves).filter(
-              user =>
-                !!s.params &&
-                s.params.involves &&
-                s.params.involves[user] === true,
-            )
-          : []
-      if (involving.length)
-        suffix += `${suffix ? ', ' : ''} involving ${involving.join(', ')}`
-
-      const notInvolving =
-        s.params && s.params.involves
-          ? Object.keys(s.params.involves).filter(
-              user =>
-                !!s.params &&
-                s.params.involves &&
-                s.params.involves[user] === false,
-            )
-          : []
-      if (notInvolving.length)
-        suffix += `${suffix ? ', ' : ''} not involving ${notInvolving.join(
-          ', ',
-        )}`
+      const {
+        includedUsernames,
+        excludedUsernames,
+        usedUsernameFilterKeys,
+      } = getUsernamesFromFilter('issue_or_pr', column.filters, {
+        blacklist: ['owner'],
+      })
 
       const usernames =
+        (includedUsernames && includedUsernames.length
+          ? includedUsernames
+          : undefined) ||
         (ownerAndRepo.repo && ownerAndRepo.owner
           ? [ownerAndRepo.owner]
           : undefined) ||
         (owner ? [owner] : undefined) ||
-        (involving && involving.length ? involving : undefined) ||
-        (notInvolving && notInvolving.length ? notInvolving : undefined) ||
+        (excludedUsernames && excludedUsernames.length
+          ? excludedUsernames
+          : undefined) ||
         (allIncludedOwners && allIncludedOwners.length
           ? allIncludedOwners
           : undefined) ||
         []
 
-      const avatarUsername =
-        (ownerAndRepo.repo && ownerAndRepo.owner) || owner || usernames[0] || ''
+      const avatarUsername = usernames[0] || ''
       const avatarProps: HeaderDetailsAvatarProps =
         avatarUsername && !isSameUsernameFromLoggedUser(avatarUsername)
           ? {
@@ -761,6 +760,10 @@ export function getColumnHeaderDetails(
               type: ownerAndRepo.repo ? 'repo' : 'user',
             }
           : undefined
+
+      const subtitleSuffix = usedUsernameFilterKeys.length
+        ? ` (${usedUsernameFilterKeys.join(', ')})`
+        : ''
 
       switch (s && s.subtype) {
         case 'ISSUES':
@@ -780,16 +783,16 @@ export function getColumnHeaderDetails(
             ...(s.subtype === 'ISSUES'
               ? {
                   icon: 'issue-opened',
-                  subtitle: `Issues${suffix}`,
+                  subtitle: `Issues${subtitleSuffix}`,
                 }
               : s.subtype === 'PULLS'
               ? {
                   icon: 'git-pull-request',
-                  subtitle: `Pull Requests${suffix}`,
+                  subtitle: `Pull Requests${subtitleSuffix}`,
                 }
               : {
                   icon: 'issue-opened',
-                  subtitle: `Issues & PRs${suffix}`,
+                  subtitle: `Issues & PRs${subtitleSuffix}`,
                 }),
           }
         }
@@ -1285,7 +1288,8 @@ export function getUsernameIsBot(
   if (
     considerProfileBotsAsBots &&
     username &&
-    username.toLowerCase().endsWith('bot')
+    (username.toLowerCase().startsWith('app/') ||
+      username.toLowerCase().endsWith('bot'))
   )
     return true
   return false

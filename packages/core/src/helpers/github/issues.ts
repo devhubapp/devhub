@@ -381,18 +381,18 @@ export function getGitHubIssueSearchQuery(
     const termsToSearchFor = getSearchQueryTerms(query)
 
     const convertedQuery = termsToSearchFor
-      .map(termArr => {
+      .map(queryTerm => {
         if (
           !(
-            termArr &&
-            Array.isArray(termArr) &&
-            (termArr.length === 2 || termArr.length === 3)
+            queryTerm &&
+            Array.isArray(queryTerm) &&
+            (queryTerm.length === 2 || queryTerm.length === 3)
           )
         )
           return ''
 
         const [key, value, isNegated] =
-          termArr.length === 2 ? ['', termArr[0], termArr[1]] : termArr
+          queryTerm.length === 2 ? ['', queryTerm[0], queryTerm[1]] : queryTerm
         if (!(value && typeof value === 'string')) return false
 
         const searchTerm = key

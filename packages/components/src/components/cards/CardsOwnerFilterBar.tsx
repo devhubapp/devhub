@@ -4,6 +4,7 @@ import {
   getItemsFilterMetadata,
   getOwnerAndRepoFormattedFilter,
   getUserAvatarByUsername,
+  getUsernamesFromFilter,
 } from '@devhub/core'
 import _ from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -66,6 +67,7 @@ function getItemSize() {
 }
 
 const ownersCacheByColumnId = new Map<string, Set<string>>()
+const lastUsernameCacheByColumnId = new Map<string, string | undefined>()
 
 export const CardsOwnerFilterBar = React.memo(
   (props: CardsOwnerFilterBarProps) => {
@@ -156,6 +158,29 @@ export const CardsOwnerFilterBar = React.memo(
         plan,
       ],
     )
+
+    // on issues/prs column, reset owners list cache
+    // if changed the usernames in the filters
+    useMemo(() => {
+      const newPreviousUsernameCacheValue =
+        (column &&
+          column.type === 'issue_or_pr' &&
+          getUsernamesFromFilter('issue_or_pr', column.filters, {
+            blacklist: ['owner'],
+          }).includedUsernames[0]) ||
+        undefined
+
+      if (
+        newPreviousUsernameCacheValue !==
+        lastUsernameCacheByColumnId.get(columnId)
+      ) {
+        lastUsernameCacheByColumnId.set(columnId, newPreviousUsernameCacheValue)
+        ownersCacheByColumnId.delete(columnId)
+      }
+    }, [
+      columnId,
+      column && column.type === 'issue_or_pr' ? allItems : undefined,
+    ])
 
     let owners = Object.keys(
       (ownerOrRepoFilteredItemsMetadata &&

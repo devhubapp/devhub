@@ -6,6 +6,7 @@ import {
   EnhancedItem,
   getDateSmallText,
   getOwnerAndRepoFormattedFilter,
+  getUsernamesFromFilter,
 } from '@devhub/core'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { View } from 'react-native'
@@ -196,7 +197,10 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const header = useMemo<OneListProps<DataItemT<ItemT>>['header']>(() => {
     const renderOwnerFilterBar = !!(
       column &&
-      (!_ownerIsKnown || column.type === 'issue_or_pr')
+      (!_ownerIsKnown ||
+        (column.type === 'issue_or_pr' &&
+          getUsernamesFromFilter('issue_or_pr', column.filters)
+            .includedUsernames.length > 1))
     )
 
     return {

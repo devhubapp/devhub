@@ -22,7 +22,6 @@ import {
   GitHubNotificationSubjectType,
   GitHubStateType,
   isReadFilterChecked,
-  IssueOrPullRequestColumnFilters,
   issueOrPullRequestStateTypes,
   issueOrPullRequestSubjectTypes,
   isUnreadFilterChecked,
@@ -35,7 +34,6 @@ import { useColumn } from '../../hooks/use-column'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
-import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -54,7 +52,6 @@ import {
 } from '../common/CounterMetadata'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
-import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { getColumnHeaderThemeColors } from './ColumnHeader'
 import { ColumnOptionsInbox } from './ColumnOptionsInbox'
@@ -97,7 +94,7 @@ export type ColumnFilterCategory =
   | 'draft'
   | 'event_action'
   | 'inbox'
-  | 'involves'
+  // | 'involves'
   | 'notification_reason'
   | 'privacy'
   | 'repos'
@@ -182,29 +179,29 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
         .length >= 1)
   )
 
-  const involvingUsers = useMemo(
-    () =>
-      _.sortBy(
-        Object.keys(
-          (column &&
-            column.filters &&
-            (column.filters as IssueOrPullRequestColumnFilters).involves) ||
-            {},
-        ),
-      ),
-    [
-      column &&
-        column.filters &&
-        (column.filters as IssueOrPullRequestColumnFilters).involves,
-    ],
-  )
+  // const involvingUsers = useMemo(
+  //   () =>
+  //     _.sortBy(
+  //       Object.keys(
+  //         (column &&
+  //           column.filters &&
+  //           (column.filters as IssueOrPullRequestColumnFilters).involves) ||
+  //           {},
+  //       ),
+  //     ),
+  //   [
+  //     column &&
+  //       column.filters &&
+  //       (column.filters as IssueOrPullRequestColumnFilters).involves,
+  //   ],
+  // )
 
-  const _shouldShowInvolvesFilter = !!(
-    column &&
-    column.type === 'issue_or_pr' &&
-    !!involvingUsers &&
-    involvingUsers.length >= 1
-  )
+  // const _shouldShowInvolvesFilter = !!(
+  //   column &&
+  //   column.type === 'issue_or_pr' &&
+  //   !!involvingUsers &&
+  //   involvingUsers.length >= 1
+  // )
 
   const _allColumnOptionCategories: Array<ColumnFilterCategory | false> = [
     !!column && column.type === 'notifications' && 'inbox',
@@ -213,7 +210,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
     'state',
     'draft',
     'bot',
-    _shouldShowInvolvesFilter && 'involves',
+    // _shouldShowInvolvesFilter && 'involves',
     'subject_types',
     !!column && column.type === 'activity' && 'event_action',
     !!column && column.type === 'notifications' && 'notification_reason',
@@ -367,7 +364,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
             />
           )}
 
-        {allColumnOptionCategories.includes('involves') &&
+        {/* allColumnOptionCategories.includes('involves') &&
           column.type === 'issue_or_pr' &&
           (() => {
             const filters = column.filters && column.filters.involves
@@ -479,7 +476,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 })}
               </ColumnOptionsRow>
             )
-          })()}
+          })() */}
 
         {allColumnOptionCategories.includes('saved_for_later') &&
           (() => {

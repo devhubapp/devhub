@@ -66,7 +66,10 @@ export function Avatar(props: AvatarProps) {
   const isBot = getUsernameIsBot(_username, {
     considerProfileBotsAsBots: false,
   })
-  const username = isBot ? _username!.replace('[bot]', '') : _username
+  const username = (_username || '')
+    .replace('[bot]', '')
+    .replace('app/', '')
+    .split('/')[0]
 
   const avatarUrl = _avatarUrl
     ? getUserAvatarByAvatarURL(
