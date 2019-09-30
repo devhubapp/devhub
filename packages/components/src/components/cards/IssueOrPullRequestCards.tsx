@@ -16,7 +16,9 @@ import { OneList, OneListProps } from '../../libs/one-list'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
+import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
+import { Spacer } from '../common/Spacer'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import {
   IssueOrPullRequestCard,
@@ -156,8 +158,6 @@ export const IssueOrPullRequestCards = React.memo(
           maybeInvalidFilters &&
           !getSearchQueryFromFilter(column.type, column.filters)
 
-        const exampleFilter = `involves:${loggedUsername || 'gaearon'}`
-
         if (maybeInvalidFilters) {
           return (
             <EmptyCards
@@ -165,27 +165,48 @@ export const IssueOrPullRequestCards = React.memo(
               disableLoadingIndicator
               emoji={emptyFilters ? 'desert' : 'squirrel'}
               errorButtonView={
-                <Button
-                  analyticsLabel="try_fix_invalid_filter"
-                  children={`Add "${exampleFilter}" filter`}
-                  onPress={() =>
-                    dispatch(
-                      actions.setColumnInvolvesFilter({
-                        columnId: column.id,
-                        user: loggedUsername || 'gaearon',
-                        value: true,
-                      }),
-                    )
-                  }
-                />
+                <View>
+                  <Button
+                    analyticsLabel="try_fix_invalid_filter"
+                    children={`Add "owner:${loggedUsername ||
+                      'gaearon'}" filter`}
+                    onPress={() =>
+                      dispatch(
+                        actions.setColumnOwnerFilter({
+                          columnId: column.id,
+                          owner: loggedUsername || 'gaearon',
+                          value: true,
+                        }),
+                      )
+                    }
+                  />
+
+                  <Spacer height={contentPadding / 2} />
+
+                  <Button
+                    analyticsLabel="try_fix_invalid_filter"
+                    children={`Add "involves:${loggedUsername ||
+                      'gaearon'}" filter`}
+                    onPress={() =>
+                      dispatch(
+                        actions.setColumnInvolvesFilter({
+                          columnId: column.id,
+                          user: loggedUsername || 'gaearon',
+                          value: true,
+                        }),
+                      )
+                    }
+                  />
+                </View>
               }
               errorMessage={
                 emptyFilters
-                  ? `You need to add some filters for this search to work. \nExample: ${exampleFilter}`
+                  ? `You need to add some filters for this search to work. \nExample: author:${loggedUsername ||
+                      'gaearon'}`
                   : `Something went wrong. Try changing your search query. \n${
                       messageHasMoreDetails
                         ? errorMessage
-                        : `Example: ${exampleFilter}`
+                        : `Example: author:${loggedUsername || 'gaearon'}`
                     }`
               }
               errorTitle={
