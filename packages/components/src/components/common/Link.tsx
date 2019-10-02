@@ -6,7 +6,7 @@ import React, {
   useLayoutEffect,
   useRef,
 } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { GestureResponderEvent, StyleSheet, Text, View } from 'react-native'
 
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
@@ -185,11 +185,14 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
         default: {
           ...otherProps,
           onPress: href
-            ? (e: any) => {
+            ? (e: GestureResponderEvent) => {
                 if (onPress) onPress(e)
+                if (e && e.isDefaultPrevented()) return
 
                 if (href.startsWith('http')) Browser.openURL(href)
-                else Linking.openURL(href)
+                else if (!href.startsWith('javascript:')) Linking.openURL(href)
+
+                if (e) e.preventDefault()
               }
             : onPress,
         } as any,
@@ -200,8 +203,11 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
           onPress: href
             ? (e: any) => {
                 if (onPress) onPress(e)
+                if (e && e.isDefaultPrevented()) return
 
                 if (isDeepLink && href) Linking.openURL(href)
+
+                if (e) e.preventDefault()
               }
             : onPress,
           selectable: true,
