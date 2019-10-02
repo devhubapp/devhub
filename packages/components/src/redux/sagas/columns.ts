@@ -269,10 +269,12 @@ function* onColumnSubscriptionFilterChange(
   action:
     | ExtractActionFromActionCreator<typeof actions.clearColumnFilters>
     | ExtractActionFromActionCreator<typeof actions.replaceColumnFilters>
+    | ExtractActionFromActionCreator<typeof actions.replaceColumnOwnerFilter>
+    | ExtractActionFromActionCreator<typeof actions.replaceColumnWatchingFilter>
     | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnInvolvesFilter>
-    | ExtractActionFromActionCreator<typeof actions.replaceColumnOwnerFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnOwnerFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnWatchingFilter>
     | ExtractActionFromActionCreator<
         typeof actions.setColumnParticipatingFilter
       >
@@ -354,7 +356,9 @@ function* onColumnSubscriptionFilterChange(
             action.type === 'CLEAR_COLUMN_FILTERS' ||
             action.type === 'REPLACE_COLUMN_FILTERS' ||
             action.type === 'REPLACE_COLUMN_OWNER_FILTER' ||
+            action.type === 'REPLACE_COLUMN_WATCHING_FILTER' ||
             action.type === 'SET_COLUMN_OWNER_FILTER' ||
+            action.type === 'SET_COLUMN_WATCHING_FILTER' ||
             action.type === 'SET_COLUMN_REPO_FILTER'
               ? c.filters && c.filters.owners
               : subscription.params.owners,
@@ -449,6 +453,7 @@ export function* columnsSagas() {
         'CLEAR_COLUMN_FILTERS',
         'REPLACE_COLUMN_FILTERS',
         'REPLACE_COLUMN_OWNER_FILTER',
+        'REPLACE_COLUMN_WATCHING_FILTER',
         'SET_COLUMN_DRAFT_FILTER',
         'SET_COLUMN_INVOLVES_FILTER',
         'SET_COLUMN_OWNER_FILTER',
@@ -457,6 +462,7 @@ export function* columnsSagas() {
         'SET_COLUMN_STATE_FILTER',
         'SET_COLUMN_SUBJECT_TYPE_FILTER',
         'SET_COLUMN_UNREAD_FILTER',
+        'SET_COLUMN_WATCHING_FILTER',
       ],
       onColumnSubscriptionFilterChange,
     ),

@@ -3,6 +3,7 @@ import {
   Column,
   ColumnSubscription,
   constants,
+  EnhancedGitHubEvent,
   EnhancedItem,
   getDateSmallText,
   getOwnerAndRepoFormattedFilter,
@@ -30,6 +31,10 @@ import {
   cardSearchTotalHeight,
   CardsSearchHeader,
 } from '../components/cards/CardsSearchHeader'
+import {
+  CardsWatchingOwnerFilterBar,
+  cardsWatchingOwnerFilterBarTotalHeight,
+} from '../components/cards/CardsWatchingOwnerFilterBar'
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { cardItemSeparatorSize } from '../components/cards/partials/CardItemSeparator'
 import { columnHeaderHeight } from '../components/columns/ColumnHeader'
@@ -91,6 +96,26 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const dispatch = useDispatch()
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
+  const subtype = useReduxState(
+    useCallback(
+      state => {
+        if (!column) return undefined
+
+        const subscription = selectors.columnSubscriptionSelector(
+          state,
+          column.id,
+        )
+        return subscription && subscription.subtype
+      },
+      [column && column.id],
+    ),
+  )
+  const isDashboard =
+    subtype === 'USER_RECEIVED_EVENTS' ||
+    subtype === 'USER_RECEIVED_PUBLIC_EVENTS'
+  const isUserActivity =
+    subtype === 'USER_EVENTS' || subtype === 'USER_PUBLIC_EVENTS'
+
   const isOverPlanColumnLimit = !!(
     plan && columnIndex + 1 > plan.featureFlags.columnsLimit
   )
@@ -103,7 +128,16 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     [column && column.filters && column.filters.owners],
   )
   const filteredToShowOnlyOneOwner = allIncludedOwners.length === 1
-  const ownerIsKnown = _ownerIsKnown || filteredToShowOnlyOneOwner
+
+  const includedUsernames =
+    (column &&
+      getUsernamesFromFilter(type, column.filters).includedUsernames) ||
+    []
+  const ownerIsKnown = !!(
+    _ownerIsKnown ||
+    filteredToShowOnlyOneOwner ||
+    (isDashboard && includedUsernames.length === 1)
+  )
 
   const previousOwnerIsKnownRef = usePreviousRef(ownerIsKnown)
   const previousPlanRef = usePreviousRef(plan)
@@ -125,10 +159,23 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     }
 
     const result = items.map<BaseCardProps>(item => {
+      const event = item as EnhancedGitHubEvent
+
       const cached = cardPropsCacheMapRef.current.get(item)
       const value =
         cached ||
-        getCardPropsForItem(type, item, { ownerIsKnown, plan, repoIsKnown })
+        getCardPropsForItem(type, item, {
+          ownerIsKnown:
+            (isDashboard || isUserActivity) &&
+            (event.type === 'ForkEvent' ||
+              event.type === 'WatchEvent' ||
+              event.type === 'WatchEvent:OneUserMultipleRepos' ||
+              event.type === 'MemberEvent')
+              ? _ownerIsKnown
+              : ownerIsKnown,
+          plan,
+          repoIsKnown,
+        })
       newCacheMap.set(item, value)
 
       return value
@@ -137,7 +184,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     cardPropsCacheMapRef.current = newCacheMap
 
     return result
-  }, [items, ownerIsKnown, plan, repoIsKnown])
+  }, [_ownerIsKnown, isDashboard, items, ownerIsKnown, plan, repoIsKnown])
 
   const itemLayouts = useMemo<Array<FlatListItemLayout | undefined>>(() => {
     const newCacheMap = new WeakMap()
@@ -198,15 +245,23 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     const renderOwnerFilterBar = !!(
       column &&
       (!_ownerIsKnown ||
-        (column.type === 'issue_or_pr' &&
-          getUsernamesFromFilter('issue_or_pr', column.filters)
-            .includedUsernames.length > 1))
+        (column.type === 'issue_or_pr' && includedUsernames.length > 1)) &&
+      !isDashboard
+    )
+
+    const renderWatchingOwnerFilterBar = !!(
+      column &&
+      column.type === 'activity' &&
+      isDashboard
     )
 
     return {
       size: column
         ? cardSearchTotalHeight +
           (renderOwnerFilterBar ? cardsOwnerFilterBarTotalHeight : 0) +
+          (renderWatchingOwnerFilterBar
+            ? cardsWatchingOwnerFilterBarTotalHeight
+            : 0) +
           columnLoadingIndicatorSize
         : 0,
       sticky: false,
@@ -226,6 +281,13 @@ export function useCardsProps<ItemT extends EnhancedItem>({
               {!!renderOwnerFilterBar && (
                 <CardsOwnerFilterBar
                   key={`cards-owner-filter-bar-column-${column.id}`}
+                  columnId={column.id}
+                />
+              )}
+
+              {!!renderWatchingOwnerFilterBar && (
+                <CardsWatchingOwnerFilterBar
+                  key={`cards-watching-owner-filter-bar-column-${column.id}`}
                   columnId={column.id}
                 />
               )}

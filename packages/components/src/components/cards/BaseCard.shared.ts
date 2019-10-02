@@ -451,19 +451,21 @@ function _getCardPropsForItem(
 
             return {
               action: actorActionOrUndefined,
-              avatar: {
-                imageURL: getUserAvatarByEmail(
-                  commit.author.email,
-                  { baseURL: getBaseUrlFromOtherUrl(commit.url) },
-                  PixelRatio.getPixelSizeForLayoutSize,
-                ),
-                linkURL:
-                  (commit.author.email &&
-                    getUserURLFromEmail(commit.author.email, {
-                      baseURL: getBaseUrlFromOtherUrl(commit.url),
-                    })) ||
-                  '',
-              },
+              avatar: ownerIsKnown
+                ? {
+                    imageURL: getUserAvatarByEmail(
+                      commit.author.email,
+                      { baseURL: getBaseUrlFromOtherUrl(commit.url) },
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    ),
+                    linkURL:
+                      (commit.author.email &&
+                        getUserURLFromEmail(commit.author.email, {
+                          baseURL: getBaseUrlFromOtherUrl(commit.url),
+                        })) ||
+                      '',
+                  }
+                : repoAvatar,
               date,
               icon,
               id,

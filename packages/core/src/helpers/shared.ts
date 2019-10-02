@@ -380,7 +380,7 @@ export function getSearchQueryFromFilter(
     unread,
   } = filters
 
-  const { activity } = filters as ActivityColumnFilters
+  const { activity, watching } = filters as ActivityColumnFilters
   const { involves } = filters as IssueOrPullRequestColumnFilters
   const { notifications } = filters as NotificationColumnFilters
 
@@ -476,6 +476,8 @@ export function getSearchQueryFromFilter(
 
   if (activity && activity.actions)
     handleRecordFilter('action', activity.actions)
+
+  if (watching) handleRecordFilter('watching', watching)
 
   // if (clearedAt) queries.push(`clear:${clearedAt}`)
 
@@ -889,6 +891,16 @@ export function getFilterFromSearchQuery(
         break
       }
 
+      case 'watching': {
+        if (type !== 'activity') return
+
+        const owner = `${value || ''}`.toLowerCase().trim()
+
+        activityFilters.watching = activityFilters.watching || {}
+        activityFilters.watching[owner] = !isNegated
+        break
+      }
+
       default: {
         if (key && value) {
           const q = `${isNegated ? '-' : ''}${key}:${value}`
@@ -907,6 +919,66 @@ export function getFilterFromSearchQuery(
   return filters
 }
 
+export function getValuesFromQueryKeysFilter(
+  type: Column['type'],
+  queryKeys: string[],
+  filters: ColumnFilters | undefined,
+) {
+  const filtersQuery =
+    getSearchQueryFromFilter(type, filters, {
+      groupByKey: true,
+    }) || undefined
+  const queryTerms = getSearchQueryTerms(filtersQuery)
+
+  const filteredQueryTerms = (_.sortBy(
+    queryTerms.filter(
+      queryTerm =>
+        queryTerm &&
+        queryTerm.length === 3 &&
+        queryKeys.includes(queryTerm[0] as any),
+    ),
+    ['0', '2'],
+  ) as any) as Array<[string, string, boolean]>
+  const usedQueryKeys = _.uniq(
+    filteredQueryTerms.map(queryTerm => queryTerm[0]),
+  )
+
+  const filterObjs: Record<
+    'including' | 'excluding',
+    Record<string, string[]>
+  > = {
+    including: {},
+    excluding: {},
+  }
+  filteredQueryTerms.forEach(queryTerm => {
+    const [key, value, isNegated] = queryTerm
+
+    if (isNegated) {
+      filterObjs.excluding[key] = filterObjs.excluding[key] || []
+      filterObjs.excluding[key]!.push(value)
+    } else {
+      filterObjs.including[key] = filterObjs.including[key] || []
+      filterObjs.including[key]!.push(value)
+    }
+  })
+
+  let included: string[] = []
+  Object.entries(filterObjs.including).forEach(([_queryKey, _usernames]) => {
+    included = _.uniq(included.concat(_usernames))
+  })
+
+  let excluded: string[] = []
+  Object.entries(filterObjs.excluding).forEach(([_queryKey, _usernames]) => {
+    excluded = _.uniq(excluded.concat(_usernames))
+  })
+
+  return {
+    included,
+    excluded,
+    usedQueryKeys,
+  }
+}
+
 type UsernameFilterKey =
   | 'assignee'
   | 'author'
@@ -920,6 +992,7 @@ type UsernameFilterKey =
   | 'team'
   | 'team-review-requested'
   | 'user'
+  | 'watching'
 export function getUsernamesFromFilter(
   type: Column['type'],
   filters: ColumnFilters | undefined,
@@ -938,70 +1011,23 @@ export function getUsernamesFromFilter(
       'team',
       'team-review-requested',
       'user',
+      'watching',
     ],
   }: { blacklist?: UsernameFilterKey[]; whitelist?: UsernameFilterKey[] } = {},
 ) {
-  const filtersQuery =
-    getSearchQueryFromFilter(type, filters, {
-      groupByKey: true,
-    }) || undefined
-  const queryTerms = getSearchQueryTerms(filtersQuery)
-
   const usernameFilterKeys = whitelist.filter(key => !blacklist.includes(key))
 
-  const usernameQueryTerms = (_.sortBy(
-    queryTerms.filter(
-      queryTerm =>
-        queryTerm &&
-        queryTerm.length === 3 &&
-        usernameFilterKeys.includes(queryTerm[0] as any),
-    ),
-    ['0', '2'],
-  ) as any) as Array<[string, string, boolean]>
-  const usedUsernameFilterKeys = _.uniq(
-    usernameQueryTerms.map(queryTerm => queryTerm[0]),
-  )
-
-  const usernameFilterObjs: Record<
-    'including' | 'excluding',
-    Record<string, string[]>
-  > = {
-    including: {},
-    excluding: {},
-  }
-  usernameQueryTerms.forEach(queryTerm => {
-    const [key, value, isNegated] = queryTerm
-
-    if (isNegated) {
-      usernameFilterObjs.excluding[key] =
-        usernameFilterObjs.excluding[key] || []
-      usernameFilterObjs.excluding[key]!.push(value)
-    } else {
-      usernameFilterObjs.including[key] =
-        usernameFilterObjs.including[key] || []
-      usernameFilterObjs.including[key]!.push(value)
-    }
-  })
-
-  let includedUsernames: string[] = []
-  Object.entries(usernameFilterObjs.including).forEach(
-    ([_queryKey, _usernames]) => {
-      includedUsernames = _.uniq(includedUsernames.concat(_usernames))
-    },
-  )
-
-  let excludedUsernames: string[] = []
-  Object.entries(usernameFilterObjs.excluding).forEach(
-    ([_queryKey, _usernames]) => {
-      excludedUsernames = _.uniq(excludedUsernames.concat(_usernames))
-    },
+  const { excluded, included, usedQueryKeys } = getValuesFromQueryKeysFilter(
+    type,
+    usernameFilterKeys,
+    filters,
   )
 
   return {
-    includedUsernames,
-    excludedUsernames,
+    excludedUsernames: excluded,
+    includedUsernames: included,
     usernameFilterKeys,
-    usedUsernameFilterKeys,
+    usedUsernameFilterKeys: usedQueryKeys,
   }
 }
 

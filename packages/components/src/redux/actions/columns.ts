@@ -147,6 +147,21 @@ export function setColumnInvolvesFilter(payload: {
   return createAction('SET_COLUMN_INVOLVES_FILTER', payload)
 }
 
+export function replaceColumnWatchingFilter(payload: {
+  columnId: string
+  owner: string | null
+}) {
+  return createAction('REPLACE_COLUMN_WATCHING_FILTER', payload)
+}
+
+export function setColumnWatchingFilter(payload: {
+  columnId: string
+  owner: string
+  value: boolean | null
+}) {
+  return createAction('SET_COLUMN_WATCHING_FILTER', payload)
+}
+
 export function replaceColumnOwnerFilter(payload: {
   columnId: string
   owner: string | null

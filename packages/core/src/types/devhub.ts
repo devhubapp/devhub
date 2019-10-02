@@ -245,6 +245,7 @@ export interface ActivityColumnFilters extends BaseColumnFilters {
     actions?: Partial<Record<GitHubEventAction, boolean>>
   }
   subjectTypes?: Partial<Record<GitHubEventSubjectType, boolean>>
+  watching?: Partial<Record<string, boolean>>
 }
 
 export interface IssueOrPullRequestColumnFilters extends BaseColumnFilters {
@@ -483,6 +484,7 @@ export interface ItemsFilterMetadata {
       repos: Record<string, ItemFilterCountMetadata | undefined>
     }
   >
+  watching: Record<string, ItemFilterCountMetadata>
 }
 
 export interface OAuthResponseData {

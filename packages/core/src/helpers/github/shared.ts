@@ -43,7 +43,11 @@ import {
   isEventPrivate,
   isNotificationPrivate,
 } from '../shared'
-import { getEventMetadata, getGitHubEventSubItems } from './events'
+import {
+  getEventMetadata,
+  getEventWatchingOwner,
+  getGitHubEventSubItems,
+} from './events'
 import {
   getGitHubIssueSearchQuery,
   getIssueOrPullRequestState,
@@ -1467,6 +1471,7 @@ const _defaultItemsFilterMetadata: ItemsFilterMetadata = {
     private: getDefaultItemFilterCountMetadata(),
   },
   owners: {},
+  watching: {},
 }
 
 function getDefaultItemsFilterMetadata() {
@@ -1503,6 +1508,7 @@ export function getItemsFilterMetadata(
     const subscriptionReason = notification && notification.reason
     const eventAction = event && getEventMetadata(event).action
     const privacy = getItemPrivacy(type, item)
+    const watchingOwner = event && getEventWatchingOwner(event)
 
     const ownersAndRepos = getItemOwnersAndRepos(type, item, { plan })
 
@@ -1547,6 +1553,12 @@ export function getItemsFilterMetadata(
       result.eventAction[eventAction] =
         result.eventAction[eventAction] || getDefaultItemFilterCountMetadata()
       updateNestedCounter(result.eventAction[eventAction]!)
+    }
+
+    if (watchingOwner) {
+      result.watching[watchingOwner] =
+        result.watching[watchingOwner] || getDefaultItemFilterCountMetadata()
+      updateNestedCounter(result.watching[watchingOwner]!)
     }
 
     if (privacy) {
@@ -1724,6 +1736,13 @@ export function getItemSearchableStrings(
       users.forEach(user => {
         strings.push(user.login)
       })
+    }
+
+    // watching:xxx filter for Dashboard columns only
+    const isDashboard = true // TODO
+    if (isDashboard) {
+      const watchingOwner = getEventWatchingOwner(event)
+      if (watchingOwner) strings.push(`watching:${watchingOwner}`)
     }
   } else if (notification) {
     const {

@@ -17,7 +17,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import {
-  cardsOwnerFilterBarTotalHeight,
+  cardsGenericOwnerFilterBarTotalHeight,
   GenericOwnerFilterBar,
   GenericOwnerFilterBarProps,
   OwnerItemT,
@@ -31,7 +31,7 @@ export interface CardsOwnerFilterBarProps {
 const ownersCacheByColumnId = new Map<string, Set<string>>()
 const lastUsernameCacheByColumnId = new Map<string, string | undefined>()
 
-export { cardsOwnerFilterBarTotalHeight }
+export const cardsOwnerFilterBarTotalHeight = cardsGenericOwnerFilterBarTotalHeight
 
 export const CardsOwnerFilterBar = React.memo(
   (props: CardsOwnerFilterBarProps) => {
@@ -146,24 +146,25 @@ export const CardsOwnerFilterBar = React.memo(
             ownerItem.metadata.unread > 0
           ),
           value:
-            ownerFilters && typeof ownerFilters[owner] === 'boolean'
-              ? ownerFilters[owner]
+            ownerFilters &&
+            typeof ownerFilters[owner.toLowerCase()] === 'boolean'
+              ? ownerFilters[owner.toLowerCase()]
               : null,
           owner,
           index,
         }
       })
-      .filter(Boolean)
-      .sort(
-        column && column.type === 'issue_or_pr'
-          ? () => 0
-          : (a, b) =>
-              a!.hasUnread && !b!.hasUnread
-                ? -1
-                : !a!.hasUnread && b!.hasUnread
-                ? 1
-                : 0,
-      ) as OwnerItemT[]
+      .filter(Boolean) as OwnerItemT[]
+    // .sort(
+    //   column && column.type === 'issue_or_pr'
+    //     ? () => 0
+    //     : (a, b) =>
+    //         a!.hasUnread && !b!.hasUnread
+    //           ? -1
+    //           : !a!.hasUnread && b!.hasUnread
+    //           ? 1
+    //           : 0,
+    // ) as OwnerItemT[]
 
     const onItemPress = useCallback<GenericOwnerFilterBarProps['onItemPress']>(
       (item, setOrReplace, value) => {

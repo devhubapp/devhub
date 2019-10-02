@@ -1083,3 +1083,26 @@ export function getGitHubEventSubItems(
     users,
   }
 }
+
+export function getEventWatchingOwner(
+  event: EnhancedGitHubEvent,
+): string | undefined {
+  let owner: string | undefined
+
+  if (event.type === 'ForkEvent') {
+    const forkRepoFullName = getRepoFullNameFromObject(event.payload.forkee)
+    owner = forkRepoFullName && forkRepoFullName.split('/')[0]
+  } else if (
+    event.type === 'WatchEvent' ||
+    event.type === 'WatchEvent:OneUserMultipleRepos'
+  ) {
+    owner = event.actor && event.actor.login
+  } else if (event.type === 'MemberEvent') {
+    owner = event.payload.member && event.payload.member.login
+  } else {
+    const repoFullName = getRepoFullNameFromObject(event.repo)
+    owner = repoFullName && repoFullName.split('/')[0]
+  }
+
+  return owner || undefined
+}

@@ -3,6 +3,7 @@ import _ from 'lodash'
 
 import {
   ActivityColumn,
+  ActivityColumnFilters,
   Column,
   filterRecordHasAnyForcedValue,
   IssueOrPullRequestColumnFilters,
@@ -430,6 +431,50 @@ export const columnsReducer: Reducer<State> = (
         draft.updatedAt = new Date().toISOString()
       })
 
+    case 'REPLACE_COLUMN_WATCHING_FILTER':
+      return immer(state, draft => {
+        const { columnId, owner: _owner } = action.payload
+
+        const owner = `${_owner || ''}`.toLowerCase()
+
+        if (!draft.byId) return
+
+        const column = draft.byId[columnId]
+        if (!(column && column.type === 'activity')) return
+
+        column.filters = column.filters || {}
+        const filters = column.filters as ActivityColumnFilters
+        filters.watching = {}
+
+        if (owner) filters.watching[owner] = true
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_WATCHING_FILTER':
+      return immer(state, draft => {
+        const { columnId, owner: _owner, value } = action.payload
+
+        const owner = `${_owner || ''}`.toLowerCase()
+
+        if (!draft.byId) return
+
+        const column = draft.byId[columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        const filters = column.filters as ActivityColumnFilters
+        filters.watching = filters.watching || {}
+
+        if (typeof value === 'boolean') {
+          filters.watching[owner] = value
+        } else {
+          delete filters.watching[owner]
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
     case 'REPLACE_COLUMN_OWNER_FILTER':
       return immer(state, draft => {
         const { columnId, owner: _owner } = action.payload
@@ -442,8 +487,6 @@ export const columnsReducer: Reducer<State> = (
         if (!column) return
 
         column.filters = column.filters || {}
-        column.filters.owners = column.filters.owners || {}
-
         column.filters.owners = {}
 
         if (owner) {

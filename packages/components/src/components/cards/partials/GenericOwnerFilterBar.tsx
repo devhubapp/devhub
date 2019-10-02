@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
 import { useDynamicRef } from '../../../hooks/use-dynamic-ref'
@@ -44,7 +44,7 @@ const itemWidth = avatarSize + 2 * contentPadding // 72
 const itemContentHeight = avatarSize + contentPadding / 2 + ownerTextLineHeight // 64
 const itemContentWithPaddingHeight =
   itemContentHeight + 2 * cardSizes.cardPadding // 85,33
-export const cardsOwnerFilterBarTotalHeight =
+export const cardsGenericOwnerFilterBarTotalHeight =
   itemContentWithPaddingHeight + separatorSize // 87,33
 
 function getItemKey(item: OwnerItemT, _index: number) {
@@ -249,7 +249,7 @@ export const GenericOwnerFilterBar = React.memo(
       <ThemedView
         style={[
           sharedStyles.flexGrow,
-          { height: cardsOwnerFilterBarTotalHeight },
+          { height: cardsGenericOwnerFilterBarTotalHeight },
         ]}
       >
         <View

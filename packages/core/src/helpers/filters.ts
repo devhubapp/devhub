@@ -29,6 +29,7 @@ import {
 } from './github'
 import {
   getEventMetadata,
+  getEventWatchingOwner,
   mergeSimilarEvents,
   sortEvents,
 } from './github/events'
@@ -353,6 +354,10 @@ export function columnHasAnyFilter(
     if (f.activity && filterRecordHasAnyForcedValue(f.activity.actions)) {
       return true
     }
+
+    if (filterRecordHasAnyForcedValue(f.watching)) {
+      return true
+    }
   }
 
   if (type === 'notifications') {
@@ -628,6 +633,15 @@ export function getFilteredEvents(
           item,
           ownerAndRepoFormattedFilter,
           { plan },
+        )
+      )
+        return false
+
+      if (
+        !itemPassesFilterRecord(
+          filters.watching || {},
+          `${getEventWatchingOwner(item) || ''}`.toLowerCase(),
+          true,
         )
       )
         return false
