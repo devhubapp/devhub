@@ -54,7 +54,7 @@ export const githubInstallationsReducer: Reducer<State> = (
         draft.updatedAt = new Date().toISOString()
 
         const installations = action.payload
-        if (!(installations && installations.length)) return
+        if (!installations) return
 
         const {
           allIds,

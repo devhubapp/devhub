@@ -35,6 +35,8 @@ function* init() {
     const isLogged = selectors.isLoggedSelector(state)
     if (!isLogged) continue
 
+    const userPlan = selectors.currentUserPlanSelector(state)
+
     const lastFetchedAt = selectors.installationsLastFetchedRequestAtSelector(
       state,
     )
@@ -62,17 +64,23 @@ function* init() {
     })()
 
     // only fetch installations tokens if:
-    // 1. never fetched
-    // 2. or there are expired ones
-    // 3. or havent fetched for 50+ minutes
-    // 4. or just installed the github app on a repo
+    // 1. have a paid plan
+    // 2. never fetched
+    // 3. or there are expired ones
+    // 4. or havent fetched for 50+ minutes
+    // 5. or just installed the github app on a repo
     if (
-      lastFetchedAt &&
       !(
-        hasExpiredInstallationToken ||
-        (fetchedNMinutesAgo && fetchedNMinutesAgo > 50)
-      ) &&
-      !installationIdFromQuery
+        userPlan &&
+        (userPlan.status === 'active' || userPlan.status === 'trialing') &&
+        userPlan.featureFlags.enablePrivateRepositories
+      ) ||
+      (lastFetchedAt &&
+        !(
+          hasExpiredInstallationToken ||
+          (fetchedNMinutesAgo && fetchedNMinutesAgo > 50)
+        ) &&
+        !installationIdFromQuery)
     ) {
       yield put(actions.refreshInstallationsNoop())
       continue
