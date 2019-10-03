@@ -266,7 +266,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 !hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'
               }
               disabled={hasCrossedColumnsLimit || !filteredItems.length}
-              name={!hasOneUnreadItem ? 'mail-read' : 'mail'}
+              name={!hasOneUnreadItem ? 'mail' : 'mail-read'}
               onPress={() => {
                 const unread = !hasOneUnreadItem
 
