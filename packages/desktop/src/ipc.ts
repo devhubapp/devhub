@@ -56,6 +56,29 @@ export function register() {
     mainWindow.setFullScreen(false)
   })
 
+  ipcMain.removeAllListeners('handle-title-bar-double-click')
+  ipcMain.addListener('handle-title-bar-double-click', () => {
+    const mainWindow = window.getMainWindow()
+    if (!mainWindow) return
+
+    if (mainWindow.isMaximized()) {
+      const { width, height } = mainWindow.getBounds()
+      const lockOnCenter = config.store.get('lockOnCenter')
+
+      config.store.set('lockOnCenter', true)
+      mainWindow.setSize(
+        Math.round(width * 0.9),
+        Math.round(height * 0.9),
+        true,
+      )
+      config.store.set('lockOnCenter', lockOnCenter)
+
+      return
+    }
+
+    mainWindow.maximize()
+  })
+
   ipcMain.removeAllListeners('unread-counter')
   ipcMain.addListener(
     'unread-counter',

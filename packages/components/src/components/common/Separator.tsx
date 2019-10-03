@@ -51,7 +51,7 @@ export interface SeparatorProps {
   backgroundThemeColor1?: keyof ThemeColors
   backgroundThemeColor2?: keyof ThemeColors
   half?: boolean
-  horizontal?: boolean
+  horizontal: boolean
   inverted?: boolean
   thick?: boolean
   zIndex?: number

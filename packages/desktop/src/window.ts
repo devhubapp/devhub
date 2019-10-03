@@ -1,4 +1,9 @@
-import { app, BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  ipcMain,
+} from 'electron'
 import path from 'path'
 
 import * as config from './config'
@@ -109,11 +114,13 @@ export function createWindow() {
   })
 
   win.on('enter-full-screen', () => {
+    ipcMain.emit('fullscreenchange', null, true)
     const _dock = dock.getDock()
     if (_dock) _dock.show()
   })
 
   win.on('leave-full-screen', () => {
+    ipcMain.emit('fullscreenchange', null, false)
     if (!(mainWindow && mainWindow.isFocused())) return
     update()
   })
@@ -123,6 +130,7 @@ export function createWindow() {
 
 export function getBrowserWindowOptions() {
   const options: BrowserWindowConstructorOptions = {
+    titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
     minWidth: 320,
     minHeight: 450,
     backgroundColor: '#1F2229',

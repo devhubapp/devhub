@@ -1,3 +1,4 @@
+import { Theme, ThemeColors } from '@devhub/core'
 import React, { ReactNode, useEffect, useLayoutEffect } from 'react'
 import {
   KeyboardAvoidingView,
@@ -9,7 +10,6 @@ import {
 } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 
-import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { useTheme } from '../context/ThemeContext'
