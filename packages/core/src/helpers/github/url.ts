@@ -6,6 +6,7 @@ export interface GitHubURLOptions {
   commentId?: number
   commentIsInline?: boolean
   issueOrPullRequestNumber?: number
+  tagName?: string
 }
 
 export const defaultBaseURL = 'https://github.com'
@@ -236,6 +237,7 @@ export function githubHTMLUrlFromAPIUrl(
     commentId,
     commentIsInline,
     issueOrPullRequestNumber,
+    tagName,
   }: GitHubURLOptions = {},
 ): string | undefined {
   if (!apiURL) return ''
@@ -292,7 +294,9 @@ export function githubHTMLUrlFromAPIUrl(
         case 'releases':
           // it wont go directly to the release, but to the generic releases page.
           // we would need to have the tag name to do that.
-          return `${baseURL}/${repoFullName}/releases/?${restOfURL2.join('/')}`
+          return `${baseURL}/${repoFullName}/releases${
+            tagName ? `/tag/${tagName}` : ''
+          }`
 
         default:
           return `${baseURL}/${restOfURL}`

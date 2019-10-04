@@ -623,7 +623,9 @@ function _getCardPropsForItem(
               icon,
               id,
               isRead,
-              link: release.html_url || fixURL(release.url)!,
+              link:
+                release.html_url ||
+                fixURL(release.url, { tagName: branchOrTagName })!,
               showPrivateLock: isPrivate,
               subitems: [],
               subtitle: trimNewLinesAndSpaces(stripMarkdown(release.body), 120),
@@ -837,18 +839,20 @@ function _getCardPropsForItem(
           (subject.type === 'RepositoryVulnerabilityAlert' &&
             getGitHubURLForSecurityAlert(repoURL)) ||
           fixURL(subject.url, {
-            addBottomAnchor: true,
+            addBottomAnchor: !release,
             commentId:
               (_comment && _comment.id && Number(_comment.id)) || undefined,
             commentIsInline: !!(_comment && _comment.path),
             issueOrPullRequestNumber,
+            tagName: release && release.tag_name,
           }) ||
-          fixURL(subject.url, {
-            addBottomAnchor: true,
+          fixURL(subject.latest_comment_url, {
+            addBottomAnchor: !release,
             commentId:
               (_comment && _comment.id && Number(_comment.id)) || undefined,
             commentIsInline: !!(_comment && _comment.path),
             issueOrPullRequestNumber,
+            tagName: release && release.tag_name,
           }) ||
           repoURL!,
         showPrivateLock: isPrivate,
