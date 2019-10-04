@@ -1,9 +1,17 @@
+import { constants, User } from '@devhub/core'
 import axios, { AxiosResponse } from 'axios'
 import * as StoreReview from 'react-native-store-review'
 import { REHYDRATE } from 'redux-persist'
-import { all, put, select, takeLatest } from 'redux-saga/effects'
+import {
+  all,
+  delay,
+  fork,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects'
 
-import { constants, User } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
 import { bugsnag } from '../../libs/bugsnag'
 import * as github from '../../libs/github'
@@ -13,6 +21,29 @@ import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
 import { ExtractActionFromActionCreator } from '../types/base'
+
+function* init() {
+  yield take('LOGIN_SUCCESS')
+
+  while (true) {
+    const state = yield select()
+
+    const appToken = selectors.appTokenSelector(state)
+    const isLogged = selectors.isLoggedSelector(state)
+    const user = selectors.currentUserSelector(state)
+    if (!(appToken && isLogged && user)) yield take('LOGIN_SUCCESS')
+    if (!(appToken && isLogged && user && user.lastLoginAt)) continue
+
+    if (
+      Date.now() - new Date(user.lastLoginAt).getTime() >
+      12 * 60 * 60 * 1000
+    ) {
+      yield put(actions.loginRequest({ appToken }))
+    }
+
+    yield delay(1000 * 60 * 60)
+  }
+}
 
 function* onRehydrate() {
   const appToken = yield select(selectors.appTokenSelector)
@@ -320,6 +351,7 @@ function* onDeleteAccountSuccess() {
 
 export function* authSagas() {
   yield all([
+    yield fork(init),
     yield takeLatest(REHYDRATE, onRehydrate),
     yield takeLatest(
       [REHYDRATE, 'LOGIN_SUCCESS', 'LOGOUT', 'UPDATE_USER_DATA'],
