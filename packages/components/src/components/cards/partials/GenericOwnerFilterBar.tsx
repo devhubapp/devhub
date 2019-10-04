@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
 import { useDynamicRef } from '../../../hooks/use-dynamic-ref'
-import useKeyPressCallback from '../../../hooks/use-key-press-callback'
 import { OneList, OneListProps } from '../../../libs/one-list'
 import { Platform } from '../../../libs/platform'
 import { sharedStyles } from '../../../styles/shared'
@@ -12,6 +11,7 @@ import {
   contentPadding,
   smallerTextSize,
 } from '../../../styles/variables'
+import { KeyboardKeyIsPressed } from '../../AppKeyboardShortcuts'
 import { getColumnHeaderThemeColors } from '../../columns/ColumnHeader'
 import { Avatar } from '../../common/Avatar'
 import { Separator, separatorSize } from '../../common/Separator'
@@ -61,39 +61,6 @@ export const GenericOwnerFilterBar = React.memo(
 
     const listRef = useRef<typeof OneList>(null)
 
-    const altKeyIsPressedRef = useRef(false)
-    useKeyPressCallback(
-      'Alt',
-      useCallback(() => {
-        altKeyIsPressedRef.current = true
-      }, []),
-      useCallback(() => {
-        altKeyIsPressedRef.current = false
-      }, []),
-    )
-
-    const shiftKeyIsPressedRef = useRef(false)
-    useKeyPressCallback(
-      'Shift',
-      useCallback(() => {
-        shiftKeyIsPressedRef.current = true
-      }, []),
-      useCallback(() => {
-        shiftKeyIsPressedRef.current = false
-      }, []),
-    )
-
-    const metaKeyIsPressedRef = useRef(false)
-    useKeyPressCallback(
-      'Meta',
-      useCallback(() => {
-        metaKeyIsPressedRef.current = true
-      }, []),
-      useCallback(() => {
-        metaKeyIsPressedRef.current = false
-      }, []),
-    )
-
     const stringifiedData = JSON.stringify(data)
 
     const firstSelectedItem = data.find(item => item.value)
@@ -122,7 +89,7 @@ export const GenericOwnerFilterBar = React.memo(
 
     const _onItemPressRef = useDynamicRef(_onItemPress)
     const onItemPress = useCallback((item: OwnerItemT) => {
-      if (altKeyIsPressedRef.current) {
+      if (KeyboardKeyIsPressed.alt) {
         _onItemPressRef.current(
           item,
           'set',
@@ -131,7 +98,7 @@ export const GenericOwnerFilterBar = React.memo(
         return
       }
 
-      if (metaKeyIsPressedRef.current || shiftKeyIsPressedRef.current) {
+      if (KeyboardKeyIsPressed.meta || KeyboardKeyIsPressed.shift) {
         _onItemPressRef.current(item, 'set', item.value ? null : true)
         return
       }
@@ -171,13 +138,13 @@ export const GenericOwnerFilterBar = React.memo(
             }}
             onLongPress={() => {
               if (Platform.supportsTouch) {
-                metaKeyIsPressedRef.current = true
+                KeyboardKeyIsPressed.meta = true
                 onItemPress(item)
               }
             }}
             onPressOut={() => {
               if (Platform.supportsTouch) {
-                metaKeyIsPressedRef.current = false
+                KeyboardKeyIsPressed.meta = false
               }
             }}
             style={[

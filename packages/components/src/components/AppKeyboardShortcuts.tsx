@@ -11,6 +11,12 @@ import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 
+export const KeyboardKeyIsPressed = {
+  meta: false,
+  shift: false,
+  alt: false,
+}
+
 export const AppKeyboardShortcuts = React.memo(() => {
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
@@ -31,6 +37,36 @@ export const AppKeyboardShortcuts = React.memo(() => {
   keyboardShortcutsParamsRef.current.columnIds = columnIds
   keyboardShortcutsParamsRef.current.focusedColumnId = focusedColumnId
   keyboardShortcutsParamsRef.current.focusedColumnIndex = focusedColumnIndex
+
+  useKeyPressCallback(
+    'Alt',
+    useCallback(() => {
+      KeyboardKeyIsPressed.alt = true
+    }, []),
+    useCallback(() => {
+      KeyboardKeyIsPressed.alt = false
+    }, []),
+  )
+
+  useKeyPressCallback(
+    'Shift',
+    useCallback(() => {
+      KeyboardKeyIsPressed.shift = true
+    }, []),
+    useCallback(() => {
+      KeyboardKeyIsPressed.shift = false
+    }, []),
+  )
+
+  useKeyPressCallback(
+    'Meta',
+    useCallback(() => {
+      KeyboardKeyIsPressed.meta = true
+    }, []),
+    useCallback(() => {
+      KeyboardKeyIsPressed.meta = false
+    }, []),
+  )
 
   useKeyPressCallback(
     'Escape',
