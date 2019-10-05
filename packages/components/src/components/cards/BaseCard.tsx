@@ -189,9 +189,15 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     type,
   } = props
 
-  if (!link) console.error(`No link for ${type} card: ${id}, ${title}, ${text}`)
+  if (!link)
+    console.error(
+      `No link for ${type} card: ${id}, ${title}, ${text && text.text}`,
+    )
   if (link && link.includes('api.github.com'))
-    console.error(`Wrong link for ${type} card: ${id}, ${title}, ${text}`, link)
+    console.error(
+      `Wrong link for ${type} card: ${id}, ${title}, ${text && text.text}`,
+      link,
+    )
 
   const backgroundThemeColor = (theme: Theme) =>
     getCardBackgroundThemeColor({ isDark: theme.isDark, isMuted: isRead })
@@ -322,22 +328,80 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               </ThemedText>
             )}
 
-            {!!text && (
+            {!!(text && text.text) && (
               <View
                 style={[
                   sharedStyles.horizontalAndVerticallyAligned,
+                  sharedStyles.justifyContentSpaceBetween,
                   sharedStyles.fullWidth,
                   sharedStyles.fullMaxWidth,
                   { height: sizes.rightTextLineHeight },
                 ]}
               >
-                <ThemedText
-                  color="foregroundColorMuted65"
-                  numberOfLines={1}
-                  style={styles.text}
-                >
-                  {text}
-                </ThemedText>
+                {text.repo && text.repo.owner && text.repo.name && columnId ? (
+                  <Link
+                    enableUnderlineHover
+                    href="javascript:void(0)"
+                    openOnNewTab={false}
+                    onPress={() => {
+                      const issueNumber =
+                        !!(
+                          text &&
+                          text.text &&
+                          text.text.match(/^#([0-9]+)$/)
+                        ) && Number(text.text.match(/^#([0-9]+)$/)![1])
+
+                      const removeIfAlreadySet = !(
+                        KeyboardKeyIsPressed.meta || KeyboardKeyIsPressed.shift
+                      )
+
+                      const removeOthers = !(
+                        KeyboardKeyIsPressed.alt ||
+                        KeyboardKeyIsPressed.meta ||
+                        KeyboardKeyIsPressed.shift
+                      )
+
+                      if (issueNumber) {
+                        dispatch(
+                          actions.changeIssueNumberFilter({
+                            columnId,
+                            issueNumber,
+                            removeIfAlreadySet,
+                            removeOthers,
+                            value: KeyboardKeyIsPressed.alt ? false : true,
+                          }),
+                        )
+                        return
+                      }
+
+                      dispatch(
+                        actions.setColumnRepoFilter({
+                          columnId,
+                          owner: text!.repo!.owner,
+                          repo: text!.repo!.name,
+                          value: KeyboardKeyIsPressed.alt ? false : true,
+                          // removeIfAlreadySet,
+                          // removeOthers,
+                        }),
+                      )
+                    }}
+                    textProps={{
+                      color: 'foregroundColorMuted65',
+                      numberOfLines: 1,
+                      style: styles.text,
+                    }}
+                  >
+                    {text.text}
+                  </Link>
+                ) : (
+                  <ThemedText
+                    color="foregroundColorMuted65"
+                    numberOfLines={1}
+                    style={styles.text}
+                  >
+                    {text.text}
+                  </ThemedText>
+                )}
 
                 {!!(reason && reason.label && columnId) && (
                   <Link
@@ -345,20 +409,23 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                     href="javascript:void(0)"
                     openOnNewTab={false}
                     onPress={() => {
+                      const removeIfAlreadySet = !(
+                        KeyboardKeyIsPressed.meta || KeyboardKeyIsPressed.shift
+                      )
+
+                      const removeOthers = !(
+                        KeyboardKeyIsPressed.alt ||
+                        KeyboardKeyIsPressed.meta ||
+                        KeyboardKeyIsPressed.shift
+                      )
+
                       dispatch(
                         actions.setColumnReasonFilter({
                           columnId,
                           reason: reason.reason,
                           value: KeyboardKeyIsPressed.alt ? false : true,
-                          resetIfAlreadySet: !(
-                            KeyboardKeyIsPressed.meta ||
-                            KeyboardKeyIsPressed.shift
-                          ),
-                          resetOthers: !(
-                            KeyboardKeyIsPressed.alt ||
-                            KeyboardKeyIsPressed.meta ||
-                            KeyboardKeyIsPressed.shift
-                          ),
+                          removeIfAlreadySet,
+                          removeOthers,
                         }),
                       )
                     }}

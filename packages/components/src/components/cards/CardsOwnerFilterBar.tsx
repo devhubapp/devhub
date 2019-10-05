@@ -53,7 +53,12 @@ export const CardsOwnerFilterBar = React.memo(
       [plan],
     )
 
-    const { allForcedOwners, allForcedRepos, ownerFilters } = useMemo(
+    const {
+      allForcedOwners,
+      allForcedRepos,
+      allIncludedOwners,
+      ownerFilters,
+    } = useMemo(
       () => getOwnerAndRepoFormattedFilter(column && column.filters),
       [column && column.filters],
     )
@@ -145,11 +150,12 @@ export const CardsOwnerFilterBar = React.memo(
             ownerItem.metadata &&
             ownerItem.metadata.unread > 0
           ),
-          value:
-            ownerFilters &&
-            typeof ownerFilters[owner.toLowerCase()] === 'boolean'
-              ? ownerFilters[owner.toLowerCase()]
-              : null,
+          value: allIncludedOwners.includes(owner.toLowerCase())
+            ? true
+            : ownerFilters &&
+              typeof ownerFilters[owner.toLowerCase()] === 'boolean'
+            ? ownerFilters[owner.toLowerCase()]
+            : null,
           owner,
           index,
         }

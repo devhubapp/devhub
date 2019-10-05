@@ -132,7 +132,10 @@ export interface BaseCardProps {
     text: string
   }>
   subtitle?: string
-  text?: string
+  text?: {
+    text: string
+    repo?: { owner: string; name: string; url: string }
+  }
   title: string
   type: Column['type']
 }
@@ -189,13 +192,15 @@ function getPrivateBannerCardProps(
     showPrivateLock: false,
     subitems: undefined,
     subtitle: undefined,
-    text:
-      cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
-        ? `Unlock private repos for ${formatPrice(
-            cheapestPlanWithNotifications.amount,
-            cheapestPlanWithNotifications.currency,
-          )}/${cheapestPlanWithNotifications.interval}`
-        : 'Tap to unlock private repos',
+    text: {
+      text:
+        cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
+          ? `Unlock private repos for ${formatPrice(
+              cheapestPlanWithNotifications.amount,
+              cheapestPlanWithNotifications.currency,
+            )}/${cheapestPlanWithNotifications.interval}`
+          : 'Tap to unlock private repos',
+    },
     title:
       type === 'activity'
         ? 'Private event'
@@ -395,7 +400,7 @@ function _getCardPropsForItem(
                 showPrivateLock: isPrivate,
                 subitems: undefined,
                 subtitle: undefined,
-                text: actionText,
+                text: { text: actionText! },
                 title: actorUsername,
                 type,
               }
@@ -410,7 +415,14 @@ function _getCardPropsForItem(
                 showPrivateLock: isPrivate,
                 subitems: undefined,
                 subtitle: undefined,
-                text: repoOwnerName,
+                text: {
+                  text: repoOwnerName!,
+                  repo: {
+                    owner: repoOwnerName!,
+                    name: repoName!,
+                    url: repoURL!,
+                  },
+                },
                 title: repoName!,
                 type,
               }
@@ -443,12 +455,15 @@ function _getCardPropsForItem(
               showPrivateLock: isPrivate,
               subitems,
               subtitle: undefined,
-              text: getRepoText({
-                repoFullName,
-                ownerIsKnown,
-                repoIsKnown,
-                issueOrPullRequestNumber: issueOrPullRequest.number,
-              }),
+              text: {
+                text: getRepoText({
+                  repoFullName,
+                  ownerIsKnown,
+                  repoIsKnown,
+                  issueOrPullRequestNumber: issueOrPullRequest.number,
+                })!,
+                repo: { owner: repoOwnerName!, name: repoName!, url: repoURL! },
+              },
               title: issueOrPullRequest.title,
               type,
             }
@@ -488,14 +503,21 @@ function _getCardPropsForItem(
               subitems,
               subtitle: undefined,
               text: repoIsKnown
-                ? branchOrTagName
-                : getRepoText({
-                    branchOrTagName,
-                    repoFullName,
-                    ownerIsKnown,
-                    repoIsKnown,
-                    issueOrPullRequestNumber: undefined,
-                  }),
+                ? { text: branchOrTagName! }
+                : {
+                    text: getRepoText({
+                      branchOrTagName,
+                      repoFullName,
+                      ownerIsKnown,
+                      repoIsKnown,
+                      issueOrPullRequestNumber: undefined,
+                    })!,
+                    repo: {
+                      owner: repoOwnerName!,
+                      name: repoName!,
+                      url: repoURL!,
+                    },
+                  },
               title: trimNewLinesAndSpaces(commit.message, 120),
               type,
             }
@@ -569,7 +591,7 @@ function _getCardPropsForItem(
                     : [],
                 ),
               subtitle: undefined,
-              text: branchOrTagName || 'master',
+              text: { text: branchOrTagName || 'master' },
               title: getRepoText({
                 branchOrTagName: undefined,
                 issueOrPullRequestNumber: undefined,
@@ -611,13 +633,16 @@ function _getCardPropsForItem(
                 stripMarkdown(pages[0].summary || ''),
                 120,
               ),
-              text: getRepoText({
-                branchOrTagName: undefined,
-                issueOrPullRequestNumber: undefined,
-                ownerIsKnown,
-                repoFullName,
-                repoIsKnown,
-              })!,
+              text: {
+                text: getRepoText({
+                  branchOrTagName: undefined,
+                  issueOrPullRequestNumber: undefined,
+                  ownerIsKnown,
+                  repoFullName,
+                  repoIsKnown,
+                })!,
+                repo: { owner: repoOwnerName!, name: repoName!, url: repoURL! },
+              },
               title: pages[0].title || pages[0].page_name,
               type,
             }
@@ -637,18 +662,21 @@ function _getCardPropsForItem(
               showPrivateLock: isPrivate,
               subitems: [],
               subtitle: trimNewLinesAndSpaces(stripMarkdown(release.body), 120),
-              text: getRepoText({
-                branchOrTagName:
-                  release.tag_name &&
-                  release.name &&
-                  release.tag_name !== release.name
-                    ? release.tag_name
-                    : undefined,
-                issueOrPullRequestNumber: undefined,
-                ownerIsKnown,
-                repoFullName,
-                repoIsKnown,
-              }),
+              text: {
+                text: getRepoText({
+                  branchOrTagName:
+                    release.tag_name &&
+                    release.name &&
+                    release.tag_name !== release.name
+                      ? release.tag_name
+                      : undefined,
+                  issueOrPullRequestNumber: undefined,
+                  ownerIsKnown,
+                  repoFullName,
+                  repoIsKnown,
+                })!,
+                repo: { owner: repoOwnerName!, name: repoName!, url: repoURL! },
+              },
               title: release.name || release.tag_name,
               type,
             }
@@ -681,16 +709,19 @@ function _getCardPropsForItem(
             showPrivateLock: isPrivate,
             subitems,
             subtitle: undefined,
-            text: getRepoText({
-              branchOrTagName:
-                isBranchMainEvent || isTagMainEvent
-                  ? branchOrTagName
-                  : undefined,
-              issueOrPullRequestNumber: undefined,
-              ownerIsKnown: false,
-              repoFullName: repoOwnerName,
-              repoIsKnown: false,
-            }),
+            text: {
+              text: getRepoText({
+                branchOrTagName:
+                  isBranchMainEvent || isTagMainEvent
+                    ? branchOrTagName
+                    : undefined,
+                issueOrPullRequestNumber: undefined,
+                ownerIsKnown: false,
+                repoFullName: repoOwnerName,
+                repoIsKnown: false,
+              })!,
+              repo: { owner: repoOwnerName!, name: repoName!, url: repoURL! },
+            },
             title: repoName!,
             type,
           }
@@ -707,6 +738,8 @@ function _getCardPropsForItem(
         isRead,
         repoFullName,
         repoOwnerName,
+        repoName,
+        repoURL,
       } = getGitHubIssueOrPullRequestSubItems(issueOrPullRequest, { plan })
 
       const avatar: BaseCardProps['avatar'] = ownerIsKnown
@@ -760,12 +793,15 @@ function _getCardPropsForItem(
         showPrivateLock: isPrivate,
         subitems: undefined,
         subtitle: undefined,
-        text: getRepoText({
-          repoFullName,
-          ownerIsKnown,
-          repoIsKnown,
-          issueOrPullRequestNumber: issueOrPullRequest.number,
-        }),
+        text: {
+          text: getRepoText({
+            repoFullName,
+            ownerIsKnown,
+            repoIsKnown,
+            issueOrPullRequestNumber: issueOrPullRequest.number,
+          })!,
+          repo: { owner: repoOwnerName!, name: repoName!, url: repoURL! },
+        },
         title: issueOrPullRequest.title,
         type,
       }
@@ -817,7 +853,9 @@ function _getCardPropsForItem(
       })()
 
       const repoURL = repo.html_url || getRepoUrlFromOtherUrl(repo.url)
-      const { owner: repoOwnerName } = getOwnerAndRepo(repoFullName)
+      const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
+        repoFullName,
+      )
 
       const reasonMetadata = getNotificationReasonMetadata(notification.reason)
 
@@ -874,13 +912,16 @@ function _getCardPropsForItem(
         showPrivateLock: isPrivate,
         subitems,
         subtitle: undefined,
-        text: getRepoText({
-          repoFullName,
-          ownerIsKnown,
-          repoIsKnown,
-          issueOrPullRequestNumber:
-            (issueOrPullRequest && issueOrPullRequest.number) || undefined,
-        }),
+        text: {
+          text: getRepoText({
+            repoFullName,
+            ownerIsKnown,
+            repoIsKnown,
+            issueOrPullRequestNumber:
+              (issueOrPullRequest && issueOrPullRequest.number) || undefined,
+          })!,
+          repo: { owner: repoOwnerName!, name: repoName!, url: repoURL! },
+        },
         title: trimNewLinesAndSpaces(subject.title, 120),
         type,
         githubApp:
@@ -955,14 +996,17 @@ function _getCardPropsForItem(
                 },
               }),
             ...(issueOrPullRequestNumber && {
-              text: getRepoText({
-                repoFullName,
-                ownerIsKnown,
-                repoIsKnown,
-                issueOrPullRequestNumber:
-                  (issueOrPullRequest && issueOrPullRequest.number) ||
-                  undefined,
-              }),
+              text: {
+                text: getRepoText({
+                  repoFullName,
+                  ownerIsKnown,
+                  repoIsKnown,
+                  issueOrPullRequestNumber:
+                    (issueOrPullRequest && issueOrPullRequest.number) ||
+                    undefined,
+                })!,
+                repo: { owner: repoOwnerName!, name: repoName!, url: repoURL! },
+              },
             }),
           }
         }
@@ -1004,7 +1048,7 @@ export function getCardSizeForProps(
       sizes.rightInnerTopSpacing +
         (props.title ? sizes.rightTextLineHeight : 0) +
         (props.subtitle ? sizes.rightTextLineHeight : 0) +
-        (props.text ? sizes.rightTextLineHeight : 0),
+        (props.text && props.text.text ? sizes.rightTextLineHeight : 0),
     ) +
     (props.action && props.action.text
       ? sizes.actionContainerHeight + sizes.verticalSpaceSize

@@ -300,8 +300,8 @@ export const columnsReducer: Reducer<State> = (
         const {
           columnId,
           reason,
-          resetIfAlreadySet,
-          resetOthers,
+          removeIfAlreadySet,
+          removeOthers,
           value,
         } = action.payload
 
@@ -318,11 +318,11 @@ export const columnsReducer: Reducer<State> = (
 
         const currentValue = column.filters.notifications.reasons[reason]
 
-        if (resetOthers) column.filters.notifications.reasons = {}
+        if (removeOthers) column.filters.notifications.reasons = {}
 
         if (
           typeof value !== 'boolean' ||
-          (resetIfAlreadySet && currentValue === value)
+          (removeIfAlreadySet && currentValue === value)
         ) {
           delete column.filters.notifications.reasons[reason]
         } else {
@@ -618,6 +618,59 @@ export const columnsReducer: Reducer<State> = (
             : action.payload.clearedAt || new Date().toISOString()
 
         draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'CHANGE_ISSUE_NUMBER_FILTER':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        const {
+          columnId,
+          issueNumber,
+          removeIfAlreadySet,
+          removeOthers,
+          value,
+        } = action.payload
+
+        if (!(columnId && issueNumber)) return
+
+        const column = draft.byId[columnId]
+        if (!column) return
+
+        column.filters = column.filters || {}
+        column.filters.query = column.filters.query || ''
+
+        draft.updatedAt = new Date().toISOString()
+
+        if (
+          column.filters.query.match(new RegExp(`-#(${issueNumber})(\s|$)`))
+        ) {
+          column.filters.query = column.filters.query.replace(
+            new RegExp(`-#(${issueNumber})(\s|$)`),
+            '',
+          )
+        } else if (
+          column.filters.query.match(new RegExp(`#(${issueNumber})(\s|$)`))
+        ) {
+          column.filters.query = column.filters.query.replace(
+            new RegExp(`#(${issueNumber})(\s|$)`),
+            '',
+          )
+          if (removeIfAlreadySet) return
+        }
+
+        if (removeOthers) {
+          column.filters.query = column.filters.query.replace(
+            /[-]?#([0-9]+)(\s|$)/gi,
+            '',
+          )
+        }
+
+        if (typeof value !== 'boolean') return
+
+        column.filters.query = `${column.filters.query.trim()} ${
+          value === false ? '-' : ''
+        }#${issueNumber}`.trim()
       })
 
     default:

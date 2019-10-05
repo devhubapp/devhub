@@ -100,8 +100,8 @@ export function setColumnReasonFilter<
   columnId: string
   reason: T
   value: boolean | null
-  resetIfAlreadySet?: boolean
-  resetOthers?: boolean
+  removeIfAlreadySet?: boolean
+  removeOthers?: boolean
 }) {
   return createAction('SET_COLUMN_REASON_FILTER', payload)
 }
@@ -204,4 +204,14 @@ export function setColumnClearedAtFilter(payload: {
   clearedAt: string | null
 }) {
   return createAction('SET_COLUMN_CLEARED_AT_FILTER', payload)
+}
+
+export function changeIssueNumberFilter(payload: {
+  columnId: string
+  issueNumber: number
+  value: boolean | null
+  removeIfAlreadySet?: boolean
+  removeOthers?: boolean
+}) {
+  return createAction('CHANGE_ISSUE_NUMBER_FILTER', payload)
 }

@@ -70,7 +70,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   lastFetchedSuccessfullyAt,
   ownerIsKnown: _ownerIsKnown,
   refresh,
-  repoIsKnown,
+  repoIsKnown: _repoIsKnown,
   type,
 }: {
   column: Column | undefined
@@ -123,20 +123,21 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     columnIndex >= 0 && columnIndex + 1 > constants.COLUMNS_LIMIT
   )
 
-  const { allIncludedOwners } = useMemo(
+  const { allIncludedOwners, allIncludedRepos } = useMemo(
     () => getOwnerAndRepoFormattedFilter(column && column.filters),
     [column && column.filters && column.filters.owners],
   )
-  const filteredToShowOnlyOneOwner = allIncludedOwners.length === 1
 
   const includedUsernames =
     (column &&
       getUsernamesFromFilter(type, column.filters).includedUsernames) ||
     []
+  const repoIsKnown = !!(_repoIsKnown || allIncludedRepos.length === 1)
   const ownerIsKnown = !!(
     _ownerIsKnown ||
-    filteredToShowOnlyOneOwner ||
-    (isDashboard && includedUsernames.length === 1)
+    allIncludedOwners.length === 1 ||
+    (isDashboard && includedUsernames.length === 1) ||
+    repoIsKnown
   )
 
   const previousOwnerIsKnownRef = usePreviousRef(ownerIsKnown)

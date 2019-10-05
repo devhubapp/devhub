@@ -521,11 +521,13 @@ export function getGitHubIssueOrPullRequestSubItems(
   issueOrPullRequest: EnhancedGitHubIssueOrPullRequest,
   { plan }: { plan: UserPlan | null | undefined },
 ) {
-  const repoFullName = getRepoFullNameFromUrl(
+  const repoURL = getRepoUrlFromOtherUrl(
     issueOrPullRequest.repository_url ||
       issueOrPullRequest.url ||
       issueOrPullRequest.html_url,
   )
+
+  const repoFullName = repoURL && getRepoFullNameFromUrl(repoURL)
   const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
     repoFullName || '',
   )
@@ -554,5 +556,6 @@ export function getGitHubIssueOrPullRequestSubItems(
     repoFullName,
     repoName,
     repoOwnerName,
+    repoURL,
   }
 }
