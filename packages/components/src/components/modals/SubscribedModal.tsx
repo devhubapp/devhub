@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
+import { Browser } from '../../libs/browser'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
@@ -103,7 +104,25 @@ export function SubscribedModal(props: SubscribedModalProps) {
           <Spacer height={contentPadding * 2} />
 
           <Button
+            analyticsLabel="subscribed_tweet_about_it"
             type="primary"
+            onPress={() => {
+              Browser.openURLOnNewTab(
+                `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  "I've just subscribed to @devhub_app and it's awesome! https://devhubapp.com",
+                )}`,
+              )
+            }}
+            style={sharedStyles.fullWidth}
+          >
+            Tweet about it
+          </Button>
+
+          <Spacer height={contentPadding / 2} />
+
+          <Button
+            analyticsLabel="subscribed_finish"
+            type="neutral"
             onPress={() => {
               dispatch(actions.closeAllModals())
             }}
