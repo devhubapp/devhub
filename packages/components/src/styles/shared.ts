@@ -12,6 +12,8 @@ export const sharedStyles = StyleSheet.create({
   flexNoGrow: { flexGrow: 0 },
   flexWrap: { flexWrap: 'wrap' },
   flexNoWrap: { flexWrap: 'nowrap' },
+  flexShrink0: { flexShrink: 0 },
+  flexShrink1: { flexShrink: 1 },
   horizontal: { flexDirection: 'row' },
   horizontalReverse: { flexDirection: 'row-reverse' },
   vertical: { flexDirection: 'column' },

@@ -385,6 +385,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                         }),
                       )
                     }}
+                    style={sharedStyles.flexShrink1}
                     textProps={{
                       color: 'foregroundColorMuted65',
                       numberOfLines: 1,
@@ -429,6 +430,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                         }),
                       )
                     }}
+                    style={sharedStyles.flexShrink0}
                     textProps={{
                       color: reason.color,
                       numberOfLines: 1,
