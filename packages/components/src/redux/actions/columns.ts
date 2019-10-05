@@ -96,7 +96,13 @@ export function setColumnActivityActionFilter<
 
 export function setColumnReasonFilter<
   T extends GitHubNotificationReason
->(payload: { columnId: string; reason: T; value: boolean | null }) {
+>(payload: {
+  columnId: string
+  reason: T
+  value: boolean | null
+  resetIfAlreadySet?: boolean
+  resetOthers?: boolean
+}) {
   return createAction('SET_COLUMN_REASON_FILTER', payload)
 }
 

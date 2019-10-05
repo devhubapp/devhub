@@ -27,6 +27,7 @@ export interface LinkProps extends Partial<TouchableProps> {
   backgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
+  enableUnderlineHover?: boolean
   enableTextWrapper?: boolean
   hoverBackgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   hoverForegroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
@@ -46,15 +47,19 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
     backgroundThemeColor,
     enableBackgroundHover,
     enableForegroundHover,
+    enableUnderlineHover,
     enableTextWrapper,
     hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
     hoverForegroundThemeColor: _hoverForegroundThemeColor,
     href,
     onPress,
-    openOnNewTab: _openOnNewTab = true,
     textProps,
     tooltip,
     ...otherProps
+  } = props
+
+  const {
+    openOnNewTab: _openOnNewTab = !(href && href.startsWith('javascript:')),
   } = props
 
   const analyticsLabel = _analyticsLabel && _analyticsLabel.replace(/-/g, '_')
@@ -109,6 +114,9 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
       textRef.current.setNativeProps({
         style: {
           color: (isHovered && hoverForegroundColor) || color,
+          ...(enableUnderlineHover
+            ? { textDecorationLine: isHovered ? 'underline' : 'none' }
+            : {}),
         },
       })
     }
@@ -118,6 +126,7 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
     backgroundThemeColor,
     enableBackgroundHover,
     enableForegroundHover,
+    enableUnderlineHover,
     backgroundColor,
     color,
     textProps && textProps.color,
@@ -128,7 +137,9 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
   const containerRef = (ref as any) || _defaultRef
   const textRef = useRef<Text | null>(null)
   const initialIsHovered = useHover(
-    enableBackgroundHover || enableForegroundHover ? containerRef : null,
+    enableBackgroundHover || enableForegroundHover || enableUnderlineHover
+      ? containerRef
+      : null,
     useCallback(
       isHovered => {
         if (cacheRef.current.isHovered === isHovered) return

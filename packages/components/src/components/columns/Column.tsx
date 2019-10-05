@@ -28,6 +28,10 @@ export interface ColumnProps extends ViewProps {
   style?: StyleProp<ViewStyle>
 }
 
+export const CurrentColumnContext = React.createContext<string | undefined>(
+  undefined,
+)
+
 export const Column = React.memo(
   React.forwardRef((props: ColumnProps, ref) => {
     const {
@@ -109,7 +113,9 @@ export const Column = React.memo(
         {!!renderLeftSeparator && <ColumnSeparator half />}
         <View style={sharedStyles.flex}>
           <ErrorBoundary FallbackComponent={ColumErrorFallbackComponent}>
-            {children}
+            <CurrentColumnContext.Provider value={columnId}>
+              {children}
+            </CurrentColumnContext.Provider>
           </ErrorBoundary>
         </View>
         {!!renderRightSeparator && <ColumnSeparator half />}

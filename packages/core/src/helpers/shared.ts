@@ -472,7 +472,10 @@ export function getSearchQueryFromFilter(
   }
 
   if (notifications && notifications.reasons)
-    handleRecordFilter('reason', notifications.reasons)
+    handleRecordFilter('reason', notifications.reasons, (k, v) => [
+      k && k.toLowerCase() === 'subscribed' ? 'watching' : k,
+      v,
+    ])
 
   if (activity && activity.actions)
     handleRecordFilter('action', activity.actions)
@@ -866,9 +869,10 @@ export function getFilterFromSearchQuery(
       case 'reason': {
         if (type !== 'notifications') return
 
-        const reason = `${value || ''}`.toLowerCase().trim() as
+        let reason = `${value || ''}`.toLowerCase().trim() as
           | EnhancedGitHubNotification['reason']
           | string
+        if (reason === 'watching') reason = 'subscribed'
 
         notificationsFilters.notifications =
           notificationsFilters.notifications || {}

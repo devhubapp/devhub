@@ -23,6 +23,7 @@ import {
   getIssueOrPullRequestState,
   getItemSubjectType,
   getNotificationIconAndColor,
+  getNotificationReasonMetadata,
   getOwnerAndRepo,
   getRepoFullNameFromUrl,
   getRepoUrlFromOtherUrl,
@@ -34,6 +35,7 @@ import {
   getUserURLFromObject,
   GitHubIcon,
   GitHubIssueOrPullRequest,
+  GitHubNotificationReason,
   GitHubPullRequest,
   GitHubPushEvent,
   isDraft,
@@ -113,6 +115,12 @@ export interface BaseCardProps {
   id: string | number
   isRead: boolean
   link: string
+  reason?: {
+    reason: GitHubNotificationReason
+    color: keyof ThemeColors
+    label: string
+    tooltip?: string
+  }
   showPrivateLock: boolean
   subitems?: Array<{
     avatar:
@@ -811,6 +819,8 @@ function _getCardPropsForItem(
       const repoURL = repo.html_url || getRepoUrlFromOtherUrl(repo.url)
       const { owner: repoOwnerName } = getOwnerAndRepo(repoFullName)
 
+      const reasonMetadata = getNotificationReasonMetadata(notification.reason)
+
       const defaultProps: Omit<BaseCardProps, 'height'> = {
         action: undefined,
         avatar: {
@@ -855,6 +865,12 @@ function _getCardPropsForItem(
             tagName: release && release.tag_name,
           }) ||
           repoURL!,
+        reason: {
+          color: reasonMetadata.color,
+          label: reasonMetadata.label,
+          reason: reasonMetadata.reason,
+          tooltip: reasonMetadata.fullDescription,
+        },
         showPrivateLock: isPrivate,
         subitems,
         subtitle: undefined,

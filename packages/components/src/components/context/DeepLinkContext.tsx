@@ -70,8 +70,13 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
         }
 
         case suffixMap.redux: {
-          if (partials[1]) {
-            dispatch({ type: partials[1] })
+          const { type, payload } = getQueryParams(querystring)
+
+          if (type) {
+            dispatch({
+              type,
+              payload: payload ? JSON.parse(payload) : undefined,
+            })
             break
           }
         }

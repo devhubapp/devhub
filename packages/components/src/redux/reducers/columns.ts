@@ -297,9 +297,17 @@ export const columnsReducer: Reducer<State> = (
 
     case 'SET_COLUMN_REASON_FILTER':
       return immer(state, draft => {
+        const {
+          columnId,
+          reason,
+          resetIfAlreadySet,
+          resetOthers,
+          value,
+        } = action.payload
+
         if (!draft.byId) return
 
-        const column = draft.byId[action.payload.columnId] as NotificationColumn
+        const column = draft.byId[columnId] as NotificationColumn
         if (!column) return
 
         column.filters = column.filters || {}
@@ -308,11 +316,17 @@ export const columnsReducer: Reducer<State> = (
         column.filters.notifications.reasons =
           column.filters.notifications.reasons || {}
 
-        if (typeof action.payload.value === 'boolean') {
-          column.filters.notifications.reasons[action.payload.reason] =
-            action.payload.value
+        const currentValue = column.filters.notifications.reasons[reason]
+
+        if (resetOthers) column.filters.notifications.reasons = {}
+
+        if (
+          typeof value !== 'boolean' ||
+          (resetIfAlreadySet && currentValue === value)
+        ) {
+          delete column.filters.notifications.reasons[reason]
         } else {
-          delete column.filters.notifications.reasons[action.payload.reason]
+          column.filters.notifications.reasons[reason] = value
         }
 
         if (

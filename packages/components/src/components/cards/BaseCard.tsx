@@ -1,8 +1,10 @@
-import React, { Fragment } from 'react'
-import { PixelRatio, StyleSheet, Text, View } from 'react-native'
-
 import { getDateSmallText, getFullDateText, Theme } from '@devhub/core'
+import React, { Fragment, useContext } from 'react'
+import { PixelRatio, StyleSheet, Text, View } from 'react-native'
+import { useDispatch } from 'react-redux'
+
 import { Platform } from '../../libs/platform'
+import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import {
   avatarSize,
@@ -10,9 +12,12 @@ import {
   smallAvatarSize,
   smallerTextSize,
 } from '../../styles/variables'
+import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
+import { CurrentColumnContext } from '../columns/Column'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { IntervalRefresh } from '../common/IntervalRefresh'
+import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -98,6 +103,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 
+  reason: {
+    lineHeight: sizes.rightTextLineHeight,
+    fontSize: smallerTextSize,
+    fontWeight: '300',
+    textAlign: 'right',
+  },
+
   timestampText: {
     lineHeight: sizes.rightTextLineHeight,
     fontSize: smallerTextSize,
@@ -168,6 +180,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     id,
     isRead,
     link,
+    reason,
     showPrivateLock,
     subitems,
     subtitle,
@@ -182,6 +195,9 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
   const backgroundThemeColor = (theme: Theme) =>
     getCardBackgroundThemeColor({ isDark: theme.isDark, isMuted: isRead })
+
+  const dispatch = useDispatch()
+  const columnId = useContext(CurrentColumnContext)
 
   return (
     <View
@@ -307,13 +323,59 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
             )}
 
             {!!text && (
-              <ThemedText
-                color="foregroundColorMuted65"
-                numberOfLines={1}
-                style={styles.text}
+              <View
+                style={[
+                  sharedStyles.horizontalAndVerticallyAligned,
+                  sharedStyles.fullWidth,
+                  sharedStyles.fullMaxWidth,
+                  { height: sizes.rightTextLineHeight },
+                ]}
               >
-                {text}
-              </ThemedText>
+                <ThemedText
+                  color="foregroundColorMuted65"
+                  numberOfLines={1}
+                  style={styles.text}
+                >
+                  {text}
+                </ThemedText>
+
+                {!!(reason && reason.label && columnId) && (
+                  <Link
+                    enableUnderlineHover
+                    href="javascript:void(0)"
+                    openOnNewTab={false}
+                    onPress={() => {
+                      dispatch(
+                        actions.setColumnReasonFilter({
+                          columnId,
+                          reason: reason.reason,
+                          value: KeyboardKeyIsPressed.alt ? false : true,
+                          resetIfAlreadySet: !(
+                            KeyboardKeyIsPressed.meta ||
+                            KeyboardKeyIsPressed.shift
+                          ),
+                          resetOthers: !(
+                            KeyboardKeyIsPressed.alt ||
+                            KeyboardKeyIsPressed.meta ||
+                            KeyboardKeyIsPressed.shift
+                          ),
+                        }),
+                      )
+                    }}
+                    textProps={{
+                      color: reason.color,
+                      numberOfLines: 1,
+                      style: [
+                        styles.reason,
+                        { minWidth: reason.label.length * 7 },
+                      ],
+                    }}
+                    {...Platform.select({ web: { title: reason.tooltip } })}
+                  >
+                    {reason.label.toLowerCase()}
+                  </Link>
+                )}
+              </View>
             )}
           </View>
         </View>
