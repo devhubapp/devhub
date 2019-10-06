@@ -398,7 +398,16 @@ function _getCardPropsForItem(
                 showPrivateLock: isPrivate,
                 subitems: undefined,
                 subtitle: undefined,
-                text: { text: actionText! },
+                text: {
+                  text: actionText!,
+                  repo: repoIsKnown
+                    ? undefined
+                    : {
+                        owner: repoOwnerName!,
+                        name: repoName!,
+                        url: repoURL!,
+                      },
+                },
                 title: actorUsername,
                 type,
               }
