@@ -347,9 +347,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
               },
             ]}
           >
-            {`You have reached the limit of ${
-              constants.COLUMNS_LIMIT
-            } columns. This is to maintain a healthy usage of the GitHub API.`}
+            {`You have reached the limit of ${constants.COLUMNS_LIMIT} columns. This is to maintain a healthy usage of the GitHub API.`}
           </ThemedText>
         )}
 

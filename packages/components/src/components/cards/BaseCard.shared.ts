@@ -186,9 +186,7 @@ function getPrivateBannerCardProps(
     icon: { color: props.iconColor || 'red', name: 'lock' },
     id: item.id,
     isRead: isItemRead(item),
-    link: `${
-      constants.APP_DEEP_LINK_URLS.pricing
-    }?highlightFeature=${highlightFeature}`,
+    link: `${constants.APP_DEEP_LINK_URLS.pricing}?highlightFeature=${highlightFeature}`,
     showPrivateLock: false,
     subitems: undefined,
     subtitle: undefined,

@@ -8,13 +8,12 @@ import { ThemedView } from '../themed/ThemedView'
 export const separatorSize = 2
 export const separatorThickSize = 5
 
-export const getSeparatorThemeColors = _.memoize(
-  (
-    _backgroundColor: string,
-  ): [keyof ThemeColors, keyof ThemeColors | undefined] => {
-    return ['backgroundColorDarker1', 'backgroundColorLighther1']
-  },
-)
+export const getSeparatorThemeColors = _.memoize((_backgroundColor: string): [
+  keyof ThemeColors,
+  keyof ThemeColors | undefined,
+] => {
+  return ['backgroundColorDarker1', 'backgroundColorLighther1']
+})
 
 const styles = StyleSheet.create({
   absoluteTop: {

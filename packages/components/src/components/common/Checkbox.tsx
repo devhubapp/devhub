@@ -237,10 +237,10 @@ export function Checkbox(props: CheckboxProps) {
               color={disabled ? 'foregroundColorMuted40' : 'foregroundColor'}
               numberOfLines={1}
               style={[sharedStyles.flex, { lineHeight: size }]}
-              {...!!labelTooltip &&
+              {...(!!labelTooltip &&
                 Platform.select({
                   web: { title: labelTooltip },
-                })}
+                }))}
             >
               {label}
             </ThemedText>

@@ -42,20 +42,24 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
   renderButtonAction = (
     action: GoogleSwipeableRowAction,
     {
-      dragX,
+      dragAnimatedValue,
       placement,
       x,
-    }: { dragX: Animated.Value; placement: Placement; x: number },
+    }: {
+      dragAnimatedValue: Animated.AnimatedInterpolation
+      placement: Placement
+      x: number
+    },
   ) => {
     const transform = {
       scale:
         placement === 'LEFT'
-          ? dragX.interpolate({
+          ? dragAnimatedValue.interpolate({
               extrapolate: 'clamp',
               inputRange: [x - 80, x],
               outputRange: [0, 1],
             })
-          : dragX.interpolate({
+          : dragAnimatedValue.interpolate({
               extrapolate: 'clamp',
               inputRange: [-x, -x + 80],
               outputRange: [1, 0],
@@ -93,17 +97,23 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
 
   renderFullAction = (
     action: GoogleSwipeableRowAction,
-    { dragX, placement }: { dragX: Animated.Value; placement: Placement },
+    {
+      dragAnimatedValue,
+      placement,
+    }: {
+      dragAnimatedValue: Animated.AnimatedInterpolation
+      placement: Placement
+    },
   ) => {
     const transform = {
       scale:
         placement === 'LEFT'
-          ? dragX.interpolate({
+          ? dragAnimatedValue.interpolate({
               extrapolate: 'clamp',
               inputRange: [0, 80],
               outputRange: [0, 1],
             })
-          : dragX.interpolate({
+          : dragAnimatedValue.interpolate({
               extrapolate: 'clamp',
               inputRange: [-80, 0],
               outputRange: [1, 0],

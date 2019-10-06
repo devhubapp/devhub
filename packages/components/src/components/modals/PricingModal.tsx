@@ -220,9 +220,7 @@ export function PricingModal(props: PricingModalProps) {
 
               if (Platform.OS !== 'web') {
                 Browser.openURLOnNewTab(
-                  `${constants.DEVHUB_LINKS.SUBSCRIBE_PAGE}?plan=${
-                    selectedPlan.cannonicalId
-                  }&appToken=${appToken}`,
+                  `${constants.DEVHUB_LINKS.SUBSCRIBE_PAGE}?plan=${selectedPlan.cannonicalId}&appToken=${appToken}`,
                 )
                 return
               }

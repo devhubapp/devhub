@@ -14,25 +14,25 @@
   },
   "dependencies": {
     "@octokit/rest": "16.20.0",
-    "axios": "0.18.1",
+    "axios": "0.19.0",
     "gravatar": "1.8.0",
-    "immer": "2.1.4",
+    "immer": "4.0.1",
     "json-to-graphql-query": "1.9.0",
-    "lodash": "4.17.13",
+    "lodash": "4.17.15",
     "moment": "2.24.0",
     "polished": "3.4.1",
-    "qs": "6.6.0"
+    "qs": "6.9.0"
   },
   "devDependencies": {
-    "@octokit/webhooks": "5.3.3",
+    "@octokit/webhooks": "6.3.1",
     "@types/fbemitter": "2.0.32",
-    "@types/lodash": "4.14.123",
+    "@types/lodash": "4.14.141",
     "mkdirp": "0.5.1",
-    "prettier": "1.16.4",
-    "tslint": "5.14.0",
-    "tslint-config-airbnb": "5.11.1",
+    "prettier": "1.18.2",
+    "tslint": "5.20.0",
+    "tslint-config-airbnb": "5.11.2",
     "tslint-config-prettier": "1.18.0",
-    "tslint-react": "3.6.0",
-    "typescript": "3.6.2"
+    "tslint-react": "4.1.0",
+    "typescript": "3.6.3"
   }
 }

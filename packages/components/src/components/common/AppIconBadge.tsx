@@ -11,7 +11,7 @@ export const AppIconBadge = React.memo((_props: AppIconBadgeProps) => {
 // 2. Make sure the badge number will get automatically updated on background
 /*
 import React from 'react'
-import firebase from 'react-native-firebase'
+import firebase from '@react-native-firebase/app'
 
 import { useUnreadCount } from '../context/UnreadCountContext'
 

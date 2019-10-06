@@ -20,7 +20,7 @@ export default {
   0: (state: any) => state,
   1: (state: any) => state,
   2: (state: any) =>
-    immer(state, draft => {
+    immer(state, (draft: any) => {
       const columns: Column[] = draft.columns && draft.columns.columns
       if (!columns) return
 

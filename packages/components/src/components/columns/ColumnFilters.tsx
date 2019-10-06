@@ -977,9 +977,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
                   return (
                     <Checkbox
-                      key={`notification-subject-type-option-${
-                        item.subjectType
-                      }`}
+                      key={`notification-subject-type-option-${item.subjectType}`}
                       checked={checked}
                       checkedBackgroundThemeColor={item.color}
                       containerStyle={
@@ -1406,9 +1404,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 title="Repositories"
                 right={
                   ownerFilterHasForcedValue || repoFilterHasForcedValue
-                    ? `${ownerCountMetadata.checked}/${
-                        ownerCountMetadata.total
-                      }`
+                    ? `${ownerCountMetadata.checked}/${ownerCountMetadata.total}`
                     : ''
                 }
               >

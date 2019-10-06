@@ -99,8 +99,7 @@ export function createWindow() {
         isSameDisplay &&
         config.store.get('isMenuBarMode') &&
         config.store.get('isMenuBarModeChangedAt') &&
-        Date.now() - (config.store.get('isMenuBarModeChangedAt') as number) >
-          1000 &&
+        Date.now() - config.store.get('isMenuBarModeChangedAt')! > 1000 &&
         !win.isDestroyed()
       )
     }

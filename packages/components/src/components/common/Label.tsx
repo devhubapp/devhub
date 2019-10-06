@@ -152,12 +152,12 @@ export const Label = React.memo((props: LabelProps) => {
           },
           textProps && !hideText && textProps.style,
         ]}
-        {...!!hideText &&
+        {...(!!hideText &&
           Platform.select({
             web: {
               title: children && typeof children === 'string' ? children : null,
             },
-          })}
+          }))}
       >
         {hideText
           ? ''

@@ -1,4 +1,5 @@
-import * as firebase from 'react-native-firebase'
+import '@react-native-firebase/analytics'
+import firebase from '@react-native-firebase/app'
 
 import { constants } from '@devhub/core'
 import { hideTokenFromString } from '../bugsnag/index.shared'
@@ -16,7 +17,7 @@ export const analytics: Analytics = {
     firebase.analytics().setUserProperties(sanitizeDimensions(_dimensions))
   },
 
-  trackEvent(category, action, label, value) {
+  trackEvent(category, action, label, value = 1) {
     firebase
       .analytics()
       .logEvent(hideTokenFromString(action || '')!.replace(/\//g, '_'), {

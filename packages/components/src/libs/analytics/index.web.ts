@@ -21,7 +21,7 @@ export const analytics: Analytics = {
     })
   },
 
-  trackEvent(category, action, label, value) {
+  trackEvent(category, action, label, value = 1) {
     ga('send', 'event', {
       eventCategory: hideTokenFromString(category),
       eventAction: hideTokenFromString(action),

@@ -362,9 +362,7 @@ export const ColumnOptions = React.memo(
               )
             }
             style={{ opacity: columnIndex === 0 ? 0.5 : 1 }}
-            tooltip={`Move column left (${
-              keyboardShortcutsById.moveColumnLeft.keys[0]
-            })`}
+            tooltip={`Move column left (${keyboardShortcutsById.moveColumnLeft.keys[0]})`}
           />
 
           <IconButton
@@ -392,9 +390,7 @@ export const ColumnOptions = React.memo(
             style={{
               opacity: columnIndex === columnsCount - 1 ? 0.5 : 1,
             }}
-            tooltip={`Move column right (${
-              keyboardShortcutsById.moveColumnRight.keys[0]
-            })`}
+            tooltip={`Move column right (${keyboardShortcutsById.moveColumnRight.keys[0]})`}
           />
 
           <Spacer flex={1} />

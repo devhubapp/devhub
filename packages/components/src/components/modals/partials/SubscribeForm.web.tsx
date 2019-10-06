@@ -121,9 +121,7 @@ const SubscribeFormWithStripe = React.memo(
       } catch (error) {
         console.error(error)
         setFormState({
-          error: `Failed to cancel subscription. Please contact support. \nError: ${
-            error.message
-          }`,
+          error: `Failed to cancel subscription. Please contact support. \nError: ${error.message}`,
           isSubmiting: false,
         })
         return false

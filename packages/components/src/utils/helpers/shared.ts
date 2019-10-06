@@ -88,18 +88,14 @@ export async function openAppStore({
         return true
       }
 
-      storeUrl = `https://play.google.com/store/apps/details?id=${
-        constants.GOOGLEPLAY_ID
-      }`
+      storeUrl = `https://play.google.com/store/apps/details?id=${constants.GOOGLEPLAY_ID}`
       if (__DEV__) console.log(`Requested to open Play Store: ${storeUrl}`) // tslint:disable-line no-console
       await Browser.openURL(storeUrl)
       return true
     }
 
     if (Platform.realOS === 'ios') {
-      let storeUrl = `itms-apps://itunes.apple.com/app/id${
-        constants.APPSTORE_ID
-      }`
+      let storeUrl = `itms-apps://itunes.apple.com/app/id${constants.APPSTORE_ID}`
 
       if (Platform.OS === 'ios' && (await Linking.canOpenURL(storeUrl))) {
         if (__DEV__) console.log(`Requested to open App Store: ${storeUrl}`) // tslint:disable-line no-console
@@ -108,12 +104,8 @@ export async function openAppStore({
       }
 
       storeUrl = showReviewModal
-        ? `https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=${
-            constants.APPSTORE_ID
-          }&pageNumber=0&sortOrdering=2&mt=8`
-        : `https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=${
-            constants.APPSTORE_ID
-          }&pageNumber=0&sortOrdering=2&mt=8`
+        ? `https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=${constants.APPSTORE_ID}&pageNumber=0&sortOrdering=2&mt=8`
+        : `https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=${constants.APPSTORE_ID}&pageNumber=0&sortOrdering=2&mt=8`
       if (__DEV__) console.log(`Requested to open App Store: ${storeUrl}`) // tslint:disable-line no-console
       await Browser.openURL(storeUrl)
       return true

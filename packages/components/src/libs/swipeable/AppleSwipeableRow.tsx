@@ -30,17 +30,21 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
     {
       x,
       placement,
-      progress,
-    }: { x: number; placement: Placement; progress: Animated.Value },
+      progressAnimatedValue,
+    }: {
+      placement: Placement
+      progressAnimatedValue: Animated.Value | Animated.AnimatedInterpolation
+      x: number
+    },
   ) => {
     const transform = {
       translateX:
         placement === 'LEFT'
-          ? progress.interpolate({
+          ? progressAnimatedValue.interpolate({
               inputRange: [0, 1],
               outputRange: [-x, 0],
             })
-          : progress.interpolate({
+          : progressAnimatedValue.interpolate({
               inputRange: [0, 1],
               outputRange: [x, 0],
             }),
@@ -81,16 +85,22 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
 
   renderFullAction = (
     action: AppleSwipeableRowAction,
-    { dragX, placement }: { dragX: Animated.Value; placement: Placement },
+    {
+      dragAnimatedValue,
+      placement,
+    }: {
+      dragAnimatedValue: Animated.AnimatedInterpolation
+      placement: Placement
+    },
   ) => {
     const transform = {
       translateX:
         placement === 'LEFT'
-          ? dragX.interpolate({
+          ? dragAnimatedValue.interpolate({
               inputRange: [0, 50, 100, 101],
               outputRange: [-20, 0, 0, 1],
             })
-          : dragX.interpolate({
+          : dragAnimatedValue.interpolate({
               inputRange: [-101, -100, -50, 0],
               outputRange: [-1, 0, 0, 20],
             }),

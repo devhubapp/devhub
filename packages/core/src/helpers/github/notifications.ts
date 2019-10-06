@@ -386,9 +386,7 @@ export async function getNotificationsEnhancementMap(
     if (commentId && !hasCommentCache) {
       try {
         const { data } = await axios.get(
-          `${
-            notification.subject.latest_comment_url
-          }?access_token=${githubToken}`,
+          `${notification.subject.latest_comment_url}?access_token=${githubToken}`,
         )
         if (!(data && data.id)) throw new Error('Invalid response')
 

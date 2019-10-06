@@ -18,9 +18,7 @@
       "packages/*",
       "subdomains/*"
     ],
-    "nohoist": [
-      "**/react-native-firebase"
-    ]
+    "nohoist": []
   },
   "scripts": {
     "clean": "yarn workspaces run clean",
@@ -32,33 +30,29 @@
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "patch-package": "patch-package",
-    "postinstall": "opencollective-postinstall",
+    "postinstall": "jetifier",
     "prepare": "yarn patch-package",
     "studio": "yarn workspace @devhub/mobile studio",
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
   "dependencies": {
-    "opencollective-postinstall": "2.0.2"
+    "react-native": "0.61.2"
   },
   "devDependencies": {
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
     "husky": "1.3.1",
+    "jetifier": "1.6.4",
     "lint-staged": "8.1.5",
-    "now": "16.2.0",
+    "now": "16.3.1",
     "patch-package": "6.0.5",
     "postinstall-prepare": "1.0.1",
     "prettier": "1.16.4",
     "shx": "0.3.2",
-    "tslint": "5.14.0",
+    "tslint": "5.20.0",
     "tslint-config-prettier": "1.18.0",
-    "tslint-react": "3.6.0",
-    "typescript": "3.6.2"
-  },
-  "resolutions": {
-    "@types/node": "12.7.2",
-    "@types/react": "16.9.2",
-    "scheduler": "0.15.0"
+    "tslint-react": "4.1.0",
+    "typescript": "3.6.3"
   },
   "husky": {
     "hooks": {

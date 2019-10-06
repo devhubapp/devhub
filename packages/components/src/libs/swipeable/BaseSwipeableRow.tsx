@@ -39,23 +39,26 @@ export abstract class BaseSwipeableRow<
   abstract renderButtonAction: (
     action: IAction,
     params: {
-      x: number
+      dragAnimatedValue: Animated.AnimatedInterpolation
       placement: Placement
-      progress: Animated.Value
-      dragX: Animated.Value
+      progressAnimatedValue: Animated.Value | Animated.AnimatedInterpolation
+      x: number
     },
   ) => ReactNode
 
   abstract renderFullAction: (
     action: IAction,
     params: {
-      dragX: Animated.Value
+      dragAnimatedValue: Animated.AnimatedInterpolation
       placement: Placement
-      progress: Animated.Value
+      progressAnimatedValue: Animated.Value | Animated.AnimatedInterpolation
     },
   ) => ReactNode
 
-  renderLeftActions = (progress: Animated.Value, dragX: Animated.Value) => {
+  renderLeftActions = (
+    progressAnimatedValue: Animated.Value | Animated.AnimatedInterpolation,
+    dragAnimatedValue: Animated.AnimatedInterpolation,
+  ): React.ReactNode => {
     const { leftActions: actions } = this.props
 
     const fullAction = actions.find(action => action.type === 'FULL')
@@ -63,8 +66,8 @@ export abstract class BaseSwipeableRow<
 
     if (fullAction)
       return this.renderFullAction(fullAction, {
-        dragX,
-        progress,
+        dragAnimatedValue,
+        progressAnimatedValue,
         placement: 'LEFT',
       })
 
@@ -79,8 +82,8 @@ export abstract class BaseSwipeableRow<
         {buttonActions.map(action => {
           x += action.width || defaultWidth
           return this.renderButtonAction(action, {
-            dragX,
-            progress,
+            dragAnimatedValue,
+            progressAnimatedValue,
             x,
             placement: 'LEFT',
           })
@@ -89,7 +92,10 @@ export abstract class BaseSwipeableRow<
     )
   }
 
-  renderRightActions = (progress: Animated.Value, dragX: Animated.Value) => {
+  renderRightActions = (
+    progressAnimatedValue: Animated.Value | Animated.AnimatedInterpolation,
+    dragAnimatedValue: Animated.AnimatedInterpolation,
+  ): React.ReactNode => {
     const { rightActions: actions } = this.props
 
     const fullAction = actions.find(action => action.type === 'FULL')
@@ -97,8 +103,8 @@ export abstract class BaseSwipeableRow<
 
     if (fullAction)
       return this.renderFullAction(fullAction, {
-        dragX,
-        progress,
+        dragAnimatedValue,
+        progressAnimatedValue,
         placement: 'RIGHT',
       })
 
@@ -112,8 +118,8 @@ export abstract class BaseSwipeableRow<
       <View style={[sharedStyles.horizontal, { width }]}>
         {buttonActions.map(action => {
           const component = this.renderButtonAction(action, {
-            dragX,
-            progress,
+            dragAnimatedValue,
+            progressAnimatedValue,
             x,
             placement: 'RIGHT',
           })

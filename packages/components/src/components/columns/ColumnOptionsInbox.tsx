@@ -77,7 +77,7 @@ export function ColumnOptionsInboxContent(
         onChange={() => {
           onChange('all')
         }}
-        {...getCheckboxPropsFor && getCheckboxPropsFor('all')}
+        {...(getCheckboxPropsFor && getCheckboxPropsFor('all'))}
       />
 
       <Checkbox
@@ -91,7 +91,7 @@ export function ColumnOptionsInboxContent(
         onChange={() => {
           onChange('participating')
         }}
-        {...getCheckboxPropsFor && getCheckboxPropsFor('participating')}
+        {...(getCheckboxPropsFor && getCheckboxPropsFor('participating'))}
       />
     </>
   )

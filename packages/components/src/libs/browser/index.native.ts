@@ -32,10 +32,12 @@ export const Browser: BrowserCrossPlatform = {
 
       emitter.emit('onShow')
       await InAppBrowserReborn.open(url, {
+        modalEnabled: false,
         preferredBarTintColor: backgroundColor,
         preferredControlTintColor: foregroundColor,
         secondaryToolbarColor: foregroundColor,
         toolbarColor: backgroundColor,
+        waitForRedirectDelay: 500,
       })
 
       emitter.emit('onDismiss')

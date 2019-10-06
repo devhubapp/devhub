@@ -1,3 +1,4 @@
+import { AsyncStorage } from 'react-native'
 import { applyMiddleware, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import {
@@ -6,7 +7,6 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 import createSagaMiddleware from 'redux-saga'
 import { registerSelectors } from 'reselect-tools'
 
@@ -22,11 +22,11 @@ if (__DEV__) {
 }
 
 export function configureStore(key = 'root') {
-  const persistConfig: PersistConfig = {
+  const persistConfig: PersistConfig<any> = {
     blacklist: ['navigation'],
     key,
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
-    storage,
+    storage: AsyncStorage,
     throttle: 500,
     version: 13,
   }

@@ -12,10 +12,7 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTRootView.h>
 
-#import "RNSplashScreen.h"
-
 #import <Firebase.h>
-#import "RNFirebaseNotifications.h"
 
 @implementation AppDelegate
 
@@ -36,9 +33,6 @@
   [self.window makeKeyAndVisible];
 
   [FIRApp configure];
-  [RNFirebaseNotifications configure];
-
-  [RNSplashScreen show];
 
   return YES;
 }
@@ -52,15 +46,8 @@
 #endif
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-  return [RCTLinkingManager application:application openURL:url
-                      sourceApplication:sourceApplication annotation:annotation];
-}
-
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-  [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  return [RCTLinkingManager application:app openURL:url options:options];
 }
 
 @end

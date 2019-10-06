@@ -70,19 +70,15 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
 
   const _flatContainerStyle = StyleSheet.flatten(otherProps.style) || EMPTY_OBJ
 
-  const _flatTextStyle =
-    StyleSheet.flatten(textProps && textProps.style) || EMPTY_OBJ
-
   const backgroundColor =
     (backgroundThemeColor &&
       getThemeColorOrItself(theme, backgroundThemeColor)) ||
     _flatContainerStyle.backgroundColor
 
   const color =
-    (textProps &&
-      textProps.color &&
-      getThemeColorOrItself(theme, textProps.color)) ||
-    _flatTextStyle.color
+    textProps &&
+    textProps.color &&
+    getThemeColorOrItself(theme, textProps.color)
 
   const updateStyles = useCallback(() => {
     const { isHovered } = cacheRef.current

@@ -57,12 +57,6 @@ export function Screen(props: ScreenProps) {
     }
   }, [])
 
-  // return (
-  //   <View style={{ flex: 1, backgroundColor: 'orange' }}>
-  //     <StatusBar backgroundColor="#00FF00" />
-  //   </View>
-  // )
-
   return (
     <ConditionalWrap
       condition

@@ -5,12 +5,13 @@ import * as ipc from './ipc'
 
 export const store = new Store({
   defaults: {
-    enablePushNotifications: undefined,
-    enablePushNotificationsSound: undefined,
+    enablePushNotifications: undefined as boolean | undefined,
+    enablePushNotificationsSound: undefined as boolean | undefined,
     isMenuBarMode: false,
-    isMenuBarModeChangedAt: null,
+    isMenuBarModeChangedAt: undefined as number | undefined,
     launchCount: 0,
     lockOnCenter: false,
+    openAtLogin: true,
     openAtLoginChangeCount: 0,
   },
 })

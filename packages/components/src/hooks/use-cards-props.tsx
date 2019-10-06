@@ -383,9 +383,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
         Component: () => (
           <EmptyCards
             columnId={column.id}
-            errorMessage={`You have reached the limit of ${
-              constants.COLUMNS_LIMIT
-            } columns. This is to maintain a healthy usage of the GitHub API.`}
+            errorMessage={`You have reached the limit of ${constants.COLUMNS_LIMIT} columns. This is to maintain a healthy usage of the GitHub API.`}
             errorTitle="Too many columns"
             fetchNextPage={undefined}
             loadState="error"
