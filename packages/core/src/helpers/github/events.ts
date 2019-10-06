@@ -1086,17 +1086,26 @@ export function getGitHubEventSubItems(
 
 export function getEventWatchingOwner(
   event: EnhancedGitHubEvent,
+  { loggedUsername }: { loggedUsername: string },
 ): string | undefined {
   let owner: string | undefined
 
-  if (event.type === 'ForkEvent') {
-    const forkRepoFullName = getRepoFullNameFromObject(event.payload.forkee)
-    owner = forkRepoFullName && forkRepoFullName.split('/')[0]
-  } else if (
-    event.type === 'WatchEvent' ||
-    event.type === 'WatchEvent:OneUserMultipleRepos'
-  ) {
-    owner = event.actor && event.actor.login
+  if (event.type === 'ForkEvent' || event.type === 'WatchEvent') {
+    const repoFullName = getRepoFullNameFromObject(event.repo)
+    const repoOwner = repoFullName && repoFullName.split('/')[0]
+
+    owner =
+      repoOwner === loggedUsername
+        ? repoOwner
+        : event.actor && event.actor.login
+  } else if (event.type === 'WatchEvent:OneUserMultipleRepos') {
+    const repoFullName = getRepoFullNameFromObject(event.repos[0])
+    const repoOwner = repoFullName && repoFullName.split('/')[0]
+
+    owner =
+      repoOwner === loggedUsername
+        ? repoOwner
+        : event.actor && event.actor.login
   } else if (event.type === 'MemberEvent') {
     owner = event.payload.member && event.payload.member.login
   } else {

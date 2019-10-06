@@ -22,6 +22,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
 
   const { column, hasCrossedColumnsLimit } = useColumn(columnId)
 
+  const loggedUsername = useReduxState(selectors.currentGitHubUsernameSelector)!
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
   const allItems = useReduxState(
@@ -44,6 +45,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
     if (!(column && allItems && allItems.length)) return allItems || EMPTY_ARRAY
 
     const items = getFilteredItems(column.type, allItems, column.filters, {
+      loggedUsername,
       mergeSimilar: !!mergeSimilar,
       plan,
     })
@@ -55,6 +57,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
     column && column.type,
     hasCrossedColumnsLimit,
     mergeSimilar,
+    loggedUsername,
   ]) as ItemT[]
 
   return {

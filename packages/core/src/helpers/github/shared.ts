@@ -1404,15 +1404,18 @@ export function getFilteredItems(
   items: EnhancedItem[],
   filters: ColumnFilters | undefined,
   {
+    loggedUsername,
     mergeSimilar,
     plan,
   }: {
+    loggedUsername: string
     mergeSimilar: boolean
     plan: UserPlan | null | undefined
   },
 ) {
   if (type === 'activity') {
     return getFilteredEvents(items as EnhancedGitHubEvent[], filters, {
+      loggedUsername,
       mergeSimilar,
       plan,
     })
@@ -1430,7 +1433,7 @@ export function getFilteredItems(
     return getFilteredNotifications(
       items as EnhancedGitHubNotification[],
       filters,
-      { plan },
+      { loggedUsername, plan },
     )
   }
 
@@ -1484,10 +1487,12 @@ export function getItemsFilterMetadata(
   {
     forceIncludeTheseOwners = [],
     forceIncludeTheseRepos = [],
+    loggedUsername,
     plan,
   }: {
     forceIncludeTheseOwners?: string[]
     forceIncludeTheseRepos?: string[]
+    loggedUsername: string
     plan: UserPlan | null | undefined
   },
 ): ItemsFilterMetadata {
@@ -1508,7 +1513,8 @@ export function getItemsFilterMetadata(
     const subscriptionReason = notification && notification.reason
     const eventAction = event && getEventMetadata(event).action
     const privacy = getItemPrivacy(type, item)
-    const watchingOwner = event && getEventWatchingOwner(event)
+    const watchingOwner =
+      event && getEventWatchingOwner(event, { loggedUsername })
 
     const ownersAndRepos = getItemOwnersAndRepos(type, item, { plan })
 
@@ -1620,7 +1626,10 @@ export function getItemsFilterMetadata(
 export function getItemSearchableStrings(
   type: ColumnSubscription['type'],
   item: EnhancedItem,
-  { plan }: { plan: UserPlan | null | undefined },
+  {
+    loggedUsername,
+    plan,
+  }: { loggedUsername: string; plan: UserPlan | null | undefined },
 ): string[] {
   const strings: string[] = []
 
@@ -1741,7 +1750,7 @@ export function getItemSearchableStrings(
     // watching:xxx filter for Dashboard columns only
     const isDashboard = true // TODO
     if (isDashboard) {
-      const watchingOwner = getEventWatchingOwner(event)
+      const watchingOwner = getEventWatchingOwner(event, { loggedUsername })
       if (watchingOwner) strings.push(`watching:${watchingOwner}`)
     }
   } else if (notification) {

@@ -270,9 +270,15 @@ export function itemPassesStringSearchFilter(
   type: ColumnSubscription['type'],
   item: EnhancedItem,
   query: string | undefined,
-  { plan }: { plan: UserPlan | null | undefined },
+  {
+    loggedUsername,
+    plan,
+  }: { loggedUsername: string; plan: UserPlan | null | undefined },
 ) {
-  const itemStrings = getItemSearchableStrings(type, item, { plan })
+  const itemStrings = getItemSearchableStrings(type, item, {
+    loggedUsername,
+    plan,
+  })
   const termsToSearchFor = getSearchQueryTerms(query)
 
   if (!(termsToSearchFor && termsToSearchFor.length)) return true
@@ -482,7 +488,10 @@ export function getFilteredIssueOrPullRequests(
 export function getFilteredNotifications(
   notifications: EnhancedGitHubNotification[],
   filters: NotificationColumnFilters | undefined,
-  { plan }: { plan: UserPlan | null | undefined },
+  {
+    loggedUsername,
+    plan,
+  }: { loggedUsername: string; plan: UserPlan | null | undefined },
 ) {
   let _notifications = sortNotifications(notifications)
 
@@ -511,6 +520,7 @@ export function getFilteredNotifications(
 
       if (
         !itemPassesStringSearchFilter('notifications', item, filters.query, {
+          loggedUsername,
           plan,
         })
       )
@@ -608,9 +618,11 @@ export function getFilteredEvents(
   events: EnhancedGitHubEvent[],
   filters: ActivityColumnFilters | undefined,
   {
+    loggedUsername,
     mergeSimilar,
     plan,
   }: {
+    loggedUsername: string
     mergeSimilar: boolean
     plan: UserPlan | null | undefined
   },
@@ -640,14 +652,18 @@ export function getFilteredEvents(
       if (
         !itemPassesFilterRecord(
           filters.watching || {},
-          `${getEventWatchingOwner(item) || ''}`.toLowerCase(),
+          `${getEventWatchingOwner(item, { loggedUsername }) ||
+            ''}`.toLowerCase(),
           true,
         )
       )
         return false
 
       if (
-        !itemPassesStringSearchFilter('activity', item, filters.query, { plan })
+        !itemPassesStringSearchFilter('activity', item, filters.query, {
+          loggedUsername,
+          plan,
+        })
       )
         return false
 

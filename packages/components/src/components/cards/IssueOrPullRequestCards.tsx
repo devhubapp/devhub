@@ -72,7 +72,7 @@ export const IssueOrPullRequestCards = React.memo(
 
     const loggedUsername = useReduxState(
       selectors.currentGitHubUsernameSelector,
-    )
+    )!
 
     const {
       OverrideRender,

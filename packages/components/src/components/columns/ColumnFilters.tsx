@@ -108,16 +108,18 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
   const { column } = useColumn(columnId)
 
+  const loggedUsername = useReduxState(selectors.currentGitHubUsernameSelector)!
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
   const getFilteredItemsOptions = useMemo<
     Parameters<typeof getFilteredItems>[3]
   >(
     () => ({
+      loggedUsername,
       mergeSimilar: false,
       plan,
     }),
-    [plan],
+    [loggedUsername, plan],
   )
 
   const { allItems, filteredItems } = useColumnData(
@@ -152,15 +154,17 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
         {
           forceIncludeTheseOwners: allForcedOwners,
           forceIncludeTheseRepos: allForcedRepos,
+          loggedUsername,
           plan,
         },
       ),
     [
-      column && column.type,
-      allItems,
-      column && column.filters,
       allForcedOwners,
       allForcedRepos,
+      allItems,
+      column && column.filters,
+      column && column.type,
+      loggedUsername,
       plan,
     ],
   )
@@ -281,17 +285,19 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   const allItemsMetadata = useMemo(
     () =>
       getItemsFilterMetadata(column ? column.type : 'activity', allItems, {
+        loggedUsername,
         plan,
       }),
-    [column && column.type, allItems, plan],
+    [column && column.type, allItems, loggedUsername, plan],
   )
 
   const filteredItemsMetadata = useMemo(
     () =>
       getItemsFilterMetadata(column ? column.type : 'activity', filteredItems, {
+        loggedUsername,
         plan,
       }),
-    [column && column.type, filteredItems, plan],
+    [column && column.type, filteredItems, loggedUsername, plan],
   )
 
   if (!column) return null
