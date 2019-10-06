@@ -44,6 +44,7 @@ export function fetchSubscriptionSuccess(payload: {
   replaceAllItems: boolean
   github: {
     appTokenType: GitHubAppTokenType
+    loggedUsername: string
     headers: GitHubAPIHeaders
   }
 }) {

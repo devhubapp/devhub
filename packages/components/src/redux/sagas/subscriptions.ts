@@ -321,6 +321,7 @@ function* onFetchRequest(
   )
   const githubOAuthToken = selectors.githubOAuthTokenSelector(state)!
   const githubAppToken = selectors.githubAppTokenSelector(state)
+  const loggedUsername = selectors.currentGitHubUsernameSelector(state)!
 
   const githubToken =
     (subscription &&
@@ -541,7 +542,7 @@ function* onFetchRequest(
         data,
         canFetchMore,
         replaceAllItems,
-        github: { appTokenType, headers: githubAPIHeaders },
+        github: { appTokenType, loggedUsername, headers: githubAPIHeaders },
       }),
     )
   } catch (error) {

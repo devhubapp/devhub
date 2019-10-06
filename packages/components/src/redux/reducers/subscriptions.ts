@@ -4,6 +4,7 @@ import { REHYDRATE } from 'redux-persist'
 
 import {
   ColumnSubscription,
+  EnhancedGitHubEvent,
   mergeEventsPreservingEnhancement,
   mergeIssuesOrPullRequestsPreservingEnhancement,
   mergeNotificationsPreservingEnhancement,
@@ -258,6 +259,32 @@ export const subscriptionsReducer: Reducer<State> = (
         subscription.data.items = mergedItems.map(
           removeUselessURLsFromResponseItem,
         )
+
+        if (action.payload.github && action.payload.github.loggedUsername) {
+          subscription.data.items = (subscription.data
+            .items as EnhancedGitHubEvent[]).map(item => {
+            const actorLogin =
+              item &&
+              item.actor &&
+              `${item.actor.login || ''}`.toLowerCase().trim()
+            if (
+              actorLogin &&
+              action.payload.github.loggedUsername &&
+              actorLogin ===
+                action.payload.github.loggedUsername.toLowerCase().trim()
+            ) {
+              if (!item.last_unread_at && !item.last_read_at) {
+                return {
+                  ...item,
+                  unread: false,
+                  last_read_at: new Date().toISOString(),
+                }
+              }
+            }
+
+            return item
+          })
+        }
 
         // TODO: The updatedAt from subscriptions was being changed too often
         // (everytime this fetch success action is dispatched)
