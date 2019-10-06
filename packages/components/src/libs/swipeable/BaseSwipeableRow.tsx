@@ -1,6 +1,8 @@
 import React, { PureComponent, ReactNode } from 'react'
 import { Animated, View } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
+import { SwipeableProperties } from 'react-native-gesture-handler/Swipeable'
+
 import { sharedStyles } from '../../styles/shared'
 
 export type BaseActionType = 'BUTTON' | 'FULL'
@@ -14,7 +16,8 @@ export interface BaseSwipeableRowAction {
   width?: number
 }
 
-export interface BaseSwipeableRowProps<IAction = BaseSwipeableRowAction> {
+export interface BaseSwipeableRowProps<IAction = BaseSwipeableRowAction>
+  extends SwipeableProperties {
   children: ReactNode
   leftActions: Array<BaseSwipeableRowAction & IAction> // tslint:disable-line prefer-array-literal
   rightActions: Array<BaseSwipeableRowAction & IAction> // tslint:disable-line prefer-array-literal
@@ -34,7 +37,8 @@ export abstract class BaseSwipeableRow<
   BaseSwipeableRowProps<IAction> & P,
   BaseSwipeableRowBaseState & S
 > {
-  swipeable = React.createRef<Swipeable>()
+  swipeableRef = React.createRef<Swipeable>()
+  innerViewRef = React.createRef<View>()
 
   abstract renderButtonAction: (
     action: IAction,
@@ -131,7 +135,7 @@ export abstract class BaseSwipeableRow<
   }
 
   close = () => {
-    if (this.swipeable.current) this.swipeable.current!.close()
+    if (this.swipeableRef.current) this.swipeableRef.current!.close()
   }
 
   abstract render(): ReactNode

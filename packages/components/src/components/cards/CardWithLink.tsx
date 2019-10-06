@@ -18,7 +18,7 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
-import { Link } from '../common/Link'
+import { Link, LinkProps } from '../common/Link'
 import { getTheme } from '../context/ThemeContext'
 import { BaseCard } from './BaseCard'
 import { BaseCardProps, getCardPropsForItem } from './BaseCard.shared'
@@ -76,18 +76,23 @@ export const CardWithLink = React.memo(
     const isReadRef = useRef(cardProps.isRead)
     isReadRef.current = cardProps.isRead
 
-    const onPress = useCallback(() => {
-      isHoveredRef.current = false
+    const onPress = useCallback<NonNullable<LinkProps['onPress']>>(
+      e => {
+        isHoveredRef.current = false
 
-      dispatch(
-        actions.openItem({
-          columnType: type,
-          columnId,
-          itemId: item.id,
-          link: undefined,
-        }),
-      )
-    }, [type, columnId, item.id, cardProps.link])
+        if (e && e.isDefaultPrevented()) return
+
+        dispatch(
+          actions.openItem({
+            columnType: type,
+            columnId,
+            itemId: item.id,
+            link: undefined,
+          }),
+        )
+      },
+      [type, columnId, item.id, cardProps.link],
+    )
 
     const updateStyles = useCallback(() => {
       if (ref.current) {
@@ -174,7 +179,7 @@ export const CardWithLink = React.memo(
         href={cardProps.link}
         onPress={onPress}
         // onLongPress={
-        //   isInsideSwipeable
+        //   swipeableInfoRef
         //     ? undefined
         //     : e => {
         //         if (!Platform.supportsTouch) return

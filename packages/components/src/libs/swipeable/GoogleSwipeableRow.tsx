@@ -158,30 +158,34 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
     return (
       <Swipeable
         {...props}
-        ref={this.swipeable}
+        ref={this.swipeableRef}
         friction={2}
         leftThreshold={80}
         onSwipeableLeftWillOpen={() => {
           const fullAction = props.leftActions.find(a => a.type === 'FULL')
           if (fullAction) {
             fullAction.onPress()
-            if (this.swipeable.current) this.swipeable.current.close()
+            if (this.swipeableRef.current) this.swipeableRef.current.close()
             ReactNativeHapticFeedback.trigger('selection', {
               enableVibrateFallback: true,
               ignoreAndroidSystemSettings: true,
             })
           }
+
+          if (props.onSwipeableLeftWillOpen) props.onSwipeableLeftWillOpen()
         }}
         onSwipeableRightWillOpen={() => {
           const fullAction = props.rightActions.find(a => a.type === 'FULL')
           if (fullAction) {
             fullAction.onPress()
-            if (this.swipeable.current) this.swipeable.current.close()
+            if (this.swipeableRef.current) this.swipeableRef.current.close()
             ReactNativeHapticFeedback.trigger('selection', {
               enableVibrateFallback: true,
               ignoreAndroidSystemSettings: true,
             })
           }
+
+          if (props.onSwipeableRightWillOpen) props.onSwipeableRightWillOpen()
         }}
         renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions}

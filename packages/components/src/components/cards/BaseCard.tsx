@@ -8,9 +8,11 @@ import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import {
   avatarSize,
+  contentPadding,
   normalTextSize,
   smallAvatarSize,
   smallerTextSize,
+  smallTextSize,
 } from '../../styles/variables'
 import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
 import { CurrentColumnContext } from '../columns/Column'
@@ -28,6 +30,12 @@ import {
   cardItemSeparatorSize,
 } from './partials/CardItemSeparator'
 import { InstallGitHubAppText } from './partials/rows/InstallGitHubAppText'
+
+const GestureHandlerTouchableOpacity = Platform.select({
+  android: () => require('react-native-gesture-handler').TouchableOpacity,
+  ios: () => require('react-native-gesture-handler').TouchableOpacity,
+  default: () => require('react-native').TouchableOpacity,
+})()
 
 const styles = StyleSheet.create({
   container: {
@@ -340,6 +348,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               >
                 {text.repo && text.repo.owner && text.repo.name && columnId ? (
                   <Link
+                    TouchableComponent={GestureHandlerTouchableOpacity}
                     enableUnderlineHover
                     href="javascript:void(0)"
                     openOnNewTab={false}
@@ -398,52 +407,90 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                   <ThemedText
                     color="foregroundColorMuted65"
                     numberOfLines={1}
-                    style={styles.text}
+                    style={[styles.text, sharedStyles.flexShrink1]}
                   >
                     {text.text}
                   </ThemedText>
                 )}
 
-                {!!(reason && reason.label && columnId) && (
-                  <Link
-                    enableUnderlineHover
-                    href="javascript:void(0)"
-                    openOnNewTab={false}
-                    onPress={() => {
-                      const removeIfAlreadySet = !(
-                        KeyboardKeyIsPressed.meta || KeyboardKeyIsPressed.shift
-                      )
+                {!!(reason && reason.label && columnId) &&
+                  (() => {
+                    const dotSize = smallTextSize / 2
+                    const dotSpacing = contentPadding / 3
 
-                      const removeOthers = !(
-                        KeyboardKeyIsPressed.alt ||
-                        KeyboardKeyIsPressed.meta ||
-                        KeyboardKeyIsPressed.shift
-                      )
+                    return (
+                      <View
+                        style={[
+                          sharedStyles.horizontalAndVerticallyAligned,
+                          sharedStyles.flexShrink0,
+                        ]}
+                      >
+                        <Link
+                          TouchableComponent={GestureHandlerTouchableOpacity}
+                          enableUnderlineHover
+                          href="javascript:void(0)"
+                          openOnNewTab={false}
+                          onPress={() => {
+                            const removeIfAlreadySet = !(
+                              KeyboardKeyIsPressed.meta ||
+                              KeyboardKeyIsPressed.shift
+                            )
 
-                      dispatch(
-                        actions.setColumnReasonFilter({
-                          columnId,
-                          reason: reason.reason,
-                          value: KeyboardKeyIsPressed.alt ? false : true,
-                          removeIfAlreadySet,
-                          removeOthers,
-                        }),
-                      )
-                    }}
-                    style={sharedStyles.flexShrink0}
-                    textProps={{
-                      color: reason.color,
-                      numberOfLines: 1,
-                      style: [
-                        styles.reason,
-                        { minWidth: reason.label.length * 7 },
-                      ],
-                    }}
-                    {...Platform.select({ web: { title: reason.tooltip } })}
-                  >
-                    {reason.label.toLowerCase()}
-                  </Link>
-                )}
+                            const removeOthers = !(
+                              KeyboardKeyIsPressed.alt ||
+                              KeyboardKeyIsPressed.meta ||
+                              KeyboardKeyIsPressed.shift
+                            )
+
+                            dispatch(
+                              actions.setColumnReasonFilter({
+                                columnId,
+                                reason: reason.reason,
+                                value: KeyboardKeyIsPressed.alt ? false : true,
+                                removeIfAlreadySet,
+                                removeOthers,
+                              }),
+                            )
+                          }}
+                          style={sharedStyles.flexShrink0}
+                          textProps={{
+                            color: 'foregroundColorMuted65',
+                            numberOfLines: 1,
+                            style: [
+                              styles.reason,
+                              { minWidth: reason.label.length * 7 },
+                            ],
+                          }}
+                          {...Platform.select({
+                            web: { title: reason.tooltip },
+                          })}
+                        >
+                          {reason.label.toLowerCase()}
+                        </Link>
+
+                        <Spacer width={dotSpacing} pointerEvents="none" />
+
+                        <View
+                          style={{
+                            width: dotSize,
+                            height: dotSize + 1,
+                            paddingTop: 1,
+                          }}
+                          pointerEvents="none"
+                        >
+                          <ThemedView
+                            backgroundColor={reason.color}
+                            style={{
+                              width: dotSize,
+                              height: dotSize,
+                              borderRadius: dotSize / 2,
+                            }}
+                            pointerEvents="none"
+                          />
+                        </View>
+                      </View>
+                    )
+                  })()}
               </View>
             )}
           </View>
