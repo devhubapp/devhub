@@ -12,11 +12,9 @@ import com.facebook.soloader.SoLoader;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.mkuczera.RNReactNativeHapticFeedbackPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.proyecto26.inappbrowser.RNInAppBrowserPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 
@@ -38,8 +36,6 @@ public class MainApplication extends Application implements ReactApplication {
                     List<ReactPackage> packages = new PackageList(this).getPackages();
                     packages.add(new ReactNativeFirebaseAppPackage());
                     packages.add(new ReactNativeFirebaseAnalyticsPackage());
-                    packages.add(new VectorIconsPackage());
-                    packages.add(new SplashScreenReactPackage());
                     packages.add(new LinearGradientPackage());
                     packages.add(new RNGestureHandlerPackage());
                     packages.add(BugsnagReactNative.getPackage());
