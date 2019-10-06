@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { EnhancedItem, isItemRead } from '@devhub/core'
@@ -14,6 +14,8 @@ export interface SwipeableCardProps<ItemT extends EnhancedItem>
 export function SwipeableCard<ItemT extends EnhancedItem>(
   props: CardWithLinkProps<ItemT>,
 ) {
+  const swipeableRef = useRef<SwipeableRow>(null)
+
   const theme = useTheme()
   const dispatch = useDispatch()
 
@@ -50,6 +52,7 @@ export function SwipeableCard<ItemT extends EnhancedItem>(
 
   return (
     <SwipeableRow
+      ref={swipeableRef}
       leftActions={[
         {
           backgroundColor:

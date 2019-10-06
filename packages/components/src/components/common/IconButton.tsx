@@ -27,7 +27,7 @@ export const defaultIconButtonSize = 17
 
 export function IconButton(props: IconButtonProps) {
   const {
-    active: _active,
+    active,
     disabled: _disabled,
     name,
     onPressIn,
@@ -44,7 +44,6 @@ export function IconButton(props: IconButtonProps) {
 
   const isHoveredRef = useRef(false)
   const isPressedRef = useRef(false)
-  const activeRef = useDynamicRef(_active)
   const disabledRef = useDynamicRef(_disabled)
 
   const {
@@ -60,7 +59,7 @@ export function IconButton(props: IconButtonProps) {
   const foregroundThemeColor: typeof _foregroundThemeColor =
     handleDisabledOpacityInternally && disabledRef.current
       ? 'foregroundColorMuted40'
-      : _foregroundThemeColor
+      : (active && tintThemeColor) || _foregroundThemeColor
 
   const updateStyles = useCallback(() => {
     const theme = getTheme()
@@ -91,9 +90,7 @@ export function IconButton(props: IconButtonProps) {
       textRef.current.setNativeProps({
         style: {
           color:
-            (isHoveredRef.current ||
-              isPressedRef.current ||
-              activeRef.current) &&
+            (isHoveredRef.current || isPressedRef.current || active) &&
             tintThemeColor &&
             !disabledRef.current
               ? getThemeColorOrItself(theme, tintThemeColor, {
@@ -106,6 +103,7 @@ export function IconButton(props: IconButtonProps) {
       })
     }
   }, [
+    active,
     foregroundThemeColor,
     tintBackgroundHoveredOpacity,
     tintBackgroundPressedOpacity,
@@ -160,7 +158,7 @@ export function IconButton(props: IconButtonProps) {
             StyleSheet.absoluteFill,
             {
               borderRadius: (size + contentPadding) / 2,
-              opacity: activeRef.current ? tintBackgroundHoveredOpacity : 0,
+              opacity: active ? tintBackgroundHoveredOpacity : 0,
             },
           ]}
         />

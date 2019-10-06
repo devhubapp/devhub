@@ -361,7 +361,7 @@ export function getSubscriptionOwnerOrOrg(
 export function getSearchQueryFromFilter(
   type: Column['type'],
   filters: ColumnFilters | undefined,
-  { groupByKey = true } = { groupByKey: true },
+  { groupByKey = false } = {},
 ): string {
   if (!(type && filters)) return ''
 
@@ -412,19 +412,23 @@ export function getSearchQueryFromFilter(
       else if (value === false) exclude.push(item)
     })
 
-    if (include.length) {
-      if (groupByKey) queries.push(`${queryKey}:${_.sortBy(include).join(',')}`)
-      else include.forEach(value => queries.push(`${queryKey}:${value}`))
-    }
-    if (exclude.length) {
-      if (groupByKey)
+    if (groupByKey) {
+      if (include.length)
+        queries.push(`${queryKey}:${_.sortBy(include).join(',')}`)
+      if (exclude.length)
         queries.push(`-${queryKey}:${_.sortBy(exclude).join(',')}`)
-      else exclude.forEach(value => queries.push(`-${queryKey}:${value}`))
+    } else {
+      const all = _.sortBy(_.uniq([...include, ...exclude])).filter(Boolean)
+      all.forEach(value =>
+        queries.push(
+          `${exclude.includes(value) ? '-' : ''}${queryKey}:${value}`,
+        ),
+      )
     }
   }
 
   const inbox = getItemInbox(type, filters)
-  if (inbox !== 'all') {
+  if (inbox !== 'all' || type === 'notifications') {
     queries.push(`inbox:${inbox}`)
   }
 

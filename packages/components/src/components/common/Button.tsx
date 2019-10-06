@@ -1,7 +1,7 @@
-import React, { useCallback, useRef } from 'react'
+import { ThemeColors } from '@devhub/core'
+import React, { useCallback, useRef, useState } from 'react'
 import { StyleSheet, View, ViewProps } from 'react-native'
 
-import { ThemeColors } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -19,22 +19,32 @@ import {
 } from '../themed/ThemedTouchableHighlight'
 import { ThemedView } from '../themed/ThemedView'
 
-export interface ButtonProps extends ThemedTouchableHighlightProps {
-  children: React.ReactNode
+export type ButtonProps = Omit<ThemedTouchableHighlightProps, 'children'> & {
+  children:
+    | React.ReactNode
+    | ((colors: { foregroundThemeColor: keyof ThemeColors }) => React.ReactNode)
   contentContainerStyle?: ViewProps['style']
   loading?: boolean
   loadingIndicatorStyle?: ThemedActivityIndicatorProps['style']
   round?: boolean
   size?: number | 'auto'
   textStyle?: ThemedTextProps['style']
-  type?: 'primary' | 'neutral' | 'danger' | 'transparent'
-}
+} & (
+    | {
+        type?: 'primary' | 'neutral' | 'danger' | 'transparent'
+        colors?: undefined
+      }
+    | {
+        type: 'custom'
+        colors: ReturnType<typeof getButtonColors>
+      })
 
 export const defaultButtonSize = 40
 
 export function Button(props: ButtonProps) {
   const {
     children,
+    colors,
     contentContainerStyle,
     loading,
     loadingIndicatorStyle,
@@ -50,12 +60,16 @@ export function Button(props: ButtonProps) {
   const innerTouchableRef = useRef<ThemedTouchableHighlight>(null)
   const textRef = useRef<ThemedText>(null)
 
+  const [_colors, _setColors] = useState<{
+    foregroundThemeColor: keyof ThemeColors
+  }>()
+
   const {
     backgroundThemeColor,
     foregroundThemeColor,
     backgroundHoverThemeColor,
     foregroundHoverThemeColor,
-  } = getButtonColors(type)
+  } = type === 'custom' ? colors! : getButtonColors(type)
 
   useHover(
     containerViewRef,
@@ -63,18 +77,28 @@ export function Button(props: ButtonProps) {
       isHovered => {
         const theme = getTheme()
 
+        const _backgroundThemeColor: keyof ThemeColors = isHovered
+          ? backgroundHoverThemeColor
+            ? backgroundHoverThemeColor
+            : theme.isDark
+            ? 'backgroundColorTransparent10'
+            : 'foregroundColorTransparent10'
+          : 'transparent'
+
+        const _foregroundThemeColor: keyof ThemeColors =
+          isHovered && foregroundHoverThemeColor
+            ? foregroundHoverThemeColor
+            : foregroundThemeColor || 'foregroundColor'
         if (innerTouchableRef.current) {
           innerTouchableRef.current.setNativeProps({
             style: {
-              backgroundColor: isHovered
-                ? backgroundHoverThemeColor
-                  ? getThemeColorOrItself(theme, backgroundHoverThemeColor, {
-                      enableCSSVariable: true,
-                    })
-                  : theme.isDark
-                  ? theme.backgroundColorTransparent10
-                  : theme.foregroundColorTransparent10
-                : 'transparent',
+              backgroundColor: getThemeColorOrItself(
+                theme,
+                _backgroundThemeColor,
+                {
+                  enableCSSVariable: true,
+                },
+              ),
             },
           })
         }
@@ -82,27 +106,22 @@ export function Button(props: ButtonProps) {
         if (textRef.current) {
           textRef.current.setNativeProps({
             style: {
-              color:
-                isHovered && foregroundHoverThemeColor
-                  ? getThemeColorOrItself(theme, foregroundHoverThemeColor, {
-                      enableCSSVariable: true,
-                    })
-                  : getThemeColorOrItself(
-                      theme,
-                      foregroundThemeColor || 'foregroundColor',
-                      {
-                        enableCSSVariable: true,
-                      },
-                    ),
+              color: getThemeColorOrItself(theme, _foregroundThemeColor, {
+                enableCSSVariable: true,
+              }),
             },
           })
         }
+
+        if (typeof children === 'function')
+          _setColors({ foregroundThemeColor: _foregroundThemeColor })
       },
       [
         backgroundThemeColor,
         foregroundThemeColor,
         backgroundHoverThemeColor,
         foregroundHoverThemeColor,
+        typeof children === 'function',
       ],
     ),
   )
@@ -157,6 +176,13 @@ export function Button(props: ButtonProps) {
               >
                 {children}
               </ThemedText>
+            ) : typeof children === 'function' ? (
+              children(
+                _colors || {
+                  foregroundThemeColor:
+                    foregroundThemeColor || 'foregroundColor',
+                },
+              )
             ) : (
               children
             )}

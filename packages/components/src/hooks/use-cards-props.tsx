@@ -256,18 +256,20 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       isDashboard
     )
 
+    const size = column
+      ? cardSearchTotalHeight +
+        (renderOwnerFilterBar ? cardsOwnerFilterBarTotalHeight : 0) +
+        (renderWatchingOwnerFilterBar
+          ? cardsWatchingOwnerFilterBarTotalHeight
+          : 0) +
+        columnLoadingIndicatorSize
+      : 0
+
     return {
-      size: column
-        ? cardSearchTotalHeight +
-          (renderOwnerFilterBar ? cardsOwnerFilterBarTotalHeight : 0) +
-          (renderWatchingOwnerFilterBar
-            ? cardsWatchingOwnerFilterBarTotalHeight
-            : 0) +
-          columnLoadingIndicatorSize
-        : 0,
+      size,
       sticky: false,
       Component: () => (
-        <View>
+        <View style={[sharedStyles.fullWidth, { height: size }]}>
           {!!column && (
             <>
               <View style={[sharedStyles.relative, sharedStyles.fullWidth]}>

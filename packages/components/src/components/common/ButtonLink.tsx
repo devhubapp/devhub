@@ -6,8 +6,9 @@ import { Platform } from '../../libs/platform'
 import { Button, ButtonProps } from './Button'
 import { Link, LinkProps } from './Link'
 
-export interface ButtonLinkProps extends Omit<ButtonProps, 'onPress'> {
+export type ButtonLinkProps = ButtonProps & {
   href?: LinkProps['href']
+  onPress?: never
   openOnNewTab?: LinkProps['openOnNewTab']
 }
 

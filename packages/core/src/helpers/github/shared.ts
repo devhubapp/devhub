@@ -1747,7 +1747,7 @@ export function getItemSearchableStrings(
       })
     }
 
-    // watching:xxx filter for Dashboard columns only
+    // watching:abc filter for Dashboard columns only
     const isDashboard = true // TODO
     if (isDashboard) {
       const watchingOwner = getEventWatchingOwner(event, { loggedUsername })
