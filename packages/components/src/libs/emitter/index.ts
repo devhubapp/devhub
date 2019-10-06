@@ -48,7 +48,7 @@ export const emitter = {
     return _emitter.addListener(key, listener)
   },
   emit<K extends keyof EmitterTypes>(key: K, payload: EmitterTypes[K]) {
-    if (__DEV__) console.debug('[EMITTER]', key, payload) // tslint:disable-line no-console
+    // if (__DEV__) console.debug('[EMITTER]', key, payload) // tslint:disable-line no-console
     _emitter.emit(key, payload)
   },
 }
