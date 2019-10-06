@@ -1,5 +1,7 @@
+import { constants as shared } from '@devhub/core'
 import { app, dialog, Notification } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import semver from 'semver'
 
 import * as menu from './menu'
 
@@ -52,6 +54,21 @@ function notify() {
     updateInfo.version && updateInfo.version.startsWith('v')
       ? updateInfo.version.slice(1)
       : updateInfo.version
+
+  const isPatchVersion = !!(
+    version &&
+    shared.APP_VERSION &&
+    semver.major(version) === semver.major(shared.APP_VERSION) &&
+    semver.minor(version) === semver.minor(shared.APP_VERSION) &&
+    semver.patch(version) !== semver.patch(shared.APP_VERSION)
+  )
+
+  // Don't show push notification for patch versions,
+  // immediately restart instead.
+  if (isPatchVersion) {
+    autoUpdater.quitAndInstall()
+    return
+  }
 
   const notification = new Notification({
     title: version

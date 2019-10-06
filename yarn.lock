@@ -1933,7 +1933,7 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/semver@^6.0.1":
+"@types/semver@6.0.2", "@types/semver@^6.0.1":
   version "6.0.2"
   resolved "https://registry.npmjs.org/@types/semver/-/semver-6.0.2.tgz#5e8b09f0e4af53034b1d0fb9977a277847836205"
   integrity sha512-G1Ggy7/9Nsa1Jt2yiBR2riEuyK2DFNnqow6R7cromXPMNynackRY1vqFTLz/gwnef1LHokbXThcPhqMRjUbkpQ==
