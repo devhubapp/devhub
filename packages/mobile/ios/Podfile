@@ -34,20 +34,10 @@ target 'devhub' do
   pod 'glog', :podspec => '../../../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../../../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'devhubTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
   use_native_modules!
 end
 
 target 'devhub-tvOS' do
   # Pods for devhub-tvOS
-
-  target 'devhub-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
 end
