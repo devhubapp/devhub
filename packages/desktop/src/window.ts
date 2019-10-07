@@ -77,6 +77,7 @@ export function createWindow() {
 
   win.on('closed', () => {
     win.destroy()
+    mainWindow = undefined
   })
 
   win.on('resize', () => {
