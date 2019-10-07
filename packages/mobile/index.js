@@ -1,5 +1,7 @@
+import 'react-native-gesture-handler'
+
 import { AppRegistry } from 'react-native'
 
-import { App } from '@devhub/components/src/components/App'
+const { App } = require('@devhub/components/src/components/App')
 
 AppRegistry.registerComponent('devhub', () => App)
