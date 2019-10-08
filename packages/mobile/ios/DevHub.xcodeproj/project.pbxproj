@@ -469,7 +469,7 @@
 			baseConfigurationReference = B85B3B59CAE1B55F143AB90A /* Pods-devhub.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2370;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
 				HEADER_SEARCH_PATHS = (
@@ -523,7 +523,7 @@
 			baseConfigurationReference = F4B98D48329AD19DA2E90F6A /* Pods-devhub.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2370;
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
