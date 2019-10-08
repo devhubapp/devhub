@@ -132,6 +132,7 @@ export function Button(props: ButtonProps) {
       backgroundColor={backgroundThemeColor}
       style={[
         styles.button,
+        !otherProps.hitSlop && sharedStyles.overflowHidden,
         { height: size },
         round && { borderRadius: size === 'auto' ? radius : size / 2 },
         style,
@@ -252,7 +253,6 @@ export function getButtonColors(
 const styles = StyleSheet.create({
   button: {
     position: 'relative',
-    overflow: 'hidden',
   },
 
   text: {

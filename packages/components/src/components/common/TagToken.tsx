@@ -60,6 +60,12 @@ export const TagToken = React.memo((props: TagTokenProps) => {
                 backgroundHoverThemeColor: 'backgroundColor',
                 foregroundHoverThemeColor: 'foregroundColor',
               }}
+              hitSlop={{
+                top: contentPadding,
+                bottom: contentPadding,
+                right: contentPadding,
+                left: contentPadding / 4,
+              }}
               style={{
                 marginTop: 1,
               }}
