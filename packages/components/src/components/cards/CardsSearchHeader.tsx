@@ -5,7 +5,7 @@ import {
   getSearchQueryTerms,
 } from '@devhub/core'
 import { useFormik } from 'formik'
-import React, { useCallback, useState } from 'react'
+import React, { Fragment, useCallback, useState } from 'react'
 import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
@@ -181,7 +181,11 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
               if (!(value && typeof value === 'string')) return false
 
               return (
-                <>
+                <Fragment
+                  key={`filter-tag-${
+                    isNegated ? '-negated' : ''
+                  }${key}-${value}`}
+                >
                   {index > 0 && <Spacer width={contentPadding / 4} />}
 
                   <TagToken
@@ -249,7 +253,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
                     size={searchBarMainContentHeight}
                     strikethrough={isNegated}
                   />
-                </>
+                </Fragment>
               )
             })}
           </ScrollViewWithOverlay>
