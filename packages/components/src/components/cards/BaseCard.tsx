@@ -350,50 +350,61 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                   <Link
                     TouchableComponent={GestureHandlerTouchableOpacity}
                     enableUnderlineHover
-                    href="javascript:void(0)"
+                    href={
+                      Platform.OS === 'android'
+                        ? undefined
+                        : 'javascript:void(0)'
+                    }
                     openOnNewTab={false}
-                    onPress={() => {
-                      const issueNumber =
-                        !!(
-                          text &&
-                          text.text &&
-                          text.text.match(/^#([0-9]+)$/)
-                        ) && Number(text.text.match(/^#([0-9]+)$/)![1])
+                    onPress={
+                      Platform.OS === 'android'
+                        ? undefined
+                        : () => {
+                            const issueNumber =
+                              !!(
+                                text &&
+                                text.text &&
+                                text.text.match(/^#([0-9]+)$/)
+                              ) && Number(text.text.match(/^#([0-9]+)$/)![1])
 
-                      const removeIfAlreadySet = !(
-                        KeyboardKeyIsPressed.meta || KeyboardKeyIsPressed.shift
-                      )
+                            const removeIfAlreadySet = !(
+                              KeyboardKeyIsPressed.meta ||
+                              KeyboardKeyIsPressed.shift
+                            )
 
-                      const removeOthers = !(
-                        KeyboardKeyIsPressed.alt ||
-                        KeyboardKeyIsPressed.meta ||
-                        KeyboardKeyIsPressed.shift
-                      )
+                            const removeOthers = !(
+                              KeyboardKeyIsPressed.alt ||
+                              KeyboardKeyIsPressed.meta ||
+                              KeyboardKeyIsPressed.shift
+                            )
 
-                      if (issueNumber) {
-                        dispatch(
-                          actions.changeIssueNumberFilter({
-                            columnId,
-                            issueNumber,
-                            removeIfAlreadySet,
-                            removeOthers,
-                            value: KeyboardKeyIsPressed.alt ? false : true,
-                          }),
-                        )
-                        return
-                      }
+                            if (issueNumber) {
+                              dispatch(
+                                actions.changeIssueNumberFilter({
+                                  columnId,
+                                  issueNumber,
+                                  removeIfAlreadySet,
+                                  removeOthers,
+                                  value: KeyboardKeyIsPressed.alt
+                                    ? false
+                                    : true,
+                                }),
+                              )
+                              return
+                            }
 
-                      dispatch(
-                        actions.setColumnRepoFilter({
-                          columnId,
-                          owner: text!.repo!.owner,
-                          repo: text!.repo!.name,
-                          value: KeyboardKeyIsPressed.alt ? false : true,
-                          // removeIfAlreadySet,
-                          // removeOthers,
-                        }),
-                      )
-                    }}
+                            dispatch(
+                              actions.setColumnRepoFilter({
+                                columnId,
+                                owner: text!.repo!.owner,
+                                repo: text!.repo!.name,
+                                value: KeyboardKeyIsPressed.alt ? false : true,
+                                // removeIfAlreadySet,
+                                // removeOthers,
+                              }),
+                            )
+                          }
+                    }
                     style={sharedStyles.flexShrink1}
                     textProps={{
                       color: 'foregroundColorMuted65',
@@ -428,30 +439,40 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                         <Link
                           TouchableComponent={GestureHandlerTouchableOpacity}
                           enableUnderlineHover
-                          href="javascript:void(0)"
+                          href={
+                            Platform.OS === 'android'
+                              ? undefined
+                              : 'javascript:void(0)'
+                          }
                           openOnNewTab={false}
-                          onPress={() => {
-                            const removeIfAlreadySet = !(
-                              KeyboardKeyIsPressed.meta ||
-                              KeyboardKeyIsPressed.shift
-                            )
+                          onPress={
+                            Platform.OS === 'android'
+                              ? undefined
+                              : () => {
+                                  const removeIfAlreadySet = !(
+                                    KeyboardKeyIsPressed.meta ||
+                                    KeyboardKeyIsPressed.shift
+                                  )
 
-                            const removeOthers = !(
-                              KeyboardKeyIsPressed.alt ||
-                              KeyboardKeyIsPressed.meta ||
-                              KeyboardKeyIsPressed.shift
-                            )
+                                  const removeOthers = !(
+                                    KeyboardKeyIsPressed.alt ||
+                                    KeyboardKeyIsPressed.meta ||
+                                    KeyboardKeyIsPressed.shift
+                                  )
 
-                            dispatch(
-                              actions.setColumnReasonFilter({
-                                columnId,
-                                reason: reason.reason,
-                                value: KeyboardKeyIsPressed.alt ? false : true,
-                                removeIfAlreadySet,
-                                removeOthers,
-                              }),
-                            )
-                          }}
+                                  dispatch(
+                                    actions.setColumnReasonFilter({
+                                      columnId,
+                                      reason: reason.reason,
+                                      value: KeyboardKeyIsPressed.alt
+                                        ? false
+                                        : true,
+                                      removeIfAlreadySet,
+                                      removeOthers,
+                                    }),
+                                  )
+                                }
+                          }
                           style={sharedStyles.flexShrink0}
                           textProps={{
                             color: 'foregroundColorMuted65',
