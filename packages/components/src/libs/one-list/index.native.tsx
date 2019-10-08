@@ -4,9 +4,21 @@ import { FlatList, FlatListProps, View } from 'react-native'
 import { sharedStyles } from '../../styles/shared'
 import { AutoSizer } from '../auto-sizer'
 import { bugsnag } from '../bugsnag'
+import { Platform } from '../platform'
 import { OneListInstance, OneListProps } from './index.shared'
 
 export { OneListProps }
+
+const renderScrollComponent = Platform.select<
+  () => FlatListProps<any>['renderScrollComponent']
+>({
+  android: () => {
+    const GestureHandlerScrollView = require('react-native-gesture-handler')
+      .ScrollView
+    return (p: any) => <GestureHandlerScrollView {...p} nestedScrollEnabled />
+  },
+  default: () => undefined,
+})()
 
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
@@ -258,6 +270,7 @@ export const OneList = (React.memo(
                     disableVirtualization={disableVirtualization}
                     getItemLayout={getItemLayout}
                     horizontal={horizontal}
+                    renderScrollComponent={renderScrollComponent}
                     initialNumToRender={
                       1 +
                       Math.ceil(

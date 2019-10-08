@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useCallback, useEffect, useRef } from 'react'
-import { View } from 'react-native'
+import { FlatListProps, View } from 'react-native'
 
 import { useDynamicRef } from '../../../hooks/use-dynamic-ref'
 import { OneList, OneListProps } from '../../../libs/one-list'
@@ -14,6 +14,7 @@ import {
 import { KeyboardKeyIsPressed } from '../../AppKeyboardShortcuts'
 import { getColumnHeaderThemeColors } from '../../columns/ColumnHeader'
 import { Avatar } from '../../common/Avatar'
+import { FlatListWithOverlay } from '../../common/FlatListWithOverlay'
 import { Separator, separatorSize } from '../../common/Separator'
 import { Spacer } from '../../common/Spacer'
 import { UnreadDot } from '../../common/UnreadDot'
@@ -42,8 +43,8 @@ const ownerTextFontSize = smallerTextSize // 12
 const ownerTextLineHeight = smallerTextSize + 4 // 16
 const itemWidth = avatarSize + 2 * contentPadding // 72
 const itemContentHeight = avatarSize + contentPadding / 2 + ownerTextLineHeight // 64
-const itemContentWithPaddingHeight =
-  itemContentHeight + 2 * cardSizes.cardPadding // 85,33
+const itemContentPadding = cardSizes.cardPadding
+const itemContentWithPaddingHeight = itemContentHeight + 2 * itemContentPadding // 85,33
 export const cardsGenericOwnerFilterBarTotalHeight =
   itemContentWithPaddingHeight + separatorSize // 87,33
 
@@ -51,9 +52,16 @@ function getItemKey(item: OwnerItemT, _index: number) {
   return `owner-filter-bar-${item.owner}`
 }
 
-function getItemSize() {
-  return itemWidth
-}
+const renderScrollComponent = Platform.select<
+  () => FlatListProps<any>['renderScrollComponent']
+>({
+  android: () => {
+    const GestureHandlerScrollView = require('react-native-gesture-handler')
+      .ScrollView
+    return (p: any) => <GestureHandlerScrollView {...p} nestedScrollEnabled />
+  },
+  default: () => undefined,
+})()
 
 export const GenericOwnerFilterBar = React.memo(
   (props: GenericOwnerFilterBarProps) => {
@@ -70,10 +78,14 @@ export const GenericOwnerFilterBar = React.memo(
         firstSelectedItem &&
         firstSelectedItem.index >= 0
       ) {
-        listRef.current.scrollToIndex(firstSelectedItem.index, {
-          animated: true,
-          alignment: 'center',
-        })
+        try {
+          listRef.current.scrollToIndex(firstSelectedItem.index, {
+            animated: true,
+            alignment: 'center',
+          })
+        } catch (e) {
+          //
+        }
       }
     }, [
       listRef.current,
@@ -115,10 +127,14 @@ export const GenericOwnerFilterBar = React.memo(
       )
 
       if (listRef.current && item.index >= 0) {
-        listRef.current.scrollToIndex(item.index, {
-          animated: true,
-          alignment: 'center',
-        })
+        try {
+          listRef.current.scrollToIndex(item.index, {
+            animated: true,
+            alignment: 'center',
+          })
+        } catch (e) {
+          //
+        }
       }
     }, [])
 
@@ -230,22 +246,27 @@ export const GenericOwnerFilterBar = React.memo(
               firstSelectedItem &&
               firstSelectedItem.index >= 0
             ) {
-              listRef.current.scrollToIndex(firstSelectedItem.index, {
-                animated: true,
-                alignment: 'center',
-              })
+              try {
+                listRef.current.scrollToIndex(firstSelectedItem.index, {
+                  animated: true,
+                  alignment: 'center',
+                })
+              } catch (e) {
+                //
+              }
             }
           }}
         >
-          <OneList
+          <FlatListWithOverlay
             ref={listRef}
+            bottomOrRightOverlayThemeColor={getColumnHeaderThemeColors().normal}
             data={data}
-            estimatedItemSize={itemWidth}
-            getItemKey={getItemKey}
-            getItemSize={getItemSize}
             horizontal
-            overscanCount={1}
+            keyExtractor={getItemKey}
+            overlaySize={itemContentPadding}
             renderItem={renderItem}
+            renderScrollComponent={renderScrollComponent}
+            topOrLeftOverlayThemeColor={getColumnHeaderThemeColors().normal}
           />
         </View>
 

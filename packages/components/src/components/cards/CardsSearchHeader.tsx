@@ -5,8 +5,9 @@ import {
   getSearchQueryTerms,
 } from '@devhub/core'
 import { useFormik } from 'formik'
-import React, { Fragment, useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
+  FlatListProps,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   View,
@@ -22,8 +23,8 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { ColumnFiltersButton } from '../columns/ColumnFiltersButton'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
+import { FlatListWithOverlay } from '../common/FlatListWithOverlay'
 import { IconButton } from '../common/IconButton'
-import { ScrollViewWithOverlay } from '../common/ScrollViewWithOverlay'
 import {
   SearchBar,
   searchBarMainContentHeight,
@@ -43,6 +44,17 @@ export interface CardsSearchHeaderProps {
 }
 
 export const cardSearchTotalHeight = searchBarTotalHeight + separatorSize
+
+const renderScrollComponent = Platform.select<
+  () => FlatListProps<any>['renderScrollComponent']
+>({
+  android: () => {
+    const GestureHandlerScrollView = require('react-native-gesture-handler')
+      .ScrollView
+    return (p: any) => <GestureHandlerScrollView {...p} nestedScrollEnabled />
+  },
+  default: () => undefined,
+})()
 
 export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
   const { autoFocus: _autoFocus = false, columnId } = props
@@ -151,41 +163,21 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
 
     if (!showTextInput) {
       return (
-        <View
-          style={[
-            sharedStyles.flex,
-            sharedStyles.horizontalAndVerticallyAligned,
-            { height: searchBarTotalHeight },
-          ]}
-        >
-          <ScrollViewWithOverlay
+        <View style={[sharedStyles.flex, { height: searchBarTotalHeight }]}>
+          <FlatListWithOverlay
+            data={queryTerms}
+            bottomOrRightOverlayThemeColor={getColumnHeaderThemeColors().normal}
+            contentContainerStyle={{ padding: searchBarOuterSpacing }}
             horizontal
-            containerStyle={[
-              sharedStyles.flex,
-              { height: searchBarTotalHeight },
-            ]}
-            contentContainerStyle={[
-              sharedStyles.alignItemsCenter,
-              sharedStyles.justifyContentCenter,
-              { padding: searchBarOuterSpacing },
-            ]}
-            style={[
-              sharedStyles.fullWidth,
-              sharedStyles.fullMaxWidth,
-              { height: searchBarTotalHeight },
-            ]}
-          >
-            {queryTerms.map((termArr, index) => {
+            keyExtractor={item => `filter-tag-${item.join('-')}`}
+            overlaySize={searchBarOuterSpacing}
+            renderItem={({ item: termArr, index }) => {
               const [key, value, isNegated] =
                 termArr.length === 2 ? ['', termArr[0], termArr[1]] : termArr
-              if (!(value && typeof value === 'string')) return false
+              if (!(value && typeof value === 'string')) return null
 
               return (
-                <Fragment
-                  key={`filter-tag-${
-                    isNegated ? '-negated' : ''
-                  }${key}-${value}`}
-                >
+                <>
                   {index > 0 && <Spacer width={contentPadding / 4} />}
 
                   <TagToken
@@ -253,10 +245,12 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
                     size={searchBarMainContentHeight}
                     strikethrough={isNegated}
                   />
-                </Fragment>
+                </>
               )
-            })}
-          </ScrollViewWithOverlay>
+            }}
+            renderScrollComponent={renderScrollComponent}
+            topOrLeftOverlayThemeColor={getColumnHeaderThemeColors().normal}
+          />
 
           <Spacer width={contentPadding / 2} />
         </View>

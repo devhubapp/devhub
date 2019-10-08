@@ -47,7 +47,10 @@ export interface OneListProps<ItemT> {
   pagingEnabled?: boolean
   pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto'
   refreshControl?: FlatListProps<any>['refreshControl'] // TODO: Web support
-  renderItem: (info: { item: ItemT; index: number }) => React.ReactElement
+  renderItem: (info: {
+    item: ItemT
+    index: number
+  }) => React.ReactElement | null
   safeAreaInsets?: {
     top?: number
     bottom?: number

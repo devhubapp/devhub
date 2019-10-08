@@ -164,6 +164,10 @@ export const Columns = React.memo((props: ColumnsProps) => {
     [appOrientation, appSafeAreaInsets.right],
   )
 
+  if (appViewMode === 'single-column') {
+    return renderItem({ index: 0, item: columnIds[0] })
+  }
+
   return (
     <OneList
       ref={listRef}
