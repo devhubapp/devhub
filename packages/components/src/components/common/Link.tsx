@@ -191,32 +191,30 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
       ...Platform.select({
         default: {
           ...otherProps,
-          onPress: href
-            ? (e: GestureResponderEvent) => {
-                if (onPress) onPress(e)
-                if (e && e.isDefaultPrevented()) return
+          onPress: (e: GestureResponderEvent, ...args: any[]) => {
+            if (e && e.isDefaultPrevented()) return
+            if (onPress) onPress(e)
 
-                if (href.startsWith('http')) Browser.openURL(href)
-                else if (!href.startsWith('javascript:')) Linking.openURL(href)
+            if (href) {
+              if (href.startsWith('http')) Browser.openURL(href)
+              else if (!href.startsWith('javascript:')) Linking.openURL(href)
+            }
 
-                if (e) e.preventDefault()
-              }
-            : onPress,
+            if (e) e.preventDefault()
+          },
         } as any,
 
         web: {
           accessibilityRole: href && !isDeepLink ? 'link' : 'button',
           href: isDeepLink ? undefined : href,
-          onPress: href
-            ? (e: any) => {
-                if (onPress) onPress(e)
-                if (e && e.isDefaultPrevented()) return
+          onPress: (e: any) => {
+            if (e && e.isDefaultPrevented()) return
+            if (onPress) onPress(e)
 
-                if (isDeepLink && href) Linking.openURL(href)
+            if (isDeepLink && href) Linking.openURL(href)
 
-                if (e && !href) e.preventDefault()
-              }
-            : onPress,
+            if (e && !href) e.preventDefault()
+          },
           selectable: true,
           target: openOnNewTab ? '_blank' : '_self',
           ...otherProps,
