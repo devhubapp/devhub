@@ -214,7 +214,7 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
 
                 if (isDeepLink && href) Linking.openURL(href)
 
-                if (e) e.preventDefault()
+                if (e && !href) e.preventDefault()
               }
             : onPress,
           selectable: true,
