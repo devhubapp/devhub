@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { Platform } from '../libs/platform'
 import { useTheme } from './context/ThemeContext'
+import { getThemeColorOrItself } from './themed/helpers'
 
 export function ElectronTitleBar() {
   const theme = useTheme()
@@ -40,7 +41,12 @@ export function ElectronTitleBar() {
       style={{
         width: '100%',
         height: `${getElectronTitleBarHeight()}px`,
-        backgroundColor: theme.backgroundColor,
+        borderBottom: `1px solid ${getThemeColorOrItself(
+          theme,
+          'backgroundColorDarker2',
+          { enableCSSVariable: true },
+        )}`,
+        backgroundColor: theme.backgroundColorDarker1,
         ['-webkit-app-region' as any]: 'drag',
       }}
     />
