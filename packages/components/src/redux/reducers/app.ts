@@ -21,9 +21,10 @@ const initialState: State = {
           : constants.DEVHUB_LINKS.DOWNLOAD_PAGE,
       id: 'desktop_push_notifications',
       message:
-        Platform.OS === 'web'
+        Platform.OS === 'web' && Platform.isElectron
           ? ':rocket: New feature: Desktop Push Notifications!'
           : 'Did you know? DevHub is also available for Desktop, with Push Notifications! Download it on your macOS, Windows or Linux computer at devhubapp.com.',
+      minLoginCount: Platform.OS === 'web' ? 0 : 2,
     },
   ],
 }
