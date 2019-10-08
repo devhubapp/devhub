@@ -21,6 +21,8 @@
     "@react-native-firebase/analytics": "6.0.0",
     "@react-native-firebase/app": "6.0.0",
     "bugsnag-react-native": "2.23.2",
+    "intl": "1.2.5",
+    "intl-locales-supported": "1.6.0",
     "react": "16.10.2",
     "react-native": "0.61.2",
     "react-native-gesture-handler": "1.4.1",
