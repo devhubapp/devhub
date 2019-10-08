@@ -170,7 +170,7 @@ export const CardWithLink = React.memo(
           getCardBackgroundThemeColor({
             isDark: theme.isDark,
             isMuted: cardProps.isRead,
-            isHovered: isFocusedRef.current,
+            isHovered: !Platform.supportsTouch && isFocusedRef.current,
           })
         }
         data-card-link
@@ -232,7 +232,7 @@ CardWithLink.displayName = 'CardWithLink'
 const GestureHandlerTouchableOpacity = Platform.select({
   android: () => require('react-native-gesture-handler').TouchableOpacity,
   ios: () => require('react-native-gesture-handler').TouchableOpacity,
-  default: () => require('react-native').TouchableOpacity,
+  default: () => require('../common/TouchableOpacity').TouchableOpacity,
 })()
 
 const GestureHandlerCardTouchable = React.forwardRef<

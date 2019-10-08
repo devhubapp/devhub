@@ -97,8 +97,8 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
         )
       : undefined
 
-    if (containerRef.current) {
-      containerRef.current!.setNativeProps({
+    if (containerRef.current && containerRef.current.setNativeProps) {
+      containerRef.current.setNativeProps({
         style: {
           backgroundColor:
             (isHovered && hoverBackgroundColor) || backgroundColor,
