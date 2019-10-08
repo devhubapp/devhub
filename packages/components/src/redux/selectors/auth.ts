@@ -1,3 +1,6 @@
+import { activePlans, GraphQLUserPlan } from '@devhub/core'
+
+import { Platform } from '../../libs/platform'
 import { EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { githubAppTokenSelector, githubOAuthTokenSelector } from './github/auth'
@@ -23,9 +26,19 @@ export const appTokenSelector = (state: RootState) =>
 export const currentUserSelector = (state: RootState) =>
   isLoggedSelector(state) ? s(state).user : undefined
 
-export const currentUserPlanSelector = (state: RootState) => {
+export const currentUserPlanSelector = (
+  state: RootState,
+): GraphQLUserPlan | undefined => {
   const user = currentUserSelector(state)
-  return user && user.plan
+  if (Platform.OS !== 'web') {
+    return {
+      ...(user && user.plan),
+      ...activePlans.slice(-1)[0],
+      status: 'active',
+    } as GraphQLUserPlan
+  }
+
+  return (user && user.plan) || undefined
 }
 
 export const currentUserIdSelector = (state: RootState) => {

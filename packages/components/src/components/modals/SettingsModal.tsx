@@ -62,21 +62,23 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
         bounces
         style={sharedStyles.flex}
       >
-        <View>
-          <SubHeader title="Current plan">
-            <Spacer flex={1} />
+        {Platform.OS === 'web' && (
+          <View>
+            <SubHeader title="Current plan">
+              <Spacer flex={1} />
 
-            <Button onPress={() => pushModal({ name: 'PRICING' })} size={32}>
-              <View style={[sharedStyles.center, sharedStyles.horizontal]}>
-                <ThemedIcon color="foregroundColor" name="pencil" />
-                <Spacer width={contentPadding / 2} />
-                <ThemedText color="foregroundColor">{`${(userPlan &&
-                  userPlan.label) ||
-                  'None'}`}</ThemedText>
-              </View>
-            </Button>
-          </SubHeader>
-        </View>
+              <Button onPress={() => pushModal({ name: 'PRICING' })} size={32}>
+                <View style={[sharedStyles.center, sharedStyles.horizontal]}>
+                  <ThemedIcon color="foregroundColor" name="pencil" />
+                  <Spacer width={contentPadding / 2} />
+                  <ThemedText color="foregroundColor">{`${(userPlan &&
+                    userPlan.label) ||
+                    'None'}`}</ThemedText>
+                </View>
+              </Button>
+            </SubHeader>
+          </View>
+        )}
 
         {!!(
           Platform.isElectron ||
