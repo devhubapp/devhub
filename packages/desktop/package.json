@@ -40,6 +40,9 @@
       "**/assets/sounds/**"
     ],
     "linux": {
+      "desktop": {
+        "MimeType": "x-scheme-handler/devhub;"
+      },
       "icon": "icons/icon.png",
       "target": [
         {
