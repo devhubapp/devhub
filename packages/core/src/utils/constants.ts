@@ -44,7 +44,7 @@ export const DEVHUB_LINKS = {
   SUBSCRIBE_PAGE: `${LANDING_BASE_URL}/subscribe`,
   SLACK_INVITATION: 'https://slack.devhubapp.com',
   GITHUB_REPOSITORY: 'https://github.com/devhubapp/devhub',
-  TWITTER_PROFILE: 'https://twitter.com/devhubapp',
+  TWITTER_PROFILE: 'https://twitter.com/devhub_app',
 }
 
 export const APP_DEEP_LINK_SCHEMA = 'devhub'
