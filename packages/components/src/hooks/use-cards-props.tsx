@@ -245,6 +245,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const header = useMemo<OneListProps<DataItemT<ItemT>>['header']>(() => {
     const renderOwnerFilterBar = !!(
       column &&
+      data.length &&
       (!_ownerIsKnown ||
         (column.type === 'issue_or_pr' && includedUsernames.length > 1)) &&
       !isDashboard
@@ -299,7 +300,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
         </View>
       ),
     }
-  }, [column && column.id, column && column.type, _ownerIsKnown])
+  }, [column && column.id, column && column.type, _ownerIsKnown, !!data.length])
 
   const cardsFooterProps: CardsFooterProps = {
     clearedAt: column && column.filters && column.filters.clearedAt,

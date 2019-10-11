@@ -97,8 +97,18 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
         </View>
       ) : (
         <>
-          {!isEmpty && shouldRenderFAB({ sizename }) && (
-            <Spacer height={fabSize + 2 * fabSpacing} />
+          {isEmpty ? (
+            <Spacer
+              height={
+                fabSpacing +
+                (fabSize - defaultButtonSize) / 2 +
+                defaultButtonSize
+              }
+            />
+          ) : (
+            shouldRenderFAB({ sizename }) && (
+              <Spacer height={fabSize + 2 * fabSpacing} />
+            )
           )}
         </>
       )}
@@ -121,13 +131,16 @@ export function getCardsFooterSize({
 
   const buttonVerticalSpacing =
     (fabSpacing + (fabSize - defaultButtonSize) / 2) * 2 + defaultButtonSize
+
   return hasFetchNextPage
     ? isEmpty
       ? buttonVerticalSpacing
       : defaultButtonSize + cardItemSeparatorSize
     : clearedAt
     ? buttonVerticalSpacing
-    : !isEmpty && shouldRenderFAB({ sizename })
+    : isEmpty
+    ? fabSpacing + (fabSize - defaultButtonSize) / 2 + defaultButtonSize
+    : shouldRenderFAB({ sizename })
     ? fabSize + 2 * fabSpacing
     : 0
 }
