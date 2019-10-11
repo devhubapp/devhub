@@ -213,6 +213,11 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
   const dispatch = useDispatch()
   const columnId = useContext(CurrentColumnContext)
 
+  const textIsOnlyIssueNumber =
+    text && text.text && text.text.match(/^#([0-9]+)$/)
+  const issueNumber =
+    textIsOnlyIssueNumber && Number(text!.text.match(/^#([0-9]+)$/)![1])
+
   return (
     <View
       key={`base-card-container-${type}-${id}-inner`}
@@ -351,7 +356,8 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                     TouchableComponent={GestureHandlerTouchableOpacity}
                     enableUnderlineHover
                     href={
-                      Platform.OS === 'android'
+                      Platform.OS === 'android' ||
+                      (textIsOnlyIssueNumber && type === 'issue_or_pr')
                         ? undefined
                         : 'javascript:void(0)'
                     }
@@ -359,14 +365,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                     onPress={
                       Platform.OS === 'android'
                         ? undefined
-                        : () => {
-                            const issueNumber =
-                              !!(
-                                text &&
-                                text.text &&
-                                text.text.match(/^#([0-9]+)$/)
-                              ) && Number(text.text.match(/^#([0-9]+)$/)![1])
-
+                        : (() => {
                             const removeIfAlreadySet = !(
                               KeyboardKeyIsPressed.meta ||
                               KeyboardKeyIsPressed.shift
@@ -378,32 +377,39 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                               KeyboardKeyIsPressed.shift
                             )
 
-                            if (issueNumber) {
+                            if (textIsOnlyIssueNumber && issueNumber) {
+                              if (type === 'issue_or_pr') return
+
+                              return () => {
+                                dispatch(
+                                  actions.changeIssueNumberFilter({
+                                    columnId,
+                                    issueNumber,
+                                    removeIfAlreadySet,
+                                    removeOthers,
+                                    value: KeyboardKeyIsPressed.alt
+                                      ? false
+                                      : true,
+                                  }),
+                                )
+                              }
+                            }
+
+                            return () => {
                               dispatch(
-                                actions.changeIssueNumberFilter({
+                                actions.setColumnRepoFilter({
                                   columnId,
-                                  issueNumber,
-                                  removeIfAlreadySet,
-                                  removeOthers,
+                                  owner: text!.repo!.owner,
+                                  repo: text!.repo!.name,
                                   value: KeyboardKeyIsPressed.alt
                                     ? false
                                     : true,
+                                  // removeIfAlreadySet,
+                                  // removeOthers,
                                 }),
                               )
-                              return
                             }
-
-                            dispatch(
-                              actions.setColumnRepoFilter({
-                                columnId,
-                                owner: text!.repo!.owner,
-                                repo: text!.repo!.name,
-                                value: KeyboardKeyIsPressed.alt ? false : true,
-                                // removeIfAlreadySet,
-                                // removeOthers,
-                              }),
-                            )
-                          }
+                          })()
                     }
                     style={sharedStyles.flexShrink1}
                     textProps={{

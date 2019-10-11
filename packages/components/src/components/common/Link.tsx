@@ -45,9 +45,9 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
     allowEmptyLink,
     analyticsLabel: _analyticsLabel,
     backgroundThemeColor,
-    enableBackgroundHover,
-    enableForegroundHover,
-    enableUnderlineHover,
+    enableBackgroundHover: _enableBackgroundHover,
+    enableForegroundHover: _enableForegroundHover,
+    enableUnderlineHover: _enableUnderlineHover,
     enableTextWrapper,
     hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
     hoverForegroundThemeColor: _hoverForegroundThemeColor,
@@ -64,6 +64,9 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
 
   const analyticsLabel = _analyticsLabel && _analyticsLabel.replace(/-/g, '_')
   const openOnNewTab = _openOnNewTab || Platform.isElectron
+  const enableBackgroundHover = !!(href || onPress) && _enableBackgroundHover
+  const enableForegroundHover = !!(href || onPress) && _enableForegroundHover
+  const enableUnderlineHover = !!(href || onPress) && _enableUnderlineHover
 
   const theme = useTheme()
   const cacheRef = useRef({ isHovered: false })
