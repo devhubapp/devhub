@@ -34,14 +34,25 @@ function* init() {
     if (!(appToken && isLogged && user)) yield take('LOGIN_SUCCESS')
     if (!(appToken && isLogged && user && user.lastLoginAt)) continue
 
+    // reload the page every 48 hours (to avoid getting super old [web] versions still being used)
     if (
+      window &&
+      window.location &&
+      window.location.reload &&
+      Date.now() - new Date(user.lastLoginAt).getTime() > 1000 * 60 * 60 * 48
+    ) {
+      window.location.reload()
+    }
+
+    // dispatch a login request every 12 hours
+    else if (
       Date.now() - new Date(user.lastLoginAt).getTime() >
-      12 * 60 * 60 * 1000
+      1000 * 60 * 60 * 12
     ) {
       yield put(actions.loginRequest({ appToken }))
     }
 
-    yield delay(1000 * 60 * 60)
+    yield delay(1000 * 60 * 60) // 1 hour
   }
 }
 
