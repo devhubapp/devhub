@@ -170,9 +170,23 @@ export function useCardsProps<ItemT extends EnhancedItem>({
             (isDashboard || isUserActivity) &&
             (event.type === 'ForkEvent' ||
               event.type === 'WatchEvent' ||
-              event.type === 'WatchEvent:OneUserMultipleRepos' ||
+              // event.type === 'WatchEvent:OneUserMultipleRepos' ||
               event.type === 'MemberEvent')
-              ? _ownerIsKnown
+              ? (() => {
+                  const repoOwnerName =
+                    (event.repo &&
+                      (event.repo.name ||
+                        event.repo.full_name ||
+                        (event.repo.owner && event.repo.owner.login))) ||
+                    undefined
+                  if (!repoOwnerName) return _ownerIsKnown
+
+                  return !!(
+                    includedUsernames.length === 1 &&
+                    repoOwnerName.split('/')[0].toLowerCase() ===
+                      includedUsernames[0].toLowerCase()
+                  )
+                })()
               : ownerIsKnown,
           plan,
           repoIsKnown,
