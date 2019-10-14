@@ -1,5 +1,5 @@
 import React from 'react'
-import { PixelRatio, StyleProp, View } from 'react-native'
+import { Image, ImageProps, PixelRatio, StyleProp, View } from 'react-native'
 
 import {
   getBaseUrlFromOtherUrl,
@@ -10,6 +10,7 @@ import {
   getUserAvatarByUsername,
   getUsernameIsBot,
 } from '@devhub/core'
+import { Platform } from '../../libs/platform'
 import {
   avatarSize,
   mutedOpacity,
@@ -17,16 +18,11 @@ import {
   smallAvatarSize,
 } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
-import {
-  ThemedImageWithLoading,
-  ThemedImageWithLoadingProps,
-} from '../themed/ThemedImageWithLoading'
 import { ConditionalWrap } from './ConditionalWrap'
 import { Link } from './Link'
 import { TouchableOpacityProps } from './TouchableOpacity'
 
-export interface AvatarProps
-  extends Partial<Omit<ThemedImageWithLoadingProps, 'tooltip'>> {
+export interface AvatarProps extends Partial<ImageProps> {
   avatarUrl?: string
   disableLink?: boolean
   email?: string
@@ -124,10 +120,10 @@ export function Avatar(props: AvatarProps) {
         )
       }
     >
-      <ThemedImageWithLoading
-        backgroundColorFailed="#FFFFFF"
-        backgroundColorLoaded="#FFFFFF"
-        backgroundColorLoading="foregroundColorTransparent05"
+      <Image
+        // backgroundColorFailed="#FFFFFF"
+        // backgroundColorLoaded="#FFFFFF"
+        // backgroundColorLoading="foregroundColorTransparent05"
         {...otherProps}
         source={{ uri, width: finalSize + 1, height: finalSize + 1 }}
         style={[
@@ -145,7 +141,8 @@ export function Avatar(props: AvatarProps) {
           muted && { opacity: mutedOpacity },
           style,
         ]}
-        tooltip={tooltip}
+        // tooltip={tooltip}
+        {...Platform.select({ web: { title: tooltip } })}
       />
     </ConditionalWrap>
   )

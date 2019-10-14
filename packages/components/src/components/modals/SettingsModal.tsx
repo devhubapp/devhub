@@ -45,7 +45,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       right={
         sizename <= '2-medium' && username ? (
           <Avatar
-            backgroundColorLoading=""
+            // backgroundColorLoading=""
             shape="circle"
             size={28}
             username={username}
