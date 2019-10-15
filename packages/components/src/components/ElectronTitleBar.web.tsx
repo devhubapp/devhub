@@ -2,12 +2,8 @@ import React, { useEffect, useState } from 'react'
 
 import { useDesktopOptions } from '../hooks/use-desktop-options'
 import { Platform } from '../libs/platform'
-import { useTheme } from './context/ThemeContext'
-import { getThemeColorOrItself } from './themed/helpers'
 
 export function ElectronTitleBar() {
-  const theme = useTheme()
-
   const [isFullScreen, setIsFullScreen] = useState(false)
   const { isMenuBarMode } = useDesktopOptions()
 
@@ -32,24 +28,31 @@ export function ElectronTitleBar() {
   )
     return null
 
+  const height = getElectronTitleBarHeight({ isMenuBarMode })
+
   return (
-    <div
-      id="title-bar"
-      onDoubleClick={() => {
-        window.ipc.send('handle-title-bar-double-click')
-      }}
-      style={{
-        width: '100%',
-        height: `${getElectronTitleBarHeight({ isMenuBarMode })}px`,
-        borderBottom: `1px solid ${getThemeColorOrItself(
-          theme,
-          'backgroundColorDarker2',
-          { enableCSSVariable: true },
-        )}`,
-        backgroundColor: theme.backgroundColorDarker1,
-        ['-webkit-app-region' as any]: 'drag',
-      }}
-    />
+    <>
+      <div
+        id="title-bar"
+        onDoubleClick={() => {
+          window.ipc.send('handle-title-bar-double-click')
+        }}
+      />
+
+      <style>
+        {`
+        #title-bar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: ${height}px;
+          -webkit-app-region: drag;
+          z-index: 9999;
+        }
+        `}
+      </style>
+    </>
   )
 }
 
@@ -58,8 +61,7 @@ export function getElectronTitleBarHeight({
 }: {
   isMenuBarMode: boolean
 }) {
-  if (!Platform.isElectron) return 0
-  if (isMenuBarMode) return 0
-  if (Platform.realOS === 'macos') return 20
+  if (!Platform.isElectron || isMenuBarMode) return 0
+  if (Platform.realOS === 'macos') return 22
   return 0
 }
