@@ -130,7 +130,10 @@ export function createWindow() {
 
 export function getBrowserWindowOptions() {
   const options: BrowserWindowConstructorOptions = {
-    titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
+    titleBarStyle:
+      process.platform === 'darwin' && !config.store.get('isMenuBarMode')
+        ? 'hidden'
+        : 'default',
     minWidth: 320,
     minHeight: 450,
     backgroundColor: '#1F2229',
@@ -205,6 +208,9 @@ function updateBrowserWindowOptions() {
   if (!mainWindow) return
 
   const options = getBrowserWindowOptions()
+
+  if (mainWindow.setWindowButtonVisibility)
+    mainWindow.setWindowButtonVisibility(options.titleBarStyle === 'hidden')
 
   const maximize =
     !config.store.get('isMenuBarMode') &&

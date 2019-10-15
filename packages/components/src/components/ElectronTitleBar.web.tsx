@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { useDesktopOptions } from '../hooks/use-desktop-options'
 import { Platform } from '../libs/platform'
 import { useTheme } from './context/ThemeContext'
 import { getThemeColorOrItself } from './themed/helpers'
@@ -8,6 +9,7 @@ export function ElectronTitleBar() {
   const theme = useTheme()
 
   const [isFullScreen, setIsFullScreen] = useState(false)
+  const { isMenuBarMode } = useDesktopOptions()
 
   useEffect(() => {
     const handler = (_e: any, value: boolean | unknown) => {
@@ -24,9 +26,7 @@ export function ElectronTitleBar() {
 
   if (
     !(
-      Platform.isElectron &&
-      Platform.realOS === 'macos' &&
-      getElectronTitleBarHeight() > 0
+      Platform.isElectron && getElectronTitleBarHeight({ isMenuBarMode }) > 0
     ) ||
     isFullScreen
   )
@@ -40,7 +40,7 @@ export function ElectronTitleBar() {
       }}
       style={{
         width: '100%',
-        height: `${getElectronTitleBarHeight()}px`,
+        height: `${getElectronTitleBarHeight({ isMenuBarMode })}px`,
         borderBottom: `1px solid ${getThemeColorOrItself(
           theme,
           'backgroundColorDarker2',
@@ -53,7 +53,13 @@ export function ElectronTitleBar() {
   )
 }
 
-export function getElectronTitleBarHeight() {
+export function getElectronTitleBarHeight({
+  isMenuBarMode,
+}: {
+  isMenuBarMode: boolean
+}) {
+  if (!Platform.isElectron) return 0
+  if (isMenuBarMode) return 0
   if (Platform.realOS === 'macos') return 20
   return 0
 }
