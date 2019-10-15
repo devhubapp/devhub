@@ -189,7 +189,7 @@ export function getRestartMenuItem() {
 }
 
 export function getModeMenuItems() {
-  const mainWindow = window.getMainWindow()
+  const _mainWindow = window.getMainWindow()
   const _tray = tray.getTray()
   if (
     !(_tray && _tray.getBounds().width && _tray.getBounds().height) &&
@@ -198,7 +198,7 @@ export function getModeMenuItems() {
     return []
 
   const isCurrentWindow =
-    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
+    _mainWindow && _mainWindow.isVisible() && !_mainWindow.isMinimized()
   const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: MenuItemConstructorOptions[] = [
@@ -218,7 +218,7 @@ export function getModeMenuItems() {
       type: 'radio',
       label: 'Menubar mode',
       checked: !!config.store.get('isMenuBarMode'),
-      enabled, // : enabled && !mainWindow.isFullScreen(),
+      enabled, // : enabled && !_mainWindow.isFullScreen(),
       click() {
         ipc.emit('update-settings', {
           settings: 'isMenuBarMode',
@@ -232,9 +232,9 @@ export function getModeMenuItems() {
 }
 
 export function getWindowOptionsMenuItems() {
-  const mainWindow = window.getMainWindow()
+  const _mainWindow = window.getMainWindow()
   const isCurrentWindow =
-    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
+    _mainWindow && _mainWindow.isVisible() && !_mainWindow.isMinimized()
   const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: MenuItemConstructorOptions[] = [
@@ -259,9 +259,9 @@ export function getWindowOptionsMenuItems() {
 }
 
 export function getMainMenuItems() {
-  const mainWindow = window.getMainWindow()
+  const _mainWindow = window.getMainWindow()
   const isCurrentWindow =
-    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
+    _mainWindow && _mainWindow.isVisible() && !_mainWindow.isMinimized()
   const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: Array<MenuItemConstructorOptions | undefined> = [
@@ -386,9 +386,9 @@ export function getDockMenuItems() {
 }
 
 export function getWindowMenuItems() {
-  const mainWindow = window.getMainWindow()
+  const _mainWindow = window.getMainWindow()
   const isCurrentWindow =
-    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
+    _mainWindow && _mainWindow.isVisible() && !_mainWindow.isMinimized()
   const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: MenuItemConstructorOptions[] = [
@@ -396,6 +396,7 @@ export function getWindowMenuItems() {
       label: 'Close',
       accelerator: 'CmdOrCtrl+W',
       click() {
+        const mainWindow = window.getMainWindow()
         if (!mainWindow) return
         mainWindow.hide()
       },
@@ -407,10 +408,11 @@ export function getWindowMenuItems() {
     {
       type: 'checkbox',
       label: 'Maximize',
-      visible: !config.store.get('isMenuBarMode'), // && mainWindow && mainWindow.isMaximizable(),
+      visible: !config.store.get('isMenuBarMode'), // && _mainWindow && _mainWindow.isMaximizable(),
       enabled,
-      checked: mainWindow && mainWindow.isMaximized(),
+      checked: _mainWindow && _mainWindow.isMaximized(),
       click(item) {
+        const mainWindow = window.getMainWindow()
         if (!mainWindow) return
 
         helpers.showWindow(mainWindow)
@@ -422,7 +424,7 @@ export function getWindowMenuItems() {
     {
       visible:
         !config.store.get('isMenuBarMode') ||
-        (mainWindow && mainWindow.isFullScreen()),
+        (_mainWindow && _mainWindow.isFullScreen()),
       role: 'togglefullscreen',
     },
   ]
@@ -431,9 +433,9 @@ export function getWindowMenuItems() {
 }
 
 export function getTrayMenuItems() {
-  const mainWindow = window.getMainWindow()
+  const _mainWindow = window.getMainWindow()
   const isCurrentWindow =
-    mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
+    _mainWindow && _mainWindow.isVisible() && !_mainWindow.isMinimized()
   const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
   const menuItems: MenuItemConstructorOptions[] = [
@@ -441,6 +443,7 @@ export function getTrayMenuItems() {
       label: 'Open',
       visible: !isCurrentWindow,
       click() {
+        const mainWindow = window.getMainWindow()
         if (!mainWindow) return
         helpers.showWindow(mainWindow)
       },
