@@ -103,7 +103,9 @@ export function alignWindowWithTray(win: BrowserWindow) {
   if (!(tray && !tray.isDestroyed())) return
 
   const trayBounds = tray.getBounds()
-  if (!(trayBounds.width && trayBounds.height)) {
+  if (
+    !(trayBounds.width && trayBounds.height && (trayBounds.x || trayBounds.y))
+  ) {
     window.center(win)
     return
   }
