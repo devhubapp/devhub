@@ -14,7 +14,7 @@ export const FEATURE_FLAGS = {
   LOCK_ON_CENTER: process.platform !== 'linux',
 }
 
-export const FRAME_IS_DIFFERENT_BETWEEN_MODES = process.platform !== 'darwin'
+export const FRAME_IS_DIFFERENT_BETWEEN_MODES = false
 
 // License: https://notificationsounds.com/notification-sounds/unsure-566
 export const notificationSoundPath = __DEV__

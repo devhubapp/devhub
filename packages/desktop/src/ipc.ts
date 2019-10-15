@@ -56,8 +56,8 @@ export function register() {
     mainWindow.setFullScreen(false)
   })
 
-  ipcMain.removeAllListeners('handle-title-bar-double-click')
-  ipcMain.addListener('handle-title-bar-double-click', () => {
+  ipcMain.removeAllListeners('toggle-maximize')
+  ipcMain.addListener('toggle-maximize', () => {
     const mainWindow = window.getMainWindow()
     if (!mainWindow) return
 
@@ -90,6 +90,21 @@ export function register() {
       if (dock) dock.setBadge(unreadCount > 0 ? `${unreadCount}` : '')
     },
   )
+
+  ipcMain.removeAllListeners('minimize')
+  ipcMain.addListener('minimize', () => {
+    const mainWindow = window.getMainWindow()
+    if (!mainWindow) return
+    mainWindow.minimize()
+  })
+
+  ipcMain.removeAllListeners('close')
+  ipcMain.addListener('close', () => {
+    const mainWindow = window.getMainWindow()
+    if (!mainWindow) return
+    if (process.platform === 'darwin') mainWindow.hide()
+    else mainWindow.close()
+  })
 
   ipcMain.removeAllListeners('get-all-settings')
   ipcMain.addListener('get-all-settings', async (e: any) => {
