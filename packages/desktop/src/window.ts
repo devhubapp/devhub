@@ -221,16 +221,10 @@ function updateBrowserWindowOptions() {
 
   mainWindow.setMaximumSize(
     Math.ceil(
-      options.maxWidth ||
-        (process.platform === 'darwin'
-          ? screen.getDisplayFromCursor().workAreaSize.width
-          : 0),
+      options.maxWidth || screen.getDisplayFromCursor().workAreaSize.width,
     ),
     Math.ceil(
-      options.maxHeight ||
-        (process.platform === 'darwin'
-          ? screen.getDisplayFromCursor().workAreaSize.height
-          : 0),
+      options.maxHeight || screen.getDisplayFromCursor().workAreaSize.height,
     ),
   )
 
