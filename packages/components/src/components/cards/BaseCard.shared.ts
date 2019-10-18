@@ -11,6 +11,7 @@ import {
   EnhancedItem,
   formatPrice,
   getBaseUrlFromOtherUrl,
+  getCommentIdFromUrl,
   getCommitCompareUrlFromRefs,
   getCommitCompareUrlFromUrls,
   getCommitUrlFromOtherUrl,
@@ -454,9 +455,14 @@ function _getCardPropsForItem(
               isRead,
               link:
                 (_comment &&
-                  fixURL(_comment.html_url || _comment.url, {
-                    commentIsInline: !!(_comment && _comment.path),
-                  })) ||
+                  (_comment.html_url ||
+                    fixURL(_comment.url, {
+                      commentId:
+                        Number.parseInt(`${_comment.id}`, 10) ||
+                        getCommentIdFromUrl(_comment.url) ||
+                        undefined,
+                      commentIsInline: !!(_comment && _comment.path),
+                    }))) ||
                 fixURL(issueOrPullRequest.html_url || issueOrPullRequest.url)!,
               showPrivateLock: isPrivate,
               subitems,
@@ -501,9 +507,14 @@ function _getCardPropsForItem(
               isRead,
               link:
                 (_comment &&
-                  fixURL(_comment.html_url || _comment.url, {
-                    commentIsInline: !!(_comment && _comment.path),
-                  })) ||
+                  (_comment.html_url ||
+                    fixURL(_comment.url, {
+                      commentId:
+                        Number.parseInt(`${_comment.id}`, 10) ||
+                        getCommentIdFromUrl(_comment.url) ||
+                        undefined,
+                      commentIsInline: !!(_comment && _comment.path),
+                    }))) ||
                 getCommitUrlFromOtherUrl(commit.url)!,
               showPrivateLock: isPrivate,
               subitems,
@@ -550,9 +561,15 @@ function _getCardPropsForItem(
               isRead,
               link:
                 (_comment &&
-                  fixURL(_comment.html_url || _comment.url, {
-                    commentIsInline: !!(_comment && _comment.path),
-                  })) ||
+                  (_comment.html_url ||
+                    fixURL(_comment.url, {
+                      commentId:
+                        (_comment &&
+                          (Number.parseInt(`${_comment.id}`, 10) ||
+                            getCommentIdFromUrl(_comment.url))) ||
+                        undefined,
+                      commentIsInline: !!(_comment && _comment.path),
+                    }))) ||
                 total === 1
                   ? getCommitUrlFromOtherUrl(commits[0].url)!
                   : _event.payload.before && _event.payload.head
@@ -697,9 +714,15 @@ function _getCardPropsForItem(
             isRead,
             link:
               (_comment &&
-                fixURL(_comment.html_url || _comment.url, {
-                  commentIsInline: !!(_comment && _comment.path),
-                })) ||
+                (_comment.html_url ||
+                  fixURL(_comment.url, {
+                    commentId:
+                      (_comment &&
+                        (Number.parseInt(`${_comment.id}`, 10) ||
+                          getCommentIdFromUrl(_comment.url))) ||
+                      undefined,
+                    commentIsInline: !!(_comment && _comment.path),
+                  }))) ||
               ('html_url' in event && event.html_url) ||
               ((subjectType === 'Repository' ||
                 subjectType === 'RepositoryInvitation' ||
@@ -892,18 +915,24 @@ function _getCardPropsForItem(
         link:
           (subject.type === 'RepositoryVulnerabilityAlert' &&
             getGitHubURLForSecurityAlert(repoURL)) ||
-          fixURL(subject.url, {
+          fixURL(subject.latest_comment_url, {
             addBottomAnchor: !release,
             commentId:
-              (_comment && _comment.id && Number(_comment.id)) || undefined,
+              (_comment &&
+                (Number.parseInt(`${_comment.id}`, 10) ||
+                  getCommentIdFromUrl(_comment.url))) ||
+              undefined,
             commentIsInline: !!(_comment && _comment.path),
             issueOrPullRequestNumber,
             tagName: release && release.tag_name,
           }) ||
-          fixURL(subject.latest_comment_url, {
+          fixURL(subject.url, {
             addBottomAnchor: !release,
             commentId:
-              (_comment && _comment.id && Number(_comment.id)) || undefined,
+              (_comment &&
+                (Number.parseInt(`${_comment.id}`, 10) ||
+                  getCommentIdFromUrl(_comment.url))) ||
+              undefined,
             commentIsInline: !!(_comment && _comment.path),
             issueOrPullRequestNumber,
             tagName: release && release.tag_name,

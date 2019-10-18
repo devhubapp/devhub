@@ -82,6 +82,7 @@ export interface GitHubReaction {
 
 export interface GitHubComment {
   id: number | string
+  node_id?: string
   commit_id?: string // 6ef64f902613c73251da32d1bc9eb236f38798cc
   user: GitHubUser
   body: string
