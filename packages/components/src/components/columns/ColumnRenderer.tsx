@@ -108,10 +108,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     columnIndex,
     columnType,
     icon,
-    owner,
     pagingEnabled,
-    repo,
-    repoIsKnown,
     subtitle,
     title,
   } = props
@@ -294,6 +291,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                   !hasAnyFilter &&
                   !unread
                 ) {
+                  /*
                   if (repoIsKnown) {
                     if (owner && repo) {
                       dispatch(
@@ -312,6 +310,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                     )
                     return
                   }
+                  */
                 }
 
                 // mark only the visible items as read/unread one by one

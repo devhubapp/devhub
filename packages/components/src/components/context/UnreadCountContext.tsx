@@ -37,6 +37,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const loggedUsername = useReduxState(selectors.currentGitHubUsernameSelector)!
   const _columns = useReduxState(selectors.columnsArrSelector)
   const subscriptions = useReduxState(selectors.userSubscriptionsArrSelector)
+  const notifications = useReduxState(selectors.notificationsCompactArrSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const {
     enablePushNotifications: enableDesktopPushNotifications,
@@ -101,7 +102,10 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       )
       .filter(Boolean) as ColumnSubscription[]
 
-    const columnItems = subscriptionsDataSelector(state, column.subscriptionIds)
+    const columnItems =
+      column && column.type === 'notifications'
+        ? notifications
+        : subscriptionsDataSelector(state, column.subscriptionIds)
     const unreadColumnItems =
       column.filters && column.filters.unread === false
         ? []

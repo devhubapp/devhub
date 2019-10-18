@@ -7,7 +7,7 @@ import { useColumn } from './use-column'
 import { useReduxState } from './use-redux-state'
 
 export function useColumnLoadingState(columnId: string): EnhancedLoadState {
-  const { hasCrossedColumnsLimit } = useColumn(columnId)
+  const { column, hasCrossedColumnsLimit } = useColumn(columnId)
 
   const mainSubscription = useReduxState(
     useCallback(
@@ -20,15 +20,24 @@ export function useColumnLoadingState(columnId: string): EnhancedLoadState {
     selectors.installationsLoadStateSelector,
   )
 
+  const notificationsLoadState = useReduxState(
+    state => selectors.notificationsState(state).loadingState,
+  )
+
   const loadState: EnhancedLoadState = hasCrossedColumnsLimit
     ? 'not_loaded'
     : installationsLoadState === 'loading'
-    ? mainSubscription &&
-      mainSubscription.data &&
-      mainSubscription.data.itemNodeIdOrIds &&
-      mainSubscription.data.itemNodeIdOrIds.length
+    ? (column && column.type === 'notifications') ||
+      (mainSubscription &&
+        mainSubscription.data &&
+        mainSubscription.data.itemNodeIdOrIds &&
+        mainSubscription.data.itemNodeIdOrIds.length)
       ? 'loading'
       : 'loading_first'
+    : column && column.type === 'notifications'
+    ? notificationsLoadState === 'loading-all'
+      ? 'loading'
+      : notificationsLoadState
     : (mainSubscription &&
         mainSubscription.data &&
         mainSubscription.data.loadState) ||

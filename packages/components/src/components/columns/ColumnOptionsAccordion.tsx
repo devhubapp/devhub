@@ -11,7 +11,8 @@ import { useColumn } from '../../hooks/use-column'
 import { AccordionView } from '../common/AccordionView'
 import { ColumnOptions, ColumnOptionsProps } from './ColumnOptions'
 
-export interface ColumnOptionsAccordionProps extends ColumnOptionsProps {
+export interface ColumnOptionsAccordionProps
+  extends Omit<ColumnOptionsProps, 'close'> {
   isOpen?: boolean
 }
 
@@ -70,7 +71,7 @@ export const ColumnOptionsAccordion = React.memo(
 
         return (
           <AccordionView isOpen={isOpen}>
-            <ColumnOptions {...props} />
+            <ColumnOptions {...props} close={() => setIsOpen(false)} />
           </AccordionView>
         )
       }, [!!column, columnId, isOpen])

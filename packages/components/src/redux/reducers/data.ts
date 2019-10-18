@@ -2,16 +2,13 @@ import {
   DevHubDataItemType,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
-  EnhancedGitHubNotification,
   EnhancedItem,
   getItemDate,
   getItemNodeIdOrId,
-  getItemOwnersAndRepos,
   isItemRead,
   isItemSaved,
   mergeEventPreservingEnhancement,
   mergeIssueOrPullRequestPreservingEnhancement,
-  mergeNotificationPreservingEnhancement,
   removeUselessURLsFromResponseItem,
 } from '@devhub/core'
 import immer from 'immer'
@@ -94,12 +91,12 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
                   newItem as EnhancedGitHubIssueOrPullRequest,
                   existingItem as EnhancedGitHubIssueOrPullRequest | undefined,
                 )
-              : action.payload.subscriptionType === 'notifications'
-              ? mergeNotificationPreservingEnhancement(
-                  newItem as EnhancedGitHubNotification,
-                  existingItem as EnhancedGitHubNotification | undefined,
-                )
-              : newItem,
+              : // : action.payload.subscriptionType === 'notifications'
+                // ? mergeNotificationPreservingEnhancement(
+                //     newItem as EnhancedGitHubNotification,
+                //     existingItem as EnhancedGitHubNotification | undefined,
+                //   )
+                newItem,
           )
 
           if (action.payload.github && action.payload.github.loggedUsername) {
@@ -255,6 +252,7 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
         })
       })
 
+    /*
     case 'MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD':
     case 'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD':
       return immer(state, draft => {
@@ -302,6 +300,7 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
           draft.updatedAt = new Date().toISOString()
         })
       })
+      */
 
     default:
       return state

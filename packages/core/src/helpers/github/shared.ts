@@ -26,7 +26,6 @@ import {
   IssueOrPullRequestColumnSubscription,
   ItemFilterCountMetadata,
   ItemsFilterMetadata,
-  NotificationColumnSubscription,
   ThemeColors,
   UserPlan,
 } from '../../types'
@@ -58,7 +57,7 @@ import {
   getNotificationSubjectType,
 } from './notifications'
 import {
-  defaultBaseURL,
+  defaultGitHubBaseURL,
   getBaseUrlFromOtherUrl,
   getCommitShaFromUrl,
   getGitHubSearchURL,
@@ -190,17 +189,17 @@ export function getUserURLFromLogin(
     })
   ) {
     const username = login.replace('[bot]', '').replace('app/', '')
-    return `${baseURL || defaultBaseURL}/apps/${username}`
+    return `${baseURL || defaultGitHubBaseURL}/apps/${username}`
   }
 
   // may be a team
   if (login.includes('/')) {
-    return `${baseURL || defaultBaseURL}/orgs/${login.split('/')[0]}/teams/${
-      login.split('/')[1]
-    }`
+    return `${baseURL || defaultGitHubBaseURL}/orgs/${
+      login.split('/')[0]
+    }/teams/${login.split('/')[1]}`
   }
 
-  return `${baseURL || defaultBaseURL}/${login}`
+  return `${baseURL || defaultGitHubBaseURL}/${login}`
 }
 
 export function getUserURLFromEmail(
@@ -219,18 +218,15 @@ export function getUserURLFromEmail(
 }
 
 export function getUserURLFromObject(
-  user: {
-    login: string
-  } & (
+  user:
     | {
-        url: string
+        login: string
+        url?: string
         html_url?: string
       }
-    | {
-        url?: string
-        html_url: string
-      }),
+    | undefined,
 ): string | undefined {
+  if (!user) return undefined
   if (user.html_url) return user.html_url
 
   return getUserURLFromLogin(user.login, {
@@ -292,23 +288,25 @@ export function getUserAvatarById(
 }
 
 export function getUserAvatarFromObject(
-  user: {
-    id?: number | string
-    login: string
-    avatar_url: string
-    url?: string
-    html_url?: string
-  },
+  user:
+    | {
+        id?: number | string
+        login: string
+        avatar_url: string
+        url?: string
+        html_url?: string
+      }
+    | undefined,
   { size }: { size?: number } = {},
   getPixelSizeForLayoutSizeFn: ((size: number) => number) | undefined,
 ) {
-  if (!(user.avatar_url || user.id || user.login)) return undefined
+  if (!(user && (user.avatar_url || user.id || user.login))) return undefined
 
   const baseURL =
-    getBaseUrlFromOtherUrl(user.html_url || user.url) || defaultBaseURL
+    getBaseUrlFromOtherUrl(user.html_url || user.url) || defaultGitHubBaseURL
 
   const isBot = getUsernameIsBot(user.login)
-  if (user.id && (!user.login || isBot) && baseURL === defaultBaseURL) {
+  if (user.id && (!user.login || isBot) && baseURL === defaultGitHubBaseURL) {
     if (isBot && user.avatar_url && !user.avatar_url.includes('/u/'))
       return user.avatar_url
 
@@ -359,7 +357,11 @@ export function getUserAvatarByEmail(
 
   const { id, username } = tryGetIdAndUsernameFromGitHubEmail(email)
   const isBot = getUsernameIsBot(username)
-  if (id && (!username || isBot) && (!baseURL || baseURL === defaultBaseURL)) {
+  if (
+    id &&
+    (!username || isBot) &&
+    (!baseURL || baseURL === defaultGitHubBaseURL)
+  ) {
     return getUserAvatarById(id, { isBot, size }, getPixelSizeForLayoutSizeFn)
   }
 
@@ -491,6 +493,9 @@ export function getUniqueIdForSubscription(subscription: {
     }
 
     case 'notifications': {
+      return '/notifications'
+
+      /*
       const _querystring = qs.stringify({
         all: !!s.params.all,
         participating: !!s.params.participating,
@@ -508,6 +513,7 @@ export function getUniqueIdForSubscription(subscription: {
           return `/notifications${querystring}`
         }
       }
+      */
     }
 
     default:
@@ -526,7 +532,7 @@ export function getColumnHeaderDetails(
   column: Column | undefined,
   subscriptions: ColumnSubscription[] | undefined,
   {
-    baseURL = defaultBaseURL,
+    baseURL = defaultGitHubBaseURL,
     loggedUsername,
   }: { baseURL?: string | undefined; loggedUsername: string | undefined },
   getPixelSizeForLayoutSizeFn: ((size: number) => number) | undefined,
@@ -844,6 +850,15 @@ export function getColumnHeaderDetails(
     }
 
     case 'notifications': {
+      return {
+        icon: 'bell',
+        ownerIsKnown: false,
+        repoIsKnown: false,
+        subtitle: undefined,
+        title: 'Notifications',
+      }
+
+      /*
       const s = subscription as Partial<NotificationColumnSubscription>
 
       switch (s.subtype) {
@@ -879,6 +894,7 @@ export function getColumnHeaderDetails(
           }
         }
       }
+      */
     }
 
     default: {
@@ -984,44 +1000,99 @@ export function getTagIconAndColor(): {
   }
 }
 
+export function getIssueOrPullRequestIconAndColor(
+  type: 'Issue' | 'PullRequest',
+  {
+    isDraft: _isDraft,
+    state,
+  }: { isDraft?: boolean; state: 'OPEN' | 'CLOSED' | 'MERGED' | undefined },
+): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
+  switch (type) {
+    case 'PullRequest': {
+      switch (state) {
+        case 'OPEN': {
+          return {
+            icon: 'git-pull-request',
+            color: _isDraft ? 'gray' : 'green',
+            tooltip: `Open${_isDraft ? ' draft' : ''} pull request`,
+          }
+        }
+
+        case 'CLOSED': {
+          return {
+            icon: 'git-pull-request',
+            color: 'lightRed',
+            tooltip: `Closed${_isDraft ? ' draft' : ''} pull request`,
+          }
+        }
+
+        case 'MERGED': {
+          return {
+            icon: 'git-merge',
+            color: 'purple',
+            tooltip: `Merged pull request`,
+          }
+        }
+
+        default: {
+          return {
+            icon: 'git-pull-request',
+            tooltip: 'Pull Request',
+          }
+        }
+      }
+    }
+
+    case 'Issue':
+    default: {
+      switch (state) {
+        case 'CLOSED': {
+          return {
+            icon: 'issue-closed',
+            color: 'lightRed',
+            tooltip: 'Closed issue',
+          }
+        }
+
+        case 'OPEN': {
+          return {
+            icon: 'issue-opened',
+            color: 'green',
+            tooltip: `Open issue`,
+          }
+        }
+
+        default: {
+          return {
+            icon: 'issue-opened',
+            tooltip: 'Issue',
+          }
+        }
+      }
+    }
+  }
+}
+
 export function getPullRequestIconAndColor(pullRequest: {
-  draft: GitHubPullRequest['draft']
-  state: GitHubPullRequest['state']
-  merged: GitHubPullRequest['merged'] | undefined
-  merged_at: GitHubPullRequest['merged_at'] | undefined
-  mergeable_state: GitHubPullRequest['mergeable_state'] | undefined
+  draft?: GitHubPullRequest['draft']
+  state?: GitHubPullRequest['state']
+  merged?: GitHubPullRequest['merged'] | undefined
+  merged_at?: GitHubPullRequest['merged_at'] | undefined
+  mergeable_state?: GitHubPullRequest['mergeable_state'] | undefined
 }): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
-  const draft = isDraft(pullRequest)
   const state = getIssueOrPullRequestState(pullRequest)
 
-  switch (state) {
-    case 'open':
-      return {
-        icon: 'git-pull-request',
-        color: draft ? 'gray' : 'green',
-        tooltip: `Open${draft ? ' draft' : ''} pull request`,
-      }
-
-    case 'closed':
-      return {
-        icon: 'git-pull-request',
-        color: 'lightRed',
-        tooltip: `Closed${draft ? ' draft' : ''} pull request`,
-      }
-
-    case 'merged':
-      return {
-        icon: 'git-merge',
-        color: 'purple',
-        tooltip: `Merged pull request`,
-      }
-
-    default:
-      return {
-        icon: 'git-pull-request',
-        tooltip: 'Pull Request',
-      }
-  }
+  return getIssueOrPullRequestIconAndColor('PullRequest', {
+    isDraft: isDraft(pullRequest),
+    state:
+      state === 'merged'
+        ? 'MERGED'
+        : state === 'closed'
+        ? 'CLOSED'
+        : state === 'open'
+        ? 'OPEN'
+        : undefined,
+  })
 }
 
 export function getIssueIconAndColor(issue: {
@@ -1035,24 +1106,11 @@ export function getIssueIconAndColor(issue: {
     return getPullRequestIconAndColor(issue as GitHubPullRequest)
   }
 
-  switch (state) {
-    case 'open':
-      return {
-        icon: 'issue-opened',
-        color: 'green',
-        tooltip: `Open issue`,
-      }
-
-    case 'closed':
-      return {
-        icon: 'issue-closed',
-        color: 'lightRed',
-        tooltip: 'Closed issue',
-      }
-
-    default:
-      return { icon: 'issue-opened', tooltip: 'Issue' }
-  }
+  return getIssueOrPullRequestIconAndColor('Issue', {
+    isDraft: false,
+    state:
+      state === 'closed' ? 'CLOSED' : state === 'open' ? 'OPEN' : undefined,
+  })
 }
 
 export function getStateTypeMetadata<T extends GitHubStateType>(

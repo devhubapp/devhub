@@ -8,6 +8,7 @@ import {
 } from '@devhub/core'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
+
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumn } from '../../hooks/use-column'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -27,6 +28,7 @@ import { ThemedView } from '../themed/ThemedView'
 import { sharedColumnOptionsStyles } from './options/shared'
 
 export interface ColumnOptionsProps {
+  close: () => void
   columnId: Column['id']
 }
 
@@ -34,15 +36,20 @@ export type ColumnOptionCategory = 'badge'
 
 export const ColumnOptions = React.memo(
   React.forwardRef<View, ColumnOptionsProps>((props, ref) => {
-    const { columnId } = props
-
-    const dispatch = useDispatch()
-    const columnsCount = useReduxState(selectors.columnCountSelector)
-    const plan = useReduxState(selectors.currentUserPlanSelector)
+    const { close, columnId } = props
 
     const { appOrientation } = useAppLayout()
     const { appViewMode } = useAppViewMode()
     const { column, columnIndex, hasCrossedColumnsLimit } = useColumn(columnId)
+
+    const dispatch = useDispatch()
+    const columnsCount = useReduxState(selectors.columnCountSelector)
+    const plan = useReduxState(selectors.currentUserPlanSelector)
+    const notificationsLoadState = useReduxState(state =>
+      column && column.type === 'notifications'
+        ? selectors.notificationsState(state).loadingState
+        : undefined,
+    )
 
     if (!column) return null
 
@@ -392,6 +399,35 @@ export const ColumnOptions = React.memo(
             }}
             tooltip={`Move column right (${keyboardShortcutsById.moveColumnRight.keys[0]})`}
           />
+
+          {column.type === 'notifications' && (
+            <IconButton
+              key="column-options-button-force-refresh"
+              analyticsLabel="force_refetch_all"
+              loading={notificationsLoadState === 'loading-all'}
+              name="sync"
+              onPress={() => {
+                if (close) close()
+
+                setTimeout(
+                  () => {
+                    if (notificationsLoadState === 'loading-all') {
+                      dispatch(actions.fetchNotificationsAbort())
+                    } else {
+                      dispatch(
+                        actions.fetchNotificationsRequest({
+                          fetchAllPages: true,
+                          preventRefetchingExistingPayloads: true,
+                        }),
+                      )
+                    }
+                  },
+                  close ? 500 : 0,
+                )
+              }}
+              tooltip="Sync unread status with GitHub."
+            />
+          )}
 
           <Spacer flex={1} />
 

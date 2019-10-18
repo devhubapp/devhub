@@ -54,7 +54,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
   const dispatch = useDispatch()
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
-  const item = useItem(nodeIdOrId)
+  const item = useItem(type, nodeIdOrId)
 
   const { CardComponent, cardProps } = useMemo(() => {
     if (!item) {

@@ -3,29 +3,22 @@ import {
   ColumnSubscription,
   constants,
   createIssuesOrPullRequestsCache,
-  createNotificationsCache,
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
-  EnhancedGitHubNotification,
   enhanceIssueOrPullRequests,
   EnhancementCache,
-  enhanceNotifications,
   getDefaultPaginationPerPage,
   getGitHubAPIHeadersFromHeader,
   getIssueOrPullRequestsEnhancementMap,
-  getNotificationsEnhancementMap,
   getOlderEventDate,
   getOlderIssueOrPullRequestDate,
-  getOlderNotificationDate,
   getSubscriptionOwnerOrOrg,
   GitHubAppTokenType,
   GitHubEvent,
   GitHubIssueOrPullRequest,
-  GitHubNotification,
   IssueOrPullRequestColumnSubscription,
   mergeEventsPreservingEnhancement,
   mergeIssuesOrPullRequestsPreservingEnhancement,
-  mergeNotificationsPreservingEnhancement,
 } from '@devhub/core'
 import { Response } from '@octokit/rest'
 import _ from 'lodash'
@@ -50,7 +43,6 @@ import { emitter } from '../../libs/emitter'
 import {
   getActivity,
   getIssuesOrPullRequests,
-  getNotifications,
   octokit,
 } from '../../libs/github'
 import * as actions from '../actions'
@@ -58,7 +50,7 @@ import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
 
 let issuesOrPullRequestsCache: EnhancementCache
-let notificationsCache: EnhancementCache
+// let notificationsCache: EnhancementCache
 
 function* init() {
   const initialAction = yield take([
@@ -117,6 +109,8 @@ function* init() {
       .filter(
         s =>
           s &&
+          s.type !== 'notifications' &&
+          s.data &&
           !(
             (s.data.loadState === 'loading' ||
               s.data.loadState === 'loading_first') &&
@@ -137,9 +131,11 @@ function* init() {
         if (!subscription) return
 
         const fiveMinutes = 1000 * 60 * 5
-        const timeDiff = subscription.data.lastFetchedAt
-          ? Date.now() - new Date(subscription.data.lastFetchedAt).valueOf()
-          : undefined
+        const timeDiff =
+          subscription.data &&
+          (subscription.data.lastFetchedAt
+            ? Date.now() - new Date(subscription.data.lastFetchedAt).valueOf()
+            : undefined)
 
         if (
           !forceFetchAll &&
@@ -367,6 +363,11 @@ function* onFetchRequest(
     let canFetchMore: boolean | undefined
     let headers
     if (subscription && subscription.type === 'notifications') {
+      yield put(
+        actions.fetchSubscriptionNoop({ subscriptionType, subscriptionId }),
+      )
+      return
+      /*
       const response = yield call(
         getNotifications,
         { ...requestParams, ...subscriptionParams },
@@ -430,7 +431,9 @@ function* onFetchRequest(
           : reponseContainOldest
           ? false
           : undefined
-    } else if (subscription && subscription.type === 'activity') {
+        */
+    }
+    if (subscription && subscription.type === 'activity') {
       const response = yield call(
         getActivity,
         subscription.subtype,
@@ -598,7 +601,7 @@ function* onFetchFailed(
 }
 
 function onLogout() {
-  if (notificationsCache) notificationsCache.clear()
+  // if (notificationsCache) notificationsCache.clear()
 }
 
 function* onMarkItemsAsReadOrUnread(
@@ -656,6 +659,7 @@ function* onMarkItemsAsReadOrUnread(
   }
 }
 
+/*
 function* onMarkAllNotificationsAsReadOrUnread(
   action: ExtractActionFromActionCreator<
     typeof actions.markAllNotificationsAsReadOrUnread
@@ -718,6 +722,7 @@ function* onMarkRepoNotificationsAsReadOrUnread(
     )
   }
 }
+*/
 
 export function* subscriptionsSagas() {
   yield all([
@@ -728,19 +733,19 @@ export function* subscriptionsSagas() {
     yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
     yield takeEvery('DELETE_COLUMN', cleanupSubscriptions),
     yield takeEvery('OPEN_ITEM', handleOpenItem),
-    yield takeLatest('REMOVE_SUBSCRIPTION_FROM_COLUMN', cleanupSubscriptions),
+    yield takeEvery('REMOVE_SUBSCRIPTION_FROM_COLUMN', cleanupSubscriptions),
     yield takeLatest('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', cleanupSubscriptions),
     yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
     yield takeEvery('FETCH_SUBSCRIPTION_FAILURE', onFetchFailed),
     yield takeEvery('MARK_ITEMS_AS_READ_OR_UNREAD', onMarkItemsAsReadOrUnread),
-    yield takeEvery(
-      'MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD',
-      onMarkAllNotificationsAsReadOrUnread,
-    ),
-    yield takeEvery(
-      'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD',
-      onMarkRepoNotificationsAsReadOrUnread,
-    ),
+    // yield takeEvery(
+    //   'MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD',
+    //   onMarkAllNotificationsAsReadOrUnread,
+    // ),
+    // yield takeEvery(
+    //   'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD',
+    //   onMarkRepoNotificationsAsReadOrUnread,
+    // ),
   ])
 }
 
@@ -756,6 +761,8 @@ function minimumRefetchTimeHasPassed(
     typeof _interval === 'number' && _interval > 0
       ? Math.min(Math.max(minPollingInterval, _interval), 60 * minute)
       : minute
+
+  if (!subscription.data) return false
 
   return (
     !subscription.data.lastFetchedAt ||

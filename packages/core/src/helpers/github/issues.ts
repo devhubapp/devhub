@@ -38,7 +38,7 @@ export const issueOrPullRequestSubjectTypes: GitHubIssueOrPullRequestSubjectType
   'PullRequest',
 ]
 
-export function getIssueOrPullRequestIconAndColor(
+function _getIssueOrPullRequestIconAndColor(
   type: GitHubIssueOrPullRequestSubjectType,
   issueOrPullRequest: GitHubIssueOrPullRequest,
 ) {
@@ -534,7 +534,7 @@ export function getGitHubIssueOrPullRequestSubItems(
     repoFullName || '',
   )
 
-  const iconDetails = getIssueOrPullRequestIconAndColor(
+  const iconDetails = _getIssueOrPullRequestIconAndColor(
     getIssueOrPullRequestSubjectType(issueOrPullRequest) || 'Issue',
     issueOrPullRequest,
   )

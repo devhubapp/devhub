@@ -144,6 +144,8 @@ export async function getActivity<T extends GitHubActivityType>(
     return cache[cacheKey]
   } catch (error) {
     if (error && error.status === 304) return cache[cacheKey]
+    if (__DEV__) console.trace('[getActivity]', _params, error) // tslint:disable-line no-console
+    error.params = _params
     throw error
   }
 }
@@ -180,11 +182,14 @@ export async function getIssuesOrPullRequests<
     },
   }
 
+  let p:
+    | (SearchIssuesAndPullRequestsParams & {
+        headers?: Record<string, string>
+      })
+    | undefined
   try {
     const response = await (() => {
-      const p: SearchIssuesAndPullRequestsParams & {
-        headers?: Record<string, string>
-      } = {
+      p = {
         ..._.omit(_requestParams, Object.keys(subscriptionParams)),
         q: getGitHubIssueSearchQuery(subscriptionParams),
       }
@@ -203,6 +208,8 @@ export async function getIssuesOrPullRequests<
     return cache[cacheKey]
   } catch (error) {
     if (error && error.status === 304) return cache[cacheKey]
+    if (__DEV__) console.trace('[getIssuesOrPullRequests]', p, error) // tslint:disable-line no-console
+    error.params = p
     throw error
   }
 }
