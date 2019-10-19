@@ -5,7 +5,7 @@ import {
   getOlderEventDate,
   getSubscriptionOwnerOrOrg,
 } from '@devhub/core'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
@@ -16,6 +16,7 @@ import { NoTokenView } from '../components/cards/NoTokenView'
 import { ButtonLink } from '../components/common/ButtonLink'
 import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
+import { useDynamicRef } from '../hooks/use-dynamic-ref'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxState } from '../hooks/use-redux-state'
 import { octokit } from '../libs/github'
@@ -31,7 +32,8 @@ export interface EventCardsContainerProps
     | 'column'
     | 'errorMessage'
     | 'fetchNextPage'
-    | 'items'
+    | 'getItemById'
+    | 'itemIds'
     | 'lastFetchedSuccessfullyAt'
     | 'refresh'
   > {
@@ -77,18 +79,17 @@ export const EventCardsContainer = React.memo(
       selectors.installationsLoadStateSelector,
     )
 
-    const subscriptionsDataSelectorRef = useRef(
-      selectors.createSubscriptionsDataSelector(),
-    )
+    const { allItems, filteredItems, filteredItemsIds } = useColumnData<
+      EnhancedGitHubEvent
+    >(columnId, { mergeSimilar: false })
 
-    useEffect(() => {
-      subscriptionsDataSelectorRef.current = selectors.createSubscriptionsDataSelector()
-    }, [column && column.subscriptionIds.join(',')])
+    const filteredItemsRef = useDynamicRef(filteredItems)
+    const getItemById = useCallback((id: EnhancedGitHubEvent['id']) => {
+      if (!(filteredItemsRef.current && filteredItemsRef.current.length))
+        return undefined
 
-    const { allItems, filteredItems } = useColumnData<EnhancedGitHubEvent>(
-      columnId,
-      { mergeSimilar: false },
-    )
+      return filteredItemsRef.current.find(item => item && item.id === id)
+    }, [])
 
     const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderEventDate(allItems)
@@ -212,7 +213,8 @@ export const EventCardsContainer = React.memo(
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
-        items={filteredItems}
+        getItemById={getItemById}
+        itemIds={filteredItemsIds as Array<EnhancedGitHubEvent['id']>}
         lastFetchedSuccessfullyAt={
           mainSubscription.data.lastFetchedSuccessfullyAt
         }

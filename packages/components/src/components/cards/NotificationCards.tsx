@@ -15,15 +15,13 @@ import { SwipeableCard } from './SwipeableCard'
 type ItemT = EnhancedGitHubNotification
 
 export interface NotificationCardsProps
-  extends Omit<
-    NotificationCardProps,
-    'cachedCardProps' | 'columnId' | 'notification'
-  > {
+  extends Omit<NotificationCardProps, 'columnId' | 'notification'> {
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
-  items: ItemT[]
+  getItemById: (id: ItemT['id']) => ItemT | undefined
+  itemIds: Array<ItemT['id']>
   lastFetchedSuccessfullyAt: string | undefined
   ownerIsKnown: boolean
   pointerEvents?: ViewProps['pointerEvents']
@@ -32,17 +30,14 @@ export interface NotificationCardsProps
   swipeable: boolean
 }
 
-function getItemKey({ item }: DataItemT<ItemT>, _index: number) {
-  return `notification-card-${item.id}`
-}
-
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
     column,
     columnIndex,
     errorMessage,
     fetchNextPage,
-    items,
+    getItemById,
+    itemIds,
     lastFetchedSuccessfullyAt,
     ownerIsKnown,
     pointerEvents,
@@ -52,6 +47,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   } = props
 
   const listRef = React.useRef<typeof OneList>(null)
+
+  const getItemKey = useCallback(
+    (id: DataItemT<ItemT>, index: number) => {
+      const item = getItemById(id)
+      return `notification-card-${(item && item.id) || index}`
+    },
+    [getItemById],
+  )
 
   const {
     OverrideRender,
@@ -68,7 +71,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     column,
     columnIndex,
     fetchNextPage,
-    items,
+    getItemById,
+    itemIds,
     lastFetchedSuccessfullyAt,
     ownerIsKnown,
     refresh,
@@ -78,10 +82,11 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   useCardsKeyboard(listRef, {
     columnId: column.id,
-    items:
+    getItemById,
+    itemIds:
       OverrideRender && OverrideRender.Component && OverrideRender.overlay
         ? []
-        : items,
+        : itemIds,
     ownerIsKnown,
     repoIsKnown,
     type: 'notifications',
@@ -91,13 +96,17 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const renderItem = useCallback<
     NonNullable<OneListProps<DataItemT<ItemT>>['renderItem']>
   >(
-    ({ item: { cachedCardProps, height, item } }) => {
+    ({ item: id, index }) => {
+      const item = getItemById(id)
+      if (!item) return null
+
+      const height = getItemSize(id, index)
+
       if (swipeable) {
         return (
           <View style={{ height }}>
             <SwipeableCard
               type="notifications"
-              cachedCardProps={cachedCardProps}
               columnId={column.id}
               item={item}
               ownerIsKnown={ownerIsKnown}
@@ -111,7 +120,6 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         <ErrorBoundary>
           <View style={{ height }}>
             <NotificationCard
-              cachedCardProps={cachedCardProps}
               columnId={column.id}
               notification={item}
               ownerIsKnown={ownerIsKnown}
@@ -121,7 +129,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         </ErrorBoundary>
       )
     },
-    [ownerIsKnown, repoIsKnown, swipeable],
+    [getItemById, ownerIsKnown, repoIsKnown, swipeable],
   )
 
   const ListEmptyComponent = useMemo<
@@ -140,10 +148,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       )
     },
     [
-      items.length ? undefined : column,
-      items.length ? undefined : errorMessage,
-      items.length ? undefined : fetchNextPage,
-      items.length ? undefined : refresh,
+      itemIds.length ? undefined : column,
+      itemIds.length ? undefined : errorMessage,
+      itemIds.length ? undefined : fetchNextPage,
+      itemIds.length ? undefined : refresh,
     ],
   )
 

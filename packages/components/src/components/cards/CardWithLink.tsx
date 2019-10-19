@@ -26,7 +26,6 @@ import { CardFocusIndicator } from './partials/CardFocusIndicator'
 import { CardSavedIndicator } from './partials/CardSavedIndicator'
 
 export interface CardWithLinkProps<ItemT extends EnhancedItem> {
-  cachedCardProps?: BaseCardProps | undefined
   columnId: string
   isInsideSwipeable?: boolean
   item: ItemT
@@ -38,7 +37,6 @@ export interface CardWithLinkProps<ItemT extends EnhancedItem> {
 export const CardWithLink = React.memo(
   (props: CardWithLinkProps<EnhancedItem>) => {
     const {
-      cachedCardProps,
       columnId,
       isInsideSwipeable,
       item,
@@ -57,13 +55,11 @@ export const CardWithLink = React.memo(
     const plan = useReduxState(selectors.currentUserPlanSelector)
 
     const { CardComponent, cardProps } = useMemo(() => {
-      const _cardProps =
-        cachedCardProps ||
-        getCardPropsForItem(type, item, {
-          ownerIsKnown,
-          plan,
-          repoIsKnown,
-        })
+      const _cardProps = getCardPropsForItem(type, item, {
+        ownerIsKnown,
+        plan,
+        repoIsKnown,
+      })
 
       return {
         cardProps: _cardProps,
@@ -71,7 +67,7 @@ export const CardWithLink = React.memo(
           <BaseCard key={`${type}-base-card-${item.id}`} {..._cardProps} />
         ),
       }
-    }, [cachedCardProps, item, ownerIsKnown, plan, repoIsKnown])
+    }, [item, ownerIsKnown, plan, repoIsKnown])
 
     const isReadRef = useRef(cardProps.isRead)
     isReadRef.current = cardProps.isRead

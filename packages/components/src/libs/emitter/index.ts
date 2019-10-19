@@ -28,7 +28,7 @@ export interface EmitterTypes {
   }
   FOCUS_ON_COLUMN_ITEM: {
     columnId: string
-    itemId: string | number | null
+    itemId: string | number | null | undefined
     scrollTo?: boolean
   }
   PRESSED_KEYBOARD_SHORTCUT: { keys: string[] }

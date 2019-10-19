@@ -42,7 +42,6 @@ export function SwipeableCard<ItemT extends EnhancedItem>(
   }
 
   const Content = useMemo(() => <CardWithLink {...props} isInsideSwipeable />, [
-    props.cachedCardProps,
     props.columnId,
     props.item,
     props.ownerIsKnown,

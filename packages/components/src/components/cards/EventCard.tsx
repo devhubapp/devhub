@@ -1,11 +1,9 @@
 import React from 'react'
 
 import { EnhancedGitHubEvent } from '@devhub/core'
-import { BaseCardProps } from './BaseCard.shared'
 import { CardWithLink } from './CardWithLink'
 
 export interface EventCardProps {
-  cachedCardProps?: BaseCardProps | undefined
   columnId: string
   event: EnhancedGitHubEvent
   ownerIsKnown: boolean
@@ -13,7 +11,7 @@ export interface EventCardProps {
 }
 
 export const EventCard = React.memo((props: EventCardProps) => {
-  const { cachedCardProps, columnId, event, ownerIsKnown, repoIsKnown } = props
+  const { columnId, event, ownerIsKnown, repoIsKnown } = props
 
   return (
     <CardWithLink
@@ -22,7 +20,6 @@ export const EventCard = React.memo((props: EventCardProps) => {
       ownerIsKnown={ownerIsKnown}
       item={event}
       columnId={columnId}
-      cachedCardProps={cachedCardProps}
     />
   )
 })

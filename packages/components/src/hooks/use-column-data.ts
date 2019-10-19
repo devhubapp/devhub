@@ -41,6 +41,11 @@ export function useColumnData<ItemT extends EnhancedItem>(
     ),
   ) as ItemT[]
 
+  const allItemsIds = useMemo(
+    () => allItems.map(item => item.id).filter(Boolean),
+    [allItems],
+  )
+
   const filteredItems = useMemo(() => {
     if (!(column && allItems && allItems.length)) return allItems || EMPTY_ARRAY
 
@@ -60,9 +65,16 @@ export function useColumnData<ItemT extends EnhancedItem>(
     loggedUsername,
   ]) as ItemT[]
 
+  const filteredItemsIds = useMemo(
+    () => filteredItems.map(item => item.id).filter(Boolean),
+    [filteredItems],
+  )
+
   return {
     allItems,
+    allItemsIds,
     filteredItems,
+    filteredItemsIds,
     hasCrossedColumnsLimit,
   }
 }

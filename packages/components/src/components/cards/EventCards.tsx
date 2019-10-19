@@ -1,7 +1,7 @@
+import { Column, EnhancedGitHubEvent } from '@devhub/core'
 import React, { useCallback, useMemo } from 'react'
 import { View, ViewProps } from 'react-native'
 
-import { Column, EnhancedGitHubEvent } from '@devhub/core'
 import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
 import { DataItemT, useCardsProps } from '../../hooks/use-cards-props'
 import { BlurView } from '../../libs/blur-view/BlurView'
@@ -15,12 +15,13 @@ import { SwipeableCard } from './SwipeableCard'
 type ItemT = EnhancedGitHubEvent
 
 export interface EventCardsProps
-  extends Omit<EventCardProps, 'cachedCardProps' | 'columnId' | 'event'> {
+  extends Omit<EventCardProps, 'columnId' | 'event'> {
   column: Column
   columnIndex: number
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
-  items: ItemT[]
+  getItemById: (id: ItemT['id']) => ItemT | undefined
+  itemIds: Array<ItemT['id']>
   lastFetchedSuccessfullyAt: string | undefined
   ownerIsKnown: boolean
   pointerEvents?: ViewProps['pointerEvents']
@@ -29,17 +30,14 @@ export interface EventCardsProps
   swipeable: boolean
 }
 
-function getItemKey({ item }: DataItemT<ItemT>, _index: number) {
-  return `event-card-${item.id}`
-}
-
 export const EventCards = React.memo((props: EventCardsProps) => {
   const {
     column,
     columnIndex,
     errorMessage,
     fetchNextPage,
-    items,
+    getItemById,
+    itemIds,
     lastFetchedSuccessfullyAt,
     ownerIsKnown,
     pointerEvents,
@@ -49,6 +47,14 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   } = props
 
   const listRef = React.useRef<typeof OneList>(null)
+
+  const getItemKey = useCallback(
+    (id: DataItemT<ItemT>, index: number) => {
+      const item = getItemById(id)
+      return `event-card-${(item && item.id) || index}`
+    },
+    [getItemById],
+  )
 
   const {
     OverrideRender,
@@ -65,7 +71,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     column,
     columnIndex,
     fetchNextPage,
-    items,
+    getItemById,
+    itemIds,
     lastFetchedSuccessfullyAt,
     ownerIsKnown,
     refresh,
@@ -75,10 +82,11 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   useCardsKeyboard(listRef, {
     columnId: column.id,
-    items:
+    getItemById,
+    itemIds:
       OverrideRender && OverrideRender.Component && OverrideRender.overlay
         ? []
-        : items,
+        : itemIds,
     ownerIsKnown,
     repoIsKnown,
     type: 'activity',
@@ -88,13 +96,17 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   const renderItem = useCallback<
     NonNullable<OneListProps<DataItemT<ItemT>>['renderItem']>
   >(
-    ({ item: { cachedCardProps, height, item } }) => {
+    ({ item: id, index }) => {
+      const item = getItemById(id)
+      if (!item) return null
+
+      const height = getItemSize(id, index)
+
       if (swipeable) {
         return (
           <View style={{ height }}>
             <SwipeableCard
               type="activity"
-              cachedCardProps={cachedCardProps}
               columnId={column.id}
               item={item}
               ownerIsKnown={ownerIsKnown}
@@ -108,7 +120,6 @@ export const EventCards = React.memo((props: EventCardsProps) => {
         <ErrorBoundary>
           <View style={{ height }}>
             <EventCard
-              cachedCardProps={cachedCardProps}
               columnId={column.id}
               event={item}
               ownerIsKnown={ownerIsKnown}
@@ -140,11 +151,11 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       )
     },
     [
-      items.length ? undefined : column,
-      items.length ? undefined : errorMessage,
-      items.length ? undefined : fetchNextPage,
-      items.length ? undefined : refresh,
-      items.length
+      itemIds.length ? undefined : column,
+      itemIds.length ? undefined : errorMessage,
+      itemIds.length ? undefined : fetchNextPage,
+      itemIds.length ? undefined : refresh,
+      itemIds.length
         ? undefined
         : !!(
             OverrideRender &&

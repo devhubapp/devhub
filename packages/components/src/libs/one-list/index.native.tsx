@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 
 import { sharedStyles } from '../../styles/shared'
@@ -94,6 +94,7 @@ export const OneList = (React.memo(
     const onVisibleItemsChangedRef = useRef(onVisibleItemsChanged)
     onVisibleItemsChangedRef.current = onVisibleItemsChanged
 
+    /*
     const getItemLayout = useMemo<
       NonNullable<FlatListProps<any>['getItemLayout']>
     >(() => {
@@ -126,6 +127,18 @@ export const OneList = (React.memo(
 
       return (_, index) => itemLayouts[index]
     }, [data, getItemSize, itemSeparator && itemSeparator.size])
+    */
+
+    const getItemLayout = useCallback<
+      NonNullable<FlatListProps<any>['getItemLayout']>
+    >(
+      (d, index) => ({
+        index,
+        length: (d && d[index] && getItemSize(d[index], index)) || 0,
+        offset: 0,
+      }),
+      [],
+    )
 
     const keyExtractor: FlatListProps<any>['keyExtractor'] = getItemKey
 

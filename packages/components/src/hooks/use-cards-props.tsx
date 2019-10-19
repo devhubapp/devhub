@@ -14,7 +14,6 @@ import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import {
-  BaseCardProps,
   getCardPropsForItem,
   getCardSizeForProps,
 } from '../components/cards/BaseCard.shared'
@@ -36,8 +35,6 @@ import {
   cardsWatchingOwnerFilterBarTotalHeight,
 } from '../components/cards/CardsWatchingOwnerFilterBar'
 import { EmptyCards } from '../components/cards/EmptyCards'
-import { cardItemSeparatorSize } from '../components/cards/partials/CardItemSeparator'
-import { columnHeaderHeight } from '../components/columns/ColumnHeader'
 import {
   ColumnLoadingIndicator,
   columnLoadingIndicatorSize,
@@ -50,23 +47,16 @@ import { useSafeArea } from '../libs/safe-area-view'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
-import { FlatListItemLayout } from '../utils/types'
-import { useDimensions } from './use-dimensions'
-import { usePreviousRef } from './use-previous-ref'
 import { useReduxState } from './use-redux-state'
 
-export interface DataItemT<ItemT extends EnhancedItem> {
-  cachedCardProps: BaseCardProps
-  height: number
-  index: number
-  item: ItemT
-}
+export type DataItemT<ItemT extends EnhancedItem> = ItemT['id']
 
 export function useCardsProps<ItemT extends EnhancedItem>({
   column,
   columnIndex,
   fetchNextPage,
-  items,
+  getItemById,
+  itemIds,
   lastFetchedSuccessfullyAt,
   ownerIsKnown: _ownerIsKnown,
   refresh,
@@ -76,23 +66,18 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   column: Column | undefined
   columnIndex: number
   fetchNextPage: CardsFooterProps['fetchNextPage']
-  items: ItemT[] | undefined
+  getItemById: (id: ItemT['id']) => ItemT | undefined
+  itemIds: Array<ItemT['id']> | undefined
   lastFetchedSuccessfullyAt: string | undefined
   ownerIsKnown: boolean
   refresh: CardsFooterProps['refresh']
   repoIsKnown: boolean
   type: ColumnSubscription['type']
 }) {
-  const cardPropsCacheMapRef = useRef(
-    new WeakMap<EnhancedItem, BaseCardProps>(),
-  )
-  const sizeCacheMapRef = useRef(new WeakMap<EnhancedItem, number>())
   const visibleItemIndexesRef = useRef({ from: -1, to: -1 })
 
   const appSafeAreaInsets = useSafeArea()
   const { appOrientation } = useAppLayout()
-  const { height: windowHeight } = useDimensions('height')
-
   const dispatch = useDispatch()
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
@@ -110,6 +95,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       [column && column.id],
     ),
   )
+
   const isDashboard =
     subtype === 'USER_RECEIVED_EVENTS' ||
     subtype === 'USER_RECEIVED_PUBLIC_EVENTS'
@@ -140,126 +126,67 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     repoIsKnown
   )
 
-  const previousOwnerIsKnownRef = usePreviousRef(ownerIsKnown)
-  const previousPlanRef = usePreviousRef(plan)
-  const previousRepoIsKnownRef = usePreviousRef(repoIsKnown)
-  const itemCardProps = useMemo<Array<BaseCardProps | undefined>>(() => {
-    const newCacheMap = new WeakMap()
+  const data: Array<DataItemT<ItemT>> = itemIds || []
 
-    if (!(items && items.length)) {
-      cardPropsCacheMapRef.current = newCacheMap
-      return []
-    }
-
-    if (
-      previousOwnerIsKnownRef.current !== ownerIsKnown ||
-      previousPlanRef.current !== plan ||
-      previousRepoIsKnownRef.current !== repoIsKnown
-    ) {
-      cardPropsCacheMapRef.current = newCacheMap
-    }
-
-    const result = items.map<BaseCardProps>(item => {
+  const getItemCardProps = useCallback(
+    (item: ItemT) => {
       const event = item as EnhancedGitHubEvent
 
-      const cached = cardPropsCacheMapRef.current.get(item)
-      const value =
-        cached ||
-        getCardPropsForItem(type, item, {
-          ownerIsKnown:
-            (isDashboard || isUserActivity) &&
-            (event.type === 'ForkEvent' ||
-              event.type === 'WatchEvent' ||
-              // event.type === 'WatchEvent:OneUserMultipleRepos' ||
-              event.type === 'MemberEvent')
-              ? (() => {
-                  const repoOwnerName =
-                    (event.repo &&
-                      (event.repo.name ||
-                        event.repo.full_name ||
-                        (event.repo.owner && event.repo.owner.login))) ||
-                    undefined
-                  if (!repoOwnerName) return _ownerIsKnown
+      return getCardPropsForItem(type, item, {
+        ownerIsKnown:
+          (isDashboard || isUserActivity) &&
+          (event.type === 'ForkEvent' ||
+            event.type === 'WatchEvent' ||
+            // event.type === 'WatchEvent:OneUserMultipleRepos' ||
+            event.type === 'MemberEvent')
+            ? (() => {
+                const repoOwnerName =
+                  (event.repo &&
+                    (event.repo.name ||
+                      event.repo.full_name ||
+                      (event.repo.owner && event.repo.owner.login))) ||
+                  undefined
+                if (!repoOwnerName) return _ownerIsKnown
 
-                  return !!(
-                    includedUsernames.length === 1 &&
-                    repoOwnerName.split('/')[0].toLowerCase() ===
-                      includedUsernames[0].toLowerCase()
-                  )
-                })()
-              : ownerIsKnown,
-          plan,
-          repoIsKnown,
-        })
-      newCacheMap.set(item, value)
-
-      return value
-    })
-
-    cardPropsCacheMapRef.current = newCacheMap
-
-    return result
-  }, [_ownerIsKnown, isDashboard, items, ownerIsKnown, plan, repoIsKnown])
-
-  const itemLayouts = useMemo<Array<FlatListItemLayout | undefined>>(() => {
-    const newCacheMap = new WeakMap()
-
-    if (!(items && items.length)) {
-      sizeCacheMapRef.current = newCacheMap
-      return []
-    }
-
-    if (
-      previousOwnerIsKnownRef.current !== ownerIsKnown ||
-      previousPlanRef.current !== plan ||
-      previousRepoIsKnownRef.current !== repoIsKnown
-    ) {
-      sizeCacheMapRef.current = newCacheMap
-    }
-
-    let totalOffset = 0
-    const result = items.map<FlatListItemLayout>((item, index) => {
-      const cached = sizeCacheMapRef.current.get(item)
-      const value = cached || getCardSizeForProps(itemCardProps[index]!) || 0
-      newCacheMap.set(item, value)
-
-      const offset = totalOffset
-      totalOffset += value + cardItemSeparatorSize
-
-      return {
-        index,
-        offset,
-        length: value,
-      }
-    })
-
-    sizeCacheMapRef.current = newCacheMap
-
-    return result
-  }, [itemCardProps, items, ownerIsKnown, plan, repoIsKnown])
+                return !!(
+                  includedUsernames.length === 1 &&
+                  repoOwnerName.split('/')[0].toLowerCase() ===
+                    includedUsernames[0].toLowerCase()
+                )
+              })()
+            : ownerIsKnown,
+        plan,
+        repoIsKnown,
+      })
+    },
+    [
+      isDashboard,
+      isUserActivity,
+      includedUsernames.length === 1,
+      includedUsernames[0],
+      ownerIsKnown,
+    ],
+  )
 
   const getItemSize = useCallback<
-    NonNullable<OneListProps<any>['getItemSize']>
-  >((_, index) => (itemLayouts[index] && itemLayouts[index]!.length) || 0, [
-    items,
-    itemLayouts,
-  ])
+    NonNullable<OneListProps<DataItemT<ItemT>>['getItemSize']>
+  >(
+    id => {
+      const item = getItemById(id)
+      if (!item) return 0
 
-  const data = useMemo<Array<DataItemT<ItemT>>>(() => {
-    return (items || []).map((item, index) => ({
-      cachedCardProps: itemCardProps[index]!,
-      height: getItemSize(undefined, index),
-      index,
-      item,
-    }))
-  }, [items, itemCardProps])
+      const itemCardProps = getItemCardProps(item)
+      return getCardSizeForProps(itemCardProps) || 0
+    },
+    [getItemById],
+  )
 
   const itemSeparator = undefined
 
   const header = useMemo<OneListProps<DataItemT<ItemT>>['header']>(() => {
     const renderOwnerFilterBar = !!(
       column &&
-      data.length &&
+      (data || []).length &&
       (!_ownerIsKnown ||
         (column.type === 'issue_or_pr' && includedUsernames.length > 1)) &&
       !isDashboard
@@ -314,23 +241,26 @@ export function useCardsProps<ItemT extends EnhancedItem>({
         </View>
       ),
     }
-  }, [column && column.id, column && column.type, _ownerIsKnown, !!data.length])
+  }, [
+    column && column.id,
+    column && column.type,
+    _ownerIsKnown,
+    !!(data || []).length,
+  ])
 
   const cardsFooterProps: CardsFooterProps = {
     clearedAt: column && column.filters && column.filters.clearedAt,
     columnId: (column && column.id)!,
     fetchNextPage,
-    isEmpty: !(items && items.length > 0),
+    isEmpty: !((data || []).length > 0),
     refresh,
   }
-  const sticky = !!(
-    !fetchNextPage &&
-    cardsFooterProps.clearedAt &&
-    itemLayouts[itemLayouts.length - 1] &&
-    itemLayouts[itemLayouts.length - 1]!.offset +
-      itemLayouts[itemLayouts.length - 1]!.length <
-      windowHeight - ((header && header.size) || 0) - columnHeaderHeight
-  )
+  const sticky = !!(!fetchNextPage && cardsFooterProps.clearedAt)
+  // && // TODO
+  // itemLayouts[itemLayouts.length - 1] &&
+  // itemLayouts[itemLayouts.length - 1]!.offset +
+  //   itemLayouts[itemLayouts.length - 1]!.length <
+  //   windowHeight - ((header && header.size) || 0) - columnHeaderHeight
 
   const footer = useMemo<OneListProps<DataItemT<ItemT>>['footer']>(() => {
     if (isOverMaxColumnLimit || isOverPlanColumnLimit) return undefined
@@ -464,7 +394,6 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     footer,
     getItemSize,
     header,
-    itemCardProps,
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,

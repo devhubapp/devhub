@@ -17,7 +17,6 @@ import {
 } from 'react-window'
 
 import { useDynamicRef } from '../../hooks/use-dynamic-ref'
-import { usePrevious } from '../../hooks/use-previous'
 import { sharedStyles } from '../../styles/shared'
 import { AutoSizer } from '../auto-sizer'
 import { bugsnag } from '../bugsnag'
@@ -358,6 +357,7 @@ export const OneList = (React.memo(
       }
     }, [onVisibleItemsChanged])
 
+    /*
     const previousItemCount = usePrevious(itemCount)
     const previousItemSize = usePrevious(itemSize)
     useLayoutEffect(() => {
@@ -389,6 +389,19 @@ export const OneList = (React.memo(
         variableSizeListRef.current.resetAfterIndex(firstDifferentIndex, true)
       }
     }, [itemCount, itemSize, previousItemCount, previousItemSize])
+    */
+
+    useLayoutEffect(() => {
+      if (variableSizeListRef.current) {
+        variableSizeListRef.current.resetAfterIndex(0, true)
+      } else {
+        setTimeout(() => {
+          if (variableSizeListRef.current) {
+            variableSizeListRef.current.resetAfterIndex(0, true)
+          }
+        }, 200)
+      }
+    }, [data, forceRerenderOnRefChange, itemCount, itemSize])
 
     const style = useMemo<VariableSizeListProps['style']>(
       () => ({

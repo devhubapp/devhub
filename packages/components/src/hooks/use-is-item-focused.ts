@@ -4,7 +4,7 @@ import { useEmitter } from './use-emitter'
 import { useForceRerender } from './use-force-rerender'
 
 let focusedColumnId: string
-let focusedItemId: string | number | null
+let focusedItemId: string | number | null | undefined
 
 export function useIsItemFocused(
   columnId: string,

@@ -1,11 +1,9 @@
 import React from 'react'
 
 import { EnhancedGitHubIssueOrPullRequest } from '@devhub/core'
-import { BaseCardProps } from './BaseCard.shared'
 import { CardWithLink } from './CardWithLink'
 
 export interface IssueOrPullRequestCardProps {
-  cachedCardProps?: BaseCardProps | undefined
   columnId: string
   issueOrPullRequest: EnhancedGitHubIssueOrPullRequest
   ownerIsKnown: boolean
@@ -14,13 +12,7 @@ export interface IssueOrPullRequestCardProps {
 
 export const IssueOrPullRequestCard = React.memo(
   (props: IssueOrPullRequestCardProps) => {
-    const {
-      cachedCardProps,
-      columnId,
-      issueOrPullRequest,
-      ownerIsKnown,
-      repoIsKnown,
-    } = props
+    const { columnId, issueOrPullRequest, ownerIsKnown, repoIsKnown } = props
 
     return (
       <CardWithLink
@@ -29,7 +21,6 @@ export const IssueOrPullRequestCard = React.memo(
         ownerIsKnown={ownerIsKnown}
         item={issueOrPullRequest}
         columnId={columnId}
-        cachedCardProps={cachedCardProps}
       />
     )
   },

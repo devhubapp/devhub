@@ -14,6 +14,7 @@ import {
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
+import { useDynamicRef } from '../hooks/use-dynamic-ref'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
@@ -24,7 +25,8 @@ export interface NotificationCardsContainerProps
     | 'column'
     | 'errorMessage'
     | 'fetchNextPage'
-    | 'items'
+    | 'getItemById'
+    | 'itemIds'
     | 'lastFetchedSuccessfullyAt'
     | 'refresh'
   > {
@@ -38,6 +40,7 @@ export const NotificationCardsContainer = React.memo(
     const { column } = useColumn(columnId)
 
     const dispatch = useDispatch()
+
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
     const githubOAuthScope = useReduxState(selectors.githubOAuthScopeSelector)
@@ -52,7 +55,7 @@ export const NotificationCardsContainer = React.memo(
 
     const data = (mainSubscription && mainSubscription.data) || {}
 
-    const { allItems, filteredItems } = useColumnData<
+    const { allItems, filteredItems, filteredItemsIds } = useColumnData<
       EnhancedGitHubNotification
     >(columnId, { mergeSimilar: false })
 
@@ -90,6 +93,14 @@ export const NotificationCardsContainer = React.memo(
       fetchData({ page: nextPage })
     }, [fetchData, allItems.length])
 
+    const filteredItemsRef = useDynamicRef(filteredItems)
+    const getItemById = useCallback((id: EnhancedGitHubNotification['id']) => {
+      if (!(filteredItemsRef.current && filteredItemsRef.current.length))
+        return undefined
+
+      return filteredItemsRef.current.find(item => item && item.id === id)
+    }, [])
+
     const refresh = useCallback(() => {
       fetchData()
     }, [fetchData])
@@ -116,7 +127,8 @@ export const NotificationCardsContainer = React.memo(
         column={column}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
-        items={filteredItems}
+        getItemById={getItemById}
+        itemIds={filteredItemsIds}
         lastFetchedSuccessfullyAt={
           mainSubscription.data.lastFetchedSuccessfullyAt
         }
