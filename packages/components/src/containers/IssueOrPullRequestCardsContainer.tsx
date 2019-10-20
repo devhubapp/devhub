@@ -77,12 +77,8 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     )
 
     const dispatch = useDispatch()
-    const username = useReduxState(selectors.currentGitHubUsernameSelector)
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
-    )
-    const installationOwnerNames = useReduxState(
-      selectors.installationOwnerNamesSelector,
     )
 
     const { allItems, filteredItems } = useColumnData<
@@ -193,48 +189,6 @@ export const IssueOrPullRequestCardsContainer = React.memo(
           </View>
         )
       }
-    }
-
-    if (
-      username &&
-      `${subscriptionOwnerOrOrg || ''}`.toLowerCase() ===
-        `${username || ''}`.toLowerCase() &&
-      !(installationOwnerNames && installationOwnerNames.length)
-    ) {
-      return (
-        <View
-          style={[
-            sharedStyles.flex,
-            sharedStyles.center,
-            {
-              padding: contentPadding,
-            },
-          ]}
-        >
-          <GenericMessageWithButtonView
-            buttonView={
-              <ButtonLink
-                analyticsLabel="setup_github_app_from_user_repo_column"
-                children="Install GitHub App"
-                disabled={
-                  mainSubscription.data.loadState === 'loading' ||
-                  mainSubscription.data.loadState === 'loading_first'
-                }
-                href={getGitHubAppInstallUri()}
-                loading={
-                  installationsLoadState === 'loading' ||
-                  mainSubscription.data.loadState === 'loading' ||
-                  mainSubscription.data.loadState === 'loading_first'
-                }
-                openOnNewTab={false}
-              />
-            }
-            emoji="sunny"
-            subtitle="Please install the GitHub App to continue. No code permission required."
-            title="Not installed"
-          />
-        </View>
-      )
     }
 
     if (!column) return null
