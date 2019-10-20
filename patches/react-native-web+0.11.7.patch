@@ -924,3 +924,115 @@ index c08437e..4bc0ae2 100644
  });
  export default VirtualizedList;
 \ No newline at end of file
+diff --git a/node_modules/react-native-web/src/vendor/react-native/VirtualizedList/index.js b/node_modules/react-native-web/src/vendor/react-native/VirtualizedList/index.js
+index 7a2b1d0..1dc38c1 100644
+--- a/node_modules/react-native-web/src/vendor/react-native/VirtualizedList/index.js
++++ b/node_modules/react-native-web/src/vendor/react-native/VirtualizedList/index.js
+@@ -642,11 +642,16 @@ class VirtualizedList extends React.PureComponent<Props, State> {
+     const {
+       CellRendererComponent,
+       ItemSeparatorComponent,
++      ListItemComponent,
+       data,
++      debug,
++      extraData,
+       getItem,
+       getItemCount,
++      getItemLayout,
+       horizontal,
+       keyExtractor,
++      renderItem,
+     } = this.props;
+     const stickyOffset = this.props.ListHeaderComponent ? 1 : 0;
+     const end = getItemCount(data) - 1;
+@@ -672,9 +677,11 @@ class VirtualizedList extends React.PureComponent<Props, State> {
+           key={key}
+           prevCellKey={prevCellKey}
+           onUpdateSeparators={this._onUpdateSeparators}
+-          onLayout={e => this._onCellLayout(e, key, ii)}
++          onLayout={this._onCellLayout}
+           onUnmount={this._onCellUnmount}
+-          parentProps={this.props}
++          ListItemComponent={ListItemComponent}
++          extraData={extraData}
++          debug={debug}
+           ref={ref => {
+             this._cellRefs[key] = ref;
+           }}
+@@ -1018,7 +1025,7 @@ class VirtualizedList extends React.PureComponent<Props, State> {
+     }
+   };
+ 
+-  _onCellLayout(e, cellKey, index) {
++  _onCellLayout = (e, cellKey, index): void => {
+     const layout = e.nativeEvent.layout;
+     const next = {
+       offset: this._selectOffset(layout),
+@@ -1047,7 +1054,7 @@ class VirtualizedList extends React.PureComponent<Props, State> {
+       this._frames[cellKey].inLayout = true;
+     }
+     this._computeBlankness();
+-  }
++  };
+ 
+   _onCellUnmount = (cellKey: string) => {
+     const curr = this._frames[cellKey];
+@@ -1554,13 +1561,13 @@ class CellRenderer extends React.Component<
+     index: number,
+     inversionStyle: ?DangerouslyImpreciseStyleProp,
+     item: Item,
+-    onLayout: (event: Object) => void, // This is extracted by ScrollViewStickyHeader
++    onLayout: (event: Object, key: string, index: number) => void, // This is extracted by ScrollViewStickyHeader
+     onUnmount: (cellKey: string) => void,
+     onUpdateSeparators: (cellKeys: Array<?string>, props: Object) => void,
+-    parentProps: {
+-      getItemLayout?: ?Function,
+-      renderItem: renderItemType,
+-    },
++    getItemLayout?: ?Function,
++    renderItem: $PropertyType<OptionalProps, 'renderItem'>,
++    ListItemComponent?: ?(React.ComponentType<any> | React.Element<any>),
++    debug: ?boolean,
+     prevCellKey: ?string
+   },
+   $FlowFixMeState,
+@@ -1620,18 +1627,24 @@ class CellRenderer extends React.Component<
+     this.props.onUnmount(this.props.cellKey);
+   }
+ 
++  _onLayout = (e): void =>
++    this.props.onLayout &&
++    this.props.onLayout(e, this.props.cellKey, this.props.index);
++
+   render() {
+     const {
+       CellRendererComponent,
+       ItemSeparatorComponent,
++      ListItemComponent,
++      debug,
+       fillRateHelper,
++      getItemLayout,
+       horizontal,
+-      item,
+       index,
+       inversionStyle,
+-      parentProps,
++      item,
++      renderItem,
+     } = this.props;
+-    const {renderItem, getItemLayout} = parentProps;
+     invariant(renderItem, 'no renderItem!');
+     const element = renderItem({
+       item,
+@@ -1639,9 +1652,9 @@ class CellRenderer extends React.Component<
+       separators: this._separators,
+     });
+     const onLayout =
+-      getItemLayout && !parentProps.debug && !fillRateHelper.enabled()
++      getItemLayout && !debug && !fillRateHelper.enabled()
+         ? undefined
+-        : this.props.onLayout;
++        : this._onLayout;
+     // NOTE: that when this is a sticky header, `onLayout` will get automatically extracted and
+     // called explicitly by `ScrollViewStickyHeader`.
+     const itemSeparator = ItemSeparatorComponent && (
