@@ -1,5 +1,3 @@
-import React, { useCallback } from 'react'
-
 import {
   EnhancedGitHubIssueOrPullRequest,
   getDefaultPaginationPerPage,
@@ -7,7 +5,10 @@ import {
   getSubscriptionOwnerOrOrg,
   IssueOrPullRequestColumnSubscription,
 } from '@devhub/core'
+import React, { useCallback } from 'react'
 import { View } from 'react-native'
+import { useDispatch } from 'react-redux'
+
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import {
@@ -19,7 +20,6 @@ import { ButtonLink } from '../components/common/ButtonLink'
 import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
 import { useGitHubAPI } from '../hooks/use-github-api'
-import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { octokit } from '../libs/github'
 import * as actions from '../redux/actions'
@@ -74,18 +74,13 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         : null,
     )
 
+    const dispatch = useDispatch()
     const username = useReduxState(selectors.currentGitHubUsernameSelector)
-
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
     )
-
     const installationOwnerNames = useReduxState(
       selectors.installationOwnerNamesSelector,
-    )
-
-    const fetchColumnSubscriptionRequest = useReduxAction(
-      actions.fetchColumnSubscriptionRequest,
     )
 
     const { allItems, filteredItems } = useColumnData<
@@ -102,16 +97,18 @@ export const IssueOrPullRequestCardsContainer = React.memo(
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
-        fetchColumnSubscriptionRequest({
-          columnId,
-          params: {
-            page: page || 1,
-            perPage: getDefaultPaginationPerPage('issue_or_pr'),
-          },
-          replaceAllItems: false,
-        })
+        dispatch(
+          actions.fetchColumnSubscriptionRequest({
+            columnId,
+            params: {
+              page: page || 1,
+              perPage: getDefaultPaginationPerPage('issue_or_pr'),
+            },
+            replaceAllItems: false,
+          }),
+        )
       },
-      [fetchColumnSubscriptionRequest, columnId],
+      [columnId],
     )
 
     const fetchNextPage = useCallback(() => {
@@ -125,8 +122,16 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     }, [fetchData, allItems.length])
 
     const refresh = useCallback(() => {
-      fetchData()
-    }, [fetchData])
+      if (data.errorMessage === 'Bad credentials' && appToken) {
+        dispatch(
+          actions.refreshInstallationsRequest({
+            includeInstallationToken: true,
+          }),
+        )
+      } else {
+        fetchData()
+      }
+    }, [fetchData, appToken])
 
     if (!mainSubscription) return null
 

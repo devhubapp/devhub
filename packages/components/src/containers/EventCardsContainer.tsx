@@ -1,5 +1,3 @@
-import React, { useCallback, useEffect, useRef } from 'react'
-
 import {
   ActivityColumnSubscription,
   EnhancedGitHubEvent,
@@ -7,7 +5,10 @@ import {
   getOlderEventDate,
   getSubscriptionOwnerOrOrg,
 } from '@devhub/core'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { View } from 'react-native'
+import { useDispatch } from 'react-redux'
+
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
@@ -16,7 +17,6 @@ import { ButtonLink } from '../components/common/ButtonLink'
 import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
 import { useGitHubAPI } from '../hooks/use-github-api'
-import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { octokit } from '../libs/github'
 import * as actions from '../redux/actions'
@@ -70,22 +70,13 @@ export const EventCardsContainer = React.memo(
         : null,
     )
 
+    const dispatch = useDispatch()
     const username = useReduxState(selectors.currentGitHubUsernameSelector)
-
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
     )
-
     const installationOwnerNames = useReduxState(
       selectors.installationOwnerNamesSelector,
-    )
-
-    const fetchColumnSubscriptionRequest = useReduxAction(
-      actions.fetchColumnSubscriptionRequest,
-    )
-
-    const refreshInstallationsRequest = useReduxAction(
-      actions.refreshInstallationsRequest,
     )
 
     const subscriptionsDataSelectorRef = useRef(
@@ -111,16 +102,18 @@ export const EventCardsContainer = React.memo(
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
-        fetchColumnSubscriptionRequest({
-          columnId,
-          params: {
-            page: page || 1,
-            perPage: getDefaultPaginationPerPage('activity'),
-          },
-          replaceAllItems: false,
-        })
+        dispatch(
+          actions.fetchColumnSubscriptionRequest({
+            columnId,
+            params: {
+              page: page || 1,
+              perPage: getDefaultPaginationPerPage('activity'),
+            },
+            replaceAllItems: false,
+          }),
+        )
       },
-      [fetchColumnSubscriptionRequest, columnId],
+      [columnId],
     )
 
     const fetchNextPage = useCallback(() => {
@@ -135,9 +128,11 @@ export const EventCardsContainer = React.memo(
 
     const refresh = useCallback(() => {
       if (data.errorMessage === 'Bad credentials' && appToken) {
-        refreshInstallationsRequest({
-          includeInstallationToken: true,
-        })
+        dispatch(
+          actions.refreshInstallationsRequest({
+            includeInstallationToken: true,
+          }),
+        )
       } else {
         fetchData()
       }

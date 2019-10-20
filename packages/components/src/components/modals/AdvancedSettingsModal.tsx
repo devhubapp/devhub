@@ -13,7 +13,6 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { clearOAuthQueryParams } from '../../utils/helpers/auth'
-import { getGitHubAppInstallUri } from '../../utils/helpers/shared'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Avatar } from '../common/Avatar'
 import { Button, getButtonColors } from '../common/Button'
@@ -250,8 +249,8 @@ export const AdvancedSettingsModal = React.memo(
                       {!!(
                         githubAppToken || installationsLoadState === 'loading'
                       ) && (
-                        <ButtonLink
-                          analyticsLabel="open_installation"
+                        <Button
+                          analyticsLabel="refresh_installation"
                           contentContainerStyle={{
                             width: 52,
                             paddingHorizontal: contentPadding,
@@ -261,16 +260,21 @@ export const AdvancedSettingsModal = React.memo(
                           loadingIndicatorStyle={{
                             transform: [{ scale: 0.8 }],
                           }}
-                          href={getGitHubAppInstallUri()}
-                          openOnNewTab={false}
+                          onPress={() => {
+                            dispatch(
+                              actions.refreshInstallationsRequest({
+                                includeInstallationToken: true,
+                              }),
+                            )
+                          }}
                           size={32}
                         >
                           <ThemedIcon
                             color={foregroundThemeColor}
-                            name="plus"
+                            name="sync"
                             size={16}
                           />
-                        </ButtonLink>
+                        </Button>
                       )}
                     </>
                   </SubHeader>

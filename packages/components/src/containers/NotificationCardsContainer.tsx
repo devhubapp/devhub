@@ -1,11 +1,12 @@
-import React, { useCallback } from 'react'
-
 import {
   EnhancedGitHubNotification,
   getDefaultPaginationPerPage,
   getOlderNotificationDate,
   NotificationColumnSubscription,
 } from '@devhub/core'
+import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+
 import {
   NotificationCards,
   NotificationCardsProps,
@@ -13,7 +14,6 @@ import {
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
-import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
@@ -37,6 +37,7 @@ export const NotificationCardsContainer = React.memo(
 
     const { column } = useColumn(columnId)
 
+    const dispatch = useDispatch()
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
     const githubOAuthScope = useReduxState(selectors.githubOAuthScopeSelector)
@@ -50,10 +51,6 @@ export const NotificationCardsContainer = React.memo(
     ) as NotificationColumnSubscription | undefined
 
     const data = (mainSubscription && mainSubscription.data) || {}
-
-    const fetchColumnSubscriptionRequest = useReduxAction(
-      actions.fetchColumnSubscriptionRequest,
-    )
 
     const { allItems, filteredItems } = useColumnData<
       EnhancedGitHubNotification
@@ -69,16 +66,18 @@ export const NotificationCardsContainer = React.memo(
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
-        fetchColumnSubscriptionRequest({
-          columnId,
-          params: {
-            page: page || 1,
-            perPage: getDefaultPaginationPerPage('notifications'),
-          },
-          replaceAllItems: false,
-        })
+        dispatch(
+          actions.fetchColumnSubscriptionRequest({
+            columnId,
+            params: {
+              page: page || 1,
+              perPage: getDefaultPaginationPerPage('notifications'),
+            },
+            replaceAllItems: false,
+          }),
+        )
       },
-      [fetchColumnSubscriptionRequest, columnId],
+      [columnId],
     )
 
     const fetchNextPage = useCallback(() => {
