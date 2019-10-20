@@ -59,7 +59,7 @@ export function SubscribedModal(props: SubscribedModalProps) {
         >
           <Avatar
             avatarUrl={logo}
-            // borderColor="backgroundColorLess2"
+            borderColor="backgroundColorLess2"
             disableLink
             shape="circle"
             size={70}
