@@ -133,9 +133,10 @@ export function ColumnHeader(props: ColumnHeaderProps) {
           )}
 
           <ScrollViewWithOverlay
-            horizontal
+            alwaysBounceHorizontal={false}
             containerStyle={styles.mainContainer}
             contentContainerStyle={styles.mainContentContainer}
+            horizontal
           >
             {avatar && avatar.imageURL ? (
               <>

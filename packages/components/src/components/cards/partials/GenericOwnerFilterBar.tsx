@@ -259,6 +259,7 @@ export const GenericOwnerFilterBar = React.memo(
         >
           <FlatListWithOverlay
             ref={listRef}
+            alwaysBounceHorizontal={false}
             bottomOrRightOverlayThemeColor={getColumnHeaderThemeColors().normal}
             data={data}
             horizontal

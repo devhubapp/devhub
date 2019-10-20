@@ -165,6 +165,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
       return (
         <View style={[sharedStyles.flex, { height: searchBarTotalHeight }]}>
           <FlatListWithOverlay
+            alwaysBounceHorizontal={false}
             data={queryTerms}
             bottomOrRightOverlayThemeColor={getColumnHeaderThemeColors().normal}
             contentContainerStyle={{ padding: searchBarOuterSpacing }}
