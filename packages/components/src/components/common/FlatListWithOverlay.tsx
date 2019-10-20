@@ -8,7 +8,9 @@ import {
 
 export interface FlatListWithOverlayProps<TItem>
   extends FlatListProps<TItem>,
-    ScrollViewWithOverlayProps {}
+    ScrollViewWithOverlayProps {
+  keyExtractor: NonNullable<FlatListProps<TItem>['keyExtractor']>
+}
 
 export const FlatListWithOverlay = React.forwardRef(
   (props: FlatListWithOverlayProps<any>, ref: any) => {

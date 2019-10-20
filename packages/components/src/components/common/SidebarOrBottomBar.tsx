@@ -105,6 +105,12 @@ const SidebarHoverItemContext = React.createContext<
   },
 })
 
+const keyExtractor: FlatListProps<string>['keyExtractor'] = item =>
+  `sidebar-column-${item}`
+
+const keyExtractorOverlay: FlatListProps<string>['keyExtractor'] = item =>
+  `sidebar-column-${item}`
+
 const SidebarHoverItemContextProvider = React.memo(
   (props: { children: React.ReactNode }) => {
     const { children } = props
@@ -321,20 +327,31 @@ export const SidebarOrBottomBar = React.memo(
       [],
     )
 
-    const PreferencesItem = (
-      <SidebarOrBottomBarItem
-        horizontal={horizontal}
-        icon="gear"
-        onPress={() =>
-          small && currentOpenedModal && currentOpenedModal.name === 'SETTINGS'
-            ? columnIds.length === 0
-              ? dispatch(actions.closeAllModals())
-              : undefined
-            : dispatch(actions.replaceModal({ name: 'SETTINGS' }))
-        }
-        selected={isModalOpen('SETTINGS')}
-        title="Preferences"
-      />
+    const PreferencesItem = useCallback(
+      () => (
+        <SidebarOrBottomBarItem
+          horizontal={horizontal}
+          icon="gear"
+          onPress={() =>
+            small &&
+            currentOpenedModal &&
+            currentOpenedModal.name === 'SETTINGS'
+              ? columnIds.length === 0
+                ? dispatch(actions.closeAllModals())
+                : undefined
+              : dispatch(actions.replaceModal({ name: 'SETTINGS' }))
+          }
+          selected={isModalOpen('SETTINGS')}
+          title="Preferences"
+        />
+      ),
+      [
+        horizontal,
+        small,
+        currentOpenedModal && currentOpenedModal.name === 'SETTINGS',
+        columnIds.length === 0,
+        isModalOpen('SETTINGS'),
+      ],
     )
     const renderPreferencesItemInline = !!(
       horizontal &&
@@ -416,7 +433,7 @@ export const SidebarOrBottomBar = React.memo(
             >
               <FlatListWithOverlay
                 ListFooterComponent={
-                  renderPreferencesItemInline ? () => PreferencesItem : null
+                  renderPreferencesItemInline ? PreferencesItem : null
                 }
                 bottomOrRightOverlayThemeColor={
                   overlayThemeColorsRef.current.bottomOrRight
@@ -425,6 +442,7 @@ export const SidebarOrBottomBar = React.memo(
                 contentContainerStyle={listContentContainerStyle}
                 data={columnIds}
                 horizontal={horizontal}
+                keyExtractor={keyExtractor}
                 onLayout={onLayout}
                 onScroll={onScroll}
                 renderItem={renderItem}
@@ -442,6 +460,7 @@ export const SidebarOrBottomBar = React.memo(
                   ref={hoverListRef}
                   bottomOrRightOverlayThemeColor="backgroundColor"
                   data={columnIds}
+                  keyExtractor={keyExtractorOverlay}
                   horizontal={horizontal}
                   pointerEvents="none"
                   renderItem={renderHoverItem}
@@ -464,7 +483,7 @@ export const SidebarOrBottomBar = React.memo(
               />
             )}
 
-            {!renderPreferencesItemInline && PreferencesItem}
+            {!renderPreferencesItemInline && <PreferencesItem />}
 
             {!(horizontal && small) && (
               <SidebarOrBottomBarItem horizontal={horizontal} title="">
