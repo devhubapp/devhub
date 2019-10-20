@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Dimensions, InteractionManager, View } from 'react-native'
+import { AppState, Dimensions, InteractionManager, View } from 'react-native'
 import {
   ListChildComponentProps,
   VariableSizeList,
@@ -256,9 +256,13 @@ export const OneList = (React.memo(
     const [isInitialRender, setIsInitialRender] = useState(true)
 
     useEffect(() => {
-      InteractionManager.runAfterInteractions(() => {
+      if (AppState.currentState === 'active') {
+        InteractionManager.runAfterInteractions(() => {
+          setIsInitialRender(false)
+        })
+      } else {
         setIsInitialRender(false)
-      })
+      }
     }, [])
 
     const List = props.disableVirtualization

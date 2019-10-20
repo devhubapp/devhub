@@ -1,19 +1,3 @@
-import { Response } from '@octokit/rest'
-import _ from 'lodash'
-import {
-  actionChannel,
-  all,
-  call,
-  delay,
-  fork,
-  put,
-  race,
-  select,
-  take,
-  takeEvery,
-  takeLatest,
-} from 'redux-saga/effects'
-
 import {
   Column,
   ColumnSubscription,
@@ -40,8 +24,23 @@ import {
   mergeIssuesOrPullRequestsPreservingEnhancement,
   mergeNotificationsPreservingEnhancement,
 } from '@devhub/core'
-
+import { Response } from '@octokit/rest'
+import _ from 'lodash'
 import { AppState, InteractionManager } from 'react-native'
+import {
+  actionChannel,
+  all,
+  call,
+  delay,
+  fork,
+  put,
+  race,
+  select,
+  take,
+  takeEvery,
+  takeLatest,
+} from 'redux-saga/effects'
+
 import { Browser } from '../../libs/browser'
 import { bugsnag } from '../../libs/bugsnag'
 import { emitter } from '../../libs/emitter'

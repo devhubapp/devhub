@@ -1,8 +1,8 @@
+import { ThemeColors } from '@devhub/core'
 import React, { useEffect, useRef } from 'react'
-import { InteractionManager, View } from 'react-native'
+import { AppState, InteractionManager, View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
-import { ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../styles/shared'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
@@ -49,16 +49,20 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
       width: '0%',
     },
     to: async (next: any) => {
-      while (isMountedRef.current) {
+      while (isMountedRef.current && AppState.currentState === 'active') {
         if (indeterminate) {
-          await InteractionManager.runAfterInteractions()
+          if (AppState.currentState === 'active')
+            await InteractionManager.runAfterInteractions()
+
           await next({
             immediate: true,
             left: `-${indeterminateSize}%`,
             width: `${indeterminateSize}%`,
           })
 
-          await InteractionManager.runAfterInteractions()
+          if (AppState.currentState === 'active')
+            await InteractionManager.runAfterInteractions()
+
           await next({
             left: '100%',
             width: `${indeterminateSize}%`,
@@ -67,7 +71,9 @@ export const ProgressBar = React.memo((props: ProgressBarProps) => {
           continue
         }
 
-        await InteractionManager.runAfterInteractions()
+        if (AppState.currentState === 'active')
+          await InteractionManager.runAfterInteractions()
+
         await next({ left: '0%', width: `${progress}%` })
       }
     },
