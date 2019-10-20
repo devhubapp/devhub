@@ -61,15 +61,17 @@ export const IssueOrPullRequestCardsContainer = React.memo(
 
     const data = (mainSubscription && mainSubscription.data) || {}
 
-    const isNotFound = (data.errorMessage || '')
-      .toLowerCase()
-      .includes('not found')
+    const _errorMessage = (data.errorMessage || '').toLowerCase()
+    const maybePrivate =
+      _errorMessage.includes('not found') ||
+      _errorMessage.includes('not exist') ||
+      _errorMessage.includes('permission')
 
     const subscriptionOwnerOrOrg = getSubscriptionOwnerOrOrg(mainSubscription)
 
     const ownerResponse = useGitHubAPI(
       octokit.users.getByUsername,
-      isNotFound && subscriptionOwnerOrOrg
+      maybePrivate && subscriptionOwnerOrOrg
         ? { username: subscriptionOwnerOrOrg }
         : null,
     )
@@ -139,7 +141,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
     }
 
-    if (isNotFound) {
+    if (maybePrivate) {
       if (!githubAppToken) return <NoTokenView githubAppType="app" />
 
       if (ownerResponse.loadingState === 'loading') {
