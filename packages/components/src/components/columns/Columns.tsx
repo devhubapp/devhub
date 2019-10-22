@@ -1,8 +1,8 @@
+import { constants } from '@devhub/core'
 import _ from 'lodash'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 
-import { constants } from '@devhub/core'
 import { ColumnContainer } from '../../containers/ColumnContainer'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useDynamicRef } from '../../hooks/use-dynamic-ref'
@@ -173,7 +173,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       ref={listRef}
       key="columns-list"
       data={columnIds}
-      disableVirtualization={Platform.OS === 'web'}
+      disableVirtualization
       ListEmptyComponent={NoColumns}
       estimatedItemSize={columnWidth}
       getItemKey={getItemKey}
