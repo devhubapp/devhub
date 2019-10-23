@@ -1,31 +1,30 @@
+import { getItemNodeIdOrId, isItemRead, isItemSaved } from '@devhub/core'
 import React, { useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { EnhancedItem, isItemRead } from '@devhub/core'
+import { useItem } from '../../hooks/use-item'
 import { SwipeableRow } from '../../libs/swipeable'
 import * as actions from '../../redux/actions'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { useTheme } from '../context/ThemeContext'
 import { CardWithLink, CardWithLinkProps } from './CardWithLink'
 
-export interface SwipeableCardProps<ItemT extends EnhancedItem>
-  extends CardWithLinkProps<ItemT> {}
+export interface SwipeableCardProps extends CardWithLinkProps {}
 
-export function SwipeableCard<ItemT extends EnhancedItem>(
-  props: CardWithLinkProps<ItemT>,
-) {
+export function SwipeableCard(props: CardWithLinkProps) {
+  const { columnId, nodeIdOrId, ownerIsKnown, repoIsKnown, type } = props
+
   const swipeableRef = useRef<SwipeableRow>(null)
-
   const theme = useTheme()
   const dispatch = useDispatch()
-
-  const isRead = isItemRead(props.item)
+  const item = useItem(nodeIdOrId)
+  const isRead = isItemRead(item)
 
   function handleMarkAsRead() {
     dispatch(
       actions.markItemsAsReadOrUnread({
-        type: props.type,
-        itemIds: [props.item.id],
+        type,
+        itemNodeIdOrIds: [getItemNodeIdOrId(item)!],
         localOnly: false,
         unread: isRead,
       }),
@@ -35,18 +34,18 @@ export function SwipeableCard<ItemT extends EnhancedItem>(
   function handleSave() {
     dispatch(
       actions.saveItemsForLater({
-        itemIds: [props.item.id],
-        save: !props.item.saved,
+        itemNodeIdOrIds: [getItemNodeIdOrId(item)!],
+        save: !isItemSaved(item),
       }),
     )
   }
 
   const Content = useMemo(() => <CardWithLink {...props} isInsideSwipeable />, [
-    props.columnId,
-    props.item,
-    props.ownerIsKnown,
-    props.repoIsKnown,
-    props.type,
+    columnId,
+    item,
+    ownerIsKnown,
+    repoIsKnown,
+    type,
   ])
 
   return (
@@ -72,7 +71,7 @@ export function SwipeableCard<ItemT extends EnhancedItem>(
       ]}
       rightActions={[
         {
-          ...(props.item.saved
+          ...(isItemSaved(item)
             ? {
                 backgroundColor: theme.backgroundColorDarker2,
                 foregroundColor: theme.foregroundColor,

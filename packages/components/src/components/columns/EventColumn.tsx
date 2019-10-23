@@ -29,21 +29,11 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
       <EventCardsContainer
         key={`event-cards-container-${columnId}`}
         columnId={columnId}
-        columnIndex={columnIndex}
-        ownerIsKnown={!!(headerDetails && headerDetails.ownerIsKnown)}
         pointerEvents={pointerEvents}
-        repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}
         swipeable={swipeable}
       />
     ),
-    [
-      columnId,
-      columnIndex,
-      pointerEvents,
-      swipeable,
-      headerDetails && headerDetails.ownerIsKnown,
-      headerDetails && headerDetails.repoIsKnown,
-    ],
+    [columnId, columnIndex, pointerEvents, swipeable],
   )
 
   if (!headerDetails) return null

@@ -1,7 +1,7 @@
+import { Column, EnhancedGitHubNotification } from '@devhub/core'
 import React, { useCallback, useMemo } from 'react'
 import { View, ViewProps } from 'react-native'
 
-import { Column, EnhancedGitHubNotification } from '@devhub/core'
 import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
 import { DataItemT, useCardsProps } from '../../hooks/use-cards-props'
 import { BlurView } from '../../libs/blur-view/BlurView'
@@ -14,46 +14,38 @@ import { SwipeableCard } from './SwipeableCard'
 
 type ItemT = EnhancedGitHubNotification
 
-export interface NotificationCardsProps
-  extends Omit<NotificationCardProps, 'columnId' | 'notification'> {
-  column: Column
-  columnIndex: number
+export interface NotificationCardsProps {
+  columnId: Column['id']
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
-  getItemById: (id: ItemT['id']) => ItemT | undefined
-  itemIds: Array<ItemT['id']>
+  getItemByNodeIdOrId: (nodeIdOrId: string) => ItemT | undefined
+  itemNodeIdOrIds: string[]
   lastFetchedSuccessfullyAt: string | undefined
-  ownerIsKnown: boolean
   pointerEvents?: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
-  repoIsKnown: boolean
   swipeable: boolean
 }
 
 export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
-    column,
-    columnIndex,
+    columnId,
     errorMessage,
     fetchNextPage,
-    getItemById,
-    itemIds,
+    getItemByNodeIdOrId,
+    itemNodeIdOrIds,
     lastFetchedSuccessfullyAt,
-    ownerIsKnown,
     pointerEvents,
     refresh,
-    repoIsKnown,
     swipeable,
   } = props
 
   const listRef = React.useRef<typeof OneList>(null)
 
   const getItemKey = useCallback(
-    (id: DataItemT<ItemT>, index: number) => {
-      const item = getItemById(id)
-      return `notification-card-${(item && item.id) || index}`
+    (nodeIdOrId: DataItemT, index: number) => {
+      return `notification-card-${nodeIdOrId || index}`
     },
-    [getItemById],
+    [getItemByNodeIdOrId],
   )
 
   const {
@@ -61,55 +53,51 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     data,
     footer,
     getItemSize,
+    getOwnerIsKnownByItemOrNodeIdOrId,
     header,
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
+    repoIsKnown,
     safeAreaInsets,
     visibleItemIndexesRef,
   } = useCardsProps({
-    column,
-    columnIndex,
+    columnId,
     fetchNextPage,
-    getItemById,
-    itemIds,
+    getItemByNodeIdOrId,
+    itemNodeIdOrIds,
     lastFetchedSuccessfullyAt,
-    ownerIsKnown,
     refresh,
-    repoIsKnown,
     type: 'notifications',
   })
 
   useCardsKeyboard(listRef, {
-    columnId: column.id,
-    getItemById,
-    itemIds:
+    columnId,
+    getItemByNodeIdOrId,
+    getOwnerIsKnownByItemOrNodeIdOrId,
+    itemNodeIdOrIds:
       OverrideRender && OverrideRender.Component && OverrideRender.overlay
         ? []
-        : itemIds,
-    ownerIsKnown,
+        : itemNodeIdOrIds,
     repoIsKnown,
     type: 'notifications',
     visibleItemIndexesRef,
   })
 
   const renderItem = useCallback<
-    NonNullable<OneListProps<DataItemT<ItemT>>['renderItem']>
+    NonNullable<OneListProps<DataItemT>['renderItem']>
   >(
-    ({ item: id, index }) => {
-      const item = getItemById(id)
-      if (!item) return null
-
-      const height = getItemSize(id, index)
+    ({ item: nodeIdOrId, index }) => {
+      const height = getItemSize(nodeIdOrId, index)
 
       if (swipeable) {
         return (
           <View style={{ height }}>
             <SwipeableCard
               type="notifications"
-              columnId={column.id}
-              item={item}
-              ownerIsKnown={ownerIsKnown}
+              columnId={columnId}
+              nodeIdOrId={nodeIdOrId}
+              ownerIsKnown={getOwnerIsKnownByItemOrNodeIdOrId(nodeIdOrId)}
               repoIsKnown={repoIsKnown}
             />
           </View>
@@ -120,26 +108,26 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         <ErrorBoundary>
           <View style={{ height }}>
             <NotificationCard
-              columnId={column.id}
-              notification={item}
-              ownerIsKnown={ownerIsKnown}
+              columnId={columnId}
+              nodeIdOrId={nodeIdOrId}
+              ownerIsKnown={getOwnerIsKnownByItemOrNodeIdOrId(nodeIdOrId)}
               repoIsKnown={repoIsKnown}
             />
           </View>
         </ErrorBoundary>
       )
     },
-    [getItemById, ownerIsKnown, repoIsKnown, swipeable],
+    [getOwnerIsKnownByItemOrNodeIdOrId, repoIsKnown, swipeable],
   )
 
   const ListEmptyComponent = useMemo<
-    NonNullable<OneListProps<DataItemT<ItemT>>['ListEmptyComponent']>
+    NonNullable<OneListProps<DataItemT>['ListEmptyComponent']>
   >(
     () => () => {
       return (
         <EmptyCards
           clearMessage="No new notifications!"
-          columnId={column.id}
+          columnId={columnId}
           disableLoadingIndicator
           errorMessage={errorMessage}
           fetchNextPage={fetchNextPage}
@@ -148,10 +136,10 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       )
     },
     [
-      itemIds.length ? undefined : column,
-      itemIds.length ? undefined : errorMessage,
-      itemIds.length ? undefined : fetchNextPage,
-      itemIds.length ? undefined : refresh,
+      itemNodeIdOrIds.length ? undefined : columnId,
+      itemNodeIdOrIds.length ? undefined : errorMessage,
+      itemNodeIdOrIds.length ? undefined : fetchNextPage,
+      itemNodeIdOrIds.length ? undefined : refresh,
     ],
   )
 
@@ -172,6 +160,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
         data={data}
         estimatedItemSize={getItemSize(data[0], 0) || 89}
         footer={footer}
+        forceRerenderOnRefChange={getItemByNodeIdOrId}
         getItemKey={getItemKey}
         getItemSize={getItemSize}
         header={header}

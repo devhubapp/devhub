@@ -1,10 +1,11 @@
+import { EnhancedItem, getFilteredItems, getItemNodeIdOrId } from '@devhub/core'
 import _ from 'lodash'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 
-import { EnhancedItem, getFilteredItems } from '@devhub/core'
 import * as selectors from '../redux/selectors'
 import { EMPTY_ARRAY } from '../utils/constants'
 import { useColumn } from './use-column'
+import { usePreviousRef } from './use-previous-ref'
 import { useReduxState } from './use-redux-state'
 
 export function useColumnData<ItemT extends EnhancedItem>(
@@ -22,29 +23,21 @@ export function useColumnData<ItemT extends EnhancedItem>(
 
   const { column, hasCrossedColumnsLimit } = useColumn(columnId)
 
+  const dataByNodeIdOrId = useReduxState(selectors.dataByNodeIdOrId)
   const loggedUsername = useReduxState(selectors.currentGitHubUsernameSelector)!
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
-  const allItems = useReduxState(
-    useCallback(
-      state => {
-        if (
-          !(column && column.subscriptionIds && column.subscriptionIds.length)
-        )
-          return EMPTY_ARRAY
-        return subscriptionsDataSelector(state, column.subscriptionIds)
-      },
-      [
-        hasCrossedColumnsLimit,
-        column && column.subscriptionIds && column.subscriptionIds.join(','),
-      ],
-    ),
-  ) as ItemT[]
+  const allItems = useReduxState(state => {
+    if (!(column && column.subscriptionIds && column.subscriptionIds.length))
+      return EMPTY_ARRAY
+    return subscriptionsDataSelector(state, column.subscriptionIds)
+  }) as ItemT[]
 
-  const allItemsIds = useMemo(
-    () => allItems.map(item => item.id).filter(Boolean),
+  const _allItemsIds = useMemo(
+    () => allItems.map(getItemNodeIdOrId).filter(Boolean) as string[],
     [allItems],
   )
+  const allItemsIds = useMemo(() => _allItemsIds, [_allItemsIds.join(',')])
 
   const filteredItems = useMemo(() => {
     if (!(column && allItems && allItems.length)) return allItems || EMPTY_ARRAY
@@ -65,9 +58,33 @@ export function useColumnData<ItemT extends EnhancedItem>(
     loggedUsername,
   ]) as ItemT[]
 
-  const filteredItemsIds = useMemo(
-    () => filteredItems.map(item => item.id).filter(Boolean),
+  const _filteredItemsIds = useMemo(
+    () => filteredItems.map(getItemNodeIdOrId).filter(Boolean) as string[],
     [filteredItems],
+  )
+  const filteredItemsIds = useMemo(() => _filteredItemsIds, [
+    _filteredItemsIds.join(','),
+  ])
+
+  const previousDataByNodeIdOrIdRef = usePreviousRef(dataByNodeIdOrId)
+  const getItemByNodeIdOrIdChangeCountRef = useRef(0)
+  useMemo(() => {
+    const changed = filteredItemsIds.some(
+      id =>
+        !previousDataByNodeIdOrIdRef.current ||
+        previousDataByNodeIdOrIdRef.current[id] !== dataByNodeIdOrId[id],
+    )
+    if (changed)
+      getItemByNodeIdOrIdChangeCountRef.current =
+        getItemByNodeIdOrIdChangeCountRef.current + 1
+  }, [dataByNodeIdOrId, filteredItemsIds])
+
+  const getItemByNodeIdOrId = useCallback(
+    (nodeIdOrId: string) => {
+      return (dataByNodeIdOrId[nodeIdOrId] &&
+        dataByNodeIdOrId[nodeIdOrId]!.item) as ItemT | undefined
+    },
+    [getItemByNodeIdOrIdChangeCountRef.current],
   )
 
   return {
@@ -75,6 +92,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
     allItemsIds,
     filteredItems,
     filteredItemsIds,
+    getItemByNodeIdOrId,
     hasCrossedColumnsLimit,
   }
 }

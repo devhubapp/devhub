@@ -196,6 +196,7 @@ export const OneList = (React.memo(
       data,
       estimatedItemSize,
       footer,
+      forceRerenderOnRefChange,
       getItemKey,
       getItemSize,
       header,
@@ -436,6 +437,7 @@ export const OneList = (React.memo(
       [
         data,
         footer,
+        forceRerenderOnRefChange,
         getItemKey,
         header,
         innerFooterSize,

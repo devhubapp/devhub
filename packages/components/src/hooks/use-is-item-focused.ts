@@ -4,11 +4,11 @@ import { useEmitter } from './use-emitter'
 import { useForceRerender } from './use-force-rerender'
 
 let focusedColumnId: string
-let focusedItemId: string | number | null | undefined
+let focusedItemNodeIdOrId: string | null | undefined
 
 export function useIsItemFocused(
   columnId: string,
-  itemId: string | number,
+  itemNodeIdOrId: string,
   callback?: (isItemFocused: boolean) => void,
   { skipFirstCallback = false }: { skipFirstCallback?: boolean } = {},
 ) {
@@ -16,15 +16,16 @@ export function useIsItemFocused(
 
   const isFocusedRef = useRef(false)
   isFocusedRef.current =
-    focusedColumnId === columnId && focusedItemId === itemId
+    focusedColumnId === columnId && focusedItemNodeIdOrId === itemNodeIdOrId
 
   useEmitter(
     'FOCUS_ON_COLUMN_ITEM',
     payload => {
       focusedColumnId = payload.columnId
-      focusedItemId = payload.itemId
+      focusedItemNodeIdOrId = payload.itemNodeIdOrId
 
-      const newValue = focusedColumnId === columnId && focusedItemId === itemId
+      const newValue =
+        focusedColumnId === columnId && focusedItemNodeIdOrId === itemNodeIdOrId
       if (isFocusedRef.current === newValue) return
       isFocusedRef.current = newValue
 
@@ -35,7 +36,7 @@ export function useIsItemFocused(
 
       forceRerender()
     },
-    [columnId, itemId, callback],
+    [columnId, itemNodeIdOrId, callback],
   )
 
   useEffect(() => {

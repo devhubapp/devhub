@@ -21,6 +21,7 @@ import {
   getGitHubNotificationSubItems,
   getGitHubURLForSecurityAlert,
   getIssueOrPullRequestState,
+  getItemNodeIdOrId,
   getItemSubjectType,
   getNotificationIconAndColor,
   getNotificationReasonMetadata,
@@ -112,7 +113,7 @@ export interface BaseCardProps {
     name: GitHubIcon
     color?: keyof ThemeColors
   }
-  id: string | number
+  nodeIdOrId: string
   isRead: boolean
   link: string
   reason?: {
@@ -184,7 +185,7 @@ function getPrivateBannerCardProps(
     date: props.date,
     githubApp: undefined,
     icon: { color: props.iconColor || 'red', name: 'lock' },
-    id: item.id,
+    nodeIdOrId: getItemNodeIdOrId(item)!,
     isRead: isItemRead(item),
     link: `${constants.APP_DEEP_LINK_URLS.pricing}?highlightFeature=${highlightFeature}`,
     showPrivateLock: false,
@@ -228,8 +229,6 @@ function _getCardPropsForItem(
     repoIsKnown: boolean
   },
 ): Omit<BaseCardProps, 'height'> {
-  const id = item.id
-
   switch (type) {
     case 'activity': {
       const event = item as EnhancedGitHubEvent
@@ -387,7 +386,7 @@ function _getCardPropsForItem(
                 avatar: actorAvatar,
                 date,
                 icon,
-                id,
+                nodeIdOrId: getItemNodeIdOrId(item)!,
                 isRead,
                 link:
                   event.type === 'WatchEvent' && actorAvatar.linkURL
@@ -416,7 +415,7 @@ function _getCardPropsForItem(
                 avatar: repoAvatar,
                 date,
                 icon,
-                id,
+                nodeIdOrId: getItemNodeIdOrId(item)!,
                 isRead,
                 link: forkURL || repoURL,
                 showPrivateLock: isPrivate,
@@ -451,7 +450,7 @@ function _getCardPropsForItem(
                 : repoAvatar,
               date,
               icon,
-              id,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               link:
                 (_comment &&
@@ -498,7 +497,7 @@ function _getCardPropsForItem(
                 : repoAvatar,
               date,
               icon,
-              id,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               link:
                 (_comment &&
@@ -547,7 +546,7 @@ function _getCardPropsForItem(
               avatar: repoAvatar,
               date,
               icon,
-              id,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               link:
                 (_comment &&
@@ -625,7 +624,7 @@ function _getCardPropsForItem(
               avatar: repoAvatar,
               date,
               icon,
-              id,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               link:
                 firstLink &&
@@ -661,7 +660,7 @@ function _getCardPropsForItem(
               avatar: repoAvatar,
               date,
               icon,
-              id,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               link:
                 release.html_url ||
@@ -694,7 +693,7 @@ function _getCardPropsForItem(
             avatar: repoAvatar,
             date,
             icon,
-            id,
+            nodeIdOrId: getItemNodeIdOrId(item)!,
             isRead,
             link:
               (_comment &&
@@ -791,7 +790,7 @@ function _getCardPropsForItem(
         avatar,
         date,
         icon,
-        id,
+        nodeIdOrId: getItemNodeIdOrId(item)!,
         isRead,
         link: fixURL(issueOrPullRequest.html_url, {
           addBottomAnchor: issueOrPullRequest.comments > 0,
@@ -888,7 +887,7 @@ function _getCardPropsForItem(
         },
         date: notification.updated_at,
         icon,
-        id,
+        nodeIdOrId: getItemNodeIdOrId(item)!,
         isRead,
         link:
           (subject.type === 'RepositoryVulnerabilityAlert' &&
@@ -1048,6 +1047,8 @@ export function getCardPropsForItem(
 export function getCardSizeForProps(
   props: Omit<BaseCardProps, 'height'>,
 ): number {
+  if (!props) return 0
+
   return (
     sizes.cardPadding * 2 +
     Math.max(
@@ -1105,7 +1106,7 @@ export function getCardPushNotificationItem(
     payload: {
       columnType: column.type,
       columnId: column.id,
-      itemId: item.id,
+      itemNodeIdOrId: getItemNodeIdOrId(item)!,
       link: cardProps.link,
     },
   }

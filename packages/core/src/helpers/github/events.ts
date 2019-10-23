@@ -41,6 +41,7 @@ import {
   getTagIconAndColor,
   isDraft,
   isItemRead,
+  isItemSaved,
   isPullRequest,
 } from './shared'
 import {
@@ -913,21 +914,23 @@ export function mergeEventPreservingEnhancement(
     any
   > = {
     enhanced: existingItem.enhanced,
-    forceUnreadLocally: existingItem.forceUnreadLocally,
     last_read_at: _.max([existingItem.last_read_at, newItem.last_read_at]),
+    last_saved_at: _.max([existingItem.last_saved_at, newItem.last_saved_at]),
     last_unread_at: _.max([
       existingItem.last_unread_at,
       newItem.last_unread_at,
     ]),
-    saved: existingItem.saved,
-    unread: existingItem.unread,
+    last_unsaved_at: _.max([
+      existingItem.last_unsaved_at,
+      newItem.last_unsaved_at,
+    ]),
   }
 
   return immer(newItem, draft => {
     Object.entries(enhancements).forEach(([key, value]) => {
       if (typeof value === 'undefined') return
-      if (value === (draft as any)[key]) return
-      if (typeof (draft as any)[key] !== 'undefined') return
+      if (value === (draft as any)[key])
+        return // if (typeof (draft as any)[key] !== 'undefined') return
       ;(draft as any)[key] = value
     })
   })
@@ -941,7 +944,6 @@ export function getGitHubEventSubItems(
     actor,
     payload,
     id,
-    saved,
     type,
     created_at: createdAt,
   } = event as EnhancedGitHubEvent
@@ -977,7 +979,7 @@ export function getGitHubEventSubItems(
     : undefined
 
   const isRead = isItemRead(event)
-  const isSaved = saved === true
+  const isSaved = isItemSaved(event)
 
   const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
 

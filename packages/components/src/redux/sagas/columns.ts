@@ -254,13 +254,6 @@ function* onSetClearedAt(
       })
 
       if (hasColumnWithoutClearedAt) return
-
-      return yield put(
-        actions.cleanupSubscriptionsData({
-          deleteOlderThan,
-          subscriptionIds: [subscriptionId],
-        }),
-      )
     }),
   )
 }
@@ -330,7 +323,7 @@ function* onColumnSubscriptionFilterChange(
           subtype: subscription.subtype,
           params: newSubscriptionParams,
           data: {
-            items: subscription.data.items,
+            itemNodeIdOrIds: subscription.data.itemNodeIdOrIds,
           },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -391,7 +384,7 @@ function* onColumnSubscriptionFilterChange(
               : undefined,
           params: newSubscriptionParams,
           data: {
-            items: subscription.data.items,
+            itemNodeIdOrIds: subscription.data.itemNodeIdOrIds,
           },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),

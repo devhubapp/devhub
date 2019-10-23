@@ -1039,46 +1039,58 @@ export function getUsernamesFromFilter(
   }
 }
 
-const _emptyItemsFromSubscriptions: EnhancedItem[] = []
-export function getItemsFromSubscriptions(subscriptions: ColumnSubscription[]) {
-  let items = _emptyItemsFromSubscriptions
+export function getItemsFromSubscriptions(
+  subscriptions: ColumnSubscription[],
+  getItemByNodeIdOrId: (nodeIdOrId: string) => EnhancedItem | undefined,
+): EnhancedItem[] {
+  const itemNodeIdOrIds: string[] = []
+  const result: EnhancedItem[] = []
 
-  if (!(subscriptions && subscriptions.length)) return items
+  if (!(subscriptions && subscriptions.length)) return result
 
   subscriptions.forEach(subscription => {
     if (
       !(
         subscription &&
         subscription.data &&
-        subscription.data.items &&
-        subscription.data.items.length
+        subscription.data.itemNodeIdOrIds &&
+        subscription.data.itemNodeIdOrIds.length
       )
     )
       return
 
-    if (!items) {
-      items = subscription.data.items
-    } else if (subscription.data.items) {
-      items = [...items, ...subscription.data.items] as any
-    }
+    subscription.data.itemNodeIdOrIds.forEach(_id => {
+      const id = `${_id || ''}`
+      if (!id) return
+
+      if (itemNodeIdOrIds.includes(id)) return
+
+      const item = getItemByNodeIdOrId(id)
+      if (!item) return
+
+      itemNodeIdOrIds.push(id)
+      result.push(item)
+    })
   })
 
-  if (!(items && items.length)) return items || _emptyItemsFromSubscriptions
+  if (!result.length) return result
 
   if (subscriptions[0] && subscriptions[0]!.type === 'activity') {
-    return sortEvents(items as EnhancedGitHubEvent[])
+    return sortEvents(result as EnhancedGitHubEvent[])
   }
 
   if (subscriptions[0] && subscriptions[0]!.type === 'issue_or_pr') {
-    return sortIssuesOrPullRequests(items as EnhancedGitHubIssueOrPullRequest[])
+    return sortIssuesOrPullRequests(
+      result as EnhancedGitHubIssueOrPullRequest[],
+    )
   }
 
   if (subscriptions[0] && subscriptions[0]!.type === 'notifications') {
-    return sortNotifications(items as EnhancedGitHubNotification[])
+    return sortNotifications(result as EnhancedGitHubNotification[])
   }
 
   console.error(`Unhandled subscription type: ${subscriptions[0]!.type}`)
-  return items
+  return result
 }
 
 export function getItemInbox(type: Column['type'], filters: Column['filters']) {

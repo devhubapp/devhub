@@ -185,7 +185,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     githubApp,
     height,
     icon,
-    id,
+    nodeIdOrId: id,
     isRead,
     link,
     reason,

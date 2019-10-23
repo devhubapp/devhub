@@ -14,7 +14,6 @@ import {
 import { NoTokenView } from '../components/cards/NoTokenView'
 import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
-import { useDynamicRef } from '../hooks/use-dynamic-ref'
 import { useReduxState } from '../hooks/use-redux-state'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
@@ -25,8 +24,8 @@ export interface NotificationCardsContainerProps
     | 'column'
     | 'errorMessage'
     | 'fetchNextPage'
-    | 'getItemById'
-    | 'itemIds'
+    | 'getItemByNodeIdOrId'
+    | 'itemNodeIdOrIds'
     | 'lastFetchedSuccessfullyAt'
     | 'refresh'
   > {
@@ -55,7 +54,7 @@ export const NotificationCardsContainer = React.memo(
 
     const data = (mainSubscription && mainSubscription.data) || {}
 
-    const { allItems, filteredItems, filteredItemsIds } = useColumnData<
+    const { allItems, filteredItemsIds, getItemByNodeIdOrId } = useColumnData<
       EnhancedGitHubNotification
     >(columnId, { mergeSimilar: false })
 
@@ -93,14 +92,6 @@ export const NotificationCardsContainer = React.memo(
       fetchData({ page: nextPage })
     }, [fetchData, allItems.length])
 
-    const filteredItemsRef = useDynamicRef(filteredItems)
-    const getItemById = useCallback((id: EnhancedGitHubNotification['id']) => {
-      if (!(filteredItemsRef.current && filteredItemsRef.current.length))
-        return undefined
-
-      return filteredItemsRef.current.find(item => item && item.id === id)
-    }, [])
-
     const refresh = useCallback(() => {
       fetchData()
     }, [fetchData])
@@ -124,11 +115,11 @@ export const NotificationCardsContainer = React.memo(
       <NotificationCards
         {...otherProps}
         key={`notification-cards-${columnId}`}
-        column={column}
+        columnId={columnId}
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
-        getItemById={getItemById}
-        itemIds={filteredItemsIds}
+        getItemByNodeIdOrId={getItemByNodeIdOrId}
+        itemNodeIdOrIds={filteredItemsIds}
         lastFetchedSuccessfullyAt={
           mainSubscription.data.lastFetchedSuccessfullyAt
         }

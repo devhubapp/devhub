@@ -75,6 +75,7 @@ export const OneList = (React.memo(
       disableVirtualization,
       estimatedItemSize,
       footer,
+      forceRerenderOnRefChange,
       getItemKey,
       getItemSize,
       header,
@@ -281,6 +282,7 @@ export const OneList = (React.memo(
                     data={data}
                     data-paging-enabled-fix={pagingEnabled}
                     disableVirtualization={disableVirtualization}
+                    extraData={forceRerenderOnRefChange}
                     getItemLayout={getItemLayout}
                     horizontal={horizontal}
                     renderScrollComponent={renderScrollComponent}

@@ -28,7 +28,7 @@ export function configureStore(key = 'root') {
     migrate: createMigrate(migrations as any, { debug: __DEV__ }),
     storage: AsyncStorage,
     throttle: 500,
-    version: 13,
+    version: 14,
   }
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 
@@ -57,7 +57,7 @@ export function configureStore(key = 'root') {
 
   const persistor = persistStore(store)
 
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(rootSaga as any)
 
   return { store, persistor }
 }

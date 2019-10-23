@@ -86,23 +86,25 @@ export function mergeIssueOrPullRequestPreservingEnhancement(
     any
   > = {
     enhanced: existingItem.enhanced,
-    forceUnreadLocally: existingItem.forceUnreadLocally,
     last_read_at: _.max([existingItem.last_read_at, newItem.last_read_at]),
+    last_saved_at: _.max([existingItem.last_saved_at, newItem.last_saved_at]),
     last_unread_at: _.max([
       existingItem.last_unread_at,
       newItem.last_unread_at,
     ]),
+    last_unsaved_at: _.max([
+      existingItem.last_unsaved_at,
+      newItem.last_unsaved_at,
+    ]),
     merged: existingItem.merged,
     private: existingItem.private,
-    saved: existingItem.saved,
-    unread: existingItem.unread,
   }
 
   return immer(newItem, draft => {
     Object.entries(enhancements).forEach(([key, value]) => {
       if (typeof value === 'undefined') return
-      if (value === (draft as any)[key]) return
-      if (typeof (draft as any)[key] !== 'undefined') return
+      if (value === (draft as any)[key])
+        return // if (typeof (draft as any)[key] !== 'undefined') return
       ;(draft as any)[key] = value
     })
 

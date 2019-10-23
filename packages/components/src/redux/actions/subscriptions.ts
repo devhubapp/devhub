@@ -39,7 +39,7 @@ export function fetchSubscriptionRequest(payload: {
 export function fetchSubscriptionSuccess(payload: {
   subscriptionType: ColumnSubscription['type']
   subscriptionId: string
-  data: any
+  data: EnhancedItem[] | undefined
   canFetchMore: boolean | undefined
   replaceAllItems: boolean
   github: {
@@ -71,7 +71,7 @@ export function fetchSubscriptionFailure<E extends Error>(
 }
 
 export function saveItemsForLater(payload: {
-  itemIds: Array<string | number>
+  itemNodeIdOrIds: string[]
   save?: boolean
 }) {
   return createAction('SAVE_ITEMS_FOR_LATER', payload)
@@ -79,7 +79,7 @@ export function saveItemsForLater(payload: {
 
 export function markItemsAsReadOrUnread(payload: {
   type: ColumnSubscription['type']
-  itemIds: Array<string | number>
+  itemNodeIdOrIds: string[]
   unread: boolean
   localOnly?: boolean
 }) {
@@ -102,19 +102,10 @@ export function markRepoNotificationsAsReadOrUnread(payload: {
   return createAction('MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD', payload)
 }
 
-export function cleanupSubscriptionsData(
-  payload: {
-    deleteOlderThan?: string
-    subscriptionIds?: string[]
-  } = {},
-) {
-  return createAction('CLEANUP_SUBSCRIPTIONS_DATA', payload)
-}
-
 export function openItem(payload: {
   columnId: Column['id']
   columnType: Column['type']
-  itemId: EnhancedItem['id']
+  itemNodeIdOrId: string
   link: string | undefined
 }) {
   return createAction('OPEN_ITEM', payload)

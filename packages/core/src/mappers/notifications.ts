@@ -26,7 +26,7 @@ export function fromGitHubNotification(
       pullRequest: notification.pullRequest, // TODO: modify fields
       release: notification.release, // TODO: modify fields
     },
-    lastReadAt: notification.last_read_at || '',
+    last_read_at: notification.last_read_at || '',
     updatedAt: notification.updated_at || '',
   }
 }

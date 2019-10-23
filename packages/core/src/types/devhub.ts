@@ -28,16 +28,15 @@ import { GraphQLUserPlan } from './graphql'
 type octokit = InstanceType<typeof Octokit>
 
 export interface ReadUnreadEnhancement {
-  forceUnreadLocally?: boolean // Workaround while GitHub doesn't support marking as unread via api
+  enhanced?: boolean
   last_read_at?: string
   last_unread_at?: string
-  unread?: boolean // GitHub server's value
-  enhanced?: boolean
 }
 
 export interface SaveForLaterEnhancement {
-  saved?: boolean
   enhanced?: boolean
+  last_saved_at?: string
+  last_unsaved_at?: string
 }
 
 export interface NotificationPayloadEnhancement
@@ -104,19 +103,21 @@ export type EnhancedItem =
   | EnhancedGitHubEvent
   | EnhancedGitHubIssueOrPullRequest
 
-export interface ColumnSubscriptionData<Item extends EnhancedItem> {
-  items?: Item[]
-  loadState?: EnhancedLoadState
-  errorMessage?: string
+export type DevHubDataItemType = 'event' | 'issue_or_pr' | 'notification' // TODO: 'repo' | 'user' | ...
+
+export interface ColumnSubscriptionData {
   canFetchMore?: boolean
+  errorMessage?: string
+  itemNodeIdOrIds?: string[]
   lastFetchedAt?: string
   lastFetchedSuccessfullyAt?: string
+  loadState?: EnhancedLoadState
 }
 
 export type ActivityColumnSubscription = {
   id: string
   type: ActivityColumn['type']
-  data: ColumnSubscriptionData<EnhancedGitHubEvent>
+  data: ColumnSubscriptionData
   createdAt: string
   updatedAt: string
 } & (
@@ -187,7 +188,7 @@ export interface IssueOrPullRequestColumnSubscription {
     draft?: IssueOrPullRequestColumnFilters['draft']
     query?: string
   }
-  data: ColumnSubscriptionData<any>
+  data: ColumnSubscriptionData
   createdAt: string
   updatedAt: string
 }
@@ -199,7 +200,7 @@ export type NotificationColumnSubscription = {
     all?: boolean
     participating?: boolean
   }
-  data: ColumnSubscriptionData<EnhancedGitHubNotification>
+  data: ColumnSubscriptionData
   createdAt: string
   updatedAt: string
 } & (

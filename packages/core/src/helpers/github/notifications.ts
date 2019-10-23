@@ -27,6 +27,7 @@ import {
   getPullRequestIconAndColor,
   getReleaseIconAndColor,
   isItemRead,
+  isItemSaved,
 } from './shared'
 import {
   getCommentIdFromUrl,
@@ -250,51 +251,49 @@ export function mergeNotificationPreservingEnhancement(
 ) {
   if (!(newItem && existingItem)) return newItem || existingItem
 
-  const lastReadAt = _.max([existingItem.last_read_at, newItem.last_read_at])
-  const lastUnreadAt = _.max([
-    existingItem.last_unread_at,
-    newItem.last_unread_at,
-  ])
-
-  const latestDate = _.max([lastReadAt, lastUnreadAt, newItem.updated_at])
-
-  const preEnhancements: Record<
-    keyof Omit<EnhancedGitHubNotification, keyof GitHubNotification>,
-    any
-  > = {
+  const softEnhancements: Partial<
+    Record<keyof EnhancedGitHubNotification, any>
+  > &
+    Record<
+      keyof Omit<EnhancedGitHubNotification, keyof GitHubNotification>,
+      any
+    > = {
     comment: existingItem.comment,
     commit: existingItem.commit,
     enhanced: existingItem.enhanced,
-    forceUnreadLocally:
-      existingItem.forceUnreadLocally &&
-      latestDate &&
-      latestDate === newItem.updated_at
-        ? newItem.unread
-        : existingItem.forceUnreadLocally,
     issue: existingItem.issue,
-    last_unread_at: lastUnreadAt,
+    last_read_at: _.max([existingItem.last_read_at, newItem.last_read_at]),
+    last_saved_at: _.max([existingItem.last_saved_at, newItem.last_saved_at]),
+    last_unread_at: _.max([
+      existingItem.last_unread_at,
+      newItem.last_unread_at,
+    ]),
+    last_unsaved_at: _.max([
+      existingItem.last_unsaved_at,
+      newItem.last_unsaved_at,
+    ]),
     pullRequest: existingItem.pullRequest,
     release: existingItem.release,
-    saved: existingItem.saved,
-  }
-
-  const postEnhancements = {
-    forceUnreadLocally: preEnhancements.forceUnreadLocally,
-    last_read_at: lastReadAt,
-    last_unread_at: preEnhancements.last_unread_at,
     updated_at: _.max([existingItem.updated_at, newItem.updated_at])!,
   }
 
+  const forceEnhancements = _.pick(softEnhancements, [
+    'last_read_at',
+    'last_saved_at',
+    'last_unread_at',
+    'last_unsaved_at',
+    'updated_at',
+  ])
+
   return immer(newItem, draft => {
-    Object.entries(preEnhancements).forEach(([key, value]) => {
+    Object.entries(softEnhancements).forEach(([key, value]) => {
       if (typeof value === 'undefined') return
       if (value === (draft as any)[key]) return
       if (typeof (draft as any)[key] !== 'undefined') return
       ;(draft as any)[key] = value
     })
 
-    Object.entries(postEnhancements).forEach(([key, value]) => {
-      if (typeof value === 'undefined') return
+    Object.entries(forceEnhancements).forEach(([key, value]) => {
       if (value === (draft as any)[key]) return
       ;(draft as any)[key] = value
     })
@@ -518,13 +517,12 @@ export function getGitHubNotificationSubItems(
     comment,
     id,
     repository: repo,
-    saved,
     subject,
     updated_at: updatedAt,
   } = notification
 
   const isRead = isItemRead(notification)
-  const isSaved = saved === true
+  const isSaved = isItemSaved(notification)
   const isPrivate = isNotificationPrivate(notification)
 
   const canSee =

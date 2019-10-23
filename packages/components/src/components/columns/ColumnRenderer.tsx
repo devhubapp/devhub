@@ -12,9 +12,11 @@ import {
   EnhancedItem,
   formatPrice,
   getDefaultPaginationPerPage,
+  getItemNodeIdOrId,
   GitHubIcon,
   isEventPrivate,
   isItemRead,
+  isItemSaved,
   isNotificationPrivate,
   ThemeColors,
 } from '@devhub/core'
@@ -132,7 +134,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         | EnhancedGitHubNotification
         | EnhancedGitHubIssueOrPullRequest,
     ) => {
-      return !!(item && !item.saved) /* && isItemRead(item) */
+      return !!(item && !isItemSaved(item)) /* && isItemRead(item) */
     },
   )
 
@@ -270,9 +272,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               onPress={() => {
                 const unread = !hasOneUnreadItem
 
-                const visibleItemIds = (filteredItems as any[]).map(
-                  (item: EnhancedItem) => item && item.id,
-                )
+                const visibleItemNodeIdOrIds = (filteredItems as any[])
+                  .map((item: EnhancedItem) => getItemNodeIdOrId(item))
+                  .filter(Boolean) as string[]
 
                 const column = selectors.columnSelector(
                   store.getState(),
@@ -316,7 +318,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 dispatch(
                   actions.markItemsAsReadOrUnread({
                     type: columnType,
-                    itemIds: visibleItemIds,
+                    itemNodeIdOrIds: visibleItemNodeIdOrIds,
                     unread,
                   }),
                 )

@@ -24,6 +24,7 @@ import {
   getNotificationSubjectType,
   isDraft,
   isItemRead,
+  isItemSaved,
   sortIssuesOrPullRequests,
   sortNotifications,
 } from './github'
@@ -236,7 +237,7 @@ export function itemPassesOwnerOrRepoFilter(
     ownerFilters &&
     ownerFiltersWithRepos &&
     repoFilters &&
-    !getItemOwnersAndRepos(type, item, { plan }).every(or => {
+    !getItemOwnersAndRepos(type, item).every(or => {
       const thisOwnerRepoFilters =
         ownerFiltersWithRepos &&
         ownerFiltersWithRepos[or.owner] &&
@@ -472,11 +473,11 @@ export function getFilteredIssueOrPullRequests(
             new Date(filters.clearedAt).getTime() ||
           new Date(item.updated_at).getTime() > Date.now())
       )
-        if (!(showSaveForLater && item.saved))
+        if (!(showSaveForLater && isItemSaved(item)))
           /* && isItemRead(notification) */
           return showCleared
 
-      if (item.saved) return showSaveForLater
+      if (isItemSaved(item)) return showSaveForLater
 
       return showInbox
     })
@@ -601,11 +602,11 @@ export function getFilteredNotifications(
             new Date(filters.clearedAt).getTime() ||
           new Date(item.updated_at).getTime() > Date.now())
       )
-        if (!(showSaveForLater && item.saved))
+        if (!(showSaveForLater && isItemSaved(item)))
           /* && isItemRead(notification) */
           return showCleared
 
-      if (item.saved) return showSaveForLater
+      if (isItemSaved(item)) return showSaveForLater
 
       return showInbox
     })
@@ -742,11 +743,11 @@ export function getFilteredEvents(
             new Date(filters.clearedAt).getTime() ||
           new Date(item.created_at).getTime() > Date.now())
       )
-        if (!(showSaveForLater && item.saved))
+        if (!(showSaveForLater && isItemSaved(item)))
           /* && isItemRead(event) */
           return showCleared
 
-      if (item.saved) return showSaveForLater
+      if (isItemSaved(item)) return showSaveForLater
 
       return showInbox
     })

@@ -1,14 +1,15 @@
-import { PixelRatio } from 'react-native'
-
 import {
   Column,
   ColumnSubscription,
   getColumnHeaderDetails,
 } from '@devhub/core'
+import { PixelRatio } from 'react-native'
+import { createSelector } from 'reselect'
+
 import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { currentGitHubUsernameSelector } from './github'
-import { createArraySelector, createDeepEqualSelector } from './helpers'
+import { createDeepEqualSelector } from './helpers'
 import { subscriptionSelector } from './subscriptions'
 
 const s = (state: RootState) => state.columns || EMPTY_OBJ
@@ -26,7 +27,7 @@ export const columnIdsSelector = (state: RootState) =>
 export const columnCountSelector = (state: RootState) =>
   columnIdsSelector(state).length
 
-export const columnsArrSelector = createArraySelector(
+export const columnsArrSelector = createSelector(
   (state: RootState) => columnIdsSelector(state),
   (state: RootState) => s(state).byId,
   (ids, byId): Column[] =>
@@ -38,7 +39,7 @@ export const columnsArrSelector = createArraySelector(
 export const hasCreatedColumnSelector = (state: RootState) =>
   s(state).byId !== null
 
-export const columnSubscriptionsSelector = createArraySelector(
+export const columnSubscriptionsSelector = createSelector(
   (state: RootState, columnId: string) => {
     const column = columnSelector(state, columnId)
     return (column && column.subscriptionIds) || EMPTY_ARRAY

@@ -25,8 +25,8 @@ export function useColumnLoadingState(columnId: string): EnhancedLoadState {
     : installationsLoadState === 'loading'
     ? mainSubscription &&
       mainSubscription.data &&
-      mainSubscription.data.items &&
-      mainSubscription.data.items.length
+      mainSubscription.data.itemNodeIdOrIds &&
+      mainSubscription.data.itemNodeIdOrIds.length
       ? 'loading'
       : 'loading_first'
     : (mainSubscription &&

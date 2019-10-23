@@ -5,7 +5,7 @@ import {
 } from '@devhub/core'
 import React, { useCallback, useMemo } from 'react'
 import { View, ViewProps } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useStore } from 'react-redux'
 
 import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
 import { DataItemT, useCardsProps } from '../../hooks/use-cards-props'
@@ -28,52 +28,42 @@ import { SwipeableCard } from './SwipeableCard'
 
 type ItemT = EnhancedGitHubIssueOrPullRequest
 
-export interface IssueOrPullRequestCardsProps
-  extends Omit<
-    IssueOrPullRequestCardProps,
-    'columnId' | 'issueOrPullRequest' | 'type'
-  > {
-  column: Column
-  columnIndex: number
+export interface IssueOrPullRequestCardsProps {
+  columnId: Column['id']
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
-  getItemById: (id: ItemT['id']) => ItemT | undefined
-  itemIds: Array<ItemT['id']>
+  getItemByNodeIdOrId: (nodeIdOrId: string) => ItemT | undefined
+  itemNodeIdOrIds: string[]
   lastFetchedSuccessfullyAt: string | undefined
-  ownerIsKnown: boolean
   pointerEvents?: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
-  repoIsKnown: boolean
   swipeable: boolean
 }
 
 export const IssueOrPullRequestCards = React.memo(
   (props: IssueOrPullRequestCardsProps) => {
     const {
-      column,
-      columnIndex,
+      columnId,
       errorMessage,
       fetchNextPage,
-      getItemById,
-      itemIds,
+      getItemByNodeIdOrId,
+      itemNodeIdOrIds,
       lastFetchedSuccessfullyAt,
-      ownerIsKnown,
       pointerEvents,
       refresh,
-      repoIsKnown,
       swipeable,
     } = props
 
     const listRef = React.useRef<typeof OneList>(null)
 
     const dispatch = useDispatch()
+    const store = useStore()
 
     const getItemKey = useCallback(
-      (id: DataItemT<ItemT>, index: number) => {
-        const item = getItemById(id)
-        return `issue-or-pr-card-${(item && item.id) || index}`
+      (nodeIdOrId: DataItemT, index: number) => {
+        return `issue-or-pr-card-${nodeIdOrId || index}`
       },
-      [getItemById],
+      [getItemByNodeIdOrId],
     )
 
     const loggedUsername = useReduxState(
@@ -85,55 +75,51 @@ export const IssueOrPullRequestCards = React.memo(
       data,
       footer,
       getItemSize,
+      getOwnerIsKnownByItemOrNodeIdOrId,
       header,
       itemSeparator,
       onVisibleItemsChanged,
       refreshControl,
+      repoIsKnown,
       safeAreaInsets,
       visibleItemIndexesRef,
     } = useCardsProps({
-      column: column!,
-      columnIndex,
+      columnId,
       fetchNextPage,
-      getItemById,
-      itemIds,
+      getItemByNodeIdOrId,
+      itemNodeIdOrIds,
       lastFetchedSuccessfullyAt,
-      ownerIsKnown,
       refresh,
-      repoIsKnown,
       type: 'issue_or_pr',
     })
 
     useCardsKeyboard(listRef, {
-      columnId: (column && column.id)!,
-      getItemById,
-      itemIds:
+      columnId,
+      getItemByNodeIdOrId,
+      getOwnerIsKnownByItemOrNodeIdOrId,
+      itemNodeIdOrIds:
         OverrideRender && OverrideRender.Component && OverrideRender.overlay
           ? []
-          : itemIds,
-      ownerIsKnown,
+          : itemNodeIdOrIds,
       repoIsKnown,
       type: 'issue_or_pr',
       visibleItemIndexesRef,
     })
 
     const renderItem = useCallback<
-      NonNullable<OneListProps<DataItemT<ItemT>>['renderItem']>
+      NonNullable<OneListProps<DataItemT>['renderItem']>
     >(
-      ({ item: id, index }) => {
-        const item = getItemById(id)
-        if (!item) return null
-
-        const height = getItemSize(id, index)
+      ({ item: nodeIdOrId, index }) => {
+        const height = getItemSize(nodeIdOrId, index)
 
         if (swipeable) {
           return (
             <View style={{ height }}>
               <SwipeableCard
                 type="issue_or_pr"
-                columnId={column.id}
-                item={item}
-                ownerIsKnown={ownerIsKnown}
+                columnId={columnId}
+                nodeIdOrId={nodeIdOrId}
+                ownerIsKnown={getOwnerIsKnownByItemOrNodeIdOrId(nodeIdOrId)}
                 repoIsKnown={repoIsKnown}
               />
             </View>
@@ -144,22 +130,24 @@ export const IssueOrPullRequestCards = React.memo(
           <ErrorBoundary>
             <View style={{ height }}>
               <IssueOrPullRequestCard
-                columnId={column.id}
-                issueOrPullRequest={item}
-                ownerIsKnown={ownerIsKnown}
                 repoIsKnown={repoIsKnown}
+                ownerIsKnown={getOwnerIsKnownByItemOrNodeIdOrId(nodeIdOrId)}
+                nodeIdOrId={nodeIdOrId}
+                columnId={columnId}
               />
             </View>
           </ErrorBoundary>
         )
       },
-      [ownerIsKnown, repoIsKnown, swipeable],
+      [getOwnerIsKnownByItemOrNodeIdOrId, repoIsKnown, swipeable],
     )
 
     const ListEmptyComponent = useMemo<
-      NonNullable<OneListProps<DataItemT<ItemT>>['ListEmptyComponent']>
+      NonNullable<OneListProps<DataItemT>['ListEmptyComponent']>
     >(
       () => () => {
+        const column = selectors.columnSelector(store.getState(), columnId)
+
         const maybeInvalidFilters = `${errorMessage || ''}`
           .toLowerCase()
           .startsWith('validation failed')
@@ -167,12 +155,12 @@ export const IssueOrPullRequestCards = React.memo(
           `${errorMessage || ''}` !== 'validation failed'
         const emptyFilters =
           maybeInvalidFilters &&
-          !getSearchQueryFromFilter(column.type, column.filters)
+          !getSearchQueryFromFilter('issue_or_pr', column && column.filters)
 
         if (maybeInvalidFilters) {
           return (
             <EmptyCards
-              columnId={column.id}
+              columnId={columnId}
               disableLoadingIndicator
               emoji={emptyFilters ? 'desert' : 'squirrel'}
               errorButtonView={
@@ -184,7 +172,7 @@ export const IssueOrPullRequestCards = React.memo(
                     onPress={() =>
                       dispatch(
                         actions.setColumnOwnerFilter({
-                          columnId: column.id,
+                          columnId,
                           owner: loggedUsername || 'gaearon',
                           value: true,
                         }),
@@ -201,7 +189,7 @@ export const IssueOrPullRequestCards = React.memo(
                     onPress={() =>
                       dispatch(
                         actions.setColumnInvolvesFilter({
-                          columnId: column.id,
+                          columnId,
                           user: loggedUsername || 'gaearon',
                           value: true,
                         }),
@@ -231,7 +219,7 @@ export const IssueOrPullRequestCards = React.memo(
 
         return (
           <EmptyCards
-            columnId={column.id}
+            columnId={columnId}
             disableLoadingIndicator
             errorMessage={errorMessage}
             fetchNextPage={fetchNextPage}
@@ -240,11 +228,11 @@ export const IssueOrPullRequestCards = React.memo(
         )
       },
       [
-        itemIds.length ? undefined : column,
-        itemIds.length ? undefined : errorMessage,
-        itemIds.length ? undefined : fetchNextPage,
-        itemIds.length ? undefined : refresh,
-        itemIds.length ? undefined : loggedUsername,
+        itemNodeIdOrIds.length ? undefined : columnId,
+        itemNodeIdOrIds.length ? undefined : errorMessage,
+        itemNodeIdOrIds.length ? undefined : fetchNextPage,
+        itemNodeIdOrIds.length ? undefined : refresh,
+        itemNodeIdOrIds.length ? undefined : loggedUsername,
       ],
     )
 
@@ -265,6 +253,7 @@ export const IssueOrPullRequestCards = React.memo(
           data={data}
           estimatedItemSize={getItemSize(data[0], 0) || 89}
           footer={footer}
+          forceRerenderOnRefChange={getItemByNodeIdOrId}
           getItemKey={getItemKey}
           getItemSize={getItemSize}
           header={header}

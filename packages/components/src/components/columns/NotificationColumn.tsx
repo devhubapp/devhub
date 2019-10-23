@@ -33,21 +33,11 @@ export const NotificationColumn = React.memo(
         <NotificationCardsContainer
           key={`notification-cards-container-${columnId}`}
           columnId={columnId}
-          columnIndex={columnIndex}
-          ownerIsKnown={!!(headerDetails && headerDetails.ownerIsKnown)}
           pointerEvents={pointerEvents}
           swipeable={swipeable}
-          repoIsKnown={!!(headerDetails && headerDetails.repoIsKnown)}
         />
       ),
-      [
-        columnId,
-        columnIndex,
-        pointerEvents,
-        swipeable,
-        headerDetails && headerDetails.ownerIsKnown,
-        headerDetails && headerDetails.repoIsKnown,
-      ],
+      [columnId, columnIndex, pointerEvents, swipeable],
     )
 
     if (!headerDetails) return null

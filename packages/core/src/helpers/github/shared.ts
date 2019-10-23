@@ -114,8 +114,48 @@ export function getDefaultPaginationPerPage(columnType: Column['type']) {
   return 10
 }
 
-export function isItemRead(item: EnhancedItem) {
-  return !(item && (item.unread !== false || item.forceUnreadLocally))
+export function getItemNodeIdOrId(
+  item: EnhancedItem | undefined,
+): string | undefined {
+  if (!item) return undefined
+  return `${('node_id' in item && item.node_id) || item.id || ''}` || undefined
+}
+
+export function getItemDate(
+  item: EnhancedItem | undefined,
+): string | undefined {
+  if (!item) return undefined
+  if ('updated_at' in item) return item.updated_at
+  if ('created_at' in item) return item.created_at
+  return undefined
+}
+
+export function isItemRead(item: EnhancedItem | undefined) {
+  if (!item) return false
+
+  const itemDate = 'updated_at' in item ? item.updated_at : item.created_at
+  const latestDate = _.max([item.last_read_at, item.last_unread_at, itemDate])
+  if (!latestDate) return false
+
+  if (latestDate === item.last_read_at) return true
+  if (latestDate === item.last_unread_at) return false
+
+  // workaround for notifications of unsubscribed issues
+  if ('unread' in item && item.unread === false && !item.last_unread_at)
+    return true
+
+  if (latestDate === itemDate) return false
+
+  return 'unread' in item ? !item.unread : false
+}
+
+export function isItemSaved(item: EnhancedItem | undefined) {
+  if (!item) return false
+
+  const latestDate = _.max([item.last_saved_at, item.last_unsaved_at])
+  if (!latestDate) return false
+
+  return latestDate === item.last_saved_at
 }
 
 export function isReadFilterChecked(filters: ColumnFilters | undefined) {
@@ -1197,10 +1237,7 @@ export function getItemIssueOrPullRequest(
 export function getItemOwnersAndRepos(
   type: ColumnSubscription['type'],
   item: EnhancedItem | undefined,
-  {
-    includeFork,
-    plan,
-  }: { includeFork?: boolean; plan: UserPlan | null | undefined },
+  { includeFork }: { includeFork?: boolean } = {},
 ): Array<{ owner: string; repo: string }> {
   const mapResult: Record<string, any> = {}
 
@@ -1234,7 +1271,9 @@ export function getItemOwnersAndRepos(
   switch (type) {
     case 'activity': {
       const event = item as EnhancedGitHubEvent
-      const { repos, forkee } = getGitHubEventSubItems(event, { plan })
+      const { repos, forkee } = getGitHubEventSubItems(event, {
+        plan: undefined,
+      })
 
       const _allRepos: GitHubRepo[] = [
         ...(repos || []),
@@ -1508,7 +1547,7 @@ export function getItemsFilterMetadata(
     const issueOrPR = getItemIssueOrPullRequest(type, item)
 
     const read = isItemRead(item)
-    const saved = !!item.saved
+    const saved = isItemSaved(item)
     const subjectType = getItemSubjectType(type, item)
     const subscriptionReason = notification && notification.reason
     const eventAction = event && getEventMetadata(event).action
@@ -1516,7 +1555,7 @@ export function getItemsFilterMetadata(
     const watchingOwner =
       event && getEventWatchingOwner(event, { loggedUsername })
 
-    const ownersAndRepos = getItemOwnersAndRepos(type, item, { plan })
+    const ownersAndRepos = getItemOwnersAndRepos(type, item)
 
     function updateNestedCounter(objRef: ItemFilterCountMetadata) {
       if (read) objRef.read++
@@ -1643,7 +1682,7 @@ export function getItemSearchableStrings(
 
   const id = item.id
 
-  const ownersAndRepos = getItemOwnersAndRepos(type, item, { plan })
+  const ownersAndRepos = getItemOwnersAndRepos(type, item)
 
   strings.push(`${id || ''}`)
 

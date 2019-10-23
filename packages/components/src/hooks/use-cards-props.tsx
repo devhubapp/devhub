@@ -47,37 +47,34 @@ import { useSafeArea } from '../libs/safe-area-view'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
+import { useColumn } from './use-column'
 import { useReduxState } from './use-redux-state'
 
-export type DataItemT<ItemT extends EnhancedItem> = ItemT['id']
+export type DataItemT = string
 
 export function useCardsProps<ItemT extends EnhancedItem>({
-  column,
-  columnIndex,
+  columnId,
   fetchNextPage,
-  getItemById,
-  itemIds,
+  getItemByNodeIdOrId,
+  itemNodeIdOrIds,
   lastFetchedSuccessfullyAt,
-  ownerIsKnown: _ownerIsKnown,
   refresh,
-  repoIsKnown: _repoIsKnown,
   type,
 }: {
-  column: Column | undefined
-  columnIndex: number
+  columnId: Column['id'] | undefined
   fetchNextPage: CardsFooterProps['fetchNextPage']
-  getItemById: (id: ItemT['id']) => ItemT | undefined
-  itemIds: Array<ItemT['id']> | undefined
+  getItemByNodeIdOrId: (nodeIdOrId: string) => ItemT | undefined
+  itemNodeIdOrIds: string[] | undefined
   lastFetchedSuccessfullyAt: string | undefined
-  ownerIsKnown: boolean
   refresh: CardsFooterProps['refresh']
-  repoIsKnown: boolean
   type: ColumnSubscription['type']
 }) {
   const visibleItemIndexesRef = useRef({ from: -1, to: -1 })
 
   const appSafeAreaInsets = useSafeArea()
   const { appOrientation } = useAppLayout()
+  const { column, columnIndex, headerDetails } = useColumn(columnId || '')
+
   const dispatch = useDispatch()
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
@@ -95,6 +92,9 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       [column && column.id],
     ),
   )
+
+  const _ownerIsKnown = headerDetails && headerDetails.ownerIsKnown
+  const _repoIsKnown = headerDetails && headerDetails.repoIsKnown
 
   const isDashboard =
     subtype === 'USER_RECEIVED_EVENTS' ||
@@ -126,64 +126,81 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     repoIsKnown
   )
 
-  const data: Array<DataItemT<ItemT>> = itemIds || []
+  const data: DataItemT[] = itemNodeIdOrIds || []
 
-  const getItemCardProps = useCallback(
-    (item: ItemT) => {
+  const getOwnerIsKnownByItemOrNodeIdOrId = useCallback(
+    (itemOrNodeIdOrId: string | ItemT | undefined): boolean => {
+      if (!itemOrNodeIdOrId) return false
+
+      const item =
+        typeof itemOrNodeIdOrId === 'string'
+          ? getItemByNodeIdOrId(itemOrNodeIdOrId)
+          : itemOrNodeIdOrId
+      if (!item) return false
+
       const event = item as EnhancedGitHubEvent
 
-      return getCardPropsForItem(type, item, {
-        ownerIsKnown:
-          (isDashboard || isUserActivity) &&
-          (event.type === 'ForkEvent' ||
-            event.type === 'WatchEvent' ||
-            // event.type === 'WatchEvent:OneUserMultipleRepos' ||
-            event.type === 'MemberEvent')
-            ? (() => {
-                const repoOwnerName =
-                  (event.repo &&
-                    (event.repo.name ||
-                      event.repo.full_name ||
-                      (event.repo.owner && event.repo.owner.login))) ||
-                  undefined
-                if (!repoOwnerName) return _ownerIsKnown
+      return (isDashboard || isUserActivity) &&
+        (event.type === 'ForkEvent' ||
+          event.type === 'WatchEvent' ||
+          // event.type === 'WatchEvent:OneUserMultipleRepos' ||
+          event.type === 'MemberEvent')
+        ? (() => {
+            const repoOwnerName =
+              (event.repo &&
+                (event.repo.name ||
+                  event.repo.full_name ||
+                  (event.repo.owner && event.repo.owner.login))) ||
+              undefined
+            if (!repoOwnerName) return !!_ownerIsKnown
 
-                return !!(
-                  includedUsernames.length === 1 &&
-                  repoOwnerName.split('/')[0].toLowerCase() ===
-                    includedUsernames[0].toLowerCase()
-                )
-              })()
-            : ownerIsKnown,
-        plan,
-        repoIsKnown,
-      })
+            return !!(
+              includedUsernames.length === 1 &&
+              repoOwnerName.split('/')[0].toLowerCase() ===
+                includedUsernames[0].toLowerCase()
+            )
+          })()
+        : ownerIsKnown
     },
     [
-      isDashboard,
-      isUserActivity,
+      getItemByNodeIdOrId,
       includedUsernames.length === 1,
       includedUsernames[0],
+      isDashboard,
+      isUserActivity,
       ownerIsKnown,
     ],
   )
 
-  const getItemSize = useCallback<
-    NonNullable<OneListProps<DataItemT<ItemT>>['getItemSize']>
-  >(
-    id => {
-      const item = getItemById(id)
-      if (!item) return 0
+  const getItemCardPropsByNodeIdOrId = useCallback(
+    (nodeIdOrId: string) => {
+      const item = getItemByNodeIdOrId(nodeIdOrId)
+      if (!item) return undefined
 
-      const itemCardProps = getItemCardProps(item)
-      return getCardSizeForProps(itemCardProps) || 0
+      return getCardPropsForItem(type, item, {
+        ownerIsKnown: getOwnerIsKnownByItemOrNodeIdOrId(item),
+        plan,
+        repoIsKnown,
+      })
     },
-    [getItemById],
+    [getItemByNodeIdOrId, getOwnerIsKnownByItemOrNodeIdOrId, plan, repoIsKnown],
+  )
+
+  const getItemSize = useCallback<
+    NonNullable<OneListProps<DataItemT>['getItemSize']>
+  >(
+    nodeIdOrId => {
+      const itemCardProps = getItemCardPropsByNodeIdOrId(nodeIdOrId)
+      if (!itemCardProps) return 0
+
+      return getCardSizeForProps(itemCardProps)
+    },
+    [getItemCardPropsByNodeIdOrId, getCardSizeForProps],
   )
 
   const itemSeparator = undefined
 
-  const header = useMemo<OneListProps<DataItemT<ItemT>>['header']>(() => {
+  const header = useMemo<OneListProps<DataItemT>['header']>(() => {
     const renderOwnerFilterBar = !!(
       column &&
       (data || []).length &&
@@ -262,7 +279,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   //   itemLayouts[itemLayouts.length - 1]!.length <
   //   windowHeight - ((header && header.size) || 0) - columnHeaderHeight
 
-  const footer = useMemo<OneListProps<DataItemT<ItemT>>['footer']>(() => {
+  const footer = useMemo<OneListProps<DataItemT>['footer']>(() => {
     if (isOverMaxColumnLimit || isOverPlanColumnLimit) return undefined
 
     return {
@@ -285,9 +302,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     sticky,
   ])
 
-  const safeAreaInsets: OneListProps<
-    DataItemT<ItemT>
-  >['safeAreaInsets'] = useMemo(
+  const safeAreaInsets: OneListProps<DataItemT>['safeAreaInsets'] = useMemo(
     () => ({
       bottom: appOrientation === 'landscape' ? appSafeAreaInsets.bottom : 0,
     }),
@@ -295,7 +310,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   )
 
   const onVisibleItemsChanged = useCallback<
-    NonNullable<OneListProps<DataItemT<ItemT>>['onVisibleItemsChanged']>
+    NonNullable<OneListProps<DataItemT>['onVisibleItemsChanged']>
   >((from, to) => {
     visibleItemIndexesRef.current = { from, to }
   }, [])
@@ -392,11 +407,14 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     OverrideRender,
     data,
     footer,
+    getItemCardPropsByNodeIdOrId,
     getItemSize,
+    getOwnerIsKnownByItemOrNodeIdOrId,
     header,
     itemSeparator,
     onVisibleItemsChanged,
     refreshControl,
+    repoIsKnown,
     safeAreaInsets,
     visibleItemIndexesRef,
   }

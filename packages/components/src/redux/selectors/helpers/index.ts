@@ -39,4 +39,4 @@ export const createDeepEqualSelector = createSelectorCreator(
 )
 
 // TODO: Make a new selector optimized for arrays whose item's refs don't change
-export const createArraySelector = createDeepEqualSelector
+// export const createArraySelector = createDeepEqualSelector

@@ -21,6 +21,7 @@ export interface OneListProps<ItemT> {
   data: ItemT[]
   disableVirtualization?: boolean
   estimatedItemSize: number
+  forceRerenderOnRefChange?: any
   footer?: {
     Component: React.ComponentType
     size: number

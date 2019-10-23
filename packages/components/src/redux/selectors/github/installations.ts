@@ -1,10 +1,9 @@
+import { Installation } from '@devhub/core'
 import _ from 'lodash'
 import { createSelector } from 'reselect'
 
-import { Installation } from '@devhub/core'
 import { EMPTY_ARRAY, EMPTY_OBJ } from '../../../utils/constants'
 import { RootState } from '../../types'
-import { createArraySelector } from '../helpers'
 
 const s = (state: RootState) =>
   (state.github && state.github.installations) || EMPTY_OBJ
@@ -28,7 +27,7 @@ export const installationsLoadStateSelector = (state: RootState) =>
 export const installationSelector = (state: RootState, id: number) =>
   s(state).byId && s(state).byId![id]
 
-export const installationsArrSelector = createArraySelector(
+export const installationsArrSelector = createSelector(
   (state: RootState) => installationIdsSelector(state),
   (state: RootState) => s(state).byId,
   (ids, byId) =>

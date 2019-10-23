@@ -1,19 +1,13 @@
+import {
+  ColumnSubscription,
+  EnhancedItem,
+  getItemNodeIdOrId,
+  normalizeSubscriptions,
+} from '@devhub/core'
 import immer from 'immer'
 import _ from 'lodash'
 import { REHYDRATE } from 'redux-persist'
 
-import {
-  ColumnSubscription,
-  EnhancedGitHubEvent,
-  mergeEventsPreservingEnhancement,
-  mergeIssuesOrPullRequestsPreservingEnhancement,
-  mergeNotificationsPreservingEnhancement,
-  normalizeSubscriptions,
-  removeUselessURLsFromResponseItem,
-  sortEvents,
-  sortIssuesOrPullRequests,
-  sortNotifications,
-} from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface State {
@@ -49,82 +43,6 @@ export const subscriptionsReducer: Reducer<State> = (
           if (!(subscription && subscription.data)) return
 
           subscription.data.loadState = 'not_loaded'
-        })
-      })
-    }
-
-    case 'CLEANUP_SUBSCRIPTIONS_DATA': {
-      return immer(state, draft => {
-        draft.allIds = draft.allIds || []
-        draft.byId = draft.byId || {}
-
-        const keys = Object.keys(draft.byId)
-        if (!(keys && keys.length && draft.byId)) return
-
-        const subscriptionIds = action.payload.subscriptionIds || keys
-        subscriptionIds.forEach(id => {
-          const subscription = draft.byId[id]
-          if (!subscription) return
-
-          subscription.data = subscription.data || {}
-          subscription.data.items = subscription.data.items || []
-          subscription.data.canFetchMore = true
-          delete subscription.data.errorMessage
-          delete subscription.data.loadState
-
-          // remove old items from the cache
-          // unless they were marked as Save for Later
-          if (subscription.data.items.length) {
-            if (subscription.type === 'activity') {
-              subscription.data.items = sortEvents(
-                subscription.data.items,
-              ).filter(item => {
-                if (!item) return false
-                if (item.saved) return true
-                if (!action.payload.deleteOlderThan) return false
-                if (!item.created_at) return true
-
-                return (
-                  new Date(item.created_at).toISOString() >=
-                  action.payload.deleteOlderThan
-                )
-              })
-            } else if (subscription.type === 'issue_or_pr') {
-              subscription.data.items = sortIssuesOrPullRequests(
-                subscription.data.items,
-              ).filter(item => {
-                if (!item) return false
-                if (item.saved) return true
-                // if (item.unread) return true
-                if (!action.payload.deleteOlderThan) return false
-                if (!item.updated_at) return true
-
-                return (
-                  new Date(item.updated_at).toISOString() >=
-                  action.payload.deleteOlderThan
-                )
-              })
-            } else if (subscription.type === 'notifications') {
-              subscription.data.items = sortNotifications(
-                subscription.data.items,
-              ).filter(item => {
-                if (!item) return false
-                if (item.saved) return true
-                // if (item.unread) return true
-                if (!action.payload.deleteOlderThan) return false
-                if (!item.updated_at) return true
-
-                return (
-                  new Date(item.updated_at).toISOString() >=
-                  action.payload.deleteOlderThan
-                )
-              })
-            } else {
-              console.error(
-                `Unhandled subscription type: ${(subscription as any).type}`,
-              )
-            }
-          }
         })
       })
     }
@@ -232,59 +150,20 @@ export const subscriptionsReducer: Reducer<State> = (
         subscription.data.lastFetchedSuccessfullyAt = new Date().toISOString()
         subscription.data.loadState = 'loaded'
 
-        const prevItems = (subscription.data.items || []) as any
-        const newItems = (action.payload.data || []) as any
+        subscription.data.itemNodeIdOrIds = action.payload.replaceAllItems
+          ? []
+          : subscription.data.itemNodeIdOrIds || []
+        ;(action.payload.data || []).forEach(
+          (item: EnhancedItem | undefined) => {
+            if (!item) return
 
-        const mergedItems: any[] =
-          action.payload.subscriptionType === 'activity'
-            ? mergeEventsPreservingEnhancement(newItems, prevItems, {
-                dropPrevItems: action.payload.replaceAllItems,
-              })
-            : action.payload.subscriptionType === 'issue_or_pr'
-            ? mergeIssuesOrPullRequestsPreservingEnhancement(
-                newItems,
-                prevItems,
-                {
-                  dropPrevItems: action.payload.replaceAllItems,
-                },
-              )
-            : action.payload.subscriptionType === 'notifications'
-            ? mergeNotificationsPreservingEnhancement(newItems, prevItems, {
-                dropPrevItems: action.payload.replaceAllItems,
-              })
-            : mergeEventsPreservingEnhancement(newItems, prevItems, {
-                dropPrevItems: action.payload.replaceAllItems,
-              })
+            const id = getItemNodeIdOrId(item)
+            if (!id) return
 
-        subscription.data.items = mergedItems.map(
-          removeUselessURLsFromResponseItem,
+            if (subscription.data.itemNodeIdOrIds!.includes(id)) return
+            subscription.data.itemNodeIdOrIds!.push(id)
+          },
         )
-
-        if (action.payload.github && action.payload.github.loggedUsername) {
-          subscription.data.items = (subscription.data
-            .items as EnhancedGitHubEvent[]).map(item => {
-            const actorLogin =
-              item &&
-              item.actor &&
-              `${item.actor.login || ''}`.toLowerCase().trim()
-            if (
-              actorLogin &&
-              action.payload.github.loggedUsername &&
-              actorLogin ===
-                action.payload.github.loggedUsername.toLowerCase().trim()
-            ) {
-              if (!item.last_unread_at && !item.last_read_at) {
-                return {
-                  ...item,
-                  unread: false,
-                  last_read_at: new Date().toISOString(),
-                }
-              }
-            }
-
-            return item
-          })
-        }
 
         // TODO: The updatedAt from subscriptions was being changed too often
         // (everytime this fetch success action is dispatched)
@@ -324,126 +203,8 @@ export const subscriptionsReducer: Reducer<State> = (
           action.error.status &&
           (action.error.status >= 402 && action.error.status < 500)
         ) {
-          subscription.data.items = []
+          subscription.data.itemNodeIdOrIds = []
         }
-
-        // draft.updatedAt = new Date().toISOString()
-      })
-
-    case 'MARK_ITEMS_AS_READ_OR_UNREAD':
-    case 'SAVE_ITEMS_FOR_LATER':
-      return immer(state, draft => {
-        if (!(action.payload.itemIds && action.payload.itemIds.length)) return
-        if (!draft.allIds) return
-        if (!draft.byId) return
-
-        const keys = Object.keys(draft.byId)
-        if (!(keys && keys.length)) return
-
-        const stringIds =
-          action.payload.itemIds &&
-          action.payload.itemIds.map(id => `${id || ''}`.trim()).filter(Boolean)
-        if (!(stringIds && stringIds.length)) return
-
-        keys.forEach(id => {
-          const subscription = draft.byId[id]
-
-          if (
-            'type' in action.payload &&
-            action.payload.type &&
-            subscription &&
-            subscription.type !== action.payload.type
-          )
-            return
-
-          if (
-            !(
-              subscription &&
-              subscription.data &&
-              subscription.data.items &&
-              subscription.data.items.length
-            )
-          )
-            return
-
-          subscription.data.items.forEach((item, index) => {
-            if (!(item && stringIds.includes(`${item.id}`))) return
-
-            if (action.type === 'MARK_ITEMS_AS_READ_OR_UNREAD') {
-              if (action.payload.unread) {
-                subscription.data.items![index].forceUnreadLocally = true
-                subscription.data.items![
-                  index
-                ].last_unread_at = new Date().toISOString()
-              } else {
-                subscription.data.items![index].unread = false
-                subscription.data.items![index].forceUnreadLocally = false
-                subscription.data.items![
-                  index
-                ].last_read_at = new Date().toISOString()
-              }
-            } else if (action.type === 'SAVE_ITEMS_FOR_LATER') {
-              subscription.data.items![index].saved =
-                action.payload.save !== false
-            }
-          })
-        })
-
-        // draft.updatedAt = new Date().toISOString()
-      })
-
-    case 'MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD':
-    case 'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD':
-      return immer(state, draft => {
-        const keys = Object.keys(draft.byId)
-        if (!(keys && keys.length)) return
-
-        keys.forEach(id => {
-          const subscription = draft.byId[id]
-          if (
-            !(
-              subscription &&
-              subscription.data &&
-              subscription.data.items &&
-              subscription.data.items.length
-            )
-          )
-            return
-
-          if (subscription.type !== 'notifications') return
-
-          if (action.type === 'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD') {
-            if (
-              !(
-                'owner' in subscription.params &&
-                `${subscription.params.owner || ''}`.toLowerCase() ===
-                  `${action.payload.owner || ''}`.toLowerCase() &&
-                `${subscription.params.repo || ''}`.toLowerCase() ===
-                  `${action.payload.repo || ''}`.toLowerCase()
-              )
-            )
-              return
-          }
-
-          ;(subscription.data.items as any).forEach(
-            (item: any, index: number) => {
-              if (!item) return
-
-              if (action.payload.unread) {
-                subscription.data.items![index].forceUnreadLocally = true
-                subscription.data.items![
-                  index
-                ].last_unread_at = new Date().toISOString()
-              } else {
-                subscription.data.items![index].unread = false
-                subscription.data.items![index].forceUnreadLocally = false
-                subscription.data.items![
-                  index
-                ].last_read_at = new Date().toISOString()
-              }
-            },
-          )
-        })
 
         // draft.updatedAt = new Date().toISOString()
       })

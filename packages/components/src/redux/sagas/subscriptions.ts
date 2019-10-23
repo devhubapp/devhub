@@ -4,6 +4,9 @@ import {
   constants,
   createIssuesOrPullRequestsCache,
   createNotificationsCache,
+  EnhancedGitHubEvent,
+  EnhancedGitHubIssueOrPullRequest,
+  EnhancedGitHubNotification,
   enhanceIssueOrPullRequests,
   EnhancementCache,
   enhanceNotifications,
@@ -209,11 +212,11 @@ function* handleOpenItem(
   if (AppState.currentState === 'active')
     yield call(InteractionManager.runAfterInteractions)
 
-  if (action.payload.itemId) {
+  if (action.payload.itemNodeIdOrId) {
     yield put(
       actions.markItemsAsReadOrUnread({
         type: action.payload.columnType,
-        itemIds: [action.payload.itemId],
+        itemNodeIdOrIds: [action.payload.itemNodeIdOrId],
         localOnly: true,
         unread: false,
       }),
@@ -228,7 +231,7 @@ function* handleOpenItem(
 
     emitter.emit('FOCUS_ON_COLUMN_ITEM', {
       columnId: action.payload.columnId,
-      itemId: action.payload.itemId,
+      itemNodeIdOrId: action.payload.itemNodeIdOrId,
       scrollTo: true,
     })
   }
@@ -310,6 +313,8 @@ function* onFetchRequest(
     subscriptionType,
   } = action.payload
 
+  const subscriptionsDataSelector = selectors.createSubscriptionsDataSelector()
+
   const subscription = selectors.subscriptionSelector(state, subscriptionId)
 
   const owner = getSubscriptionOwnerOrOrg(subscription)
@@ -369,7 +374,9 @@ function* onFetchRequest(
       )
       headers = (response && response.headers) || {}
 
-      const prevItems = subscription.data.items || []
+      const prevItems = subscriptionsDataSelector(state, [
+        subscription.id,
+      ]) as EnhancedGitHubNotification[]
       const newItems = response.data as GitHubNotification[]
       const mergedItems = mergeNotificationsPreservingEnhancement(
         newItems,
@@ -432,7 +439,9 @@ function* onFetchRequest(
       )
       headers = (response && response.headers) || {}
 
-      const prevItems = subscription.data.items || []
+      const prevItems = subscriptionsDataSelector(state, [
+        subscription.id,
+      ]) as EnhancedGitHubEvent[]
       const newItems = (response.data || []) as GitHubEvent[]
       const mergedItems = mergeEventsPreservingEnhancement(
         newItems,
@@ -468,7 +477,9 @@ function* onFetchRequest(
       )
       headers = (response && response.headers) || {}
 
-      const prevItems = subscription.data.items || []
+      const prevItems = subscriptionsDataSelector(state, [
+        subscription.id,
+      ]) as EnhancedGitHubIssueOrPullRequest[]
       const newItems = (response.data || []) as GitHubIssueOrPullRequest[]
       const mergedItems = mergeIssuesOrPullRequestsPreservingEnhancement(
         newItems,
@@ -595,7 +606,7 @@ function* onMarkItemsAsReadOrUnread(
     typeof actions.markItemsAsReadOrUnread
   >,
 ) {
-  const { itemIds, localOnly, type, unread } = action.payload
+  const { itemNodeIdOrIds, localOnly, type, unread } = action.payload
 
   if (localOnly) return
 
@@ -604,11 +615,11 @@ function* onMarkItemsAsReadOrUnread(
   if (unread) return
 
   if (type !== 'notifications') return
-  if (!(itemIds && itemIds.length)) return
+  if (!(itemNodeIdOrIds && itemNodeIdOrIds.length)) return
 
   const results = yield all(
-    itemIds.map(function*(itemId, index) {
-      const threadId = itemId && parseInt(`${itemId}`, 10)
+    itemNodeIdOrIds.map(function*(itemNodeIdOrId, index) {
+      const threadId = itemNodeIdOrId && parseInt(`${itemNodeIdOrId}`, 10)
       if (!threadId) return
 
       if (index > 0) yield delay(100)
@@ -629,7 +640,7 @@ function* onMarkItemsAsReadOrUnread(
       result &&
       ((result.status >= 200 && result.status < 400) || result.status === 404)
         ? undefined
-        : action.payload.itemIds[index],
+        : action.payload.itemNodeIdOrIds[index],
     )
     .filter(Boolean)
 
@@ -637,7 +648,7 @@ function* onMarkItemsAsReadOrUnread(
     yield put(
       actions.markItemsAsReadOrUnread({
         localOnly: true,
-        itemIds: failedIds,
+        itemNodeIdOrIds: failedIds,
         type: action.payload.type,
         unread: !action.payload.unread,
       }),

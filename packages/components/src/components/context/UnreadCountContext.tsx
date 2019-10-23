@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useMemo, useRef } from 'react'
 
 import {
   ColumnSubscription,
   getColumnHeaderDetails,
   getColumnOption,
   getFilteredItems,
-  getItemsFromSubscriptions,
+  getItemDate,
   ItemPushNotification,
 } from '@devhub/core'
 import { PixelRatio } from 'react-native'
+import { useStore } from 'react-redux'
 import { useDesktopOptions } from '../../hooks/use-desktop-options'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
@@ -31,6 +32,8 @@ UnreadCountContext.displayName = 'UnreadCountContext'
 
 export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const notificationsLastShowedAtRef = useRef<string | null>(null) // TODO: persist this value
+
+  const store = useStore()
   const loggedUsername = useReduxState(selectors.currentGitHubUsernameSelector)!
   const _columns = useReduxState(selectors.columnsArrSelector)
   const subscriptions = useReduxState(selectors.userSubscriptionsArrSelector)
@@ -38,6 +41,12 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const {
     enablePushNotifications: enableDesktopPushNotifications,
   } = useDesktopOptions()
+
+  // TODO: memoize for each column id
+  const subscriptionsDataSelector = useMemo(
+    () => selectors.createSubscriptionsDataSelector(),
+    [],
+  )
 
   const columns = loggedUsername ? _columns : []
 
@@ -53,6 +62,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     notificationsLastShowedAtRef.current = new Date().toISOString()
   }, [plan && plan.id])
 
+  const state = store.getState()
   columns.forEach(column => {
     if (!column) return
 
@@ -91,7 +101,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       )
       .filter(Boolean) as ColumnSubscription[]
 
-    const columnItems = getItemsFromSubscriptions(columnSubscriptions)
+    const columnItems = subscriptionsDataSelector(state, column.subscriptionIds)
     const unreadColumnItems =
       column.filters && column.filters.unread === false
         ? []
@@ -118,9 +128,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
         unreadIds.add(`${item.id}`)
       }
 
-      const itemDate = // item.last_unread_at
-        ('updated_at' in item && item.updated_at) ||
-        ('created_at' in item && item.created_at)
+      const itemDate = getItemDate(item)
       if (
         showDesktopPushNotifications &&
         itemDate &&

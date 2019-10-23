@@ -179,6 +179,7 @@ export interface GitHubMilestone {
 
 export interface GitHubIssue {
   id: number | string
+  node_id?: string
   user: GitHubUser
   assignee?: GitHubUser | null
   assignees?: GitHubUser[]
@@ -210,6 +211,7 @@ export interface GitHubOrg {
 
 export interface GitHubPullRequest {
   id: number | string // 95201658
+  node_id?: string
   number: number // 2
   state: 'open' | 'closed' // closed
   locked: boolean // false
