@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@devhub/components": "0.97.1",
+    "localforage": "1.7.3",
     "react": "16.10.2",
     "react-app-polyfill": "1.0.4",
     "react-art": "16.10.2",

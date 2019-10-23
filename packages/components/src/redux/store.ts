@@ -1,21 +1,24 @@
-import { AsyncStorage } from 'react-native'
 import { applyMiddleware, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import {
   createMigrate,
+  getStoredState,
   PersistConfig,
   persistReducer,
   persistStore,
+  purgeStoredState,
 } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import { registerSelectors } from 'reselect-tools'
 
+import { Platform } from '../libs/platform'
 import { analyticsMiddleware } from './middlewares/analytics'
 import { electronMiddleware } from './middlewares/electron'
 import migrations from './migrations'
 import { rootReducer } from './reducers'
 import { rootSaga } from './sagas'
 import * as selectors from './selectors'
+import storage from './storage'
 
 if (__DEV__) {
   registerSelectors(selectors)
@@ -25,8 +28,33 @@ export function configureStore(key = 'root') {
   const persistConfig: PersistConfig<any> = {
     blacklist: ['navigation'],
     key,
-    migrate: createMigrate(migrations as any, { debug: __DEV__ }),
-    storage: AsyncStorage,
+    migrate: async (state, currentVersion) => {
+      if (!state && Platform.OS === 'web') {
+        try {
+          const previousConfig: PersistConfig<any> = {
+            key,
+            storage: require('react-native').AsyncStorage,
+          }
+
+          const previousState = await getStoredState(previousConfig)
+          if (previousState) {
+            const newState = createMigrate(migrations as any, {
+              debug: __DEV__,
+            })(previousState as any, currentVersion)
+            purgeStoredState(previousConfig)
+            return newState
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      return createMigrate(migrations as any, { debug: __DEV__ })(
+        state,
+        currentVersion,
+      )
+    },
+    storage,
     throttle: 500,
     version: 14,
   }
