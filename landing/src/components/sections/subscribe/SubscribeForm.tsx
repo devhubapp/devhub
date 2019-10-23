@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CardElement, injectStripe } from 'react-stripe-elements'
 
-import { constants, Plan } from '@brunolemos/devhub-core/dist'
+import { constants, Plan } from '@brunolemos/devhub-core'
 import { useAuth } from '../../../context/AuthContext'
 import { useTheme } from '../../../context/ThemeContext'
 import { formatPrice, getDefaultDevHubHeaders } from '../../../helpers'

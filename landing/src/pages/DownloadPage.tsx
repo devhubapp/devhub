@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { PlatformCategory } from '@brunolemos/devhub-core/dist'
+import { PlatformCategory } from '@brunolemos/devhub-core'
 import Button from '../components/common/buttons/Button'
 import { Select } from '../components/common/Select'
 import LandingLayout from '../components/layouts/LandingLayout'

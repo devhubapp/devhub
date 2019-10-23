@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-import { allPlansObj } from '@brunolemos/devhub-core/dist'
+import { allPlansObj } from '@brunolemos/devhub-core'
 import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'

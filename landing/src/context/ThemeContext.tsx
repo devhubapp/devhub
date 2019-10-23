@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react'
 
-import { loadTheme, Theme, themes } from '@brunolemos/devhub-core/dist'
+import { loadTheme, Theme, themes } from '@brunolemos/devhub-core'
 
 export interface ThemeProviderProps {
   children: React.ReactNode

@@ -4,7 +4,7 @@ import {
   constants,
   GitHubAppType,
   tryParseOAuthParams,
-} from '@brunolemos/devhub-core/dist'
+} from '@brunolemos/devhub-core'
 import { useAuth } from '../context/AuthContext'
 import { getPlatform } from '../helpers'
 import { useWindowEvent } from './use-window-event'

@@ -4,7 +4,7 @@ import {
   OS,
   Platform,
   PlatformCategory,
-} from '@brunolemos/devhub-core/dist'
+} from '@brunolemos/devhub-core'
 
 export function aspectRatioToStyle(ratio: number) {
   return {

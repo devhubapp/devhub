@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import { activePlans } from '@brunolemos/devhub-core/dist'
+import { activePlans } from '@brunolemos/devhub-core'
 import Link from 'next/link'
 import { PricingPlanBlock } from './PricingPlanBlock'
 
@@ -10,7 +10,7 @@ const pricingPlanComponents = activePlans.map(plan =>
   plan.amount > 0 ? (
     <PricingPlanBlock
       key={`pricing-plan-${plan.id}`}
-      banner={plan.cannonicalId === 'starter' ? 'Most popular' : true}
+      banner={plan.cannonicalId === 'starter' ? 'Most potato' : true}
       buttonLink={`/subscribe?plan=${plan.cannonicalId}`}
       plan={plan}
     />

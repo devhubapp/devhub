@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import React from 'react'
 
-import { activePlans, Plan } from '@brunolemos/devhub-core/dist'
+import { activePlans, Plan } from '@brunolemos/devhub-core'
 import { useAuth } from '../../../context/AuthContext'
 import { formatPrice } from '../../../helpers'
 import Button from '../../common/buttons/Button'

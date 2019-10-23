@@ -12,7 +12,7 @@ import {
   constants,
   getDefaultUserPlan,
   UserPlan,
-} from '@brunolemos/devhub-core/dist'
+} from '@brunolemos/devhub-core'
 import { getDefaultDevHubHeaders } from '../helpers'
 
 export interface AuthProviderProps {
@@ -158,9 +158,7 @@ export function AuthProvider(props: AuthProviderProps) {
         } catch (error) {
           console.error(error)
           alert(
-            `Failed to cancel subscription. Please contact support.\nError: ${
-              error.message
-            }`,
+            `Failed to cancel subscription. Please contact support.\nError: ${error.message}`,
           )
         }
       })()
@@ -210,9 +208,7 @@ export function AuthProvider(props: AuthProviderProps) {
         } catch (error) {
           console.error(error)
           alert(
-            `Failed to delete account. Please contact support.\nError: ${
-              error.message
-            }`,
+            `Failed to delete account. Please contact support.\nError: ${error.message}`,
           )
         }
       })()
