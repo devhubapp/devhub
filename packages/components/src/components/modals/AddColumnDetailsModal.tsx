@@ -22,6 +22,9 @@ import {
   IssueOrPullRequestColumnFilters,
   IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestColumnSubscriptionCreation,
+  NotificationColumnFilters,
+  NotificationColumnSubscription,
+  NotificationColumnSubscriptionCreation,
   ThemeColors,
 } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -703,16 +706,15 @@ function getFormItems({
 }: AddColumnDetailsPayload['subscription']): FormItem[] {
   switch (_type) {
     case 'notifications': {
-      return ['inbox', 'repo_option']
-      // const subtype = _subtype as NotificationColumnSubscription['subtype']
+      const subtype = _subtype as NotificationColumnSubscription['subtype']
 
-      // switch (subtype) {
-      //   case 'REPO_NOTIFICATIONS':
-      //     return ['inbox', 'repo']
+      switch (subtype) {
+        case 'REPO_NOTIFICATIONS':
+          return ['inbox', 'repo']
 
-      //   default:
-      //     return ['inbox', 'repo_option']
-      // }
+        default:
+          return ['inbox', 'repo_option']
+      }
     }
 
     case 'issue_or_pr': {
@@ -797,11 +799,9 @@ function getNewColumnAndSubscriptions(
     : { owner: undefined, repo: undefined }
 
   const newColumnFilters: ColumnFilters | undefined = defaultFilters || {}
-  let newSubscription: ColumnSubscriptionCreation & { id: string } | undefined
+  let newSubscription: ColumnSubscriptionCreation & { id: string }
   switch (_type) {
     case 'notifications': {
-      newSubscription = undefined
-      /*
       const type = _type as NotificationColumnSubscription['type']
       const subtype = _subtype as NotificationColumnSubscription['subtype']
       const _newColumnFilters = newColumnFilters as NotificationColumnFilters
@@ -827,17 +827,14 @@ function getNewColumnAndSubscriptions(
                 ? 'REPO_NOTIFICATIONS'
                 : undefined,
           })
-
           _newColumnFilters.notifications =
             _newColumnFilters.notifications || {}
-          if (newSubscription && newSubscription.params)
-            _newColumnFilters.notifications!.participating =
-              newSubscription.params.participating
+          _newColumnFilters.notifications!.participating =
+            newSubscription.params.participating
 
           break
         }
       }
-      */
 
       break
     }
@@ -1020,13 +1017,13 @@ function getNewColumnAndSubscriptions(
   const newColumn: ColumnCreation = {
     id: guid(),
     type: _type as any,
-    subscriptionIds: newSubscription ? [newSubscription.id] : [],
+    subscriptionIds: [newSubscription.id],
     filters: newColumnFilters,
   }
 
   return {
     column: newColumn,
-    subscriptions: newSubscription ? [newSubscription] : [],
+    subscriptions: [newSubscription],
   }
 }
 

@@ -131,9 +131,8 @@ export function Button(props: ButtonProps) {
       ref={containerViewRef}
       backgroundColor={backgroundThemeColor}
       style={[
-        sharedStyles.relative,
+        styles.button,
         !otherProps.hitSlop && sharedStyles.overflowHidden,
-        typeof size === 'number' && { minWidth: size },
         { height: size },
         round && { borderRadius: size === 'auto' ? radius : size / 2 },
         style,
@@ -252,6 +251,10 @@ export function getButtonColors(
 }
 
 const styles = StyleSheet.create({
+  button: {
+    position: 'relative',
+  },
+
   text: {
     lineHeight: normalTextSize + 4,
     fontSize: normalTextSize,

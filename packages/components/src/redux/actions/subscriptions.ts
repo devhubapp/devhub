@@ -36,13 +36,6 @@ export function fetchSubscriptionRequest(payload: {
   return createAction('FETCH_SUBSCRIPTION_REQUEST', payload)
 }
 
-export function fetchSubscriptionNoop(payload: {
-  subscriptionType: ColumnSubscription['type']
-  subscriptionId: string
-}) {
-  return createAction('FETCH_SUBSCRIPTION_NOOP', payload)
-}
-
 export function fetchSubscriptionSuccess(payload: {
   subscriptionType: ColumnSubscription['type']
   subscriptionId: string
@@ -93,21 +86,21 @@ export function markItemsAsReadOrUnread(payload: {
   return createAction('MARK_ITEMS_AS_READ_OR_UNREAD', payload)
 }
 
-// export function markAllNotificationsAsReadOrUnread(payload: {
-//   unread: boolean
-//   localOnly?: boolean
-// }) {
-//   return createAction('MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD', payload)
-// }
+export function markAllNotificationsAsReadOrUnread(payload: {
+  unread: boolean
+  localOnly?: boolean
+}) {
+  return createAction('MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD', payload)
+}
 
-// export function markRepoNotificationsAsReadOrUnread(payload: {
-//   owner: string
-//   repo: string
-//   unread: boolean
-//   localOnly?: boolean
-// }) {
-//   return createAction('MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD', payload)
-// }
+export function markRepoNotificationsAsReadOrUnread(payload: {
+  owner: string
+  repo: string
+  unread: boolean
+  localOnly?: boolean
+}) {
+  return createAction('MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD', payload)
+}
 
 export function openItem(payload: {
   columnId: Column['id']

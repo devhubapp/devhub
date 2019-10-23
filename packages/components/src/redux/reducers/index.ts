@@ -9,7 +9,6 @@ import { countReducer } from './counters'
 import { dataReducer } from './data'
 import { githubReducer } from './github'
 import { navigationReducer } from './navigation'
-import { notificationsReducer } from './notifications'
 import { subscriptionsReducer } from './subscriptions'
 
 const _rootReducer = combineReducers({
@@ -21,7 +20,6 @@ const _rootReducer = combineReducers({
   data: dataReducer,
   github: githubReducer,
   navigation: navigationReducer,
-  notifications: notificationsReducer,
   subscriptions: subscriptionsReducer,
 })
 

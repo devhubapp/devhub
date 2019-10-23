@@ -1,7 +1,10 @@
+import axios from 'axios'
+import immer from 'immer'
 import _ from 'lodash'
 
 import {
   EnhancedGitHubNotification,
+  EnhancementCache,
   GitHubIcon,
   GitHubIssue,
   GitHubIssueOrPullRequest,
@@ -10,6 +13,7 @@ import {
   GitHubNotificationReason,
   GitHubNotificationSubjectType,
   GitHubPullRequest,
+  NotificationPayloadEnhancement,
   ThemeColors,
   UserPlan,
 } from '../../types'
@@ -19,12 +23,14 @@ import {
   getCommitIconAndColor,
   getIssueIconAndColor,
   getItemIsBot,
+  getOwnerAndRepo,
   getPullRequestIconAndColor,
   getReleaseIconAndColor,
   isItemRead,
   isItemSaved,
 } from './shared'
 import {
+  getCommentIdFromUrl,
   getIssueOrPullRequestNumberFromUrl,
   getRepoFullNameFromObject,
 } from './url'
@@ -52,9 +58,9 @@ export const notificationSubjectTypes: GitHubNotificationSubjectType[] = [
   'RepositoryVulnerabilityAlert',
 ]
 
-export function getNotificationSubjectType(notification: {
-  subject: { type: GitHubNotificationSubjectType }
-}): GitHubNotificationSubjectType | null {
+export function getNotificationSubjectType(
+  notification: GitHubNotification,
+): GitHubNotificationSubjectType | null {
   if (!(notification && notification.subject && notification.subject.type))
     return null
 
@@ -65,7 +71,10 @@ export function getNotificationIconAndColor(
   notification: GitHubNotification,
   payload: GitHubIssueOrPullRequest | undefined,
 ): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
-  switch (notification.subject.type) {
+  const { subject } = notification
+  const { type } = subject
+
+  switch (type) {
     case 'Commit':
       return getCommitIconAndColor()
     case 'Issue':
@@ -87,7 +96,7 @@ export function getNotificationIconAndColor(
         tooltip: 'Repository vulnerability alert',
       }
     default: {
-      const message = `Unknown notification subject type: ${notification.subject.type}`
+      const message = `Unknown notification subject type: ${type}`
       console.error(message)
       return { icon: 'bell', tooltip: '' }
     }
@@ -217,7 +226,6 @@ export function getNotificationReasonMetadata<
   }
 }
 
-/*
 export function mergeNotificationsPreservingEnhancement(
   newItems: EnhancedGitHubNotification[],
   prevItems: EnhancedGitHubNotification[],
@@ -487,7 +495,6 @@ export function createNotificationsCache(
 
   return cache
 }
-*/
 
 export function sortNotifications(
   notifications: EnhancedGitHubNotification[] | undefined,

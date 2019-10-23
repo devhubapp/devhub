@@ -23,15 +23,12 @@ export function createErrorAction<
 export function createErrorActionWithPayload<
   T extends string,
   P,
-  E extends Error
+  E extends object
 >(type: T, payload: P, error: E): ActionWithError<T, P, E>
 export function createErrorActionWithPayload<
   T extends string,
   P,
-  E extends Error
->(type: T, payload: P, e: E) {
-  const error = Object.assign({}, e, {
-    message: (e && e.message) || `${e || ''}`,
-  })
+  E extends object = Record<string, any>
+>(type: T, payload: P, error: E) {
   return { type, payload, error }
 }

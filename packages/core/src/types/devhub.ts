@@ -193,32 +193,29 @@ export interface IssueOrPullRequestColumnSubscription {
   updatedAt: string
 }
 
-export interface NotificationColumnSubscription {
+export type NotificationColumnSubscription = {
   id: string
   type: NotificationColumn['type']
-  subtype?: undefined
   params: {
-    // all?: boolean
-    // participating?: boolean
+    all?: boolean
+    participating?: boolean
   }
-  data?: undefined
-  // data: ColumnSubscriptionData<EnhancedGitHubNotification>
+  data: ColumnSubscriptionData
   createdAt: string
   updatedAt: string
-}
-// & (
-//   | {
-//       subtype: undefined | ''
-//       params: GitHubExtractParamsFromMethod<
-//         octokit['activity']['listNotifications']
-//       >
-//     }
-//   | {
-//       subtype: 'REPO_NOTIFICATIONS'
-//       params: GitHubExtractParamsFromMethod<
-//         octokit['activity']['listNotificationsForRepo']
-//       >
-//     })
+} & (
+  | {
+      subtype: undefined | ''
+      params: GitHubExtractParamsFromMethod<
+        octokit['activity']['listNotifications']
+      >
+    }
+  | {
+      subtype: 'REPO_NOTIFICATIONS'
+      params: GitHubExtractParamsFromMethod<
+        octokit['activity']['listNotificationsForRepo']
+      >
+    })
 
 export interface BaseColumnFilters {
   bot?: boolean

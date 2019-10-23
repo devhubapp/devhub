@@ -134,31 +134,10 @@ export const subscriptionsReducer: Reducer<State> = (
         // draft.updatedAt = new Date().toISOString()
       })
 
-    case 'FETCH_SUBSCRIPTION_NOOP': {
-      return immer(state, draft => {
-        if (!draft.allIds) return
-        if (!draft.byId) return
-
-        const subscription = draft.byId[action.payload.subscriptionId]
-        if (!subscription) return
-
-        subscription.data = subscription.data || {}
-        if (
-          subscription.data.loadState === 'loading' ||
-          subscription.data.loadState === 'loading_first' ||
-          subscription.data.loadState === 'loading_more'
-        ) {
-          subscription.data.loadState = 'not_loaded'
-        }
-      })
-    }
-
     case 'FETCH_SUBSCRIPTION_SUCCESS':
       return immer(state, draft => {
         if (!draft.allIds) return
         if (!draft.byId) return
-
-        if (action.payload.subscriptionType === 'notifications') return
 
         const subscription = draft.byId[action.payload.subscriptionId]
         if (!subscription) return
@@ -181,8 +160,8 @@ export const subscriptionsReducer: Reducer<State> = (
             const id = getItemNodeIdOrId(item)
             if (!id) return
 
-            if (subscription.data!.itemNodeIdOrIds!.includes(id)) return
-            subscription.data!.itemNodeIdOrIds!.push(id)
+            if (subscription.data.itemNodeIdOrIds!.includes(id)) return
+            subscription.data.itemNodeIdOrIds!.push(id)
           },
         )
 

@@ -1,7 +1,7 @@
-import { ThemeColors } from '@devhub/core'
 import React, { useCallback, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 
+import { ThemeColors } from '@devhub/core'
 import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
 import { OcticonIconProps, Octicons } from '../../libs/vector-icons'
@@ -9,10 +9,6 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { getTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
-import {
-  ThemedActivityIndicator,
-  ThemedActivityIndicatorProps,
-} from '../themed/ThemedActivityIndicator'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import {
@@ -22,8 +18,6 @@ import {
 
 export interface IconButtonProps extends TouchableWithoutFeedbackProps {
   active?: boolean
-  loading?: boolean
-  loadingIndicatorStyle?: ThemedActivityIndicatorProps['style']
   name: OcticonIconProps['name']
   size?: number
   type?: 'primary' | 'neutral' | 'danger'
@@ -35,8 +29,6 @@ export function IconButton(props: IconButtonProps) {
   const {
     active,
     disabled: _disabled,
-    loading,
-    loadingIndicatorStyle,
     name,
     onPressIn,
     onPressOut,
@@ -147,7 +139,6 @@ export function IconButton(props: IconButtonProps) {
         if (onPressOut) onPressOut(e)
       }}
       style={[
-        sharedStyles.relative,
         sharedStyles.center,
         sharedStyles.paddingHalf,
         {
@@ -172,11 +163,7 @@ export function IconButton(props: IconButtonProps) {
           ]}
         />
 
-        <ThemedText
-          ref={textRef}
-          color={foregroundThemeColor}
-          style={loading && sharedStyles.opacity0}
-        >
+        <ThemedText ref={textRef} color={foregroundThemeColor}>
           <Octicons
             name={name}
             selectable={false}
@@ -184,19 +171,6 @@ export function IconButton(props: IconButtonProps) {
             style={sharedStyles.textCenter}
           />
         </ThemedText>
-
-        {!!loading && (
-          <View
-            style={[StyleSheet.absoluteFill, sharedStyles.center]}
-            pointerEvents="none"
-          >
-            <ThemedActivityIndicator
-              color={foregroundThemeColor}
-              size="small"
-              style={loadingIndicatorStyle}
-            />
-          </View>
-        )}
       </>
     </TouchableWithoutFeedback>
   )

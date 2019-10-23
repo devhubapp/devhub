@@ -1,5 +1,5 @@
 import { AppState, InteractionManager } from 'react-native'
-import { all, call, put, select, takeEvery } from 'redux-saga/effects'
+import { all, call, put, select, takeLatest } from 'redux-saga/effects'
 
 import {
   ActivityColumnSubscriptionCreation,
@@ -10,10 +10,13 @@ import {
   getDefaultPaginationPerPage,
   getUniqueIdForSubscription,
   guid,
+  isReadFilterChecked,
   IssueOrPullRequestColumn,
   IssueOrPullRequestColumnSubscription,
   IssueOrPullRequestColumnSubscriptionCreation,
   itemPassesFilterRecord,
+  NotificationColumn,
+  NotificationColumnSubscription,
 } from '@devhub/core'
 import { emitter } from '../../libs/emitter'
 import * as actions from '../actions'
@@ -21,14 +24,14 @@ import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
 
 export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
-  // const notificationSubscription = createSubscriptionObjectWithId({
-  //   type: 'notifications',
-  //   subtype: undefined,
-  //   params: {
-  //     all: true,
-  //     participating: true,
-  //   },
-  // }) as NotificationColumnSubscription
+  const notificationSubscription = createSubscriptionObjectWithId({
+    type: 'notifications',
+    subtype: undefined,
+    params: {
+      all: true,
+      participating: true,
+    },
+  }) as NotificationColumnSubscription
 
   const userReceivedEventsSubscription = createSubscriptionObjectWithId<
     ActivityColumnSubscriptionCreation
@@ -76,13 +79,13 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     columns: [
       {
         id: guid(),
-        subscriptionIds: [], // [notificationSubscription.id]
+        subscriptionIds: [notificationSubscription.id],
         type: 'notifications',
-        // filters: {
-        //   notifications: {
-        //     participating: notificationSubscription.params.participating,
-        //   },
-        // },
+        filters: {
+          notifications: {
+            participating: notificationSubscription.params.participating,
+          },
+        },
       },
       {
         id: guid(),
@@ -134,7 +137,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       },
     ],
     subscriptions: [
-      // notificationSubscription,
+      notificationSubscription,
       userReceivedEventsSubscription,
       involvedIssuesAndPRsSubscription,
       myReposIssuesAndPRsSubscription,
@@ -292,42 +295,39 @@ function* onColumnSubscriptionFilterChange(
       if (!(subscription && subscription.id)) return
 
       let newSubscriptionParams
-      let newSubscriptionId: string | undefined
+      let newSubscriptionId: string
       let newSubscription
 
       if (subscription.type === 'notifications') {
-        newSubscriptionParams = undefined
-        newSubscriptionId = undefined
-        newSubscription = undefined
-        // const c = column as NotificationColumn
+        const c = column as NotificationColumn
 
-        // newSubscriptionParams = {
-        //   ...subscription.params,
-        //   all: isReadFilterChecked(c.filters) ? true : false,
-        //   participating:
-        //     c.filters &&
-        //     c.filters.notifications &&
-        //     c.filters.notifications.participating
-        //       ? true
-        //       : false,
-        // } as NotificationColumnSubscription['params']
+        newSubscriptionParams = {
+          ...subscription.params,
+          all: isReadFilterChecked(c.filters) ? true : false,
+          participating:
+            c.filters &&
+            c.filters.notifications &&
+            c.filters.notifications.participating
+              ? true
+              : false,
+        } as NotificationColumnSubscription['params']
 
-        // newSubscriptionId = getUniqueIdForSubscription({
-        //   ...subscription,
-        //   params: newSubscriptionParams,
-        // })
+        newSubscriptionId = getUniqueIdForSubscription({
+          ...subscription,
+          params: newSubscriptionParams,
+        })
 
-        // newSubscription = {
-        //   id: newSubscriptionId,
-        //   type: subscription.type,
-        //   subtype: subscription.subtype,
-        //   params: newSubscriptionParams,
-        //   data: {
-        //     items: subscription.data.items,
-        //   },
-        //   createdAt: new Date().toISOString(),
-        //   updatedAt: new Date().toISOString(),
-        // } as NotificationColumnSubscription
+        newSubscription = {
+          id: newSubscriptionId,
+          type: subscription.type,
+          subtype: subscription.subtype,
+          params: newSubscriptionParams,
+          data: {
+            itemNodeIdOrIds: subscription.data.itemNodeIdOrIds,
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        } as NotificationColumnSubscription
       } else if (subscription.type === 'issue_or_pr') {
         const c = column as IssueOrPullRequestColumn
 
@@ -395,12 +395,7 @@ function* onColumnSubscriptionFilterChange(
 
       const result = []
 
-      if (
-        !newSubscription ||
-        !newSubscriptionId ||
-        newSubscriptionId === subscription.id
-      )
-        return
+      if (newSubscriptionId === subscription.id) return
 
       result.push(
         yield put(
@@ -442,11 +437,11 @@ function* onColumnSubscriptionFilterChange(
 
 export function* columnsSagas() {
   yield all([
-    yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
-    yield takeEvery('MOVE_COLUMN', onMoveColumn),
-    yield takeEvery('DELETE_COLUMN', onDeleteColumn),
-    yield takeEvery('SET_COLUMN_CLEARED_AT_FILTER', onSetClearedAt),
-    yield takeEvery(
+    yield takeLatest('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
+    yield takeLatest('MOVE_COLUMN', onMoveColumn),
+    yield takeLatest('DELETE_COLUMN', onDeleteColumn),
+    yield takeLatest('SET_COLUMN_CLEARED_AT_FILTER', onSetClearedAt),
+    yield takeLatest(
       [
         'CLEAR_COLUMN_FILTERS',
         'REPLACE_COLUMN_FILTERS',

@@ -84,10 +84,7 @@ export interface GitHubComment {
   id: number | string
   node_id?: string
   commit_id?: string // 6ef64f902613c73251da32d1bc9eb236f38798cc
-  user: Pick<
-    GitHubUser,
-    'avatar_url' | 'html_url' | 'id' | 'login' | 'node_id' | 'type' | 'url'
-  >
+  user: GitHubUser
   body: string
   position?: number | null
   line?: number | null
@@ -126,49 +123,42 @@ export interface GitHubCommit {
       date: string
     }
     message: string
-    // tree: {
-    //   sha: string
-    //   url: string
-    // }
+    tree: {
+      sha: string
+      url: string
+    }
     url: string
     comment_count: number
-    // verification: {
-    //   verified: boolean
-    //   reason: string
-    //   signature: any
-    //   payload: any
-    // }
+    verification: {
+      verified: boolean
+      reason: string
+      signature: any
+      payload: any
+    }
   }
   url: string
   html_url: string
-  author?: Pick<
-    GitHubUser,
-    'avatar_url' | 'email' | 'login' | 'name' | 'html_url'
-  >
-  committer: Pick<
-    GitHubUser,
-    'avatar_url' | 'email' | 'login' | 'name' | 'html_url'
-  >
-  // parents: Array<{
-  //   sha: string
-  //   url: string
-  //   html_url: string
-  // }>
-  // stats: {
-  //   total: number
-  //   additions: number
-  //   deletions: number
-  // }
-  // files: any[]
+  author?: GitHubUser
+  committer: GitHubUser
+  parents: Array<{
+    sha: string
+    url: string
+    html_url: string
+  }>
+  stats: {
+    total: number
+    additions: number
+    deletions: number
+  }
+  files: any[]
 }
 
 export interface GitHubLabel {
-  id?: number | string
-  node_id?: string
+  id: number | string
   name: string
   color: string // CCCCCC
   default: boolean
-  url?: string // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
+  url: string // https://api.github.com/repos/richelbilderbeek/pbdmms/comments/19954756
 }
 
 export interface GitHubMilestone {
@@ -191,22 +181,9 @@ export interface GitHubMilestone {
 export interface GitHubIssue {
   id: number | string
   node_id?: string
-  user:
-    | Pick<
-        GitHubUser,
-        'avatar_url' | 'html_url' | 'id' | 'login' | 'node_id' | 'url'
-      >
-    | undefined
-  assignee?: Pick<
-    GitHubUser,
-    'avatar_url' | 'html_url' | 'id' | 'login' | 'node_id' | 'url'
-  > | null
-  assignees?: Array<
-    Pick<
-      GitHubUser,
-      'avatar_url' | 'html_url' | 'id' | 'login' | 'node_id' | 'url'
-    >
-  >
+  user: GitHubUser
+  assignee?: GitHubUser | null
+  assignees?: GitHubUser[]
   number: number
   body: string
   title: string
@@ -216,7 +193,6 @@ export interface GitHubIssue {
   locked: boolean
   milestone?: GitHubMilestone | null
   comments: number
-  closed_at: string | null
   created_at: string // 2016-11-24T16:00:16Z
   updated_at: string // 2016-11-24T16:00:16Z
   html_url: string // https://github.com/hasadna/Open-Knesset/issues/345
@@ -232,7 +208,6 @@ export interface GitHubOrg {
   gravatar_id?: string
   type?: 'Organization'
   url: string // https://api.github.com/orgs/DefinitelyTyped
-  html_url?: string
 }
 
 export interface GitHubPullRequest {
@@ -243,50 +218,34 @@ export interface GitHubPullRequest {
   locked: boolean // false
   title: string // ok
   labels: GitHubLabel[]
-  user:
-    | Pick<
-        GitHubUser,
-        'avatar_url' | 'html_url' | 'id' | 'login' | 'node_id' | 'url'
-      >
-    | undefined
+  user: GitHubUser
   body: string //
   created_at: string // 2016-11-24T15:59:50Z
   updated_at: string // 2016-11-24T16:00:02Z
   closed_at: string | null // 2016-11-24T16:00:02Z
   merged_at: string | null // 2016-11-24T16:00:02Z
-  // merge_commit_sha: string | null // e94fd3c0ed8b1fe095acad353ef27c43dfd7ce9b
-  assignee?: Pick<
-    GitHubUser,
-    'avatar_url' | 'html_url' | 'id' | 'login' | 'node_id' | 'url'
-  > | null // null
-  assignees?: Array<
-    Pick<
-      GitHubUser,
-      'avatar_url' | 'html_url' | 'id' | 'login' | 'node_id' | 'url'
-    >
-  > | null // []
+  merge_commit_sha: string | null // e94fd3c0ed8b1fe095acad353ef27c43dfd7ce9b
+  assignee?: GitHubUser | null // null
+  assignees?: GitHubUser[] | null // []
   milestone?: GitHubMilestone | null // null
-  // head: object // object
-  // base: object // object
-  // _links: {
-  //   [key: string]: {
-  //     href: string
-  //   }
-  // }
+  head: object // object
+  base: object // object
+  _links: {
+    [key: string]: {
+      href: string
+    }
+  }
   draft: boolean
   merged: boolean // true
-  mergeable?: boolean // null
-  mergeable_state?: string // unknown
-  merged_by: Pick<
-    GitHubUser,
-    'avatar_url' | 'html_url' | 'id' | 'login' | 'node_id' | 'url'
-  > // User
+  mergeable: boolean // null
+  mergeable_state: string // unknown
+  merged_by: GitHubUser // User
   comments: number // 0
-  // review_comments: number // 0
-  // commits: number // 2
-  // additions: number // 4
-  // deletions: number // 4
-  // changed_files: number // 1
+  review_comments: number // 0
+  commits: number // 2
+  additions: number // 4
+  deletions: number // 4
+  changed_files: number // 1
   html_url: string // https://github.com/billy0920/hotsite/pull/2
   url: string // https://api.github.com/repos/billy0920/hotsite/pulls/2
   repository_url: string // https://api.github.com/repos/devhubapp/devhub
@@ -294,7 +253,6 @@ export interface GitHubPullRequest {
 
 export interface GitHubRepo {
   id: number | string
-  node_id: string
   name: string
   full_name?: string
   fork: boolean
@@ -317,15 +275,15 @@ export interface GitHubPage {
 export interface GitHubRelease {
   id: number | string // 1
   tag_name: string // "v1.0.0"
-  // target_commitish: string // "master"
+  target_commitish: string // "master"
   name: string // "v1.0.0"
   body: string // "Description of the release"
   draft: boolean
   prerelease: boolean
   created_at: string // "2013-02-27T19:35:32Z"
   published_at: string // "2013-02-27T19:35:32Z"
-  author: Pick<GitHubUser, 'avatar_url' | 'id' | 'login' | 'node_id'>
-  // assets: any[] // see https://developer.github.com/v3/repos/releases/#get-a-single-release
+  author: GitHubUser
+  assets: any[] // see https://developer.github.com/v3/repos/releases/#get-a-single-release
   url: string // "https://api.github.com/repos/octocat/Hello-World/releases/1"
   html_url: string // "https://github.com/octocat/Hello-World/releases/v1.0.0"
 }
@@ -927,7 +885,7 @@ export interface GitHubNotification {
   subject: {
     title: string
     url: string
-    latest_comment_url?: string | undefined
+    latest_comment_url: string
     type: GitHubNotificationSubjectType
   }
   unread?: boolean

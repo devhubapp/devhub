@@ -432,7 +432,7 @@ export default {
           const type: DevHubDataItemType =
             subscription.type === 'activity'
               ? 'event'
-              : (subscription.type as any) === 'notifications'
+              : subscription.type === 'notifications'
               ? 'notification'
               : subscription.type
 
@@ -492,36 +492,4 @@ export default {
         })
       })
     }),
-  /*
-  // Remove notification subscriptions, they aren't necessary anymore
-  XX: (state: RootState) =>
-    immer(state, draft => {
-      draft.columns = draft.columns || {}
-      draft.columns.allIds = draft.columns.allIds || []
-      draft.columns.byId = draft.columns.byId || {}
-
-      draft.subscriptions = draft.subscriptions || {}
-      draft.subscriptions.allIds = draft.subscriptions.allIds || []
-      draft.subscriptions.byId = draft.subscriptions.byId || {}
-
-      const columnIds = Object.keys(draft.columns.byId)
-      columnIds.forEach(columnId => {
-        const column = draft.columns.byId![columnId]
-        if (!(column && column.type === 'notifications')) return
-
-        column.subscriptionIds = []
-      })
-
-      const subscriptionIds = Object.keys(draft.subscriptions.byId)
-      subscriptionIds.forEach(subscriptionId => {
-        const subscription = draft.subscriptions.byId[subscriptionId]
-        if (!(subscription && subscription.type === 'notifications')) return
-
-        draft.subscriptions.allIds = draft.subscriptions.allIds.filter(
-          id => id !== subscriptionId,
-        )
-        delete draft.subscriptions.byId[subscriptionId]
-      })
-    }),
-    */
 }

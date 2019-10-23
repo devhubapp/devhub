@@ -9,19 +9,13 @@ export interface GitHubURLOptions {
   tagName?: string
 }
 
-export const defaultGitHubBaseURL = 'https://github.com'
-export const defaultGitHubBaseAPIURL = 'https://api.github.com'
+export const defaultBaseURL = 'https://github.com'
 
-export function getCommentIdFromUrl(url: string | undefined) {
+export function getCommentIdFromUrl(url: string) {
   if (!url) return null
 
-  const matches1 = url.match(/\/comments\/([0-9]+)([?].+)?$/)
-  if (matches1 && matches1[1]) return parseInt(matches1[1], 10) || null
-
-  const matches2 = url.match(/comment-([0-9]+)([?].+)?$/)
-  if (matches2 && matches2[1]) return parseInt(matches2[1], 10) || null
-
-  return null
+  const matches = url.match(/\/comments\/([0-9]+)([?].+)?$/)
+  return (matches && matches[1] && parseInt(matches[1], 10)) || null
 }
 
 export function getCommitShaFromUrl(url: string): string | undefined {
@@ -71,7 +65,7 @@ export function getCommitCompareUrlFromRefs(
 }
 
 export function getIssueOrPullRequestNumberFromUrl(
-  url: string | undefined,
+  url: string,
 ): number | undefined {
   if (!url) return
 
@@ -123,7 +117,7 @@ export const getRepoFullNameFromUrl = (url: string): string | undefined =>
 
 export const getRepoUrlFromFullName = (
   repoFullName: string,
-  { baseURL = defaultGitHubBaseURL }: { baseURL?: string } = {},
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ): string | undefined => {
   return baseURL && repoFullName && repoFullName.split('/').length === 2
     ? `${baseURL}/${repoFullName}`
@@ -148,7 +142,7 @@ export const getRepoFullNameFromObject = (
 export const getGitHubURLForUser = (
   username: string,
   {
-    baseURL = defaultGitHubBaseURL,
+    baseURL = defaultBaseURL,
     isBot,
   }: { baseURL?: string; isBot?: boolean } = {},
 ) => (username ? `${baseURL}/${isBot ? 'apps/' : ''}${username}` : undefined)
@@ -162,14 +156,14 @@ export const getGitHubSearchURL = (
   queryParams: {
     [key: string]: string | number
   },
-  { baseURL = defaultGitHubBaseURL }: { baseURL?: string } = {},
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) => (queryParams ? `${baseURL}/search?${objToQueryParams(queryParams)}` : '')
 
 export const getGitHubURLForBranch = (
   ownerName: string,
   repoName: string,
   branch: string,
-  { baseURL = defaultGitHubBaseURL }: { baseURL?: string } = {},
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) =>
   ownerName && repoName && branch
     ? `${baseURL}/${ownerName}/${repoName}/tree/${branch}`
@@ -179,7 +173,7 @@ export const getGitHubURLForRelease = (
   ownerName: string,
   repoName: string,
   tagName: string | undefined,
-  { baseURL = defaultGitHubBaseURL }: { baseURL?: string } = {},
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) =>
   ownerName && repoName
     ? tagName
@@ -190,13 +184,13 @@ export const getGitHubURLForRelease = (
 export const getGitHubURLForRepo = (
   ownerName: string,
   repoName: string,
-  { baseURL = defaultGitHubBaseURL }: { baseURL?: string } = {},
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) => (ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}` : undefined)
 
 export const getGitHubURLForRepoInvitation = (
   ownerName: string,
   repoName: string,
-  { baseURL = defaultGitHubBaseURL }: { baseURL?: string } = {},
+  { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) =>
   ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}/invitations` : ''
 
@@ -239,7 +233,7 @@ export function githubHTMLUrlFromAPIUrl(
   isMobile: boolean,
   {
     addBottomAnchor,
-    baseURL = defaultGitHubBaseURL,
+    baseURL = defaultBaseURL,
     commentId,
     commentIsInline,
     issueOrPullRequestNumber,
@@ -253,16 +247,17 @@ export function githubHTMLUrlFromAPIUrl(
   ) as string[]
   if (!(type && restOfURL)) return ''
 
-  const repoFullName = getRepoFullNameFromUrl(apiURL)
-  const [type2, ...restOfURL2] = (
-    apiURL.split(`/repos/${repoFullName}/`)[1] || ''
-  ).split('/')
-
-  if (type2 === 'comments') return undefined
-
   if (type === 'repos') {
+    const repoFullName = getRepoFullNameFromUrl(apiURL)
+    const [type2, ...restOfURL2] = (
+      apiURL.split(`/repos/${repoFullName}/`)[1] || ''
+    ).split('/')
+
     if (restOfURL2[0]) {
       switch (type2) {
+        case 'comments':
+          return undefined
+
         case 'commits': {
           if (commentId) {
             return `${baseURL}/${repoFullName}/commit/${restOfURL2[0]}#${
@@ -322,7 +317,7 @@ export function fixURLForPlatform(
   if (!url) return ''
 
   // sometimes the url come like this: '/facebook/react', so we add https://github.com
-  const baseURL = (options && options.baseURL) || defaultGitHubBaseURL
+  const baseURL = (options && options.baseURL) || defaultBaseURL
   let uri: string | undefined =
     url[0] === '/' && url.indexOf('github.com') < 0 ? `${baseURL}${url}` : url
 

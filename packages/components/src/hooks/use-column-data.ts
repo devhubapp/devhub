@@ -28,14 +28,8 @@ export function useColumnData<ItemT extends EnhancedItem>(
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
   const allItems = useReduxState(state => {
-    if (!(column && column.type)) return EMPTY_ARRAY
-
-    if (column.type === 'notifications')
-      return selectors.notificationsCompactArrSelector(state)
-
-    if (!(column.subscriptionIds && column.subscriptionIds.length))
+    if (!(column && column.subscriptionIds && column.subscriptionIds.length))
       return EMPTY_ARRAY
-
     return subscriptionsDataSelector(state, column.subscriptionIds)
   }) as ItemT[]
 
@@ -78,7 +72,6 @@ export function useColumnData<ItemT extends EnhancedItem>(
     const changed = filteredItemsIds.some(
       id =>
         !previousDataByNodeIdOrIdRef.current ||
-        !previousDataByNodeIdOrIdRef.current[id] ||
         previousDataByNodeIdOrIdRef.current[id] !== dataByNodeIdOrId[id],
     )
     if (changed)

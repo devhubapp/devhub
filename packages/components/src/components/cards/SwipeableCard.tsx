@@ -17,7 +17,7 @@ export function SwipeableCard(props: CardWithLinkProps) {
   const swipeableRef = useRef<SwipeableRow>(null)
   const theme = useTheme()
   const dispatch = useDispatch()
-  const item = useItem(type, nodeIdOrId)
+  const item = useItem(nodeIdOrId)
   const isRead = isItemRead(item)
 
   function handleMarkAsRead() {

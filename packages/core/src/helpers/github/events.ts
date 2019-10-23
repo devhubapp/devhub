@@ -997,7 +997,6 @@ export function getGitHubEventSubItems(
     if (owner && name) {
       repos.push({
         id: '',
-        node_id: '',
         fork: false,
         private: false,
         full_name: _repoFullName,
