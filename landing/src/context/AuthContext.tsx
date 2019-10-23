@@ -114,14 +114,16 @@ export function AuthProvider(props: AuthProviderProps) {
       if (typeof window === 'undefined' || typeof fetch !== 'function') return
       if (!authData.appToken) return
 
+      let reason: string | null = null
       if (shouldPrompt) {
-        const confirmed = confirm(
+        reason = prompt(
           'Cancel subscription? You will be downgraded to the free plan.' +
             (authData.plan && authData.plan.status === 'trialing'
               ? ''
-              : ' If you are not on a free trial, your card might still be charged up to one more time, depending on when you cancel.'),
+              : ' If you are not on a free trial, your card might still be charged up to one more time, depending on when you cancel.') +
+            '\n\nI am cancelling because...',
         )
-        if (!confirmed) return
+        if (!reason) return
       }
 
       ;(async () => {
@@ -134,7 +136,9 @@ export function AuthProvider(props: AuthProviderProps) {
                   cancelSubscription(input: $input)
               }`,
               variables: {
-                input: {},
+                input: {
+                  reason: reason || '',
+                },
               },
             }),
             headers: {
