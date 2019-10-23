@@ -62,7 +62,7 @@ export function SwipeableCard(props: CardWithLinkProps) {
             ],
           foregroundColor: theme.foregroundColor,
           iconFamily: 'octicons',
-          icon: isRead ? 'mail' : 'mail-read',
+          icon: isRead ? 'primitive-dot' : 'mail-read',
           key: 'read',
           label: 'Read',
           onPress: handleMarkAsRead,
