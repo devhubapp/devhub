@@ -105,6 +105,7 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
                       backgroundColor="backgroundColorLess2"
                       style={[
                         sharedStyles.alignSelfFlexStart,
+                        sharedStyles.flexShrink1,
                         {
                           marginBottom: contentPadding / 2,
                           marginRight: contentPadding / 2,
