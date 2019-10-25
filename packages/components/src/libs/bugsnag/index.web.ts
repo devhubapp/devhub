@@ -12,6 +12,7 @@ const client = bugsnagJS({
   apiKey: '231f337f6090422c611017d3dab3d32e',
   appVersion: constants.APP_VERSION,
   autoBreadcrumbs: true,
+  interactionBreadcrumbsEnabled: false,
   notifyReleaseStages: ['production'],
 })
 
