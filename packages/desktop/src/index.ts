@@ -55,7 +55,9 @@ function init() {
 
     helpers.registerAppSchema()
 
-    tray.createTray()
+    if (config.store.get('isMenuBarMode')) {
+      tray.createTray()
+    }
     window.init()
 
     if (process.platform === 'darwin') {

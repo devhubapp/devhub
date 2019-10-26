@@ -29,6 +29,15 @@ export function getTray() {
   return tray
 }
 
+export function toggleTray() {
+  if (tray) {
+    tray.destroy()
+    tray = null
+  } else {
+    createTray()
+  }
+}
+
 export function createTray() {
   const image = nativeImage.createFromPath(trayIcon)
 

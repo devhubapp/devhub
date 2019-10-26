@@ -190,12 +190,6 @@ export function getRestartMenuItem() {
 
 export function getModeMenuItems() {
   const mainWindow = window.getMainWindow()
-  const _tray = tray.getTray()
-  if (
-    !(_tray && _tray.getBounds().width && _tray.getBounds().height) &&
-    !config.store.get('isMenuBarMode')
-  )
-    return []
 
   const isCurrentWindow =
     mainWindow && mainWindow.isVisible() && !mainWindow.isMinimized()
@@ -208,6 +202,8 @@ export function getModeMenuItems() {
       checked: !config.store.get('isMenuBarMode'),
       enabled,
       click() {
+        tray.toggleTray()
+
         ipc.emit('update-settings', {
           settings: 'isMenuBarMode',
           value: false,
@@ -220,6 +216,8 @@ export function getModeMenuItems() {
       checked: !!config.store.get('isMenuBarMode'),
       enabled, // : enabled && !mainWindow.isFullScreen(),
       click() {
+        tray.toggleTray()
+
         ipc.emit('update-settings', {
           settings: 'isMenuBarMode',
           value: true,
