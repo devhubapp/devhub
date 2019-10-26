@@ -1,7 +1,7 @@
 import {
   cheapestPlanWithNotifications,
   constants,
-  formatPrice,
+  formatPriceAndInterval,
   getColumnOptionMetadata,
 } from '@devhub/core'
 import React from 'react'
@@ -170,10 +170,10 @@ export const DesktopPreferences = React.memo(() => {
                   )
                 }}
                 textStyle={{ fontWeight: '300' }}
-              >{`Unlock Push Notifications and other features for ${formatPrice(
+              >{`Unlock Push Notifications and other features for ${formatPriceAndInterval(
                 cheapestPlanWithNotifications.amount,
-                cheapestPlanWithNotifications.currency,
-              )}/${cheapestPlanWithNotifications.interval}`}</Button>
+                cheapestPlanWithNotifications,
+              )}`}</Button>
             </ThemedView>
           </>
         )}

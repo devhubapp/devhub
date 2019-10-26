@@ -9,7 +9,7 @@ import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { SubscribeForm } from '../components/sections/subscribe/SubscribeForm'
 import { useAuth } from '../context/AuthContext'
-import { formatPrice } from '../helpers'
+import { formatPrice, formatPriceAndInterval } from '../helpers'
 import SubscribedPage from './SubscribedPage'
 
 export interface SubscribePageProps {}
@@ -44,7 +44,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
   const plan = paidPlansArr.find(p => p.cannonicalId === planCannonicalId)
   useEffect(() => {
-    if (!plan) setPlanCannonicalId('pro')
+    if (!plan) setPlanCannonicalId(activePlans[0].cannonicalId)
   }, [plan])
 
   useEffect(() => {
@@ -91,7 +91,15 @@ export default function SubscribePage(_props: SubscribePageProps) {
           </StripeProvider>
         </div>
 
-        <div className="flex flex-row flex-wrap items-center italic text-sm whitespace-pre">
+        {authData.plan && authData.plan.amount > 0 && (
+          <Link href="/account">
+            <a className="mb-4 text-sm text-muted-65">
+              Manage existing subscription
+            </a>
+          </Link>
+        )}
+
+        <div className="flex flex-row flex-wrap items-center italic text-sm whitespace-pre mb-4">
           <Link href="/account">
             <a className="text-muted-65">
               <img
@@ -142,7 +150,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
               ? authData.plan.id === plan.id
                 ? 'Update my '
                 : 'Switch to '
-              : 'Unlock '}
+              : 'Subscribe to '}
             <Select<Plan['cannonicalId']>
               onChange={option => setPlanCannonicalId(option)}
             >
@@ -161,25 +169,17 @@ export default function SubscribePage(_props: SubscribePageProps) {
                 </Select.Option>
               ))}
             </Select>{' '}
-            {authData.plan && authData.plan.amount > 0 ? 'plan' : 'features'}
+            plan
           </h1>
 
-          <p className="mb-4 text-sm text-muted-65">{`${formatPrice(
+          <p className="mb-4 text-sm text-muted-65">{`${formatPriceAndInterval(
             plan.amount,
-            plan.currency,
-          )}/${plan.interval} (${plan.currency.toUpperCase()}) · ${
+            plan,
+          )} (${plan.currency.toUpperCase()}) · ${
             plan.trialPeriodDays > 0
               ? `${plan.trialPeriodDays}-day free trial · `
               : ''
           }Cancel anytime`}</p>
-
-          {authData.plan && authData.plan.amount > 0 && (
-            <Link href="/account">
-              <a className="mb-4 text-sm text-muted-65">
-                Manage existing subscription
-              </a>
-            </Link>
-          )}
 
           <div className="mb-4" />
 

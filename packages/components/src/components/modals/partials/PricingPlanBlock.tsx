@@ -1,7 +1,7 @@
+import { formatPrice, formatPriceAndInterval, Plan } from '@devhub/core'
 import React from 'react'
 import { Platform, Text, View } from 'react-native'
 
-import { formatPrice, Plan } from '@devhub/core'
 import { useReduxState } from '../../../hooks/use-redux-state'
 import * as selectors from '../../../redux/selectors'
 import { sharedStyles } from '../../../styles/shared'
@@ -22,6 +22,7 @@ export const defaultPricingBlockWidth = 220
 export interface PricingPlanBlockProps {
   banner?: string | boolean
   highlightFeature?: keyof Plan['featureFlags']
+  isPartOfAList: boolean
   isSelected?: boolean | undefined
   onSelect?: (() => void) | undefined
   plan: Plan
@@ -33,6 +34,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   const {
     banner: _banner,
     highlightFeature,
+    isPartOfAList,
     isSelected,
     onSelect,
     plan,
@@ -46,6 +48,26 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     userPlan && userPlan.id && userPlan!.id === plan.id
       ? 'Current plan'
       : _banner
+
+  const estimatedMonthlyPrice =
+    (plan.interval === 'day'
+      ? plan.amount * 30
+      : plan.interval === 'week'
+      ? plan.amount * 4
+      : plan.interval === 'year'
+      ? plan.amount / 12
+      : plan.amount) / (plan.intervalCount || 1)
+
+  const _priceLabel = formatPrice(estimatedMonthlyPrice, plan)
+  const _cents = estimatedMonthlyPrice % 100
+  const priceLabelWithoutCents =
+    _cents && _priceLabel.endsWith(_cents.toString())
+      ? _priceLabel.substring(0, _priceLabel.length - 3)
+      : _priceLabel
+  const priceLabelCents =
+    _cents && _priceLabel.endsWith(_cents.toString())
+      ? _priceLabel.substr(-3)
+      : ''
 
   return (
     <View
@@ -132,16 +154,31 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             style={[
               sharedStyles.textCenter,
               {
-                lineHeight: normalTextSize + 30,
+                height: normalTextSize + 40,
+                lineHeight: normalTextSize + 40,
                 fontSize: normalTextSize + 30,
                 fontWeight: '800',
               },
             ]}
-          >{`${formatPrice(plan.amount, plan.currency)}`}</ThemedText>
+          >
+            <Text>{`${priceLabelWithoutCents}`}</Text>
+            {!!priceLabelCents && (
+              <Text style={{ fontSize: normalTextSize }}>
+                {priceLabelCents}
+              </Text>
+            )}
+          </ThemedText>
 
           <Spacer height={contentPadding / 3} />
 
-          {plan.interval ? (
+          <ThemedText
+            color="foregroundColorMuted65"
+            style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
+          >{`/month${
+            estimatedMonthlyPrice !== plan.amount ? '*' : ''
+          }`}</ThemedText>
+
+          {/* {plan.interval ? (
             <ThemedText
               color="foregroundColorMuted65"
               style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
@@ -153,9 +190,27 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             >
               {' '}
             </ThemedText>
-          )}
+          )} */}
 
           <Spacer height={contentPadding * 2} />
+
+          {!!(estimatedMonthlyPrice !== plan.amount || isPartOfAList) && (
+            <>
+              <ThemedText
+                color="foregroundColorMuted65"
+                style={[
+                  sharedStyles.textCenter,
+                  { fontSize: smallTextSize, fontStyle: 'italic' },
+                ]}
+              >
+                {estimatedMonthlyPrice !== plan.amount
+                  ? `*Billed ${formatPriceAndInterval(plan.amount, plan)}`
+                  : ' '}
+              </ThemedText>
+
+              <Spacer height={contentPadding * 2} />
+            </>
+          )}
 
           {!!onSelect && (
             <>

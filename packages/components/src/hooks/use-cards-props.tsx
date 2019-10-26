@@ -77,6 +77,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   const dispatch = useDispatch()
   const plan = useReduxState(selectors.currentUserPlanSelector)
+  const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
 
   const subtype = useReduxState(
     useCallback(
@@ -323,10 +324,9 @@ export function useCardsProps<ItemT extends EnhancedItem>({
         refreshing={false}
         title={
           lastFetchedSuccessfullyAt
-            ? `Last updated ${getDateSmallText(
-                lastFetchedSuccessfullyAt,
-                true,
-              )}`
+            ? `Last updated ${getDateSmallText(lastFetchedSuccessfullyAt, {
+                includeExactTime: true,
+              })}`
             : 'Pull to refresh'
         }
       />
@@ -339,6 +339,40 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     overlay?: boolean
   }>(() => {
     if (!(column && column.id)) return { Component: undefined, overlay: false }
+
+    if (isPlanExpired) {
+      return {
+        Component: () => (
+          <EmptyCards
+            columnId={column.id}
+            emoji="lock"
+            errorButtonView={
+              <Button
+                analyticsCategory="plan_expired"
+                analyticsLabel="select_a_plan_button"
+                children="Select a plan"
+                onPress={() => {
+                  dispatch(
+                    actions.pushModal({
+                      name: 'PRICING',
+                      params: {
+                        highlightFeature: 'columnsLimit',
+                      },
+                    }),
+                  )
+                }}
+              />
+            }
+            errorMessage="You need a paid plan to keep using DevHub."
+            errorTitle="Free trial expired"
+            fetchNextPage={undefined}
+            loadState="error"
+            refresh={undefined}
+          />
+        ),
+        overlay: false,
+      }
+    }
 
     if (isOverMaxColumnLimit) {
       return {
@@ -358,39 +392,65 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
     if (isOverPlanColumnLimit) {
       return {
-        Component: () => (
-          <EmptyCards
-            columnId={column.id}
-            emoji="rocket"
-            errorButtonView={
-              <Button
-                analyticsLabel="unlock_more_columns_button"
-                children="Unlock more columns"
-                onPress={() => {
-                  const nextPlan = activePlans.find(
-                    p => p.featureFlags.columnsLimit > columnIndex + 1,
-                  )
-                  dispatch(
-                    actions.pushModal({
-                      name: 'PRICING',
-                      params: {
-                        highlightFeature: 'columnsLimit',
-                        initialSelectedPlanId: nextPlan && nextPlan.id,
-                      },
-                    }),
-                  )
-                }}
-              />
-            }
-            errorMessage={`You have exceeded the limit of ${
-              plan!.featureFlags.columnsLimit
-            } columns.`}
-            errorTitle="Limit exceeded"
-            fetchNextPage={undefined}
-            loadState="error"
-            refresh={undefined}
-          />
-        ),
+        Component: () =>
+          plan && plan.featureFlags.columnsLimit ? (
+            <EmptyCards
+              columnId={column.id}
+              emoji="rocket"
+              errorButtonView={
+                <Button
+                  analyticsLabel="unlock_more_columns_button"
+                  children="Unlock more columns"
+                  onPress={() => {
+                    const nextPlan = activePlans.find(
+                      p => p.featureFlags.columnsLimit > columnIndex + 1,
+                    )
+                    dispatch(
+                      actions.pushModal({
+                        name: 'PRICING',
+                        params: {
+                          highlightFeature: 'columnsLimit',
+                          initialSelectedPlanId: nextPlan && nextPlan.id,
+                        },
+                      }),
+                    )
+                  }}
+                />
+              }
+              errorMessage={`You have exceeded the limit of ${plan.featureFlags.columnsLimit} columns.`}
+              errorTitle="Limit exceeded"
+              fetchNextPage={undefined}
+              loadState="error"
+              refresh={undefined}
+            />
+          ) : (
+            <EmptyCards
+              columnId={column.id}
+              emoji="lock"
+              errorButtonView={
+                <Button
+                  analyticsLabel="select_a_plan_button"
+                  analyticsCategory="invalid_plan"
+                  children="Select a plan"
+                  onPress={() => {
+                    dispatch(
+                      actions.pushModal({
+                        name: 'PRICING',
+                        params: {
+                          highlightFeature: 'columnsLimit',
+                        },
+                      }),
+                    )
+                  }}
+                />
+              }
+              errorMessage="You need a paid plan to keep using DevHub."
+              errorTitle="Upgrade to a paid plan"
+              fetchNextPage={undefined}
+              loadState="error"
+              refresh={undefined}
+            />
+          ),
         overlay: true,
       }
     }
@@ -401,6 +461,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     columnIndex,
     isOverMaxColumnLimit,
     isOverPlanColumnLimit,
+    isPlanExpired,
   ])
 
   return {

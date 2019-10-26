@@ -4,7 +4,11 @@ import { CardElement, injectStripe } from 'react-stripe-elements'
 import { constants, Plan } from '@brunolemos/devhub-core'
 import { useAuth } from '../../../context/AuthContext'
 import { useTheme } from '../../../context/ThemeContext'
-import { formatPrice, getDefaultDevHubHeaders } from '../../../helpers'
+import {
+  formatPrice,
+  formatPriceAndInterval,
+  getDefaultDevHubHeaders,
+} from '../../../helpers'
 import Button from '../../common/buttons/Button'
 
 export interface SubscribeFormProps {
@@ -222,10 +226,21 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           loading={formState.isSubmiting}
           onClick={handleSubmit}
         >
-          {`Unlock for ${formatPrice(plan.amount, plan.currency)}/${
-            plan.interval
-          }`}
+          {`Subscribe for ${formatPriceAndInterval(plan.amount, plan)}`}
         </Button>
+
+        {!!(
+          plan.amount &&
+          !plan.trialPeriodDays &&
+          (!(authData.plan && authData.plan.amount) ||
+            (authData.plan.amount && plan.amount > authData.plan.amount))
+        ) && (
+          <p className="mb-4 text-xs text-muted-65">
+            {authData.plan && authData.plan.amount
+              ? 'Your card will be changed any difference immediately'
+              : 'Your card will be changed immediately'}
+          </p>
+        )}
 
         {!!formState.error && (
           <p className="mb-4 text-sm text-red italic">{formState.error}</p>

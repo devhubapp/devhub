@@ -39,6 +39,7 @@ export const DEVHUB_BETA_URL = 'https://beta.devhubapp.com'
 export const API_BASE_URL = 'https://api.devhubapp.com'
 export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
 export const DEVHUB_LINKS = {
+  ACCOUNT_PAGE: `${LANDING_BASE_URL}/account`,
   DOWNLOAD_PAGE: `${LANDING_BASE_URL}/download`,
   PRICING_PAGE: `${LANDING_BASE_URL}/pricing`,
   SUBSCRIBE_PAGE: `${LANDING_BASE_URL}/subscribe`,

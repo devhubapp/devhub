@@ -19,7 +19,13 @@ export interface State {
   isLoggingIn: boolean
   user: Pick<
     User,
-    '_id' | 'plan' | 'lastLoginAt' | 'createdAt' | 'updatedAt'
+    | '_id'
+    | 'plan'
+    | 'lastLoginAt'
+    | 'freeTrialStartAt'
+    | 'freeTrialEndAt'
+    | 'createdAt'
+    | 'updatedAt'
   > | null
 }
 
@@ -62,6 +68,8 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
         isLoggingIn: false,
         user: action.payload.user && {
           _id: action.payload.user._id,
+          freeTrialStartAt: action.payload.user.freeTrialStartAt,
+          freeTrialEndAt: action.payload.user.freeTrialEndAt,
           plan: action.payload.user.plan,
           lastLoginAt:
             action.payload.user.lastLoginAt || new Date().toISOString(),

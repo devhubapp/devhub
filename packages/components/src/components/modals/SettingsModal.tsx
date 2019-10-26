@@ -1,7 +1,7 @@
+import { allPlans, constants, freePlan } from '@devhub/core'
 import React from 'react'
 import { View } from 'react-native'
 
-import { allPlans, constants } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
@@ -18,6 +18,7 @@ import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
+import { UnreadDot } from '../common/UnreadDot'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -33,10 +34,13 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
   const { sizename } = useAppLayout()
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
-  const _userPlan = useReduxState(selectors.currentUserPlanSelector)
+  const userPlan = useReduxState(selectors.currentUserPlanSelector)
+  const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
   const pushModal = useReduxAction(actions.pushModal)
 
-  const userPlan = allPlans.find(p => p.id === (_userPlan && _userPlan.id))
+  const userPlanLabel = (
+    allPlans.find(p => p.id === (userPlan && userPlan.id)) || {}
+  ).label
 
   return (
     <ModalColumn
@@ -71,9 +75,22 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 <View style={[sharedStyles.center, sharedStyles.horizontal]}>
                   <ThemedIcon color="foregroundColor" name="pencil" />
                   <Spacer width={contentPadding / 2} />
-                  <ThemedText color="foregroundColor">{`${(userPlan &&
-                    userPlan.label) ||
-                    'None'}`}</ThemedText>
+                  <ThemedText color="foregroundColor">{`${userPlanLabel ||
+                    'None'}${
+                    isPlanExpired
+                      ? ' (expired)'
+                      : userPlan && userPlan.status === 'trialing'
+                      ? ' (trial)'
+                      : ''
+                  }`}</ThemedText>
+                  {!!(
+                    isPlanExpired && !(freePlan && !freePlan.trialPeriodDays)
+                  ) && (
+                    <>
+                      <Spacer width={contentPadding / 2} />
+                      <UnreadDot backgroundColor="red" borderColor={null} />
+                    </>
+                  )}
                 </View>
               </Button>
             </SubHeader>

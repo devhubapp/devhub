@@ -1,5 +1,5 @@
-import { activePlans, PlanID } from '@devhub/core'
-import React, { useCallback, useEffect } from 'react'
+import { activePlans, freePlan, PlanID } from '@devhub/core'
+import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
@@ -16,6 +16,7 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { ThemedText } from '../themed/ThemedText'
 import { SubscribeForm } from './partials/SubscribeForm'
+import { SubscribeFormProps } from './partials/SubscribeForm.shared'
 
 export interface SubscribeModalProps {
   planId: PlanID | undefined
@@ -28,26 +29,28 @@ export function SubscribeModal(props: SubscribeModalProps) {
   const dispatch = useDispatch()
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
 
-  const plan =
-    (planId && activePlans.find(p => p.id === planId)) ||
-    activePlans.find(p => p.amount > 0)
+  const plan = planId && activePlans.find(p => p.id === planId)
 
   const trialDays = (plan && plan.trialPeriodDays) || 0
 
-  useEffect(() => {
-    if (!(plan && plan.id)) {
-      dispatch(actions.popModal())
-    }
-  }, [plan && plan.id])
+  // useEffect(() => {
+  //   if (!(plan && plan.id)) {
+  //     dispatch(actions.popModal())
+  //   }
+  // }, [plan && plan.id])
 
-  const onSubscribeOrDowngrade = useCallback(() => {
-    if (!(plan && plan.id)) return
+  const onSubscribeOrDowngrade = useCallback<
+    NonNullable<SubscribeFormProps['onSubscribe']>
+  >(_planId => {
     dispatch(
-      actions.replaceModal({ name: 'SUBSCRIBED', params: { planId: plan.id } }),
+      actions.replaceModal({
+        name: 'SUBSCRIBED',
+        params: { planId: _planId },
+      }),
     )
-  }, [plan && plan.id])
+  }, [])
 
-  if (!(plan && plan.id))
+  if (!userPlan && !(plan && plan.id)) {
     return (
       <ModalColumn
         name="SUBSCRIBE"
@@ -57,6 +60,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
         {null}
       </ModalColumn>
     )
+  }
 
   return (
     <ModalColumn
@@ -66,10 +70,14 @@ export function SubscribeModal(props: SubscribeModalProps) {
         userPlan && userPlan.amount
           ? plan && plan.amount > userPlan.amount
             ? 'Upgrade plan'
-            : plan && plan.amount < userPlan.amount
+            : !plan || !plan.amount
+            ? freePlan && !freePlan.trialPeriodDays
+              ? 'Downgrade plan'
+              : 'Cancel subscription'
+            : plan.amount < userPlan.amount
             ? 'Downgrade plan'
             : 'Change plan'
-          : 'Unlock features'
+          : 'Subscribe'
       }
     >
       <FullHeightScrollView style={sharedStyles.flex}>
@@ -110,25 +118,29 @@ export function SubscribeModal(props: SubscribeModalProps) {
 
               <Spacer height={contentPadding} />
 
-              <View
-                style={[
-                  sharedStyles.fullWidth,
-                  sharedStyles.horizontal,
-                  sharedStyles.justifyContentSpaceBetween,
-                ]}
-              >
-                <H3 children="Free trial" />
-                <ThemedText color="foregroundColor">
-                  {(trialDays === 1
-                    ? '1 day'
-                    : trialDays > 1
-                    ? `${trialDays} days`
-                    : 'No'
-                  ).toUpperCase()}
-                </ThemedText>
-              </View>
+              {trialDays > 0 && !(userPlan && userPlan.amount) && (
+                <>
+                  <View
+                    style={[
+                      sharedStyles.fullWidth,
+                      sharedStyles.horizontal,
+                      sharedStyles.justifyContentSpaceBetween,
+                    ]}
+                  >
+                    <H3 children="Free trial" />
+                    <ThemedText color="foregroundColor">
+                      {(trialDays === 1
+                        ? '1 day'
+                        : trialDays > 1
+                        ? `${trialDays} days`
+                        : 'No'
+                      ).toUpperCase()}
+                    </ThemedText>
+                  </View>
 
-              <Spacer height={contentPadding} />
+                  <Spacer height={contentPadding} />
+                </>
+              )}
 
               <View
                 style={[
@@ -148,7 +160,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
           </>
         )}
 
-        {!!(Platform.OS === 'web' && plan && plan.id) && (
+        {!!(Platform.OS === 'web') && (
           <SubscribeForm
             planId={plan && plan.id}
             onSubscribe={onSubscribeOrDowngrade}

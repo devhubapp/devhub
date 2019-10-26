@@ -56,6 +56,7 @@ export interface LoginActivity {
 }
 
 export interface GraphQLUserPlan extends DatabaseUserPlan {
+  banner?: string | boolean
   featureFlags: {
     columnsLimit: number
     enableFilters: boolean
@@ -70,6 +71,8 @@ export interface GraphQLUser {
   columns?: DatabaseUser['columns']
   subscriptions?: DatabaseUser['subscriptions']
   github: DatabaseUser['github']
+  freeTrialStartAt?: string
+  freeTrialEndAt?: string
   plan: GraphQLUserPlan | undefined
   createdAt: DatabaseUser['createdAt']
   updatedAt: DatabaseUser['updatedAt']

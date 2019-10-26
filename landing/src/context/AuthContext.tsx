@@ -30,7 +30,10 @@ export interface AuthData {
     name: string
     createdAt: string
   }
+  freeTrialStartAt: string | undefined
+  freeTrialEndAt: string | undefined
   plan: UserPlan | undefined
+  createdAt: string
 }
 
 export interface AuthProviderState {
@@ -54,7 +57,10 @@ const defaultAuthData: AuthData = {
     name: '',
     createdAt: '',
   },
+  freeTrialStartAt: '',
+  freeTrialEndAt: '',
   plan: undefined,
+  createdAt: '',
 }
 export const AuthContext = React.createContext<AuthProviderState>({
   authData: defaultAuthData,
@@ -156,7 +162,10 @@ export function AuthProvider(props: AuthProviderProps) {
 
           if (data && data.cancelSubscription) {
             mergeAuthData({
-              plan: getDefaultUserPlan(new Date().toISOString()),
+              plan: getDefaultUserPlan(authData.createdAt, {
+                trialStartAt: authData.freeTrialStartAt,
+                trialEndAt: authData.freeTrialEndAt,
+              }),
             })
           }
         } catch (error) {
@@ -244,9 +253,13 @@ export function AuthProvider(props: AuthProviderProps) {
                     createdAt
                   }
                 }
+                freeTrialStartAt
+                freeTrialEndAt
                 plan {
                   id
                   source
+
+                  banner
 
                   amount
                   currency
@@ -279,6 +292,7 @@ export function AuthProvider(props: AuthProviderProps) {
                   createdAt
                   updatedAt
                 }
+                createdAt
               }
             }
           }`,
@@ -293,20 +307,21 @@ export function AuthProvider(props: AuthProviderProps) {
 
         if (response.status >= 200 && response.status < 300) {
           const { data } = await response.json()
+
           const _id =
             data && data.login && data.login.user && data.login.user._id
           const newAppToken = data && data.login && data.login.appToken
-          const appTokenCreatedAt = new Date().toISOString()
           const user = data && data.login && data.login.user
-          const github = user && user.github && user.github.user
-          const plan = user && user.plan
 
           const v: AuthData = {
             _id,
             appToken: newAppToken,
-            appTokenCreatedAt,
-            github,
-            plan,
+            appTokenCreatedAt: new Date().toISOString(),
+            github: user && user.github && user.github.user,
+            plan: user && user.plan,
+            createdAt: user && user.createdAt,
+            freeTrialStartAt: user && user.freeTrialStartAt,
+            freeTrialEndAt: user && user.freeTrialEndAt,
           }
           setAuthData(isValid(v) ? v : defaultAuthData)
         } else if (response.status === 401) {

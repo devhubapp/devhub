@@ -34,6 +34,8 @@ function* init() {
     if (!(appToken && isLogged && user)) yield take('LOGIN_SUCCESS')
     if (!(appToken && isLogged && user && user.lastLoginAt)) continue
 
+    const plan = selectors.currentUserPlanSelector(state)
+
     // reload the page every 48 hours (to avoid getting super old [web] versions still being used)
     if (
       window &&
@@ -52,7 +54,29 @@ function* init() {
       yield put(actions.loginRequest({ appToken }))
     }
 
-    yield delay(1000 * 60 * 60) // 1 hour
+    // dispatch a login request if plan just expired
+    else if (
+      plan &&
+      plan.trialEndAt &&
+      Date.now() >= new Date(plan.trialEndAt).getTime() &&
+      Date.now() - new Date(plan.trialEndAt).getTime() < 1000 * 60 * 5
+    ) {
+      yield put(actions.loginRequest({ appToken }))
+      yield delay(1000 * 60 * 1)
+      continue
+    }
+
+    // if plan will expire in the next hour, use this time diff as delay
+    if (
+      plan &&
+      plan.trialEndAt &&
+      new Date(plan.trialEndAt).getTime() > Date.now() &&
+      new Date(plan.trialEndAt).getTime() - Date.now() < 1000 * 60 * 60
+    ) {
+      yield delay(Date.now() - new Date(plan.trialEndAt).getTime() + 100)
+    } else {
+      yield delay(1000 * 60 * 60) // 1 hour
+    }
   }
 }
 
@@ -130,9 +154,13 @@ function* onLoginRequest(
                   avatarUrl
                 }
               }
+              freeTrialStartAt
+              freeTrialEndAt
               plan {
                 id
                 source
+
+                banner
 
                 amount
                 currency

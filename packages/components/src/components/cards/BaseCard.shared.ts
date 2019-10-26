@@ -9,7 +9,7 @@ import {
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   EnhancedItem,
-  formatPrice,
+  formatPriceAndInterval,
   getBaseUrlFromOtherUrl,
   getCommentIdFromUrl,
   getCommitCompareUrlFromRefs,
@@ -195,10 +195,10 @@ function getPrivateBannerCardProps(
     text: {
       text:
         cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
-          ? `Unlock private repos for ${formatPrice(
+          ? `Unlock private repos for ${formatPriceAndInterval(
               cheapestPlanWithNotifications.amount,
-              cheapestPlanWithNotifications.currency,
-            )}/${cheapestPlanWithNotifications.interval}`
+              cheapestPlanWithNotifications,
+            )}`
           : 'Tap to unlock private repos',
     },
     title:

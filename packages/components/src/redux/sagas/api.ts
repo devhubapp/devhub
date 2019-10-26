@@ -85,9 +85,13 @@ function* onSyncDown() {
             _id
             columns
             subscriptions
+            freeTrialStartAt
+            freeTrialEndAt
             plan {
               id
               source
+
+              banner
 
               amount
               currency

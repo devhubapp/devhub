@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useRef } from 'react'
 
 import {
   ColumnSubscription,
+  freePlan,
   getColumnHeaderDetails,
   getColumnOption,
   getFilteredItems,
@@ -38,6 +39,8 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const _columns = useReduxState(selectors.columnsArrSelector)
   const subscriptions = useReduxState(selectors.userSubscriptionsArrSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
+  const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
+
   const {
     enablePushNotifications: enableDesktopPushNotifications,
   } = useDesktopOptions()
@@ -48,7 +51,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     [],
   )
 
-  const columns = loggedUsername ? _columns : []
+  const columns = loggedUsername && !isPlanExpired ? _columns : []
 
   const unreadIds = new Set<string>([])
   const pushNotifications = new Set<CardPushNotification>([])
@@ -177,7 +180,12 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   })
 
   return (
-    <UnreadCountContext.Provider value={unreadIds.size}>
+    <UnreadCountContext.Provider
+      value={
+        unreadIds.size ||
+        (isPlanExpired && !(freePlan && !freePlan.trialPeriodDays) ? 1 : 0)
+      }
+    >
       {props.children}
     </UnreadCountContext.Provider>
   )

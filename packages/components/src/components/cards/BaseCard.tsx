@@ -299,7 +299,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
               <IntervalRefresh date={date}>
                 {() => {
-                  const dateText = getDateSmallText(date, false)
+                  const dateText = getDateSmallText(date)
                   if (!dateText) return null
 
                   return (

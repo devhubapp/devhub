@@ -1,53 +1,108 @@
-import { DatabaseUser, UserPlan } from '../types'
-import { allPlansObj, defaultFreePlan, PlanID } from '../utils'
+import { DatabaseUser, Plan, UserPlan } from '../types'
+import { allPlansObj, freePlan, freeTrialPlan, PlanID } from '../utils'
 import { fixDateToISO } from './shared'
 
-export function getDefaultUserPlan(date: string): UserPlan {
+export function getDefaultUserPlan(
+  userCreatedAt: string,
+  {
+    trialStartAt = userCreatedAt,
+    trialEndAt,
+  }: { trialStartAt: string | undefined; trialEndAt: string | undefined },
+): UserPlan {
+  const _userCreatedAt = fixDateToISO(userCreatedAt) || new Date().toISOString()
+  const _trialStartAt = fixDateToISO(trialStartAt) || _userCreatedAt
+  const _trialEndAt =
+    trialEndAt &&
+    fixDateToISO(trialEndAt) &&
+    fixDateToISO(trialEndAt)! >= _trialStartAt
+      ? fixDateToISO(trialEndAt)
+      : freePlan && freePlan.trialPeriodDays
+      ? new Date(
+          new Date(fixDateToISO(_trialStartAt)!).valueOf() +
+            freePlan.trialPeriodDays * 1000 * 60 * 60 * 24,
+        ).toISOString()
+      : undefined
+
+  const isTrialExpired =
+    _trialStartAt && _trialEndAt && new Date(_trialEndAt).valueOf() < Date.now()
+  const defaultPlan = isTrialExpired ? freePlan : freeTrialPlan
+
   const userPlan: UserPlan = {
-    amount: defaultFreePlan.amount,
+    amount: (defaultPlan && defaultPlan.amount) || 0,
     cancelAt: undefined,
     cancelAtPeriodEnd: false,
-    createdAt: fixDateToISO(date)!,
-    currency: defaultFreePlan.currency,
-    currentPeriodEndAt: undefined,
-    currentPeriodStartAt: fixDateToISO(date),
-    featureFlags: defaultFreePlan.featureFlags,
-    id: defaultFreePlan.id,
-    interval: defaultFreePlan.interval,
-    intervalCount: defaultFreePlan.intervalCount,
+    createdAt: _userCreatedAt,
+    currency: (defaultPlan && defaultPlan.currency) || 'usd',
+    currentPeriodEndAt: _trialEndAt,
+    currentPeriodStartAt: _trialStartAt,
+    featureFlags: (defaultPlan && defaultPlan.featureFlags) || {
+      columnsLimit: 0,
+      enableFilters: false,
+      enablePrivateRepositories: false,
+      enablePushNotifications: false,
+      enableSync: false,
+    },
+    id: (defaultPlan && defaultPlan.id) || ('free' as any),
+    interval: (defaultPlan && defaultPlan.interval) || 'month',
+    intervalCount: (defaultPlan && defaultPlan.intervalCount) || 1,
     source: 'none',
-    startAt: fixDateToISO(date),
-    status: 'active',
-    trialEndAt: undefined,
-    trialPeriodDays: defaultFreePlan.trialPeriodDays,
-    trialStartAt: undefined,
-    updatedAt: fixDateToISO(date)!,
+    startAt: _trialStartAt,
+    status: defaultPlan && defaultPlan.trialPeriodDays ? 'trialing' : 'active',
+    trialEndAt: _trialEndAt,
+    trialPeriodDays: (defaultPlan && defaultPlan.trialPeriodDays) || 0,
+    trialStartAt: _trialEndAt ? _trialStartAt : undefined,
+    updatedAt: _trialStartAt,
   }
 
   return userPlan
 }
 
 export function getUserPlan(user: DatabaseUser): UserPlan {
-  let userPlan: UserPlan = getDefaultUserPlan(user.createdAt)
+  const defaultUserPlan: UserPlan = getDefaultUserPlan(user.createdAt, {
+    trialStartAt: user.freeTrialStartAt,
+    trialEndAt: user.freeTrialEndAt,
+  })
 
   const planId = (user.plan && user.plan.id) as PlanID | undefined
   const plan = planId && allPlansObj[planId]
-  if (!plan) return userPlan
+  if (!plan) return defaultUserPlan
 
-  if (user.plan.status !== 'canceled') {
-    userPlan = {
-      ...user.plan,
-      featureFlags: plan.featureFlags,
-    }
+  if (user.plan.amount) {
+    if (user.plan.status === 'canceled') return defaultUserPlan
+    if (isPlanExpired(user.plan)) return defaultUserPlan
   }
 
-  return userPlan
+  return {
+    ...user.plan,
+    banner: plan.banner,
+    featureFlags: plan.featureFlags,
+  }
+}
+
+export function isPlanExpired(
+  plan: Pick<UserPlan, 'status' | 'trialEndAt'> | undefined,
+): boolean {
+  if (!plan) return false
+
+  if (
+    plan.status === 'trialing' &&
+    plan.trialEndAt &&
+    fixDateToISO(plan.trialEndAt)
+  )
+    return new Date().toISOString() > fixDateToISO(plan.trialEndAt)!
+
+  return false
 }
 
 export function formatPrice(
   valueInCents: number,
-  currency: string,
-  locale = 'en-US',
+  {
+    currency,
+    locale = 'en-US',
+  }: {
+    currency: string
+    locale?: string
+  },
 ) {
   const formatter = new Intl.NumberFormat(locale, {
     style: 'currency',
@@ -56,4 +111,31 @@ export function formatPrice(
 
   const value = formatter.format(valueInCents / 100)
   return value.endsWith('.00') ? value.slice(0, -3) : value
+}
+
+export function formatPriceAndInterval(
+  valueInCents: number,
+  {
+    currency,
+    interval,
+    intervalCount,
+    locale = 'en-US',
+  }: {
+    currency: string
+    interval: Plan['interval']
+    intervalCount: Plan['intervalCount']
+    locale?: string
+  },
+) {
+  const formatter = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency || 'usd',
+  })
+
+  const value = formatter.format(valueInCents / 100)
+  const priceLabel = value.endsWith('.00') ? value.slice(0, -3) : value
+
+  return `${priceLabel}${
+    intervalCount > 1 ? ` every ${intervalCount} ${interval}s` : `/${interval}`
+  }`
 }

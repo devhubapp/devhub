@@ -65,7 +65,20 @@ export function getFullDateText(date: MomentInput) {
   return momentDate.format('llll')
 }
 
-export function getDateSmallText(date: MomentInput, includeExactTime = false) {
+export function getDateSmallText(
+  date: MomentInput,
+  {
+    futurePrefix = '',
+    futureSuffix = '',
+    includeExactTime = false,
+    pastPrefix = '',
+    pastSuffix = '',
+    showPrefixOnFullDate = false,
+    showSuffixOnFullDate = false,
+  } = {
+    futurePrefix: 'in',
+  },
+) {
   if (!date) return ''
 
   const momentDate = moment(date)
@@ -76,7 +89,16 @@ export function getDateSmallText(date: MomentInput, includeExactTime = false) {
 
   const _secondsDiff = momentNow.diff(momentDate, 'seconds')
   const isInFuture = _secondsDiff < 0
-  const inText = isInFuture ? 'in ' : ''
+  const prefix =
+    (isInFuture
+      ? futurePrefix && `${futurePrefix} `
+      : pastPrefix && `${pastPrefix} `) || ''
+  const suffix =
+    (isInFuture
+      ? futureSuffix && ` ${futureSuffix}`
+      : pastSuffix && ` ${pastSuffix}`) || ''
+  const fullDatePrefix = showPrefixOnFullDate ? prefix : ''
+  const fullDateSuffix = showSuffixOnFullDate ? suffix : ''
 
   const secondsDiff = Math.abs(_secondsDiff)
   const minutesDiff = Math.abs(momentNow.diff(momentDate, 'minutes'))
@@ -95,29 +117,37 @@ export function getDateSmallText(date: MomentInput, includeExactTime = false) {
     if (hoursDiff < 1) {
       if (minutesDiff < 1) {
         if (secondsDiff <= 1) {
-          return 'now'
+          return `${fullDatePrefix}now${fullDateSuffix}`
         }
 
-        return `${inText}${secondsDiff}s`
+        return `${prefix}${secondsDiff}s${suffix}`
       }
 
-      return `${inText}${minutesDiff}m${
+      return `${prefix}${minutesDiff}m${suffix}${
         includeExactTime ? ` (${timeText})` : ''
       }`
     }
 
-    return `${inText}${hoursDiff}h${includeExactTime ? ` (${timeText})` : ''}`
+    return `${prefix}${hoursDiff}h${suffix}${
+      includeExactTime ? ` (${timeText})` : ''
+    }`
   }
 
   if (daysDiff <= 3) {
-    return `${inText}${daysDiff}d${includeExactTime ? ` (${timeText})` : ''}`
+    return `${prefix}${daysDiff}d${suffix}${
+      includeExactTime ? ` (${timeText})` : ''
+    }`
   }
 
   if (momentDate.year() !== moment().year()) {
-    return momentDate.format('L').toLowerCase()
+    return `${fullDatePrefix}${momentDate
+      .format('L')
+      .toLowerCase()}${fullDateSuffix}`
   }
 
-  return momentDate.format('MMM Do').toLowerCase()
+  return `${fullDatePrefix}${momentDate
+    .format('MMM Do')
+    .toLowerCase()}${fullDateSuffix}`
 }
 
 // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)

@@ -5,7 +5,11 @@ import { allPlansObj } from '@brunolemos/devhub-core'
 import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'
-import { formatPrice, getTrialTimeLeftLabel } from '../helpers'
+import {
+  formatPrice,
+  formatPriceAndInterval,
+  getTrialTimeLeftLabel,
+} from '../helpers'
 
 export interface AccountPageProps {}
 
@@ -48,10 +52,10 @@ export default function AccountPage(_props: AccountPageProps) {
               {authData.plan.amount > 0 && (
                 <small>
                   (
-                  {`${authData.plan.currency.toUpperCase()} ${formatPrice(
+                  {`${authData.plan.currency.toUpperCase()} ${formatPriceAndInterval(
                     authData.plan.amount,
-                    authData.plan.currency,
-                  )}/${authData.plan.interval || 'month'}`}
+                    authData.plan,
+                  )}`}
                   )
                 </small>
               )}

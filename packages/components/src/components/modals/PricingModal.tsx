@@ -1,4 +1,11 @@
-import { activePlans, allPlans, constants, Plan, PlanID } from '@devhub/core'
+import {
+  activePlans,
+  allPlans,
+  constants,
+  freePlan,
+  Plan,
+  PlanID,
+} from '@devhub/core'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -128,15 +135,12 @@ export function PricingModal(props: PricingModalProps) {
         <PricingPlanBlock
           key={`pricing-plan-${plan.id}`}
           banner={
-            userPlan && userPlan.amount > plan.amount
-              ? true
-              : plan.cannonicalId === 'pro'
-              ? 'Recommended'
-              : plan.cannonicalId === 'starter'
-              ? 'Most popular'
-              : true
+            plan && typeof plan.banner === 'boolean'
+              ? plan.banner
+              : (plan && plan.banner) || false
           }
           highlightFeature={highlightFeature}
+          isPartOfAList
           isSelected={selectedPlanId === plan.id}
           onSelect={() => {
             setSelectedPlanId(plan.id)
@@ -150,6 +154,7 @@ export function PricingModal(props: PricingModalProps) {
           key={`pricing-plan-${plan.cannonicalId}`}
           banner
           highlightFeature={highlightFeature}
+          isPartOfAList
           isSelected={selectedPlanId === plan.id}
           onSelect={() => {
             setSelectedPlanId(plan.id)
@@ -162,25 +167,67 @@ export function PricingModal(props: PricingModalProps) {
     [selectedPlanId, highlightFeature, userPlan && userPlan.amount],
   )
 
+  const CancelSubscriptionButton = (
+    <Button
+      analyticsCategory="downgrade"
+      analyticsAction="downgrade"
+      analyticsLabel="downgrade"
+      onPress={() => {
+        if (Platform.OS !== 'web') {
+          Browser.openURLOnNewTab(
+            `${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${appToken}`,
+          )
+          return
+        }
+
+        dispatch(
+          actions.pushModal({
+            name: 'SUBSCRIBE',
+            params: { planId: undefined },
+          }),
+        )
+      }}
+      type="neutral"
+    >
+      Cancel subscription
+    </Button>
+  )
+
   return (
     <ModalColumn
       name="PRICING"
       showBackButton={showBackButton}
-      title="Unlock features"
+      title="Subscribe"
     >
       <FullHeightScrollView style={sharedStyles.flex}>
-        {!!userPlanDetails && !userPlanStillExist && (
+        {!!(
+          userPlanDetails &&
+          userPlanDetails.amount &&
+          !userPlanStillExist
+        ) && (
           <>
             <SubHeader title="CURRENT PLAN" />
 
-            <PricingPlanBlock
-              key="pricing-current-plan"
-              banner={userPlanDetails.label}
-              plan={userPlanDetails}
-              width="100%"
-            />
+            <View style={sharedStyles.marginHorizontalHalf}>
+              <PricingPlanBlock
+                key="pricing-current-plan"
+                banner={userPlanDetails.label}
+                isPartOfAList={false}
+                plan={userPlanDetails}
+                width="100%"
+              />
+            </View>
 
             <Spacer height={contentPadding} />
+
+            {!(freePlan && !freePlan.trialPeriodDays) && (
+              <>
+                <View style={sharedStyles.marginHorizontal}>
+                  {CancelSubscriptionButton}
+                </View>
+                <Spacer height={contentPadding} />
+              </>
+            )}
           </>
         )}
 
@@ -247,6 +294,14 @@ export function PricingModal(props: PricingModalProps) {
 
           <Spacer height={contentPadding} />
 
+          {!(freePlan && !freePlan.trialPeriodDays) &&
+            !(userPlanDetails && !userPlanStillExist) && (
+              <>
+                {CancelSubscriptionButton}
+                <Spacer height={contentPadding} />
+              </>
+            )}
+
           <ThemedText
             color="foregroundColorMuted65"
             style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
@@ -256,10 +311,12 @@ export function PricingModal(props: PricingModalProps) {
             userPlan.amount > 0
               ? selectedPlan && !selectedPlan.amount
                 ? ''
-                : 'Thank you for being part of this 💚'
+                : ''
               : selectedPlan && selectedPlan.amount
-              ? '💚'
-              : 'If you want DevHub to keep existing and being updated, consider purchasing a paid plan.'}
+              ? ''
+              : freePlan && !freePlan.trialPeriodDays
+              ? 'If you want DevHub to keep existing and being updated, consider purchasing a paid plan.'
+              : ''}
           </ThemedText>
         </View>
 

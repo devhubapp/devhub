@@ -3,7 +3,7 @@ import React from 'react'
 
 import { activePlans, Plan } from '@brunolemos/devhub-core'
 import { useAuth } from '../../../context/AuthContext'
-import { formatPrice } from '../../../helpers'
+import { formatPrice, formatPriceAndInterval } from '../../../helpers'
 import Button from '../../common/buttons/Button'
 import CheckLabel from '../../common/CheckLabel'
 
@@ -31,13 +31,35 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
         : true
       : _banner
 
+  const estimatedMonthlyPrice =
+    (plan.interval === 'day'
+      ? plan.amount * 30
+      : plan.interval === 'week'
+      ? plan.amount * 4
+      : plan.interval === 'year'
+      ? plan.amount / 12
+      : plan.amount) / (plan.intervalCount || 1)
+
+  const _priceLabel = formatPrice(estimatedMonthlyPrice, plan)
+  const _cents = estimatedMonthlyPrice % 100
+  const priceLabelWithoutCents =
+    _cents && _priceLabel.endsWith(_cents.toString())
+      ? _priceLabel.substring(0, _priceLabel.length - 3)
+      : _priceLabel
+  const priceLabelCents =
+    _cents && _priceLabel.endsWith(_cents.toString())
+      ? _priceLabel.substr(-3)
+      : ''
+
   return (
     <section className="pricing-plan flex flex-col flex-shrink-0 w-64">
       <div
         className={classNames(
           'm-1 bg-more-1 shadow border rounded',
-          banner && typeof banner === 'string'
-            ? 'border-primary'
+          true // banner && typeof banner === 'string'
+            ? true // isMyPlan
+              ? 'border-primary'
+              : 'border-bg-less-1'
             : 'border-bg-more-2',
         )}
       >
@@ -46,7 +68,13 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             &nbsp;
           </div>
         ) : banner ? (
-          <div className="bg-primary text-primary-foreground text-sm leading-normal py-1 px-6 text-center font-semibold rounded-t">
+          <div
+            className={`${
+              true // isMyPlan
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-less-1 text-default'
+            } text-sm leading-normal py-1 px-6 text-center font-semibold rounded-t`}
+          >
             {banner}
           </div>
         ) : null}
@@ -55,23 +83,53 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           <div className="text-base leading-loose font-bold text-default">
             {plan.label}
           </div>
+
           <div className="mb-2 text-sm text-muted-65">{plan.description}</div>
 
-          <div className="text-5xl leading-snug font-bold text-default">{`${formatPrice(
-            plan.amount,
-            plan.currency,
-          )}`}</div>
-          {plan.interval ? (
-            <div className="text-sm text-muted-65">{`/${plan.interval}`}</div>
+          <div className="text-5xl leading-snug font-bold text-default">
+            {`${priceLabelWithoutCents}`}
+            {!!priceLabelCents && (
+              <small>
+                <small>
+                  <small>
+                    <small>{priceLabelCents}</small>
+                  </small>
+                </small>
+              </small>
+            )}
+          </div>
+          <div className="text-sm text-muted-65">{`/month${
+            estimatedMonthlyPrice !== plan.amount ? '*' : ''
+          }`}</div>
+          {/* {plan.interval ? (
+            <div className="text-sm text-muted-65">{`/${
+              plan.intervalCount > 1 ? `${plan.intervalCount}-` : ''
+            }${plan.interval}`}</div>
           ) : (
             <div className="text-sm text-muted-65">&nbsp;</div>
-          )}
+          )} */}
 
           <div className="pb-6" />
 
-          <Button type="neutral" href={buttonLink}>
-            {buttonLabel || 'Get started'}
-          </Button>
+          <div className="mb-2 text-sm text-muted-65 italic">
+            &nbsp;
+            {estimatedMonthlyPrice !== plan.amount
+              ? `*Billed ${formatPriceAndInterval(plan.amount, plan)}`
+              : ''}
+            &nbsp;
+          </div>
+
+          <div className="pb-6" />
+
+          {isMyPlan ? (
+            <Button type="neutral" href="/account">
+              {'Manage'}
+            </Button>
+          ) : (
+            <Button type="neutral" href={buttonLink}>
+              {buttonLabel || 'Get started'}
+            </Button>
+          )}
 
           <div className="pb-6" />
         </div>

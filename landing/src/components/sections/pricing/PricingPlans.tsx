@@ -10,7 +10,7 @@ const pricingPlanComponents = activePlans.map(plan =>
   plan.amount > 0 ? (
     <PricingPlanBlock
       key={`pricing-plan-${plan.id}`}
-      banner={plan.cannonicalId === 'starter' ? 'Most potato' : true}
+      banner={plan.banner}
       buttonLink={`/subscribe?plan=${plan.cannonicalId}`}
       plan={plan}
     />
@@ -47,7 +47,7 @@ export function PricingPlans(_props: PricingPlansProps) {
       <div className="text-center">
         <Link href="/account">
           <a className="text-xs text-muted-65 text-center">
-            Already on a paid plan? Manage your account
+            Already on a paid plan? Manage your subscription
           </a>
         </Link>
       </div>

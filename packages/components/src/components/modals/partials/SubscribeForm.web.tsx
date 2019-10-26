@@ -1,7 +1,8 @@
 import {
   activePlans,
   constants,
-  formatPrice,
+  formatPriceAndInterval,
+  freePlan,
   getDefaultUserPlan,
 } from '@devhub/core'
 import axios from 'axios'
@@ -68,11 +69,11 @@ const SubscribeFormWithStripe = React.memo(
 
     async function handleSubmit() {
       if (plan && plan.amount) subscribeToPlan()
-      else if (plan && !plan.amount) downgradeToFreePlan()
+      else if (!(plan && plan.amount)) downgradeToFreePlan()
     }
 
     async function downgradeToFreePlan() {
-      if (!(plan && plan.id && !plan.amount && reason)) return
+      if (!(!(plan && plan.amount) && reason)) return
 
       try {
         setFormState({ error: undefined, isSubmiting: true })
@@ -112,10 +113,13 @@ const SubscribeFormWithStripe = React.memo(
 
         dispatch(
           actions.updateUserData({
-            plan: getDefaultUserPlan(new Date().toISOString()),
+            plan: getDefaultUserPlan(new Date().toISOString(), {
+              trialStartAt: undefined,
+              trialEndAt: undefined,
+            }),
           }),
         )
-        if (onSubscribe) onSubscribe(plan.id)
+        if (onSubscribe) onSubscribe(plan && plan.id)
 
         return true
       } catch (error) {
@@ -259,7 +263,6 @@ const SubscribeFormWithStripe = React.memo(
     }
 
     const plan = planId && activePlans.find(p => p.id === planId)
-    if (!(plan && plan.id)) return null
 
     return (
       <form onSubmit={handleSubmit}>
@@ -381,7 +384,9 @@ const SubscribeFormWithStripe = React.memo(
           </>
         ) : (
           <>
-            <SubHeader title="Downgrade reason" />
+            <SubHeader
+              title={freePlan ? 'Downgrade reason' : 'Cancellation reason'}
+            />
 
             <View
               style={[sharedStyles.fullWidth, sharedStyles.paddingHorizontal]}
@@ -390,7 +395,11 @@ const SubscribeFormWithStripe = React.memo(
                 editable={!formState.isSubmiting}
                 multiline
                 onChangeText={value => setReason(value)}
-                placeholder="Let us know the reason you are downgrading so we can improve DevHub."
+                placeholder={`Let us know the reason you are ${
+                  freePlan && !freePlan.trialPeriodDays
+                    ? 'downgrading'
+                    : 'cancelling'
+                } so we can improve DevHub.`}
                 textInputKey="downgrade-reason-text-input"
                 value={reason}
               />
@@ -407,15 +416,22 @@ const SubscribeFormWithStripe = React.memo(
 
               <Spacer height={contentPadding} />
 
-              {!!(!plan.amount && userPlansToKeepUsing) && (
+              {!!(!(plan && plan.amount) && userPlansToKeepUsing) && (
                 <>
-                  <ThemedText color="foregroundColorMuted65">
-                    DevHub is made by a single person working on it full time.
-                    It needs to be a sustainable project to exist.
-                    {'\n\n'}
-                    If you want DevHub to keep existing and being updated,
-                    consider supporting it with a paid plan.
-                  </ThemedText>
+                  {freePlan && !freePlan.trialPeriodDays ? (
+                    <ThemedText color="foregroundColorMuted65">
+                      DevHub is made by a single person working on it full time.
+                      It needs to be a sustainable project to exist.
+                      {'\n\n'}
+                      If you want DevHub to keep existing and being updated,
+                      consider supporting it with a paid plan.
+                    </ThemedText>
+                  ) : (
+                    <ThemedText color="foregroundColorMuted65">
+                      DevHub doesn't have a free plan anymore. The only way to
+                      keep using DevHub is by having a paid subscription.
+                    </ThemedText>
+                  )}
 
                   <Spacer height={contentPadding} />
                 </>
@@ -434,10 +450,10 @@ const SubscribeFormWithStripe = React.memo(
           <Button
             analyticsCategory="subscription"
             analyticsAction="subscribe"
-            analyticsLabel={plan.cannonicalId}
+            analyticsLabel={(plan && plan.cannonicalId) || 'free'}
             disabled={
               formState.isSubmiting ||
-              (plan.amount
+              (plan && plan.amount
                 ? userPlan && userPlan.amount
                   ? !isCardFilled
                   : !isCardFilled || !reason
@@ -455,12 +471,31 @@ const SubscribeFormWithStripe = React.memo(
                       : userPlan && userPlan.amount > plan.amount
                       ? 'Downgrade to'
                       : 'Unlock for'
-                  } ${formatPrice(plan.amount, plan.currency)}/${plan.interval}`
+                  } ${formatPriceAndInterval(plan.amount, plan)}`
                 : userPlan && userPlan.amount > 0
                 ? 'Confirm downgrade to free plan'
-                : 'Unlock features'
-              : 'Select a plan'}
+                : 'Subscribe'
+              : freePlan && !freePlan.trialPeriodDays
+              ? 'Select a plan'
+              : 'Cancel subscription'}
           </Button>
+
+          {!!(plan && plan.amount && !plan.trialPeriodDays) &&
+            (!(userPlan && userPlan.amount) ||
+              (userPlan.amount && plan.amount > userPlan.amount)) && (
+              <>
+                <Spacer height={contentPadding} />
+
+                <ThemedText
+                  color="foregroundColorMuted65"
+                  style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
+                >
+                  {userPlan && userPlan.amount
+                    ? 'Your card will be changed any difference immediately'
+                    : 'Your card will be changed immediately'}
+                </ThemedText>
+              </>
+            )}
 
           <Spacer height={contentPadding} />
 

@@ -9,7 +9,7 @@ export const defaultUnreadIndicatorSize = 12
 
 export interface UnreadDotProps {
   backgroundColor?: keyof ThemeColors
-  borderColor?: keyof ThemeColors
+  borderColor?: keyof ThemeColors | null
   style?: ViewProps['style']
 }
 export const UnreadDot = React.forwardRef<ThemedView, UnreadDotProps>(
@@ -24,7 +24,9 @@ export const UnreadDot = React.forwardRef<ThemedView, UnreadDotProps>(
       <View
         ref={ref}
         style={[
-          styles.unreadIndicator,
+          borderColor === 'transparent' || borderColor === null
+            ? styles.unreadIndicator_noborder
+            : styles.unreadIndicator,
           style,
           {
             backgroundColor: theme[backgroundColor || 'primaryBackgroundColor'],
@@ -44,5 +46,11 @@ const styles = StyleSheet.create({
     height: defaultUnreadIndicatorSize,
     borderWidth: 2,
     borderRadius: defaultUnreadIndicatorSize / 2,
+  },
+  unreadIndicator_noborder: {
+    width: defaultUnreadIndicatorSize - 4,
+    height: defaultUnreadIndicatorSize - 4,
+    borderWidth: 0,
+    borderRadius: (defaultUnreadIndicatorSize - 4) / 2,
   },
 })

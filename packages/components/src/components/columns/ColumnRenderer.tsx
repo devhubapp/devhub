@@ -1,6 +1,3 @@
-import React, { useCallback, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
-
 import {
   cheapestPlanWithNotifications,
   Column as ColumnT,
@@ -10,7 +7,8 @@ import {
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
   EnhancedItem,
-  formatPrice,
+  formatPriceAndInterval,
+  getDateSmallText,
   getDefaultPaginationPerPage,
   getItemNodeIdOrId,
   GitHubIcon,
@@ -20,7 +18,10 @@ import {
   isNotificationPrivate,
   ThemeColors,
 } from '@devhub/core'
+import React, { useCallback, useRef } from 'react'
+import { StyleSheet, View } from 'react-native'
 import { useDispatch, useStore } from 'react-redux'
+
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useColumnData } from '../../hooks/use-column-data'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -124,6 +125,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   })
   const columnsCount = useReduxState(selectors.columnCountSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
+  const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
   const dispatch = useDispatch()
   const store = useStore()
 
@@ -139,9 +141,26 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   )
 
   const showBannerForPaidFeature: FreeTrialHeaderMessageProps | undefined =
-    plan &&
-    plan.featureFlags.columnsLimit >= 1 &&
-    columnIndex + 1 > plan.featureFlags.columnsLimit
+    isPlanExpired && plan && plan.trialEndAt
+      ? {
+          backgroundColor: 'backgroundColorDarker1',
+          foregroundColor: 'foregroundColorMuted65',
+          intervalRefresh: { date: plan.trialEndAt },
+          message: () =>
+            `${plan.amount ? 'Trial' : 'Free trial'} ${getDateSmallText(
+              plan.trialEndAt,
+              {
+                futureSuffix: 'left',
+                pastPrefix: 'ended',
+                pastSuffix: 'ago',
+                showPrefixOnFullDate: true,
+                showSuffixOnFullDate: false,
+              },
+            )}`,
+        }
+      : plan &&
+        plan.featureFlags.columnsLimit >= 1 &&
+        columnIndex + 1 > plan.featureFlags.columnsLimit
       ? columnIndex + 1 === plan.featureFlags.columnsLimit &&
         columnIndex + 1 === columnsCount &&
         columnIndex + 1 <= constants.COLUMNS_LIMIT
@@ -169,14 +188,29 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             message:
               cheapestPlanWithNotifications &&
               cheapestPlanWithNotifications.amount
-                ? `Unlock private repos for ${formatPrice(
+                ? `Unlock private repos for ${formatPriceAndInterval(
                     cheapestPlanWithNotifications.amount,
-                    cheapestPlanWithNotifications.currency,
-                  )}/${cheapestPlanWithNotifications.interval}`
+                    cheapestPlanWithNotifications,
+                  )}`
                 : 'Tap to unlock Private Repositories',
             relatedFeature: 'enablePrivateRepositories',
           }) ||
-        undefined
+        (plan && plan.status === 'trialing' && plan.trialEndAt
+          ? {
+              intervalRefresh: { date: plan.trialEndAt },
+              message: () =>
+                `${plan.amount ? 'Trial' : 'Free trial'} (${getDateSmallText(
+                  plan.trialEndAt,
+                  {
+                    futureSuffix: 'left',
+                    pastPrefix: 'ended',
+                    pastSuffix: 'ago',
+                    showPrefixOnFullDate: true,
+                    showSuffixOnFullDate: false,
+                  },
+                )})`,
+            }
+          : undefined)
 
   const refresh = useCallback(() => {
     dispatch(

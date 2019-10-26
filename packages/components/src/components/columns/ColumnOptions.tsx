@@ -326,10 +326,10 @@ export const ColumnOptions = React.memo(
               ],
             }}
           >
-            {`Unlock desktop notifications for ${formatPrice(
+            {`Unlock desktop notifications for ${formatPriceAndInterval(
               cheapestPlanWithNotifications.amount,
-              cheapestPlanWithNotifications.currency,
-            )}/${cheapestPlanWithNotifications.interval}`.toUpperCase()}
+              cheapestPlanWithNotifications,
+            )}`.toUpperCase()}
           </Link> */}
 
             <Spacer height={contentPadding / 2} />

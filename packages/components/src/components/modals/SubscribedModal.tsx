@@ -1,4 +1,4 @@
-import { allPlans, PlanID } from '@devhub/core'
+import { allPlans, freePlan, PlanID } from '@devhub/core'
 import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -26,12 +26,10 @@ export function SubscribedModal(props: SubscribedModalProps) {
 
   const dispatch = useDispatch()
 
-  const plan =
-    (planId && allPlans.find(p => p.id === planId)) ||
-    allPlans.find(p => p.amount > 0)
+  const plan = planId && allPlans.find(p => p.id === planId)
 
   useEffect(() => {
-    if (!(plan && plan.id)) {
+    if (freePlan && !freePlan.trialPeriodDays && !(plan && plan.id)) {
       dispatch(actions.closeAllModals())
       return
     }
@@ -41,13 +39,20 @@ export function SubscribedModal(props: SubscribedModalProps) {
     }
   }, [plan && plan.id])
 
-  if (!(plan && plan.label)) return null
+  // if (!(plan && plan.label)) return null
 
   return (
     <ModalColumn
       name="SUBSCRIBED"
       showBackButton={showBackButton}
-      title={plan && plan.amount ? 'Unlock features' : 'Downgraded'}
+      title=""
+      // title={
+      //   plan && plan.amount
+      //     ? 'Subscribed'
+      //     : (freePlan && !freePlan.trialPeriodDays)
+      //     ? 'Downgraded'
+      //     : 'Cancelled'
+      // }
     >
       <View style={[sharedStyles.fullWidth, sharedStyles.padding]}>
         <View
@@ -75,17 +80,36 @@ export function SubscribedModal(props: SubscribedModalProps) {
               textAlign: 'center',
             }}
           >
-            {plan.amount ? 'You are all set 🎉' : 'You are all set 👍'}
+            {plan && plan.amount ? 'You are all set 🎉' : 'You are all set 👍'}
           </ThemedText>
           <Spacer height={contentPadding} />
           <ThemedText
             color="foregroundColorMuted65"
             style={{ lineHeight: 24, fontSize: 18, textAlign: 'center' }}
           >
-            You've successfully {plan.amount ? 'subscribed' : 'downgraded'} to
-            the{' '}
-            <ThemedText style={{ fontWeight: 'bold' }}>{plan.label}</ThemedText>{' '}
-            plan
+            {plan && plan.amount ? (
+              <>
+                You've successfully subscribed to the{' '}
+                {!!plan.label && (
+                  <>
+                    <ThemedText style={{ fontWeight: 'bold' }}>
+                      {plan.label.toLowerCase()}
+                    </ThemedText>{' '}
+                  </>
+                )}
+                plan
+              </>
+            ) : freePlan && !freePlan.trialPeriodDays && plan ? (
+              <>
+                You've successfully downgraded to the{' '}
+                <ThemedText style={{ fontWeight: 'bold' }}>
+                  {`${plan.label || 'Free'}`.toLowerCase()}
+                </ThemedText>{' '}
+                plan
+              </>
+            ) : (
+              <>You've successfully cancelled your subscription.</>
+            )}
           </ThemedText>
           <Spacer height={contentPadding} />
           <ThemedText
@@ -96,29 +120,33 @@ export function SubscribedModal(props: SubscribedModalProps) {
               textAlign: 'center',
             }}
           >
-            {plan.amount
+            {plan && plan.amount
               ? 'You can now use DevHub with the unlocked features.'
-              : ' Hopefully it was quick and easy to downgrade. Feel free to subscribe again anytime!'}
+              : ' Hopefully this was quick and easy. Feel free to subscribe again anytime!'}
           </ThemedText>
 
           <Spacer height={contentPadding * 2} />
 
-          <Button
-            analyticsLabel="subscribed_tweet_about_it"
-            type="primary"
-            onPress={() => {
-              Browser.openURLOnNewTab(
-                `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  "I've just subscribed to @devhub_app and it's awesome! https://devhubapp.com",
-                )}`,
-              )
-            }}
-            style={sharedStyles.fullWidth}
-          >
-            Tweet about it
-          </Button>
+          {!!(plan && plan.amount) && (
+            <>
+              <Button
+                analyticsLabel="subscribed_tweet_about_it"
+                type="primary"
+                onPress={() => {
+                  Browser.openURLOnNewTab(
+                    `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                      "I've just bought @devhub_app and it's awesome! https://devhubapp.com",
+                    )}`,
+                  )
+                }}
+                style={sharedStyles.fullWidth}
+              >
+                Tweet about it
+              </Button>
 
-          <Spacer height={contentPadding / 2} />
+              <Spacer height={contentPadding / 2} />
+            </>
+          )}
 
           <Button
             analyticsLabel="subscribed_finish"

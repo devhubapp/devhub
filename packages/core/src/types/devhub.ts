@@ -423,7 +423,7 @@ export type ModalPayload =
     }
   | {
       name: 'SUBSCRIBED'
-      params: { planId: PlanID }
+      params: { planId: PlanID | undefined }
     }
 
 export type ModalPayloadWithIndex = ModalPayload & { index: number }
@@ -543,11 +543,13 @@ export type PlanSource = 'stripe' // | 'github_marketplace' | 'opencollective' |
 
 export interface Plan {
   id: PlanID
-  stripeIds: [string, string] | []
+  stripeIds: [string, string] | [] // [test, prod]
 
-  cannonicalId: 'free' | 'starter' | 'pro' | 'max'
+  cannonicalId: string
   label: string
   description: string
+
+  banner: string | boolean
 
   amount: number
   currency: string

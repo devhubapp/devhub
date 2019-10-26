@@ -1,5 +1,6 @@
 import {
   constants,
+  freePlan,
   getColumnOption,
   getUserAvatarByUsername,
   getUserURLFromLogin,
@@ -170,6 +171,7 @@ export const SidebarOrBottomBar = React.memo(
     const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
     const modalStack = useReduxState(selectors.modalStack)
     const user = useReduxState(selectors.currentGitHubUserSelector)
+    const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
 
     const small = sizename <= '2-medium'
 
@@ -340,6 +342,14 @@ export const SidebarOrBottomBar = React.memo(
                 ? dispatch(actions.closeAllModals())
                 : undefined
               : dispatch(actions.replaceModal({ name: 'SETTINGS' }))
+          }
+          showUnreadIndicator={
+            isPlanExpired && !(freePlan && !freePlan.trialPeriodDays)
+          }
+          unreadIndicatorColor={
+            isPlanExpired && !(freePlan && !freePlan.trialPeriodDays)
+              ? 'red'
+              : undefined
           }
           selected={isModalOpen('SETTINGS')}
           title="Preferences"

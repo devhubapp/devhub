@@ -1,4 +1,9 @@
-import { activePlans, GraphQLUserPlan } from '@devhub/core'
+import {
+  activePlans,
+  getDefaultUserPlan,
+  GraphQLUserPlan,
+  isPlanExpired,
+} from '@devhub/core'
 
 import { Platform } from '../../libs/platform'
 import { EMPTY_OBJ } from '../../utils/constants'
@@ -38,7 +43,21 @@ export const currentUserPlanSelector = (
     } as GraphQLUserPlan
   }
 
-  return (user && user.plan) || undefined
+  return (
+    (user && user.plan) ||
+    (user &&
+      user.createdAt &&
+      getDefaultUserPlan(user.createdAt, {
+        trialStartAt: user.freeTrialStartAt,
+        trialEndAt: user.freeTrialEndAt,
+      })) ||
+    undefined
+  )
+}
+
+export const isPlanExpiredSelector = (state: RootState): boolean => {
+  const plan = currentUserPlanSelector(state)
+  return isPlanExpired(plan)
 }
 
 export const currentUserIdSelector = (state: RootState) => {
