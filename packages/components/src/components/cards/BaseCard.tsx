@@ -24,7 +24,8 @@ import { Spacer } from '../common/Spacer'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
-import { BaseCardProps, sizes } from './BaseCard.shared'
+import { BaseCardProps, renderCardActions, sizes } from './BaseCard.shared'
+import { CardActions } from './partials/CardActions'
 import {
   CardItemSeparator,
   cardItemSeparatorSize,
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
   },
 
   subitemContainer: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
@@ -185,9 +186,10 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     githubApp,
     height,
     icon,
-    nodeIdOrId: id,
     isRead,
+    isSaved,
     link,
+    nodeIdOrId,
     reason,
     showPrivateLock,
     subitems,
@@ -199,11 +201,12 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
   if (!link)
     console.error(
-      `No link for ${type} card: ${id}, ${title}, ${text && text.text}`,
+      `No link for ${type} card: ${nodeIdOrId}, ${title}, ${text && text.text}`,
     )
   if (link && link.includes('api.github.com'))
     console.error(
-      `Wrong link for ${type} card: ${id}, ${title}, ${text && text.text}`,
+      `Wrong link for ${type} card: ${nodeIdOrId}, ${title}, ${text &&
+        text.text}`,
       link,
     )
 
@@ -220,7 +223,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
   return (
     <View
-      key={`base-card-container-${type}-${id}-inner`}
+      key={`base-card-container-${type}-${nodeIdOrId}-inner`}
       style={[styles.container, { height }]}
     >
       <View
@@ -576,6 +579,26 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
             </View>
           </>
         )}
+
+        {!!renderCardActions && (
+          <>
+            <Spacer height={sizes.verticalSpaceSize} />
+
+            <CardActions
+              commentsCount={
+                undefined
+                // issueOrPullRequest ? issueOrPullRequest.comments : undefined
+              }
+              commentsLink={link}
+              isRead={isRead}
+              isSaved={isSaved}
+              itemNodeIdOrIds={[nodeIdOrId]}
+              type={type}
+            />
+          </>
+        )}
+
+        <Spacer flex={1} />
       </View>
 
       <CardItemSeparator muted={isRead} />

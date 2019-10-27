@@ -1,5 +1,3 @@
-import { PixelRatio } from 'react-native'
-
 import {
   cheapestPlanWithNotifications,
   Column,
@@ -42,6 +40,7 @@ import {
   GitHubPushEvent,
   isDraft,
   isItemRead,
+  isItemSaved,
   isPullRequest,
   ItemPushNotification,
   Plan,
@@ -50,6 +49,9 @@ import {
   trimNewLinesAndSpaces,
   UserPlan,
 } from '@devhub/core'
+import { PixelRatio } from 'react-native'
+
+import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { ExtractActionFromActionCreator } from '../../redux/types/base'
 import {
@@ -61,6 +63,7 @@ import {
   smallTextSize,
 } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
+import { cardActionsHeight } from './partials/CardActions'
 import { cardItemSeparatorSize } from './partials/CardItemSeparator'
 
 const _iconSize = smallAvatarSize - 4
@@ -91,6 +94,9 @@ export const sizes = {
   verticalSpaceSize: contentPadding / 2,
 }
 
+export const renderCardActions =
+  Platform.OS === 'web' || constants.DISABLE_SWIPEABLE_CARDS
+
 export interface BaseCardProps {
   action?: {
     avatar: {
@@ -116,6 +122,7 @@ export interface BaseCardProps {
   }
   nodeIdOrId: string
   isRead: boolean
+  isSaved: boolean
   link: string
   reason?: {
     reason: GitHubNotificationReason
@@ -188,6 +195,7 @@ function getPrivateBannerCardProps(
     icon: { color: props.iconColor || 'red', name: 'lock' },
     nodeIdOrId: getItemNodeIdOrId(item)!,
     isRead: isItemRead(item),
+    isSaved: isItemSaved(item),
     link: `${constants.APP_DEEP_LINK_URLS.pricing}?highlightFeature=${highlightFeature}`,
     showPrivateLock: false,
     subitems: undefined,
@@ -244,6 +252,7 @@ function _getCardPropsForItem(
         isBranchMainEvent,
         isPrivate,
         isRead,
+        isSaved,
         isTagMainEvent,
         issueOrPullRequest,
         pages,
@@ -389,6 +398,7 @@ function _getCardPropsForItem(
                 icon,
                 nodeIdOrId: getItemNodeIdOrId(item)!,
                 isRead,
+                isSaved,
                 link:
                   event.type === 'WatchEvent' && actorAvatar.linkURL
                     ? repoIsKnown
@@ -418,6 +428,7 @@ function _getCardPropsForItem(
                 icon,
                 nodeIdOrId: getItemNodeIdOrId(item)!,
                 isRead,
+                isSaved,
                 link: forkURL || repoURL,
                 showPrivateLock: isPrivate,
                 subitems: undefined,
@@ -453,6 +464,7 @@ function _getCardPropsForItem(
               icon,
               nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
+              isSaved,
               link:
                 (_comment &&
                   (_comment.html_url ||
@@ -505,6 +517,7 @@ function _getCardPropsForItem(
               icon,
               nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
+              isSaved,
               link:
                 (_comment &&
                   (_comment.html_url ||
@@ -559,6 +572,7 @@ function _getCardPropsForItem(
               icon,
               nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
+              isSaved,
               link:
                 (_comment &&
                   (_comment.html_url ||
@@ -643,6 +657,7 @@ function _getCardPropsForItem(
               icon,
               nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
+              isSaved,
               link:
                 firstLink &&
                 pages.length === 1 &&
@@ -679,6 +694,7 @@ function _getCardPropsForItem(
               icon,
               nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
+              isSaved,
               link:
                 release.html_url ||
                 fixURL(release.url, { tagName: branchOrTagName })!,
@@ -712,6 +728,7 @@ function _getCardPropsForItem(
             icon,
             nodeIdOrId: getItemNodeIdOrId(item)!,
             isRead,
+            isSaved,
             link:
               (_comment &&
                 (_comment.html_url ||
@@ -765,6 +782,7 @@ function _getCardPropsForItem(
         iconDetails,
         isPrivate,
         isRead,
+        isSaved,
         repoFullName,
         repoOwnerName,
         repoName,
@@ -815,6 +833,7 @@ function _getCardPropsForItem(
         icon,
         nodeIdOrId: getItemNodeIdOrId(item)!,
         isRead,
+        isSaved,
         link: fixURL(issueOrPullRequest.html_url, {
           addBottomAnchor: issueOrPullRequest.comments > 0,
           issueOrPullRequestNumber: issueOrPullRequest.number,
@@ -845,6 +864,7 @@ function _getCardPropsForItem(
         commit,
         isPrivate,
         isRead,
+        isSaved,
         issueOrPullRequest,
         issueOrPullRequestNumber,
         release,
@@ -912,6 +932,7 @@ function _getCardPropsForItem(
         icon,
         nodeIdOrId: getItemNodeIdOrId(item)!,
         isRead,
+        isSaved,
         link:
           (subject.type === 'RepositoryVulnerabilityAlert' &&
             getGitHubURLForSecurityAlert(repoURL)) ||
@@ -1097,6 +1118,7 @@ export function getCardSizeForProps(
     (props.githubApp
       ? sizes.githubAppMessageContainerHeight + sizes.verticalSpaceSize
       : 0) +
+    (renderCardActions ? cardActionsHeight + sizes.verticalSpaceSize : 0) +
     cardItemSeparatorSize
   )
 }

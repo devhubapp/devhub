@@ -23,7 +23,12 @@ import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Link, LinkProps } from '../common/Link'
 import { getTheme } from '../context/ThemeContext'
 import { BaseCard } from './BaseCard'
-import { BaseCardProps, getCardPropsForItem } from './BaseCard.shared'
+import {
+  BaseCardProps,
+  getCardPropsForItem,
+  renderCardActions,
+} from './BaseCard.shared'
+import { CardActions } from './partials/CardActions'
 import { CardFocusIndicator } from './partials/CardFocusIndicator'
 import { CardSavedIndicator } from './partials/CardSavedIndicator'
 
@@ -166,6 +171,8 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
 
   if (!(item && cardProps)) return null
 
+  const isSaved = isItemSaved(item)
+
   return (
     <Link
       ref={ref}
@@ -195,7 +202,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
       //         dispatch(
       //           actions.saveItemsForLater({
       //             itemNodeIdOrIds: [getItemNodeIdOrId(item)!],
-      //             save: !isItemSaved(item),
+      //             save: !isSaved,
       //           }),
       //         )
       //       }
@@ -227,7 +234,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
         }}
       />
 
-      {!!isItemSaved(item) && <CardSavedIndicator />}
+      {!!isSaved && <CardSavedIndicator />}
     </Link>
   )
 })

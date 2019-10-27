@@ -25,6 +25,7 @@ import {
   getOwnerAndRepo,
   getPullRequestIconAndColor,
   isItemRead,
+  isItemSaved,
   isPullRequest,
 } from './shared'
 import {
@@ -540,6 +541,7 @@ export function getGitHubIssueOrPullRequestSubItems(
   )
 
   const isRead = isItemRead(issueOrPullRequest)
+  const isSaved = isItemSaved(issueOrPullRequest)
   const isPrivate = isIssueOrPullRequestPrivate(issueOrPullRequest)
 
   const canSee =
@@ -555,6 +557,7 @@ export function getGitHubIssueOrPullRequestSubItems(
     iconDetails,
     isPrivate,
     isRead,
+    isSaved,
     repoFullName,
     repoName,
     repoOwnerName,
