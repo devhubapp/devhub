@@ -83,7 +83,7 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
           }
 
           const existingItem = draft.byId[nodeIdOrId]!.item
-          const mergedItem = removeUselessURLsFromResponseItem(
+          const _mergedItem = removeUselessURLsFromResponseItem(
             action.payload.subscriptionType === 'activity'
               ? mergeEventPreservingEnhancement(
                   newItem as EnhancedGitHubEvent,
@@ -101,6 +101,12 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
                 )
               : newItem,
           )
+          const mergedItem =
+            existingItem &&
+            _mergedItem &&
+            JSON.stringify(existingItem) === JSON.stringify(_mergedItem)
+              ? existingItem
+              : _mergedItem
 
           if (action.payload.github && action.payload.github.loggedUsername) {
             const actorLogin =

@@ -216,7 +216,8 @@ const urlsToKeep = ['url', 'html_url', 'avatar_url', 'latest_comment_url']
 export function removeUselessURLsFromResponseItem<
   T extends Record<string, any>
 >(item: T) {
-  return deepMapper(item, obj => {
+  let hasChanged = false
+  const result = deepMapper(item, obj => {
     const keys = Object.keys(obj)
 
     keys.forEach(key => {
@@ -227,11 +228,16 @@ export function removeUselessURLsFromResponseItem<
         return
 
       if (!urlsToKeep.includes(key)) {
+        hasChanged = true
         delete (obj as any)[key]
       }
     })
+
     return obj
   })
+
+  if (!hasChanged) return item
+  return result
 }
 
 // Modified version of: https://github.com/stiang/remove-markdown
