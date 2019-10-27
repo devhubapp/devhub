@@ -9,7 +9,7 @@ import { ErrorBoundary } from '../../libs/bugsnag'
 import { OneList, OneListProps } from '../../libs/one-list'
 import { sharedStyles } from '../../styles/shared'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
-import { EventCard, EventCardProps } from './EventCard'
+import { EventCard } from './EventCard'
 import { SwipeableCard } from './SwipeableCard'
 
 type ItemT = EnhancedGitHubEvent

@@ -1,11 +1,11 @@
-import _ from 'lodash'
-
 import {
   ColumnSubscription,
   constants,
   getItemsFromSubscriptions,
 } from '@devhub/core'
+import _ from 'lodash'
 import { createSelector } from 'reselect'
+
 import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { currentUserPlanSelector } from './auth'
@@ -63,6 +63,7 @@ export const createSubscriptionsDataSelector = () =>
         dataByNodeIdOrId &&
         dataByNodeIdOrId[nodeIdOrId] &&
         dataByNodeIdOrId[nodeIdOrId]!.item
+
       const result = getItemsFromSubscriptions(
         subscriptions,
         getItemByNodeIdOrId,

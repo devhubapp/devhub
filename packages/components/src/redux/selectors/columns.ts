@@ -8,9 +8,13 @@ import { createSelector } from 'reselect'
 
 import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
+import { itemsBySubscriptionIdsSelector } from './data'
 import { currentGitHubUsernameSelector } from './github'
 import { createDeepEqualSelector } from './helpers'
-import { subscriptionSelector } from './subscriptions'
+import {
+  createSubscriptionsDataSelector,
+  subscriptionSelector,
+} from './subscriptions'
 
 const s = (state: RootState) => state.columns || EMPTY_OBJ
 
@@ -78,3 +82,33 @@ export const createColumnHeaderDetailsSelector = () =>
         PixelRatio.getPixelSizeForLayoutSize,
       ),
   )
+
+export const createColumnDataSelector = () => {
+  const subscriptionsDataSelector = createSubscriptionsDataSelector()
+
+  return (state: RootState, columnId: string) => {
+    let saved: boolean | undefined
+
+    const subscriptionIds = (() => {
+      const column = columnSelector(state, columnId)
+      if (!column) return EMPTY_ARRAY
+
+      saved = column.filters && column.filters.saved
+
+      if (
+        saved &&
+        column.subscriptionIdsHistory &&
+        column.subscriptionIdsHistory.length
+      )
+        return column.subscriptionIdsHistory
+      if (column.subscriptionIds && column.subscriptionIds.length)
+        return column.subscriptionIds
+
+      return EMPTY_ARRAY
+    })()
+
+    if (saved) return itemsBySubscriptionIdsSelector(state, subscriptionIds)
+
+    return subscriptionsDataSelector(state, subscriptionIds)
+  }
+}

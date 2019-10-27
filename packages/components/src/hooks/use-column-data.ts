@@ -16,10 +16,9 @@ export function useColumnData<ItemT extends EnhancedItem>(
     mergeSimilar?: boolean
   } = {},
 ) {
-  const subscriptionsDataSelector = useMemo(
-    selectors.createSubscriptionsDataSelector,
-    [columnId],
-  )
+  const columnDataSelector = useMemo(selectors.createColumnDataSelector, [
+    columnId,
+  ])
 
   const { column, hasCrossedColumnsLimit } = useColumn(columnId)
 
@@ -28,9 +27,8 @@ export function useColumnData<ItemT extends EnhancedItem>(
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
   const allItems = useReduxState(state => {
-    if (!(column && column.subscriptionIds && column.subscriptionIds.length))
-      return EMPTY_ARRAY
-    return subscriptionsDataSelector(state, column.subscriptionIds)
+    if (!(column && column.id)) return EMPTY_ARRAY
+    return columnDataSelector(state, column.id)
   }) as ItemT[]
 
   const _allItemsIds = useMemo(

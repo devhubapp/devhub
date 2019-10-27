@@ -20,10 +20,7 @@ import { contentPadding } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { Spacer } from '../common/Spacer'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
-import {
-  IssueOrPullRequestCard,
-  IssueOrPullRequestCardProps,
-} from './IssueOrPullRequestCard'
+import { IssueOrPullRequestCard } from './IssueOrPullRequestCard'
 import { SwipeableCard } from './SwipeableCard'
 
 type ItemT = EnhancedGitHubIssueOrPullRequest
