@@ -216,7 +216,8 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
 
             if (isDeepLink && href) Linking.openURL(href)
 
-            if (e && !href) e.preventDefault()
+            if (e && (!href || href.startsWith('javascript:')))
+              e.preventDefault()
           },
           selectable: true,
           target: openOnNewTab ? '_blank' : '_self',

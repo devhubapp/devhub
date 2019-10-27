@@ -116,6 +116,8 @@ function init() {
           return
 
         event.preventDefault()
+
+        if (uri.startsWith('javascript:') || uri.startsWith('about:blank')) return
         shell.openExternal(uri)
       },
     )
