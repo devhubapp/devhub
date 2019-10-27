@@ -86,13 +86,13 @@ export default function useMultiKeyPressCallback(
     }
   }, [downHandler, upHandler, targetKeys.length])
 
-  useEmitter(
-    targetKeys.length ? 'PRESSED_KEYBOARD_SHORTCUT' : undefined,
-    payload => {
-      if (payload.keys.length === 1) pressedKeysRef.current.clear()
-    },
-    [],
-  )
+  // useEmitter(
+  //   targetKeys.length ? 'PRESSED_KEYBOARD_SHORTCUT' : undefined,
+  //   payload => {
+  //     if (payload.keys.length === 1) pressedKeysRef.current.clear()
+  //   },
+  //   [],
+  // )
 }
 
 function areKeysPressed(
