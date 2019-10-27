@@ -80,6 +80,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       {
         id: guid(),
         subscriptionIds: [notificationSubscription.id],
+        subscriptionIdsHistory: [notificationSubscription.id],
         type: 'notifications',
         filters: {
           notifications: {
@@ -90,6 +91,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       {
         id: guid(),
         subscriptionIds: [userReceivedEventsSubscription.id],
+        subscriptionIdsHistory: [userReceivedEventsSubscription.id],
         type: 'activity',
         filters: {
           subjectTypes: {
@@ -104,6 +106,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       {
         id: guid(),
         subscriptionIds: [involvedIssuesAndPRsSubscription.id],
+        subscriptionIdsHistory: [involvedIssuesAndPRsSubscription.id],
         type: 'issue_or_pr',
         filters: {
           involves: involvedIssuesAndPRsSubscription.params.involves,
@@ -118,6 +121,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       {
         id: guid(),
         subscriptionIds: [myReposIssuesAndPRsSubscription.id],
+        subscriptionIdsHistory: [myReposIssuesAndPRsSubscription.id],
         type: 'issue_or_pr',
         filters: {
           involves: myReposIssuesAndPRsSubscription.params.involves,
@@ -132,6 +136,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
       {
         id: guid(),
         subscriptionIds: [userEventsSubscription.id],
+        subscriptionIdsHistory: [userEventsSubscription.id],
         type: 'activity',
         filters: undefined,
       },

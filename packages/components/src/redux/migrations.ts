@@ -64,6 +64,7 @@ export default {
           id: oldColumn.id,
           type: oldColumn.type,
           subscriptionIds: [subscription.id],
+          subscriptionIdsHistory: [subscription.id],
           createdAt: oldColumn.createdAt || new Date().toISOString(),
           updatedAt: oldColumn.updatedAt || new Date().toISOString(),
         }
@@ -488,6 +489,27 @@ export default {
               draft.data.readIds.push(id)
               draft.data.updatedAt = now
             }
+          }
+        })
+      })
+    }),
+  15: (state: RootState) =>
+    immer(state, draft => {
+      draft.columns = draft.columns || {}
+      draft.columns.byId = draft.columns.byId || {}
+
+      const columnIds = Object.keys(draft.columns.byId)
+      columnIds.forEach(columnId => {
+        const column = draft.columns.byId![columnId]
+        if (!column) return
+
+        column.subscriptionIds = column.subscriptionIds || []
+        column.subscriptionIdsHistory = column.subscriptionIdsHistory || []
+
+        column.subscriptionIds.forEach(subscriptionId => {
+          if (!subscriptionId) return
+          if (!column.subscriptionIdsHistory.includes(subscriptionId)) {
+            column.subscriptionIdsHistory.push(subscriptionId)
           }
         })
       })

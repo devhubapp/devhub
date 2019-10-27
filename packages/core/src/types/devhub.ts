@@ -284,6 +284,7 @@ export interface BaseColumn {
   // title?: string // TODO
   // subtitle?: string // TODO
   subscriptionIds: string[]
+  subscriptionIdsHistory: string[]
   options?: ColumnOptions
   createdAt: string
   updatedAt: string

@@ -76,6 +76,10 @@ export const columnsReducer: Reducer<State> = (
           column.subscriptionIds.concat(action.payload.subscription.id),
         )
 
+        column.subscriptionIdsHistory = _.uniq(
+          (column.subscriptionIdsHistory || []).concat(column.subscriptionIds),
+        )
+
         draft.updatedAt = new Date().toISOString()
       })
 

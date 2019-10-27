@@ -1018,6 +1018,7 @@ function getNewColumnAndSubscriptions(
     id: guid(),
     type: _type as any,
     subscriptionIds: [newSubscription.id],
+    subscriptionIdsHistory: [newSubscription.id],
     filters: newColumnFilters,
   }
 

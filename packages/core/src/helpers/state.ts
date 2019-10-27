@@ -25,8 +25,16 @@ export function normalizeColumns(
     byId[id] = immer(column, draft => {
       draft.id = id
       draft.subscriptionIds = column.subscriptionIds || []
+      draft.subscriptionIdsHistory = column.subscriptionIdsHistory || []
       draft.createdAt = column.createdAt || new Date().toISOString()
       draft.updatedAt = column.updatedAt || new Date().toISOString()
+
+      draft.subscriptionIds.forEach(subscriptionId => {
+        if (!subscriptionId) return
+        if (!draft.subscriptionIdsHistory.includes(subscriptionId)) {
+          draft.subscriptionIdsHistory.push(subscriptionId)
+        }
+      })
     }) as Column
 
     return id
