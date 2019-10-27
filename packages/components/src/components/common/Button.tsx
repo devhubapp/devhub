@@ -29,14 +29,25 @@ export type ButtonProps = Omit<ThemedTouchableHighlightProps, 'children'> & {
   round?: boolean
   size?: number | 'auto'
   textStyle?: ThemedTextProps['style']
+  withBorder?: boolean
 } & (
     | {
         type?: 'primary' | 'neutral' | 'danger' | 'transparent'
-        colors?: undefined
+        colors?: {
+          backgroundThemeColor?: keyof ThemeColors
+          foregroundThemeColor?: keyof ThemeColors
+          backgroundHoverThemeColor?: keyof ThemeColors | undefined
+          foregroundHoverThemeColor?: keyof ThemeColors
+        }
       }
     | {
         type: 'custom'
-        colors: ReturnType<typeof getButtonColors>
+        colors: {
+          backgroundThemeColor: keyof ThemeColors
+          foregroundThemeColor: keyof ThemeColors
+          backgroundHoverThemeColor: keyof ThemeColors | undefined
+          foregroundHoverThemeColor: keyof ThemeColors
+        }
       })
 
 export const defaultButtonSize = 40
@@ -49,12 +60,15 @@ export function Button(props: ButtonProps) {
     loading,
     loadingIndicatorStyle,
     round = true,
-    size = defaultButtonSize,
     style,
     textStyle,
     type = 'neutral',
+    withBorder,
     ...otherProps
   } = props
+
+  const _size = props.size || defaultButtonSize
+  const size = typeof _size === 'number' ? _size - (withBorder ? 1 : 0) : _size
 
   const containerViewRef = useRef<View>(null)
   const innerTouchableRef = useRef<ThemedTouchableHighlight>(null)
@@ -69,7 +83,7 @@ export function Button(props: ButtonProps) {
     foregroundThemeColor,
     backgroundHoverThemeColor,
     foregroundHoverThemeColor,
-  } = type === 'custom' ? colors! : getButtonColors(type)
+  } = getButtonColors(type, colors)
 
   useHover(
     containerViewRef,
@@ -130,11 +144,17 @@ export function Button(props: ButtonProps) {
     <ThemedView
       ref={containerViewRef}
       backgroundColor={backgroundThemeColor}
+      borderColor={
+        !backgroundThemeColor || backgroundThemeColor === 'transparent'
+          ? backgroundHoverThemeColor
+          : backgroundThemeColor
+      }
       style={[
         styles.button,
         !otherProps.hitSlop && sharedStyles.overflowHidden,
-        { height: size },
+        { minWidth: size, height: size },
         round && { borderRadius: size === 'auto' ? radius : size / 2 },
+        withBorder && { borderWidth: 1 },
         style,
       ]}
     >
@@ -209,12 +229,8 @@ export function Button(props: ButtonProps) {
 
 export function getButtonColors(
   type?: ButtonProps['type'],
-): {
-  backgroundThemeColor: keyof ThemeColors
-  foregroundThemeColor: keyof ThemeColors
-  backgroundHoverThemeColor: keyof ThemeColors | undefined
-  foregroundHoverThemeColor: keyof ThemeColors
-} {
+  override?: ButtonProps['colors'],
+): NonNullable<ButtonProps['colors']> {
   switch (type) {
     case 'danger':
       return {
@@ -246,6 +262,7 @@ export function getButtonColors(
         foregroundThemeColor: 'foregroundColor',
         backgroundHoverThemeColor: 'backgroundColorLess2',
         foregroundHoverThemeColor: 'foregroundColor',
+        ...override,
       }
   }
 }

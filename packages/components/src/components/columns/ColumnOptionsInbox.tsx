@@ -36,7 +36,7 @@ export function ColumnOptionsInbox(props: ColumnOptionsInboxProps) {
       enableBackgroundHover={enableBackgroundHover}
       hasChanged={false}
       headerItemFixedIconSize={columnHeaderItemContentSize}
-      iconName="inbox"
+      icon={{ family: 'octicon', name: 'inbox' }}
       isOpen={isOpen}
       onToggle={onToggleRowVisibility}
       right={right}

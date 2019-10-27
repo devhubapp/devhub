@@ -21,6 +21,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
 import { ColumnFiltersButton } from '../columns/ColumnFiltersButton'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 import { IconButton } from '../common/IconButton'
@@ -166,6 +167,35 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
   function renderMainContent() {
     if (!column) return null
 
+    const saved = column.filters && column.filters.saved
+
+    const FilterTagBookmark = (
+      <View
+        key={`filter-tag-bookmark`}
+        style={sharedStyles.horizontalAndVerticallyAligned}
+      >
+        <TagToken
+          icon={{ family: 'material', name: 'bookmark' }}
+          onPress={() => {
+            dispatch(
+              actions.setColumnSavedFilter({
+                columnId,
+                saved: KeyboardKeyIsPressed.alt
+                  ? false
+                  : saved === true
+                  ? null
+                  : true,
+              }),
+            )
+          }}
+          onRemove={undefined}
+          size={searchBarMainContentHeight}
+          strikethrough={saved === false}
+          transparent={typeof saved !== 'boolean'}
+        />
+      </View>
+    )
+
     if (!showTextInput) {
       return (
         <View style={[sharedStyles.flex, { height: searchBarTotalHeight }]}>
@@ -187,17 +217,23 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
             ]}
             topOrLeftOverlayThemeColor={getColumnHeaderThemeColors().normal}
           >
+            {FilterTagBookmark}
+
             {queryTerms.map((termArr, index) => {
               const [key, value, isNegated] =
                 termArr.length === 2 ? ['', termArr[0], termArr[1]] : termArr
               if (!(value && typeof value === 'string')) return null
+
+              // we already show the saved tag everytime
+              if (key === 'is' && value === 'saved') return null
 
               return (
                 <View
                   key={`filter-tag-${termArr.join('-')}`}
                   style={sharedStyles.horizontalAndVerticallyAligned}
                 >
-                  {index > 0 && <Spacer width={contentPadding / 4} />}
+                  {/* {index > 0 && <Spacer width={contentPadding / 4} />} */}
+                  <Spacer width={contentPadding / 4} />
 
                   <TagToken
                     label={`${key ? `${key}:${value}` : value}`}
@@ -275,27 +311,39 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
     }
 
     return (
-      <SearchBar
-        key={`cards-search-header-column-${column.id}`}
-        autoCapitalize="none"
-        autoCorrect={false}
-        autoFocus={autoFocus}
-        blurOnSubmit={false}
-        borderHoverThemeColor={isPendingSave ? 'yellow' : undefined}
-        borderThemeColor={isPendingSave ? 'yellow' : undefined}
-        clearButtonMode="while-editing"
-        containerBackgroundThemeColor={null}
-        onBlur={onBlur}
-        onChangeText={onChangeText}
-        onFocus={onFocus}
-        onKeyPress={onKeyPress}
-        onSubmitEditing={onSubmit}
-        returnKeyType="search"
-        textHoverThemeColor={isPendingSave ? 'yellow' : undefined}
-        textInputKey={`search-bar-input-component-column-${column.id}`}
-        textThemeColor={isPendingSave ? 'yellow' : undefined}
-        value={formikProps.values.query}
-      />
+      <View
+        style={[
+          sharedStyles.flex,
+          sharedStyles.fullMaxWidth,
+          sharedStyles.horizontalAndVerticallyAligned,
+        ]}
+      >
+        <Spacer width={searchBarOuterSpacing} />
+        {FilterTagBookmark}
+        <Spacer width={contentPadding / 2 - searchBarOuterSpacing} />
+
+        <SearchBar
+          key={`cards-search-header-column-${column.id}`}
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={autoFocus}
+          blurOnSubmit={false}
+          borderHoverThemeColor={isPendingSave ? 'yellow' : undefined}
+          borderThemeColor={isPendingSave ? 'yellow' : undefined}
+          clearButtonMode="while-editing"
+          containerBackgroundThemeColor={null}
+          onBlur={onBlur}
+          onChangeText={onChangeText}
+          onFocus={onFocus}
+          onKeyPress={onKeyPress}
+          onSubmitEditing={onSubmit}
+          returnKeyType="search"
+          textHoverThemeColor={isPendingSave ? 'yellow' : undefined}
+          textInputKey={`search-bar-input-component-column-${column.id}`}
+          textThemeColor={isPendingSave ? 'yellow' : undefined}
+          value={formikProps.values.query}
+        />
+      </View>
     )
   }
 

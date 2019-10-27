@@ -1,6 +1,6 @@
+import { ModalPayload } from '@devhub/core'
 import React, { useEffect, useRef } from 'react'
 
-import { ModalPayload } from '@devhub/core'
 import { NativeComponent, View } from 'react-native'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -12,14 +12,13 @@ import { contentPadding } from '../../styles/variables'
 import { findNode, tryFocus } from '../../utils/helpers/shared'
 import { Spacer } from '../common/Spacer'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
-import { ThemedIconProps } from '../themed/ThemedIcon'
 import { Column } from './Column'
-import { ColumnHeader } from './ColumnHeader'
+import { ColumnHeader, ColumnHeaderProps } from './ColumnHeader'
 
 export interface ModalColumnProps {
   children: React.ReactNode
   hideCloseButton?: boolean
-  icon?: ThemedIconProps['name'] | undefined
+  icon?: ColumnHeaderProps['icon']
   name: ModalPayload['name']
   right?: React.ReactNode
   showBackButton: boolean

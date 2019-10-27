@@ -52,8 +52,10 @@ export const sharedStyles = StyleSheet.create({
   paddingHalf: { padding: contentPadding / 2 },
   paddingHorizontal: { paddingHorizontal: contentPadding },
   paddingHorizontalHalf: { paddingHorizontal: contentPadding / 2 },
+  paddingHorizontalNone: { paddingHorizontal: 0 },
   paddingVertical: { paddingVertical: contentPadding },
   paddingVerticalHalf: { paddingVertical: contentPadding / 2 },
+  paddingVerticalNone: { paddingVertical: 0 },
   textCenter: { textAlign: 'center' },
 
   center: {

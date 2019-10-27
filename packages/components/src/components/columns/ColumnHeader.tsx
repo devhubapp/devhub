@@ -17,6 +17,7 @@ import { confirm } from '../../libs/confirm'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
+import { OcticonIconProps } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -28,7 +29,7 @@ import { ScrollViewWithOverlay } from '../common/ScrollViewWithOverlay'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { TouchableWithoutFeedback } from '../common/TouchableWithoutFeedback'
-import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 
@@ -47,7 +48,7 @@ export function getColumnHeaderThemeColors(): {
 export interface ColumnHeaderProps {
   avatar?: { imageURL: string; linkURL: string }
   columnId?: string
-  icon?: ThemedIconProps['name']
+  icon?: OcticonIconProps['name']
   left?: ReactNode
   right?: ReactNode
   style?: StyleProp<ViewStyle>
@@ -152,6 +153,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
               <>
                 <ThemedIcon
                   color="foregroundColor"
+                  family="octicon"
                   name={icon}
                   size={columnHeaderItemContentSize * 1.1}
                 />

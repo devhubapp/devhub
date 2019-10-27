@@ -387,7 +387,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={false}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'involves'}
-                iconName="person"
+                icon={{ family: 'octicon', name: 'person' }}
                 isOpen={openedOptionCategories.has('involves')}
                 onToggle={
                   allowToggleCategories
@@ -504,7 +504,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={typeof savedForLater === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'saved_for_later'}
-                iconName="bookmark"
+                icon={{ family: 'material', name: 'bookmark' }}
                 isOpen={openedOptionCategories.has('saved_for_later')}
                 onToggle={
                   allowToggleCategories
@@ -570,11 +570,13 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 }
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'unread'}
-                iconName={
-                  column.filters && column.filters.unread === true
-                    ? 'mail'
-                    : 'mail-read'
-                }
+                icon={{
+                  family: 'octicon',
+                  name:
+                    column.filters && column.filters.unread === true
+                      ? 'mail'
+                      : 'mail-read',
+                }}
                 isOpen={openedOptionCategories.has('unread')}
                 onToggle={
                   allowToggleCategories
@@ -693,8 +695,9 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'state'}
-                iconName={
-                  hasForcedValue
+                icon={{
+                  family: 'octicon',
+                  name: hasForcedValue
                     ? itemPassesFilterRecord(
                         filters!,
                         'merged',
@@ -708,8 +711,8 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                         )
                       ? 'issue-closed'
                       : 'issue-opened'
-                    : 'issue-opened'
-                }
+                    : 'issue-opened',
+                }}
                 isOpen={openedOptionCategories.has('state')}
                 onToggle={
                   allowToggleCategories
@@ -801,7 +804,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={typeof draft === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'draft'}
-                iconName="pencil"
+                icon={{ family: 'octicon', name: 'pencil' }}
                 isOpen={openedOptionCategories.has('draft')}
                 onToggle={
                   allowToggleCategories
@@ -860,7 +863,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={typeof bot === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'bot'}
-                iconName="hubot"
+                icon={{ family: 'octicon', name: 'hubot' }}
                 isOpen={openedOptionCategories.has('bot')}
                 onToggle={
                   allowToggleCategories
@@ -953,7 +956,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'subject_types'}
-                iconName="file"
+                icon={{ family: 'octicon', name: 'file' }}
                 isOpen={openedOptionCategories.has('subject_types')}
                 onToggle={
                   allowToggleCategories
@@ -1068,7 +1071,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'notification_reason'}
-                iconName="rss"
+                icon={{ family: 'octicon', name: 'rss' }}
                 isOpen={openedOptionCategories.has('notification_reason')}
                 onToggle={
                   allowToggleCategories
@@ -1181,7 +1184,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={filterRecordHasAnyForcedValue(filters)}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'event_action'}
-                iconName="note"
+                icon={{ family: 'octicon', name: 'note' }}
                 isOpen={openedOptionCategories.has('event_action')}
                 onToggle={
                   allowToggleCategories
@@ -1276,11 +1279,13 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 }
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'privacy'}
-                iconName={
-                  column.filters && column.filters.private === false
-                    ? 'globe'
-                    : 'lock'
-                }
+                icon={{
+                  family: 'octicon',
+                  name:
+                    column.filters && column.filters.private === false
+                      ? 'globe'
+                      : 'lock',
+                }}
                 isOpen={openedOptionCategories.has('privacy')}
                 onToggle={
                   allowToggleCategories
@@ -1400,7 +1405,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 }
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'repos'}
-                iconName="repo"
+                icon={{ family: 'octicon', name: 'repo' }}
                 isOpen={openedOptionCategories.has('repos')}
                 onToggle={
                   allowToggleCategories

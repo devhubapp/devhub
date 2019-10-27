@@ -1,15 +1,16 @@
 import React from 'react'
 
 import { View } from 'react-native'
+import { OcticonIconProps } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { H2 } from './H2'
 import { Spacer } from './Spacer'
 
 export interface SubHeaderProps {
   children?: React.ReactNode
-  iconName?: ThemedIconProps['name']
+  iconName?: OcticonIconProps['name']
   muted?: boolean
   title?: string
 }
@@ -28,7 +29,12 @@ export function SubHeader(props: SubHeaderProps) {
       ]}
     >
       {!!iconName && (
-        <ThemedIcon color="foregroundColor" name={iconName} size={18} />
+        <ThemedIcon
+          color="foregroundColor"
+          family="octicon"
+          name={iconName}
+          size={18}
+        />
       )}
 
       {!!title && (

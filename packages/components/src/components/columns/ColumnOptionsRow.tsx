@@ -1,7 +1,6 @@
 import React, { useCallback, useRef } from 'react'
 import { View, ViewStyle } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core'
 import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
@@ -16,7 +15,7 @@ import {
   TouchableOpacityProps,
 } from '../common/TouchableOpacity'
 import { getTheme } from '../context/ThemeContext'
-import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import {
@@ -34,7 +33,7 @@ export interface ColumnOptionsRowProps {
   hasChanged: boolean
   headerItemFixedIconSize?: number
   hideSeparator?: boolean
-  iconName: GitHubIcon
+  icon: Pick<ThemedIconProps, 'family' | 'name'>
   isOpen: boolean
   onToggle: (() => void) | undefined
   openOnHover?: boolean
@@ -52,7 +51,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     hasChanged,
     headerItemFixedIconSize = columnHeaderItemContentSize,
     hideSeparator,
-    iconName,
+    icon,
     isOpen,
     onToggle,
     openOnHover,
@@ -145,7 +144,8 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
         >
           <ThemedIcon
             color="foregroundColor"
-            name={iconName}
+            family={icon.family as any}
+            name={icon.name as any}
             selectable={false}
             style={{
               lineHeight: 22,
