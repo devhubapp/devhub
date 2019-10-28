@@ -5,6 +5,7 @@ import { Platform } from '../libs/platform'
 import { findNode } from '../utils/helpers/shared'
 import { useForceRerender } from './use-force-rerender'
 
+let lastHoveredAt: string | undefined
 export function useHover(
   ref: RefObject<Element | any> | null,
   callback?: (isHovered: boolean) => void,
@@ -17,6 +18,8 @@ export function useHover(
   const resolve = useCallback(
     debounce(
       (value: boolean) => {
+        lastHoveredAt = new Date().toISOString()
+
         if (cacheRef.current === value) return
         cacheRef.current = value
 
@@ -53,4 +56,8 @@ export function useHover(
   }, [ref && ref.current, resolve])
 
   return cacheRef.current
+}
+
+export function getLastHoveredAt() {
+  return lastHoveredAt
 }

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { emitter } from '../libs/emitter'
-import { useEmitter } from './use-emitter'
 
+import { emitter } from '../libs/emitter'
+
+let lastPressedKeyboardKeysAt: string | undefined
 export default function useMultiKeyPressCallback(
   targetKeys: string[],
   onPress: () => void,
@@ -35,6 +36,7 @@ export default function useMultiKeyPressCallback(
 
   const downHandler = useCallback(
     (e: KeyboardEvent) => {
+      lastPressedKeyboardKeysAt = new Date().toISOString()
       pingTimeout()
 
       if (pressedKeysRef.current.has(e.key)) return
@@ -64,7 +66,9 @@ export default function useMultiKeyPressCallback(
   )
 
   const upHandler = useCallback((e: KeyboardEvent) => {
+    lastPressedKeyboardKeysAt = new Date().toISOString()
     pingTimeout()
+
     pressedKeysRef.current.delete(e.key)
 
     if (calledOnPressRef.current) {
@@ -113,4 +117,8 @@ function areKeysPressed(
   })
 
   return keysToCheck.size === 0
+}
+
+export function getLastPressedKeyboardKeysAt() {
+  return lastPressedKeyboardKeysAt
 }

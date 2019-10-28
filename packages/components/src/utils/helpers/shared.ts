@@ -6,6 +6,8 @@ import {
   AppLayoutProviderState,
   getAppLayout,
 } from '../../components/context/LayoutContext'
+import { getLastHoveredAt } from '../../hooks/use-hover'
+import { getLastPressedKeyboardKeysAt } from '../../hooks/use-multi-key-press-callback'
 import { Browser } from '../../libs/browser'
 import { Linking } from '../../libs/linking'
 import { Platform } from '../../libs/platform'
@@ -142,4 +144,18 @@ export function isBigEnoughForMultiColumnView(
   sizename?: AppLayoutProviderState['sizename'],
 ) {
   return (sizename || getAppLayout().sizename) >= '2-medium'
+}
+
+export function getLastUsedInputType(): 'keyboard' | 'mouse' | undefined {
+  const lastHoveredAt = getLastHoveredAt()
+  const lastPressedKeyboardKeysAt = getLastPressedKeyboardKeysAt()
+
+  if (lastHoveredAt && lastPressedKeyboardKeysAt)
+    return lastPressedKeyboardKeysAt > lastHoveredAt ? 'keyboard' : 'mouse'
+
+  if (lastHoveredAt) return 'mouse'
+
+  if (lastPressedKeyboardKeysAt) return 'keyboard'
+
+  return undefined
 }

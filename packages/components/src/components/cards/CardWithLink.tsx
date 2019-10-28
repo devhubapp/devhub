@@ -18,17 +18,12 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { tryFocus } from '../../utils/helpers/shared'
+import { getLastUsedInputType, tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Link, LinkProps } from '../common/Link'
 import { getTheme } from '../context/ThemeContext'
 import { BaseCard } from './BaseCard'
-import {
-  BaseCardProps,
-  getCardPropsForItem,
-  renderCardActions,
-} from './BaseCard.shared'
-import { CardActions } from './partials/CardActions'
+import { getCardPropsForItem } from './BaseCard.shared'
 import { CardFocusIndicator } from './partials/CardFocusIndicator'
 import { CardSavedIndicator } from './partials/CardSavedIndicator'
 
@@ -124,7 +119,10 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
     if (focusIndicatorRef.current) {
       focusIndicatorRef.current.setNativeProps({
         style: {
-          opacity: !Platform.supportsTouch && isFocusedRef.current ? 1 : 0,
+          opacity:
+            getLastUsedInputType() === 'keyboard' && isFocusedRef.current
+              ? 1
+              : 0,
         },
       })
     }
@@ -230,7 +228,10 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
       <CardFocusIndicator
         ref={focusIndicatorRef}
         style={{
-          opacity: !Platform.supportsTouch && isFocusedRef.current ? 1 : 0,
+          opacity:
+            getLastUsedInputType() === 'keyboard' && isFocusedRef.current
+              ? 1
+              : 0,
         }}
       />
 
