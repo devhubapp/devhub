@@ -18,6 +18,7 @@ import {
   getGitHubEventSubItems,
   getGitHubIssueOrPullRequestSubItems,
   getGitHubNotificationSubItems,
+  getGitHubURLForRepoInvitationFromRepoURL,
   getGitHubURLForSecurityAlert,
   getIssueOrPullRequestState,
   getItemNodeIdOrId,
@@ -741,8 +742,9 @@ function _getCardPropsForItem(
                     commentIsInline: !!(_comment && _comment.path),
                   }))) ||
               ('html_url' in event && event.html_url) ||
+              (subjectType === 'RepositoryInvitation' &&
+                getGitHubURLForRepoInvitationFromRepoURL(repoURL)) ||
               ((subjectType === 'Repository' ||
-                subjectType === 'RepositoryInvitation' ||
                 subjectType === 'RepositoryVulnerabilityAlert') &&
                 repoURL) ||
               (subjectType === 'User' && (users[0] && users[0].html_url)) ||
@@ -934,6 +936,8 @@ function _getCardPropsForItem(
         isRead,
         isSaved,
         link:
+          (subject.type === 'RepositoryInvitation' &&
+            getGitHubURLForRepoInvitationFromRepoURL(repoURL)) ||
           (subject.type === 'RepositoryVulnerabilityAlert' &&
             getGitHubURLForSecurityAlert(repoURL)) ||
           fixURL(subject.latest_comment_url, {

@@ -86,7 +86,7 @@ export function getNotificationIconAndColor(
     case 'RepositoryInvitation':
       return {
         icon: 'mail',
-        color: 'brown',
+        color: undefined,
         tooltip: 'Repository invitation',
       }
     case 'RepositoryVulnerabilityAlert':

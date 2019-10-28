@@ -187,12 +187,21 @@ export const getGitHubURLForRepo = (
   { baseURL = defaultBaseURL }: { baseURL?: string } = {},
 ) => (ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}` : undefined)
 
+export const getGitHubURLForRepoInvitationFromRepoURL = (
+  repoURL: string | undefined,
+) => {
+  if (!repoURL) return undefined
+  return `${repoURL}/invitations`
+}
+
 export const getGitHubURLForRepoInvitation = (
   ownerName: string,
   repoName: string,
   { baseURL = defaultBaseURL }: { baseURL?: string } = {},
-) =>
-  ownerName && repoName ? `${baseURL}/${ownerName}/${repoName}/invitations` : ''
+) => {
+  if (!(ownerName && repoName)) return undefined
+  return `${baseURL}/${ownerName}/${repoName}/invitations`
+}
 
 export const getGitHubURLForSecurityAlert = (repoURL: string | undefined) =>
   repoURL ? `${repoURL}/network/alerts` : undefined
