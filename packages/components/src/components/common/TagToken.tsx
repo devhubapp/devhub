@@ -20,7 +20,7 @@ export type TagTokenProps = {
       label: string
     }
   | {
-      icon: Pick<ThemedIconProps, 'family' | 'name'>
+      icon: Pick<ThemedIconProps, 'family' | 'name' | 'color'>
       label?: undefined
     })
 
@@ -68,7 +68,7 @@ export const TagToken = React.memo((props: TagTokenProps) => {
 
         {icon ? (
           <ThemedIcon
-            color="foregroundColor"
+            color={icon.color || 'foregroundColor'}
             family={icon.family as any}
             name={icon.name as any}
             style={iconOrLabelStyle}

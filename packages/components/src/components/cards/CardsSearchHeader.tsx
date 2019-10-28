@@ -175,7 +175,12 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
         style={sharedStyles.horizontalAndVerticallyAligned}
       >
         <TagToken
-          icon={{ family: 'material', name: 'bookmark' }}
+          icon={{
+            family: 'material',
+            name: 'bookmark',
+            color:
+              typeof saved === 'boolean' ? undefined : 'foregroundColorMuted65',
+          }}
           onPress={() => {
             dispatch(
               actions.setColumnSavedFilter({
