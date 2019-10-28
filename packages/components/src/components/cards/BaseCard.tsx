@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
 
   title: {
     flex: 1,
+    height: sizes.rightTextLineHeight,
     lineHeight: sizes.rightTextLineHeight,
     fontSize: normalTextSize,
     fontWeight: '500',
