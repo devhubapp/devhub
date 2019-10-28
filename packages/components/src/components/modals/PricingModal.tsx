@@ -231,9 +231,13 @@ export function PricingModal(props: PricingModalProps) {
           </>
         )}
 
-        <SubHeader title="SELECT A PLAN" />
-
-        <Spacer height={contentPadding} />
+        <SubHeader
+          title={
+            userPlanDetails && userPlanDetails.amount
+              ? 'CHANGE PLAN'
+              : 'SELECT A PLAN'
+          }
+        />
 
         <FlatList
           ref={flatListRef}
