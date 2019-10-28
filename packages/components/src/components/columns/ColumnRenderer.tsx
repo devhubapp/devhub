@@ -195,7 +195,11 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 : 'Tap to unlock Private Repositories',
             relatedFeature: 'enablePrivateRepositories',
           }) ||
-        (plan && plan.status === 'trialing' && plan.trialEndAt
+        (plan &&
+        plan.status === 'trialing' &&
+        plan.trialEndAt &&
+        new Date(plan.trialEndAt).valueOf() - Date.now() <
+          1000 * 60 * 60 * 24 * 5
           ? {
               intervalRefresh: { date: plan.trialEndAt },
               message: () =>
