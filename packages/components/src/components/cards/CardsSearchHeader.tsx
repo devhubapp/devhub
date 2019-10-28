@@ -10,6 +10,7 @@ import {
   NativeSyntheticEvent,
   ScrollViewProps,
   TextInputKeyPressEventData,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -353,41 +354,63 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
   }
 
   return (
-    <ThemedView
-      backgroundColor={getColumnHeaderThemeColors().normal}
-      style={[sharedStyles.fullWidth, sharedStyles.fullMaxWidth]}
+    <TouchableWithoutFeedback
+      onPress={
+        columnId
+          ? () => {
+              // fix bug on web (it was scrolling to the top when tapping the input)
+              const currentFocusedNodeTag =
+                typeof document !== 'undefined' &&
+                document &&
+                document.activeElement &&
+                document.activeElement.tagName
+              if (
+                currentFocusedNodeTag &&
+                currentFocusedNodeTag.toLowerCase() === 'input'
+              )
+                return
+
+              emitter.emit('SCROLL_TOP_COLUMN', { columnId })
+            }
+          : undefined
+      }
     >
-      <View
-        style={[
-          sharedStyles.horizontalAndVerticallyAligned,
-          sharedStyles.fullWidth,
-          sharedStyles.fullMaxWidth,
-        ]}
+      <ThemedView
+        backgroundColor={getColumnHeaderThemeColors().normal}
+        style={[sharedStyles.fullWidth, sharedStyles.fullMaxWidth]}
       >
-        {renderMainContent()}
+        <View
+          style={[
+            sharedStyles.horizontalAndVerticallyAligned,
+            sharedStyles.fullWidth,
+            sharedStyles.fullMaxWidth,
+          ]}
+        >
+          {renderMainContent()}
 
-        {!!queryTerms.length && (
-          <IconButton
-            key="column-search-toggle-button"
-            active={forceShowTextInput}
-            analyticsAction="toggle"
-            analyticsLabel="column_search"
-            name="search"
-            onPress={() => {
-              setForceShowTextInput(v => !v)
-            }}
-            style={{ paddingHorizontal: contentPadding / 3 }}
-            tooltip="Search"
-          />
-        )}
+          {!!queryTerms.length && (
+            <IconButton
+              key="column-search-toggle-button"
+              active={forceShowTextInput}
+              analyticsAction="toggle"
+              analyticsLabel="column_search"
+              name="search"
+              onPress={() => {
+                setForceShowTextInput(v => !v)
+              }}
+              style={{ paddingHorizontal: contentPadding / 3 }}
+              tooltip="Search"
+            />
+          )}
 
-        {!inlineMode && <ColumnFiltersButton columnId={column.id} />}
+          {!inlineMode && <ColumnFiltersButton columnId={column.id} />}
 
-        <Spacer width={contentPadding / 2} />
-      </View>
+          <Spacer width={contentPadding / 2} />
+        </View>
 
-      <Separator horizontal />
-    </ThemedView>
+        <Separator horizontal />
+      </ThemedView>
+    </TouchableWithoutFeedback>
   )
 })
 

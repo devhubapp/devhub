@@ -26,19 +26,13 @@ import {
   CardsOwnerFilterBar,
   cardsOwnerFilterBarTotalHeight,
 } from '../components/cards/CardsOwnerFilterBar'
-import {
-  cardSearchTotalHeight,
-  CardsSearchHeader,
-} from '../components/cards/CardsSearchHeader'
+import { CardsSearchHeader } from '../components/cards/CardsSearchHeader'
 import {
   CardsWatchingOwnerFilterBar,
   cardsWatchingOwnerFilterBarTotalHeight,
 } from '../components/cards/CardsWatchingOwnerFilterBar'
 import { EmptyCards } from '../components/cards/EmptyCards'
-import {
-  ColumnLoadingIndicator,
-  columnLoadingIndicatorSize,
-} from '../components/columns/ColumnLoadingIndicator'
+import { ColumnLoadingIndicator } from '../components/columns/ColumnLoadingIndicator'
 import { Button } from '../components/common/Button'
 import { RefreshControl } from '../components/common/RefreshControl'
 import { useAppLayout } from '../components/context/LayoutContext'
@@ -201,6 +195,21 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   const itemSeparator = undefined
 
+  const fixedHeaderComponent = useMemo(
+    () =>
+      !!column && (
+        <View style={[sharedStyles.relative, sharedStyles.fullWidth]}>
+          <CardsSearchHeader
+            key={`cards-search-header-column-${column.id}`}
+            columnId={column.id}
+          />
+
+          <ColumnLoadingIndicator columnId={column.id} />
+        </View>
+      ),
+    [column && column.id],
+  )
+
   const header = useMemo<OneListProps<DataItemT>['header']>(() => {
     const renderOwnerFilterBar = !!(
       column &&
@@ -217,12 +226,10 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     )
 
     const size = column
-      ? cardSearchTotalHeight +
-        (renderOwnerFilterBar ? cardsOwnerFilterBarTotalHeight : 0) +
+      ? (renderOwnerFilterBar ? cardsOwnerFilterBarTotalHeight : 0) +
         (renderWatchingOwnerFilterBar
           ? cardsWatchingOwnerFilterBarTotalHeight
-          : 0) +
-        columnLoadingIndicatorSize
+          : 0)
       : 0
 
     return {
@@ -232,15 +239,6 @@ export function useCardsProps<ItemT extends EnhancedItem>({
         <View style={[sharedStyles.fullWidth, { height: size }]}>
           {!!column && (
             <>
-              <View style={[sharedStyles.relative, sharedStyles.fullWidth]}>
-                <CardsSearchHeader
-                  key={`cards-search-header-column-${column.id}`}
-                  columnId={column.id}
-                />
-
-                <ColumnLoadingIndicator columnId={column.id} />
-              </View>
-
               {!!renderOwnerFilterBar && (
                 <CardsOwnerFilterBar
                   key={`cards-owner-filter-bar-column-${column.id}`}
@@ -467,6 +465,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   return {
     OverrideRender,
     data,
+    fixedHeaderComponent,
     footer,
     getItemCardPropsByNodeIdOrId,
     getItemSize,

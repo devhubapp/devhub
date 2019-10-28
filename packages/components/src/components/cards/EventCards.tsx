@@ -51,6 +51,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
   const {
     OverrideRender,
     data,
+    fixedHeaderComponent,
     footer,
     getItemSize,
     getOwnerIsKnownByItemOrNodeIdOrId,
@@ -158,6 +159,8 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   return (
     <View style={[sharedStyles.relative, sharedStyles.flex]}>
+      {fixedHeaderComponent}
+
       <OneList
         ref={listRef}
         key="event-cards-list"

@@ -70,6 +70,7 @@ export const IssueOrPullRequestCards = React.memo(
     const {
       OverrideRender,
       data,
+      fixedHeaderComponent,
       footer,
       getItemSize,
       getOwnerIsKnownByItemOrNodeIdOrId,
@@ -238,6 +239,8 @@ export const IssueOrPullRequestCards = React.memo(
 
     return (
       <View style={sharedStyles.flex}>
+        {fixedHeaderComponent}
+
         <OneList
           ref={listRef}
           key="issue-or-pr-cards-list"

@@ -51,6 +51,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
   const {
     OverrideRender,
     data,
+    fixedHeaderComponent,
     footer,
     getItemSize,
     getOwnerIsKnownByItemOrNodeIdOrId,
@@ -148,6 +149,8 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   return (
     <View style={sharedStyles.flex}>
+      {fixedHeaderComponent}
+
       <OneList
         ref={listRef}
         key="notification-cards-list"
