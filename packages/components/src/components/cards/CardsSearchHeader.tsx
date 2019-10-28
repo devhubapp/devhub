@@ -13,7 +13,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { batch, useDispatch } from 'react-redux'
 
 import { useColumn } from '../../hooks/use-column'
 import { usePrevious } from '../../hooks/use-previous'
@@ -396,7 +396,14 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
               analyticsLabel="column_search"
               name="search"
               onPress={() => {
-                setForceShowTextInput(v => !v)
+                batch(() => {
+                  if (forceShowTextInput) {
+                    setIsFocused(false)
+                    setForceShowTextInput(false)
+                  } else {
+                    setForceShowTextInput(true)
+                  }
+                })
               }}
               style={{ paddingHorizontal: contentPadding / 3 }}
               tooltip="Search"
