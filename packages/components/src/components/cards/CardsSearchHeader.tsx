@@ -225,6 +225,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
             topOrLeftOverlayThemeColor={getColumnHeaderThemeColors().normal}
           >
             {FilterTagBookmark}
+            <Spacer width={contentPadding / 4} />
 
             {queryTerms.map((termArr, index) => {
               const [key, value, isNegated] =
@@ -239,8 +240,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
                   key={`filter-tag-${termArr.join('-')}`}
                   style={sharedStyles.horizontalAndVerticallyAligned}
                 >
-                  {/* {index > 0 && <Spacer width={contentPadding / 4} />} */}
-                  <Spacer width={contentPadding / 4} />
+                  {index > 0 && <Spacer width={contentPadding / 4} />}
 
                   <TagToken
                     label={`${key ? `${key}:${value}` : value}`}
@@ -327,7 +327,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
       >
         <Spacer width={searchBarOuterSpacing} />
         {FilterTagBookmark}
-        <Spacer width={contentPadding / 2 - searchBarOuterSpacing} />
+        <Spacer width={contentPadding / 4} />
 
         <SearchBar
           key={`cards-search-header-column-${column.id}`}
@@ -339,6 +339,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
           borderThemeColor={isPendingSave ? 'yellow' : undefined}
           clearButtonMode="while-editing"
           containerBackgroundThemeColor={null}
+          noPaddingHorizontal
           onBlur={onBlur}
           onChangeText={onChangeText}
           onFocus={onFocus}
@@ -350,6 +351,8 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
           textThemeColor={isPendingSave ? 'yellow' : undefined}
           value={formikProps.values.query}
         />
+
+        <Spacer width={searchBarOuterSpacing} />
       </View>
     )
   }
