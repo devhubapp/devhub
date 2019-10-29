@@ -167,30 +167,29 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     ],
   )
 
-  const getItemCardPropsByNodeIdOrId = useCallback(
-    (nodeIdOrId: string) => {
-      const item = getItemByNodeIdOrId(nodeIdOrId)
-      if (!item) return undefined
-
-      return getCardPropsForItem(type, item, {
-        ownerIsKnown: getOwnerIsKnownByItemOrNodeIdOrId(item),
-        plan,
-        repoIsKnown,
-      })
-    },
-    [getItemByNodeIdOrId, getOwnerIsKnownByItemOrNodeIdOrId, plan, repoIsKnown],
-  )
-
   const getItemSize = useCallback<
     NonNullable<OneListProps<DataItemT>['getItemSize']>
   >(
     nodeIdOrId => {
-      const itemCardProps = getItemCardPropsByNodeIdOrId(nodeIdOrId)
+      const item = getItemByNodeIdOrId(nodeIdOrId)
+      if (!item) return 0
+
+      const itemCardProps = getCardPropsForItem(type, item, {
+        ownerIsKnown: getOwnerIsKnownByItemOrNodeIdOrId(item),
+        plan,
+        repoIsKnown,
+      })
       if (!itemCardProps) return 0
 
       return getCardSizeForProps(itemCardProps)
     },
-    [getItemCardPropsByNodeIdOrId, getCardSizeForProps],
+    [
+      getCardSizeForProps,
+      getOwnerIsKnownByItemOrNodeIdOrId,
+      plan,
+      repoIsKnown,
+      type,
+    ],
   )
 
   const itemSeparator = undefined
@@ -468,7 +467,6 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     data,
     fixedHeaderComponent,
     footer,
-    getItemCardPropsByNodeIdOrId,
     getItemSize,
     getOwnerIsKnownByItemOrNodeIdOrId,
     header,

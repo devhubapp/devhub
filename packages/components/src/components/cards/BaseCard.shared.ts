@@ -54,6 +54,7 @@ import { PixelRatio } from 'react-native'
 
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import { memoizeMultipleArguments } from '../../redux/selectors/helpers'
 import { ExtractActionFromActionCreator } from '../../redux/types/base'
 import {
   avatarSize,
@@ -1091,10 +1092,14 @@ function _getCardPropsForItem(
   }
 }
 
+const _memoizedGetCardPropsForItem = memoizeMultipleArguments(
+  _getCardPropsForItem,
+)
+
 export function getCardPropsForItem(
-  ...args: Parameters<typeof _getCardPropsForItem>
+  ...args: Parameters<typeof _memoizedGetCardPropsForItem>
 ): BaseCardProps {
-  const props = _getCardPropsForItem(...args)
+  const props = _memoizedGetCardPropsForItem(...args)
   return { ...props, height: getCardSizeForProps(props) }
 }
 

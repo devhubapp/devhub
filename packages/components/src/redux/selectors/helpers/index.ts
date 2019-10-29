@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { shallowEqual } from 'react-redux'
 import { createSelectorCreator } from 'reselect'
 
 export function shallowEqualityCheckOrDeepIfArray(a: unknown, b: unknown) {
@@ -6,9 +7,9 @@ export function shallowEqualityCheckOrDeepIfArray(a: unknown, b: unknown) {
 }
 
 // tslint:disable-next-line ban-types
-export function memoizeResult<F extends Function>(
+export function memoizeMultipleArguments<F extends Function>(
   func: F,
-  equalityCheck = shallowEqualityCheckOrDeepIfArray,
+  equalityCheck = shallowEqual,
 ): F {
   let lastArgs: unknown[] | null = null
   let lastResult: unknown | null = null
@@ -34,8 +35,8 @@ export function memoizeResult<F extends Function>(
 }
 
 export const createDeepEqualSelector = createSelectorCreator(
-  memoizeResult,
-  _.isEqual,
+  memoizeMultipleArguments,
+  shallowEqualityCheckOrDeepIfArray,
 )
 
 // TODO: Make a new selector optimized for arrays whose item's refs don't change
