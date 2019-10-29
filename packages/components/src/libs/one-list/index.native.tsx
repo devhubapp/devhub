@@ -295,14 +295,21 @@ export const OneList = (React.memo(
                       )
                     }
                     keyExtractor={keyExtractor}
-                    maxToRenderPerBatch={2}
+                    maxToRenderPerBatch={
+                      1 +
+                      Math.ceil(
+                        horizontal
+                          ? width / estimatedItemSize
+                          : height / estimatedItemSize,
+                      )
+                    }
                     onScrollToIndexFailed={onScrollToIndexFailed}
                     onViewableItemsChanged={onViewableItemsChanged}
                     pagingEnabled={pagingEnabled}
                     refreshControl={refreshControl}
                     removeClippedSubviews={!disableVirtualization}
                     renderItem={renderItem}
-                    scrollEventThrottle={16}
+                    scrollEventThrottle={10}
                     snapToAlignment={snapToAlignment}
                     style={[
                       listStyle,
@@ -311,7 +318,7 @@ export const OneList = (React.memo(
                         height: horizontal ? '100%' : height,
                       },
                     ]}
-                    updateCellsBatchingPeriod={0}
+                    updateCellsBatchingPeriod={50}
                     viewabilityConfig={viewabilityConfig}
                     windowSize={
                       1 +
