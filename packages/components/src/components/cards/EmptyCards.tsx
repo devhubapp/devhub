@@ -1,7 +1,7 @@
+import { EnhancedLoadState } from '@devhub/core'
 import React from 'react'
 import { Image, View } from 'react-native'
 
-import { EnhancedLoadState } from '@devhub/core'
 import { useColumnLoadingState } from '../../hooks/use-column-loading-state'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
@@ -12,6 +12,7 @@ import {
 import { Button, defaultButtonSize } from '../common/Button'
 import { fabSize } from '../common/FAB'
 import { fabSpacing } from '../common/FABRenderer'
+import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Spacer } from '../common/Spacer'
 import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'
 import { ThemedText } from '../themed/ThemedText'
@@ -159,12 +160,13 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   }
 
   return (
-    <View
-      style={[sharedStyles.flex, sharedStyles.center]}
+    <FullHeightScrollView
+      style={sharedStyles.flex}
+      contentContainerStyle={sharedStyles.center}
       pointerEvents="box-none"
     >
       {renderContent()}
-    </View>
+    </FullHeightScrollView>
   )
 })
 
