@@ -1,11 +1,6 @@
 import { Column, getItemNodeIdOrId, isItemSaved } from '@devhub/core'
 import React, { useCallback, useMemo, useRef } from 'react'
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from 'react-native'
+import { StyleSheet, TouchableHighlightProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { useDynamicRef } from '../../hooks/use-dynamic-ref'
@@ -21,7 +16,11 @@ import { sharedStyles } from '../../styles/shared'
 import { getLastUsedInputType, tryFocus } from '../../utils/helpers/shared'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Link, LinkProps } from '../common/Link'
-import { getTheme } from '../context/ThemeContext'
+import { getTheme, useTheme } from '../context/ThemeContext'
+import {
+  ThemedTouchableHighlight,
+  ThemedTouchableHighlightProps,
+} from '../themed/ThemedTouchableHighlight'
 import { BaseCard } from './BaseCard'
 import { getCardPropsForItem } from './BaseCard.shared'
 import { CardFocusIndicator } from './partials/CardFocusIndicator'
@@ -242,42 +241,66 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
 
 CardWithLink.displayName = 'CardWithLink'
 
-const GestureHandlerTouchableOpacity = Platform.select({
-  android: () => require('react-native-gesture-handler').TouchableOpacity,
-  ios: () => require('react-native-gesture-handler').TouchableOpacity,
-  default: () => require('../common/TouchableOpacity').TouchableOpacity,
+const GestureHandlerTouchableHighlight = Platform.select({
+  android: () => require('react-native-gesture-handler').TouchableHighlight,
+  ios: () => require('react-native-gesture-handler').TouchableHighlight,
+  default: () => require('../common/TouchableHighlight').TouchableHighlight,
 })()
 
 const GestureHandlerCardTouchable = React.forwardRef<
   View,
-  TouchableOpacityProps
+  TouchableHighlightProps
 >((props, ref) => {
+  const theme = useTheme()
+
   return (
     <View ref={ref} style={props.style}>
-      <GestureHandlerTouchableOpacity
+      <GestureHandlerTouchableHighlight
         accessible={false}
-        activeOpacity={1}
+        underlayColor={
+          theme[
+            getCardBackgroundThemeColor({
+              isDark: theme.isDark,
+              isMuted: false, // cardProps.isRead,
+              isHovered: true,
+            })
+          ]
+        }
         {...props}
         style={StyleSheet.flatten([
           props.style,
           { backgroundColor: 'transparent' },
         ])}
-      />
+      >
+        <View>{props.children}</View>
+      </GestureHandlerTouchableHighlight>
     </View>
   )
 })
 
-const NormalCardTouchable = React.forwardRef<View, TouchableOpacityProps>(
-  (props, ref) => {
-    return (
-      <View ref={ref} style={props.style}>
-        <TouchableOpacity
-          accessible={false}
-          activeOpacity={Platform.supportsTouch ? 1 : undefined}
-          {...props}
-          style={[props.style, { backgroundColor: 'transparent' }]}
-        />
-      </View>
-    )
-  },
-)
+const NormalCardTouchable = React.forwardRef<
+  ThemedTouchableHighlight,
+  ThemedTouchableHighlightProps
+>((props, ref) => {
+  return (
+    <View ref={ref} style={props.style}>
+      <ThemedTouchableHighlight
+        ref={ref}
+        accessible={false}
+        backgroundColor="transparent"
+        underlayColor={theme =>
+          theme[
+            getCardBackgroundThemeColor({
+              isDark: theme.isDark,
+              isMuted: false, // cardProps.isRead,
+              isHovered: true,
+            })
+          ]
+        }
+        {...props}
+      >
+        <View>{props.children}</View>
+      </ThemedTouchableHighlight>
+    </View>
+  )
+})

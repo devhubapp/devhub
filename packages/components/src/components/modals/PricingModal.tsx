@@ -18,7 +18,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, smallTextSize } from '../../styles/variables'
+import { contentPadding } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
@@ -26,7 +26,6 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
-import { ThemedText } from '../themed/ThemedText'
 import {
   defaultPricingBlockWidth,
   PricingPlanBlock,
