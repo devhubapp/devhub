@@ -4,6 +4,7 @@ import {
   GraphQLUserPlan,
   isPlanExpired,
 } from '@devhub/core'
+import { createSelector } from 'reselect'
 
 import { Platform } from '../../libs/platform'
 import { EMPTY_OBJ } from '../../utils/constants'
@@ -31,29 +32,48 @@ export const appTokenSelector = (state: RootState) =>
 export const currentUserSelector = (state: RootState) =>
   isLoggedSelector(state) ? s(state).user : undefined
 
-export const currentUserPlanSelector = (
-  state: RootState,
-): GraphQLUserPlan | undefined => {
-  const user = currentUserSelector(state)
-  if (Platform.OS !== 'web') {
-    return {
-      ...(user && user.plan),
-      ...activePlans.slice(-1)[0],
-      status: 'active',
-    } as GraphQLUserPlan
-  }
+export const currentUserPlanSelector = createSelector(
+  (state: RootState) => {
+    const user = currentUserSelector(state)
+    return (user && user.plan) || undefined
+  },
+  (state: RootState) => {
+    const user = currentUserSelector(state)
+    return (user && user.createdAt) || undefined
+  },
+  (state: RootState) => {
+    const user = currentUserSelector(state)
+    return (user && user.freeTrialStartAt) || undefined
+  },
+  (state: RootState) => {
+    const user = currentUserSelector(state)
+    return (user && user.freeTrialEndAt) || undefined
+  },
+  (
+    plan,
+    createdAt,
+    freeTrialStartAt,
+    freeTrialEndAt,
+  ): GraphQLUserPlan | undefined => {
+    if (Platform.OS !== 'web') {
+      return {
+        ...plan,
+        ...activePlans.slice(-1)[0],
+        status: 'active',
+      } as GraphQLUserPlan
+    }
 
-  return (
-    (user && user.plan) ||
-    (user &&
-      user.createdAt &&
-      getDefaultUserPlan(user.createdAt, {
-        trialStartAt: user.freeTrialStartAt,
-        trialEndAt: user.freeTrialEndAt,
-      })) ||
-    undefined
-  )
-}
+    return (
+      plan ||
+      (createdAt &&
+        getDefaultUserPlan(createdAt, {
+          trialStartAt: freeTrialStartAt,
+          trialEndAt: freeTrialEndAt,
+        })) ||
+      undefined
+    )
+  },
+)
 
 export const isPlanExpiredSelector = (state: RootState): boolean => {
   const plan = currentUserPlanSelector(state)
