@@ -3,7 +3,7 @@ import { View } from 'react-native'
 
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallTextSize } from '../../styles/variables'
-import { Button } from '../common/Button'
+import { Button, ButtonProps } from '../common/Button'
 import { Spacer } from '../common/Spacer'
 import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
 import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
@@ -11,8 +11,10 @@ import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
 export type TagTokenProps = {
   onPress: () => void
   onRemove?: (() => void) | undefined
+  removeTooltip?: ButtonProps['tooltip']
   size?: number
   strikethrough?: boolean
+  tooltip?: ButtonProps['tooltip']
   transparent?: boolean
 } & (
   | {
@@ -30,8 +32,10 @@ export const TagToken = React.memo((props: TagTokenProps) => {
     label,
     onPress,
     onRemove,
+    removeTooltip = 'Remove',
     size = smallTextSize + 4 + contentPadding + 2,
     strikethrough,
+    tooltip,
     transparent,
   } = props
 
@@ -60,6 +64,7 @@ export const TagToken = React.memo((props: TagTokenProps) => {
       }
       onPress={onPress}
       size={size}
+      tooltip={tooltip}
       type="neutral"
       withBorder
     >
@@ -106,6 +111,7 @@ export const TagToken = React.memo((props: TagTokenProps) => {
               }}
               onPress={onRemove}
               size={smallTextSize + 3}
+              tooltip={removeTooltip}
               type="custom"
             >
               {({ foregroundThemeColor }) => (

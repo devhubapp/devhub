@@ -198,6 +198,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
           size={searchBarMainContentHeight}
           strikethrough={saved === false}
           transparent={typeof saved !== 'boolean'}
+          tooltip="Toggle bookmark filter"
         />
       </View>
     )

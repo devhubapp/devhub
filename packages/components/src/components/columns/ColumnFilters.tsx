@@ -518,7 +518,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     ? 'Excluded'
                     : ''
                 }
-                title="Bookmarked"
+                title="Bookmarks"
               >
                 <Checkbox
                   checked={
@@ -532,7 +532,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     sharedColumnOptionsStyles.checkboxSquareContainer
                   }
                   enableIndeterminateState
-                  label="Bookmarked"
+                  label="Bookmarks"
                   onChange={checked => {
                     setColumnSavedFilter({
                       columnId: column.id,
