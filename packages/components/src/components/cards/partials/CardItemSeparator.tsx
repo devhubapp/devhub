@@ -15,7 +15,7 @@ export function getCardItemSeparatorThemeColors({
 }): [keyof ThemeColors, keyof ThemeColors | undefined] {
   return isDark
     ? muted
-      ? ['backgroundColorDarker3', 'backgroundColorLighther1']
+      ? ['backgroundColorDarker1', 'backgroundColorLighther1']
       : ['backgroundColorDarker1', 'backgroundColorLighther2']
     : muted
     ? ['backgroundColorDarker2', 'backgroundColor']
