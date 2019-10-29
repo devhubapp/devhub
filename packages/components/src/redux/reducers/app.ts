@@ -1,8 +1,8 @@
+import { BannerMessage, constants } from '@devhub/core'
 import immer from 'immer'
 import _ from 'lodash'
-
-import { BannerMessage, constants } from '@devhub/core'
 import { REHYDRATE } from 'redux-persist'
+
 import { Platform } from '../../libs/platform'
 import { Reducer } from '../types'
 
@@ -12,21 +12,17 @@ export interface State {
 
 const initialState: State = {
   banners: [
-    {
+    (Platform.OS === 'ios' || Platform.OS === 'android') && {
       createdAt: '2019-09-23T00:00:00.000Z',
       disableOnSmallScreens: false,
-      href:
-        Platform.OS === 'web'
-          ? constants.APP_DEEP_LINK_URLS.preferences
-          : constants.DEVHUB_LINKS.DOWNLOAD_PAGE,
+      href: constants.DEVHUB_LINKS.LANDING_PAGE_HOME,
       id: 'desktop_push_notifications',
       message:
-        Platform.OS === 'web' && Platform.isElectron
-          ? ':rocket: New feature: Desktop Push Notifications!'
-          : 'Did you know? DevHub is also available for Desktop, with Push Notifications! Download it on your macOS, Windows or Linux computer at devhubapp.com.',
-      minLoginCount: Platform.OS === 'web' ? 0 : 2,
+        'Did you know? DevHub is also available for Desktop, with Push Notifications! ' +
+        'Download it on your macOS, Windows or Linux computer at devhubapp.com.',
+      minLoginCount: 0,
     },
-  ],
+  ].filter(Boolean) as State['banners'],
 }
 
 export const appReducer: Reducer<State> = (state = initialState, action) => {

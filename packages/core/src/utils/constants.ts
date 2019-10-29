@@ -33,12 +33,14 @@ export const DEFAULT_GITHUB_OAUTH_SCOPES = ['notifications', 'user:email']
 export const APPSTORE_ID = '1191864199'
 export const GOOGLEPLAY_ID = 'com.devhubapp'
 
-export const LANDING_BASE_URL = 'https://devhubapp.com'
 export const APP_BASE_URL = 'https://app.devhubapp.com'
 export const DEVHUB_BETA_URL = 'https://beta.devhubapp.com'
 export const API_BASE_URL = 'https://api.devhubapp.com'
 export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
+
+const LANDING_BASE_URL = 'https://devhubapp.com'
 export const DEVHUB_LINKS = {
+  LANDING_PAGE_HOME: LANDING_BASE_URL,
   ACCOUNT_PAGE: `${LANDING_BASE_URL}/account`,
   DOWNLOAD_PAGE: `${LANDING_BASE_URL}/download`,
   PRICING_PAGE: `${LANDING_BASE_URL}/pricing`,

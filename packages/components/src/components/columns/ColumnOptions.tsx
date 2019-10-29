@@ -192,7 +192,7 @@ export const ColumnOptions = React.memo(
               analyticsLabel="column_option_desktop_push_notifications_download_link"
               enableForegroundHover
               openOnNewTab
-              href={`${constants.LANDING_BASE_URL}/download`}
+              href={constants.DEVHUB_LINKS.DOWNLOAD_PAGE}
               style={{ marginRight: contentPadding / 2 }}
               textProps={{
                 color: 'foregroundColorMuted65',
