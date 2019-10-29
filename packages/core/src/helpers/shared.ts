@@ -68,12 +68,14 @@ export function getFullDateText(date: MomentInput) {
 export function getDateSmallText(
   date: MomentInput,
   {
-    futurePrefix = '',
-    futureSuffix = '',
     includeExactTime = false,
+
     pastPrefix = '',
     pastSuffix = '',
     showPrefixOnFullDate = false,
+
+    futurePrefix = '',
+    futureSuffix = '',
     showSuffixOnFullDate = false,
   } = {
     futurePrefix: 'in',
@@ -140,14 +142,10 @@ export function getDateSmallText(
   }
 
   if (momentDate.year() !== moment().year()) {
-    return `${fullDatePrefix}${momentDate
-      .format('L')
-      .toLowerCase()}${fullDateSuffix}`
+    return `${fullDatePrefix}${momentDate.format('ll')}${fullDateSuffix}`
   }
 
-  return `${fullDatePrefix}${momentDate
-    .format('MMM Do')
-    .toLowerCase()}${fullDateSuffix}`
+  return `${fullDatePrefix}${momentDate.format('MMM Do')}${fullDateSuffix}`
 }
 
 // sizes will be multiples of 50 for caching (e.g 50, 100, 150, ...)

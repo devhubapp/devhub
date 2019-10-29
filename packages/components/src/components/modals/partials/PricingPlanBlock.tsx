@@ -1,4 +1,9 @@
-import { formatPrice, formatPriceAndInterval, Plan } from '@devhub/core'
+import {
+  formatPrice,
+  formatPriceAndInterval,
+  getDateSmallText,
+  Plan,
+} from '@devhub/core'
 import React from 'react'
 import { Platform, Text, View } from 'react-native'
 
@@ -43,11 +48,10 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   } = props
 
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
+  const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
 
-  const banner =
-    userPlan && userPlan.id && userPlan!.id === plan.id
-      ? 'Current plan'
-      : _banner
+  const isMyPlan = userPlan && userPlan.id && userPlan!.id === plan.id
+  const banner = isMyPlan && isPartOfAList ? 'Current plan' : _banner
 
   const estimatedMonthlyPrice =
     (plan.interval === 'day'
@@ -57,6 +61,18 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       : plan.interval === 'year'
       ? plan.amount / 12
       : plan.amount) / (plan.intervalCount || 1)
+
+  const planLabel = `${plan.label || ''}${
+    !isMyPlan
+      ? ''
+      : userPlan && userPlan.status === 'trialing'
+      ? (plan.label || '').toLowerCase().includes('trial')
+        ? ''
+        : userPlan.amount
+        ? ` (trial${isPlanExpired ? ' expired' : ''})`
+        : ` trial${isPlanExpired ? ' (expired)' : ''}`
+      : ''
+  }`
 
   const _priceLabel = formatPrice(estimatedMonthlyPrice, plan)
   const _cents = estimatedMonthlyPrice % 100
@@ -68,6 +84,23 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     _cents && _priceLabel.endsWith(_cents.toString())
       ? _priceLabel.substr(-3)
       : ''
+
+  const additionalFooterText = isPartOfAList
+    ? undefined
+    : userPlan && userPlan.trialEndAt && isMyPlan
+    ? `${isPlanExpired ? 'Expired' : 'Expires'} ${getDateSmallText(
+        userPlan.trialEndAt,
+        {
+          pastPrefix: '',
+          futurePrefix: 'in',
+          showPrefixOnFullDate: false,
+
+          pastSuffix: 'ago',
+          futureSuffix: '',
+          showSuffixOnFullDate: false,
+        },
+      )}`
+    : undefined
 
   return (
     <View
@@ -135,19 +168,23 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               },
             ]}
           >
-            {plan.label}
+            {planLabel}
           </ThemedText>
 
           <Spacer height={contentPadding / 2} />
 
-          <ThemedText
-            color="foregroundColorMuted65"
-            style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
-          >
-            {plan.description}
-          </ThemedText>
+          {!!(plan.description || isPartOfAList) && (
+            <>
+              <ThemedText
+                color="foregroundColorMuted65"
+                style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
+              >
+                {plan.description}
+              </ThemedText>
 
-          <Spacer height={contentPadding} />
+              <Spacer height={contentPadding} />
+            </>
+          )}
 
           <ThemedText
             color="foregroundColor"
@@ -171,14 +208,16 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
           <Spacer height={contentPadding / 3} />
 
-          <ThemedText
-            color="foregroundColorMuted65"
-            style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
-          >{`/month${
-            estimatedMonthlyPrice !== plan.amount ? '*' : ''
-          }`}</ThemedText>
+          {!!(plan.amount || isPartOfAList) && (
+            <>
+              <ThemedText
+                color="foregroundColorMuted65"
+                style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
+              >{`/month${
+                estimatedMonthlyPrice !== plan.amount ? '*' : ''
+              }`}</ThemedText>
 
-          {/* {plan.interval ? (
+              {/* {plan.interval ? (
             <ThemedText
               color="foregroundColorMuted65"
               style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
@@ -192,9 +231,17 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             </ThemedText>
           )} */}
 
-          <Spacer height={contentPadding * 2} />
+              <Spacer height={contentPadding} />
+            </>
+          )}
 
-          {!!(estimatedMonthlyPrice !== plan.amount || isPartOfAList) && (
+          <Spacer height={contentPadding} />
+
+          {!!(
+            estimatedMonthlyPrice !== plan.amount ||
+            additionalFooterText ||
+            isPartOfAList
+          ) && (
             <>
               <ThemedText
                 color="foregroundColorMuted65"
@@ -204,8 +251,10 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
                 ]}
               >
                 {estimatedMonthlyPrice !== plan.amount
-                  ? `*Billed ${formatPriceAndInterval(plan.amount, plan)}`
-                  : ' '}
+                  ? `*Billed ${formatPriceAndInterval(plan.amount, plan)}${
+                      additionalFooterText ? `\n\n${additionalFooterText}` : ''
+                    }`
+                  : additionalFooterText || ' '}
               </ThemedText>
 
               <Spacer height={contentPadding * 2} />

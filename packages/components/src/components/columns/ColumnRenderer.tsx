@@ -150,10 +150,12 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             `${plan.amount ? 'Trial' : 'Free trial'} ${getDateSmallText(
               plan.trialEndAt,
               {
-                futureSuffix: 'left',
                 pastPrefix: 'ended',
-                pastSuffix: 'ago',
+                futurePrefix: '',
                 showPrefixOnFullDate: true,
+
+                pastSuffix: 'ago',
+                futureSuffix: 'left',
                 showSuffixOnFullDate: false,
               },
             )}`,
@@ -206,10 +208,12 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 `${plan.amount ? 'Trial' : 'Free trial'} (${getDateSmallText(
                   plan.trialEndAt,
                   {
-                    futureSuffix: 'left',
                     pastPrefix: 'ended',
-                    pastSuffix: 'ago',
+                    futurePrefix: '',
                     showPrefixOnFullDate: true,
+
+                    pastSuffix: 'ago',
+                    futureSuffix: 'left',
                     showSuffixOnFullDate: false,
                   },
                 )})`,

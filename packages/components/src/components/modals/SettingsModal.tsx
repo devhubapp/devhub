@@ -38,9 +38,8 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
   const pushModal = useReduxAction(actions.pushModal)
 
-  const userPlanLabel = (
-    allPlans.find(p => p.id === (userPlan && userPlan.id)) || {}
-  ).label
+  const userPlanLabel =
+    (allPlans.find(p => p.id === (userPlan && userPlan.id)) || {}).label || ''
 
   return (
     <ModalColumn
@@ -80,7 +79,11 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                     isPlanExpired
                       ? ' (expired)'
                       : userPlan && userPlan.status === 'trialing'
-                      ? ' (trial)'
+                      ? userPlanLabel.toLowerCase().includes('trial')
+                        ? ''
+                        : userPlan.amount
+                        ? ' (trial)'
+                        : ' trial'
                       : ''
                   }`}</ThemedText>
                   {!!(

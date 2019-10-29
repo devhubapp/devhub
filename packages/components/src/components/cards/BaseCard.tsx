@@ -317,7 +317,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                           web: { title: getFullDateText(date) },
                         })}
                       >
-                        {dateText}
+                        {dateText.toLowerCase()}
                       </ThemedText>
 
                       {!!showPrivateLock && (

@@ -3,6 +3,7 @@ import {
   allPlans,
   constants,
   freePlan,
+  isPlanExpired,
   Plan,
   PlanID,
 } from '@devhub/core'
@@ -201,8 +202,10 @@ export function PricingModal(props: PricingModalProps) {
     >
       <FullHeightScrollView style={sharedStyles.flex}>
         {!!(
+          userPlan &&
           userPlanDetails &&
-          userPlanDetails.amount &&
+          (userPlanDetails.amount ||
+            (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
           !userPlanStillExist
         ) && (
           <>
@@ -211,7 +214,7 @@ export function PricingModal(props: PricingModalProps) {
             <View style={sharedStyles.marginHorizontalHalf}>
               <PricingPlanBlock
                 key="pricing-current-plan"
-                banner={userPlanDetails.label}
+                banner={false}
                 isPartOfAList={false}
                 plan={userPlanDetails}
                 width="100%"
@@ -220,14 +223,15 @@ export function PricingModal(props: PricingModalProps) {
 
             <Spacer height={contentPadding} />
 
-            {!(freePlan && !freePlan.trialPeriodDays) && (
-              <>
-                <View style={sharedStyles.marginHorizontal}>
-                  {CancelSubscriptionButton}
-                </View>
-                <Spacer height={contentPadding} />
-              </>
-            )}
+            {!!(userPlan && userPlan.amount) &&
+              !(freePlan && !freePlan.trialPeriodDays) && (
+                <>
+                  <View style={sharedStyles.marginHorizontal}>
+                    {CancelSubscriptionButton}
+                  </View>
+                  <Spacer height={contentPadding} />
+                </>
+              )}
           </>
         )}
 
@@ -305,26 +309,7 @@ export function PricingModal(props: PricingModalProps) {
                 <Spacer height={contentPadding} />
               </>
             )}
-
-          <ThemedText
-            color="foregroundColorMuted65"
-            style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
-          >
-            {userPlan &&
-            (userPlan.status === 'active' || userPlan.status === 'trialing') &&
-            userPlan.amount > 0
-              ? selectedPlan && !selectedPlan.amount
-                ? ''
-                : ''
-              : selectedPlan && selectedPlan.amount
-              ? ''
-              : freePlan && !freePlan.trialPeriodDays
-              ? 'If you want DevHub to keep existing and being updated, consider purchasing a paid plan.'
-              : ''}
-          </ThemedText>
         </View>
-
-        <Spacer height={contentPadding} />
       </FullHeightScrollView>
     </ModalColumn>
   )
