@@ -221,6 +221,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
     const renderWatchingOwnerFilterBar = !!(
       column &&
+      (data || []).length &&
       column.type === 'activity' &&
       isDashboard
     )
