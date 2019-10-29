@@ -76,9 +76,13 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
 
   const allFiltersQuery =
     (column &&
-      getSearchQueryFromFilter(column.type, column.filters, {
-        groupByKey: false,
-      })) ||
+      getSearchQueryFromFilter(
+        column.type,
+        { ...column.filters, saved: undefined },
+        {
+          groupByKey: false,
+        },
+      )) ||
     undefined
 
   const queryTerms = getSearchQueryTerms(allFiltersQuery)
