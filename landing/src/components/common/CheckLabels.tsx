@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { CheckLabelProps } from './CheckLabel'
 
 export interface CheckLabelsProps {
-  children: Array<ReactElement<CheckLabelProps>>
+  children: Array<ReactElement<CheckLabelProps> | false>
 }
 
 export function CheckLabels(props: CheckLabelsProps) {
@@ -16,7 +16,7 @@ export function CheckLabels(props: CheckLabelsProps) {
       {React.Children.map(children, (child, index) => (
         <>
           {child}
-          {index < total - 1 && <div className="pr-4" />}
+          {!!(child && index < total - 1) && <div className="pr-4" />}
         </>
       ))}
     </div>

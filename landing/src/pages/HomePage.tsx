@@ -1,3 +1,5 @@
+import { activePaidPlans, freePlan } from '@brunolemos/devhub-core'
+
 import CheckLabel from '../components/common/CheckLabel'
 import { CheckLabels } from '../components/common/CheckLabels'
 import { DeviceFrame } from '../components/common/DeviceFrame'
@@ -29,8 +31,22 @@ export default function HomePage(_props: HomePageProps) {
             <DownloadButtons />
 
             <CheckLabels>
-              <CheckLabel label="Free version" />
-              <CheckLabel label="Free trial on paid features" />
+              {!!(freePlan && !freePlan.trialPeriodDays) && (
+                <CheckLabel label="Free version" />
+              )}
+              {!!(
+                (freePlan && freePlan.trialPeriodDays) ||
+                (activePaidPlans &&
+                  activePaidPlans.some(plan => plan.trialPeriodDays))
+              ) && (
+                <CheckLabel
+                  label={
+                    freePlan && !freePlan.trialPeriodDays
+                      ? 'Free trial on paid features'
+                      : 'Free trial'
+                  }
+                />
+              )}
               <CheckLabel label="No code access" />
             </CheckLabels>
           </div>

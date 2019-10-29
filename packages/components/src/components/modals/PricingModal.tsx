@@ -1,5 +1,6 @@
 import {
-  activePlans,
+  activePaidPlans as _activePaidPlans,
+  activePlans as _activePlans,
   allPlans,
   constants,
   freePlan,
@@ -37,6 +38,9 @@ export interface PricingModalProps {
   showBackButton: boolean
 }
 
+const plansToShow =
+  freePlan && !freePlan.trialPeriodDays ? _activePlans : _activePaidPlans
+
 export function PricingModal(props: PricingModalProps) {
   const {
     highlightFeature: _highlightFeature,
@@ -64,32 +68,32 @@ export function PricingModal(props: PricingModalProps) {
   const userPlanStillExist = !!(
     userPlan &&
     userPlan.id &&
-    activePlans.find(p => p.id === userPlan.id)
+    plansToShow.find(p => p.id === userPlan.id)
   )
 
   const [selectedPlanId, setSelectedPlanId] = useState<PlanID | undefined>(
     () =>
       (initialSelectedPlanId &&
-      activePlans.find(p => p.id === initialSelectedPlanId)
+      plansToShow.find(p => p.id === initialSelectedPlanId)
         ? initialSelectedPlanId
         : undefined) ||
       (_highlightFeature &&
-      activePlans.find(p => p.featureFlags[_highlightFeature] === true)
-        ? activePlans.find(p => p.featureFlags[_highlightFeature] === true)!.id
+      plansToShow.find(p => p.featureFlags[_highlightFeature] === true)
+        ? plansToShow.find(p => p.featureFlags[_highlightFeature] === true)!.id
         : undefined) ||
       (userPlan && userPlanStillExist && userPlan.id) ||
       undefined,
   )
 
   const selectedPlan =
-    selectedPlanId && activePlans.find(p => p.id === selectedPlanId)
+    selectedPlanId && plansToShow.find(p => p.id === selectedPlanId)
 
   const scrollToPlan = useCallback(
     (planId: PlanID | undefined) => {
       if (!flatListRef.current) return
 
-      const index = activePlans.findIndex(p => p.id === planId)
-      if (!(index >= 0 && index < activePlans.length)) return
+      const index = plansToShow.findIndex(p => p.id === planId)
+      if (!(index >= 0 && index < plansToShow.length)) return
 
       flatListRef.current.scrollToOffset({
         animated: hasCalledOnLayoutRef.current,
@@ -100,7 +104,7 @@ export function PricingModal(props: PricingModalProps) {
         ),
       })
     },
-    [activePlans],
+    [plansToShow],
   )
 
   useEffect(() => {
@@ -193,6 +197,13 @@ export function PricingModal(props: PricingModalProps) {
     </Button>
   )
 
+  const showUserPlanAtTheTop =
+    userPlan &&
+    userPlanDetails &&
+    (userPlanDetails.amount ||
+      (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
+    !userPlanStillExist
+
   return (
     <ModalColumn
       name="PRICING"
@@ -200,13 +211,7 @@ export function PricingModal(props: PricingModalProps) {
       title="Subscribe"
     >
       <FullHeightScrollView style={sharedStyles.flex}>
-        {!!(
-          userPlan &&
-          userPlanDetails &&
-          (userPlanDetails.amount ||
-            (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
-          !userPlanStillExist
-        ) && (
+        {!!showUserPlanAtTheTop && (
           <>
             <SubHeader title="CURRENT PLAN" />
 
@@ -215,7 +220,7 @@ export function PricingModal(props: PricingModalProps) {
                 key="pricing-current-plan"
                 banner={false}
                 isPartOfAList={false}
-                plan={userPlanDetails}
+                plan={userPlanDetails!}
                 width="100%"
               />
             </View>
@@ -245,7 +250,7 @@ export function PricingModal(props: PricingModalProps) {
         <FlatList
           ref={flatListRef}
           contentContainerStyle={sharedStyles.paddingHorizontalHalf}
-          data={activePlans}
+          data={plansToShow}
           extraData={selectedPlanId}
           getItemLayout={getItemLayout}
           horizontal
@@ -302,7 +307,8 @@ export function PricingModal(props: PricingModalProps) {
           <Spacer height={contentPadding} />
 
           {!(freePlan && !freePlan.trialPeriodDays) &&
-            !(userPlanDetails && !userPlanStillExist) && (
+            !showUserPlanAtTheTop &&
+            !!(userPlan && userPlan.amount) && (
               <>
                 {CancelSubscriptionButton}
                 <Spacer height={contentPadding} />

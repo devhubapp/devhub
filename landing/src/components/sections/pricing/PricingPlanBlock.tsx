@@ -115,6 +115,8 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             &nbsp;
             {estimatedMonthlyPrice !== plan.amount
               ? `*Billed ${formatPriceAndInterval(plan.amount, plan)}`
+              : !plan.amount && plan.trialPeriodDays
+              ? `Free for ${plan.trialPeriodDays} days`
               : ''}
             &nbsp;
           </div>
