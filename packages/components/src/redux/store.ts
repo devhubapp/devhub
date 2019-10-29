@@ -1,4 +1,4 @@
-import { applyMiddleware, createStore } from 'redux'
+import { applyMiddleware, compose, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import {
   createMigrate,
@@ -25,6 +25,10 @@ if (__DEV__) {
   reactotron = require('./ReactotronConfig').default // tslint:disable-line no-var-requires
   registerSelectors(selectors)
 }
+
+const composeFn: typeof composeWithDevTools = __DEV__
+  ? composeWithDevTools
+  : compose
 
 export function configureStore(key = 'root') {
   const persistConfig: PersistConfig<any> = {
@@ -80,15 +84,9 @@ export function configureStore(key = 'root') {
 
   const store = createStore(
     persistedReducer,
-    composeWithDevTools(
-      ...[
-        applyMiddleware(
-          analyticsMiddleware,
-          sagaMiddleware,
-          electronMiddleware,
-        ),
-        reactotron && reactotron.createEnhancer(),
-      ].filter(Boolean),
+    composeFn(
+      applyMiddleware(analyticsMiddleware, sagaMiddleware, electronMiddleware),
+      ...[reactotron && reactotron.createEnhancer()].filter(Boolean),
     ),
   )
 
