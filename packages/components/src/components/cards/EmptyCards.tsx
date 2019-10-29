@@ -122,14 +122,22 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
       <View
         style={[
           sharedStyles.fullWidth,
-          sharedStyles.horizontal,
+          sharedStyles.padding,
           sharedStyles.center,
-          {
-            padding: contentPadding,
-          },
         ]}
         pointerEvents="box-none"
       >
+        {!!clearEmojiURL && (
+          <>
+            <Image
+              source={{ uri: clearEmojiURL }}
+              style={{ width: 24, height: 24 }}
+            />
+
+            {!!clearMessage && <Spacer height={contentPadding / 2} />}
+          </>
+        )}
+
         {!!clearMessage && (
           <ThemedText
             color="foregroundColorMuted65"
@@ -143,17 +151,6 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
           >
             {clearMessage}
           </ThemedText>
-        )}
-
-        {!!clearEmojiURL && (
-          <>
-            {!!clearMessage && <Spacer width={contentPadding / 2} />}
-
-            <Image
-              source={{ uri: clearEmojiURL }}
-              style={{ width: 24, height: 24 }}
-            />
-          </>
         )}
       </View>
     )

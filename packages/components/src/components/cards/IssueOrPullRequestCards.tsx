@@ -30,6 +30,7 @@ export interface IssueOrPullRequestCardsProps {
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   getItemByNodeIdOrId: (nodeIdOrId: string) => ItemT | undefined
+  isShowingOnlyBookmarks: boolean
   itemNodeIdOrIds: string[]
   lastFetchedSuccessfullyAt: string | undefined
   pointerEvents?: ViewProps['pointerEvents']
@@ -44,6 +45,7 @@ export const IssueOrPullRequestCards = React.memo(
       errorMessage,
       fetchNextPage,
       getItemByNodeIdOrId,
+      isShowingOnlyBookmarks,
       itemNodeIdOrIds,
       lastFetchedSuccessfullyAt,
       pointerEvents,
@@ -144,6 +146,27 @@ export const IssueOrPullRequestCards = React.memo(
       NonNullable<OneListProps<DataItemT>['ListEmptyComponent']>
     >(
       () => () => {
+        if (
+          OverrideRender &&
+          OverrideRender.Component &&
+          OverrideRender.overlay
+        )
+          return null
+
+        if (isShowingOnlyBookmarks) {
+          return (
+            <EmptyCards
+              clearEmoji="bookmark"
+              clearMessage="No bookmarks matching your filters"
+              columnId={columnId}
+              disableLoadingIndicator
+              errorMessage={errorMessage}
+              fetchNextPage={fetchNextPage}
+              refresh={refresh}
+            />
+          )
+        }
+
         const column = selectors.columnSelector(store.getState(), columnId)
 
         const maybeInvalidFilters = `${errorMessage || ''}`
@@ -231,6 +254,14 @@ export const IssueOrPullRequestCards = React.memo(
         itemNodeIdOrIds.length ? undefined : fetchNextPage,
         itemNodeIdOrIds.length ? undefined : refresh,
         itemNodeIdOrIds.length ? undefined : loggedUsername,
+        itemNodeIdOrIds.length ? undefined : isShowingOnlyBookmarks,
+        itemNodeIdOrIds.length
+          ? undefined
+          : !!(
+              OverrideRender &&
+              OverrideRender.Component &&
+              OverrideRender.overlay
+            ),
       ],
     )
 

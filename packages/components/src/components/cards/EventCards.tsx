@@ -19,6 +19,7 @@ export interface EventCardsProps {
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   getItemByNodeIdOrId: (nodeIdOrId: string) => ItemT | undefined
+  isShowingOnlyBookmarks: boolean
   itemNodeIdOrIds: string[]
   lastFetchedSuccessfullyAt: string | undefined
   pointerEvents?: ViewProps['pointerEvents']
@@ -32,6 +33,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
     errorMessage,
     fetchNextPage,
     getItemByNodeIdOrId,
+    isShowingOnlyBookmarks,
     itemNodeIdOrIds,
     lastFetchedSuccessfullyAt,
     pointerEvents,
@@ -128,6 +130,20 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       if (OverrideRender && OverrideRender.Component && OverrideRender.overlay)
         return null
 
+      if (isShowingOnlyBookmarks) {
+        return (
+          <EmptyCards
+            clearEmoji="bookmark"
+            clearMessage="No bookmarks matching your filters"
+            columnId={columnId}
+            disableLoadingIndicator
+            errorMessage={errorMessage}
+            fetchNextPage={fetchNextPage}
+            refresh={refresh}
+          />
+        )
+      }
+
       return (
         <EmptyCards
           clearMessage="No new events!"
@@ -144,6 +160,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
       itemNodeIdOrIds.length ? undefined : errorMessage,
       itemNodeIdOrIds.length ? undefined : fetchNextPage,
       itemNodeIdOrIds.length ? undefined : refresh,
+      itemNodeIdOrIds.length ? undefined : isShowingOnlyBookmarks,
       itemNodeIdOrIds.length
         ? undefined
         : !!(

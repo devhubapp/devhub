@@ -35,6 +35,7 @@ export interface IssueOrPullRequestCardsContainerProps
     | 'errorMessage'
     | 'fetchNextPage'
     | 'getItemByNodeIdOrId'
+    | 'isShowingOnlyBookmarks'
     | 'itemNodeIdOrIds'
     | 'lastFetchedSuccessfullyAt'
     | 'refresh'
@@ -202,6 +203,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         errorMessage={mainSubscription.data.errorMessage || ''}
         fetchNextPage={canFetchMore ? fetchNextPage : undefined}
         getItemByNodeIdOrId={getItemByNodeIdOrId}
+        isShowingOnlyBookmarks={!!(column.filters && column.filters.saved)}
         itemNodeIdOrIds={filteredItemsIds}
         lastFetchedSuccessfullyAt={
           mainSubscription.data.lastFetchedSuccessfullyAt

@@ -19,6 +19,7 @@ export interface NotificationCardsProps {
   errorMessage: EmptyCardsProps['errorMessage']
   fetchNextPage: (() => void) | undefined
   getItemByNodeIdOrId: (nodeIdOrId: string) => ItemT | undefined
+  isShowingOnlyBookmarks: boolean
   itemNodeIdOrIds: string[]
   lastFetchedSuccessfullyAt: string | undefined
   pointerEvents?: ViewProps['pointerEvents']
@@ -32,6 +33,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     errorMessage,
     fetchNextPage,
     getItemByNodeIdOrId,
+    isShowingOnlyBookmarks,
     itemNodeIdOrIds,
     lastFetchedSuccessfullyAt,
     pointerEvents,
@@ -125,6 +127,23 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     NonNullable<OneListProps<DataItemT>['ListEmptyComponent']>
   >(
     () => () => {
+      if (OverrideRender && OverrideRender.Component && OverrideRender.overlay)
+        return null
+
+      if (isShowingOnlyBookmarks) {
+        return (
+          <EmptyCards
+            clearEmoji="bookmark"
+            clearMessage="No bookmarks matching your filters"
+            columnId={columnId}
+            disableLoadingIndicator
+            errorMessage={errorMessage}
+            fetchNextPage={fetchNextPage}
+            refresh={refresh}
+          />
+        )
+      }
+
       return (
         <EmptyCards
           clearMessage="No new notifications!"
@@ -141,6 +160,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
       itemNodeIdOrIds.length ? undefined : errorMessage,
       itemNodeIdOrIds.length ? undefined : fetchNextPage,
       itemNodeIdOrIds.length ? undefined : refresh,
+      itemNodeIdOrIds.length ? undefined : isShowingOnlyBookmarks,
+      itemNodeIdOrIds.length
+        ? undefined
+        : !!(
+            OverrideRender &&
+            OverrideRender.Component &&
+            OverrideRender.overlay
+          ),
     ],
   )
 
