@@ -1,7 +1,8 @@
+import { constants } from '@devhub/core'
 import qs from 'qs'
+import { ReactNode } from 'react'
 import { findDOMNode } from 'react-dom'
 
-import { constants } from '@devhub/core'
 import {
   AppLayoutProviderState,
   getAppLayout,
@@ -123,7 +124,7 @@ export async function openAppStore({
 export function genericParseText<T extends string>(
   text: string,
   pattern: RegExp,
-  fn: (match: T) => React.ReactNode,
+  fn: (match: T) => ReactNode,
 ) {
   if (!(text && typeof text === 'string')) return [text].filter(Boolean)
 
@@ -136,7 +137,7 @@ export function genericParseText<T extends string>(
 
       return result.concat([item, fn(matches[index])].filter(Boolean))
     },
-    [] as React.ReactNode[],
+    [] as ReactNode[],
   )
 }
 

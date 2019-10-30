@@ -36,7 +36,7 @@
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
   "dependencies": {
-    "react-native": "0.61.2"
+    "react-native": "0.61.3"
   },
   "devDependencies": {
     "concurrently": "4.1.0",

@@ -24,7 +24,7 @@
     "intl": "1.2.5",
     "intl-locales-supported": "1.6.0",
     "react": "16.10.2",
-    "react-native": "0.61.2",
+    "react-native": "0.61.3",
     "react-native-gesture-handler": "1.4.1",
     "react-native-haptic-feedback": "1.8.2",
     "react-native-inappbrowser-reborn": "3.1.0",
@@ -35,12 +35,9 @@
     "react-native-vector-icons": "6.6.0"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
-    "@babel/runtime": "7.6.2",
     "@react-native-community/eslint-config": "0.0.5",
     "babel-jest": "24.9.0",
     "jest": "24.9.0",
-    "metro-react-native-babel-preset": "0.56.0",
     "react-test-renderer": "16.10.2"
   },
   "jest": {

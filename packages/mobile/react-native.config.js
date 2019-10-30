@@ -1,9 +1,4 @@
 module.exports = {
-  project: {
-    android: {
-      sourceDir: './packages/mobile/android',
-    },
-  },
   dependencies: {
     'react-native-splash-screen': {
       platforms: {

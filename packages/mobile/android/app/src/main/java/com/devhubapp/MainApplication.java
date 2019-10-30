@@ -10,13 +10,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.bugsnag.BugsnagReactNative;
-import com.mkuczera.RNReactNativeHapticFeedbackPackage;
-import com.proyecto26.inappbrowser.RNInAppBrowserPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
-import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
-import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -34,14 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
                 protected List<ReactPackage> getPackages() {
                     @SuppressWarnings("UnnecessaryLocalVariable")
                     List<ReactPackage> packages = new PackageList(this).getPackages();
-                    packages.add(new ReactNativeFirebaseAppPackage());
-                    packages.add(new ReactNativeFirebaseAnalyticsPackage());
                     packages.add(new LinearGradientPackage());
-                    packages.add(new RNGestureHandlerPackage());
-                    packages.add(BugsnagReactNative.getPackage());
-                    packages.add(new RNInAppBrowserPackage());
                     packages.add(new SafeAreaContextPackage());
-                    packages.add(new RNReactNativeHapticFeedbackPackage());
                     return packages;
                 }
 
