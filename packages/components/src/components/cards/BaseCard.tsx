@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     height: sizes.rightTextLineHeight,
     lineHeight: sizes.rightTextLineHeight,
     fontSize: normalTextSize,
-    fontWeight: '500',
+    // fontWeight: '500',
     overflow: 'hidden',
   },
 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     lineHeight: sizes.rightTextLineHeight,
     fontSize: smallerTextSize,
-    fontWeight: '400',
+    // fontWeight: '400',
     overflow: 'hidden',
   },
 
@@ -212,7 +212,10 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     )
 
   const backgroundThemeColor = (theme: Theme) =>
-    getCardBackgroundThemeColor({ isDark: theme.isDark, isMuted: isRead })
+    getCardBackgroundThemeColor({
+      isDark: theme.isDark,
+      isMuted: isRead,
+    })
 
   const dispatch = useDispatch()
   const columnId = useContext(CurrentColumnContext)
@@ -278,10 +281,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
             >
               <ThemedIcon
                 name={icon.name}
-                color={
-                  icon.color ||
-                  (isRead ? 'foregroundColorMuted65' : 'foregroundColor')
-                }
+                color={icon.color || 'foregroundColor'}
                 style={styles.icon}
               />
             </ThemedView>
@@ -294,9 +294,9 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
             <View style={sharedStyles.horizontalAndVerticallyAligned}>
               <ThemedText
-                color={isRead ? 'foregroundColorMuted65' : 'foregroundColor'}
+                color={'foregroundColor'}
                 numberOfLines={1}
-                style={styles.title}
+                style={[styles.title, { fontWeight: isRead ? '300' : '500' }]}
               >
                 {title}
               </ThemedText>
@@ -337,9 +337,12 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
             {!!subtitle && (
               <ThemedText
-                color={isRead ? 'foregroundColorMuted65' : 'foregroundColor'}
+                color={'foregroundColor'}
                 numberOfLines={1}
-                style={styles.subtitle}
+                style={[
+                  styles.subtitle,
+                  { fontWeight: isRead ? '300' : '400' },
+                ]}
               >
                 {subtitle}
               </ThemedText>
@@ -602,7 +605,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
         <Spacer flex={1} />
       </View>
 
-      <CardItemSeparator muted={isRead} />
+      <CardItemSeparator muted={false} />
     </View>
   )
 })

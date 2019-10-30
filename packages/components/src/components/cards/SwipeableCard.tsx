@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { useItem } from '../../hooks/use-item'
 import { SwipeableRow } from '../../libs/swipeable'
 import * as actions from '../../redux/actions'
-import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { useTheme } from '../context/ThemeContext'
 import { CardWithLink, CardWithLinkProps } from './CardWithLink'
 
@@ -53,14 +52,15 @@ export function SwipeableCard(props: CardWithLinkProps) {
       ref={swipeableRef}
       leftActions={[
         {
-          backgroundColor:
-            theme[
-              getCardBackgroundThemeColor({
-                isDark: theme.isDark,
-                isMuted: !isRead,
-              })
-            ],
-          foregroundColor: theme.foregroundColor,
+          ...(!isRead
+            ? {
+                backgroundColor: theme.backgroundColorDarker2,
+                foregroundColor: theme.foregroundColor,
+              }
+            : {
+                backgroundColor: theme.primaryBackgroundColor,
+                foregroundColor: theme.primaryForegroundColor,
+              }),
           iconFamily: 'octicons',
           icon: isRead ? 'primitive-dot' : 'mail-read',
           key: 'read',

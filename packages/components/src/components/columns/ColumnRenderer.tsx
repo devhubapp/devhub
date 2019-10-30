@@ -65,12 +65,12 @@ export function getColumnCardThemeColors({
 
 export function getCardBackgroundThemeColor({
   isDark,
-  isHovered,
   isMuted,
+  isHovered,
 }: {
   isDark: boolean
-  isHovered?: boolean
   isMuted: boolean
+  isHovered?: boolean
 }) {
   const backgroundThemeColors = getColumnCardThemeColors({ isDark })
 

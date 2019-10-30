@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { isItemRead, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { Separator, separatorSize } from '../../common/Separator'
 import { useTheme } from '../../context/ThemeContext'
 
@@ -28,16 +28,16 @@ export interface CardItemSeparatorProps {
 }
 
 export function CardItemSeparator(props: CardItemSeparatorProps) {
-  const { leadingItem, muted: _muted } = props
+  const { muted: _muted } = props
 
   const theme = useTheme()
 
   const muted =
     typeof _muted === 'boolean'
       ? _muted
-      : leadingItem
-      ? isItemRead(leadingItem)
-      : false
+      : // : leadingItem
+        // ? isItemRead(leadingItem)
+        false
 
   const cardItemSeparatorThemeColors = getCardItemSeparatorThemeColors({
     isDark: theme.isDark,

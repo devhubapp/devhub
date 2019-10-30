@@ -21,9 +21,9 @@ import {
   ThemedTouchableHighlight,
   ThemedTouchableHighlightProps,
 } from '../themed/ThemedTouchableHighlight'
+import { ThemedView } from '../themed/ThemedView'
 import { BaseCard } from './BaseCard'
 import { getCardPropsForItem } from './BaseCard.shared'
-import { CardFocusIndicator } from './partials/CardFocusIndicator'
 import { CardSavedIndicator } from './partials/CardSavedIndicator'
 
 export interface CardWithLinkProps {
@@ -120,7 +120,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
         style: {
           opacity:
             getLastUsedInputType() === 'keyboard' && isFocusedRef.current
-              ? 1
+              ? 0.1
               : 0,
         },
       })
@@ -180,7 +180,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
         getCardBackgroundThemeColor({
           isDark: theme.isDark,
           isMuted: cardProps.isRead,
-          isHovered: !Platform.supportsTouch && isFocusedRef.current,
+          // isHovered: !Platform.supportsTouch && isFocusedRef.current,
         })
       }
       data-card-link
@@ -222,17 +222,29 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
         handleFocusChange(false, true)
       }}
     >
+      <ThemedView
+        ref={focusIndicatorRef}
+        backgroundColor="primaryBackgroundColor"
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            opacity:
+              getLastUsedInputType() === 'keyboard' && isFocusedRef.current
+                ? 0.1
+                : 0,
+          },
+        ]}
+      />
+
       {CardComponent}
 
-      <CardFocusIndicator
-        ref={focusIndicatorRef}
-        style={{
-          opacity:
-            getLastUsedInputType() === 'keyboard' && isFocusedRef.current
-              ? 1
-              : 0,
-        }}
-      />
+      {/* {appViewMode === 'single-column' && (
+        <CardLeftBorder
+          style={{
+            opacity: !!(cardProps && !cardProps.isRead) ? 1 : 0,
+          }}
+        />
+      )} */}
 
       {!!isSaved && <CardSavedIndicator />}
     </Link>
@@ -261,7 +273,7 @@ const GestureHandlerCardTouchable = React.forwardRef<
           theme[
             getCardBackgroundThemeColor({
               isDark: theme.isDark,
-              isMuted: false, // cardProps.isRead,
+              isMuted: false,
               isHovered: true,
             })
           ]
@@ -292,7 +304,7 @@ const NormalCardTouchable = React.forwardRef<
           theme[
             getCardBackgroundThemeColor({
               isDark: theme.isDark,
-              isMuted: false, // cardProps.isRead,
+              isMuted: false,
               isHovered: true,
             })
           ]
