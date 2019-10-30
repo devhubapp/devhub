@@ -20,9 +20,7 @@ import { rootSaga } from './sagas'
 import * as selectors from './selectors'
 import storage from './storage'
 
-let reactotron: any
 if (__DEV__) {
-  reactotron = require('./ReactotronConfig').default // tslint:disable-line no-var-requires
   registerSelectors(selectors)
 }
 
@@ -86,7 +84,6 @@ export function configureStore(key = 'root') {
     persistedReducer,
     composeFn(
       applyMiddleware(analyticsMiddleware, sagaMiddleware, electronMiddleware),
-      ...[reactotron && reactotron.createEnhancer()].filter(Boolean),
     ),
   )
 
