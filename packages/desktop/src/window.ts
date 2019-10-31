@@ -225,6 +225,7 @@ function updateBrowserWindowOptions() {
     Math.floor(options.minHeight || 0),
   )
 
+  // TODO: Fix when hiding/showing dock, the maxwidth should change
   mainWindow.setMaximumSize(
     Math.ceil(
       options.maxWidth || screen.getDisplayFromCursor().workAreaSize.width,

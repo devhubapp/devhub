@@ -60,7 +60,8 @@
       "icon": "icons/icon.png"
     },
     "win": {
-      "icon": "icons/icon.ico"
+      "icon": "icons/icon.ico",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     },
     "files": [
       "assets",
