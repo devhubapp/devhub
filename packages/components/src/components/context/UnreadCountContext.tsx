@@ -41,6 +41,10 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
 
+  // Re-render when changing the data
+  useReduxState(selectors.dataNodeIdsOrIdsBySubscriptionId)
+  useReduxState(selectors.dataReadIds)
+
   const {
     enablePushNotifications: enableDesktopPushNotifications,
   } = useDesktopOptions()

@@ -11,6 +11,10 @@ export const dataByNodeIdOrId = (state: RootState) => s(state).byId
 export const dataNodeIdsOrIdsBySubscriptionId = (state: RootState) =>
   s(state).idsBySubscriptionId
 
+export const dataReadIds = (state: RootState) => s(state).readIds
+
+export const dataSavedIds = (state: RootState) => s(state).savedIds
+
 export const itemsBySubscriptionIdsSelector = createSelector(
   (_state: RootState, subscriptionIds: string[]) => subscriptionIds,
   (state: RootState, _subscriptionIds: string[]) =>
