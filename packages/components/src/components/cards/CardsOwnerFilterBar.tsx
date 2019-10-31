@@ -37,24 +37,21 @@ export const CardsOwnerFilterBar = React.memo(
   (props: CardsOwnerFilterBarProps) => {
     const { columnId } = props
 
-    const { column } = useColumn(columnId)
+    const { column, dashboardFromUsername } = useColumn(columnId)
     const { allItems } = useColumnData(columnId)
 
     const dispatch = useDispatch()
-    const loggedUsername = useReduxState(
-      selectors.currentGitHubUsernameSelector,
-    )!
     const plan = useReduxState(selectors.currentUserPlanSelector)
 
     const getFilteredItemsOptions = useMemo<
       Parameters<typeof getFilteredItems>[3]
     >(
       () => ({
-        loggedUsername,
+        dashboardFromUsername,
         mergeSimilar: false,
         plan,
       }),
-      [loggedUsername, plan],
+      [dashboardFromUsername, plan],
     )
 
     const {
@@ -82,9 +79,9 @@ export const CardsOwnerFilterBar = React.memo(
             getFilteredItemsOptions,
           ),
           {
+            dashboardFromUsername,
             forceIncludeTheseOwners: allForcedOwners,
             forceIncludeTheseRepos: allForcedRepos,
-            loggedUsername,
             plan,
           },
         ),
@@ -94,7 +91,7 @@ export const CardsOwnerFilterBar = React.memo(
         allItems,
         column && column.filters,
         column && column.type,
-        loggedUsername,
+        dashboardFromUsername,
         plan,
       ],
     )

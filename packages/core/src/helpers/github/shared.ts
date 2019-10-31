@@ -535,11 +535,12 @@ export function getColumnHeaderDetails(
       avatarProps?: HeaderDetailsAvatarProps
       icon: GitHubIcon
       owner?: string
-      repo?: string
       ownerIsKnown: boolean
+      repo?: string
       repoIsKnown: boolean
       subtitle?: string
       title: string
+      mainSubscriptionSubtype: ColumnSubscription['subtype'] | undefined
     }
   | undefined {
   if (!column) return undefined
@@ -575,6 +576,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle: 'Activity',
             title: s.params!.org,
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
         case 'PUBLIC_EVENTS': {
@@ -584,6 +586,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle: 'Activity',
             title: 'Public',
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
         case 'REPO_EVENTS': {
@@ -608,6 +611,7 @@ export function getColumnHeaderDetails(
             repo: s.params!.repo,
             subtitle: 'Activity',
             title: s.params!.repo,
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
         case 'REPO_NETWORK_EVENTS': {
@@ -632,6 +636,7 @@ export function getColumnHeaderDetails(
             repo: s.params!.repo,
             subtitle: 'Network',
             title: s.params!.repo,
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
         case 'USER_EVENTS': {
@@ -657,6 +662,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle: 'Activity',
             title: s.params!.username,
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
         case 'USER_ORG_EVENTS': {
@@ -676,6 +682,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle: 'Activity',
             title: s.params!.org,
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
         case 'USER_PUBLIC_EVENTS': {
@@ -701,6 +708,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle: 'Activity',
             title: s.params!.username,
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
         case 'USER_RECEIVED_EVENTS':
@@ -727,6 +735,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle: 'Dashboard',
             title: s.params!.username,
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
         default: {
@@ -741,6 +750,7 @@ export function getColumnHeaderDetails(
             repoIsKnown: false,
             subtitle: (column && (column as any).subtype) || '',
             title: 'Unknown',
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
       }
@@ -817,6 +827,7 @@ export function getColumnHeaderDetails(
             avatarProps,
             ownerIsKnown: !!owner,
             repoIsKnown: !!(ownerAndRepo.owner && ownerAndRepo.repo),
+            mainSubscriptionSubtype: subscription.subtype,
             owner: ownerAndRepo.owner || owner || '',
             repo: ownerAndRepo.repo || '',
             title:
@@ -856,6 +867,7 @@ export function getColumnHeaderDetails(
             repo: (s && s.params && s.params.repo) || '',
             subtitle: (s && s.params && s.params.repo) || '',
             title: 'Notifications',
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
 
@@ -876,6 +888,7 @@ export function getColumnHeaderDetails(
                 ? 'Read'
                 : '',
             title: 'Notifications',
+            mainSubscriptionSubtype: subscription.subtype,
           }
         }
       }
@@ -895,6 +908,7 @@ export function getColumnHeaderDetails(
         repoIsKnown: false,
         subtitle: (column && (column as any).type) || '',
         title: 'Unknown',
+        mainSubscriptionSubtype: subscription.subtype,
       }
     }
   }
@@ -1443,18 +1457,18 @@ export function getFilteredItems(
   items: EnhancedItem[],
   filters: ColumnFilters | undefined,
   {
-    loggedUsername,
+    dashboardFromUsername,
     mergeSimilar,
     plan,
   }: {
-    loggedUsername: string
+    dashboardFromUsername: string | undefined
     mergeSimilar: boolean
     plan: UserPlan | null | undefined
   },
 ) {
   if (type === 'activity') {
     return getFilteredEvents(items as EnhancedGitHubEvent[], filters, {
-      loggedUsername,
+      dashboardFromUsername,
       mergeSimilar,
       plan,
     })
@@ -1472,7 +1486,7 @@ export function getFilteredItems(
     return getFilteredNotifications(
       items as EnhancedGitHubNotification[],
       filters,
-      { loggedUsername, plan },
+      { dashboardFromUsername, plan },
     )
   }
 
@@ -1524,14 +1538,13 @@ export function getItemsFilterMetadata(
   type: ColumnSubscription['type'],
   items: EnhancedItem[],
   {
+    dashboardFromUsername,
     forceIncludeTheseOwners = [],
     forceIncludeTheseRepos = [],
-    loggedUsername,
-    plan,
   }: {
     forceIncludeTheseOwners?: string[]
     forceIncludeTheseRepos?: string[]
-    loggedUsername: string
+    dashboardFromUsername: string | undefined
     plan: UserPlan | null | undefined
   },
 ): ItemsFilterMetadata {
@@ -1553,7 +1566,7 @@ export function getItemsFilterMetadata(
     const eventAction = event && getEventMetadata(event).action
     const privacy = getItemPrivacy(type, item)
     const watchingOwner =
-      event && getEventWatchingOwner(event, { loggedUsername })
+      event && getEventWatchingOwner(event, { dashboardFromUsername })
 
     const ownersAndRepos = getItemOwnersAndRepos(type, item)
 
@@ -1666,9 +1679,9 @@ export function getItemSearchableStrings(
   type: ColumnSubscription['type'],
   item: EnhancedItem,
   {
-    loggedUsername,
+    dashboardFromUsername,
     plan,
-  }: { loggedUsername: string; plan: UserPlan | null | undefined },
+  }: { dashboardFromUsername?: string; plan: UserPlan | null | undefined },
 ): string[] {
   const strings: string[] = []
 
@@ -1789,7 +1802,9 @@ export function getItemSearchableStrings(
     // watching:abc filter for Dashboard columns only
     const isDashboard = true // TODO
     if (isDashboard) {
-      const watchingOwner = getEventWatchingOwner(event, { loggedUsername })
+      const watchingOwner = getEventWatchingOwner(event, {
+        dashboardFromUsername,
+      })
       if (watchingOwner) strings.push(`watching:${watchingOwner}`)
     }
   } else if (notification) {

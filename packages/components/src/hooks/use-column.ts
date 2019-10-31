@@ -32,9 +32,18 @@ export function useColumn(columnId: string) {
     columnIndex + 1 > constants.COLUMNS_LIMIT ||
     !!(plan && columnIndex + 1 > plan.featureFlags.columnsLimit)
 
+  const dashboardFromUsername =
+    (headerDetails &&
+      (headerDetails.mainSubscriptionSubtype === 'USER_RECEIVED_EVENTS' ||
+        headerDetails.mainSubscriptionSubtype ===
+          'USER_RECEIVED_PUBLIC_EVENTS') &&
+      headerDetails.owner) ||
+    undefined
+
   return {
     column,
     columnIndex,
+    dashboardFromUsername,
     hasCrossedColumnsLimit,
     headerDetails,
   }

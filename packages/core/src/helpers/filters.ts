@@ -272,12 +272,15 @@ export function itemPassesStringSearchFilter(
   item: EnhancedItem,
   query: string | undefined,
   {
-    loggedUsername,
+    dashboardFromUsername,
     plan,
-  }: { loggedUsername: string; plan: UserPlan | null | undefined },
+  }: {
+    dashboardFromUsername: string | undefined
+    plan: UserPlan | null | undefined
+  },
 ) {
   const itemStrings = getItemSearchableStrings(type, item, {
-    loggedUsername,
+    dashboardFromUsername,
     plan,
   })
   const termsToSearchFor = getSearchQueryTerms(query)
@@ -490,9 +493,12 @@ export function getFilteredNotifications(
   notifications: EnhancedGitHubNotification[],
   filters: NotificationColumnFilters | undefined,
   {
-    loggedUsername,
+    dashboardFromUsername,
     plan,
-  }: { loggedUsername: string; plan: UserPlan | null | undefined },
+  }: {
+    dashboardFromUsername: string | undefined
+    plan: UserPlan | null | undefined
+  },
 ) {
   let _notifications = sortNotifications(notifications)
 
@@ -521,7 +527,7 @@ export function getFilteredNotifications(
 
       if (
         !itemPassesStringSearchFilter('notifications', item, filters.query, {
-          loggedUsername,
+          dashboardFromUsername,
           plan,
         })
       )
@@ -619,11 +625,11 @@ export function getFilteredEvents(
   events: EnhancedGitHubEvent[],
   filters: ActivityColumnFilters | undefined,
   {
-    loggedUsername,
+    dashboardFromUsername,
     mergeSimilar,
     plan,
   }: {
-    loggedUsername: string
+    dashboardFromUsername: string | undefined
     mergeSimilar: boolean
     plan: UserPlan | null | undefined
   },
@@ -653,7 +659,7 @@ export function getFilteredEvents(
       if (
         !itemPassesFilterRecord(
           filters.watching || {},
-          `${getEventWatchingOwner(item, { loggedUsername }) ||
+          `${getEventWatchingOwner(item, { dashboardFromUsername }) ||
             ''}`.toLowerCase(),
           true,
         )
@@ -662,7 +668,7 @@ export function getFilteredEvents(
 
       if (
         !itemPassesStringSearchFilter('activity', item, filters.query, {
-          loggedUsername,
+          dashboardFromUsername,
           plan,
         })
       )

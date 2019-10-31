@@ -104,6 +104,14 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       )
       .filter(Boolean) as ColumnSubscription[]
 
+    const dashboardFromUsername =
+      (columnSubscriptions[0] &&
+        (columnSubscriptions[0].subtype === 'USER_RECEIVED_EVENTS' ||
+          columnSubscriptions[0].subtype === 'USER_RECEIVED_PUBLIC_EVENTS') &&
+        (columnSubscriptions[0].params &&
+          columnSubscriptions[0].params.username)) ||
+      undefined
+
     const columnItems = subscriptionsDataSelector(state, column.subscriptionIds)
     const unreadColumnItems =
       column.filters && column.filters.unread === false
@@ -112,7 +120,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
             column.type,
             columnItems,
             { ...column.filters, unread: true },
-            { loggedUsername, mergeSimilar: false, plan },
+            { dashboardFromUsername, mergeSimilar: false, plan },
           )
     const columnHeader = getColumnHeaderDetails(
       column,

@@ -1088,7 +1088,7 @@ export function getGitHubEventSubItems(
 
 export function getEventWatchingOwner(
   event: EnhancedGitHubEvent,
-  { loggedUsername }: { loggedUsername: string },
+  { dashboardFromUsername }: { dashboardFromUsername: string | undefined },
 ): string | undefined {
   let owner: string | undefined
 
@@ -1097,7 +1097,7 @@ export function getEventWatchingOwner(
     const repoOwner = repoFullName && repoFullName.split('/')[0]
 
     owner =
-      repoOwner === loggedUsername
+      repoOwner === dashboardFromUsername
         ? repoOwner
         : event.actor && event.actor.login
   } else if (event.type === 'WatchEvent:OneUserMultipleRepos') {
@@ -1105,7 +1105,7 @@ export function getEventWatchingOwner(
     const repoOwner = repoFullName && repoFullName.split('/')[0]
 
     owner =
-      repoOwner === loggedUsername
+      repoOwner === dashboardFromUsername
         ? repoOwner
         : event.actor && event.actor.login
   } else if (event.type === 'MemberEvent') {

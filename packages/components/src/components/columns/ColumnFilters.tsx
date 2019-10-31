@@ -106,20 +106,19 @@ export type ColumnFilterCategory =
 export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   const { columnId, forceOpenAll, startWithFiltersExpanded } = props
 
-  const { column } = useColumn(columnId)
+  const { column, dashboardFromUsername } = useColumn(columnId)
 
-  const loggedUsername = useReduxState(selectors.currentGitHubUsernameSelector)!
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
   const getFilteredItemsOptions = useMemo<
     Parameters<typeof getFilteredItems>[3]
   >(
     () => ({
-      loggedUsername,
+      dashboardFromUsername,
       mergeSimilar: false,
       plan,
     }),
-    [loggedUsername, plan],
+    [dashboardFromUsername, plan],
   )
 
   const { allItems, filteredItems } = useColumnData(
@@ -154,7 +153,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
         {
           forceIncludeTheseOwners: allForcedOwners,
           forceIncludeTheseRepos: allForcedRepos,
-          loggedUsername,
+          dashboardFromUsername,
           plan,
         },
       ),
@@ -164,7 +163,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
       allItems,
       column && column.filters,
       column && column.type,
-      loggedUsername,
+      dashboardFromUsername,
       plan,
     ],
   )
@@ -285,19 +284,19 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   const allItemsMetadata = useMemo(
     () =>
       getItemsFilterMetadata(column ? column.type : 'activity', allItems, {
-        loggedUsername,
+        dashboardFromUsername,
         plan,
       }),
-    [column && column.type, allItems, loggedUsername, plan],
+    [column && column.type, allItems, dashboardFromUsername, plan],
   )
 
   const filteredItemsMetadata = useMemo(
     () =>
       getItemsFilterMetadata(column ? column.type : 'activity', filteredItems, {
-        loggedUsername,
+        dashboardFromUsername,
         plan,
       }),
-    [column && column.type, filteredItems, loggedUsername, plan],
+    [column && column.type, filteredItems, dashboardFromUsername, plan],
   )
 
   if (!column) return null

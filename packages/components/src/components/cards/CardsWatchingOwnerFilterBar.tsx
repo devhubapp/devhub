@@ -33,26 +33,23 @@ export const CardsWatchingOwnerFilterBar = React.memo(
   (props: CardsWatchingOwnerFilterBarProps) => {
     const { columnId } = props
 
-    const { column: _column } = useColumn(columnId)
+    const { column: _column, dashboardFromUsername } = useColumn(columnId)
     const { allItems } = useColumnData(columnId)
 
     const column = _column as ActivityColumn
 
     const dispatch = useDispatch()
-    const loggedUsername = useReduxState(
-      selectors.currentGitHubUsernameSelector,
-    )!
     const plan = useReduxState(selectors.currentUserPlanSelector)
 
     const getFilteredItemsOptions = useMemo<
       Parameters<typeof getFilteredItems>[3]
     >(
       () => ({
-        loggedUsername,
+        dashboardFromUsername,
         mergeSimilar: false,
         plan,
       }),
-      [loggedUsername, plan],
+      [dashboardFromUsername, plan],
     )
 
     const filteredItemsMetadata = useMemo(
@@ -69,7 +66,7 @@ export const CardsWatchingOwnerFilterBar = React.memo(
             },
             getFilteredItemsOptions,
           ),
-          { loggedUsername, plan },
+          { dashboardFromUsername, plan },
         ),
       [column && column.type, allItems, column && column.filters, plan],
     )
