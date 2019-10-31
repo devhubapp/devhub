@@ -47,8 +47,8 @@ export default function DownloadPage(_props: DownloadPageProps) {
   const category = _category || system.category || 'web'
   const { os } = system
 
-  const version = '0.98.1'
-  const releaseDate = '2019-10-29'
+  const version = '0.98.2'
+  const releaseDate = '2019-10-31'
 
   return (
     <LandingLayout>
@@ -112,7 +112,7 @@ export default function DownloadPage(_props: DownloadPageProps) {
                   type={os === 'windows' ? 'primary' : 'neutral'}
                   className={swClasses.button}
                   download
-                  href={`https://github.com/devhubapp/devhub/releases/download/v${version}/devhub-setup-${version}.exe`}
+                  href={`https://github.com/devhubapp/devhub/releases/download/v${version}/DevHub-Setup-${version}.exe`}
                 >
                   Download for Windows
                 </Button>

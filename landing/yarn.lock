@@ -803,10 +803,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@brunolemos/devhub-core@0.98.1":
-  version "0.98.1"
-  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.98.1.tgz#bf1c11df8970e43a3a40e225d63a538e7b10c2f9"
-  integrity sha512-JzUjyRWTXTvpT+Z2OyRA65R7o57rauPlOmlf+/04jFvINgMzHvbKup8YDhvwVJORdAEthajpOGi1CboGsujceg==
+"@brunolemos/devhub-core@0.98.2":
+  version "0.98.2"
+  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.98.2.tgz#22eba12f69cd8149b17bf8142e31abf052f6b749"
+  integrity sha512-sjG/JoPfaLq0Xkq/LxfCcn853uLnC19/Z0JvYJBW0QeBYhAJhpPP3wId7acE0acp+MYUjxgOBD33DbY02oNWIQ==
   dependencies:
     "@octokit/rest" "16.20.0"
     axios "0.19.0"

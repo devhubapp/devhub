@@ -1,6 +1,6 @@
 {
   "name": "@devhub/core",
-  "version": "0.98.1",
+  "version": "0.98.2",
   "private": false,
   "main": "dist/index.js",
   "scripts": {
@@ -9,8 +9,7 @@
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package",
-    "prepublish": "yarn compile",
-    "publish": "npm publish --access public"
+    "prepublish": "yarn compile"
   },
   "dependencies": {
     "@octokit/rest": "16.20.0",
