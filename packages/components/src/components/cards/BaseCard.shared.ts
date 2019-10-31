@@ -1093,13 +1093,35 @@ function _getCardPropsForItem(
 }
 
 const _memoizedGetCardPropsForItem = memoizeMultipleArguments(
-  _getCardPropsForItem,
+  (
+    type: ColumnSubscription['type'],
+    item: EnhancedItem,
+    ownerIsKnown: boolean,
+    plan: UserPlan | null | undefined,
+    repoIsKnown: boolean,
+  ) => _getCardPropsForItem(type, item, { ownerIsKnown, plan, repoIsKnown }),
 )
 
 export function getCardPropsForItem(
-  ...args: Parameters<typeof _memoizedGetCardPropsForItem>
+  type: ColumnSubscription['type'],
+  item: EnhancedItem,
+  {
+    ownerIsKnown,
+    plan,
+    repoIsKnown,
+  }: {
+    ownerIsKnown: boolean
+    plan: UserPlan | null | undefined
+    repoIsKnown: boolean
+  },
 ): BaseCardProps {
-  const props = _memoizedGetCardPropsForItem(...args)
+  const props = _memoizedGetCardPropsForItem(
+    type,
+    item,
+    ownerIsKnown,
+    plan,
+    repoIsKnown,
+  )
   return { ...props, height: getCardSizeForProps(props) }
 }
 
