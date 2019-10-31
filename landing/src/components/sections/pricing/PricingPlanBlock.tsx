@@ -19,17 +19,16 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   const { authData } = useAuth()
 
-  const isMyPlan = authData && authData.plan && authData.plan.id === plan.id
+  const userPlan = authData && authData.plan
+  const userPlanIsActive =
+    userPlan && userPlan.id && activePlans.find(p => p.id === userPlan!.id)
+  const isMyPlan = userPlan && userPlan.id === plan.id
 
-  const banner =
-    authData &&
-    authData.plan &&
-    authData.plan.id &&
-    activePlans.find(p => p.id === authData.plan!.id)
-      ? isMyPlan
-        ? 'Current plan'
-        : true
-      : _banner
+  const banner = userPlanIsActive
+    ? isMyPlan
+      ? 'Current plan'
+      : _banner || true
+    : _banner
 
   const estimatedMonthlyPrice =
     (plan.interval === 'day'
@@ -55,9 +54,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     <section className="pricing-plan flex flex-col flex-shrink-0 w-64">
       <div
         className={classNames(
-          'm-1 bg-more-1 shadow border rounded',
+          'bg-more-1 shadow border rounded',
           true // banner && typeof banner === 'string'
-            ? true // isMyPlan
+            ? plan.amount // isMyPlan
               ? 'border-primary'
               : 'border-bg-less-1'
             : 'border-bg-more-2',
@@ -70,7 +69,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
         ) : banner ? (
           <div
             className={`${
-              true // isMyPlan
+              plan.amount // isMyPlan
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-less-1 text-default'
             } text-sm leading-normal py-1 px-6 text-center font-semibold rounded-t`}
@@ -92,7 +91,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               <small>
                 <small>
                   <small>
-                    <small>{priceLabelCents}</small>
+                    <small>
+                      <small>{priceLabelCents}</small>
+                    </small>
                   </small>
                 </small>
               </small>
@@ -114,7 +115,14 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           <div className="mb-2 text-sm text-muted-65 italic">
             &nbsp;
             {estimatedMonthlyPrice !== plan.amount
-              ? `*Billed ${formatPriceAndInterval(plan.amount, plan)}`
+              ? `*Billed ${
+                  plan.amount % 100 > 50 ? '~' : ''
+                }${formatPriceAndInterval(
+                  plan.amount % 100 > 50
+                    ? plan.amount + (100 - (plan.amount % 100))
+                    : plan.amount,
+                  plan,
+                )}`
               : !plan.amount && plan.trialPeriodDays
               ? `Free for ${plan.trialPeriodDays} days`
               : ''}

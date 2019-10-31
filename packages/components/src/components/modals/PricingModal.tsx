@@ -215,7 +215,7 @@ export function PricingModal(props: PricingModalProps) {
           <>
             <SubHeader title="CURRENT PLAN" />
 
-            <View style={sharedStyles.marginHorizontalHalf}>
+            <View style={{ paddingHorizontal: (contentPadding * 3) / 4 }}>
               <PricingPlanBlock
                 key="pricing-current-plan"
                 banner={false}
@@ -249,7 +249,9 @@ export function PricingModal(props: PricingModalProps) {
 
         <FlatList
           ref={flatListRef}
-          contentContainerStyle={sharedStyles.paddingHorizontalHalf}
+          contentContainerStyle={{
+            paddingHorizontal: (contentPadding * 3) / 4,
+          }}
           data={plansToShow}
           extraData={selectedPlanId}
           getItemLayout={getItemLayout}

@@ -22,7 +22,7 @@ import { ThemedIcon } from '../../themed/ThemedIcon'
 import { ThemedText } from '../../themed/ThemedText'
 import { ThemedTouchableOpacity } from '../../themed/ThemedTouchableOpacity'
 
-export const defaultPricingBlockWidth = 220
+export const defaultPricingBlockWidth = 230
 
 export interface PricingPlanBlockProps {
   banner?: string | boolean
@@ -106,7 +106,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     <View
       style={[
         sharedStyles.fullWidth,
-        sharedStyles.paddingHorizontalHalf,
+        sharedStyles.paddingHorizontalQuarter,
         { width },
       ]}
     >
@@ -251,7 +251,14 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
                 ]}
               >
                 {estimatedMonthlyPrice !== plan.amount
-                  ? `*Billed ${formatPriceAndInterval(plan.amount, plan)}${
+                  ? `*Billed ${
+                      plan.amount % 100 > 50 ? '~' : ''
+                    }${formatPriceAndInterval(
+                      plan.amount % 100 > 50
+                        ? plan.amount + (100 - (plan.amount % 100))
+                        : plan.amount,
+                      plan,
+                    )}${
                       additionalFooterText ? `\n\n${additionalFooterText}` : ''
                     }`
                   : additionalFooterText || ' '}
