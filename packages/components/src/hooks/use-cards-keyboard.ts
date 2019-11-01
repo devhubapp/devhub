@@ -200,7 +200,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
 
       const newValue = itemNodeIdOrId || null
       if (selectedItemNodeIdOrIdRef.current === newValue) {
-        if (newIndex === itemNodeIdOrIds.length - 1)
+        if (newIndex >= itemNodeIdOrIds.length - 1)
           listRef.current.scrollToEnd()
         return
       }

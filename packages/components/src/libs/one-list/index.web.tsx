@@ -213,6 +213,25 @@ export const OneList = (React.memo(
       snapToAlignment,
     } = props
 
+    const List = props.disableVirtualization
+      ? VariableSizeListWithoutVirtualization
+      : VariableSizeList
+
+    const itemSeparatorSize =
+      itemSeparator && itemSeparator.Component && itemSeparator.size > 0
+        ? itemSeparator.size
+        : 0
+
+    const innerHeaderSize =
+      header && header.Component && !header.sticky && header.size > 0
+        ? header.size
+        : 0
+
+    const innerFooterSize =
+      footer && footer.Component && !footer.sticky && footer.size > 0
+        ? footer.size
+        : 0
+
     React.useImperativeHandle(
       ref,
       () => ({
@@ -234,10 +253,11 @@ export const OneList = (React.memo(
             bugsnag.notify(error)
           }
         },
-        scrollToIndex: (index, params) => {
+        scrollToIndex: (dataIndex, params) => {
           try {
             const alignment = params ? params.alignment : 'smart'
             if (!variableSizeListRef.current) return
+            const index = innerHeaderSize ? dataIndex + 1 : dataIndex
             variableSizeListRef.current.scrollToItem(index, alignment)
           } catch (error) {
             console.error(error)
@@ -245,7 +265,7 @@ export const OneList = (React.memo(
           }
         },
       }),
-      [data.length],
+      [data.length, innerHeaderSize],
     )
 
     const variableSizeListRef = useRef<VariableSizeList>(null)
@@ -264,25 +284,6 @@ export const OneList = (React.memo(
         setIsInitialRender(false)
       }
     }, [])
-
-    const List = props.disableVirtualization
-      ? VariableSizeListWithoutVirtualization
-      : VariableSizeList
-
-    const itemSeparatorSize =
-      itemSeparator && itemSeparator.Component && itemSeparator.size > 0
-        ? itemSeparator.size
-        : 0
-
-    const innerHeaderSize =
-      header && header.Component && !header.sticky && header.size > 0
-        ? header.size
-        : 0
-
-    const innerFooterSize =
-      footer && footer.Component && !footer.sticky && footer.size > 0
-        ? footer.size
-        : 0
 
     const _itemCount =
       data.length + (innerHeaderSize ? 1 : 0) + (innerFooterSize ? 1 : 0)
@@ -354,9 +355,13 @@ export const OneList = (React.memo(
       if (!onVisibleItemsChanged) return undefined
 
       return ({ visibleStartIndex, visibleStopIndex }) => {
-        return onVisibleItemsChanged(visibleStartIndex, visibleStopIndex)
+        const dataIndexFix = innerHeaderSize ? -1 : 0
+        return onVisibleItemsChanged(
+          Math.max(0, visibleStartIndex + dataIndexFix),
+          visibleStopIndex + dataIndexFix,
+        )
       }
-    }, [onVisibleItemsChanged])
+    }, [onVisibleItemsChanged, !!innerHeaderSize])
 
     /*
     const previousItemCount = usePrevious(itemCount)
