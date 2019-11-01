@@ -163,8 +163,8 @@ export function getBrowserWindowOptions() {
           center: false,
           frame: false,
           fullscreenable: false,
-          maxWidth: screen.getDisplayFromCursor().workAreaSize.width * 0.8,
-          maxHeight: screen.getDisplayFromCursor().workAreaSize.height * 0.8,
+          maxWidth: screen.getDisplayFromCursor().size.width * 0.9,
+          maxHeight: screen.getDisplayFromCursor().size.height,
           movable: false,
           skipTaskbar: true,
         }
@@ -227,12 +227,8 @@ function updateBrowserWindowOptions() {
 
   // TODO: Fix when hiding/showing dock, the maxwidth should change
   mainWindow.setMaximumSize(
-    Math.ceil(
-      options.maxWidth || screen.getDisplayFromCursor().workAreaSize.width,
-    ),
-    Math.ceil(
-      options.maxHeight || screen.getDisplayFromCursor().workAreaSize.height,
-    ),
+    Math.ceil(options.maxWidth || screen.getDisplayFromCursor().size.width),
+    Math.ceil(options.maxHeight || screen.getDisplayFromCursor().size.height),
   )
 
   mainWindow.setMovable(options.movable !== false)
