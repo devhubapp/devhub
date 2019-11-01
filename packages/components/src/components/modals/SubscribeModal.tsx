@@ -154,6 +154,19 @@ export function SubscribeModal(props: SubscribeModalProps) {
                   {'Cancel anytime'.toUpperCase()}
                 </ThemedText>
               </View>
+
+              <Spacer height={contentPadding} />
+
+              <View
+                style={[
+                  sharedStyles.fullWidth,
+                  sharedStyles.horizontal,
+                  sharedStyles.justifyContentSpaceBetween,
+                ]}
+              >
+                <H3 children="Refund policy" />
+                <ThemedText color="foregroundColor">NO REFUND</ThemedText>
+              </View>
             </View>
 
             <Spacer height={contentPadding} />
