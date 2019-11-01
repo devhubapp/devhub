@@ -177,7 +177,7 @@ export const SidebarOrBottomBar = React.memo(
     const small = sizename <= '2-medium'
 
     function isModalOpen(modalName: ModalPayload['name']) {
-      return !!modalStack && modalStack.some(m => m.name === modalName)
+      return !!modalStack && modalStack.some(m => m && m.name === modalName)
     }
 
     const styles = horizontal ? horizontalStyles : verticalStyles

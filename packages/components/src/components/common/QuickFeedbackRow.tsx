@@ -46,8 +46,8 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
               }`,
         variables: {
           input: {
-            feedback: feedbackText,
-            screeName: currentOpenedModal.name,
+            feedback: feedbackText || '',
+            screeName: (currentOpenedModal && currentOpenedModal.name) || '',
           },
         },
       },

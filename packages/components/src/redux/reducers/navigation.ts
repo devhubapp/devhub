@@ -4,7 +4,7 @@ import { ModalPayloadWithIndex } from '@devhub/core'
 import { Reducer } from '../types'
 
 export interface State {
-  modalStack: ModalPayloadWithIndex[]
+  modalStack: Array<ModalPayloadWithIndex | undefined>
 }
 
 const initialState: State = {

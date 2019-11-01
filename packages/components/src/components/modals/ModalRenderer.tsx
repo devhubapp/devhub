@@ -110,7 +110,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const previouslyOpenedModal = usePrevious(currentOpenedModal)
 
-  const isSettings = !!modalStack.find(m => m.name === 'SETTINGS')
+  const isSettings = !!modalStack.find(m => m && m.name === 'SETTINGS')
   const wasSettings = usePrevious(isSettings)
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
@@ -164,62 +164,58 @@ export function ModalRenderer(props: ModalRendererProps) {
     },
   )[0]
 
-  const modalTransitions = useTransition<ModalPayloadWithIndex, any>(
-    modalStack,
-    item => `modal-stack-${item.name}`,
-    {
-      reset: false,
-      config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
-      immediate,
-      ...(appOrientation === 'portrait'
-        ? {
-            from: (item: ModalPayloadWithIndex) =>
-              (item.index === 0 && modalStack.length) ||
-              (item.index > 0 && !modalStack.length)
-                ? { top: Dimensions.get('window').height, left: 0 }
-                : { top: 0, left: size },
-            enter: { top: 0, left: 0 },
-            update: (item: ModalPayloadWithIndex) =>
-              modalStack.length > 1 && item.index !== modalStack.length - 1
-                ? { top: 0, left: -50 }
-                : { top: 0, left: 0 },
-            leave: (item: ModalPayloadWithIndex) =>
-              item.index === 0 || !modalStack.length
-                ? { top: Dimensions.get('window').height, left: 0 }
-                : { top: 0, left: size },
-          }
-        : {
-            from: (item: ModalPayloadWithIndex) =>
-              (item.index === 0 &&
-                modalStack.length &&
-                !previouslyOpenedModal) ||
-              (item.index > 0 && !modalStack.length)
-                ? { left: -size }
-                : { left: size },
-            enter: { left: 0 },
-            update: (item: ModalPayloadWithIndex) =>
-              item.index !== modalStack.length - 1
-                ? { left: -size / 3 }
-                : { left: 0 },
+  const modalTransitions = useTransition<
+    ModalPayloadWithIndex | undefined,
+    any
+  >(modalStack, item => `modal-stack-${item && item.name}`, {
+    reset: false,
+    config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
+    immediate,
+    ...(appOrientation === 'portrait'
+      ? {
+          from: (item: ModalPayloadWithIndex) =>
+            (item.index === 0 && modalStack.length) ||
+            (item.index > 0 && !modalStack.length)
+              ? { top: Dimensions.get('window').height, left: 0 }
+              : { top: 0, left: size },
+          enter: { top: 0, left: 0 },
+          update: (item: ModalPayloadWithIndex) =>
+            modalStack.length > 1 && item.index !== modalStack.length - 1
+              ? { top: 0, left: -50 }
+              : { top: 0, left: 0 },
+          leave: (item: ModalPayloadWithIndex) =>
+            item.index === 0 || !modalStack.length
+              ? { top: Dimensions.get('window').height, left: 0 }
+              : { top: 0, left: size },
+        }
+      : {
+          from: (item: ModalPayloadWithIndex) =>
+            (item.index === 0 && modalStack.length && !previouslyOpenedModal) ||
+            (item.index > 0 && !modalStack.length)
+              ? { left: -size }
+              : { left: size },
+          enter: { left: 0 },
+          update: (item: ModalPayloadWithIndex) =>
+            item.index !== modalStack.length - 1
+              ? { left: -size / 3 }
+              : { left: 0 },
 
-            leave: (item: ModalPayloadWithIndex) =>
-              item.index >= modalStack.length &&
-              modalStack.length &&
-              previouslyOpenedModal &&
-              previouslyOpenedModal.name === item.name &&
-              previousModalStack &&
-              previousModalStack[0] &&
-              previousModalStack[0].name ===
-                (modalStack[0] && modalStack[0].name)
-                ? { left: size }
-                : { left: -size },
-          }),
-    },
-  )
+          leave: (item: ModalPayloadWithIndex) =>
+            item.index >= modalStack.length &&
+            modalStack.length &&
+            previouslyOpenedModal &&
+            previouslyOpenedModal.name === item.name &&
+            previousModalStack &&
+            previousModalStack[0] &&
+            previousModalStack[0].name === (modalStack[0] && modalStack[0].name)
+              ? { left: size }
+              : { left: -size },
+        }),
+  })
 
   const separatorTransitions = useTransition<string, any>(
     renderSeparator && sizename !== '2-medium' && modalStack.length
-      ? [modalStack[0].name]
+      ? [(modalStack[0] && modalStack[0]!.name) || '']
       : [],
     item => `modal-separator-${item}`,
     {
