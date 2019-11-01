@@ -24,7 +24,7 @@ export type ThemedIconProps = {
     } & Omit<MaterialIconProps, 'color' | 'style'>))
 
 export const ThemedIcon = React.memo(
-  React.forwardRef<Octicons, ThemedIconProps>((props, ref) => {
+  React.forwardRef<Octicons | MaterialIcons, ThemedIconProps>((props, ref) => {
     const {
       color: _color,
       family = 'octicon',
@@ -47,4 +47,4 @@ export const ThemedIcon = React.memo(
 
 ThemedIcon.displayName = 'ThemedIcon'
 
-export type ThemedIcon = Octicons
+export type ThemedIcon = Octicons | MaterialIcons

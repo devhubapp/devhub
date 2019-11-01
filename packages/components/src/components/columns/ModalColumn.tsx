@@ -10,6 +10,7 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { findNode, tryFocus } from '../../utils/helpers/shared'
+import { QuickFeedbackRow } from '../common/QuickFeedbackRow'
 import { Spacer } from '../common/Spacer'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { Column } from './Column'
@@ -115,7 +116,17 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         }
       />
 
-      {children}
+      <View style={sharedStyles.flex}>{children}</View>
+
+      <View
+        style={[
+          sharedStyles.fullWidth,
+          sharedStyles.horizontalAndVerticallyAligned,
+          sharedStyles.padding,
+        ]}
+      >
+        <QuickFeedbackRow />
+      </View>
     </Column>
   )
 })

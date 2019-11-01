@@ -39,6 +39,15 @@ export interface DatabaseUserPlan {
   updatedAt: string
 }
 
+export interface DatabaseUserFeedback {
+  appVersion: string
+  feedback?: string
+  isElectron: boolean
+  platformOS: string
+  platformRealOS: string
+  screeName?: string
+}
+
 export interface DatabaseUser {
   _id: any
   columns?: {
@@ -75,4 +84,5 @@ export interface DatabaseUser {
         updatedAt: string
       }
     | undefined
+  feedbacks?: DatabaseUserFeedback[]
 }

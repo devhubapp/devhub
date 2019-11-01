@@ -348,6 +348,7 @@ export const ColumnOptions = React.memo(
               columnIndex === 0 ||
               !!(plan && columnIndex + 1 > plan.featureFlags.columnsLimit)
             }
+            family="octicon"
             name="chevron-left"
             onPress={() =>
               dispatch(
@@ -373,6 +374,7 @@ export const ColumnOptions = React.memo(
               columnIndex + 1 >= constants.COLUMNS_LIMIT ||
               !!(plan && columnIndex + 1 > plan.featureFlags.columnsLimit - 1)
             }
+            family="octicon"
             name="chevron-right"
             onPress={() =>
               dispatch(
@@ -398,6 +400,7 @@ export const ColumnOptions = React.memo(
           <IconButton
             key="column-options-button-remove-column"
             analyticsLabel="remove_column"
+            family="octicon"
             name="trashcan"
             onPress={() =>
               dispatch(actions.deleteColumn({ columnId, columnIndex }))

@@ -79,6 +79,7 @@ export function AppBannerMessage() {
         <Spacer width={contentPadding / 2} />
 
         <IconButton
+          family="octicon"
           name="x"
           onPress={() => closeBannerMessage(bannerMessage.id)}
           size={18}

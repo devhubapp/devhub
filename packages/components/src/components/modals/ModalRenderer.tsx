@@ -279,6 +279,7 @@ export function ModalRenderer(props: ModalRendererProps) {
           <View
             collapsable={false}
             style={[
+              sharedStyles.flex,
               sharedStyles.fullHeight,
               sharedStyles.overflowHidden,
               {

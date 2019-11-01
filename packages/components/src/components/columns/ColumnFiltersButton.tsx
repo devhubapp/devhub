@@ -41,6 +41,7 @@ export const ColumnFiltersButton = React.memo(
         key="column-filters-toggle-button"
         analyticsAction="toggle"
         analyticsLabel="column_filters"
+        family="octicon"
         name="settings"
         onPress={onPress}
         style={style}

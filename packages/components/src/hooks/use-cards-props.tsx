@@ -34,13 +34,16 @@ import {
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { ColumnLoadingIndicator } from '../components/columns/ColumnLoadingIndicator'
 import { Button } from '../components/common/Button'
+import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
 import { RefreshControl } from '../components/common/RefreshControl'
+import { Spacer } from '../components/common/Spacer'
 import { useAppLayout } from '../components/context/LayoutContext'
 import { OneListProps } from '../libs/one-list'
 import { useSafeArea } from '../libs/safe-area-view'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
+import { contentPadding } from '../styles/variables'
 import { useColumn } from './use-column'
 import { useReduxState } from './use-redux-state'
 
@@ -345,21 +348,27 @@ export function useCardsProps<ItemT extends EnhancedItem>({
             columnId={column.id}
             emoji="lock"
             errorButtonView={
-              <Button
-                analyticsCategory="plan_expired"
-                analyticsLabel="select_a_plan_button"
-                children="Select a plan"
-                onPress={() => {
-                  dispatch(
-                    actions.pushModal({
-                      name: 'PRICING',
-                      params: {
-                        highlightFeature: 'columnsLimit',
-                      },
-                    }),
-                  )
-                }}
-              />
+              <View>
+                <Button
+                  analyticsCategory="plan_expired"
+                  analyticsLabel="select_a_plan_button"
+                  children="Select a plan"
+                  onPress={() => {
+                    dispatch(
+                      actions.pushModal({
+                        name: 'PRICING',
+                        params: {
+                          highlightFeature: 'columnsLimit',
+                        },
+                      }),
+                    )
+                  }}
+                />
+
+                <Spacer height={contentPadding} />
+
+                <QuickFeedbackRow />
+              </View>
             }
             errorMessage="You need a paid plan to keep using DevHub."
             errorTitle="Free trial expired"

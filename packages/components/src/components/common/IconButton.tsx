@@ -4,11 +4,11 @@ import { StyleSheet } from 'react-native'
 import { ThemeColors } from '@devhub/core'
 import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
-import { OcticonIconProps, Octicons } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { getTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
+import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import {
@@ -16,12 +16,11 @@ import {
   TouchableWithoutFeedbackProps,
 } from './TouchableWithoutFeedback'
 
-export interface IconButtonProps extends TouchableWithoutFeedbackProps {
+export type IconButtonProps = TouchableWithoutFeedbackProps & {
   active?: boolean
-  name: OcticonIconProps['name']
   size?: number
   type?: 'primary' | 'neutral' | 'danger'
-}
+} & Pick<ThemedIconProps, 'family' | 'name'>
 
 export const defaultIconButtonSize = 17
 
@@ -29,6 +28,7 @@ export function IconButton(props: IconButtonProps) {
   const {
     active,
     disabled: _disabled,
+    family,
     name,
     onPressIn,
     onPressOut,
@@ -164,8 +164,9 @@ export function IconButton(props: IconButtonProps) {
         />
 
         <ThemedText ref={textRef} color={foregroundThemeColor}>
-          <Octicons
-            name={name}
+          <ThemedIcon
+            family={family as any}
+            name={name as any}
             selectable={false}
             size={size}
             style={sharedStyles.textCenter}

@@ -402,6 +402,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
               active={forceShowTextInput}
               analyticsAction="toggle"
               analyticsLabel="column_search"
+              family="octicon"
               name="search"
               onPress={() => {
                 batch(() => {
