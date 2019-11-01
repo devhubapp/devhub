@@ -37,6 +37,7 @@ export interface AuthData {
 }
 
 export interface AuthProviderState {
+  abortSubscriptionCancellation: () => void
   authData: AuthData
   cancelSubscription: (shouldPrompt?: boolean) => void
   deleteAccount: (shouldPrompt?: boolean) => void
@@ -63,6 +64,9 @@ const defaultAuthData: AuthData = {
   createdAt: '',
 }
 export const AuthContext = React.createContext<AuthProviderState>({
+  abortSubscriptionCancellation(_shouldPrompt = true) {
+    throw new Error('AuthContext not yet initialized.')
+  },
   authData: defaultAuthData,
   cancelSubscription(_shouldPrompt = true) {
     throw new Error('AuthContext not yet initialized.')
@@ -115,6 +119,54 @@ export function AuthProvider(props: AuthProviderProps) {
     }
   }, [authData && authData._id])
 
+  const abortSubscriptionCancellation = useCallback(() => {
+    if (typeof window === 'undefined' || typeof fetch !== 'function') return
+    if (!authData.appToken) return
+    ;(async () => {
+      try {
+        const response = await fetch(constants.GRAPHQL_ENDPOINT, {
+          method: 'POST',
+          body: JSON.stringify({
+            query: `
+              mutation {
+                abortSubscriptionCancellation
+              }`,
+          }),
+          headers: {
+            ...getDefaultDevHubHeaders({ appToken: authData.appToken }),
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (!isMountedRef.current) return
+
+        const { data, errors } = await response.json()
+
+        if (errors && errors[0] && errors[0].message)
+          throw new Error(errors[0].message)
+
+        if (data && data.abortSubscriptionCancellation) {
+          mergeAuthData({
+            // plan: getDefaultUserPlan(authData.createdAt, {
+            //   trialStartAt: authData.freeTrialStartAt,
+            //   trialEndAt: authData.freeTrialEndAt,
+            // }),
+            plan: {
+              ...authData.plan!,
+              cancelAt: undefined,
+              cancelAtPeriodEnd: false,
+            },
+          })
+        }
+      } catch (error) {
+        console.error(error)
+        alert(
+          `Failed to abort subscription cancellation. Please contact support.\nError: ${error.message}`,
+        )
+      }
+    })()
+  }, [authData.appToken, authData.plan])
+
   const cancelSubscription = useCallback(
     (shouldPrompt = true) => {
       if (typeof window === 'undefined' || typeof fetch !== 'function') return
@@ -123,10 +175,11 @@ export function AuthProvider(props: AuthProviderProps) {
       let reason: string | null = null
       if (shouldPrompt) {
         reason = prompt(
-          'Cancel subscription? You will be downgraded to the free plan.' +
-            (authData.plan && authData.plan.status === 'trialing'
-              ? ''
-              : ' If you are not on a free trial, your card might still be charged up to one more time, depending on when you cancel.') +
+          'Cancel subscription? Your subscription will be cancelled at the end of the billing period.' +
+            ' You can keep using DevHub for the already paid period.' +
+            // (authData.plan && authData.plan.status === 'trialing'
+            //   ? ''
+            //   : ' If you are not on a free trial, your card might still be charged up to one more time, depending on when you cancel.') +
             '\n\nI am cancelling because...',
         )
         if (!reason) return
@@ -162,10 +215,15 @@ export function AuthProvider(props: AuthProviderProps) {
 
           if (data && data.cancelSubscription) {
             mergeAuthData({
-              plan: getDefaultUserPlan(authData.createdAt, {
-                trialStartAt: authData.freeTrialStartAt,
-                trialEndAt: authData.freeTrialEndAt,
-              }),
+              // plan: getDefaultUserPlan(authData.createdAt, {
+              //   trialStartAt: authData.freeTrialStartAt,
+              //   trialEndAt: authData.freeTrialEndAt,
+              // }),
+              plan: {
+                ...authData.plan!,
+                cancelAt: authData.plan && authData.plan.currentPeriodEndAt,
+                cancelAtPeriodEnd: true,
+              },
             })
           }
         } catch (error) {
@@ -189,7 +247,8 @@ export function AuthProvider(props: AuthProviderProps) {
 
       if (shouldPrompt) {
         const confirmed = confirm(
-          "Delete account and cancel subscription? Your data can't be recovered, but you can create a new account anytime.",
+          "Delete account and cancel subscription? Your data can't be recovered," +
+            ' but you can create a new account anytime.',
         )
         if (!confirmed) return
       }
@@ -348,6 +407,7 @@ export function AuthProvider(props: AuthProviderProps) {
 
   const value: AuthProviderState = useMemo(
     () => ({
+      abortSubscriptionCancellation,
       authData,
       cancelSubscription,
       deleteAccount,

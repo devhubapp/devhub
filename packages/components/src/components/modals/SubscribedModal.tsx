@@ -108,7 +108,10 @@ export function SubscribedModal(props: SubscribedModalProps) {
                 plan
               </>
             ) : (
-              <>You've successfully cancelled your subscription.</>
+              <>
+                You've successfully scheduled your subscription for
+                cancellation.
+              </>
             )}
           </ThemedText>
           <Spacer height={contentPadding} />
@@ -122,7 +125,8 @@ export function SubscribedModal(props: SubscribedModalProps) {
           >
             {plan && plan.amount
               ? 'You can now use DevHub with the unlocked features.'
-              : ' Hopefully this was quick and easy. Feel free to subscribe again anytime!'}
+              : ' You can keep using DevHub for the already paid period.' +
+                ' Feel free to abort this or subscribe again anytime!'}
           </ThemedText>
 
           <Spacer height={contentPadding * 2} />
@@ -156,7 +160,7 @@ export function SubscribedModal(props: SubscribedModalProps) {
             }}
             style={sharedStyles.fullWidth}
           >
-            Finish
+            Close
           </Button>
         </View>
       </View>

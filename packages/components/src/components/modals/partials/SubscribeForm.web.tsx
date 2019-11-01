@@ -3,7 +3,6 @@ import {
   constants,
   formatPriceAndInterval,
   freePlan,
-  getDefaultUserPlan,
 } from '@devhub/core'
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
@@ -12,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import { CardElement, injectStripe } from 'react-stripe-elements'
 
 import { useReduxState } from '../../../hooks/use-redux-state'
+import { bugsnag } from '../../../libs/bugsnag'
 import * as actions from '../../../redux/actions'
 import * as selectors from '../../../redux/selectors'
 import { sharedStyles } from '../../../styles/shared'
@@ -69,10 +69,10 @@ const SubscribeFormWithStripe = React.memo(
 
     async function handleSubmit() {
       if (plan && plan.amount) subscribeToPlan()
-      else if (!(plan && plan.amount)) downgradeToFreePlan()
+      else if (!(plan && plan.amount)) cancelSubscription()
     }
 
-    async function downgradeToFreePlan() {
+    async function cancelSubscription() {
       if (!(!(plan && plan.amount) && reason)) return
 
       try {
@@ -113,10 +113,11 @@ const SubscribeFormWithStripe = React.memo(
 
         dispatch(
           actions.updateUserData({
-            plan: getDefaultUserPlan(new Date().toISOString(), {
-              trialStartAt: undefined,
-              trialEndAt: undefined,
-            }),
+            plan: {
+              ...userPlan!,
+              cancelAt: userPlan && userPlan.currentPeriodEndAt,
+              cancelAtPeriodEnd: true,
+            },
           }),
         )
         if (onSubscribe) onSubscribe(plan && plan.id)
@@ -124,6 +125,8 @@ const SubscribeFormWithStripe = React.memo(
         return true
       } catch (error) {
         console.error(error)
+        bugsnag.notify(error)
+
         setFormState({
           error: `Failed to cancel subscription. Please contact support. \nError: ${error.message}`,
           isSubmiting: false,
@@ -429,7 +432,9 @@ const SubscribeFormWithStripe = React.memo(
                   ) : (
                     <ThemedText color="foregroundColorMuted65">
                       DevHub doesn't have a free plan anymore. The only way to
-                      keep using DevHub is by having a paid subscription.
+                      keep using DevHub is by having a paid subscription. After
+                      cancelling, you can keep using it for the already paid
+                      period.
                     </ThemedText>
                   )}
 

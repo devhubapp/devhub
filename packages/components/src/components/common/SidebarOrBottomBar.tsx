@@ -171,6 +171,7 @@ export const SidebarOrBottomBar = React.memo(
     const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
     const modalStack = useReduxState(selectors.modalStack)
     const user = useReduxState(selectors.currentGitHubUserSelector)
+    const userPlan = useReduxState(selectors.currentUserPlanSelector)
     const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
 
     const small = sizename <= '2-medium'
@@ -344,10 +345,20 @@ export const SidebarOrBottomBar = React.memo(
               : dispatch(actions.replaceModal({ name: 'SETTINGS' }))
           }
           showUnreadIndicator={
-            isPlanExpired && !(freePlan && !freePlan.trialPeriodDays)
+            !!(
+              (isPlanExpired && !(freePlan && !freePlan.trialPeriodDays)) ||
+              (userPlan &&
+                userPlan.status === 'active' &&
+                userPlan.cancelAtPeriodEnd &&
+                userPlan.cancelAt)
+            )
           }
           unreadIndicatorColor={
-            isPlanExpired && !(freePlan && !freePlan.trialPeriodDays)
+            (isPlanExpired && !(freePlan && !freePlan.trialPeriodDays)) ||
+            (userPlan &&
+              userPlan.status === 'active' &&
+              userPlan.cancelAtPeriodEnd &&
+              userPlan.cancelAt)
               ? 'red'
               : undefined
           }
@@ -361,6 +372,9 @@ export const SidebarOrBottomBar = React.memo(
         currentOpenedModal && currentOpenedModal.name === 'SETTINGS',
         columnIds.length === 0,
         isModalOpen('SETTINGS'),
+        userPlan && userPlan.status,
+        userPlan && userPlan.cancelAtPeriodEnd,
+        userPlan && userPlan.cancelAt,
       ],
     )
     const renderPreferencesItemInline = !!(

@@ -17,6 +17,7 @@ import {
   smallTextSize,
 } from '../../../styles/variables'
 import { Checkbox } from '../../common/Checkbox'
+import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Spacer } from '../../common/Spacer'
 import { ThemedIcon } from '../../themed/ThemedIcon'
 import { ThemedText } from '../../themed/ThemedText'
@@ -85,22 +86,49 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       ? _priceLabel.substr(-3)
       : ''
 
-  const additionalFooterText = isPartOfAList
-    ? undefined
-    : userPlan && userPlan.trialEndAt && isMyPlan
-    ? `${isPlanExpired ? 'Expired' : 'Expires'} ${getDateSmallText(
-        userPlan.trialEndAt,
-        {
-          pastPrefix: '',
-          futurePrefix: 'in',
-          showPrefixOnFullDate: false,
+  let footerText = ''
 
-          pastSuffix: 'ago',
-          futureSuffix: '',
-          showSuffixOnFullDate: false,
-        },
+  if (
+    estimatedMonthlyPrice !== plan.amount &&
+    !(isMyPlan && userPlan && userPlan.cancelAt && !isPartOfAList)
+  ) {
+    footerText =
+      footerText +
+      `*Billed ${plan.amount % 100 > 50 ? '~' : ''}${formatPriceAndInterval(
+        plan.amount % 100 > 50
+          ? plan.amount + (100 - (plan.amount % 100))
+          : plan.amount,
+        plan,
       )}`
-    : undefined
+  }
+
+  if (isMyPlan && userPlan && userPlan.cancelAt && !isPartOfAList) {
+    footerText =
+      footerText +
+      `${footerText ? '\n\n' : ''}${getDateSmallText(userPlan.cancelAt, {
+        pastPrefix: 'Cancelled: ',
+        futurePrefix: 'Scheduled for cancellation: ',
+        showPrefixOnFullDate: true,
+
+        pastSuffix: '',
+        futureSuffix: '',
+        showSuffixOnFullDate: true,
+      })}`
+  } else if (isMyPlan && userPlan && userPlan.trialEndAt && !isPartOfAList) {
+    footerText =
+      footerText +
+      `${footerText ? '\n\n' : ''}${
+        isPlanExpired ? 'Expired' : 'Expires'
+      } ${getDateSmallText(userPlan.trialEndAt, {
+        pastPrefix: '',
+        futurePrefix: 'in',
+        showPrefixOnFullDate: false,
+
+        pastSuffix: 'ago',
+        futureSuffix: '',
+        showSuffixOnFullDate: false,
+      })}`
+  }
 
   return (
     <View
@@ -237,32 +265,25 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
           <Spacer height={contentPadding} />
 
-          {!!(
-            estimatedMonthlyPrice !== plan.amount ||
-            additionalFooterText ||
-            isPartOfAList
-          ) && (
+          {!!(footerText || isPartOfAList) && (
             <>
-              <ThemedText
-                color="foregroundColorMuted65"
-                style={[
-                  sharedStyles.textCenter,
-                  { fontSize: smallTextSize, fontStyle: 'italic' },
-                ]}
-              >
-                {estimatedMonthlyPrice !== plan.amount
-                  ? `*Billed ${
-                      plan.amount % 100 > 50 ? '~' : ''
-                    }${formatPriceAndInterval(
-                      plan.amount % 100 > 50
-                        ? plan.amount + (100 - (plan.amount % 100))
-                        : plan.amount,
-                      plan,
-                    )}${
-                      additionalFooterText ? `\n\n${additionalFooterText}` : ''
-                    }`
-                  : additionalFooterText || ' '}
-              </ThemedText>
+              <IntervalRefresh interval={1000}>
+                {() => (
+                  <ThemedText
+                    color={
+                      footerText && footerText.toLowerCase().includes('cancel')
+                        ? 'red'
+                        : 'foregroundColorMuted65'
+                    }
+                    style={[
+                      sharedStyles.textCenter,
+                      { fontSize: smallTextSize, fontStyle: 'italic' },
+                    ]}
+                  >
+                    {footerText || ' '}
+                  </ThemedText>
+                )}
+              </IntervalRefresh>
 
               <Spacer height={contentPadding * 2} />
             </>

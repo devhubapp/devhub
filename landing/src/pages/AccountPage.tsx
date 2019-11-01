@@ -14,7 +14,13 @@ import {
 export interface AccountPageProps {}
 
 export default function AccountPage(_props: AccountPageProps) {
-  const { authData, cancelSubscription, deleteAccount, logout } = useAuth()
+  const {
+    abortSubscriptionCancellation,
+    authData,
+    cancelSubscription,
+    deleteAccount,
+    logout,
+  } = useAuth()
 
   const planInfo = authData.plan && allPlansObj[authData.plan.id]
 
@@ -74,7 +80,13 @@ export default function AccountPage(_props: AccountPageProps) {
                     authData.plan.trialEndAt,
                   )})`
                 : 'Status: trial ended'
-              : `Status: ${authData.plan.status}`}
+              : `Status: ${authData.plan.status}${
+                  authData.plan.cancelAtPeriodEnd && authData.plan.cancelAt
+                    ? ` (cancellation: ${new Date(
+                        authData.plan.cancelAt,
+                      ).toDateString()})`
+                    : ''
+                }`}
           </h2>
         )}
 
@@ -96,13 +108,25 @@ export default function AccountPage(_props: AccountPageProps) {
               <a className="text-default">Update credit card</a>
             </Link>
 
-            <a
-              href="javascript:void(0)"
-              className="text-default"
-              onClick={() => cancelSubscription(true)}
-            >
-              Cancel subscription
-            </a>
+            {authData.plan &&
+            authData.plan.cancelAtPeriodEnd &&
+            authData.plan.cancelAt ? (
+              <a
+                href="javascript:void(0)"
+                className="text-default"
+                onClick={() => abortSubscriptionCancellation()}
+              >
+                Abort subscription cancellation
+              </a>
+            ) : (
+              <a
+                href="javascript:void(0)"
+                className="text-default"
+                onClick={() => cancelSubscription(true)}
+              >
+                Cancel subscription
+              </a>
+            )}
           </>
         ) : (
           <>

@@ -8,6 +8,7 @@ import {
   Plan,
   PlanID,
 } from '@devhub/core'
+import axios from 'axios'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -20,6 +21,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { getDefaultDevHubHeaders } from '../../utils/api'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
@@ -171,38 +173,103 @@ export function PricingModal(props: PricingModalProps) {
     [selectedPlanId, highlightFeature, userPlan && userPlan.amount],
   )
 
-  const CancelSubscriptionButton = (
-    <Button
-      analyticsCategory="downgrade"
-      analyticsAction="downgrade"
-      analyticsLabel="downgrade"
-      onPress={() => {
-        if (Platform.OS !== 'web') {
-          Browser.openURLOnNewTab(
-            `${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${appToken}`,
-          )
-          return
-        }
+  const CancelOrReactivateSubscriptionButton =
+    userPlan && userPlan.cancelAtPeriodEnd && userPlan.cancelAt ? (
+      <Button
+        analyticsCategory="abort_cancellation"
+        analyticsAction="abort_cancellation"
+        analyticsLabel="abort_cancellation"
+        onPress={async () => {
+          const userPlanBK = { ...userPlan }
+          try {
+            dispatch(
+              actions.updateUserData({
+                plan: {
+                  ...userPlan!,
+                  cancelAt: undefined,
+                  cancelAtPeriodEnd: false,
+                },
+              }),
+            )
 
-        dispatch(
-          actions.pushModal({
-            name: 'SUBSCRIBE',
-            params: { planId: undefined },
-          }),
-        )
-      }}
-      type="neutral"
-    >
-      Cancel subscription
-    </Button>
-  )
+            const response = await axios.post<{
+              data: { abortSubscriptionCancellation?: boolean }
+              errors?: any[]
+            }>(
+              constants.GRAPHQL_ENDPOINT,
+              {
+                query: `
+                  mutation {
+                    abortSubscriptionCancellation
+                  }`,
+              },
+              { headers: getDefaultDevHubHeaders({ appToken }) },
+            )
+
+            const { data, errors } = await response.data
+
+            if (errors && errors[0] && errors[0].message)
+              throw new Error(errors[0].message)
+
+            if (!(data && data.abortSubscriptionCancellation)) {
+              throw new Error('Failed to abort subscription cancellation.')
+            }
+          } catch (error) {
+            console.error(error)
+            bugsnag.notify(error)
+
+            dispatch(
+              actions.updateUserData({
+                plan: {
+                  ...userPlanBK!,
+                  cancelAt: userPlanBK && userPlanBK.cancelAt,
+                  cancelAtPeriodEnd: userPlanBK && userPlanBK.cancelAtPeriodEnd,
+                },
+              }),
+            )
+
+            alert(
+              `Failed to abort subscription cancellation. Please contact support. \nError: ${error.message}`,
+            )
+          }
+        }}
+        type="neutral"
+      >
+        Abort subscription cancellation
+      </Button>
+    ) : (
+      <Button
+        analyticsCategory="downgrade"
+        analyticsAction="downgrade"
+        analyticsLabel="downgrade"
+        onPress={() => {
+          if (Platform.OS !== 'web') {
+            Browser.openURLOnNewTab(
+              `${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${appToken}`,
+            )
+            return
+          }
+
+          dispatch(
+            actions.pushModal({
+              name: 'SUBSCRIBE',
+              params: { planId: undefined },
+            }),
+          )
+        }}
+        type="neutral"
+      >
+        Cancel subscription
+      </Button>
+    )
 
   const showUserPlanAtTheTop =
     userPlan &&
-    userPlanDetails &&
-    (userPlanDetails.amount ||
-      (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
-    !userPlanStillExist
+    ((userPlanDetails &&
+      (userPlanDetails.amount ||
+        (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
+      !userPlanStillExist) ||
+      userPlan.cancelAt)
 
   return (
     <ModalColumn
@@ -231,7 +298,7 @@ export function PricingModal(props: PricingModalProps) {
               !(freePlan && !freePlan.trialPeriodDays) && (
                 <>
                   <View style={sharedStyles.marginHorizontal}>
-                    {CancelSubscriptionButton}
+                    {CancelOrReactivateSubscriptionButton}
                   </View>
                   <Spacer height={contentPadding} />
                 </>
@@ -312,7 +379,7 @@ export function PricingModal(props: PricingModalProps) {
             !showUserPlanAtTheTop &&
             !!(userPlan && userPlan.amount) && (
               <>
-                {CancelSubscriptionButton}
+                {CancelOrReactivateSubscriptionButton}
                 <Spacer height={contentPadding} />
               </>
             )}

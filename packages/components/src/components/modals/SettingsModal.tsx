@@ -87,7 +87,12 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                       : ''
                   }`}</ThemedText>
                   {!!(
-                    isPlanExpired && !(freePlan && !freePlan.trialPeriodDays)
+                    (isPlanExpired &&
+                      !(freePlan && !freePlan.trialPeriodDays)) ||
+                    (userPlan &&
+                      userPlan.status === 'active' &&
+                      userPlan.cancelAtPeriodEnd &&
+                      userPlan.cancelAt)
                   ) && (
                     <>
                       <Spacer width={contentPadding / 2} />
