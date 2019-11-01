@@ -1,11 +1,12 @@
 import debounce from 'lodash/debounce'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
 
+import { emitter } from '../libs/emitter'
 import { Platform } from '../libs/platform'
 import { findNode } from '../utils/helpers/shared'
 import { useForceRerender } from './use-force-rerender'
+import { getLastUsedInputType } from './use-last-input-type'
 
-let lastHoveredAt: string | undefined
 export function useHover(
   ref: RefObject<Element | any> | null,
   callback?: (isHovered: boolean) => void,
@@ -18,7 +19,8 @@ export function useHover(
   const resolve = useCallback(
     debounce(
       (value: boolean) => {
-        lastHoveredAt = new Date().toISOString()
+        if (getLastUsedInputType() !== 'mouse')
+          emitter.emit('SET_LAST_INPUT_TYPE', { type: 'mouse' })
 
         if (cacheRef.current === value) return
         cacheRef.current = value
@@ -56,8 +58,4 @@ export function useHover(
   }, [ref && ref.current, resolve])
 
   return cacheRef.current
-}
-
-export function getLastHoveredAt() {
-  return lastHoveredAt
 }

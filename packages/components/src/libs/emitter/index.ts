@@ -32,9 +32,10 @@ export interface EmitterTypes {
     scrollTo?: boolean
   }
   PRESSED_KEYBOARD_SHORTCUT: { keys: string[] }
-  SCROLL_TOP_COLUMN: { columnId: string }
   SCROLL_DOWN_COLUMN: { columnId: string; columnIndex: number }
+  SCROLL_TOP_COLUMN: { columnId: string }
   SCROLL_UP_COLUMN: { columnId: string; columnIndex: number }
+  SET_LAST_INPUT_TYPE: { type: 'keyboard' | 'mouse' | undefined }
   TOGGLE_COLUMN_FILTERS: { columnId: string; isOpen?: boolean }
 }
 

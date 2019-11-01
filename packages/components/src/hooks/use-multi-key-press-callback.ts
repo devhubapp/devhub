@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 import { emitter } from '../libs/emitter'
+import { getLastUsedInputType } from './use-last-input-type'
 
-let lastPressedKeyboardKeysAt: string | undefined
 export default function useMultiKeyPressCallback(
   targetKeys: string[],
   onPress: () => void,
@@ -23,11 +23,26 @@ export default function useMultiKeyPressCallback(
   // this is a workaround to fix the keyup event not being called sometimes
   // which would cause a key to be stuck at the pressedKeys cache
   // and fail other combo attempts
-  function pingTimeout() {
+  function pingKeyPressed() {
     clearTimeout(timeoutRef.current)
+
     timeoutRef.current = setTimeout(() => {
       pressedKeysRef.current.clear()
     }, 5000)
+
+    const currentFocusedNodeTag =
+      typeof document !== 'undefined' &&
+      document &&
+      document.activeElement &&
+      document.activeElement.tagName
+    if (
+      !(
+        currentFocusedNodeTag && currentFocusedNodeTag.toLowerCase() === 'input'
+      )
+    ) {
+      if (getLastUsedInputType() !== 'keyboard')
+        emitter.emit('SET_LAST_INPUT_TYPE', { type: 'keyboard' })
+    }
   }
 
   useEffect(() => {
@@ -36,8 +51,7 @@ export default function useMultiKeyPressCallback(
 
   const downHandler = useCallback(
     (e: KeyboardEvent) => {
-      lastPressedKeyboardKeysAt = new Date().toISOString()
-      pingTimeout()
+      pingKeyPressed()
 
       if (pressedKeysRef.current.has(e.key)) return
 
@@ -66,8 +80,7 @@ export default function useMultiKeyPressCallback(
   )
 
   const upHandler = useCallback((e: KeyboardEvent) => {
-    lastPressedKeyboardKeysAt = new Date().toISOString()
-    pingTimeout()
+    pingKeyPressed()
 
     pressedKeysRef.current.delete(e.key)
 
@@ -117,8 +130,4 @@ function areKeysPressed(
   })
 
   return keysToCheck.size === 0
-}
-
-export function getLastPressedKeyboardKeysAt() {
-  return lastPressedKeyboardKeysAt
 }

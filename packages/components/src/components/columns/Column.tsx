@@ -1,9 +1,11 @@
+import { Theme, ThemeColors } from '@devhub/core'
 import React, { ReactNode, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import url from 'url'
 
-import { Theme, ThemeColors } from '@devhub/core'
 import { useEmitter } from '../../hooks/use-emitter'
+import { useIsColumnFocused } from '../../hooks/use-is-column-focused'
+import { useLastInputType } from '../../hooks/use-last-input-type'
 import { ErrorBoundary, ErrorBoundaryProps } from '../../libs/bugsnag'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
@@ -49,8 +51,9 @@ export const Column = React.memo(
     const columnRef = (ref as React.RefObject<View>) || _columnRef
 
     const columnBorderRef = useRef<View | null>(null)
-
     const columnWidth = useColumnWidth()
+    const isColumnFocused = useIsColumnFocused(columnId)
+    const lastUsedInputType = useLastInputType()
 
     useEffect(() => {
       return () => {
@@ -68,6 +71,7 @@ export const Column = React.memo(
 
       if (payload.highlight) {
         columnBorderRef.current.setNativeProps({ style: { opacity: 1 } })
+
         setTimeout(() => {
           if (!columnBorderRef.current) return
           columnBorderRef.current.setNativeProps({ style: { opacity: 0 } })
@@ -95,6 +99,15 @@ export const Column = React.memo(
         }
       }
     })
+
+    useEffect(() => {
+      if (!columnBorderRef.current) return
+      columnBorderRef.current.setNativeProps({
+        style: {
+          opacity: isColumnFocused && lastUsedInputType === 'keyboard' ? 1 : 0,
+        },
+      })
+    }, [isColumnFocused, lastUsedInputType])
 
     return (
       <ThemedView
@@ -132,7 +145,8 @@ export const Column = React.memo(
               borderRightWidth: Math.max(4, separatorThickSize),
               borderLeftWidth: Math.max(4, separatorThickSize),
               zIndex: 1000,
-              opacity: 0,
+              opacity:
+                isColumnFocused && lastUsedInputType === 'keyboard' ? 1 : 0,
             },
           ]}
         />
