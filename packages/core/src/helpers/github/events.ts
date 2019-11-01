@@ -906,9 +906,6 @@ export function mergeEventPreservingEnhancement(
 ) {
   if (!(newItem && existingItem)) return newItem || existingItem
 
-  delete newItem.last_read_at
-  delete newItem.last_unread_at
-
   const enhancements: Record<
     keyof Omit<EnhancedGitHubEvent, keyof GitHubEvent>,
     any
