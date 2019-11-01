@@ -605,7 +605,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
         <Spacer flex={1} />
       </View>
 
-      <CardItemSeparator muted={false} />
+      <CardItemSeparator muted={isRead} />
     </View>
   )
 })
