@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 import { emitter } from '../libs/emitter'
+import { useEmitter } from './use-emitter'
 import { getLastUsedInputType } from './use-last-input-type'
 
 export default function useMultiKeyPressCallback(
@@ -103,13 +104,18 @@ export default function useMultiKeyPressCallback(
     }
   }, [downHandler, upHandler, targetKeys.length])
 
-  // useEmitter(
-  //   targetKeys.length ? 'PRESSED_KEYBOARD_SHORTCUT' : undefined,
-  //   payload => {
-  //     if (payload.keys.length === 1) pressedKeysRef.current.clear()
-  //   },
-  //   [],
-  // )
+  useEmitter(
+    targetKeys.length ? 'PRESSED_KEYBOARD_SHORTCUT' : undefined,
+    payload => {
+      if (
+        payload.keys.length === 1 &&
+        !['Meta', 'Shift', 'Ctrl'].includes(payload.keys[0])
+      ) {
+        pressedKeysRef.current.clear()
+      }
+    },
+    [],
+  )
 }
 
 function areKeysPressed(
