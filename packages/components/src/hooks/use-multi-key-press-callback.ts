@@ -30,20 +30,6 @@ export default function useMultiKeyPressCallback(
     timeoutRef.current = setTimeout(() => {
       pressedKeysRef.current.clear()
     }, 5000)
-
-    const currentFocusedNodeTag =
-      typeof document !== 'undefined' &&
-      document &&
-      document.activeElement &&
-      document.activeElement.tagName
-    if (
-      !(
-        currentFocusedNodeTag && currentFocusedNodeTag.toLowerCase() === 'input'
-      )
-    ) {
-      if (getLastUsedInputType() !== 'keyboard')
-        emitter.emit('SET_LAST_INPUT_TYPE', { type: 'keyboard' })
-    }
   }
 
   useEffect(() => {
@@ -74,6 +60,21 @@ export default function useMultiKeyPressCallback(
           emitter.emit('PRESSED_KEYBOARD_SHORTCUT', {
             keys,
           })
+
+          const currentFocusedNodeTag =
+            typeof document !== 'undefined' &&
+            document &&
+            document.activeElement &&
+            document.activeElement.tagName
+          if (
+            !(
+              currentFocusedNodeTag &&
+              currentFocusedNodeTag.toLowerCase() === 'input'
+            )
+          ) {
+            if (getLastUsedInputType() !== 'keyboard')
+              emitter.emit('SET_LAST_INPUT_TYPE', { type: 'keyboard' })
+          }
         }, 10)
       }
     },
