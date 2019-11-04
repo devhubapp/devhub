@@ -237,8 +237,8 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         ) && (
           <p className="mb-4 text-xs text-muted-65">
             {authData.plan && authData.plan.amount
-              ? 'Your card will be changed any difference immediately'
-              : 'Your card will be changed immediately'}
+              ? 'Your card will be charged any difference immediately'
+              : 'Your card will be charged immediately'}
           </p>
         )}
 
