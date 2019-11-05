@@ -4,6 +4,7 @@ import {
   getFilteredItems,
   getItemsFilterMetadata,
   getUserAvatarByUsername,
+  getUsernamesFromFilter,
 } from '@devhub/core'
 import _ from 'lodash'
 import React, { useCallback, useMemo } from 'react'
@@ -41,6 +42,13 @@ export const CardsWatchingOwnerFilterBar = React.memo(
     const dispatch = useDispatch()
     const plan = useReduxState(selectors.currentUserPlanSelector)
 
+    const allWatchingFromFilter =
+      (column &&
+        getUsernamesFromFilter(column.type, column.filters, {
+          whitelist: ['watching'],
+        }).allUsernames) ||
+      []
+
     const getFilteredItemsOptions = useMemo<
       Parameters<typeof getFilteredItems>[3]
     >(
@@ -66,7 +74,11 @@ export const CardsWatchingOwnerFilterBar = React.memo(
             },
             getFilteredItemsOptions,
           ),
-          { dashboardFromUsername, plan },
+          {
+            dashboardFromUsername,
+            plan,
+            forceIncludeTheseWatchingUsernames: allWatchingFromFilter,
+          },
         ),
       [column && column.type, allItems, column && column.filters, plan],
     )

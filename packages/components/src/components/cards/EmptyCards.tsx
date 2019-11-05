@@ -89,10 +89,10 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
 
   const renderContent = () => {
     if (
-      loadState === 'loading_first' ||
-      (loadState === 'loading' && !refresh && !fetchNextPage)
+      !disableLoadingIndicator &&
+      (loadState === 'loading_first' ||
+        (loadState === 'loading' && !refresh && !fetchNextPage))
     ) {
-      if (disableLoadingIndicator) return null
       return <ThemedActivityIndicator color="foregroundColor" />
     }
 

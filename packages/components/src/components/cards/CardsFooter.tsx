@@ -23,10 +23,18 @@ export interface CardsFooterProps {
   fetchNextPage: (() => void) | undefined
   isEmpty: boolean
   refresh: (() => void | Promise<void>) | undefined
+  topSpacing: number
 }
 
 export const CardsFooter = React.memo((props: CardsFooterProps) => {
-  const { clearedAt, columnId, fetchNextPage, isEmpty, refresh } = props
+  const {
+    clearedAt,
+    columnId,
+    fetchNextPage,
+    isEmpty,
+    refresh,
+    topSpacing,
+  } = props
 
   const dispatch = useDispatch()
   const { sizename } = useAppLayout()
@@ -41,10 +49,13 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
             clearedAt,
             hasFetchNextPage: !!fetchNextPage,
             isEmpty,
+            topSpacing,
           }),
         },
       ]}
     >
+      {!!topSpacing && <Spacer height={topSpacing} />}
+
       {fetchNextPage ? (
         <View
           style={
@@ -122,25 +133,29 @@ export function getCardsFooterSize({
   clearedAt,
   isEmpty,
   hasFetchNextPage,
+  topSpacing,
 }: {
   clearedAt: string | undefined
   hasFetchNextPage: boolean
   isEmpty: boolean
+  topSpacing: number
 }) {
   const { sizename } = getAppLayout()
 
   const buttonVerticalSpacing =
     (fabSpacing + (fabSize - defaultButtonSize) / 2) * 2 + defaultButtonSize
 
-  return hasFetchNextPage
-    ? isEmpty
+  return (
+    (hasFetchNextPage
+      ? isEmpty
+        ? buttonVerticalSpacing
+        : defaultButtonSize + cardItemSeparatorSize
+      : clearedAt
       ? buttonVerticalSpacing
-      : defaultButtonSize + cardItemSeparatorSize
-    : clearedAt
-    ? buttonVerticalSpacing
-    : isEmpty
-    ? fabSpacing + (fabSize - defaultButtonSize) / 2 + defaultButtonSize
-    : shouldRenderFAB({ sizename })
-    ? fabSize + 2 * fabSpacing
-    : 0
+      : isEmpty
+      ? fabSpacing + (fabSize - defaultButtonSize) / 2 + defaultButtonSize
+      : shouldRenderFAB({ sizename })
+      ? fabSize + 2 * fabSpacing
+      : 0) + (topSpacing || 0)
+  )
 }

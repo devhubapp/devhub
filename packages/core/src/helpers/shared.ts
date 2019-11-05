@@ -1015,6 +1015,7 @@ export function getValuesFromQueryKeysFilter(
   })
 
   return {
+    all: _.uniq(included.concat(excluded)),
     included,
     excluded,
     usedQueryKeys,
@@ -1059,13 +1060,15 @@ export function getUsernamesFromFilter(
 ) {
   const usernameFilterKeys = whitelist.filter(key => !blacklist.includes(key))
 
-  const { excluded, included, usedQueryKeys } = getValuesFromQueryKeysFilter(
-    type,
-    usernameFilterKeys,
-    filters,
-  )
+  const {
+    all,
+    excluded,
+    included,
+    usedQueryKeys,
+  } = getValuesFromQueryKeysFilter(type, usernameFilterKeys, filters)
 
   return {
+    allUsernames: all,
     excludedUsernames: excluded,
     includedUsernames: included,
     usernameFilterKeys,

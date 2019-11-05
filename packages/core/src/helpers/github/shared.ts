@@ -1541,10 +1541,12 @@ export function getItemsFilterMetadata(
     dashboardFromUsername,
     forceIncludeTheseOwners = [],
     forceIncludeTheseRepos = [],
+    forceIncludeTheseWatchingUsernames = [],
   }: {
+    dashboardFromUsername: string | undefined
     forceIncludeTheseOwners?: string[]
     forceIncludeTheseRepos?: string[]
-    dashboardFromUsername: string | undefined
+    forceIncludeTheseWatchingUsernames?: string[]
     plan: UserPlan | null | undefined
   },
 ): ItemsFilterMetadata {
@@ -1652,6 +1654,16 @@ export function getItemsFilterMetadata(
         metadata: getDefaultItemFilterCountMetadata(),
         repos: {},
       }
+    })
+  }
+
+  if (
+    forceIncludeTheseWatchingUsernames &&
+    forceIncludeTheseWatchingUsernames.length
+  ) {
+    forceIncludeTheseWatchingUsernames.forEach(username => {
+      result.watching[username] =
+        result.watching[username] || getDefaultItemFilterCountMetadata()
     })
   }
 

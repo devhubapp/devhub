@@ -112,15 +112,26 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     [column && column.filters && column.filters.owners],
   )
 
-  const includedUsernames =
+  const allUsernamesFromFilter =
+    (column && getUsernamesFromFilter(type, column.filters).allUsernames) || []
+
+  const allOwnersFromFilter =
     (column &&
-      getUsernamesFromFilter(type, column.filters).includedUsernames) ||
+      getUsernamesFromFilter(type, column.filters, { whitelist: ['owner'] })
+        .allUsernames) ||
     []
+
+  const allWatchingFromFilter =
+    (column &&
+      getUsernamesFromFilter(type, column.filters, { whitelist: ['watching'] })
+        .allUsernames) ||
+    []
+
   const repoIsKnown = !!(_repoIsKnown || allIncludedRepos.length === 1)
   const ownerIsKnown = !!(
     _ownerIsKnown ||
     allIncludedOwners.length === 1 ||
-    (isDashboard && includedUsernames.length === 1) ||
+    (isDashboard && allUsernamesFromFilter.length === 1) ||
     repoIsKnown
   )
 
@@ -153,17 +164,17 @@ export function useCardsProps<ItemT extends EnhancedItem>({
             if (!repoOwnerName) return !!_ownerIsKnown
 
             return !!(
-              includedUsernames.length === 1 &&
+              allUsernamesFromFilter.length === 1 &&
               repoOwnerName.split('/')[0].toLowerCase() ===
-                includedUsernames[0].toLowerCase()
+                allUsernamesFromFilter[0].toLowerCase()
             )
           })()
         : ownerIsKnown
     },
     [
       getItemByNodeIdOrId,
-      includedUsernames.length === 1,
-      includedUsernames[0],
+      allUsernamesFromFilter.length === 1,
+      allUsernamesFromFilter[0],
       isDashboard,
       isUserActivity,
       ownerIsKnown,
@@ -215,15 +226,15 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const header = useMemo<OneListProps<DataItemT>['header']>(() => {
     const renderOwnerFilterBar = !!(
       column &&
-      (data || []).length &&
+      ((data || []).length || allOwnersFromFilter.length) &&
       (!_ownerIsKnown ||
-        (column.type === 'issue_or_pr' && includedUsernames.length > 1)) &&
+        (column.type === 'issue_or_pr' && allUsernamesFromFilter.length > 1)) &&
       !isDashboard
     )
 
     const renderWatchingOwnerFilterBar = !!(
       column &&
-      (data || []).length &&
+      ((data || []).length || allWatchingFromFilter.length) &&
       column.type === 'activity' &&
       isDashboard
     )
@@ -273,6 +284,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     fetchNextPage,
     isEmpty: !((data || []).length > 0),
     refresh,
+    topSpacing: (!data.length && header && header.size) || 0,
   }
   const sticky = !!(!fetchNextPage && cardsFooterProps.clearedAt)
   // && // TODO
@@ -289,11 +301,13 @@ export function useCardsProps<ItemT extends EnhancedItem>({
         clearedAt: cardsFooterProps.clearedAt,
         hasFetchNextPage: !!cardsFooterProps.fetchNextPage,
         isEmpty: cardsFooterProps.isEmpty,
+        topSpacing: cardsFooterProps.topSpacing,
       }),
       sticky,
       Component: () => <CardsFooter {...cardsFooterProps} />,
     }
   }, [
+    (!data.length && header && header.size) || 0,
     cardsFooterProps.clearedAt,
     cardsFooterProps.columnId,
     cardsFooterProps.fetchNextPage,
