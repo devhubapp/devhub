@@ -72,8 +72,12 @@ export default function useMultiKeyPressCallback(
               currentFocusedNodeTag.toLowerCase() === 'input'
             )
           ) {
-            if (getLastUsedInputType() !== 'keyboard')
+            if (
+              getLastUsedInputType() !== 'keyboard' &&
+              keys.some(key => !['Alt', 'Ctrl', 'Meta', 'Shift'].includes(key))
+            ) {
               emitter.emit('SET_LAST_INPUT_TYPE', { type: 'keyboard' })
+            }
           }
         }, 10)
       }
@@ -110,7 +114,7 @@ export default function useMultiKeyPressCallback(
     payload => {
       if (
         payload.keys.length === 1 &&
-        !['Meta', 'Shift', 'Ctrl'].includes(payload.keys[0])
+        !['Alt', 'Ctrl', 'Meta', 'Shift'].includes(payload.keys[0])
       ) {
         pressedKeysRef.current.clear()
       }
