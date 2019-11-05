@@ -140,7 +140,7 @@ const columnTypes: Array<{
             type: 'activity',
             subtype: 'REPO_EVENTS',
           },
-          isPrivateSupported: false, // https://github.com/devhubapp/devhub/issues/140
+          isPrivateSupported: true,
         },
       },
       {
