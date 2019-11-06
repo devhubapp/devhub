@@ -201,7 +201,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         plan.status === 'trialing' &&
         plan.trialEndAt &&
         new Date(plan.trialEndAt).valueOf() - Date.now() <
-          1000 * 60 * 60 * 24 * 5
+          1000 * 60 * 60 * 24 * 14
           ? {
               intervalRefresh: { date: plan.trialEndAt },
               message: () =>
