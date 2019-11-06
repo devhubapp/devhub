@@ -26,13 +26,13 @@ export function AppProviders(props: AppProvidersProps) {
           <DeepLinkProvider>
             <AppLayoutProvider>
               <ColumnFocusProvider>
-                <ColumnFiltersProvider>
-                  <ColumnWidthProvider>
+                <ColumnWidthProvider>
+                  <ColumnFiltersProvider>
                     <ThemeProvider>
                       <SafeAreaProvider>{props.children}</SafeAreaProvider>
                     </ThemeProvider>
-                  </ColumnWidthProvider>
-                </ColumnFiltersProvider>
+                  </ColumnFiltersProvider>
+                </ColumnWidthProvider>
               </ColumnFocusProvider>
             </AppLayoutProvider>
           </DeepLinkProvider>

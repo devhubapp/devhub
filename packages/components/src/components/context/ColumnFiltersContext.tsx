@@ -1,8 +1,8 @@
-import immer from 'immer'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
+import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useEmitter } from '../../hooks/use-emitter'
 import { sizes as cardSizes } from '../cards/BaseCard.shared'
 import { calculateColumnWidth, useColumnWidth } from './ColumnWidthContext'
@@ -47,16 +47,21 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
   const isSharedFiltersOpened =
     inlineMode || (enableSharedFiltersView && isOpen)
 
-  const valueCacheRef = useRef<ColumnFiltersProviderState>({
-    enableSharedFiltersView,
-    fixedWidth:
-      columnWidth -
-      (cardSizes.cardPadding +
-        cardSizes.avatarContainerWidth +
-        cardSizes.horizontalSpaceSize),
-    inlineMode,
-    isSharedFiltersOpened,
-  })
+  const fixedWidth =
+    columnWidth -
+    (cardSizes.cardPadding +
+      cardSizes.avatarContainerWidth +
+      cardSizes.horizontalSpaceSize)
+
+  const valueCacheRef = useDynamicRef<ColumnFiltersProviderState>(
+    {
+      enableSharedFiltersView,
+      fixedWidth,
+      inlineMode,
+      isSharedFiltersOpened,
+    },
+    [enableSharedFiltersView, fixedWidth, inlineMode, isSharedFiltersOpened],
+  )
 
   useEffect(() => {
     if (!inlineMode && isSharedFiltersOpened) setIsOpened(false)
@@ -72,12 +77,6 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
     },
     [enableSharedFiltersView],
   )
-
-  valueCacheRef.current = immer(valueCacheRef.current, draft => {
-    draft.enableSharedFiltersView = enableSharedFiltersView
-    draft.inlineMode = inlineMode
-    draft.isSharedFiltersOpened = isSharedFiltersOpened
-  })
 
   return (
     <ColumnFiltersContext.Provider value={valueCacheRef.current}>

@@ -1,8 +1,11 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 
-export function useDynamicRef<T>(value: T) {
+export function useDynamicRef<T>(value: T, deps?: any[]) {
   const ref = useRef(value)
-  if (ref.current !== value) ref.current = value
+
+  useMemo(() => {
+    ref.current = value
+  }, deps || [value])
 
   return ref
 }
