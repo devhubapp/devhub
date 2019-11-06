@@ -37,7 +37,7 @@ export const freePlan: Plan & { id: 'free' } = {
   currency: 'usd',
   interval: undefined,
   intervalCount: 1,
-  trialPeriodDays: 7,
+  trialPeriodDays: 14,
 
   featureLabels: [
     // { id: 'columnsLimit', label: 'Up to 6 columns', available: true },
