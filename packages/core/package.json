@@ -28,10 +28,10 @@
     "@types/lodash": "4.14.141",
     "mkdirp": "0.5.1",
     "prettier": "1.18.2",
-    "tslint": "5.20.0",
+    "tslint": "5.20.1",
     "tslint-config-airbnb": "5.11.2",
     "tslint-config-prettier": "1.18.0",
     "tslint-react": "4.1.0",
-    "typescript": "3.6.3"
+    "typescript": "3.7.2"
   }
 }

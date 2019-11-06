@@ -64,10 +64,10 @@
     "react-native-typescript-transformer": "1.2.13",
     "reselect-tools": "0.0.7",
     "ts-jest": "24.1.0",
-    "tslint": "5.20.0",
+    "tslint": "5.20.1",
     "tslint-config-airbnb": "5.11.2",
     "tslint-config-prettier": "1.18.0",
     "tslint-react": "4.1.0",
-    "typescript": "3.6.3"
+    "typescript": "3.7.2"
   }
 }

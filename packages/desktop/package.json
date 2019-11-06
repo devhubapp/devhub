@@ -101,8 +101,8 @@
     "electron-devtools-installer": "2.2.4",
     "electron-notarize": "0.1.1",
     "nodemon": "1.19.3",
-    "tslint": "5.20.0",
-    "typescript": "3.6.3",
+    "tslint": "5.20.1",
+    "typescript": "3.7.2",
     "wait-on": "3.3.0"
   }
 }

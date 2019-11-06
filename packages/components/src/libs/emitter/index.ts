@@ -1,7 +1,6 @@
 import { EventEmitter, EventSubscription } from 'fbemitter'
 
-export type EventEmitter = EventEmitter
-export type EventSubscription = EventSubscription
+export { EventEmitter, EventSubscription }
 
 export interface EmitterTypes {
   DEEP_LINK: {

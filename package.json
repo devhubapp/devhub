@@ -49,10 +49,10 @@
     "postinstall-prepare": "1.0.1",
     "prettier": "1.16.4",
     "shx": "0.3.2",
-    "tslint": "5.20.0",
+    "tslint": "5.20.1",
     "tslint-config-prettier": "1.18.0",
     "tslint-react": "4.1.0",
-    "typescript": "3.6.3"
+    "typescript": "3.7.2"
   },
   "husky": {
     "hooks": {
