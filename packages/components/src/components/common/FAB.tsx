@@ -1,7 +1,7 @@
+import { GitHubIcon } from '@devhub/core'
 import React, { useRef, useState } from 'react'
 import { StyleProp, TextStyle } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
@@ -14,6 +14,7 @@ import {
 import { ThemedView } from '../themed/ThemedView'
 
 export const fabSize = 44
+export const fabSpacing = contentPadding / 2 // + Math.max(0, (fabSize - defaultButtonSize) / 2) - 2
 
 export interface FABProps extends ThemedTouchableOpacityProps {
   children?: string | React.ReactElement<any>

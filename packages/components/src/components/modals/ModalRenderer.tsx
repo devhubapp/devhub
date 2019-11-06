@@ -142,7 +142,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   const immediate =
     constants.DISABLE_ANIMATIONS ||
     (sizename <= '2-medium' &&
-    ((isSettings && !previouslyOpenedModal) ||
+    ((isSettings && !wasSettings && modalStack.length === 1) ||
       (!currentOpenedModal && wasSettings)) &&
     columnIds.length > 0
       ? true

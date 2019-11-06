@@ -14,7 +14,6 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
-import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
@@ -60,11 +59,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       showBackButton={showBackButton}
       title="Preferences"
     >
-      <FullHeightScrollView
-        alwaysBounceVertical
-        bounces
-        style={sharedStyles.flex}
-      >
+      <>
         {Platform.OS === 'web' && (
           <View>
             <SubHeader title="Current plan">
@@ -249,7 +244,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
         <Spacer flex={1} minHeight={contentPadding} />
 
-        <View style={{ padding: contentPadding }}>
+        <View style={sharedStyles.paddingHorizontal}>
           <AppVersion />
 
           <Spacer height={contentPadding / 2} />
@@ -261,7 +256,9 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             Show advanced settings
           </Button>
         </View>
-      </FullHeightScrollView>
+
+        <Spacer height={contentPadding / 2} />
+      </>
     </ModalColumn>
   )
 })

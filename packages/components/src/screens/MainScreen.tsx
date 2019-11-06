@@ -2,21 +2,20 @@ import _ from 'lodash'
 import qs from 'qs'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
+import { useDispatch } from 'react-redux'
 import url from 'url'
 
-import { useDispatch } from 'react-redux'
 import { AppKeyboardShortcuts } from '../components/AppKeyboardShortcuts'
 import { AppBannerMessage } from '../components/banners/AppBannerMessage'
 import { ColumnSeparator } from '../components/columns/ColumnSeparator'
 import { ColumnsRenderer } from '../components/columns/ColumnsRenderer'
-import { FABRenderer } from '../components/common/FABRenderer'
 import { Screen } from '../components/common/Screen'
 import { Separator } from '../components/common/Separator'
 import { SidebarOrBottomBar } from '../components/common/SidebarOrBottomBar'
 import { useAppLayout } from '../components/context/LayoutContext'
 import { ModalRenderer } from '../components/modals/ModalRenderer'
 import { useAppVisibility } from '../hooks/use-app-visibility'
-import { useReduxAction } from '../hooks/use-redux-action'
+import { useFAB } from '../hooks/use-fab'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
 import { Linking } from '../libs/linking'
@@ -40,19 +39,21 @@ export const MainScreen = React.memo(() => {
   const dispatch = useDispatch()
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const plan = useReduxState(selectors.currentUserPlanSelector)
-
-  const refreshInstallationsRequest = useReduxAction(
-    actions.refreshInstallationsRequest,
-  )
-  const syncDown = useReduxAction(actions.syncDown)
+  const FAB = useFAB()
 
   const debounceSyncDown = useMemo(() => {
-    return _.debounce(syncDown, 5000, {
-      leading: true,
-      maxWait: 30000,
-      trailing: false,
-    })
-  }, [syncDown])
+    return _.debounce(
+      () => {
+        dispatch(actions.syncDown())
+      },
+      5000,
+      {
+        leading: true,
+        maxWait: 30000,
+        trailing: false,
+      },
+    )
+  }, [])
 
   const isVisible = useAppVisibility()
   const wasVisible = useRef(isVisible)
@@ -81,7 +82,9 @@ export const MainScreen = React.memo(() => {
       if (!query.installation_id) return
 
       clearQueryStringFromURL(['installation_id', 'setup_action'])
-      refreshInstallationsRequest({ includeInstallationToken: true })
+      dispatch(
+        actions.refreshInstallationsRequest({ includeInstallationToken: true }),
+      )
     }
 
     Linking.addEventListener('url', handler)
@@ -152,7 +155,7 @@ export const MainScreen = React.memo(() => {
 
             <ColumnsRenderer key="columns-renderer" />
 
-            <FABRenderer key="fab-renderer" />
+            {FAB.Component}
           </View>
         </View>
       </Screen>

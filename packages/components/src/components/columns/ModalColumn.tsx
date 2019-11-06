@@ -1,7 +1,8 @@
 import { ModalPayload } from '@devhub/core'
 import React, { useEffect, useRef } from 'react'
-
 import { NativeComponent, View } from 'react-native'
+
+import { useFAB } from '../../hooks/use-fab'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
@@ -10,6 +11,8 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { findNode, tryFocus } from '../../utils/helpers/shared'
+import { fabSpacing } from '../common/FAB'
+import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { QuickFeedbackRow } from '../common/QuickFeedbackRow'
 import { Spacer } from '../common/Spacer'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
@@ -43,6 +46,8 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const popModal = useReduxAction(actions.popModal)
+
+  const FAB = useFAB()
 
   useEffect(() => {
     if (Platform.OS !== 'web') return
@@ -116,17 +121,24 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         }
       />
 
-      <View style={sharedStyles.flex}>{children}</View>
-
-      <View
-        style={[
-          sharedStyles.fullWidth,
-          sharedStyles.horizontalAndVerticallyAligned,
-          sharedStyles.padding,
-        ]}
+      <FullHeightScrollView
+        keyboardShouldPersistTaps="handled"
+        style={sharedStyles.flex}
       >
-        <QuickFeedbackRow />
-      </View>
+        <View style={sharedStyles.flex}>{children}</View>
+
+        <View
+          style={[
+            sharedStyles.fullWidth,
+            sharedStyles.horizontalAndVerticallyAligned,
+            sharedStyles.paddingHorizontal,
+          ]}
+        >
+          <QuickFeedbackRow />
+        </View>
+
+        <Spacer height={FAB.Component ? FAB.size : fabSpacing} />
+      </FullHeightScrollView>
     </Column>
   )
 })

@@ -182,7 +182,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             sharedStyles.center,
           ]}
         >
-          <Spacer height={contentPadding * 2} />
+          <Spacer height={contentPadding} />
 
           <ThemedText
             color="foregroundColor"
@@ -199,9 +199,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             {planLabel}
           </ThemedText>
 
-          <Spacer height={contentPadding / 2} />
+          <Spacer height={contentPadding} />
 
-          {!!(plan.description || isPartOfAList) && (
+          {!!plan.description && (
             <>
               <ThemedText
                 color="foregroundColorMuted65"
@@ -210,7 +210,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
                 {plan.description}
               </ThemedText>
 
-              <Spacer height={contentPadding} />
+              <Spacer height={contentPadding / 2} />
             </>
           )}
 
@@ -233,8 +233,6 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               </Text>
             )}
           </ThemedText>
-
-          <Spacer height={contentPadding / 3} />
 
           {!!(plan.amount || isPartOfAList) && (
             <>
@@ -259,7 +257,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             </ThemedText>
           )} */}
 
-              <Spacer height={contentPadding} />
+              <Spacer height={contentPadding / 2} />
             </>
           )}
 
@@ -285,7 +283,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
                 )}
               </IntervalRefresh>
 
-              <Spacer height={contentPadding * 2} />
+              <Spacer height={contentPadding} />
             </>
           )}
 

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Fragment } from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 
 export interface KeyboardShortcutsModalProps {
   showBackButton: boolean
@@ -93,7 +93,7 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
       showBackButton={showBackButton}
       title="Keyboard Shortcuts"
     >
-      <ScrollView style={[sharedStyles.flex, { padding: contentPadding }]}>
+      <View style={[sharedStyles.flex, { padding: contentPadding }]}>
         {keyboardShortcuts.map((ks, index) => (
           <Fragment key={[...ks.keys, index].join('+')}>
             <View style={sharedStyles.horizontal}>
@@ -141,7 +141,7 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
         ))}
 
         <Spacer height={contentPadding} />
-      </ScrollView>
+      </View>
     </ModalColumn>
   )
 }

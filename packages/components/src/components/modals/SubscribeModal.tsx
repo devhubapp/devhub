@@ -10,7 +10,6 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
-import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
@@ -80,7 +79,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
           : 'Subscribe'
       }
     >
-      <FullHeightScrollView style={sharedStyles.flex}>
+      <>
         {!!(plan && plan.amount) && (
           <>
             <SubHeader title="Review your choice" />
@@ -166,7 +165,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
             onSubscribe={onSubscribeOrDowngrade}
           />
         )}
-      </FullHeightScrollView>
+      </>
     </ModalColumn>
   )
 }

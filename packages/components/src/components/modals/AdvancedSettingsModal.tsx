@@ -1,6 +1,6 @@
 import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
 import React, { useState } from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -86,10 +86,7 @@ export const AdvancedSettingsModal = React.memo(
         showBackButton={showBackButton}
         title="Advanced settings"
       >
-        <ScrollView
-          style={sharedStyles.flex}
-          contentContainerStyle={sharedStyles.flexGrow}
-        >
+        <>
           {Platform.OS === 'web' && (
             <SubHeader title="Keyboard shortcuts">
               <>
@@ -343,9 +340,9 @@ export const AdvancedSettingsModal = React.memo(
             )}
           </View>
 
-          <Spacer flex={1} minHeight={contentPadding} />
+          <Spacer flex={1} minHeight={contentPadding * 2} />
 
-          <View style={{ padding: contentPadding }}>
+          <View style={sharedStyles.paddingHorizontal}>
             <Spacer height={contentPadding} />
 
             <Button
@@ -385,7 +382,9 @@ export const AdvancedSettingsModal = React.memo(
               Logout
             </Button>
           </View>
-        </ScrollView>
+
+          <Spacer height={contentPadding / 2} />
+        </>
       </ModalColumn>
     )
   },

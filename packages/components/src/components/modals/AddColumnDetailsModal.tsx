@@ -1,9 +1,3 @@
-import { FormikErrors, useFormik } from 'formik'
-import _ from 'lodash'
-import React, { Fragment, useEffect } from 'react'
-import { Keyboard, ScrollView, View } from 'react-native'
-import * as Yup from 'yup'
-
 import {
   ActivityColumnFilters,
   ActivityColumnSubscription,
@@ -27,7 +21,13 @@ import {
   NotificationColumnSubscriptionCreation,
   ThemeColors,
 } from '@devhub/core'
-import { useReduxAction } from '../../hooks/use-redux-action'
+import { FormikErrors, useFormik } from 'formik'
+import _ from 'lodash'
+import React, { Fragment, useEffect } from 'react'
+import { Keyboard, View } from 'react-native'
+import { useDispatch } from 'react-redux'
+import * as Yup from 'yup'
+
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { Platform } from '../../libs/platform'
@@ -50,6 +50,7 @@ import { H3 } from '../common/H3'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
+import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import {
@@ -166,14 +167,12 @@ export const AddColumnDetailsModal = React.memo(
 
     const formItems = getFormItems(subscription)
 
+    const dispatch = useDispatch()
+    const { sizename } = useAppLayout()
+
     const loggedUsername = useReduxState(
       selectors.currentGitHubUsernameSelector,
     )!
-
-    const addColumnAndSubscriptions = useReduxAction(
-      actions.addColumnAndSubscriptions,
-    )
-    const closeAllModals = useReduxAction(actions.closeAllModals)
 
     const formikProps = useFormik({
       initialValues: formInitialValues,
@@ -181,7 +180,7 @@ export const AddColumnDetailsModal = React.memo(
         formikActions.setSubmitting(false)
 
         Keyboard.dismiss()
-        closeAllModals()
+        dispatch(actions.closeAllModals())
 
         // TODO: Wait for modal close animation to finish
 
@@ -211,7 +210,7 @@ export const AddColumnDetailsModal = React.memo(
           return
         }
 
-        addColumnAndSubscriptions(newColumnAndSubscriptions)
+        dispatch(actions.addColumnAndSubscriptions(newColumnAndSubscriptions))
 
         formikActions.setSubmitting(false)
       },
@@ -671,17 +670,23 @@ export const AddColumnDetailsModal = React.memo(
         showBackButton={showBackButton}
         title="Add Column"
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          style={sharedStyles.flex}
-        >
+        <>
           {renderHeader()}
+
           <Separator horizontal />
           <Spacer height={contentPadding} />
 
-          <View style={sharedStyles.flex}>{renderContent()}</View>
+          <View
+            style={
+              sizename <= '2-medium'
+                ? sharedStyles.flex
+                : sharedStyles.fullWidth
+            }
+          >
+            {renderContent()}
+          </View>
 
-          <View style={{ paddingHorizontal: contentPadding }}>
+          <View style={sharedStyles.paddingHorizontal}>
             <Button
               analyticsLabel="add_column"
               disabled={!formikProps.isValid || formikProps.isSubmitting}
@@ -691,8 +696,8 @@ export const AddColumnDetailsModal = React.memo(
             </Button>
           </View>
 
-          <Spacer height={contentPadding} />
-        </ScrollView>
+          <Spacer height={contentPadding / 2} />
+        </>
       </ModalColumn>
     )
   },

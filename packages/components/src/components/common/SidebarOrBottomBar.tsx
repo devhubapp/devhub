@@ -31,6 +31,7 @@ import { useDispatch } from 'react-redux'
 
 import { useColumn } from '../../hooks/use-column'
 import { useColumnData } from '../../hooks/use-column-data'
+import { shouldRenderFAB } from '../../hooks/use-fab'
 import { useForceRerender } from '../../hooks/use-force-rerender'
 import { useHover } from '../../hooks/use-hover'
 import { useIsColumnFocused } from '../../hooks/use-is-column-focused'
@@ -58,7 +59,6 @@ import { ThemedTouchableWithoutFeedback } from '../themed/ThemedTouchableWithout
 import { ThemedView } from '../themed/ThemedView'
 import { Avatar } from './Avatar'
 import { ConditionalWrap } from './ConditionalWrap'
-import { shouldRenderFAB } from './FABRenderer'
 import {
   FlatListWithOverlay,
   FlatListWithOverlayProps,

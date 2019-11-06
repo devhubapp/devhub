@@ -10,8 +10,7 @@ import {
   GitHubEmoji,
 } from '../../utils/helpers/github/emojis'
 import { Button, defaultButtonSize } from '../common/Button'
-import { fabSize } from '../common/FAB'
-import { fabSpacing } from '../common/FABRenderer'
+import { fabSize, fabSpacing } from '../common/FAB'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Spacer } from '../common/Spacer'
 import { ThemedActivityIndicator } from '../themed/ThemedActivityIndicator'

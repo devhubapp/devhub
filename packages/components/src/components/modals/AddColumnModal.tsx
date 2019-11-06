@@ -1,14 +1,14 @@
-import { rgba } from 'polished'
-import React, { useCallback, useLayoutEffect, useRef } from 'react'
-import { View } from 'react-native'
-import { useSpring } from 'react-spring/native'
-
 import {
   AddColumnDetailsPayload,
   ColumnSubscription,
   constants,
   GitHubIcon,
 } from '@devhub/core'
+import { rgba } from 'polished'
+import React, { useCallback, useLayoutEffect, useRef } from 'react'
+import { View } from 'react-native'
+import { useSpring } from 'react-spring/native'
+
 import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -20,15 +20,11 @@ import { contentPadding } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ModalColumn } from '../columns/ModalColumn'
-import { fabSize } from '../common/FAB'
-import { fabSpacing, shouldRenderFAB } from '../common/FABRenderer'
-import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { H2 } from '../common/H2'
 import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
-import { useAppLayout } from '../context/LayoutContext'
 import { useTheme } from '../context/ThemeContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -273,11 +269,9 @@ function AddColumnModalItem({
 export function AddColumnModal(props: AddColumnModalProps) {
   const { showBackButton } = props
 
-  const { sizename } = useAppLayout()
   const columnIds = useReduxState(selectors.columnIdsSelector)
 
   const hasReachedColumnLimit = columnIds.length >= constants.COLUMNS_LIMIT
-  const isFabVisible = shouldRenderFAB({ sizename })
 
   return (
     <ModalColumn
@@ -285,7 +279,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
       showBackButton={showBackButton}
       title="Add Column"
     >
-      <FullHeightScrollView style={sharedStyles.flex}>
+      <>
         {columnTypes.map((group, groupIndex) => (
           <View key={`add-column-header-group-${groupIndex}`}>
             <SubHeader muted={group.soon} title={group.title}>
@@ -335,28 +329,26 @@ export function AddColumnModal(props: AddColumnModalProps) {
         <Spacer flex={1} minHeight={contentPadding} />
 
         {!!hasReachedColumnLimit && (
-          <ThemedText
-            color="foregroundColorMuted65"
-            style={[
-              sharedStyles.textCenter,
-              {
-                marginTop: contentPadding,
-                paddingHorizontal: contentPadding,
-                lineHeight: 20,
-                fontSize: 14,
-              },
-            ]}
-          >
-            {`You have reached the limit of ${constants.COLUMNS_LIMIT} columns. This is to maintain a healthy usage of the GitHub API.`}
-          </ThemedText>
+          <>
+            <ThemedText
+              color="foregroundColorMuted65"
+              style={[
+                sharedStyles.textCenter,
+                {
+                  marginTop: contentPadding,
+                  paddingHorizontal: contentPadding,
+                  lineHeight: 20,
+                  fontSize: 14,
+                },
+              ]}
+            >
+              {`You have reached the limit of ${constants.COLUMNS_LIMIT} columns. This is to maintain a healthy usage of the GitHub API.`}
+            </ThemedText>
+
+            <Spacer height={contentPadding} />
+          </>
         )}
-
-        <Spacer height={contentPadding} />
-
-        <Spacer
-          height={isFabVisible ? fabSize + 2 * fabSpacing : contentPadding}
-        />
-      </FullHeightScrollView>
+      </>
     </ModalColumn>
   )
 }

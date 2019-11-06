@@ -1,24 +1,26 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { useKeyboardVisibility } from '../../hooks/use-keyboard-visibility'
-import { useReduxAction } from '../../hooks/use-redux-action'
-import { useReduxState } from '../../hooks/use-redux-state'
-import * as actions from '../../redux/actions'
-import * as selectors from '../../redux/selectors'
-import { contentPadding } from '../../styles/variables'
-import { FAB } from '../common/FAB'
-import { useColumnFilters } from '../context/ColumnFiltersContext'
-import { AppLayoutProviderState, useAppLayout } from '../context/LayoutContext'
-import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
-
-export const fabSpacing = contentPadding / 2 // + Math.max(0, (fabSize - defaultButtonSize) / 2) - 2
+import { FAB, fabSize, fabSpacing } from '../components/common/FAB'
+import { useColumnFilters } from '../components/context/ColumnFiltersContext'
+import {
+  AppLayoutProviderState,
+  useAppLayout,
+} from '../components/context/LayoutContext'
+import { keyboardShortcutsById } from '../components/modals/KeyboardShortcutsModal'
+import * as actions from '../redux/actions'
+import * as selectors from '../redux/selectors'
+import { contentPadding } from '../styles/variables'
+import { useKeyboardVisibility } from './use-keyboard-visibility'
+import { useReduxAction } from './use-redux-action'
+import { useReduxState } from './use-redux-state'
 
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     bottom: fabSpacing,
     right: contentPadding,
+    marginTop: fabSpacing,
     zIndex: 1000,
   },
 })
@@ -42,7 +44,7 @@ export function shouldRenderFAB({
   return true
 }
 
-export function FABRenderer() {
+export function useFAB(): { Component: React.ReactNode; size: number } {
   // const addOrCloseAnimatedRef = useRef(new Animated.Value(0))
 
   const { isSharedFiltersOpened } = useColumnFilters()
@@ -59,7 +61,7 @@ export function FABRenderer() {
       isColumnFiltersVisible: isSharedFiltersOpened,
     })
   )
-    return null
+    return { Component: undefined, size: 0 }
 
   if (!currentOpenedModal) {
     /*
@@ -81,19 +83,22 @@ export function FABRenderer() {
     // Bug: https://github.com/react-spring/react-spring/issues/437
     const iconStyle = undefined
 
-    return (
-      <View collapsable={false} style={styles.container}>
-        <FAB
-          key="fab"
-          analyticsLabel="add_column"
-          iconName="plus"
-          iconStyle={iconStyle}
-          onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
-          tooltip={`Add column (${keyboardShortcutsById.addColumn.keys[0]})`}
-          useBrandColor
-        />
-      </View>
-    )
+    return {
+      size: fabSize + 2 * fabSpacing,
+      Component: (
+        <View collapsable={false} style={styles.container}>
+          <FAB
+            key="fab"
+            analyticsLabel="add_column"
+            iconName="plus"
+            iconStyle={iconStyle}
+            onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
+            tooltip={`Add column (${keyboardShortcutsById.addColumn.keys[0]})`}
+            useBrandColor
+          />
+        </View>
+      ),
+    }
   }
 
   switch (currentOpenedModal.name) {
@@ -118,23 +123,26 @@ export function FABRenderer() {
       // Bug: https://github.com/react-spring/react-spring/issues/437
       const iconStyle = undefined
 
-      return (
-        <View style={styles.container}>
-          <FAB
-            analyticsLabel="close_modals"
-            key="fab"
-            iconName="x"
-            iconStyle={iconStyle}
-            onPress={() => closeAllModals()}
-            tooltip={`Close (${keyboardShortcutsById.closeModal.keys[0]})`}
-          />
-        </View>
-      )
+      return {
+        size: fabSize + 2 * fabSpacing,
+        Component: (
+          <View style={styles.container}>
+            <FAB
+              analyticsLabel="close_modals"
+              key="fab"
+              iconName="x"
+              iconStyle={iconStyle}
+              onPress={() => closeAllModals()}
+              tooltip={`Close (${keyboardShortcutsById.closeModal.keys[0]})`}
+            />
+          </View>
+        ),
+      }
     }
 
     default: {
       // addOrCloseAnimatedRef.current.setValue(0)
-      return null
+      return { Component: undefined, size: 0 }
     }
   }
 }

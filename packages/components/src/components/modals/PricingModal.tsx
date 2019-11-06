@@ -24,7 +24,6 @@ import { contentPadding } from '../../styles/variables'
 import { getDefaultDevHubHeaders } from '../../utils/api'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
-import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
@@ -277,7 +276,7 @@ export function PricingModal(props: PricingModalProps) {
       showBackButton={showBackButton}
       title="Subscribe"
     >
-      <FullHeightScrollView style={sharedStyles.flex}>
+      <>
         {!!showUserPlanAtTheTop && (
           <>
             <SubHeader title="CURRENT PLAN" />
@@ -384,7 +383,7 @@ export function PricingModal(props: PricingModalProps) {
               </>
             )}
         </View>
-      </FullHeightScrollView>
+      </>
     </ModalColumn>
   )
 }
