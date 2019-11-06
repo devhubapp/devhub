@@ -175,7 +175,7 @@ export const ColumnFiltersRenderer = React.memo(
       <SpringAnimatedView
         key={`${key}-inner-container`}
         style={[
-          sharedStyles.fullWidth,
+          !inlineMode && sharedStyles.fullWidth,
           sharedStyles.fullHeight,
 
           !inlineMode && StyleSheet.absoluteFill,

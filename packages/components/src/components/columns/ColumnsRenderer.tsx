@@ -14,7 +14,7 @@ export interface ColumnsRendererProps {}
 export function ColumnsRenderer() {
   const { appViewMode } = useAppViewMode()
 
-  const { enableSharedFiltersView } = useColumnFilters()
+  const { enableSharedFiltersView, inlineMode } = useColumnFilters()
 
   const hasColumns = useReduxState(
     state => !!selectors.columnIdsSelector(state).length,
@@ -35,6 +35,7 @@ export function ColumnsRenderer() {
           key="column-options-renderer"
           columnId="focused"
           fixedPosition="right"
+          forceOpenAll={inlineMode}
           header="header"
           type="shared"
         />
