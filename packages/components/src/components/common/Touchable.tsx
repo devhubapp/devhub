@@ -1,13 +1,20 @@
+import { Theme, ThemeColors } from '@devhub/core/src'
 import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import {
+  StyleSheet,
   TouchableHighlightProps,
   TouchableOpacity,
   TouchableOpacityProps,
   TouchableWithoutFeedbackProps,
 } from 'react-native'
+
+import { useDynamicRef } from '../../hooks/use-dynamic-ref'
+import { useHover } from '../../hooks/use-hover'
 import { analytics } from '../../libs/analytics'
 import { Platform } from '../../libs/platform'
 import { findNode } from '../../utils/helpers/shared'
+import { getTheme } from '../context/ThemeContext'
+import { getThemeColorOrItself } from '../themed/helpers'
 
 export interface TouchableProps
   extends TouchableWithoutFeedbackProps,
@@ -20,6 +27,10 @@ export interface TouchableProps
   analyticsLabel?: string | undefined
   analyticsValue?: number | undefined
   children?: React.ReactNode
+  hoverBackgroundThemeColor?:
+    | keyof ThemeColors
+    | ((theme: Theme) => string | undefined)
+    | null
   selectable?: boolean
   tooltip?: string
 }
@@ -32,6 +43,7 @@ export const Touchable = React.forwardRef(
       analyticsCategory,
       analyticsLabel,
       analyticsValue,
+      hoverBackgroundThemeColor,
       onLongPress: _onLongPress,
       onPress: _onPress,
       onPressIn: _onPressIn,
@@ -126,6 +138,31 @@ export const Touchable = React.forwardRef(
         analyticsLabel,
         analyticsValue,
       ],
+    )
+
+    const styleRef = useDynamicRef(props.style)
+    useHover(
+      hoverBackgroundThemeColor ? touchableRef : null,
+      useCallback(isHovered => {
+        if (
+          !(
+            touchableRef &&
+            touchableRef.current &&
+            touchableRef.current.setNativeProps
+          )
+        )
+          return
+
+        touchableRef.current.setNativeProps({
+          style: {
+            backgroundColor: isHovered
+              ? getThemeColorOrItself(getTheme(), hoverBackgroundThemeColor, {
+                  enableCSSVariable: true,
+                })
+              : StyleSheet.flatten(styleRef.current).backgroundColor,
+          },
+        })
+      }, []),
     )
 
     return (

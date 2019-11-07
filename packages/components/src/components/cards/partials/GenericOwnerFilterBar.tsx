@@ -149,6 +149,7 @@ export const GenericOwnerFilterBar = React.memo(
                 ? 'backgroundColorTintedRed'
                 : getColumnHeaderThemeColors().normal
             }
+            hoverBackgroundThemeColor={getColumnHeaderThemeColors().hover}
             onPress={() => {
               onItemPress(item)
             }}
