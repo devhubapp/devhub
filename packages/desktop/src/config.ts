@@ -7,7 +7,7 @@ export const store = new Store({
   defaults: {
     enablePushNotifications: undefined as boolean | undefined,
     enablePushNotificationsSound: undefined as boolean | undefined,
-    isMenuBarMode: true,
+    isMenuBarMode: false,
     isMenuBarModeChangedAt: undefined as number | undefined,
     launchCount: 0,
     lockOnCenter: false,
