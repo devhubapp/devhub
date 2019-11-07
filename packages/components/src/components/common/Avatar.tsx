@@ -37,7 +37,7 @@ export interface AvatarProps
   shape?: 'circle' | 'rounded' | 'square'
   size?: number
   small?: boolean
-  style?: StyleProp<any>
+  style?: ThemedImageWithLoadingProps['style']
   tooltip?: string
   username?: string
 }
@@ -129,22 +129,20 @@ export function Avatar(props: AvatarProps) {
         backgroundColorLoaded="#FFFFFF"
         backgroundColorLoading="foregroundColorTransparent05"
         {...otherProps}
-        source={{ uri, width: finalSize + 1, height: finalSize + 1 }}
-        style={[
-          {
-            height: finalSize,
-            width: finalSize,
-            borderWidth: 0,
-            borderRadius:
-              !shape || shape === 'circle'
-                ? finalSize / 2
-                : shape === 'square'
-                ? 0
-                : radius,
-          },
-          muted && { opacity: mutedOpacity },
-          style,
-        ]}
+        source={{ uri }}
+        style={{
+          height: finalSize,
+          width: finalSize,
+          borderWidth: 0,
+          borderRadius:
+            !shape || shape === 'circle'
+              ? finalSize / 2
+              : shape === 'square'
+              ? 0
+              : radius,
+          ...(muted && { opacity: mutedOpacity }),
+          ...style,
+        }}
         tooltip={tooltip}
       />
     </ConditionalWrap>

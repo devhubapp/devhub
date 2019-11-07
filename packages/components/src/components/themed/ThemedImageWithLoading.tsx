@@ -32,9 +32,11 @@ export interface ThemedImageWithLoadingProps
     | ((theme: Theme) => string)
   borderColor?: keyof ThemeColors | ((theme: Theme) => string)
   children?: React.ReactNode
-  style?: StyleProp<
-    Omit<ImageWithLoadingProps['style'], 'backgroundColor' | 'borderColor'>
+  style?: Omit<
+    ImageWithLoadingProps['style'],
+    'backgroundColor' | 'borderColor'
   >
+
   themeTransformer?: ThemeTransformer
 }
 
@@ -80,7 +82,7 @@ export const ThemedImageWithLoading = React.forwardRef<
       backgroundColorFailed={backgroundColorFailed}
       backgroundColorLoaded={backgroundColorLoaded}
       backgroundColorLoading={backgroundColorLoading}
-      style={[style, getStyle(theme, { backgroundColor, borderColor })]}
+      style={{ ...style, ...getStyle(theme, { backgroundColor, borderColor }) }}
     />
   )
 })
