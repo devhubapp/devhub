@@ -100,6 +100,7 @@
     "electron-builder": "21.2.0",
     "electron-devtools-installer": "2.2.4",
     "electron-notarize": "0.1.1",
+    "electron-timber": "0.5.1",
     "nodemon": "1.19.3",
     "tslint": "5.20.1",
     "typescript": "3.7.2",

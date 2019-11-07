@@ -98,14 +98,6 @@ export function register() {
     mainWindow.minimize()
   })
 
-  ipcMain.removeAllListeners('close')
-  ipcMain.addListener('close', () => {
-    const mainWindow = window.getMainWindow()
-    if (!mainWindow) return
-    if (process.platform === 'darwin') mainWindow.hide()
-    else mainWindow.close()
-  })
-
   ipcMain.removeAllListeners('get-all-settings')
   ipcMain.addListener('get-all-settings', async (e: any) => {
     if (!e) return

@@ -6,6 +6,7 @@ import {
 } from 'electron'
 import path from 'path'
 
+import { forceQuit } from '.'
 import * as config from './config'
 import * as constants from './constants'
 import * as dock from './dock'
@@ -75,11 +76,18 @@ export function createWindow() {
     if (_tray) _tray.setHighlightMode('selection')
   })
 
+  win.on('close', e => {
+    if (process.platform === 'darwin' && !forceQuit) {
+      e.preventDefault()
+      win.hide()
+      return
+    }
+  })
+
   win.on('closed', () => {
     win.destroy()
     mainWindow = undefined
   })
-
   win.on('resize', () => {
     if (config.store.get('isMenuBarMode')) {
       tray.alignWindowWithTray(win)

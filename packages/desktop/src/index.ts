@@ -21,6 +21,8 @@ function setupBrowserExtensions() {
   installExtension(REDUX_DEVTOOLS).catch(console.error)
 }
 
+export let forceQuit = false
+
 function init() {
   app.setName('DevHub')
   // app.commandLine.appendSwitch('disable-renderer-backgrounding')
@@ -81,6 +83,10 @@ function init() {
         }
       }, 5000)
     }
+  })
+
+  app.addListener('before-quit', async () => {
+    forceQuit = true
   })
 
   app.addListener('window-all-closed', async () => {
