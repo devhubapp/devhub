@@ -744,21 +744,28 @@ export function* subscriptionsSagas() {
   ])
 }
 
-const minute = 1 * 60 * 1000
-const minPollingInterval = minute
+const minute = 1000 * 60 * 1
 function minimumRefetchTimeHasPassed(
   subscription: ColumnSubscription,
-  _interval = minPollingInterval,
+  interval = 0,
 ) {
   if (!subscription) return false
 
-  const interval =
-    typeof _interval === 'number' && _interval > 0
-      ? Math.min(Math.max(minPollingInterval, _interval), 60 * minute)
+  const minPollingInterval =
+    subscription.type === 'issue_or_pr'
+      ? AppState.currentState === 'active'
+        ? 2 * minute
+        : 5 * minute
       : minute
+
+  const fixedInterval =
+    typeof interval === 'number' && interval >= 0
+      ? Math.min(Math.max(minPollingInterval, interval), 60 * minute)
+      : minPollingInterval
 
   return (
     !subscription.data.lastFetchedAt ||
-    new Date(subscription.data.lastFetchedAt).valueOf() <= Date.now() - interval
+    new Date(subscription.data.lastFetchedAt).valueOf() <=
+      Date.now() - fixedInterval
   )
 }
