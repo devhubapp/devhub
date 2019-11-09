@@ -553,96 +553,63 @@ export function getSearchQueryTerms(
 ): Array<[string, boolean] | [string, string, boolean]> {
   if (!(query && typeof query === 'string')) return []
 
-  let q = query
+  const result: Array<[string, boolean] | [string, string, boolean]> = []
 
-  q = q.replace(/(^|\s)NOT(\s)/gi, '$1-').trim()
+  const q = query.replace(/(^|\s)NOT(\s)/gi, '$1-').trim()
 
-  // TODO: Fix regex
-  // const exactStringsWithBackslash = q.match(/("-?([^\\][^"])+")/g)
-  // if (exactStringsWithBackslash && exactStringsWithBackslash.length) {
-  //   exactStringsWithBackslash.forEach((str, index) => {
-  //     q = q.replace(str, '')
-  //   })
-  // }
+    // TODO: Fix regex with backslash
+    // ;(q.match(/("-?([^\\][^"])+")/g) || []).forEach((str, index) => {
+    //   if (!str) return
+    //   q = q.replace(str, '')
+    //   strings.push(str.trim())
+    // })
+  ;(
+    q.match(
+      /(-?[a-zA-Z]+:"[^"]+")|(-?[a-zA-Z]+:[^ \n$]+)|(-?"[^"]+")|([^ $]+)/g,
+    ) || []
+  ).forEach(queryItem => {
+    if (!queryItem) return
 
-  const otherExactStrings = q.match(/(-?"[^"]+")/g)
-  if (otherExactStrings && otherExactStrings.length) {
-    otherExactStrings.forEach(str => {
-      q = q.replace(str, '')
-    })
-  }
+    const [_keyOrValue, ..._values] =
+      queryItem[0] === '"' || (queryItem[0] === '-' && queryItem[1] === '"')
+        ? [queryItem]
+        : queryItem.split(':')
 
-  q = q.replace(/\s+/g, ' ').trim()
+    const isNegated = !!(_keyOrValue && _keyOrValue[0] === '-')
+    const keyOrValue = (_keyOrValue || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase()
+      .slice(isNegated ? 1 : 0)
+    const value = _values
+      .join(':')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase()
 
-  const queryItems: string[] = _.flatten(
-    q.split(' ').map(queryItem => {
-      const dotParts = queryItem.split(':')
-
-      // handle queries with comma, like: owner:facebook,styled-components
-      // by splitting them into: owner:facebook owner:styled-components
-      if (
-        dotParts.length === 2 &&
-        dotParts[0] &&
-        dotParts[1] &&
-        dotParts[1].split(',').length > 1
-      ) {
-        return dotParts[1]
-          .split(',')
-          .map(subItem => subItem && `${dotParts[0]}:${subItem.trim()}`)
-          .filter(Boolean)
+    function handleValue(v: string) {
+      if (keyOrValue && !v) {
+        result.push([keyOrValue, isNegated])
+      } else if (keyOrValue && v) {
+        result.push([keyOrValue, v, isNegated])
       }
+    }
 
-      return queryItem
-    }),
-  ).filter(Boolean)
-
-  const otherStrings: string[] = []
-  const keyValueItems: Array<[string, string, boolean]> = []
-
-  queryItems.forEach(queryItem => {
-    const dotParts = queryItem.split(':')
-
-    if (dotParts.length === 1) {
-      otherStrings.push(dotParts[0])
-    } else if (dotParts.length === 2) {
-      const _key = dotParts[0]
-        .replace(/\s+/g, ' ')
-        .trim()
-        .toLowerCase()
-      const isNegated = _key[0] === '-'
-      const key = isNegated ? _key.slice(1) : _key
-      const value = dotParts[1]
-        .replace(/\s+/g, ' ')
-        .trim()
-        .toLowerCase()
-
-      if (key && value) {
-        keyValueItems.push([key, value, isNegated])
-      }
+    // handle queries with comma, like: owner:facebook,styled-components
+    // by splitting them into: owner:facebook owner:styled-components
+    if (
+      keyOrValue &&
+      value &&
+      !value.startsWith('"') &&
+      value.split(',').length > 1
+    ) {
+      value.split(',').map(subItem => subItem && handleValue(subItem.trim()))
+    } else {
+      handleValue(value)
     }
   })
 
-  const stringItems = [
-    // ...(exactStringsWithBackslash || []),
-    ...(otherExactStrings || []),
-    ...(otherStrings || []),
-  ]
-    .map(_str => {
-      if (!(_str && typeof _str === 'string')) return undefined
-
-      let isNegated = false
-      let str = _str
-
-      if (str[0] === '-') {
-        isNegated = true
-        str = _str.slice(1)
-      }
-
-      return [str, isNegated]
-    })
-    .filter(Boolean) as Array<[string, boolean]>
-
-  return [...keyValueItems, ...stringItems]
+  return result
 }
 
 export function getFilterFromSearchQuery(
