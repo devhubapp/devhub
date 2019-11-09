@@ -11,7 +11,7 @@
     "lint": "tslint -p .",
     "now": "now",
     "prepare": "cd .",
-    "start": "next"
+    "start": "next -p 3001"
   },
   "dependencies": {
     "@brunolemos/devhub-core": "0.98.4",
