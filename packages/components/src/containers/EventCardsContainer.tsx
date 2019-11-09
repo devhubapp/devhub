@@ -9,6 +9,7 @@ import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
+import { CardsSearchHeader } from '../components/cards/CardsSearchHeader'
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
@@ -158,39 +159,44 @@ export const EventCardsContainer = React.memo(
 
       if (ownerResponse.data && ownerResponse.data.id) {
         return (
-          <View
-            style={[
-              sharedStyles.flex,
-              sharedStyles.center,
-              {
-                padding: contentPadding,
-              },
-            ]}
-          >
-            <GenericMessageWithButtonView
-              buttonView={
-                <ButtonLink
-                  analyticsLabel="setup_github_app_from_column"
-                  children="Install GitHub App"
-                  disabled={
-                    mainSubscription.data.loadState === 'loading' ||
-                    mainSubscription.data.loadState === 'loading_first'
-                  }
-                  href={getGitHubAppInstallUri({
-                    suggestedTargetId: ownerResponse.data.id,
-                  })}
-                  loading={
-                    installationsLoadState === 'loading' ||
-                    mainSubscription.data.loadState === 'loading' ||
-                    mainSubscription.data.loadState === 'loading_first'
-                  }
-                  openOnNewTab={false}
-                />
-              }
-              emoji="lock"
-              subtitle="Install the GitHub App to unlock private access. No code permission required."
-              title="Private repository?"
+          <View style={sharedStyles.flex}>
+            <CardsSearchHeader
+              key={`cards-search-header-column-${columnId}`}
+              columnId={columnId}
             />
+
+            <View
+              style={[
+                sharedStyles.flex,
+                sharedStyles.center,
+                sharedStyles.padding,
+              ]}
+            >
+              <GenericMessageWithButtonView
+                buttonView={
+                  <ButtonLink
+                    analyticsLabel="setup_github_app_from_column"
+                    children="Install GitHub App"
+                    disabled={
+                      mainSubscription.data.loadState === 'loading' ||
+                      mainSubscription.data.loadState === 'loading_first'
+                    }
+                    href={getGitHubAppInstallUri({
+                      suggestedTargetId: ownerResponse.data.id,
+                    })}
+                    loading={
+                      installationsLoadState === 'loading' ||
+                      mainSubscription.data.loadState === 'loading' ||
+                      mainSubscription.data.loadState === 'loading_first'
+                    }
+                    openOnNewTab={false}
+                  />
+                }
+                emoji="lock"
+                subtitle="Install the GitHub App to unlock private access. No code permission required."
+                title="Private repository?"
+              />
+            </View>
           </View>
         )
       }
