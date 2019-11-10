@@ -1,15 +1,16 @@
+import { activePaidPlans, activePlans, Plan } from '@brunolemos/devhub-core'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Elements, StripeProvider } from 'react-stripe-elements'
 
-import { activePlans, Plan } from '@brunolemos/devhub-core'
-import Link from 'next/link'
+import { LogoHead } from '../components/common/LogoHead'
 import { Select } from '../components/common/Select'
 import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { SubscribeForm } from '../components/sections/subscribe/SubscribeForm'
 import { useAuth } from '../context/AuthContext'
-import { formatPrice, formatPriceAndInterval } from '../helpers'
+import { formatPriceAndInterval } from '../helpers'
 import SubscribedPage from './SubscribedPage'
 
 export interface SubscribePageProps {}
@@ -44,7 +45,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
   const plan = paidPlansArr.find(p => p.cannonicalId === planCannonicalId)
   useEffect(() => {
-    if (!plan) setPlanCannonicalId(activePlans[0].cannonicalId)
+    if (!plan) setPlanCannonicalId(activePaidPlans[0].cannonicalId)
   }, [plan])
 
   useEffect(() => {
@@ -138,13 +139,9 @@ export default function SubscribePage(_props: SubscribePageProps) {
   return (
     <LandingLayout>
       <section id="subscribe" className="container">
-        <div className="flex flex-col items-center m-auto text-center">
-          <img
-            alt="DevHub screenshot"
-            className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
-            src="/static/logo.png"
-          />
+        <LogoHead />
 
+        <div className="flex flex-col items-center m-auto text-center">
           <h1 className="mb-4 text-2xl sm:text-4xl whitespace-no-wrap">
             {authData.plan && authData.plan.amount > 0
               ? authData.plan.id === plan.id

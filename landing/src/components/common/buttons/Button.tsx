@@ -1,11 +1,12 @@
 import classNames from 'classnames'
 import Link from 'next/link'
 import React, { AnchorHTMLAttributes } from 'react'
+
 import { Loader } from '../Loader'
 
 const twClasses = {
   button:
-    'btn flex items-center justify-center py-2 px-8 border font-semibold rounded-full cursor-pointer whitespace-no-wrap',
+    'btn flex items-center justify-center py-2 px-8 lg:px-10 border font-semibold rounded-full cursor-pointer whitespace-no-wrap',
   button__primary: 'bg-primary text-primary-foreground border-primary',
   // button__secondary: 'bg-transparent text-primary border-primary',
   button__neutral: 'bg-less-2 text-default border-bg-darker-2',

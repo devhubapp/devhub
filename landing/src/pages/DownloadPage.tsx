@@ -1,8 +1,9 @@
+import { PlatformCategory } from '@brunolemos/devhub-core'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { PlatformCategory } from '@brunolemos/devhub-core'
 import Button from '../components/common/buttons/Button'
+import { LogoHead } from '../components/common/LogoHead'
 import { Select } from '../components/common/Select'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { useSystem } from '../hooks/use-system'
@@ -18,21 +19,37 @@ const swClasses = {
 }
 
 export default function DownloadPage(_props: DownloadPageProps) {
+  const autostartRef = useRef<HTMLAnchorElement>()
+
   const Router = useRouter()
+  const autostart = 'autostart' in Router.query
+  const categoryFromRouter: PlatformCategory | undefined =
+    Router.query.category === 'web' ||
+    Router.query.category === 'mobile' ||
+    Router.query.category === 'desktop'
+      ? Router.query.category
+      : undefined
 
   const system = useSystem()
-  const [_category, setCategory] = useState<PlatformCategory | undefined>()
+  const [_category, setCategory] = useState<PlatformCategory | undefined>(
+    categoryFromRouter,
+  )
 
   const [isDownloading, setIsDownloading] = useState(false)
 
-  const autostartRef = useRef<HTMLAnchorElement>()
+  useEffect(() => {
+    Router.replace(Router.route, Router.pathname, { shallow: true })
+  }, [])
 
-  const autostart = 'autostart' in Router.query
+  useEffect(() => {
+    if (!categoryFromRouter) return
+    setCategory(categoryFromRouter)
+  }, [categoryFromRouter])
+
   useEffect(() => {
     if (!autostart) return
 
     setIsDownloading(true)
-    Router.replace(Router.route, Router.pathname, { shallow: true })
 
     setTimeout(() => {
       if (!autostartRef.current) return
@@ -53,13 +70,9 @@ export default function DownloadPage(_props: DownloadPageProps) {
   return (
     <LandingLayout>
       <section id="download" className="container">
-        <div className="flex flex-col items-center m-auto text-center">
-          <img
-            alt="DevHub logo"
-            className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
-            src="/static/logo.png"
-          />
+        <LogoHead />
 
+        <div className="flex flex-col items-center m-auto text-center">
           <h1 className="text-3xl sm:text-4xl whitespace-no-wrap">
             {isDownloading ? (
               autostartRef &&

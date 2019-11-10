@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import Button from '../components/common/buttons/Button'
+import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { useAuth } from '../context/AuthContext'
 
@@ -18,14 +19,10 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
 
   return (
     <LandingLayout>
+      <LogoHead />
+
       <section id="subscribed" className="container">
         <div className="flex flex-col items-center m-auto text-center">
-          <img
-            alt="DevHub screenshot"
-            className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
-            src="/static/logo.png"
-          />
-
           <h1 className="mb-4 text-2xl sm:text-4xl whitespace-no-wrap">
             You are all set 🎉
           </h1>

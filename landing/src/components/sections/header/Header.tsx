@@ -1,7 +1,6 @@
 import classNames from 'classnames'
 import Link from 'next/link'
 
-import { ThemeSwitcher } from '../../common/ThemeSwitcher'
 import HeaderLink from './HeaderLink'
 
 const twClasses = {
@@ -40,15 +39,15 @@ export default function Header() {
           target="_blank"
           rel="noopener"
         >
-          Twitter
+          Twitter ↗
         </HeaderLink>
 
-        {/* <HeaderLink
-          href="/features"
+        <HeaderLink
+          href="/#features"
           className={twClasses.headerLink__rightMargin}
         >
           Features
-        </HeaderLink> */}
+        </HeaderLink>
 
         <HeaderLink
           href="/pricing"
@@ -71,9 +70,9 @@ export default function Header() {
           Download
         </HeaderLink>
 
-        <span className="pr-2" />
+        {/* <span className="pr-2" />
 
-        <ThemeSwitcher />
+        <ThemeSwitcher /> */}
       </div>
     </header>
   )

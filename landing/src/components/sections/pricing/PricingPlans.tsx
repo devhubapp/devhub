@@ -27,8 +27,8 @@ const pricingPlanComponents = activePlans.map(plan =>
 
 export function PricingPlans(_props: PricingPlansProps) {
   return (
-    <section id="pricing-plans">
-      <div className="flex flex-row lg:justify-center items-stretch overflow-x-scroll md:overflow-x-auto">
+    <div className="container">
+      <div className="flex flex-row lg:justify-center items-stretch -ml-8 sm:ml-0 -mr-8 sm:mr-0 pl-8 sm:pl-0 pr-8 sm:pr-0 overflow-x-scroll md:overflow-x-auto">
         {pricingPlanComponents.map((component, index) => (
           <Fragment key={`${component.key}-container`}>
             {component}
@@ -42,15 +42,10 @@ export function PricingPlans(_props: PricingPlansProps) {
         ))}
       </div>
 
-      <p className="mb-16" />
-
-      <div className="text-center">
-        <Link href="/account">
-          <a className="text-xs text-muted-65 text-center">
-            Already on a paid plan? Manage your subscription
-          </a>
-        </Link>
-      </div>
-    </section>
+      <p className="block sm:hidden mb-4" />
+      <small className="block sm:hidden italic text-sm text-muted-65 text-center">
+        TIP: Scroll horizontally to see all plans
+      </small>
+    </div>
   )
 }

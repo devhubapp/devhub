@@ -56,7 +56,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
         className={classNames(
           'bg-more-1 shadow border rounded',
           true // banner && typeof banner === 'string'
-            ? plan.amount // isMyPlan
+            ? false // isMyPlan
               ? 'border-primary'
               : 'border-bg-less-1'
             : 'border-bg-more-2',
@@ -69,7 +69,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
         ) : banner ? (
           <div
             className={`${
-              plan.amount // isMyPlan
+              false // isMyPlan
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-less-1 text-default'
             } text-sm leading-normal py-1 px-6 text-center font-semibold rounded-t`}

@@ -9,7 +9,7 @@ export default function UsedByCompaniesBlock(
     <section id="trusted-by" className="bg-less-1 py-6">
       <div className="container text-center">
         <h3 className="uppercase mb-0">
-          Used by 20,000+ Developers &amp; Managers
+          Join 20,000+ Developers &amp; Managers
         </h3>
         <h4 className="mb-4">Including people from these companies:</h4>
 

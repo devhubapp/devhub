@@ -41,7 +41,7 @@ export default class App extends NextApp {
         <AuthProvider>
           <Container>
             <Head>
-              <title>DevHub | GitHub Management tool</title>
+              <title>DevHub | TweetDeck for GitHub</title>
             </Head>
 
             <ThemeConsumer>

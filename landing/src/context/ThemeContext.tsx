@@ -1,12 +1,5 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react'
-
-import { loadTheme, Theme, themes } from '@brunolemos/devhub-core'
+import { Theme, themes } from '@brunolemos/devhub-core'
+import React, { useContext, useMemo, useState } from 'react'
 
 export interface ThemeProviderProps {
   children: React.ReactNode
@@ -32,6 +25,7 @@ ThemeContext.displayName = 'ThemeContext'
 export function ThemeProvider(props: ThemeProviderProps) {
   const [theme, setTheme] = useState(defaultTheme)
 
+  /*
   useLayoutEffect(() => {
     const cache = getThemefromCache()
     if (cache) setTheme(cache)
@@ -41,6 +35,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
     saveThemeOnCache(theme)
   }, [theme.id])
 
+  */
   const value: ThemeProviderState = useMemo(
     () => ({
       theme,
@@ -65,6 +60,7 @@ export function useTheme() {
   return useContext(ThemeContext)
 }
 
+/*
 function getThemefromCache() {
   if (typeof localStorage === 'undefined') return
 
@@ -91,3 +87,4 @@ function saveThemeOnCache(theme: Theme) {
   if (typeof localStorage === 'undefined') return
   localStorage.setItem('theme', JSON.stringify({ id: theme.id }))
 }
+*/

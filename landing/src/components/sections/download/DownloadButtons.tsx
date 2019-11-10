@@ -1,42 +1,56 @@
+import classNames from 'classnames'
+
+import { constants } from '@brunolemos/devhub-core'
 import { getSystemLabel } from '../../../helpers'
 import { useSystem } from '../../../hooks/use-system'
 import Button from '../../common/buttons/Button'
 
-export interface DownloadButtonsProps {}
+export interface DownloadButtonsProps {
+  center?: boolean
+  className?: string
+}
 
-export default function DownloadButtons(_props: DownloadButtonsProps) {
+export default function DownloadButtons(props: DownloadButtonsProps) {
+  const { center, className } = props
+
   const { os } = useSystem()
 
   return (
-    <div className="flex flex-row flex-wrap mb-4">
+    <div
+      className={classNames(
+        'flex flex-row flex-wrap',
+        center && 'items-center justify-center m-auto text-center',
+        className,
+      )}
+    >
       {os ? (
         <>
           <Button
             type="primary"
+            href="/pricing"
+            target="_top"
+            className="mb-2 mr-2"
+          >
+            Start free trial
+          </Button>
+
+          <Button
+            type="neutral"
             href="/download?autostart"
             className="mb-2 mr-2"
           >
             {`Download for ${getSystemLabel(os)}`}
           </Button>
-
-          <Button
-            type="neutral"
-            href="https://app.devhubapp.com/"
-            target="_top"
-            className="mb-2"
-          >
-            Use web version
-          </Button>
         </>
       ) : (
         <>
-          <Button type="primary" href="/download" className="mb-2 mr-2">
+          <Button type="primary" href="/download" className="mb-2">
             Download the app
           </Button>
 
           <Button
             type="neutral"
-            href="https://app.devhubapp.com/"
+            href={constants.APP_BASE_URL}
             target="_top"
             className="mb-2"
           >

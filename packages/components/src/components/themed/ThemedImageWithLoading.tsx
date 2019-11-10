@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleProp } from 'react-native'
+import { Image } from 'react-native'
 
 import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import {

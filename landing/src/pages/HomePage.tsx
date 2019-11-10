@@ -1,36 +1,49 @@
 import { activePaidPlans, freePlan } from '@brunolemos/devhub-core'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 import CheckLabel from '../components/common/CheckLabel'
 import { CheckLabels } from '../components/common/CheckLabels'
-import { DeviceFrame } from '../components/common/DeviceFrame'
+import { LogoHead } from '../components/common/LogoHead'
+import { ResponsiveImage } from '../components/common/ResponsiveImage'
 import LandingLayout from '../components/layouts/LandingLayout'
 import DownloadButtons from '../components/sections/download/DownloadButtons'
+import FeaturesBlock from '../components/sections/features/FeaturesBlock'
+import GetStartedBlock from '../components/sections/GetStartedBlock'
+import { PricingPlans } from '../components/sections/pricing/PricingPlans'
 import UsedByCompaniesBlock from '../components/sections/UsedByCompaniesBlock'
-import { aspectRatioToStyle } from '../helpers'
 
 export interface HomePageProps {}
 
 export default function HomePage(_props: HomePageProps) {
+  const Router = useRouter()
+
+  useEffect(() => {
+    Router.replace(Router.route, Router.pathname, { shallow: true })
+  }, [])
+
   return (
     <LandingLayout>
       <section id="homepage">
+        <LogoHead />
+
         <div className="container flex flex-col lg:flex-row">
-          <div className="lg:w-5/12 lg:mr-12 mb-12 lg:mb-0">
-            <div className="mb-8">
-              <h1 className="text-5xl font-bold">
-                GitHub management tool to help you keep your sanity
+          <div className="mb-12 lg:mb-0">
+            <div className="flex flex-col lg:w-8/12 items-center m-auto mb-8 text-center">
+              <h1 className="text-4xl sm:text-5xl">
+                DevHub is like TweetDeck, but&nbsp;for&nbsp;GitHub
               </h1>
 
               <h2>
-                Manage notifications; Filter repository activities; Filter
-                Issues &amp; Pull Requests; Save custom searches; Enable Push
-                Notifications for only what you want.
+                Create columns with filters; Manage Notifications, Issues, Pull
+                Requests and Repository Activities; Bookmark things for later;
+                Enable Desktop Push Notifications.
               </h2>
             </div>
 
-            <DownloadButtons />
+            <DownloadButtons center className="mb-2" />
 
-            <CheckLabels>
+            <CheckLabels center className="mb-16">
               {!!(freePlan && !freePlan.trialPeriodDays) && (
                 <CheckLabel label="Free version" />
               )}
@@ -43,33 +56,28 @@ export default function HomePage(_props: HomePageProps) {
                   label={
                     freePlan && !freePlan.trialPeriodDays
                       ? 'Free trial on paid features'
-                      : 'Free trial'
+                      : `${freePlan.trialPeriodDays}-day free trial`
                   }
                 />
               )}
-              <CheckLabel label="No code access" />
+              <CheckLabel label="No code access (granular permissons)" />
             </CheckLabels>
+
+            <ResponsiveImage
+              alt="DevHub Screenshot with 4 columns: Notifications, Facebook activity, TailwindCSS activity and Filters"
+              src="/static/screenshots/dark/devhub-desktop.jpg"
+              aspectRatio={1440 / 798}
+              enableBorder
+              minHeight={500}
+            />
+
+            <p className="block sm:hidden mb-4" />
+            <small className="block sm:hidden italic text-sm text-muted-65 text-center">
+              TIP: You can scroll the images horizontally
+            </small>
           </div>
 
-          <div className="lg:w-7/12">
-            <div className="p-2 bg-less-1 rounded-lg">
-              <div
-                className="relative bg-less-2 rounded"
-                style={aspectRatioToStyle(2880 / 1596)}
-              >
-                <img
-                  alt="DevHub desktop screenshot"
-                  src="/static/screenshots/devhub-desktop-zoomed-light.jpg"
-                  className="visible-light-theme absolute inset-0 object-cover rounded"
-                />
-                <img
-                  alt="DevHub desktop screenshot"
-                  src="/static/screenshots/devhub-desktop-zoomed-dark.jpg"
-                  className="visible-dark-theme absolute inset-0 object-cover rounded"
-                />
-              </div>
-            </div>
-
+          {/* <div className="lg:w-7/12">
             <div className="block sm:hidden">
               <div className="pb-8" />
 
@@ -88,12 +96,34 @@ export default function HomePage(_props: HomePageProps) {
                 </div>
               </DeviceFrame>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="pb-16" />
 
         <UsedByCompaniesBlock />
+
+        <div className="pb-8" />
+        <section id="features">
+          <div className="pb-8" />
+
+          <FeaturesBlock />
+        </section>
+
+        {/* <div className="pb-8" />
+        <section id="pricing">
+          <div className="pb-8" />
+
+          <div className="container">
+            <h1 className="mb-12">Choose your plan</h1>
+          </div>
+
+          <PricingPlans />
+        </section> */}
+
+        <div className="pb-16" />
+
+        <GetStartedBlock />
       </section>
     </LandingLayout>
   )

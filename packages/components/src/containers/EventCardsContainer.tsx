@@ -23,7 +23,6 @@ import { octokit } from '../libs/github'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
-import { contentPadding } from '../styles/variables'
 import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 
 export interface EventCardsContainerProps

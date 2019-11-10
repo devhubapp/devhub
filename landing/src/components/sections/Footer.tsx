@@ -29,7 +29,7 @@ export default function Footer() {
         </Link>
 
         <Link href="/account">
-          <a className={twClasses.footerLink}>My account</a>
+          <a className={twClasses.footerLink}>Manage subscription</a>
         </Link>
       </div>
 

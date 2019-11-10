@@ -109,8 +109,9 @@ module.exports = {
           marginBottom: config('theme.margin.6'),
           lineHeight: config('theme.lineHeight.tight'),
           fontSize: config('theme.fontSize.4xl'),
-          fontWeight: config('theme.fontWeight.bold'),
+          fontWeight: config('theme.fontWeight.black'),
           color: config('theme.textColor.default'),
+          textAlign: 'center',
         },
         h2: {
           marginBottom: config('theme.margin.6'),

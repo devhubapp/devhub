@@ -1,7 +1,8 @@
+import { allPlansObj } from '@brunolemos/devhub-core'
 import Link from 'next/link'
 import React from 'react'
 
-import { allPlansObj } from '@brunolemos/devhub-core'
+import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'
@@ -28,11 +29,7 @@ export default function AccountPage(_props: AccountPageProps) {
     if (!(authData.appToken && authData.github && authData.github.login)) {
       return (
         <>
-          <img
-            alt="DevHub logo"
-            className="w-20 h-20 mb-8 bg-primary border-4 border-bg-less-2 rounded-full"
-            src="/static/logo.png"
-          />
+          <LogoHead />
 
           <GitHubLoginButton />
         </>

@@ -1,3 +1,4 @@
+import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { PricingPlans } from '../components/sections/pricing/PricingPlans'
 
@@ -7,11 +8,13 @@ export default function PricingPage(_props: PricingPageProps) {
   return (
     <LandingLayout>
       <section id="pricing">
-        <div className="container">
-          <h1>Pricing</h1>
+        <LogoHead />
 
-          <PricingPlans />
+        <div className="container">
+          <h1>Choose your plan</h1>
         </div>
+
+        <PricingPlans />
       </section>
     </LandingLayout>
   )

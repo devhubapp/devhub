@@ -1,5 +1,5 @@
 import React from 'react'
-import { PixelRatio, StyleProp, View } from 'react-native'
+import { PixelRatio, View } from 'react-native'
 
 import {
   getBaseUrlFromOtherUrl,

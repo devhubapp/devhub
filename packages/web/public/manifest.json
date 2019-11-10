@@ -1,7 +1,7 @@
 {
   "name": "DevHub",
   "short_name": "DevHub",
-  "description": "GitHub Management Tool",
+  "description": "TweetDeck for GitHub",
   "lang": "en-US",
   "start_url": "./?utm_source=web_app_manifest",
   "display": "standalone",

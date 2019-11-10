@@ -1,9 +1,9 @@
 import NextDocument, { Head, Main, NextScript } from 'next/document'
 import React from 'react'
 
-const shortDescriptionTitle = 'GitHub Management Tool'
+const shortDescriptionTitle = 'TweetDeck for GitHub'
 const shortDescriptionContent =
-  "Take back control of your GitHub workflow. Manage notifications, apply filters, save custom searches and don't miss anything important."
+  'Create columns with filters; Manage Notifications, Issues, Pull Requests and Repository Activities; Bookmark things for later; Enable Desktop Push Notifications.'
 const fullDescription = `${shortDescriptionTitle}. ${shortDescriptionContent}`
 const screenshot =
   'https://devhubapp.com/static/screenshots/devhub-desktop-zoomed-dark.jpg'
