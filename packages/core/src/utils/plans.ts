@@ -3,16 +3,17 @@ import * as constants from './constants'
 
 export type ActivePlanID =
   | 'free'
-  | '5db0d37ce59ab2d3c0bbd611'
-  | '5dba30bd0621102b5cd0bc44'
-  | '5dba30bf7deee78cb184291d'
+  | '5dc89f56bae8d4ae5245423e'
+  | '5db0d5fb957ac4e5ed7bbb05'
 
 export type InactivePlanID =
   | '5d4b8e85d123d1d770d93825'
   | '5d4b8e44ab1ba20b9ef4a1ba'
   | '5d4b8e4de70bd8c61c13a6a9'
   | '5db0d55e138a98f7008a0e53'
-  | '5db0d5fb957ac4e5ed7bbb05'
+  | '5db0d37ce59ab2d3c0bbd611'
+  | '5dba30bd0621102b5cd0bc44'
+  | '5dba30bf7deee78cb184291d'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -266,7 +267,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
     stripeIds: ['plan_G2y7gq9I7sd8Gc', 'plan_G3Liuh6wnA8Git'],
 
-    banner: '42% OFF',
+    banner: '18% OFF',
 
     cannonicalId: 'yearly',
     label: 'Yearly',
@@ -338,15 +339,40 @@ export const allPlansObj: Record<PlanID, Plan> = {
       enablePushNotifications: true,
     },
   },
+
+  '5dc89f56bae8d4ae5245423e': {
+    id: '5dc89f56bae8d4ae5245423e',
+
+    stripeIds: ['plan_G9jW5bWfdl4T0T', 'plan_G9jQYMzS9KkKrk'],
+
+    banner: true,
+
+    cannonicalId: 'monthly',
+    label: 'Monthly',
+    description: '',
+    amount: 699,
+    currency: 'usd',
+    interval: 'month',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
 }
 
 export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
   allPlansObj.free as Plan & { id: ActivePlanID },
-  allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dba30bd0621102b5cd0bc44'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dba30bf7deee78cb184291d'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dc89f56bae8d4ae5245423e'] as Plan & { id: ActivePlanID },
+  allPlansObj['5db0d5fb957ac4e5ed7bbb05'] as Plan & { id: ActivePlanID },
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)
