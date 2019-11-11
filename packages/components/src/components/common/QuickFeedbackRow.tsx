@@ -47,7 +47,9 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
         variables: {
           input: {
             feedback: feedbackText || '',
-            screeName: (currentOpenedModal && currentOpenedModal.name) || '',
+            location:
+              (currentOpenedModal && currentOpenedModal.name) ||
+              (appToken ? 'MAIN_SCREEN' : 'LOGIN_SCREEN'),
           },
         },
       },

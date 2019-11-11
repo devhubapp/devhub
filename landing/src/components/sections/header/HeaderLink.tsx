@@ -7,7 +7,8 @@ const twClasses = {
   headerLink:
     'header-link px-2 md:px-3 text-base font-semibold text-center border rounded-full whitespace-no-wrap overflow-hidden',
   headerLink__active: 'bg-less-2 border-bg-less-2 text-default font-extrabold',
-  headerLink__inactive: 'bg-default border-bg text-muted-65 hover:text-default',
+  headerLink__inactive:
+    'bg-transparent border-transparent text-muted-65 hover:text-default',
 }
 
 export interface HeaderLinkProps extends LinkProps {

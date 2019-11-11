@@ -45,7 +45,7 @@ export interface DatabaseUserFeedback {
   isElectron: boolean
   platformOS: string
   platformRealOS: string
-  screeName?: string
+  location?: string
 }
 
 export interface DatabaseUser {

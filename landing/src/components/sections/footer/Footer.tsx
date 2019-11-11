@@ -81,6 +81,15 @@ export default function Footer() {
 
         <a
           className={twClasses.footerLink}
+          href="https://twitter.com/messages/compose?recipient_id=1013342195087224832"
+          target="_blank"
+          rel="noopener"
+        >
+          @devhub_app
+        </a>
+
+        <a
+          className={twClasses.footerLink}
           href="https://twitter.com/brunolemos"
           target="_blank"
           rel="noopener"

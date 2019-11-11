@@ -1,4 +1,5 @@
-import Footer from '../sections/Footer'
+import FloatingFooter from '../sections/footer/FloatingFooter'
+import Footer from '../sections/footer/Footer'
 import Header from '../sections/header/Header'
 
 export interface LandingLayoutProps {
@@ -15,6 +16,7 @@ export default function LandingLayout(props: LandingLayoutProps) {
       <div className="pb-16 md:pb-32" />
 
       <Footer />
+      <FloatingFooter />
     </section>
   )
 }
