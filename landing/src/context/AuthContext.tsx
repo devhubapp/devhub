@@ -8,11 +8,7 @@ import React, {
   useState,
 } from 'react'
 
-import {
-  constants,
-  getDefaultUserPlan,
-  UserPlan,
-} from '@brunolemos/devhub-core'
+import { constants, UserPlan } from '@brunolemos/devhub-core'
 import { getDefaultDevHubHeaders } from '../helpers'
 
 export interface AuthProviderProps {
@@ -111,11 +107,12 @@ export function AuthProvider(props: AuthProviderProps) {
   }, [JSON.stringify(authData)])
 
   useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.gtag === 'undefined')
-      return
+    if (typeof gtag === 'undefined') return
 
     if (authData && authData._id) {
-      window.gtag('set', { user_id: authData && authData._id })
+      gtag('config', 'UA-52350759-6', {
+        user_id: (authData && authData._id) || undefined,
+      })
     }
   }, [authData && authData._id])
 
@@ -482,7 +479,5 @@ function saveOnCache(auth: AuthData | undefined) {
 }
 
 declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void
-  }
+  const gtag: ((...args: any[]) => void) | undefined
 }
