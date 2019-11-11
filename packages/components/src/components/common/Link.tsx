@@ -27,8 +27,9 @@ export interface LinkProps extends Partial<TouchableProps> {
   backgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   enableBackgroundHover?: boolean
   enableForegroundHover?: boolean
-  enableUnderlineHover?: boolean
   enableTextWrapper?: boolean
+  enableUnderlineHover?: boolean
+  forceOpenOutsideApp?: boolean
   hoverBackgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   hoverForegroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
   href?: string
@@ -47,8 +48,9 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
     backgroundThemeColor,
     enableBackgroundHover: _enableBackgroundHover,
     enableForegroundHover: _enableForegroundHover,
-    enableUnderlineHover: _enableUnderlineHover,
     enableTextWrapper,
+    enableUnderlineHover: _enableUnderlineHover,
+    forceOpenOutsideApp,
     hoverBackgroundThemeColor: _hoverBackgroundThemeColor,
     hoverForegroundThemeColor: _hoverForegroundThemeColor,
     href,
@@ -199,7 +201,8 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
             if (onPress) onPress(e)
 
             if (href) {
-              if (href.startsWith('http')) Browser.openURL(href)
+              if (!forceOpenOutsideApp && href.startsWith('http'))
+                Browser.openURL(href)
               else if (!href.startsWith('javascript:')) Linking.openURL(href)
             }
 

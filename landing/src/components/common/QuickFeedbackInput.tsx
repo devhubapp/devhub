@@ -150,7 +150,7 @@ export function QuickFeedbackInput(props: QuickFeedbackInputProps) {
           setFeedbackText('')
           setPlaceholder('')
         })
-      }, 2000)
+      }, 3000)
     }
   }
 

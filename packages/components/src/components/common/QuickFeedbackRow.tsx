@@ -22,7 +22,7 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
   const isMountedRef = useRef(true)
 
   const [feedbackText, setFeedbackText] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState<React.ReactNode>('')
   const [placeholder, setPlaceholder] = useState('')
 
   const appToken = useReduxState(selectors.appTokenSelector)
@@ -115,7 +115,49 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
         setMessage('Thanks for your feedback!')
 
         setTimeout(() => {
-          setMessage('Join our Slack to get a response.')
+          setMessage(
+            <View
+              style={[
+                sharedStyles.flex,
+                sharedStyles.flexWrap,
+                sharedStyles.horizontal,
+                sharedStyles.alignSelfCenter,
+                sharedStyles.justifyContentCenter,
+              ]}
+            >
+              <Link
+                analyticsLabel="send_feedback_via_twitter"
+                enableUnderlineHover
+                forceOpenOutsideApp
+                href={`https://twitter.com/messages/compose?recipient_id=1013342195087224832&text=${
+                  typeof encodeURIComponent === 'function'
+                    ? encodeURIComponent(feedbackText)
+                    : feedbackText
+                }`}
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColorMuted65',
+                }}
+              >
+                Send via Twitter
+              </Link>
+              <ThemedText color="foregroundColorMuted65">{' or '}</ThemedText>
+              <Link
+                analyticsLabel="join_slack_after_feedback"
+                enableUnderlineHover
+                href={constants.DEVHUB_LINKS.SLACK_INVITATION}
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColorMuted65',
+                }}
+              >
+                join Slack
+              </Link>
+              <ThemedText color="foregroundColorMuted65">
+                {' to get a response.'}
+              </ThemedText>
+            </View>,
+          )
 
           setTimeout(() => {
             batch(() => {
@@ -138,7 +180,7 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
           setFeedbackText('')
           setPlaceholder('')
         })
-      }, 2000)
+      }, 3000)
     }
   }
 
@@ -151,27 +193,15 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
       ]}
     >
       {message ? (
-        message.toLowerCase().includes('slack') ? (
-          <Link
-            analyticsLabel="join_slack_after_feedback"
-            enableUnderlineHover
-            href={constants.DEVHUB_LINKS.SLACK_INVITATION}
-            openOnNewTab
-            textProps={{
-              color: 'foregroundColorMuted65',
-              style: [sharedStyles.flex, sharedStyles.textCenter],
-            }}
-            style={sharedStyles.flex}
-          >
-            {message}
-          </Link>
-        ) : (
+        typeof message === 'string' ? (
           <ThemedText
             color="foregroundColorMuted65"
             style={[sharedStyles.flex, sharedStyles.textCenter]}
           >
             {message}
           </ThemedText>
+        ) : (
+          message
         )
       ) : (
         <ThemedTextInput
