@@ -38,33 +38,24 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
 
   async function trySendFeedback() {
     const response = await axios.post(
-      constants.GRAPHQL_ENDPOINT,
+      `${constants.API_BASE_URL}/feedback`,
       {
-        query: `
-              mutation($input: SendFeedbackInput) {
-                sendFeedback(input: $input)
-              }`,
-        variables: {
-          input: {
-            feedback: feedbackText || '',
-            location:
-              (currentOpenedModal && currentOpenedModal.name) ||
-              (appToken ? 'MAIN_SCREEN' : 'LOGIN_SCREEN'),
-          },
-        },
+        feedback: feedbackText || '',
+        location:
+          (currentOpenedModal && currentOpenedModal.name) ||
+          (appToken ? 'MAIN_SCREEN' : 'LOGIN_SCREEN'),
       },
       { headers: getDefaultDevHubHeaders({ appToken }) },
     )
 
     if (!isMountedRef.current) return
 
-    const { data, errors } = await response.data
+    const { data, status } = await response
 
-    if (errors && errors[0] && errors[0].message)
-      throw new Error(errors[0].message)
-
-    if (!(data && data.sendFeedback)) {
-      throw new Error('Failed to send feedback.')
+    if (status !== 200) {
+      throw new Error(
+        typeof data === 'string' ? data : 'Failed to send feedback.',
+      )
     }
   }
 
@@ -151,7 +142,7 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
                   color: 'foregroundColorMuted65',
                 }}
               >
-                join Slack
+                Slack
               </Link>
               <ThemedText color="foregroundColorMuted65">
                 {' to get a response.'}
