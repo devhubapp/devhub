@@ -141,8 +141,12 @@ export function isItemRead(item: EnhancedItem | undefined) {
   if (latestDate === item.last_unread_at) return false
 
   // workaround for notifications of unsubscribed issues
-  if ('unread' in item && item.unread === false && !item.last_unread_at)
-    return true
+  if (
+    latestDate === itemDate &&
+    'unread' in item &&
+    typeof item.unread === 'boolean'
+  )
+    return !item.unread
 
   if (latestDate === itemDate) return false
 
