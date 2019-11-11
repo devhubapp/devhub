@@ -61,6 +61,7 @@ export interface EmptyCardsProps {
   errorMessage?: string
   errorTitle?: string
   fetchNextPage: (() => void) | undefined
+  footer?: React.ReactNode
   loadState?: EnhancedLoadState
   refresh: (() => void | Promise<void>) | undefined
 }
@@ -76,6 +77,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
     errorMessage,
     errorTitle = 'Something went wrong',
     fetchNextPage,
+    footer,
     loadState: _loadStateProp,
     refresh,
   } = props
@@ -156,13 +158,17 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
   }
 
   return (
-    <FullHeightScrollView
-      style={sharedStyles.flex}
-      contentContainerStyle={sharedStyles.center}
-      pointerEvents="box-none"
-    >
-      {renderContent()}
-    </FullHeightScrollView>
+    <>
+      <FullHeightScrollView
+        style={sharedStyles.flex}
+        contentContainerStyle={sharedStyles.center}
+        pointerEvents="box-none"
+      >
+        {renderContent()}
+      </FullHeightScrollView>
+
+      {footer}
+    </>
   )
 })
 

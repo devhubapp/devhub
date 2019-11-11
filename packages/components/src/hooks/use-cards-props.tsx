@@ -378,15 +378,16 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                     )
                   }}
                 />
-
-                <Spacer height={contentPadding} />
-
-                <QuickFeedbackRow />
               </View>
             }
             errorMessage="You need a paid plan to keep using DevHub."
             errorTitle="Free trial expired"
             fetchNextPage={undefined}
+            footer={
+              <View style={sharedStyles.padding}>
+                <QuickFeedbackRow />
+              </View>
+            }
             loadState="error"
             refresh={undefined}
           />
