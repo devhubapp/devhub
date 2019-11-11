@@ -369,7 +369,7 @@ export function PricingModal(props: PricingModalProps) {
                 : userPlan && userPlan.amount > 0
                 ? 'Downgrade to free plan'
                 : 'Select another plan'
-              : 'Select a plan'}
+              : 'Continue'}
           </Button>
 
           <Spacer height={contentPadding} />
