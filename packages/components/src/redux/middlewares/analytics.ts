@@ -14,7 +14,9 @@ const strsToMatch = [
 
 export const analyticsMiddleware: Middleware = () => next => action => {
   if (action && strsToMatch.some(str => action.type.includes(str))) {
-    analytics.trackEvent('redux', 'dispatch', action.type)
+    setTimeout(() => {
+      analytics.trackEvent('redux', 'dispatch', action.type)
+    }, 0)
   }
 
   next(action)
