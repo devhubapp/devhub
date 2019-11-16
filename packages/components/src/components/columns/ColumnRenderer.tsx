@@ -16,6 +16,7 @@ import {
   isItemRead,
   isItemSaved,
   isNotificationPrivate,
+  isPlanStatusValid,
   ThemeColors,
 } from '@devhub/core'
 import React, { useCallback, useRef } from 'react'
@@ -173,7 +174,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         : undefined
       : (!(
           plan &&
-          (plan.status === 'active' || plan.status === 'trialing') &&
+          isPlanStatusValid(plan) &&
           plan.featureFlags.enablePrivateRepositories
         ) &&
           (columnType === 'activity'

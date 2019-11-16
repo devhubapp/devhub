@@ -68,7 +68,7 @@ export function getUserPlan(user: DatabaseUser): UserPlan {
   if (!plan) return defaultUserPlan
 
   if (user.plan.amount) {
-    if (user.plan.status === 'canceled') return defaultUserPlan
+    if (!isPlanStatusValid(user.plan)) return defaultUserPlan
     if (isPlanExpired(user.plan)) return defaultUserPlan
   }
 
@@ -77,6 +77,18 @@ export function getUserPlan(user: DatabaseUser): UserPlan {
     banner: plan.banner,
     featureFlags: plan.featureFlags,
   }
+}
+
+export function isPlanStatusValid(
+  plan: Pick<UserPlan, 'status'> | undefined,
+): boolean {
+  if (!plan) return false
+
+  return !!(
+    plan.status === 'active' ||
+    plan.status === 'trialing' ||
+    plan.status === 'incomplete'
+  )
 }
 
 export function isPlanExpired(

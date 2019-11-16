@@ -32,6 +32,7 @@ export interface PricingPlanBlockProps {
   isSelected?: boolean | undefined
   onSelect?: (() => void) | undefined
   plan: Plan
+  showCurrentPlanDetails: boolean
   showFeatures?: boolean
   width?: string | number
 }
@@ -44,6 +45,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     isSelected,
     onSelect,
     plan,
+    showCurrentPlanDetails,
     showFeatures,
     width = defaultPricingBlockWidth,
   } = props
@@ -90,7 +92,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   if (
     estimatedMonthlyPrice !== plan.amount &&
-    !(isMyPlan && userPlan && userPlan.cancelAt && !isPartOfAList)
+    !(isMyPlan && userPlan && userPlan.cancelAt && showCurrentPlanDetails)
   ) {
     footerText =
       footerText +
@@ -102,7 +104,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       )}`
   }
 
-  if (isMyPlan && userPlan && userPlan.cancelAt && !isPartOfAList) {
+  if (isMyPlan && userPlan && userPlan.cancelAt && showCurrentPlanDetails) {
     footerText =
       footerText +
       `${footerText ? '\n\n' : ''}${getDateSmallText(userPlan.cancelAt, {
@@ -114,7 +116,27 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
         futureSuffix: '',
         showSuffixOnFullDate: true,
       })}`
-  } else if (isMyPlan && userPlan && userPlan.trialEndAt && !isPartOfAList) {
+  } else if (
+    isMyPlan &&
+    userPlan &&
+    userPlan.status &&
+    (userPlan.status !== 'active' && userPlan.status !== 'trialing') &&
+    showCurrentPlanDetails
+  ) {
+    footerText =
+      footerText +
+      `${footerText ? '\n\n' : ''}Status: ${userPlan.status}${
+        userPlan.status === 'incomplete' ||
+        userPlan.status === 'incomplete_expired'
+          ? ' (failed to charge your card. please try again with a different one)'
+          : ''
+      }`
+  } else if (
+    isMyPlan &&
+    userPlan &&
+    userPlan.trialEndAt &&
+    showCurrentPlanDetails
+  ) {
     footerText =
       footerText +
       `${footerText ? '\n\n' : ''}${

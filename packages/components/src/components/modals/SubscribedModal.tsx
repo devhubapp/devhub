@@ -3,9 +3,11 @@ import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
+import { useReduxState } from '../../hooks/use-redux-state'
 import { Browser } from '../../libs/browser'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
+import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, normalTextSize } from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -22,10 +24,12 @@ export interface SubscribedModalProps {
 }
 
 export function SubscribedModal(props: SubscribedModalProps) {
-  const { planId, showBackButton } = props
+  const { planId: _planId, showBackButton } = props
 
   const dispatch = useDispatch()
+  const userPlan = useReduxState(selectors.currentUserPlanSelector)
 
+  const planId = _planId || (userPlan && userPlan.id)
   const plan = planId && allPlans.find(p => p.id === planId)
 
   useEffect(() => {
@@ -98,6 +102,18 @@ export function SubscribedModal(props: SubscribedModalProps) {
                   </>
                 )}
                 plan
+                {userPlan &&
+                userPlan.status &&
+                !(
+                  userPlan.status === 'active' || userPlan.status === 'trialing'
+                ) ? (
+                  <>
+                    {', '}but your subscription status is{' '}
+                    <ThemedText style={{ fontWeight: 'bold' }}>
+                      {userPlan.status}
+                    </ThemedText>
+                  </>
+                ) : null}
               </>
             ) : freePlan && !freePlan.trialPeriodDays && plan ? (
               <>
@@ -106,6 +122,18 @@ export function SubscribedModal(props: SubscribedModalProps) {
                   {`${plan.label || 'Free'}`.toLowerCase()}
                 </ThemedText>{' '}
                 plan
+                {userPlan &&
+                userPlan.status &&
+                !(
+                  userPlan.status === 'active' || userPlan.status === 'trialing'
+                ) ? (
+                  <>
+                    {', '}but your subscription status is{' '}
+                    <ThemedText style={{ fontWeight: 'bold' }}>
+                      {userPlan.status}
+                    </ThemedText>
+                  </>
+                ) : null}
               </>
             ) : (
               <>
@@ -114,7 +142,28 @@ export function SubscribedModal(props: SubscribedModalProps) {
               </>
             )}
           </ThemedText>
+
           <Spacer height={contentPadding} />
+
+          {userPlan &&
+          (userPlan.status === 'incomplete' ||
+            userPlan.status === 'incomplete_expired') ? (
+            <>
+              <ThemedText
+                color="foregroundColor"
+                style={{
+                  lineHeight: normalTextSize + 4,
+                  fontSize: normalTextSize,
+                  textAlign: 'center',
+                }}
+              >
+                Credit card charge failed. Please try again with another card.
+              </ThemedText>
+
+              <Spacer height={contentPadding} />
+            </>
+          ) : null}
+
           <ThemedText
             color="foregroundColor"
             style={{

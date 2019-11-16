@@ -18,6 +18,7 @@ import {
   UserPlan,
 } from '../../types'
 import { constants } from '../../utils'
+import { isPlanStatusValid } from '../plans'
 import { capitalize, isNotificationPrivate } from '../shared'
 import {
   getCommitIconAndColor,
@@ -529,7 +530,7 @@ export function getGitHubNotificationSubItems(
     !isPrivate ||
     !!(
       plan &&
-      (plan.status === 'active' || plan.status === 'trialing') &&
+      isPlanStatusValid(plan) &&
       plan.featureFlags.enablePrivateRepositories
     )
 

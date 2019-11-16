@@ -1,4 +1,4 @@
-import { allPlans, constants, freePlan } from '@devhub/core'
+import { allPlans, constants, freePlan, isPlanStatusValid } from '@devhub/core'
 import React from 'react'
 import { View } from 'react-native'
 
@@ -87,7 +87,11 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                     (userPlan &&
                       userPlan.status === 'active' &&
                       userPlan.cancelAtPeriodEnd &&
-                      userPlan.cancelAt)
+                      userPlan.cancelAt) ||
+                    (userPlan &&
+                      userPlan.status &&
+                      (!isPlanStatusValid(userPlan) ||
+                        userPlan.status === 'incomplete'))
                   ) && (
                     <>
                       <Spacer width={contentPadding / 2} />

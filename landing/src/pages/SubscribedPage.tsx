@@ -24,13 +24,32 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
       <section id="subscribed" className="container">
         <div className="flex flex-col items-center m-auto text-center">
           <h1 className="mb-4 text-2xl sm:text-4xl whitespace-no-wrap">
-            You are all set 🎉
+            {authData.plan.status === 'incomplete' ||
+            authData.plan.status === 'incomplete_expired'
+              ? 'Something went wrong'
+              : 'You are all set 🎉'}
           </h1>
 
-          <h2 className="mb-4 text-xl sm:text-2xl">
-            You've successfully subscribed to the{' '}
-            <strong>{planInfo.label}</strong> plan
-          </h2>
+          {authData.plan.status === 'active' ||
+          authData.plan.status === 'trialing' ? (
+            <h2 className="mb-4 text-xl sm:text-2xl">
+              You've successfully subscribed to the{' '}
+              <strong>{planInfo.label}</strong> plan
+            </h2>
+          ) : (
+            <h2 className="mb-4 text-xl sm:text-2xl">
+              You've subscribed to the <strong>{planInfo.label}</strong> plan,
+              but your subscription status is{' '}
+              <strong>{authData.plan.status}</strong>
+            </h2>
+          )}
+
+          {authData.plan.status === 'incomplete' ||
+          authData.plan.status === 'incomplete_expired' ? (
+            <p className="mb-8 text-default">
+              Credit card charge failed. Please try again with another card.
+            </p>
+          ) : null}
 
           <p className="mb-8 text-default">
             You can now open DevHub or download it below. <br />

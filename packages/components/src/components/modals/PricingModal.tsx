@@ -72,6 +72,14 @@ export function PricingModal(props: PricingModalProps) {
     plansToShow.find(p => p.id === userPlan.id)
   )
 
+  const showUserPlanAtTheTop =
+    userPlan &&
+    ((userPlanDetails &&
+      (userPlanDetails.amount ||
+        (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
+      !userPlanStillExist) ||
+      userPlan.cancelAt)
+
   const [selectedPlanId, setSelectedPlanId] = useState<PlanID | undefined>(
     () =>
       (initialSelectedPlanId &&
@@ -152,6 +160,7 @@ export function PricingModal(props: PricingModalProps) {
             scrollToPlan(plan.id)
           }}
           plan={plan}
+          showCurrentPlanDetails={!showUserPlanAtTheTop}
           showFeatures
         />
       ) : (
@@ -166,10 +175,16 @@ export function PricingModal(props: PricingModalProps) {
             scrollToPlan(plan.id)
           }}
           plan={plan}
+          showCurrentPlanDetails={!showUserPlanAtTheTop}
           showFeatures
         />
       ),
-    [selectedPlanId, highlightFeature, userPlan && userPlan.amount],
+    [
+      selectedPlanId,
+      highlightFeature,
+      userPlan && userPlan.amount,
+      showUserPlanAtTheTop,
+    ],
   )
 
   const CancelOrReactivateSubscriptionButton =
@@ -262,14 +277,6 @@ export function PricingModal(props: PricingModalProps) {
       </Button>
     )
 
-  const showUserPlanAtTheTop =
-    userPlan &&
-    ((userPlanDetails &&
-      (userPlanDetails.amount ||
-        (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
-      !userPlanStillExist) ||
-      userPlan.cancelAt)
-
   return (
     <ModalColumn
       name="PRICING"
@@ -287,6 +294,7 @@ export function PricingModal(props: PricingModalProps) {
                 banner={false}
                 isPartOfAList={false}
                 plan={userPlanDetails!}
+                showCurrentPlanDetails
                 width="100%"
               />
             </View>

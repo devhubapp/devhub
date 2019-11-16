@@ -19,6 +19,7 @@ import {
   filterRecordHasAnyForcedValue,
   itemPassesFilterRecord,
 } from '../filters'
+import { isPlanStatusValid } from '../plans'
 import { getSearchQueryTerms, isIssueOrPullRequestPrivate } from '../shared'
 import {
   getIssueIconAndColor,
@@ -545,7 +546,7 @@ export function getGitHubIssueOrPullRequestSubItems(
     !isPrivate ||
     !!(
       plan &&
-      (plan.status === 'active' || plan.status === 'trialing') &&
+      isPlanStatusValid(plan) &&
       plan.featureFlags.enablePrivateRepositories
     )
 

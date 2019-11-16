@@ -82,6 +82,9 @@ export default function AccountPage(_props: AccountPageProps) {
                     ? ` (cancellation: ${new Date(
                         authData.plan.cancelAt,
                       ).toDateString()})`
+                    : authData.plan.status === 'incomplete' ||
+                      authData.plan.status === 'incomplete_expired'
+                    ? ' (failed to charge your card. please try with a different one)'
                     : ''
                 }`}
           </h2>

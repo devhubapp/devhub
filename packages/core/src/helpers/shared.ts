@@ -33,6 +33,7 @@ import {
   sortIssuesOrPullRequests,
   sortNotifications,
 } from './github'
+import { isPlanStatusValid } from './plans'
 
 export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, _.toUpper)
@@ -1133,7 +1134,7 @@ export function getColumnOptionMetadata({
     },
     enableDesktopPushNotifications: {
       hasAccess: !!(plan &&
-      (plan.status === 'active' || plan.status === 'trialing') &&
+      isPlanStatusValid(plan) &&
       plan.featureFlags &&
       plan.featureFlags.enablePushNotifications
         ? plan.status === 'trialing' && !plan.amount

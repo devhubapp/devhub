@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CardElement, injectStripe } from 'react-stripe-elements'
 
-import { constants, Plan } from '@brunolemos/devhub-core'
+import { constants, Plan, UserPlan } from '@brunolemos/devhub-core'
 import { useAuth } from '../../../context/AuthContext'
 import { useTheme } from '../../../context/ThemeContext'
 import {
@@ -147,7 +147,10 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           return false
         }
 
-        const { data, errors } = await response.json()
+        const { data, errors } = (await response.json()) as {
+          data: { subscribeToPlan: UserPlan | null } | null
+          errors: any[] | null
+        }
 
         if (!(data && data.subscribeToPlan) || (errors && errors[0])) {
           throw new Error(
@@ -163,12 +166,18 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
         mergeAuthData({ plan: data.subscribeToPlan })
 
+        if (data.subscribeToPlan.status === 'incomplete') {
+          throw new Error('Please try a different credit card.')
+        }
+
         if (onSuccess) onSuccess()
         return true
       } catch (error) {
         console.error(error)
         setFormState({
-          error: `Failed to execute payment. ${error.message}`,
+          error:
+            `Failed to execute payment. ${error.message}` +
+            "\n\nAlso, please note we currently don't support Amex, Elo or Debit cards.",
           isSubmiting: false,
         })
         return false

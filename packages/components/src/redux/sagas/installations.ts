@@ -12,7 +12,11 @@ import {
 } from 'redux-saga/effects'
 import url from 'url'
 
-import { Installation, refreshUserInstallations } from '@devhub/core'
+import {
+  Installation,
+  isPlanStatusValid,
+  refreshUserInstallations,
+} from '@devhub/core'
 import { bugsnag } from '../../libs/bugsnag'
 import { Linking } from '../../libs/linking'
 import { getDefaultDevHubHeaders } from '../../utils/api'
@@ -72,7 +76,7 @@ function* init() {
     if (
       !(
         userPlan &&
-        (userPlan.status === 'active' || userPlan.status === 'trialing') &&
+        isPlanStatusValid(userPlan) &&
         userPlan.featureFlags.enablePrivateRepositories
       ) ||
       (lastFetchedAt &&

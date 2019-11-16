@@ -3,6 +3,7 @@ import {
   constants,
   formatPriceAndInterval,
   freePlan,
+  UserPlan,
 } from '@devhub/core'
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
@@ -173,7 +174,10 @@ const SubscribeFormWithStripe = React.memo(
       }
 
       try {
-        const response = await axios.post(
+        const response = await axios.post<{
+          data: { subscribeToPlan: UserPlan | null } | null
+          errors: any[] | null
+        }>(
           constants.GRAPHQL_ENDPOINT,
           {
             query: `
@@ -253,12 +257,18 @@ const SubscribeFormWithStripe = React.memo(
 
         dispatch(actions.updateUserData({ plan: data.subscribeToPlan }))
 
+        if (data.subscribeToPlan.status === 'incomplete') {
+          throw new Error('Please try a different credit card.')
+        }
+
         if (onSubscribe) onSubscribe(plan.id)
         return true
       } catch (error) {
         console.error(error)
         setFormState({
-          error: `Failed to execute payment. ${error.message}`,
+          error:
+            `Failed to execute payment. ${error.message}` +
+            "\n\nAlso, please note we currently don't support Amex, Elo or Debit cards.",
           isSubmiting: false,
         })
         return false
