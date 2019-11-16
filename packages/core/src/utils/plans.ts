@@ -379,8 +379,11 @@ export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)
 
 export const cheapestPlanWithNotifications = activePlans
   .slice()
-  .sort((a, b) => a.amount - b.amount)
-  .find(p => p.featureFlags.enablePushNotifications)
+  .filter(
+    plan =>
+      !!(plan && plan.amount > 0 && plan.featureFlags.enablePushNotifications),
+  )
+  .sort((a, b) => a.amount - b.amount)[0]
 
 /*
 (function generateNewObjectId() {

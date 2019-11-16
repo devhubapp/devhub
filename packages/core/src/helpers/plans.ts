@@ -136,6 +136,10 @@ export function formatPriceAndInterval(
   const priceLabel = value.endsWith('.00') ? value.slice(0, -3) : value
 
   return `${priceLabel}${
-    intervalCount > 1 ? ` every ${intervalCount} ${interval}s` : `/${interval}`
+    interval
+      ? intervalCount > 1
+        ? ` every ${intervalCount} ${interval}s`
+        : `/${interval}`
+      : ''
   }`
 }
