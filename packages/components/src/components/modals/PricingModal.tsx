@@ -316,7 +316,9 @@ export function PricingModal(props: PricingModalProps) {
         <SubHeader
           title={
             userPlanDetails && userPlanDetails.amount
-              ? 'CHANGE PLAN'
+              ? userPlanDetails.id === selectedPlanId
+                ? 'CHANGE CREDIT CARD'
+                : 'CHANGE PLAN'
               : 'SELECT A PLAN'
           }
         />
@@ -347,9 +349,7 @@ export function PricingModal(props: PricingModalProps) {
             analyticsCategory="subscribe"
             analyticsAction="subscribe"
             analyticsLabel="subscribe"
-            disabled={
-              !selectedPlan || selectedPlan.id === (userPlan && userPlan.id)
-            }
+            disabled={!selectedPlan}
             onPress={() => {
               if (!(selectedPlan && selectedPlan.id)) return
 
@@ -372,7 +372,7 @@ export function PricingModal(props: PricingModalProps) {
             {selectedPlan
               ? selectedPlan.amount > 0
                 ? userPlan && userPlan.id === selectedPlan.id
-                  ? 'You are on this plan'
+                  ? 'Change credit card'
                   : 'Continue'
                 : userPlan && userPlan.amount > 0
                 ? 'Downgrade to free plan'

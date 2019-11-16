@@ -480,13 +480,17 @@ const SubscribeFormWithStripe = React.memo(
           >
             {plan
               ? plan.amount > 0
-                ? `${
-                    userPlan && userPlan.amount && userPlan.amount < plan.amount
-                      ? 'Upgrade to'
-                      : userPlan && userPlan.amount > plan.amount
-                      ? 'Downgrade to'
-                      : 'Unlock for'
-                  } ${formatPriceAndInterval(plan.amount, plan)}`
+                ? userPlan && userPlan.id === plan.id
+                  ? 'Change credit card'
+                  : `${
+                      userPlan &&
+                      userPlan.amount &&
+                      userPlan.amount < plan.amount
+                        ? 'Upgrade to'
+                        : userPlan && userPlan.amount > plan.amount
+                        ? 'Downgrade to'
+                        : 'Unlock for'
+                    } ${formatPriceAndInterval(plan.amount, plan)}`
                 : userPlan && userPlan.amount > 0
                 ? 'Confirm downgrade to free plan'
                 : 'Subscribe'

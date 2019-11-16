@@ -75,12 +75,14 @@ export function SubscribeModal(props: SubscribeModalProps) {
               : 'Cancel subscription'
             : plan.amount < userPlan.amount
             ? 'Downgrade plan'
+            : userPlan.id === plan.id
+            ? 'Change credit card'
             : 'Change plan'
           : 'Subscribe'
       }
     >
       <>
-        {!!(plan && plan.amount) && (
+        {!!(plan && plan.amount && !(userPlan && userPlan.id === plan.id)) && (
           <>
             <SubHeader title="Review your choice" />
 
