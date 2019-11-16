@@ -36,14 +36,12 @@ import { ColumnLoadingIndicator } from '../components/columns/ColumnLoadingIndic
 import { Button } from '../components/common/Button'
 import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
 import { RefreshControl } from '../components/common/RefreshControl'
-import { Spacer } from '../components/common/Spacer'
 import { useAppLayout } from '../components/context/LayoutContext'
 import { OneListProps } from '../libs/one-list'
 import { useSafeArea } from '../libs/safe-area-view'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
-import { contentPadding } from '../styles/variables'
 import { useColumn } from './use-column'
 import { useReduxState } from './use-redux-state'
 
@@ -188,7 +186,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       const item = getItemByNodeIdOrId(nodeIdOrId)
       if (!item) return 0
 
-      const itemCardProps = getCardPropsForItem(type, item, {
+      const itemCardProps = getCardPropsForItem(type, columnId || '', item, {
         ownerIsKnown: getOwnerIsKnownByItemOrNodeIdOrId(item),
         plan,
         repoIsKnown,
@@ -198,6 +196,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       return getCardSizeForProps(itemCardProps)
     },
     [
+      columnId,
       getCardSizeForProps,
       getOwnerIsKnownByItemOrNodeIdOrId,
       plan,

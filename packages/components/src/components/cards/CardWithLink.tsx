@@ -61,7 +61,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
       return {}
     }
 
-    const _cardProps = getCardPropsForItem(type, item, {
+    const _cardProps = getCardPropsForItem(type, columnId, item, {
       ownerIsKnown,
       plan,
       repoIsKnown,
@@ -76,7 +76,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
         />
       ),
     }
-  }, [item, ownerIsKnown, plan, repoIsKnown])
+  }, [columnId, item, ownerIsKnown, plan, repoIsKnown])
 
   const isReadRef = useDynamicRef(!!(cardProps && cardProps.isRead))
 

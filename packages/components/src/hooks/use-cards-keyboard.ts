@@ -254,7 +254,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
           columnType: type,
           columnId,
           itemNodeIdOrId: selectedItemNodeIdOrId,
-          link: getCardPropsForItem(type, selectedItem, {
+          link: getCardPropsForItem(type, columnId, selectedItem, {
             ownerIsKnown: getOwnerIsKnownByItemOrNodeIdOrId(selectedItem),
             plan,
             repoIsKnown,

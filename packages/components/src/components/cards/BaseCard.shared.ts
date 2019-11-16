@@ -1092,18 +1092,46 @@ function _getCardPropsForItem(
   }
 }
 
-const _memoizedGetCardPropsForItem = memoizeMultipleArguments(
-  (
+const _memoizedGetCardPropsForItemFnByColumnId = memoizeMultipleArguments(
+  (_columnId: string) => (
     type: ColumnSubscription['type'],
     item: EnhancedItem,
     ownerIsKnown: boolean,
     plan: UserPlan | null | undefined,
     repoIsKnown: boolean,
-  ) => _getCardPropsForItem(type, item, { ownerIsKnown, plan, repoIsKnown }),
+  ) =>
+    _getCardPropsForItem(type, item, {
+      ownerIsKnown,
+      plan,
+      repoIsKnown,
+    }),
+  undefined,
+  10,
+)
+
+const _memoizedGetCardPropsForItem = memoizeMultipleArguments(
+  (
+    type: ColumnSubscription['type'],
+    columnId: string,
+    item: EnhancedItem,
+    ownerIsKnown: boolean,
+    plan: UserPlan | null | undefined,
+    repoIsKnown: boolean,
+  ) =>
+    _memoizedGetCardPropsForItemFnByColumnId(columnId)(
+      type,
+      item,
+      ownerIsKnown,
+      plan,
+      repoIsKnown,
+    ),
+  undefined,
+  200,
 )
 
 export function getCardPropsForItem(
   type: ColumnSubscription['type'],
+  columnId: string,
   item: EnhancedItem,
   {
     ownerIsKnown,
@@ -1117,6 +1145,7 @@ export function getCardPropsForItem(
 ): BaseCardProps {
   const props = _memoizedGetCardPropsForItem(
     type,
+    columnId,
     item,
     ownerIsKnown,
     plan,
@@ -1177,7 +1206,7 @@ export function getCardPushNotificationItem(
     repoIsKnown: boolean
   },
 ): CardPushNotification {
-  const cardProps = getCardPropsForItem(column.type, item, {
+  const cardProps = getCardPropsForItem(column.type, column.id, item, {
     ownerIsKnown,
     plan,
     repoIsKnown,
