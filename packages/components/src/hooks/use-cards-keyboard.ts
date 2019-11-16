@@ -135,10 +135,10 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
       emitter.emit('FOCUS_ON_COLUMN_ITEM', {
         columnId,
         itemNodeIdOrId: firstItemNodeIdOrId || null,
-        scrollTo: true,
+        scrollTo: false,
       })
 
-      if (!firstItemNodeIdOrId && listRef.current) {
+      if (listRef.current) {
         listRef.current.scrollToStart()
       }
     },
