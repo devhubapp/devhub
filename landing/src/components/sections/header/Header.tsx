@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import Link from 'next/link'
 
+import { ThemeSwitcher } from '../../common/ThemeSwitcher'
 import HeaderLink from './HeaderLink'
 
 const twClasses = {
@@ -91,9 +92,9 @@ export default function Header(props: HeaderProps) {
               Download
             </HeaderLink>
 
-            {/* <span className="pr-2" />
+            <span className="pr-2" />
 
-        <ThemeSwitcher /> */}
+            <ThemeSwitcher />
           </div>
         </div>
       </header>
