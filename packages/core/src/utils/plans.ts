@@ -3,17 +3,18 @@ import * as constants from './constants'
 
 export type ActivePlanID =
   | 'free'
-  | '5dc89f56bae8d4ae5245423e'
-  | '5db0d5fb957ac4e5ed7bbb05'
+  | '5db0d37ce59ab2d3c0bbd611'
+  | '5dd44e11b2726bb02d540b5e'
 
 export type InactivePlanID =
   | '5d4b8e85d123d1d770d93825'
   | '5d4b8e44ab1ba20b9ef4a1ba'
   | '5d4b8e4de70bd8c61c13a6a9'
   | '5db0d55e138a98f7008a0e53'
-  | '5db0d37ce59ab2d3c0bbd611'
   | '5dba30bd0621102b5cd0bc44'
   | '5dba30bf7deee78cb184291d'
+  | '5dc89f56bae8d4ae5245423e'
+  | '5db0d5fb957ac4e5ed7bbb05'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -365,14 +366,40 @@ export const allPlansObj: Record<PlanID, Plan> = {
       enablePushNotifications: true,
     },
   },
+
+  '5dd44e11b2726bb02d540b5e': {
+    id: '5dd44e11b2726bb02d540b5e',
+
+    stripeIds: ['plan_GD3I71EXD50V2t', 'plan_GD3FmlLdmL4M9E'],
+
+    banner: '25% OFF',
+
+    cannonicalId: 'yearly',
+    label: 'Yearly',
+    description: '',
+    amount: 9000,
+    currency: 'usd',
+    interval: 'year',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
 }
 
 export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
   allPlansObj.free as Plan & { id: ActivePlanID },
-  allPlansObj['5dc89f56bae8d4ae5245423e'] as Plan & { id: ActivePlanID },
-  allPlansObj['5db0d5fb957ac4e5ed7bbb05'] as Plan & { id: ActivePlanID },
+  allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd44e11b2726bb02d540b5e'] as Plan & { id: ActivePlanID },
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)
