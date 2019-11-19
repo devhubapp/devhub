@@ -132,11 +132,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           <div className="pb-6" />
 
           {isMyPlan ? (
-            <Button type="neutral" href="/account">
+            <Button type="primary" href="/account">
               {'Manage'}
             </Button>
           ) : (
-            <Button type="neutral" href={buttonLink}>
+            <Button type="primary" href={buttonLink}>
               {buttonLabel || 'Get started'}
             </Button>
           )}
