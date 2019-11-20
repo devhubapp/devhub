@@ -1224,7 +1224,8 @@ export function fixDateToISO(
   let timestamp: number | null = null
   if (_date instanceof Date) timestamp = _date.getTime()
   if (typeof _date === 'number') timestamp = _date
-  if (timestamp && timestamp.toString().length <= 10) timestamp *= 1000
+  if (timestamp && timestamp.toString().length <= 10)
+    timestamp = timestamp * 1000 + new Date().getTimezoneOffset() * 60 * 1000
 
   if (!(timestamp && timestamp.toString().length >= 13)) return undefined
 

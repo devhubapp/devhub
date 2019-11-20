@@ -45,13 +45,18 @@ export function getDefaultUserPlan(
     id: (defaultPlan && defaultPlan.id) || ('free' as any),
     interval: (defaultPlan && defaultPlan.interval) || 'month',
     intervalCount: (defaultPlan && defaultPlan.intervalCount) || 1,
+    label: (defaultPlan && defaultPlan.label) || 'Free',
+    last4: undefined,
+    quantity: 1,
     source: 'none',
     startAt: _trialStartAt,
     status: defaultPlan && defaultPlan.trialPeriodDays ? 'trialing' : 'active',
     trialEndAt: _trialEndAt,
     trialPeriodDays: (defaultPlan && defaultPlan.trialPeriodDays) || 0,
     trialStartAt: _trialEndAt ? _trialStartAt : undefined,
+    type: 'individual',
     updatedAt: _trialStartAt,
+    users: [],
   }
 
   return userPlan
@@ -74,8 +79,14 @@ export function getUserPlan(user: DatabaseUser): UserPlan {
 
   return {
     ...user.plan,
+    type: user.plan.type || 'individual',
     banner: plan.banner,
     featureFlags: plan.featureFlags,
+    label: user.plan.label || plan.label,
+    last4:
+      user.plan.last4 ||
+      (user.plan.source === 'stripe' && user.stripe && user.stripe.last4) ||
+      undefined,
   }
 }
 
@@ -127,20 +138,33 @@ export function formatPriceAndInterval(
     currency,
     interval,
     intervalCount,
-    locale = 'en-US',
+    transformUsage,
+    type,
   }: {
     currency: string
     interval: Plan['interval']
     intervalCount: Plan['intervalCount']
-    locale?: string
+    transformUsage?: { divideBy: number; round?: 'up' | 'down' }
+    type?: Plan['type']
   },
+  { locale = 'en-US', quantity }: { locale?: string; quantity?: number } = {},
 ) {
   const formatter = new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency || 'usd',
   })
 
-  const value = formatter.format(valueInCents / 100)
+  const _roundedUnits =
+    quantity && quantity > 1
+      ? transformUsage && transformUsage.divideBy > 1
+        ? transformUsage.round === 'down'
+          ? Math.floor(quantity / transformUsage.divideBy)
+          : Math.ceil(quantity / transformUsage.divideBy)
+        : quantity
+      : 1
+  const _valueInCents = valueInCents * _roundedUnits
+
+  const value = formatter.format(_valueInCents / 100)
   const priceLabel = value.endsWith('.00') ? value.slice(0, -3) : value
 
   return `${priceLabel}${
@@ -148,6 +172,14 @@ export function formatPriceAndInterval(
       ? intervalCount > 1
         ? ` every ${intervalCount} ${interval}s`
         : `/${interval}`
+      : ''
+  }${
+    quantity && quantity >= 1
+      ? ''
+      : transformUsage && transformUsage.divideBy > 1
+      ? ` every ${transformUsage.divideBy} users`
+      : type === 'team'
+      ? ' per user'
       : ''
   }`
 }

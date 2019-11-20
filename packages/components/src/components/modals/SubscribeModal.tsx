@@ -76,7 +76,9 @@ export function SubscribeModal(props: SubscribeModalProps) {
             : plan.amount < userPlan.amount
             ? 'Downgrade plan'
             : userPlan.id === plan.id
-            ? 'Change credit card'
+            ? userPlan.type === 'team'
+              ? 'Update plan'
+              : 'Change credit card'
             : 'Change plan'
           : 'Subscribe'
       }

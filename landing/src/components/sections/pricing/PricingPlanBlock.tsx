@@ -1,9 +1,14 @@
+import {
+  activePlans,
+  formatPrice,
+  formatPriceAndInterval,
+  Plan,
+} from '@brunolemos/devhub-core'
 import classNames from 'classnames'
+import qs from 'qs'
 import React from 'react'
 
-import { activePlans, Plan } from '@brunolemos/devhub-core'
 import { useAuth } from '../../../context/AuthContext'
-import { formatPrice, formatPriceAndInterval } from '../../../helpers'
 import Button from '../../common/buttons/Button'
 import CheckLabel from '../../common/CheckLabel'
 
@@ -37,7 +42,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       ? plan.amount * 4
       : plan.interval === 'year'
       ? plan.amount / 12
-      : plan.amount) / (plan.intervalCount || 1)
+      : plan.amount) /
+    (plan.intervalCount || 1) /
+    (plan.transformUsage && plan.transformUsage.divideBy > 1
+      ? plan.transformUsage.divideBy
+      : 1)
 
   const _priceLabel = formatPrice(estimatedMonthlyPrice, plan)
   const _cents = estimatedMonthlyPrice % 100
@@ -49,6 +58,23 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     _cents && _priceLabel.endsWith(_cents.toString())
       ? _priceLabel.substr(-3)
       : ''
+
+  let footerText = ''
+
+  if (!plan.amount && plan.trialPeriodDays) {
+    footerText = footerText + `Free for ${plan.trialPeriodDays} days`
+  }
+
+  if (estimatedMonthlyPrice !== plan.amount) {
+    footerText =
+      footerText +
+      `*Billed ${plan.amount % 100 > 50 ? '~' : ''}${formatPriceAndInterval(
+        plan.amount % 100 > 50
+          ? plan.amount + (100 - (plan.amount % 100))
+          : plan.amount,
+        plan,
+      )}`
+  }
 
   return (
     <section className="pricing-plan flex flex-col flex-shrink-0 w-64">
@@ -92,16 +118,25 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
                 <small>
                   <small>
                     <small>
-                      <small>{priceLabelCents}</small>
+                      <small className="text-muted-65">{priceLabelCents}</small>
                     </small>
                   </small>
                 </small>
               </small>
             )}
           </div>
-          <div className="text-sm text-muted-65">{`/month${
-            estimatedMonthlyPrice !== plan.amount ? '*' : ''
-          }`}</div>
+          <div className="text-sm text-muted-65">
+            &nbsp;
+            {`${
+              plan.type === 'team' ||
+              (plan.transformUsage && plan.transformUsage.divideBy > 1)
+                ? '/user'
+                : ''
+            }${plan.interval ? '/month' : ''}${
+              estimatedMonthlyPrice !== plan.amount ? '*' : ''
+            }`}
+            &nbsp;
+          </div>
           {/* {plan.interval ? (
             <div className="text-sm text-muted-65">{`/${
               plan.intervalCount > 1 ? `${plan.intervalCount}-` : ''
@@ -114,27 +149,28 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
           <div className="mb-2 text-sm text-muted-65 italic">
             &nbsp;
-            {estimatedMonthlyPrice !== plan.amount
-              ? `*Billed ${
-                  plan.amount % 100 > 50 ? '~' : ''
-                }${formatPriceAndInterval(
-                  plan.amount % 100 > 50
-                    ? plan.amount + (100 - (plan.amount % 100))
-                    : plan.amount,
-                  plan,
-                )}`
-              : !plan.amount && plan.trialPeriodDays
-              ? `Free for ${plan.trialPeriodDays} days`
-              : ''}
+            {footerText}
             &nbsp;
           </div>
 
           <div className="pb-6" />
 
           {isMyPlan ? (
-            <Button type="primary" href="/account">
-              {'Manage'}
-            </Button>
+            plan.type === 'team' ? (
+              <Button
+                type="primary"
+                href={`/subscribe${qs.stringify(
+                  { plan: userPlan && userPlan.id },
+                  { addQueryPrefix: true },
+                )}`}
+              >
+                Update
+              </Button>
+            ) : (
+              <Button type="primary" href="/account">
+                Manage
+              </Button>
+            )
           ) : (
             <Button type="primary" href={buttonLink}>
               {buttonLabel || 'Get started'}

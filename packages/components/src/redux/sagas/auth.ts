@@ -159,6 +159,7 @@ function* onLoginRequest(
               plan {
                 id
                 source
+                type
 
                 banner
 
@@ -167,6 +168,12 @@ function* onLoginRequest(
                 trialPeriodDays
                 interval
                 intervalCount
+                label
+                transformUsage {
+                  divideBy
+                  round
+                }
+                quantity
 
                 status
 
@@ -180,7 +187,9 @@ function* onLoginRequest(
                 currentPeriodStartAt
                 currentPeriodEndAt
 
+                last4
                 reason
+                users
 
                 featureFlags {
                   columnsLimit

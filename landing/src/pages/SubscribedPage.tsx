@@ -1,6 +1,11 @@
-import { allPlansObj } from '@brunolemos/devhub-core'
+import {
+  activePaidPlans,
+  allPlansObj,
+  isPlanStatusValid,
+} from '@brunolemos/devhub-core'
 import Link from 'next/link'
-import React from 'react'
+import qs from 'qs'
+import React, { Fragment } from 'react'
 
 import Button from '../components/common/buttons/Button'
 import { LogoHead } from '../components/common/LogoHead'
@@ -35,11 +40,17 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
             <h2 className="mb-4 text-xl sm:text-2xl">
               You've successfully subscribed to the{' '}
               <strong>{planInfo.label}</strong> plan
+              {authData.plan.quantity && authData.plan.quantity > 1
+                ? ` (${authData.plan.quantity} seats)`
+                : ''}
             </h2>
           ) : (
             <h2 className="mb-4 text-xl sm:text-2xl">
-              You've subscribed to the <strong>{planInfo.label}</strong> plan,
-              but your subscription status is{' '}
+              You've subscribed to the <strong>{planInfo.label}</strong> plan
+              {authData.plan.quantity && authData.plan.quantity > 1
+                ? ` (${authData.plan.quantity} seats)`
+                : ''}
+              , but your subscription status is{' '}
               <strong>{authData.plan.status}</strong>
             </h2>
           )}
@@ -51,27 +62,120 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
             </p>
           ) : null}
 
-          <p className="mb-8 text-default">
-            You can now open DevHub or download it below. <br />
-            What about sharing the news with your friends? 🙌
-          </p>
+          {isPlanStatusValid(authData.plan) && (
+            <>
+              <p className="mb-8 text-default">
+                {authData.plan.type === 'team' ? (
+                  authData.plan.users && authData.plan.users.length ? (
+                    <>
+                      <div className="mb-2">
+                        These people can now use DevHub:{' '}
+                        {authData.plan.users.map((username, index) => (
+                          <Fragment key={username}>
+                            {index > 0 && ', '}
+                            <a
+                              className="font-bold"
+                              href={`https://github.com/${username}`}
+                              target="_blank"
+                            >
+                              {username}
+                            </a>
+                          </Fragment>
+                        ))}{' '}
+                        (
+                        <Link
+                          href={`/subscribe${qs.stringify(
+                            {
+                              action: 'update_seats',
+                              plan:
+                                planInfo && planInfo.id
+                                  ? activePaidPlans.find(
+                                      _p => _p.id === planInfo.id,
+                                    )
+                                    ? planInfo.cannonicalId
+                                    : 'current'
+                                  : undefined,
+                            },
+                            { addQueryPrefix: true },
+                          )}`}
+                        >
+                          <a className="text-default">edit</a>
+                        </Link>
+                        )
+                      </div>
 
-          <div className="flex flex-row">
-            <Button
-              type="primary"
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                "I've just bought @devhub_app and it's awesome! https://devhubapp.com",
-              )}`}
-              target="_blank"
-              className="mb-2 mr-2"
-            >
-              Tweet about it
-            </Button>
+                      {!!authData.plan.users.length && (
+                        <div className="flex flex-row items-center justify-center">
+                          {authData.plan.users.map(username => (
+                            <>
+                              <a
+                                href={`https://github.com/${username}`}
+                                target="_blank"
+                              >
+                                <img
+                                  alt=""
+                                  className="w-6 h-6 m-1 bg-less-1 rounded-full"
+                                  src={`https://github.com/${username}.png`}
+                                  title={`@${username}`}
+                                />
+                              </a>
+                            </>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      href={`/subscribe${qs.stringify(
+                        {
+                          action: 'update_seats',
+                          plan:
+                            planInfo && planInfo.id
+                              ? activePaidPlans.find(
+                                  _p => _p.id === planInfo.id,
+                                )
+                                ? planInfo.cannonicalId
+                                : 'current'
+                              : undefined,
+                        },
+                        { addQueryPrefix: true },
+                      )}`}
+                    >
+                      <a className="text-default">
+                        Click to manage who can use this subscription
+                      </a>
+                    </Link>
+                  )
+                ) : (
+                  <>
+                    You can now open DevHub or download it below. <br />
+                    What about sharing the news with your friends? 🙌
+                  </>
+                )}
+              </p>
 
-            <Button type="neutral" href="/download" className="mb-2">
-              Download the app
-            </Button>
-          </div>
+              <div className="flex flex-row">
+                <Button
+                  type="primary"
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `I've just bought @devhub_app${
+                      authData.plan.type === 'team'
+                        ? ' for my team!'
+                        : " and it's awesome!"
+                    } https://devhubapp.com`,
+                  )}`}
+                  target="_blank"
+                  className="mb-2 mr-2"
+                >
+                  Tweet about it
+                </Button>
+
+                <Button type="neutral" href="/download" className="mb-2">
+                  Download the app
+                </Button>
+              </div>
+            </>
+          )}
 
           <p className="mb-4" />
 

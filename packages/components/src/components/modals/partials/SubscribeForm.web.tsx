@@ -61,6 +61,8 @@ const SubscribeFormWithStripe = React.memo(
       isSubmiting: false,
     })
 
+    const quantity = 1 // TODO
+
     useEffect(() => {
       isMountedRef.current = true
 
@@ -186,12 +188,19 @@ const SubscribeFormWithStripe = React.memo(
                 subscribeToPlan(input: $input) {
                   id
                   source
+                  type
 
                   amount
                   currency
                   trialPeriodDays
                   interval
                   intervalCount
+                  label
+                  transformUsage {
+                    divideBy
+                    round
+                  }
+                  quantity
 
                   status
 
@@ -205,7 +214,9 @@ const SubscribeFormWithStripe = React.memo(
                   currentPeriodStartAt
                   currentPeriodEndAt
 
+                  last4
                   reason
+                  users
 
                   featureFlags {
                     columnsLimit
@@ -224,6 +235,7 @@ const SubscribeFormWithStripe = React.memo(
                 planId: plan.id,
                 cardToken,
                 reason,
+                quantity,
               },
             },
           },
@@ -485,7 +497,9 @@ const SubscribeFormWithStripe = React.memo(
             {plan
               ? plan.amount > 0
                 ? userPlan && userPlan.id === plan.id
-                  ? 'Change credit card'
+                  ? userPlan.type === 'team'
+                    ? 'Update plan'
+                    : 'Change credit card'
                   : `${
                       userPlan &&
                       userPlan.amount &&
@@ -494,7 +508,9 @@ const SubscribeFormWithStripe = React.memo(
                         : userPlan && userPlan.amount > plan.amount
                         ? 'Downgrade to'
                         : 'Unlock for'
-                    } ${formatPriceAndInterval(plan.amount, plan)}`
+                    } ${formatPriceAndInterval(plan.amount, plan, {
+                      quantity,
+                    })}`
                 : userPlan && userPlan.amount > 0
                 ? 'Confirm downgrade to free plan'
                 : 'Subscribe'

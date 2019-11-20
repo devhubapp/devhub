@@ -314,6 +314,7 @@ export function AuthProvider(props: AuthProviderProps) {
                 plan {
                   id
                   source
+                  type
 
                   banner
 
@@ -322,6 +323,12 @@ export function AuthProvider(props: AuthProviderProps) {
                   trialPeriodDays
                   interval
                   intervalCount
+                  label
+                  transformUsage {
+                    divideBy
+                    round
+                  }
+                  quantity
 
                   status
 
@@ -335,7 +342,9 @@ export function AuthProvider(props: AuthProviderProps) {
                   currentPeriodStartAt
                   currentPeriodEndAt
 
+                  last4
                   reason
+                  users
 
                   featureFlags {
                     columnsLimit

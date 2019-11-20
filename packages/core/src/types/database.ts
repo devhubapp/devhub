@@ -1,17 +1,26 @@
 import { PlanID } from '../utils'
-import { Column, ColumnSubscription } from './devhub'
+import { Column, ColumnSubscription, PlanType } from './devhub'
 import { GitHubTokenDetails, GraphQLGitHubUser, Installation } from './graphql'
 import { StripeSubscription } from './stripe'
 
 export interface DatabaseUserPlan {
   id: PlanID
   source: 'stripe' | 'none'
+  type: PlanType
 
   amount: number
   currency: string
+  label: string | undefined
   trialPeriodDays: number
   interval: 'day' | 'week' | 'month' | 'year' | undefined
   intervalCount: number
+  transformUsage?:
+    | {
+        divideBy: number
+        round: 'up' | 'down'
+      }
+    | undefined
+  quantity: number | undefined
 
   status:
     | 'incomplete'
@@ -32,8 +41,10 @@ export interface DatabaseUserPlan {
   currentPeriodStartAt: string | undefined
   currentPeriodEndAt: string | undefined
 
+  last4: string | undefined
   reason?: string | undefined
   userPlansToKeepUsing?: boolean | null | undefined
+  users?: string[] | undefined
 
   createdAt: string
   updatedAt: string

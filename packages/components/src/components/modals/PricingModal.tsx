@@ -316,9 +316,7 @@ export function PricingModal(props: PricingModalProps) {
         <SubHeader
           title={
             userPlanDetails && userPlanDetails.amount
-              ? userPlanDetails.id === selectedPlanId
-                ? 'CHANGE CREDIT CARD'
-                : 'CHANGE PLAN'
+              ? 'CHANGE PLAN'
               : 'SELECT A PLAN'
           }
         />
@@ -372,7 +370,9 @@ export function PricingModal(props: PricingModalProps) {
             {selectedPlan
               ? selectedPlan.amount > 0
                 ? userPlan && userPlan.id === selectedPlan.id
-                  ? 'Change credit card'
+                  ? userPlan.type === 'team'
+                    ? 'Update plan'
+                    : 'Change credit card'
                   : 'Continue'
                 : userPlan && userPlan.amount > 0
                 ? 'Downgrade to free plan'

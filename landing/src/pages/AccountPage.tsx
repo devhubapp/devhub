@@ -1,16 +1,17 @@
-import { allPlansObj } from '@brunolemos/devhub-core'
+import {
+  activePaidPlans,
+  allPlansObj,
+  formatPriceAndInterval,
+} from '@brunolemos/devhub-core'
 import Link from 'next/link'
+import qs from 'qs'
 import React from 'react'
 
 import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'
-import {
-  formatPrice,
-  formatPriceAndInterval,
-  getTrialTimeLeftLabel,
-} from '../helpers'
+import { getTrialTimeLeftLabel } from '../helpers'
 
 export interface AccountPageProps {}
 
@@ -51,15 +52,21 @@ export default function AccountPage(_props: AccountPageProps) {
         <h2 className="mb-0 text-xl sm:text-2xl">
           {!!(planInfo && authData.plan) ? (
             <>
-              Current plan: <strong>{planInfo.label}</strong>{' '}
-              {authData.plan.amount > 0 && (
-                <small>
-                  (
-                  {`${authData.plan.currency.toUpperCase()} ${formatPriceAndInterval(
+              Current plan:{' '}
+              <strong className="text-default">
+                {authData.plan.label || planInfo.label}
+              </strong>
+              {authData && authData.plan && authData.plan.amount > 0 && (
+                <small className="text-muted-65 italic">
+                  {` (${authData.plan.currency.toUpperCase()} ${formatPriceAndInterval(
                     authData.plan.amount,
                     authData.plan,
-                  )}`}
-                  )
+                    { quantity: authData.plan.quantity },
+                  )}${
+                    authData.plan.quantity && authData.plan.quantity > 1
+                      ? `, ${authData.plan.quantity} seats`
+                      : ''
+                  })`}
                 </small>
               )}
             </>
@@ -69,25 +76,32 @@ export default function AccountPage(_props: AccountPageProps) {
         </h2>
 
         {!!(authData.plan && authData.plan.status) && (
-          <h2 className="mb-0 text-md sm:text-xl">
-            {authData.plan.status === 'trialing'
-              ? authData.plan.trialEndAt &&
-                authData.plan.trialEndAt > new Date().toISOString()
-                ? `Status: ${authData.plan.status} (${getTrialTimeLeftLabel(
-                    authData.plan.trialEndAt,
-                  )})`
-                : 'Status: trial ended'
-              : `Status: ${authData.plan.status}${
-                  authData.plan.cancelAtPeriodEnd && authData.plan.cancelAt
-                    ? ` (cancellation: ${new Date(
-                        authData.plan.cancelAt,
-                      ).toDateString()})`
-                    : authData.plan.status === 'incomplete' ||
-                      authData.plan.status === 'incomplete_expired'
-                    ? ' (failed to charge your card. please try with a different one)'
-                    : ''
-                }`}
-          </h2>
+          <>
+            <h2 className="mb-2 text-md sm:text-xl">
+              Status:{' '}
+              <span className="text-default">
+                {authData.plan.status === 'trialing'
+                  ? authData.plan.trialEndAt &&
+                    authData.plan.trialEndAt > new Date().toISOString()
+                    ? `${authData.plan.status} (${getTrialTimeLeftLabel(
+                        authData.plan.trialEndAt,
+                      )})`
+                    : 'trial ended'
+                  : authData.plan.status}
+              </span>
+            </h2>
+
+            {authData.plan.cancelAtPeriodEnd && authData.plan.cancelAt ? (
+              <p className="mb-2 text-sm text-muted-65 italic">{` Cancellation scheduled to ${new Date(
+                authData.plan.cancelAt,
+              ).toDateString()}`}</p>
+            ) : authData.plan.status === 'incomplete' ||
+              authData.plan.status === 'incomplete_expired' ? (
+              <p className="mb-2 text-sm text-muted-65 italic">
+                Failed to charge your card. Please try with a different one.
+              </p>
+            ) : null}
+          </>
         )}
 
         <div className="pb-4" />
@@ -98,12 +112,44 @@ export default function AccountPage(_props: AccountPageProps) {
               <a className="text-default">Switch plan</a>
             </Link>
 
+            {!!(
+              authData.plan &&
+              (authData.plan.type === 'team' ||
+                (authData.plan.quantity && authData.plan.quantity > 1) ||
+                (authData.plan.transformUsage &&
+                  authData.plan.transformUsage.divideBy > 1))
+            ) && (
+              <Link
+                href={`/subscribe${qs.stringify(
+                  {
+                    action: 'update_seats',
+                    plan:
+                      planInfo && planInfo.id
+                        ? activePaidPlans.find(_p => _p.id === planInfo.id)
+                          ? planInfo.cannonicalId
+                          : 'current'
+                        : undefined,
+                  },
+                  { addQueryPrefix: true },
+                )}`}
+              >
+                <a className="text-default">Update seats</a>
+              </Link>
+            )}
+
             <Link
-              href={`/subscribe${
-                planInfo && planInfo.cannonicalId
-                  ? `?plan=${planInfo.cannonicalId}`
-                  : ''
-              }`}
+              href={`/subscribe${qs.stringify(
+                {
+                  action: 'update_card',
+                  plan:
+                    planInfo && planInfo.id
+                      ? activePaidPlans.find(_p => _p.id === planInfo.id)
+                        ? planInfo.cannonicalId
+                        : 'current'
+                      : undefined,
+                },
+                { addQueryPrefix: true },
+              )}`}
             >
               <a className="text-default">Update credit card</a>
             </Link>

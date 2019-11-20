@@ -15,7 +15,10 @@ export interface StripePlan {
   product?: string | object | null
   // tiers: any
   // tiers_mode: any
-  // transform_usage: any
+  transform_usage: {
+    divide_by: number
+    round: 'up' | 'down'
+  } | null
   trial_period_days: number | null
   usage_type: 'licensed' | 'metered'
 }

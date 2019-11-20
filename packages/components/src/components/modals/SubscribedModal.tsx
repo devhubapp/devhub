@@ -188,7 +188,11 @@ export function SubscribedModal(props: SubscribedModalProps) {
                 onPress={() => {
                   Browser.openURLOnNewTab(
                     `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                      "I've just bought @devhub_app and it's awesome! https://devhubapp.com",
+                      `I've just bought @devhub_app${
+                        plan.type === 'team'
+                          ? ' for my team!'
+                          : " and it's awesome!"
+                      } https://devhubapp.com`,
                     )}`,
                   )
                 }}

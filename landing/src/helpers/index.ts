@@ -2,7 +2,6 @@ import {
   constants,
   DevHubHeaders,
   OS,
-  Plan,
   Platform,
   PlatformCategory,
 } from '@brunolemos/devhub-core'
@@ -91,52 +90,6 @@ export function getSystemLabel(name: Platform | OS | '') {
     default:
       return ''
   }
-}
-
-export function formatPrice(
-  valueInCents: number,
-  {
-    currency,
-    locale = 'en-US',
-  }: {
-    currency: string
-    locale?: string
-  },
-) {
-  const formatter = new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency || 'usd',
-  })
-
-  const value = formatter.format(valueInCents / 100)
-  return value.endsWith('.00') ? value.slice(0, -3) : value
-}
-
-export function formatPriceAndInterval(
-  valueInCents: number,
-  {
-    currency,
-    interval,
-    intervalCount,
-    locale = 'en-US',
-  }: {
-    currency: string
-    interval: Plan['interval']
-    intervalCount: Plan['intervalCount']
-    locale?: string
-  },
-) {
-  const formatter = new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency || 'usd',
-  })
-
-  const value = formatter.format(valueInCents / 100)
-  const priceLabel = value.endsWith('.00') ? value.slice(0, -3) : value
-
-  return `${priceLabel}${
-    intervalCount > 1 ? ` every ${intervalCount} ${interval}s` : `/${interval}`
-  }`
 }
 
 export function getDefaultDevHubHeaders({

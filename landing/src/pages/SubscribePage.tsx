@@ -1,52 +1,55 @@
-import { activePaidPlans, activePlans, Plan } from '@brunolemos/devhub-core'
+import {
+  activePaidPlans,
+  allPlans,
+  formatPriceAndInterval,
+  Plan,
+} from '@brunolemos/devhub-core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import qs from 'qs'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Elements, StripeProvider } from 'react-stripe-elements'
 
 import { LogoHead } from '../components/common/LogoHead'
 import { Select } from '../components/common/Select'
 import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
-import { SubscribeForm } from '../components/sections/subscribe/SubscribeForm'
+import {
+  SubscribeForm,
+  SubscribeFormProps,
+} from '../components/sections/subscribe/SubscribeForm'
 import { useAuth } from '../context/AuthContext'
-import { formatPriceAndInterval } from '../helpers'
-import SubscribedPage from './SubscribedPage'
 
 export interface SubscribePageProps {}
-
-const paidPlansArr = activePlans.filter(plan => plan.amount > 0)
 
 export default function SubscribePage(_props: SubscribePageProps) {
   const Router = useRouter()
 
-  const _planFromQuery = Router.query.plan as string | undefined
-  const planFromQuery = paidPlansArr.find(
-    p => p.cannonicalId === _planFromQuery,
+  const { authData, logout } = useAuth()
+  const userPlan = allPlans.find(
+    p => p.id === (authData && authData.plan && authData.plan.id),
   )
-    ? (_planFromQuery as Plan['cannonicalId'])
-    : 'pro'
 
-  const [planCannonicalId, setPlanCannonicalId] = useState<
-    Plan['cannonicalId']
-  >(planFromQuery)
+  const plans = useMemo(() => {
+    if (!userPlan) return activePaidPlans
+    if (activePaidPlans.find(p => p.id === userPlan.id)) return activePaidPlans
+    return [userPlan].concat(activePaidPlans)
+  }, [userPlan, activePaidPlans])
+
+  const _planFromQuery = Router.query.plan as string | undefined
+  const planFromQuery =
+    (_planFromQuery === 'current' && userPlan) ||
+    (_planFromQuery && plans.find(p => p.cannonicalId === _planFromQuery)) ||
+    undefined
+
+  const action = Router.query.action as SubscribeFormProps['action']
 
   const [stripe, setStripe] = useState(null)
 
-  const [hasJustSubscribed, setHasJustSubscribed] = useState(false)
-
-  const { authData, logout } = useAuth()
-
-  useEffect(() => {
-    if (!planFromQuery) return
-
-    Router.replace(Router.route, Router.pathname, { shallow: true })
-  }, [planFromQuery])
-
-  const plan = paidPlansArr.find(p => p.cannonicalId === planCannonicalId)
-  useEffect(() => {
-    if (!plan) setPlanCannonicalId(activePaidPlans[0].cannonicalId)
-  }, [plan])
+  const plan =
+    planFromQuery ||
+    (userPlan && userPlan.id && plans.find(p => p.id === userPlan.id)) ||
+    plans[0]
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
@@ -85,7 +88,8 @@ export default function SubscribePage(_props: SubscribePageProps) {
           <StripeProvider stripe={stripe}>
             <Elements>
               <SubscribeForm
-                onSuccess={() => setHasJustSubscribed(true)}
+                action={action}
+                onSuccess={() => Router.push('/subscribed')}
                 plan={plan}
               />
             </Elements>
@@ -132,9 +136,9 @@ export default function SubscribePage(_props: SubscribePageProps) {
     )
   }
 
-  if (hasJustSubscribed) return <SubscribedPage />
-
   if (!plan) return null
+
+  const isMyPlan = !!(authData.plan && authData.plan.id === plan.id)
 
   return (
     <LandingLayout>
@@ -142,41 +146,91 @@ export default function SubscribePage(_props: SubscribePageProps) {
         <LogoHead />
 
         <div className="flex flex-col items-center m-auto text-center">
-          <h1 className="mb-4 text-2xl sm:text-4xl whitespace-no-wrap">
-            {authData.plan && authData.plan.amount > 0
-              ? authData.plan.id === plan.id
-                ? 'Update my '
-                : 'Switch to '
-              : 'Subscribe to '}
-            <Select<Plan['cannonicalId']>
-              onChange={option => setPlanCannonicalId(option)}
-            >
-              {paidPlansArr.map(p => (
-                <Select.Option
-                  key={`subscribe-plan-option-${p.cannonicalId}`}
-                  id={p.cannonicalId}
-                  selected={p.cannonicalId === planCannonicalId}
+          <h1 className="mb-4 text-2xl sm:text-4xl">
+            {isMyPlan && action === 'update_card' ? (
+              'Update credit card'
+            ) : isMyPlan && action === 'update_seats' ? (
+              'Update seats'
+            ) : (
+              <>
+                {authData.plan && authData.plan.amount > 0
+                  ? isMyPlan
+                    ? 'Update my '
+                    : 'Switch to '
+                  : 'Subscribe to '}
+                <Select<Plan['cannonicalId']>
+                  onChange={option => {
+                    Router.replace(
+                      `${Router.pathname}${qs.stringify(
+                        {
+                          ...Router.query,
+                          plan: option,
+                        },
+                        { addQueryPrefix: true },
+                      )}`,
+                    )
+                  }}
                 >
-                  {authData.plan &&
-                  authData.plan &&
-                  authData.plan.id === p.id &&
-                  p.id !== plan.id
-                    ? `${p.label.toLowerCase()} (current)`
-                    : p.label.toLowerCase()}
-                </Select.Option>
-              ))}
-            </Select>{' '}
-            plan
+                  {plans.map(p => (
+                    <Select.Option
+                      key={`subscribe-plan-option-${p.cannonicalId}`}
+                      id={
+                        authData.plan &&
+                        authData.plan.id === p.id &&
+                        !activePaidPlans.find(_p => _p.id === p.id)
+                          ? 'current'
+                          : p.cannonicalId
+                      }
+                      selected={p.id === plan.id}
+                    >
+                      {authData.plan &&
+                      authData.plan &&
+                      authData.plan.id === p.id &&
+                      p.id !== plan.id
+                        ? `${p.label.toLowerCase()} (current)`
+                        : p.label.toLowerCase()}
+                    </Select.Option>
+                  ))}
+                </Select>{' '}
+                plan
+              </>
+            )}
           </h1>
 
           <p className="mb-4 text-sm text-muted-65">{`${formatPriceAndInterval(
             plan.amount,
             plan,
+            {
+              quantity:
+                isMyPlan && action === 'update_card'
+                  ? authData.plan && authData.plan.quantity
+                  : undefined,
+            },
           )} (${plan.currency.toUpperCase()}) · ${
             plan.trialPeriodDays > 0
               ? `${plan.trialPeriodDays}-day free trial · `
               : ''
+          }${
+            isMyPlan &&
+            authData.plan &&
+            authData.plan.quantity &&
+            authData.plan.quantity > 1
+              ? `Currently at ${authData.plan.quantity} seats · `
+              : ''
           }Cancel anytime`}</p>
+
+          {!!(
+            authData.plan &&
+            authData.plan.type === 'team' &&
+            plan.type !== 'team'
+          ) && (
+            <>
+              <p className="mb-4 text-sm text-red">
+                You are switching from a Team plan to an Individual plan. If you
+                proceed, all team members will lose access to DevHub.
+              </p>
+            </>
+          )}
 
           <div className="mb-4" />
 

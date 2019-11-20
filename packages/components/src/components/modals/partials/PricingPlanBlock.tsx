@@ -63,7 +63,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       ? plan.amount * 4
       : plan.interval === 'year'
       ? plan.amount / 12
-      : plan.amount) / (plan.intervalCount || 1)
+      : plan.amount) /
+    (plan.intervalCount || 1) /
+    (plan.transformUsage && plan.transformUsage.divideBy > 1
+      ? plan.transformUsage.divideBy
+      : 1)
 
   const planLabel = `${plan.label || ''}${
     !isMyPlan
@@ -91,7 +95,8 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   let footerText = ''
 
   if (
-    estimatedMonthlyPrice !== plan.amount &&
+    (estimatedMonthlyPrice !== plan.amount ||
+      (plan.transformUsage && plan.transformUsage.divideBy > 1)) &&
     !(isMyPlan && userPlan && userPlan.cancelAt && showCurrentPlanDetails)
   ) {
     footerText =
@@ -261,9 +266,16 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               <ThemedText
                 color="foregroundColorMuted65"
                 style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
-              >{`/month${
-                estimatedMonthlyPrice !== plan.amount ? '*' : ''
-              }`}</ThemedText>
+              >
+                {`${
+                  plan.type === 'team' ||
+                  (plan.transformUsage && plan.transformUsage.divideBy > 1)
+                    ? '/user'
+                    : ''
+                }${plan.interval ? '/month' : ''}${
+                  estimatedMonthlyPrice !== plan.amount ? '*' : ''
+                }` || ' '}
+              </ThemedText>
 
               {/* {plan.interval ? (
             <ThemedText

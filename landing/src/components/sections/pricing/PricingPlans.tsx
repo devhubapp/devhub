@@ -1,33 +1,66 @@
-import React, { Fragment } from 'react'
+import { activePlans, PlanType } from '@brunolemos/devhub-core'
+import React, { Fragment, useMemo, useState } from 'react'
 
-import { activePlans } from '@brunolemos/devhub-core'
-import Link from 'next/link'
+import { useAuth } from '../../../context/AuthContext'
+import { Tabs } from '../../common/Tabs'
 import { PricingPlanBlock } from './PricingPlanBlock'
 
 export interface PricingPlansProps {}
 
-const pricingPlanComponents = activePlans.map(plan =>
-  plan.amount > 0 ? (
-    <PricingPlanBlock
-      key={`pricing-plan-${plan.id}`}
-      banner={plan.banner}
-      buttonLink={`/subscribe?plan=${plan.cannonicalId}`}
-      plan={plan}
-    />
-  ) : (
-    <PricingPlanBlock
-      key={`pricing-plan-${plan.cannonicalId}`}
-      banner
-      buttonLink={`/download?plan=${plan.cannonicalId}`}
-      buttonLabel="Download"
-      plan={plan}
-    />
-  ),
-)
-
 export function PricingPlans(_props: PricingPlansProps) {
+  const { authData } = useAuth()
+
+  const [tab, setTab] = useState<PlanType>(
+    (authData && authData.plan && authData.plan.type) === 'team'
+      ? 'team'
+      : 'individual',
+  )
+
+  const pricingPlanComponents = useMemo(
+    () =>
+      activePlans
+        .filter(
+          plan =>
+            !!(
+              plan &&
+              (plan.type === tab || (tab === 'individual' && !plan.type))
+            ),
+        )
+        .map(plan =>
+          plan.amount > 0 ? (
+            <PricingPlanBlock
+              key={`pricing-plan-${plan.id}`}
+              banner={plan.banner}
+              buttonLink={`/subscribe?plan=${plan.cannonicalId}`}
+              plan={plan}
+            />
+          ) : (
+            <PricingPlanBlock
+              key={`pricing-plan-${plan.cannonicalId}`}
+              banner
+              buttonLink={`/download?plan=${plan.cannonicalId}`}
+              buttonLabel="Download"
+              plan={plan}
+            />
+          ),
+        ),
+    [tab],
+  )
+
   return (
     <div className="container">
+      <Tabs<NonNullable<PlanType>>
+        className="mb-6"
+        onTabChange={id => setTab(id)}
+      >
+        <Tabs.Tab
+          active={tab === 'individual'}
+          id="individual"
+          title="Individual"
+        />
+        <Tabs.Tab active={tab === 'team'} id="team" title="Team" />
+      </Tabs>
+
       <div className="flex flex-row lg:justify-center items-stretch -ml-8 sm:ml-0 -mr-8 sm:mr-0 pl-8 sm:pl-0 pr-8 sm:pr-0 overflow-x-scroll md:overflow-x-auto">
         {pricingPlanComponents.map((component, index) => (
           <Fragment key={`${component.key}-container`}>

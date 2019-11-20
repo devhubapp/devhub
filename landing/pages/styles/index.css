@@ -32,7 +32,7 @@ body {
   pointer-events: none;
 }
 
-a {
+a.transform-on-hover {
   margin-top: 1px;
   margin-bottom: 1px;
 }

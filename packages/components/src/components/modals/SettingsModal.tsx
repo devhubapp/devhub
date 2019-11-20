@@ -37,9 +37,6 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
   const pushModal = useReduxAction(actions.pushModal)
 
-  const userPlanLabel =
-    (allPlans.find(p => p.id === (userPlan && userPlan.id)) || {}).label || ''
-
   return (
     <ModalColumn
       hideCloseButton={sizename <= '2-medium'}
@@ -69,12 +66,13 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 <View style={[sharedStyles.center, sharedStyles.horizontal]}>
                   <ThemedIcon color="foregroundColor" name="pencil" />
                   <Spacer width={contentPadding / 2} />
-                  <ThemedText color="foregroundColor">{`${userPlanLabel ||
+                  <ThemedText color="foregroundColor">{`${(userPlan &&
+                    userPlan.label) ||
                     'None'}${
                     isPlanExpired
                       ? ' (expired)'
                       : userPlan && userPlan.status === 'trialing'
-                      ? userPlanLabel.toLowerCase().includes('trial')
+                      ? (userPlan.label || '').toLowerCase().includes('trial')
                         ? ''
                         : userPlan.amount
                         ? ' (trial)'

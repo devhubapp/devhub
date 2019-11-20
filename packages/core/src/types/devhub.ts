@@ -541,9 +541,12 @@ export type PlatformCategory = DownloadOption['category']
 export type Platform = DownloadOption['platform']
 
 export type PlanSource = 'stripe' // | 'github_marketplace' | 'opencollective' | 'appstore' | 'playstore'
+export type PlanType = 'individual' | 'team' | undefined
 
 export interface Plan {
   id: PlanID
+  type: PlanType
+
   stripeIds: [string, string] | [] // [test, prod]
 
   cannonicalId: string
@@ -557,6 +560,10 @@ export interface Plan {
   trialPeriodDays: number
   interval: 'day' | 'week' | 'month' | 'year' | undefined
   intervalCount: number
+  transformUsage?: {
+    divideBy: number
+    round: 'up' | 'down'
+  }
 
   featureLabels: Array<{
     id: FeatureFlagId

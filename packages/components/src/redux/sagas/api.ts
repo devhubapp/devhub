@@ -90,6 +90,7 @@ function* onSyncDown() {
             plan {
               id
               source
+              type
 
               banner
 
@@ -98,6 +99,12 @@ function* onSyncDown() {
               trialPeriodDays
               interval
               intervalCount
+              label
+              transformUsage {
+                divideBy
+                round
+              }
+              quantity
 
               status
 
@@ -111,7 +118,9 @@ function* onSyncDown() {
               currentPeriodStartAt
               currentPeriodEndAt
 
+              last4
               reason
+              users
 
               featureFlags {
                 columnsLimit

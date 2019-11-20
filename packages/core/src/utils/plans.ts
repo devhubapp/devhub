@@ -5,6 +5,8 @@ export type ActivePlanID =
   | 'free'
   | '5db0d37ce59ab2d3c0bbd611'
   | '5dd44e11b2726bb02d540b5e'
+  | '5dd4618db3ebb145268eba7c'
+  | '5dd467e799537b2378df8eea'
 
 export type InactivePlanID =
   | '5d4b8e85d123d1d770d93825'
@@ -27,6 +29,7 @@ export type FeatureFlagId =
 
 export const freePlan: Plan & { id: 'free' } = {
   id: 'free',
+  type: undefined,
 
   stripeIds: [],
 
@@ -81,8 +84,10 @@ export const freeTrialPlan = {
 
 export const allPlansObj: Record<PlanID, Plan> = {
   free: freeTrialPlan,
+
   '5d4b8e44ab1ba20b9ef4a1ba': {
     id: '5d4b8e44ab1ba20b9ef4a1ba',
+    type: 'individual',
 
     stripeIds: ['plan_FZq6KR3dWwsDMD', 'plan_FYy3loKWJXBMiA'],
 
@@ -124,6 +129,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
   },
   '5d4b8e4de70bd8c61c13a6a9': {
     id: '5d4b8e4de70bd8c61c13a6a9',
+    type: 'individual',
 
     stripeIds: ['plan_Fa91C1UYp4I4jk', 'plan_FYy4yB7RIG9Ex5'],
 
@@ -173,6 +179,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
   '5d4b8e85d123d1d770d93825': {
     id: '5d4b8e85d123d1d770d93825',
+    type: 'individual',
 
     stripeIds: ['plan_Fa91LFrdFSM9vG', 'plan_Fa5EGSsHdZl3LG'],
 
@@ -213,6 +220,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
   '5db0d37ce59ab2d3c0bbd611': {
     id: '5db0d37ce59ab2d3c0bbd611',
+    type: 'individual',
 
     stripeIds: ['plan_G2zZe1HdGfVwDH', 'plan_G3Lfpx8jw3Smxc'],
 
@@ -239,6 +247,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
   '5db0d55e138a98f7008a0e53': {
     id: '5db0d55e138a98f7008a0e53',
+    type: 'individual',
 
     stripeIds: ['plan_G2y6Y7RtMt5oAE', 'plan_G3Li3X9Qaj9vxo'],
 
@@ -265,6 +274,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
   '5db0d5fb957ac4e5ed7bbb05': {
     id: '5db0d5fb957ac4e5ed7bbb05',
+    type: 'individual',
 
     stripeIds: ['plan_G2y7gq9I7sd8Gc', 'plan_G3Liuh6wnA8Git'],
 
@@ -291,6 +301,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
   '5dba30bd0621102b5cd0bc44': {
     id: '5dba30bd0621102b5cd0bc44',
+    type: 'individual',
 
     stripeIds: ['plan_G5d9TcPDExqFcc', 'plan_G5dgccnsYVmSXX'],
 
@@ -317,6 +328,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
   '5dba30bf7deee78cb184291d': {
     id: '5dba30bf7deee78cb184291d',
+    type: 'individual',
 
     stripeIds: ['plan_G5dAdlW5lu5Ld5', 'plan_G5dhda9cEU3r0H'],
 
@@ -343,6 +355,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
   '5dc89f56bae8d4ae5245423e': {
     id: '5dc89f56bae8d4ae5245423e',
+    type: 'individual',
 
     stripeIds: ['plan_G9jW5bWfdl4T0T', 'plan_G9jQYMzS9KkKrk'],
 
@@ -369,6 +382,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
   '5dd44e11b2726bb02d540b5e': {
     id: '5dd44e11b2726bb02d540b5e',
+    type: 'individual',
 
     stripeIds: ['plan_GD3I71EXD50V2t', 'plan_GD3FmlLdmL4M9E'],
 
@@ -392,6 +406,70 @@ export const allPlansObj: Record<PlanID, Plan> = {
       enablePushNotifications: true,
     },
   },
+
+  '5dd4618db3ebb145268eba7c': {
+    id: '5dd4618db3ebb145268eba7c',
+    type: 'team',
+
+    stripeIds: ['plan_GDCxyxPMVxrmGM', 'plan_GD4d9NyJT9PZjT'],
+
+    banner: true,
+
+    cannonicalId: 'team-monthly',
+    label: 'Team Monthly',
+    description: '',
+    amount: 4900,
+    currency: 'usd',
+    interval: 'month',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    transformUsage: {
+      divideBy: 5,
+      round: 'up',
+    },
+
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
+  '5dd467e799537b2378df8eea': {
+    id: '5dd467e799537b2378df8eea',
+    type: 'team',
+
+    stripeIds: ['plan_GDCyDqLyRC5Q5o', 'plan_GDCwjCwtc7aIEm'],
+
+    banner: '29% OFF',
+
+    cannonicalId: 'team-yearly',
+    label: 'Team Yearly',
+    description: '',
+    amount: 25200,
+    currency: 'usd',
+    interval: 'year',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    transformUsage: {
+      divideBy: 3,
+      round: 'up',
+    },
+
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
 }
 
 export const allPlans = Object.values(allPlansObj)
@@ -400,6 +478,8 @@ export const activePlans: Array<Plan & { id: ActivePlanID }> = [
   allPlansObj.free as Plan & { id: ActivePlanID },
   allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & { id: ActivePlanID },
   allPlansObj['5dd44e11b2726bb02d540b5e'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd4618db3ebb145268eba7c'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd467e799537b2378df8eea'] as Plan & { id: ActivePlanID },
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)

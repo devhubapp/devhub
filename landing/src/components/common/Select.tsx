@@ -39,6 +39,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
             style={{
               top: selectedIndex >= 0 ? `-${110 * selectedIndex + 6}%` : 0,
               left: -1,
+              zIndex: 1000,
             }}
           >
             <span className="flex flex-col bg-default border border-bg-less-2 rounded-lg shadow overflow-hidden">
