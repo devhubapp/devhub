@@ -3,6 +3,7 @@ import {
   constants,
   formatPriceAndInterval,
   freePlan,
+  isPlanStatusValid,
   UserPlan,
 } from '@devhub/core'
 import axios from 'axios'
@@ -257,7 +258,10 @@ const SubscribeFormWithStripe = React.memo(
 
         dispatch(actions.updateUserData({ plan: data.subscribeToPlan }))
 
-        if (data.subscribeToPlan.status === 'incomplete') {
+        if (
+          !isPlanStatusValid(data.subscribeToPlan) ||
+          data.subscribeToPlan.status === 'incomplete'
+        ) {
           throw new Error('Please try a different credit card.')
         }
 

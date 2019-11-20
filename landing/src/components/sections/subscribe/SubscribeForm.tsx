@@ -1,3 +1,11 @@
+import {
+  constants,
+  formatPriceAndInterval,
+  Plan,
+  UserPlan,
+  isPlanStatusValid,
+} from '@brunolemos/devhub-core'
+import classNames from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
 import { CardElement, injectStripe } from 'react-stripe-elements'
 
@@ -166,7 +174,10 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
         mergeAuthData({ plan: data.subscribeToPlan })
 
-        if (data.subscribeToPlan.status === 'incomplete') {
+        if (
+          !isPlanStatusValid(data.subscribeToPlan) ||
+          data.subscribeToPlan.status === 'incomplete'
+        ) {
           throw new Error('Please try a different credit card.')
         }
 

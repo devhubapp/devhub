@@ -84,11 +84,7 @@ export function isPlanStatusValid(
 ): boolean {
   if (!plan) return false
 
-  return !!(
-    plan.status === 'active' ||
-    plan.status === 'trialing' ||
-    plan.status === 'incomplete'
-  )
+  return !!(plan.status === 'active' || plan.status === 'trialing')
 }
 
 export function isPlanExpired(
