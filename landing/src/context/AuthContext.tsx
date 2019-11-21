@@ -1,3 +1,6 @@
+import { constants, UserPlan } from '@brunolemos/devhub-core'
+import { useRouter } from 'next/router'
+import qs from 'qs'
 import React, {
   useCallback,
   useContext,
@@ -8,7 +11,6 @@ import React, {
   useState,
 } from 'react'
 
-import { constants, UserPlan } from '@brunolemos/devhub-core'
 import { getDefaultDevHubHeaders } from '../helpers'
 
 export interface AuthProviderProps {
@@ -84,6 +86,8 @@ export const AuthContext = React.createContext<AuthProviderState>({
 AuthContext.displayName = 'AuthContext'
 
 export function AuthProvider(props: AuthProviderProps) {
+  const Router = useRouter()
+
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [authData, setAuthData] = useState(defaultAuthData)
 
@@ -115,6 +119,23 @@ export function AuthProvider(props: AuthProviderProps) {
       })
     }
   }, [authData && authData._id])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const appToken = Router.query.appToken as string | undefined
+    if (!appToken) return
+
+    const querystring = qs.stringify(
+      { ...Router.query, appToken: undefined },
+      { addQueryPrefix: true },
+    )
+    Router.replace(`${Router.pathname}${querystring}`, undefined, {
+      shallow: true,
+    })
+
+    login(appToken)
+  }, [Router.query.appToken])
 
   const abortSubscriptionCancellation = useCallback(() => {
     if (typeof window === 'undefined' || typeof fetch !== 'function') return
