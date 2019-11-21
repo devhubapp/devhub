@@ -20,12 +20,13 @@
     "lodash": "4.17.15",
     "moment": "2.24.0",
     "polished": "3.4.1",
-    "qs": "6.9.0"
+    "qs": "6.9.1"
   },
   "devDependencies": {
     "@octokit/webhooks": "6.3.1",
     "@types/fbemitter": "2.0.32",
-    "@types/lodash": "4.14.141",
+    "@types/lodash": "4.14.149",
+    "@types/qs": "6.9.0",
     "mkdirp": "0.5.1",
     "prettier": "1.18.2",
     "tslint": "5.20.1",
