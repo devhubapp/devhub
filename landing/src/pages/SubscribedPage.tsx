@@ -69,7 +69,8 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
                   authData.plan.users && authData.plan.users.length ? (
                     <>
                       <div className="mb-2">
-                        These people can now use DevHub:{' '}
+                        These people can now
+                        <span className="text-yellow">*</span> use DevHub:{' '}
                         {authData.plan.users.map((username, index) => (
                           <Fragment key={username}>
                             {index > 0 && ', '}
@@ -105,7 +106,7 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
                       </div>
 
                       {!!authData.plan.users.length && (
-                        <div className="flex flex-row items-center justify-center">
+                        <div className="flex flex-row items-center justify-center mb-2">
                           {authData.plan.users.map(username => (
                             <>
                               <a
@@ -123,6 +124,12 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
                           ))}
                         </div>
                       )}
+
+                      <p className="mb-2 text-yellow text-sm italic">
+                        *Note: We are enabling the Team plan manually at this
+                        moment, so it may take a few hours to have an effect on
+                        your team members's accounts.
+                      </p>
                     </>
                   ) : (
                     <Link
