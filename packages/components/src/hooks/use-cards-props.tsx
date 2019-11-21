@@ -34,6 +34,7 @@ import {
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { ColumnLoadingIndicator } from '../components/columns/ColumnLoadingIndicator'
 import { Button } from '../components/common/Button'
+import { ButtonLink } from '../components/common/ButtonLink'
 import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
 import { RefreshControl } from '../components/common/RefreshControl'
 import { useAppLayout } from '../components/context/LayoutContext'
@@ -71,6 +72,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const { column, columnIndex, headerDetails } = useColumn(columnId || '')
 
   const dispatch = useDispatch()
+  const appToken = useReduxState(selectors.appTokenSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
 
@@ -362,20 +364,12 @@ export function useCardsProps<ItemT extends EnhancedItem>({
             emoji="lock"
             errorButtonView={
               <View>
-                <Button
+                <ButtonLink
                   analyticsCategory="plan_expired"
                   analyticsLabel="select_a_plan_button"
-                  children="Select a plan"
-                  onPress={() => {
-                    dispatch(
-                      actions.pushModal({
-                        name: 'PRICING',
-                        params: {
-                          highlightFeature: 'columnsLimit',
-                        },
-                      }),
-                    )
-                  }}
+                  children="Select a plan ↗"
+                  href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
+                  openOnNewTab
                 />
               </View>
             }
@@ -449,20 +443,12 @@ export function useCardsProps<ItemT extends EnhancedItem>({
               columnId={column.id}
               emoji="lock"
               errorButtonView={
-                <Button
+                <ButtonLink
                   analyticsLabel="select_a_plan_button"
                   analyticsCategory="invalid_plan"
-                  children="Select a plan"
-                  onPress={() => {
-                    dispatch(
-                      actions.pushModal({
-                        name: 'PRICING',
-                        params: {
-                          highlightFeature: 'columnsLimit',
-                        },
-                      }),
-                    )
-                  }}
+                  children="Select a plan ↗"
+                  href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
+                  openOnNewTab
                 />
               }
               errorMessage="You need a paid plan to keep using DevHub."
@@ -483,6 +469,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     isOverMaxColumnLimit,
     isOverPlanColumnLimit,
     isPlanExpired,
+    appToken,
   ])
 
   return {

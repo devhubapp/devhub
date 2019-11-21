@@ -24,6 +24,7 @@ import { contentPadding } from '../../styles/variables'
 import { getDefaultDevHubHeaders } from '../../utils/api'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
+import { ButtonLink } from '../common/ButtonLink'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
@@ -72,13 +73,16 @@ export function PricingModal(props: PricingModalProps) {
     plansToShow.find(p => p.id === userPlan.id)
   )
 
-  const showUserPlanAtTheTop =
+  const showUserPlanAtTheTop = true
+  /*
     userPlan &&
     ((userPlanDetails &&
       (userPlanDetails.amount ||
         (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
       !userPlanStillExist) ||
-      userPlan.cancelAt)
+      userPlan.cancelAt ||
+      userPlan.type === 'team')
+  */
 
   const [selectedPlanId, setSelectedPlanId] = useState<PlanID | undefined>(
     () =>
@@ -187,7 +191,21 @@ export function PricingModal(props: PricingModalProps) {
     ],
   )
 
-  const CancelOrReactivateSubscriptionButton =
+  const CancelOrReactivateSubscriptionButton = !!(
+    userPlan && userPlan.amount
+  ) && (
+    <ButtonLink
+      analyticsCategory="manage"
+      analyticsAction="manage"
+      analyticsLabel="manage"
+      href={`${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${appToken}`}
+      openOnNewTab
+      type="neutral"
+    >
+      Manage subscription ↗
+    </ButtonLink>
+  )
+  /*
     userPlan && userPlan.cancelAtPeriodEnd && userPlan.cancelAt ? (
       <Button
         analyticsCategory="abort_cancellation"
@@ -276,6 +294,7 @@ export function PricingModal(props: PricingModalProps) {
         Cancel subscription
       </Button>
     )
+    */
 
   return (
     <ModalColumn
@@ -307,90 +326,123 @@ export function PricingModal(props: PricingModalProps) {
                   <View style={sharedStyles.marginHorizontal}>
                     {CancelOrReactivateSubscriptionButton}
                   </View>
-                  <Spacer height={contentPadding} />
+
+                  <Spacer height={contentPadding / 2} />
                 </>
               )}
           </>
         )}
 
-        <SubHeader
-          title={
-            userPlanDetails && userPlanDetails.amount
-              ? 'CHANGE PLAN'
-              : 'SELECT A PLAN'
-          }
-        />
-
-        <FlatList
-          ref={flatListRef}
-          contentContainerStyle={{
-            paddingHorizontal: (contentPadding * 3) / 4,
-          }}
-          data={plansToShow}
-          extraData={selectedPlanId}
-          getItemLayout={getItemLayout}
-          horizontal
-          onLayout={onLayout}
-          onScrollToIndexFailed={onScrollToIndexFailed}
-          renderItem={renderItem}
-          style={[sharedStyles.flexNoGrow, sharedStyles.fullWidth]}
-        />
-
-        {sizename <= '2-medium' ? (
-          <Spacer flex={1} minHeight={contentPadding * 2} />
-        ) : (
-          <Spacer height={contentPadding * 2} />
-        )}
-
-        <View style={[sharedStyles.fullWidth, sharedStyles.paddingHorizontal]}>
-          <Button
-            analyticsCategory="subscribe"
-            analyticsAction="subscribe"
-            analyticsLabel="subscribe"
-            disabled={!selectedPlan}
-            onPress={() => {
-              if (!(selectedPlan && selectedPlan.id)) return
-
-              if (Platform.OS !== 'web') {
-                Browser.openURLOnNewTab(
-                  `${constants.DEVHUB_LINKS.SUBSCRIBE_PAGE}?plan=${selectedPlan.cannonicalId}&appToken=${appToken}`,
-                )
-                return
-              }
-
-              dispatch(
-                actions.pushModal({
-                  name: 'SUBSCRIBE',
-                  params: { planId: selectedPlan.id },
-                }),
-              )
-            }}
-            type="primary"
+        {showUserPlanAtTheTop ? (
+          <View
+            style={[sharedStyles.fullWidth, sharedStyles.paddingHorizontal]}
           >
-            {selectedPlan
-              ? selectedPlan.amount > 0
-                ? userPlan && userPlan.id === selectedPlan.id
-                  ? userPlan.type === 'team'
-                    ? 'Update plan'
-                    : 'Change credit card'
-                  : 'Continue'
-                : userPlan && userPlan.amount > 0
-                ? 'Downgrade to free plan'
-                : 'Select another plan'
-              : 'Continue'}
-          </Button>
+            <ButtonLink
+              analyticsCategory="switch"
+              analyticsAction="switch"
+              analyticsLabel="switch"
+              href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
+              openOnNewTab
+              type="neutral"
+            >
+              {userPlan && userPlan.amount
+                ? 'Switch plan ↗'
+                : 'Select a plan ↗'}
+            </ButtonLink>
+          </View>
+        ) : (
+          <>
+            <Spacer height={contentPadding / 2} />
 
-          <Spacer height={contentPadding} />
+            <SubHeader
+              title={
+                userPlanDetails && userPlanDetails.amount
+                  ? 'CHANGE PLAN'
+                  : 'SELECT A PLAN'
+              }
+            />
 
-          {!(freePlan && !freePlan.trialPeriodDays) &&
-            !showUserPlanAtTheTop &&
-            !!(userPlan && userPlan.amount) && (
-              <>
-                {CancelOrReactivateSubscriptionButton}
-                <Spacer height={contentPadding} />
-              </>
+            <FlatList
+              ref={flatListRef}
+              contentContainerStyle={{
+                paddingHorizontal: (contentPadding * 3) / 4,
+              }}
+              data={plansToShow}
+              extraData={selectedPlanId}
+              getItemLayout={getItemLayout}
+              horizontal
+              onLayout={onLayout}
+              onScrollToIndexFailed={onScrollToIndexFailed}
+              renderItem={renderItem}
+              style={[sharedStyles.flexNoGrow, sharedStyles.fullWidth]}
+            />
+
+            {sizename <= '2-medium' ? (
+              <Spacer flex={1} minHeight={contentPadding * 2} />
+            ) : (
+              <Spacer height={contentPadding * 2} />
             )}
-        </View>
+
+            <View
+              style={[sharedStyles.fullWidth, sharedStyles.paddingHorizontal]}
+            >
+              <Button
+                analyticsCategory="subscribe"
+                analyticsAction="subscribe"
+                analyticsLabel="subscribe"
+                disabled={!selectedPlan}
+                onPress={() => {
+                  if (!(selectedPlan && selectedPlan.id)) return
+
+                  if (Platform.OS !== 'web' || selectedPlan.type === 'team') {
+                    Browser.openURLOnNewTab(
+                      `${constants.DEVHUB_LINKS.SUBSCRIBE_PAGE}?plan=${selectedPlan.cannonicalId}&appToken=${appToken}`,
+                    )
+                    return
+                  }
+
+                  dispatch(
+                    actions.pushModal({
+                      name: 'SUBSCRIBE',
+                      params: { planId: selectedPlan.id },
+                    }),
+                  )
+                }}
+                type="primary"
+              >
+                {`${
+                  selectedPlan
+                    ? selectedPlan.amount > 0
+                      ? userPlan && userPlan.id === selectedPlan.id
+                        ? userPlan.type === 'team'
+                          ? 'Update plan'
+                          : 'Change credit card'
+                        : 'Continue'
+                      : userPlan && userPlan.amount > 0
+                      ? 'Downgrade to free plan'
+                      : 'Select another plan'
+                    : 'Continue'
+                }${
+                  Platform.OS !== 'web' ||
+                  (selectedPlan && selectedPlan.type === 'team')
+                    ? ' ↗'
+                    : ''
+                }`}
+              </Button>
+
+              <Spacer height={contentPadding} />
+
+              {!(freePlan && !freePlan.trialPeriodDays) &&
+                !showUserPlanAtTheTop &&
+                !!(userPlan && userPlan.amount) && (
+                  <>
+                    {CancelOrReactivateSubscriptionButton}
+                    <Spacer height={contentPadding} />
+                  </>
+                )}
+            </View>
+          </>
+        )}
       </>
     </ModalColumn>
   )
