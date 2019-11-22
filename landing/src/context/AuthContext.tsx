@@ -410,11 +410,12 @@ export function AuthProvider(props: AuthProviderProps) {
             freeTrialEndAt: user && user.freeTrialEndAt,
           }
           setAuthData(isValid(v) ? v : defaultAuthData)
-        } else if (response.status === 401) {
-          setAuthData(defaultAuthData)
+        } else {
+          throw new Error('Login failed')
         }
       } catch (error) {
         console.error(error)
+        setAuthData(defaultAuthData)
       }
 
       window.requestAnimationFrame(() => {
