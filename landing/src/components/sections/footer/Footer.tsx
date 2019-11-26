@@ -1,3 +1,4 @@
+import { activePaidPlans } from '@brunolemos/devhub-core'
 import Link from 'next/link'
 
 const twClasses = {
@@ -7,6 +8,8 @@ const twClasses = {
 }
 
 export default function Footer() {
+  // const { authData } = useAuth()
+
   return (
     <footer className="container flex flex-row flex-wrap sm:justify-between md:justify-around py-4 mb-10">
       <div className="flex flex-col items-start w-1/2 sm:w-auto mb-4 sm:mr-3">
@@ -16,9 +19,9 @@ export default function Footer() {
           <a className={twClasses.footerLink}>Download</a>
         </Link>
 
-        {/* <Link href="/features">
+        <Link href="/#features">
           <a className={twClasses.footerLink}>Features</a>
-        </Link> */}
+        </Link>
 
         {/* <Link href="/changelog">
           <a className={twClasses.footerLink}>Changelog</a>
@@ -28,9 +31,16 @@ export default function Footer() {
           <a className={twClasses.footerLink}>Pricing</a>
         </Link>
 
-        <Link href="/account">
-          <a className={twClasses.footerLink}>Manage subscription</a>
-        </Link>
+        {/* <Link href="/account">
+          <a className={twClasses.footerLink}>
+            {authData &&
+            authData.plan &&
+            authData.plan.amount &&
+            authData.plan.interval
+              ? 'Manage subscription'
+              : 'My account'}
+          </a>
+        </Link> */}
       </div>
 
       <div className="flex flex-col items-start w-1/2 sm:w-auto mb-4 sm:mr-3">

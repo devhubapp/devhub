@@ -1,3 +1,5 @@
+import { activePaidPlans } from '@brunolemos/devhub-core'
+
 import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { PricingPlans } from '../components/sections/pricing/PricingPlans'
@@ -11,7 +13,11 @@ export default function PricingPage(_props: PricingPageProps) {
         <LogoHead />
 
         <div className="container">
-          <h1>Choose your plan</h1>
+          <h1>
+            {activePaidPlans.length === 1
+              ? 'Simple pricing'
+              : 'Choose your plan'}
+          </h1>
         </div>
 
         <PricingPlans />

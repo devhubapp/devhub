@@ -7,7 +7,7 @@ import { STRIPE_PUBLIC_KEY, StripeLoaderProps } from './StripeLoader.shared'
 export function StripeLoader(props: StripeLoaderProps) {
   const { children } = props
 
-  const [stripe, setStripe] = useState(null)
+  const [stripe, setStripe] = useState<stripe.Stripe | null>(null)
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
@@ -49,6 +49,6 @@ export function StripeLoader(props: StripeLoaderProps) {
 
 declare global {
   interface Window {
-    Stripe?: (apiKey: string) => any
+    Stripe?: (apiKey: string) => stripe.Stripe
   }
 }

@@ -1,14 +1,10 @@
-import {
-  activePlans,
-  formatPrice,
-  formatPriceAndInterval,
-  Plan,
-} from '@brunolemos/devhub-core'
+import { activePlans, Plan } from '@brunolemos/devhub-core'
 import classNames from 'classnames'
 import qs from 'qs'
 import React from 'react'
 
 import { useAuth } from '../../../context/AuthContext'
+import { useFormattedPlanPrice } from '../../../hooks/use-formatted-plan-price'
 import Button from '../../common/buttons/Button'
 import CheckLabel from '../../common/CheckLabel'
 
@@ -17,10 +13,17 @@ export interface PricingPlanBlockProps {
   buttonLabel?: string
   buttonLink: string
   plan: Plan
+  totalNumberOfVisiblePlans?: number
 }
 
 export function PricingPlanBlock(props: PricingPlanBlockProps) {
-  const { banner: _banner, buttonLabel, buttonLink, plan } = props
+  const {
+    banner: _banner,
+    buttonLabel,
+    buttonLink,
+    plan,
+    totalNumberOfVisiblePlans,
+  } = props
 
   const { authData } = useAuth()
 
@@ -31,7 +34,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   const banner = userPlanIsActive
     ? isMyPlan
-      ? 'Current plan'
+      ? plan.interval
+        ? 'Current plan'
+        : 'You bought this'
       : _banner || true
     : _banner
 
@@ -48,7 +53,15 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       ? plan.transformUsage.divideBy
       : 1)
 
-  const _priceLabel = formatPrice(estimatedMonthlyPrice, plan)
+  const _priceLabel = useFormattedPlanPrice(estimatedMonthlyPrice, plan)
+  const _roundedPriceLabelWithInterval = useFormattedPlanPrice(
+    plan.amount % 100 > 50
+      ? plan.amount + (100 - (plan.amount % 100))
+      : plan.amount,
+    plan,
+    { includeInterval: true },
+  )
+
   const _cents = estimatedMonthlyPrice % 100
   const priceLabelWithoutCents =
     _cents && _priceLabel.endsWith(_cents.toString())
@@ -59,25 +72,48 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       ? _priceLabel.substr(-3)
       : ''
 
+  const subtitle = `${
+    plan.type === 'team' ||
+    (plan.transformUsage && plan.transformUsage.divideBy > 1)
+      ? '/user'
+      : ''
+  }${plan.interval ? '/month' : ''}${
+    estimatedMonthlyPrice !== plan.amount ? '*' : ''
+  }`
+
   let footerText = ''
 
   if (!plan.amount && plan.trialPeriodDays) {
-    footerText = footerText + `Free for ${plan.trialPeriodDays} days`
+    footerText =
+      (footerText ? `${footerText}\n` : footerText) +
+      `Free for ${plan.trialPeriodDays} days`
   }
 
   if (estimatedMonthlyPrice !== plan.amount) {
     footerText =
-      footerText +
-      `*Billed ${plan.amount % 100 > 50 ? '~' : ''}${formatPriceAndInterval(
-        plan.amount % 100 > 50
-          ? plan.amount + (100 - (plan.amount % 100))
-          : plan.amount,
-        plan,
-      )}`
+      (footerText ? `${footerText}\n` : footerText) +
+      `*Billed ${
+        plan.amount % 100 > 50 ? '~' : ''
+      }${_roundedPriceLabelWithInterval}`
+  }
+
+  if (!plan.interval) {
+    footerText =
+      (footerText ? `${footerText}\n` : footerText) +
+      'One-time payment (no subscription)'
   }
 
   return (
-    <section className="pricing-plan flex flex-col flex-shrink-0 w-64">
+    <section
+      className={classNames(
+        'pricing-plan flex flex-col flex-shrink-0 w-full',
+        totalNumberOfVisiblePlans === 1
+          ? 'w-full lg:w-84'
+          : totalNumberOfVisiblePlans && totalNumberOfVisiblePlans <= 2
+          ? 'w-72'
+          : 'w-64',
+      )}
+    >
       <div
         className={classNames(
           'bg-more-1 shadow border rounded',
@@ -125,19 +161,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               </small>
             )}
           </div>
-          <div className="text-sm text-muted-65">
-            &nbsp;
-            {`${
-              plan.type === 'team' ||
-              (plan.transformUsage && plan.transformUsage.divideBy > 1)
-                ? '/user'
-                : ''
-            }${plan.interval ? '/month' : ''}${
-              estimatedMonthlyPrice !== plan.amount ? '*' : ''
-            }`}
-            &nbsp;
-          </div>
-          {/* {plan.interval ? (
+
+          {!!subtitle && (
+            <>
+              <div className="text-sm text-muted-65">{subtitle}</div>
+              {/* {plan.interval ? (
             <div className="text-sm text-muted-65">{`/${
               plan.intervalCount > 1 ? `${plan.intervalCount}-` : ''
             }${plan.interval}`}</div>
@@ -145,13 +173,15 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             <div className="text-sm text-muted-65">&nbsp;</div>
           )} */}
 
-          <div className="pb-6" />
+              <div className="pb-6" />
+            </>
+          )}
 
-          <div className="mb-2 text-sm text-muted-65 italic">
-            &nbsp;
-            {footerText}
-            &nbsp;
-          </div>
+          {!!footerText && (
+            <div className="mb-2 text-sm text-muted-65 italic">
+              {footerText}
+            </div>
+          )}
 
           <div className="pb-6" />
 
@@ -159,7 +189,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             plan.type === 'team' ? (
               <Button
                 type="primary"
-                href={`/subscribe${qs.stringify(
+                href={`/purchase${qs.stringify(
                   { plan: userPlan && userPlan.id },
                   { addQueryPrefix: true },
                 )}`}
@@ -173,7 +203,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             )
           ) : (
             <Button type="primary" href={buttonLink}>
-              {buttonLabel || 'Get started'}
+              {buttonLabel || 'Continue'}
             </Button>
           )}
 

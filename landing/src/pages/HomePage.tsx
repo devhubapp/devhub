@@ -1,4 +1,8 @@
-import { activePaidPlans, freePlan } from '@brunolemos/devhub-core'
+import {
+  activePaidPlans,
+  freePlan,
+  freeTrialDays,
+} from '@brunolemos/devhub-core'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
@@ -7,10 +11,9 @@ import { CheckLabels } from '../components/common/CheckLabels'
 import { LogoHead } from '../components/common/LogoHead'
 import { ResponsiveImage } from '../components/common/ResponsiveImage'
 import LandingLayout from '../components/layouts/LandingLayout'
-import DownloadButtons from '../components/sections/download/DownloadButtons'
+import CTAButtons from '../components/sections/CTAButtons'
 import FeaturesBlock from '../components/sections/features/FeaturesBlock'
 import GetStartedBlock from '../components/sections/GetStartedBlock'
-import { PricingPlans } from '../components/sections/pricing/PricingPlans'
 import UsedByCompaniesBlock from '../components/sections/UsedByCompaniesBlock'
 
 export interface HomePageProps {}
@@ -19,8 +22,16 @@ export default function HomePage(_props: HomePageProps) {
   const Router = useRouter()
 
   useEffect(() => {
-    Router.replace(Router.route, Router.pathname, { shallow: true })
-  }, [])
+    if (typeof window === 'undefined') return
+
+    const interval = setInterval(() => {
+      Router.replace(Router.route, Router.pathname)
+    }, 1000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [Router.query.features])
 
   return (
     <LandingLayout>
@@ -40,29 +51,21 @@ export default function HomePage(_props: HomePageProps) {
                 Enable Desktop Push Notifications.
               </h2>
             </div>
-
-            <DownloadButtons center className="mb-2" />
-
+            <CTAButtons center className="mb-2" />
             <CheckLabels center className="mb-16">
               {!!(freePlan && !freePlan.trialPeriodDays) && (
                 <CheckLabel label="Free version" />
               )}
-              {!!(
-                (freePlan && freePlan.trialPeriodDays) ||
-                (activePaidPlans &&
-                  activePaidPlans.some(plan => plan.trialPeriodDays))
-              ) && (
-                <CheckLabel
-                  label={
-                    freePlan && !freePlan.trialPeriodDays
-                      ? 'Free trial on paid features'
-                      : `${freePlan.trialPeriodDays}-day free trial`
-                  }
-                />
+              {!!freeTrialDays && (
+                <CheckLabel label={`${freeTrialDays}-day free trial`} />
               )}
-              <CheckLabel label="No code access (granular permissons)" />
-            </CheckLabels>
+              {!!(
+                activePaidPlans && activePaidPlans.every(plan => !plan.interval)
+              ) && <CheckLabel label="One-time payment (no subscription)" />}
 
+              <CheckLabel label="No code access (granular permissons)" />
+              <CheckLabel label="Cross-platform (desktop & mobile)" />
+            </CheckLabels>
             <ResponsiveImage
               alt="DevHub Screenshot with 4 columns: Notifications, Facebook activity, TailwindCSS activity and Filters"
               src="/static/screenshots/dark/devhub-desktop.jpg"
@@ -70,7 +73,6 @@ export default function HomePage(_props: HomePageProps) {
               enableBorder
               minHeight={500}
             />
-
             <p className="block sm:hidden mb-4" />
             <small className="block sm:hidden italic text-sm text-muted-65 text-center">
               TIP: You can scroll the images horizontally

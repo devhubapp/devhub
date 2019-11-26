@@ -8,17 +8,17 @@ import SubscribePage from '../src/pages/SubscribePage'
 
 export interface SubscribePageProps {}
 
-const Buy: NextPage<SubscribePageProps> = () => {
+const Purchase: NextPage<SubscribePageProps> = () => {
   const Router = useRouter()
 
   useEffect(() => {
-    if (activePaidPlans.some(p => !!p.interval)) return
+    if (!activePaidPlans.some(p => !!p.interval)) return
     Router.replace(
-      `/buy${qs.stringify(Router.query, { addQueryPrefix: true })}`,
+      `/purchase${qs.stringify(Router.query, { addQueryPrefix: true })}`,
     )
   }, [])
 
   return <SubscribePage />
 }
 
-export default Buy
+export default Purchase

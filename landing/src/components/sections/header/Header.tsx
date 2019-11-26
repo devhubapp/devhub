@@ -1,6 +1,8 @@
+import { activePaidPlans, freeTrialDays } from '@brunolemos/devhub-core'
 import classNames from 'classnames'
 import Link from 'next/link'
 
+import { useAuth } from '../../../context/AuthContext'
 import { ThemeSwitcher } from '../../common/ThemeSwitcher'
 import HeaderLink from './HeaderLink'
 
@@ -14,6 +16,8 @@ export interface HeaderProps {
 
 export default function Header(props: HeaderProps) {
   const { fixed } = props
+
+  const { authData } = useAuth()
 
   return (
     <>
@@ -71,26 +75,50 @@ export default function Header(props: HeaderProps) {
               Features
             </HeaderLink>
 
-            <HeaderLink
-              href="/pricing"
-              className={twClasses.headerLink__rightMargin}
-            >
-              Pricing
-            </HeaderLink>
+            {activePaidPlans.length > 1 && (
+              <HeaderLink
+                href="/pricing"
+                className={twClasses.headerLink__rightMargin}
+              >
+                Pricing
+              </HeaderLink>
+            )}
 
             {/* <HeaderLink
-          href="/changelog"
-          className={twClasses.headerLink__rightMargin}
-        >
-          Changelog
-        </HeaderLink> */}
-
-            <HeaderLink
-              href="/download"
+              href="/changelog"
               className={twClasses.headerLink__rightMargin}
             >
-              Download
-            </HeaderLink>
+              Changelog
+            </HeaderLink> */}
+
+            {!!(
+              authData &&
+              authData.appToken &&
+              (freeTrialDays || (authData.plan && authData.plan.amount))
+            ) && (
+              <HeaderLink
+                href="/download"
+                className={twClasses.headerLink__rightMargin}
+              >
+                Download
+              </HeaderLink>
+            )}
+
+            {authData && authData.appToken ? (
+              <HeaderLink
+                href="/account"
+                className={twClasses.headerLink__rightMargin}
+              >
+                My account
+              </HeaderLink>
+            ) : (
+              <HeaderLink
+                href="/account?autologin"
+                className={twClasses.headerLink__rightMargin}
+              >
+                Login
+              </HeaderLink>
+            )}
 
             <span className="pr-2" />
 

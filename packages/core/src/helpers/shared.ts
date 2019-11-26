@@ -1226,8 +1226,11 @@ export function fixDateToISO(
   if (typeof _date === 'number') timestamp = _date
   if (timestamp && timestamp.toString().length <= 10)
     timestamp = timestamp * 1000 + new Date().getTimezoneOffset() * 60 * 1000
+  if (date && typeof date === 'string' && !date.includes('Z') && timestamp)
+    timestamp = timestamp + new Date().getTimezoneOffset() * 60 * 1000
 
   if (!(timestamp && timestamp.toString().length >= 13)) return undefined
 
   return new Date(timestamp).toISOString()
 }
+// new Date(new Date('2019-11-24 22:48:21').getTime() + (new Date().getTimezoneOffset() * 60 * 1000))

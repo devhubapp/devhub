@@ -100,7 +100,8 @@ export function SubscribeModal(props: SubscribeModalProps) {
               >
                 <H3 children="Plan" />
                 <ThemedText color="foregroundColor">
-                  {`${(plan && plan.label) || 'None'}`.toUpperCase()}
+                  {`${(plan && plan.label) ||
+                    (plan && plan.amount ? 'Paid' : 'None')}`.toUpperCase()}
                 </ThemedText>
               </View>
 

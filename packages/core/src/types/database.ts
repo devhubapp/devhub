@@ -1,12 +1,15 @@
 import { PlanID } from '../utils'
-import { Column, ColumnSubscription, PlanType } from './devhub'
+import { Column, ColumnSubscription, PlanSource, PlanType } from './devhub'
 import { GitHubTokenDetails, GraphQLGitHubUser, Installation } from './graphql'
 import { StripeSubscription } from './stripe'
 
 export interface DatabaseUserPlan {
   id: PlanID
-  source: 'stripe' | 'none'
+  source: PlanSource
   type: PlanType
+
+  stripeIds?: [string, string] | []
+  paddleProductId?: number
 
   amount: number
   currency: string
@@ -21,6 +24,7 @@ export interface DatabaseUserPlan {
       }
     | undefined
   quantity: number | undefined
+  coupon?: string
 
   status:
     | 'incomplete'
@@ -83,6 +87,7 @@ export interface DatabaseUser {
   loginCount: number
   freeTrialStartAt?: string
   freeTrialEndAt?: string
+  paddle: { [key: string]: any } | undefined | null
   plan: DatabaseUserPlan
   planHistory: DatabaseUserPlan[]
   stripe?:

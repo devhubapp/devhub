@@ -1,4 +1,5 @@
 import {
+  activePaidPlans,
   activePlans,
   Column,
   ColumnSubscription,
@@ -367,7 +368,13 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                 <ButtonLink
                   analyticsCategory="plan_expired"
                   analyticsLabel="select_a_plan_button"
-                  children="Select a plan ↗"
+                  children={
+                    activePaidPlans.some(p => p.interval)
+                      ? plan && plan.amount
+                        ? 'Switch plan ↗'
+                        : 'Select a plan ↗'
+                      : 'See available options ↗'
+                  }
                   href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
                   openOnNewTab
                 />
@@ -446,7 +453,13 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                 <ButtonLink
                   analyticsLabel="select_a_plan_button"
                   analyticsCategory="invalid_plan"
-                  children="Select a plan ↗"
+                  children={
+                    activePaidPlans.some(p => p.interval)
+                      ? plan && plan.amount
+                        ? 'Switch plan ↗'
+                        : 'Select a plan ↗'
+                      : 'See available options ↗'
+                  }
                   href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
                   openOnNewTab
                 />
@@ -470,6 +483,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     isOverPlanColumnLimit,
     isPlanExpired,
     appToken,
+    !!(plan && plan.amount),
   ])
 
   return {

@@ -161,6 +161,9 @@ function* onLoginRequest(
                 source
                 type
 
+                stripeIds
+                paddleProductId
+                
                 banner
 
                 amount

@@ -25,45 +25,58 @@ export function Select<T extends string>(props: SelectProps<T>) {
     <span className="select-container my-1 cursor-default">
       <span className="bg-default border border-bg-less-2 rounded-lg shadow text-left">
         <span className="relative w-full h-full">
-          <span className="selected-option w-full px-2 py-1 hover:bg-less-2 whitespace-no-wrap cursor-pointer">
+          <span
+            className={classNames(
+              'selected-option w-full px-2 py-1 whitespace-no-wrap',
+              childrenArr.length > 1 && 'hover:bg-less-2 cursor-pointer',
+            )}
+          >
             <span className="text-default">
               {childrenArr[selectedIndex] || placeholder}
             </span>
-            <small className="text-default" style={{ fontSize: '75%' }}>
-              {` ▼`}
-            </small>
+            {childrenArr.length > 1 && (
+              <small className="text-default" style={{ fontSize: '75%' }}>
+                {` ▼`}
+              </small>
+            )}
           </span>
 
-          <span
-            className="options absolute"
-            style={{
-              top: selectedIndex >= 0 ? `-${110 * selectedIndex + 6}%` : 0,
-              left: -1,
-              zIndex: 1000,
-            }}
-          >
-            <span className="flex flex-col bg-default border border-bg-less-2 rounded-lg shadow overflow-hidden">
-              {React.Children.map(children, child => (
-                <span
-                  className="w-full px-2 py-1 hover:bg-less-2  whitespace-no-wrap cursor-pointer"
-                  onClick={
-                    onChange ? () => onChange(child.props.id) : undefined
-                  }
-                >
-                  <span className="text-default">{child}</span>
-                  <small
+          {childrenArr.length > 1 && (
+            <span
+              className="options absolute"
+              style={{
+                top: selectedIndex >= 0 ? `-${110 * selectedIndex + 6}%` : 0,
+                left: -1,
+                zIndex: 1000,
+              }}
+            >
+              <span className="flex flex-col bg-default border border-bg-less-2 rounded-lg shadow overflow-hidden">
+                {React.Children.map(children, child => (
+                  <span
                     className={classNames(
-                      'text-default',
-                      !child.props.selected && 'opacity-0',
+                      'w-full px-2 py-1 whitespace-no-wrap',
+                      childrenArr.length > 1 &&
+                        'hover:bg-less-2 cursor-pointer',
                     )}
-                    style={{ fontSize: '75%' }}
+                    onClick={
+                      onChange ? () => onChange(child.props.id) : undefined
+                    }
                   >
-                    {` ▼`}
-                  </small>
-                </span>
-              ))}
+                    <span className="text-default">{child}</span>
+                    <small
+                      className={classNames(
+                        'text-default',
+                        !child.props.selected && 'opacity-0',
+                      )}
+                      style={{ fontSize: '75%' }}
+                    >
+                      {` ▼`}
+                    </small>
+                  </span>
+                ))}
+              </span>
             </span>
-          </span>
+          )}
         </span>
       </span>
 

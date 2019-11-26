@@ -1,11 +1,12 @@
 import { constants } from '@brunolemos/devhub-core'
 import axios from 'axios'
 import classNames from 'classnames'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { unstable_batchedUpdates as batch } from 'react-dom'
 
 import { useAuth } from '../../context/AuthContext'
 import { getDefaultDevHubHeaders } from '../../helpers'
+import { useIsMountedRef } from '../../hooks/use-is-mounted-ref'
 import { TextInput, TextInputProps } from './TextInput'
 
 export interface QuickFeedbackInputProps extends TextInputProps {}
@@ -13,7 +14,7 @@ export interface QuickFeedbackInputProps extends TextInputProps {}
 export const quickFeedbackRowHeight = 42
 
 export function QuickFeedbackInput(props: QuickFeedbackInputProps) {
-  const isMountedRef = useRef(true)
+  const isMountedRef = useIsMountedRef()
 
   const [feedbackText, setFeedbackText] = useState('')
   const [message, setMessage] = useState<React.ReactNode>('')
@@ -22,14 +23,6 @@ export function QuickFeedbackInput(props: QuickFeedbackInputProps) {
   const {
     authData: { appToken },
   } = useAuth()
-
-  useEffect(() => {
-    isMountedRef.current = true
-
-    return () => {
-      isMountedRef.current = false
-    }
-  }, [])
 
   async function trySendFeedback() {
     const response = await axios.post(

@@ -17,22 +17,22 @@ export default function CheckLabel(props: CheckLabelProps) {
     <div
       className={classNames('flex flex-row items-center', containerClassName)}
     >
-      <Check
-        {...checkProps}
-        className={classNames(
-          checkProps && checkProps.className
-            ? checkProps.className
-            : 'text-primary',
-        )}
-        containerClassName={classNames(
-          'mr-1 self-start',
-          checkProps && checkProps.containerClassName,
-        )}
-      />
       <span
         className={classNames('text-sm text-default', className)}
         style={style}
       >
+        <Check
+          {...checkProps}
+          className={classNames(
+            checkProps && checkProps.className
+              ? checkProps.className
+              : 'text-primary',
+          )}
+          containerClassName={classNames(
+            'mr-1 self-start',
+            checkProps && checkProps.containerClassName,
+          )}
+        />
         {label}
       </span>
     </div>

@@ -1,11 +1,22 @@
 import { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import qs from 'qs'
+import { useEffect } from 'react'
 
-import SubscribedPage from '../src/pages/SubscribedPage'
+import SuccessPage from '../src/pages/SuccessPage'
 
-export interface SubscribedPageProps {}
+export interface SuccessPageProps {}
 
-const Subscribed: NextPage<SubscribedPageProps> = () => {
-  return <SubscribedPage />
+const Subscribed: NextPage<SuccessPageProps> = () => {
+  const Router = useRouter()
+
+  useEffect(() => {
+    Router.replace(
+      `/success${qs.stringify(Router.query, { addQueryPrefix: true })}`,
+    )
+  }, [])
+
+  return <SuccessPage />
 }
 
 export default Subscribed

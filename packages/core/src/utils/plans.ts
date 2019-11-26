@@ -1,14 +1,10 @@
 import { Plan } from '../types'
 import * as constants from './constants'
 
-export type ActivePlanID =
-  | 'free'
-  | '5db0d37ce59ab2d3c0bbd611'
-  | '5dd44e11b2726bb02d540b5e'
-  | '5dd4618db3ebb145268eba7c'
-  | '5dd467e799537b2378df8eea'
+export type ActivePlanID = '5dd82d16eb2b11106f941f8d'
 
 export type InactivePlanID =
+  | 'free'
   | '5d4b8e85d123d1d770d93825'
   | '5d4b8e44ab1ba20b9ef4a1ba'
   | '5d4b8e4de70bd8c61c13a6a9'
@@ -17,6 +13,10 @@ export type InactivePlanID =
   | '5dba30bf7deee78cb184291d'
   | '5dc89f56bae8d4ae5245423e'
   | '5db0d5fb957ac4e5ed7bbb05'
+  | '5db0d37ce59ab2d3c0bbd611'
+  | '5dd44e11b2726bb02d540b5e'
+  | '5dd4618db3ebb145268eba7c'
+  | '5dd467e799537b2378df8eea'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -27,11 +27,12 @@ export type FeatureFlagId =
   | 'enablePrivateRepositories'
   | 'enablePushNotifications'
 
-export const freePlan: Plan & { id: 'free' } = {
+const _freePlan: Plan & { id: 'free' } = {
   id: 'free',
   type: undefined,
 
   stripeIds: [],
+  paddleProductId: undefined,
 
   banner: true,
 
@@ -70,7 +71,10 @@ export const freePlan: Plan & { id: 'free' } = {
   },
 }
 
-export const freeTrialPlan = {
+export const freePlan: typeof _freePlan | undefined = undefined // _freePlan
+export const freeTrialPlan: typeof _freePlan | undefined = undefined
+/*
+export const freeTrialPlan: typeof freePlan = freePlan && {
   ...freePlan,
   label: 'Free trial',
   featureFlags: {
@@ -81,15 +85,17 @@ export const freeTrialPlan = {
     enableSync: true,
   },
 }
+*/
 
 export const allPlansObj: Record<PlanID, Plan> = {
-  free: freeTrialPlan,
+  free: _freePlan,
 
   '5d4b8e44ab1ba20b9ef4a1ba': {
     id: '5d4b8e44ab1ba20b9ef4a1ba',
     type: 'individual',
 
     stripeIds: ['plan_FZq6KR3dWwsDMD', 'plan_FYy3loKWJXBMiA'],
+    paddleProductId: undefined,
 
     banner: 'Most popular',
 
@@ -132,6 +138,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_Fa91C1UYp4I4jk', 'plan_FYy4yB7RIG9Ex5'],
+    paddleProductId: undefined,
 
     banner: true,
 
@@ -182,6 +189,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_Fa91LFrdFSM9vG', 'plan_Fa5EGSsHdZl3LG'],
+    paddleProductId: undefined,
 
     banner: true,
 
@@ -223,6 +231,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G2zZe1HdGfVwDH', 'plan_G3Lfpx8jw3Smxc'],
+    paddleProductId: undefined,
 
     banner: true,
 
@@ -250,6 +259,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G2y6Y7RtMt5oAE', 'plan_G3Li3X9Qaj9vxo'],
+    paddleProductId: undefined,
 
     banner: '20% OFF',
 
@@ -277,6 +287,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G2y7gq9I7sd8Gc', 'plan_G3Liuh6wnA8Git'],
+    paddleProductId: undefined,
 
     banner: '18% OFF',
 
@@ -304,6 +315,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G5d9TcPDExqFcc', 'plan_G5dgccnsYVmSXX'],
+    paddleProductId: undefined,
 
     banner: '10% OFF',
 
@@ -331,6 +343,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G5dAdlW5lu5Ld5', 'plan_G5dhda9cEU3r0H'],
+    paddleProductId: undefined,
 
     banner: '20% OFF',
 
@@ -358,6 +371,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G9jW5bWfdl4T0T', 'plan_G9jQYMzS9KkKrk'],
+    paddleProductId: undefined,
 
     banner: true,
 
@@ -385,6 +399,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_GD3I71EXD50V2t', 'plan_GD3FmlLdmL4M9E'],
+    paddleProductId: undefined,
 
     banner: '25% OFF',
 
@@ -412,6 +427,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'team',
 
     stripeIds: ['plan_GDCxyxPMVxrmGM', 'plan_GD4d9NyJT9PZjT'],
+    paddleProductId: undefined,
 
     banner: true,
 
@@ -444,6 +460,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'team',
 
     stripeIds: ['plan_GDCyDqLyRC5Q5o', 'plan_GDCwjCwtc7aIEm'],
+    paddleProductId: undefined,
 
     banner: '29% OFF',
 
@@ -470,16 +487,42 @@ export const allPlansObj: Record<PlanID, Plan> = {
       enablePushNotifications: true,
     },
   },
+
+  '5dd82d16eb2b11106f941f8d': {
+    id: '5dd82d16eb2b11106f941f8d',
+    type: undefined,
+
+    stripeIds: [],
+    paddleProductId: 566713,
+
+    banner: false,
+
+    cannonicalId: 'devhub-v1',
+    label: 'DevHub v1',
+    description: `Lifetime access from v0.9 to v1.9 (current: v${constants.APP_VERSION})`,
+    amount: 2500,
+    currency: 'usd',
+    interval: undefined,
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    transformUsage: undefined,
+
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
 }
 
 export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
-  allPlansObj.free as Plan & { id: ActivePlanID },
-  allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd44e11b2726bb02d540b5e'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd4618db3ebb145268eba7c'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd467e799537b2378df8eea'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd82d16eb2b11106f941f8d'] as Plan & { id: ActivePlanID },
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)
@@ -491,6 +534,13 @@ export const cheapestPlanWithNotifications = activePlans
       !!(plan && plan.amount > 0 && plan.featureFlags.enablePushNotifications),
   )
   .sort((a, b) => a.amount - b.amount)[0]
+
+export const freeTrialDays =
+  (freeTrialPlan && (freeTrialPlan as any).trialPeriodDays) ||
+  (activePaidPlans &&
+    activePaidPlans[0] &&
+    activePaidPlans[0].trialPeriodDays) ||
+  0
 
 /*
 (function generateNewObjectId() {

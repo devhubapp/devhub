@@ -92,6 +92,9 @@ function* onSyncDown() {
               source
               type
 
+              stripeIds
+              paddleProductId
+
               banner
 
               amount

@@ -1,8 +1,8 @@
-import { allPlans, constants, freePlan, isPlanStatusValid } from '@devhub/core'
+import { constants, freePlan, isPlanStatusValid } from '@devhub/core'
 import React from 'react'
 import { View } from 'react-native'
+import { useDispatch } from 'react-redux'
 
-import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
@@ -14,6 +14,7 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
+import { ButtonLink } from '../common/ButtonLink'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
@@ -32,10 +33,12 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { showBackButton } = props
 
   const { sizename } = useAppLayout()
+
+  const dispatch = useDispatch()
+  const appToken = useReduxState(selectors.githubAppTokenSelector)
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
-  const pushModal = useReduxAction(actions.pushModal)
 
   return (
     <ModalColumn
@@ -57,50 +60,57 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
       title="Preferences"
     >
       <>
-        {Platform.OS === 'web' && (
-          <View>
-            <SubHeader title="Current plan">
-              <Spacer flex={1} />
+        {Platform.OS === 'web' &&
+          !(userPlan && userPlan.status === 'active' && !userPlan.interval) && (
+            <View>
+              <SubHeader title="Current plan">
+                <Spacer flex={1} />
 
-              <Button onPress={() => pushModal({ name: 'PRICING' })} size={32}>
-                <View style={[sharedStyles.center, sharedStyles.horizontal]}>
-                  <ThemedIcon color="foregroundColor" name="pencil" />
-                  <Spacer width={contentPadding / 2} />
-                  <ThemedText color="foregroundColor">{`${(userPlan &&
-                    userPlan.label) ||
-                    'None'}${
-                    isPlanExpired
-                      ? ' (expired)'
-                      : userPlan && userPlan.status === 'trialing'
-                      ? (userPlan.label || '').toLowerCase().includes('trial')
-                        ? ''
-                        : userPlan.amount
-                        ? ' (trial)'
-                        : ' trial'
-                      : ''
-                  }`}</ThemedText>
-                  {!!(
-                    (isPlanExpired &&
-                      !(freePlan && !freePlan.trialPeriodDays)) ||
-                    (userPlan &&
-                      userPlan.status === 'active' &&
-                      userPlan.cancelAtPeriodEnd &&
-                      userPlan.cancelAt) ||
-                    (userPlan &&
-                      userPlan.status &&
-                      (!isPlanStatusValid(userPlan) ||
-                        userPlan.status === 'incomplete'))
-                  ) && (
-                    <>
-                      <Spacer width={contentPadding / 2} />
-                      <UnreadDot backgroundColor="red" borderColor={null} />
-                    </>
-                  )}
-                </View>
-              </Button>
-            </SubHeader>
-          </View>
-        )}
+                <ButtonLink
+                  href={`${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${appToken}`}
+                  openOnNewTab
+                  size={32}
+                >
+                  <View style={[sharedStyles.center, sharedStyles.horizontal]}>
+                    {/* <ThemedIcon color="foregroundColor" name="pencil" />
+                  <Spacer width={contentPadding / 2} /> */}
+                    <ThemedText color="foregroundColor">{`${
+                      userPlan
+                        ? userPlan.label || (userPlan.amount ? 'Paid' : 'Free')
+                        : 'None'
+                    }${
+                      isPlanExpired
+                        ? ' (expired)'
+                        : userPlan && userPlan.status === 'trialing'
+                        ? (userPlan.label || '').toLowerCase().includes('trial')
+                          ? ''
+                          : userPlan.amount
+                          ? ' (trial)'
+                          : ' trial'
+                        : ''
+                    } ↗`}</ThemedText>
+                    {!!(
+                      (isPlanExpired &&
+                        !(freePlan && !freePlan.trialPeriodDays)) ||
+                      (userPlan &&
+                        userPlan.status === 'active' &&
+                        userPlan.cancelAtPeriodEnd &&
+                        userPlan.cancelAt) ||
+                      (userPlan &&
+                        userPlan.status &&
+                        (!isPlanStatusValid(userPlan) ||
+                          userPlan.status === 'incomplete'))
+                    ) && (
+                      <>
+                        <Spacer width={contentPadding / 2} />
+                        <UnreadDot backgroundColor="red" borderColor={null} />
+                      </>
+                    )}
+                  </View>
+                </ButtonLink>
+              </SubHeader>
+            </View>
+          )}
 
         {!!(
           Platform.isElectron ||
@@ -253,7 +263,9 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
 
           <Button
             key="advanced-button"
-            onPress={() => pushModal({ name: 'ADVANCED_SETTINGS' })}
+            onPress={() =>
+              dispatch(actions.pushModal({ name: 'ADVANCED_SETTINGS' }))
+            }
           >
             Show advanced settings
           </Button>

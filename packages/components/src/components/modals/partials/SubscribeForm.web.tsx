@@ -72,7 +72,7 @@ const SubscribeFormWithStripe = React.memo(
     }, [])
 
     async function handleSubmit() {
-      if (plan && plan.amount) subscribeToPlan()
+      if (plan && plan.amount) subscribeToStripePlan()
       else if (!(plan && plan.amount)) cancelSubscription()
     }
 
@@ -139,7 +139,7 @@ const SubscribeFormWithStripe = React.memo(
       }
     }
 
-    async function subscribeToPlan() {
+    async function subscribeToStripePlan() {
       if (!(plan && plan.id && isCardFilled && stripe)) return
 
       let cardToken
@@ -178,17 +178,20 @@ const SubscribeFormWithStripe = React.memo(
 
       try {
         const response = await axios.post<{
-          data: { subscribeToPlan: UserPlan | null } | null
+          data: { subscribeToStripePlan: UserPlan | null } | null
           errors: any[] | null
         }>(
           constants.GRAPHQL_ENDPOINT,
           {
             query: `
               mutation($input: PlanSubscriptionInput) {
-                subscribeToPlan(input: $input) {
+                subscribeToStripePlan(input: $input) {
                   id
                   source
                   type
+
+                  stripeIds
+                  paddleProductId
 
                   amount
                   currency
@@ -256,7 +259,7 @@ const SubscribeFormWithStripe = React.memo(
 
         const { data, errors } = response.data || {}
 
-        if (!(data && data.subscribeToPlan) || (errors && errors[0])) {
+        if (!(data && data.subscribeToStripePlan) || (errors && errors[0])) {
           throw new Error(
             (errors && errors[0] && errors[0].message) ||
               'Something went wrong',
@@ -268,11 +271,11 @@ const SubscribeFormWithStripe = React.memo(
           isSubmiting: false,
         })
 
-        dispatch(actions.updateUserData({ plan: data.subscribeToPlan }))
+        dispatch(actions.updateUserData({ plan: data.subscribeToStripePlan }))
 
         if (
-          !isPlanStatusValid(data.subscribeToPlan) ||
-          data.subscribeToPlan.status === 'incomplete'
+          !isPlanStatusValid(data.subscribeToStripePlan) ||
+          data.subscribeToStripePlan.status === 'incomplete'
         ) {
           throw new Error('Please try a different credit card.')
         }

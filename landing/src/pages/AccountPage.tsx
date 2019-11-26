@@ -1,7 +1,7 @@
 import {
   activePaidPlans,
   allPlansObj,
-  formatPriceAndInterval,
+  freeTrialDays,
 } from '@brunolemos/devhub-core'
 import Link from 'next/link'
 import qs from 'qs'
@@ -12,6 +12,7 @@ import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'
 import { getTrialTimeLeftLabel } from '../helpers'
+import { useFormattedPlanPrice } from '../hooks/use-formatted-plan-price'
 
 export interface AccountPageProps {}
 
@@ -25,6 +26,12 @@ export default function AccountPage(_props: AccountPageProps) {
   } = useAuth()
 
   const planInfo = authData.plan && allPlansObj[authData.plan.id]
+
+  const priceLabelForQuantity = useFormattedPlanPrice(
+    authData && authData.plan && authData.plan.amount,
+    authData.plan,
+    authData.plan && { quantity: authData.plan.quantity },
+  )
 
   function renderContent() {
     if (!(authData.appToken && authData.github && authData.github.login)) {
@@ -52,17 +59,20 @@ export default function AccountPage(_props: AccountPageProps) {
         <h2 className="mb-0 text-xl sm:text-2xl">
           {!!(planInfo && authData.plan) ? (
             <>
-              Current plan:{' '}
+              {authData.plan.interval ? 'Current plan: ' : 'You bought '}
               <strong className="text-default">
-                {authData.plan.label || planInfo.label}
+                {authData.plan.label ||
+                  planInfo.label ||
+                  (authData.plan.amount ? 'Paid' : 'None')}
               </strong>
-              {authData && authData.plan && authData.plan.amount > 0 && (
+              {!!(
+                authData &&
+                authData.plan &&
+                authData.plan.amount > 0 &&
+                authData.plan.interval
+              ) && (
                 <small className="text-muted-65 italic">
-                  {` (${authData.plan.currency.toUpperCase()} ${formatPriceAndInterval(
-                    authData.plan.amount,
-                    authData.plan,
-                    { quantity: authData.plan.quantity },
-                  )}${
+                  {` (${authData.plan.currency.toUpperCase()} ${priceLabelForQuantity}${
                     authData.plan.quantity && authData.plan.quantity > 1
                       ? `, ${authData.plan.quantity} seats`
                       : ''
@@ -75,7 +85,11 @@ export default function AccountPage(_props: AccountPageProps) {
           )}
         </h2>
 
-        {!!(authData.plan && authData.plan.status) && (
+        {!!(
+          authData.plan &&
+          authData.plan.status &&
+          !(authData.plan.status === 'active' && !authData.plan.interval)
+        ) && (
           <>
             <h2 className="mb-2 text-md sm:text-xl">
               Status:{' '}
@@ -90,27 +104,81 @@ export default function AccountPage(_props: AccountPageProps) {
                   : authData.plan.status}
               </span>
             </h2>
-
-            {authData.plan.cancelAtPeriodEnd && authData.plan.cancelAt ? (
-              <p className="mb-2 text-sm text-muted-65 italic">{` Cancellation scheduled to ${new Date(
-                authData.plan.cancelAt,
-              ).toDateString()}`}</p>
-            ) : authData.plan.status === 'incomplete' ||
-              authData.plan.status === 'incomplete_expired' ? (
-              <p className="mb-2 text-sm text-muted-65 italic">
-                Failed to charge your card. Please try with a different one.
-              </p>
-            ) : null}
           </>
+        )}
+
+        {authData.plan &&
+          authData.plan.cancelAtPeriodEnd &&
+          authData.plan.cancelAt && (
+            <p className="mb-2 text-sm text-orange italic">
+              {` Cancellation scheduled to ${new Date(
+                authData.plan.cancelAt,
+              ).toDateString()}`}{' '}
+              <span className="text-muted-65">
+                (
+                <a
+                  href="javascript:void(0)"
+                  onClick={() => abortSubscriptionCancellation()}
+                >
+                  abort cancellation
+                </a>
+                )
+              </span>
+            </p>
+          )}
+
+        {!!(
+          authData.plan &&
+          (authData.plan.status === 'incomplete' ||
+            authData.plan.status === 'incomplete_expired')
+        ) && (
+          <p className="mb-2 text-sm text-red italic">
+            Failed to charge your card. Please try with a different one.
+          </p>
+        )}
+
+        {!!(
+          authData.plan &&
+          !authData.plan.interval &&
+          planInfo &&
+          planInfo.description
+        ) && (
+          <p className="mb-2 text-sm text-muted-default italic">
+            {planInfo.description}
+          </p>
         )}
 
         <div className="pb-4" />
 
         {authData.plan && authData.plan.amount > 0 ? (
           <>
-            <Link href="/pricing">
-              <a className="text-default">Switch plan</a>
+            {!!(
+              !freeTrialDays &&
+              !activePaidPlans.some(p => !!p.interval) &&
+              authData.plan.interval
+            ) && (
+              <Link
+                href={`/purchase${qs.stringify(
+                  { plan: activePaidPlans[0].cannonicalId },
+                  { addQueryPrefix: true },
+                )}`}
+              >
+                <a className="text-default">Purchase</a>
+              </Link>
+            )}
+
+            <Link href="/download">
+              <a className="text-default">Download</a>
             </Link>
+
+            {!!(
+              authData.plan.interval &&
+              activePaidPlans.some(plan => plan.interval)
+            ) && (
+              <Link href="/pricing">
+                <a className="text-default">Switch plan</a>
+              </Link>
+            )}
 
             {!!(
               authData.plan &&
@@ -120,7 +188,7 @@ export default function AccountPage(_props: AccountPageProps) {
                   authData.plan.transformUsage.divideBy > 1))
             ) && (
               <Link
-                href={`/subscribe${qs.stringify(
+                href={`/purchase${qs.stringify(
                   {
                     action: 'update_seats',
                     plan:
@@ -137,54 +205,66 @@ export default function AccountPage(_props: AccountPageProps) {
               </Link>
             )}
 
-            <Link
-              href={`/subscribe${qs.stringify(
-                {
-                  action: 'update_card',
-                  plan:
-                    planInfo && planInfo.id
-                      ? activePaidPlans.find(_p => _p.id === planInfo.id)
-                        ? planInfo.cannonicalId
-                        : 'current'
-                      : undefined,
-                },
-                { addQueryPrefix: true },
-              )}`}
-            >
-              <a className="text-default">Update credit card</a>
-            </Link>
-
-            {authData.plan &&
-            authData.plan.cancelAtPeriodEnd &&
-            authData.plan.cancelAt ? (
-              <a
-                href="javascript:void(0)"
-                className="text-default"
-                onClick={() => abortSubscriptionCancellation()}
+            {!!(authData.plan && authData.plan.interval) && (
+              <Link
+                href={`/purchase${qs.stringify(
+                  {
+                    action: 'update_card',
+                    plan:
+                      planInfo && planInfo.id
+                        ? activePaidPlans.find(_p => _p.id === planInfo.id)
+                          ? planInfo.cannonicalId
+                          : 'current'
+                        : undefined,
+                  },
+                  { addQueryPrefix: true },
+                )}`}
               >
-                Abort subscription cancellation
-              </a>
-            ) : (
-              <a
-                href="javascript:void(0)"
-                className="text-default"
-                onClick={() => cancelSubscription(true)}
-              >
-                Cancel subscription
-              </a>
+                <a className="text-default">Update credit card</a>
+              </Link>
             )}
+
+            {!!(authData.plan && authData.plan.interval) &&
+              (authData.plan.cancelAtPeriodEnd &&
+              authData.plan.cancelAt ? null : (
+                <a
+                  href="javascript:void(0)"
+                  className="text-default"
+                  onClick={() => cancelSubscription(true)}
+                >
+                  Cancel subscription
+                </a>
+              ))}
           </>
         ) : (
           <>
-            <Link href="/pricing">
-              <a className="text-default">Subscribe to a plan</a>
-            </Link>
+            {activePaidPlans.length === 1 && activePaidPlans[0] ? (
+              <Link href="/purchase">
+                <a className="text-default">
+                  {freeTrialDays
+                    ? 'Start free trial'
+                    : activePaidPlans[0].interval
+                    ? 'Subscribe'
+                    : 'Purchase'}
+                </a>
+              </Link>
+            ) : (
+              <Link href="/pricing">
+                <a className="text-default">
+                  {activePaidPlans.some(plan => plan.interval)
+                    ? 'Subscribe to a plan'
+                    : 'See plans'}
+                </a>
+              </Link>
+            )}
           </>
         )}
 
+        <p className="mb-2" />
+
         <a
           href="javascript:void(0)"
-          className="text-default"
+          className="text-muted-65 hover:text-default"
           onClick={() => deleteAccount(true)}
         >
           Delete account
@@ -192,7 +272,7 @@ export default function AccountPage(_props: AccountPageProps) {
 
         <a
           href="javascript:void(0)"
-          className="text-default"
+          className="text-muted-65 hover:text-default"
           onClick={() => logout()}
         >
           Logout

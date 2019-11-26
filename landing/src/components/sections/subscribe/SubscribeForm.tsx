@@ -1,18 +1,24 @@
 import {
   constants,
-  formatPriceAndInterval,
   isPlanStatusValid,
   Plan,
   UserPlan,
 } from '@brunolemos/devhub-core'
 import classNames from 'classnames'
 import _ from 'lodash'
-import React, { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
+import qs from 'qs'
+import React, { useEffect, useState } from 'react'
 import { CardElement, injectStripe } from 'react-stripe-elements'
 
 import { useAuth } from '../../../context/AuthContext'
+import { usePaddleLoader } from '../../../context/PaddleLoaderContext'
 import { useTheme } from '../../../context/ThemeContext'
 import { getDefaultDevHubHeaders } from '../../../helpers'
+import { useDynamicRef } from '../../../hooks/use-dynamic-ref'
+import { useFormattedPlanPrice } from '../../../hooks/use-formatted-plan-price'
+import { useIsMountedRef } from '../../../hooks/use-is-mounted-ref'
+import { useSystem } from '../../../hooks/use-system'
 import Button from '../../common/buttons/Button'
 import { Tabs } from '../../common/Tabs'
 import { TextInput } from '../../common/TextInput'
@@ -28,10 +34,14 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
   function SubscribeForm(props) {
     const { action, children, onSuccess, plan, stripe } = props
 
-    const isMountedRef = useRef(true)
+    const Router = useRouter()
+    const { Paddle } = usePaddleLoader()
+
+    const isMountedRef = useIsMountedRef()
 
     const { theme } = useTheme()
     const { authData, logout, mergeAuthData } = useAuth()
+    const { os } = useSystem()
 
     const [isCardFilled, setIsCardFilled] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
@@ -61,12 +71,13 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     )
 
     const needsToFillTheCard =
-      action === 'update_card' ||
-      !(
-        authData.plan &&
-        authData.plan.amount &&
-        isPlanStatusValid(authData.plan)
-      )
+      (action === 'update_card' ||
+        !(
+          authData.plan &&
+          authData.plan.amount &&
+          isPlanStatusValid(authData.plan)
+        )) &&
+      plan.stripeIds.length
 
     const [creditCardTab, setCreditCardTab] = useState<'current' | 'change'>(
       !needsToFillTheCard ? 'current' : 'change',
@@ -101,14 +112,6 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         : minimumQuantity
 
     useEffect(() => {
-      isMountedRef.current = true
-
-      return () => {
-        isMountedRef.current = false
-      }
-    }, [])
-
-    useEffect(() => {
       if (!isMountedRef.current) return
       if (quantity !== _quantity) setQuantity(quantity)
     }, [_quantity, quantity])
@@ -131,7 +134,33 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         authData.plan.users.join(', '),
     ])
 
-    function canSubmit() {
+    const autostart = 'autostart' in Router.query
+    useEffect(() => {
+      if (!autostart || !(authData && authData.appToken)) return
+      if (plan.paddleProductId && !Paddle) return
+
+      Router.replace(
+        `${Router.pathname}${qs.stringify(
+          { ...Router.query, autostart: undefined },
+          { addQueryPrefix: true },
+        )}`,
+      )
+
+      if (!plan.paddleProductId) return
+
+      handleSubmitRef.current()
+    }, [
+      autostart,
+      authData && authData.appToken,
+      !!plan.paddleProductId,
+      !!Paddle,
+    ])
+
+    const priceLabelForQuantity = useFormattedPlanPrice(plan.amount, plan, {
+      quantity,
+    })
+
+    const canSubmitRef = useDynamicRef(() => {
       return !!(
         isCardFilled ||
         (!needsToFillTheCard &&
@@ -143,18 +172,21 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                     authData.plan.users &&
                     authData.plan.users.join(', '))))))
       )
-    }
+    })
 
-    async function handleSubmit() {
-      if (!canSubmit()) return
+    const subscribeToStripePlanRef = useDynamicRef(async () => {
+      if (!canSubmitRef.current()) return
+
+      if (!stripe) throw new Error('Stripe not initialized.')
+      if (!(plan.stripeIds && plan.stripeIds.length))
+        throw new Error('Not a Stripe product.')
 
       let cardToken
       try {
         setFormState({ error: undefined, isSubmiting: true })
-        const { error, token } =
-          stripe && isCardFilled
-            ? await stripe.createToken()
-            : { error: undefined, token: undefined }
+        const { error, token } = isCardFilled
+          ? await stripe.createToken()
+          : { error: undefined, token: undefined }
 
         if (!isMountedRef.current) return
 
@@ -193,10 +225,13 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           body: JSON.stringify({
             query: `
               mutation($input: PlanSubscriptionInput) {
-                subscribeToPlan(input: $input) {
+                subscribeToStripePlan(input: $input) {
                   id
                   source
                   type
+
+                  stripeIds
+                  paddleProductId
 
                   amount
                   currency
@@ -266,11 +301,11 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         }
 
         const { data, errors } = (await response.json()) as {
-          data: { subscribeToPlan: UserPlan | null } | null
+          data: { subscribeToStripePlan: UserPlan | null } | null
           errors: any[] | null
         }
 
-        if (!(data && data.subscribeToPlan) || (errors && errors[0])) {
+        if (!(data && data.subscribeToStripePlan) || (errors && errors[0])) {
           throw new Error(
             (errors && errors[0] && errors[0].message) ||
               'Something went wrong',
@@ -282,11 +317,11 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           isSubmiting: false,
         })
 
-        mergeAuthData({ plan: data.subscribeToPlan })
+        mergeAuthData({ plan: data.subscribeToStripePlan })
 
         if (
-          !isPlanStatusValid(data.subscribeToPlan) ||
-          data.subscribeToPlan.status === 'incomplete'
+          !isPlanStatusValid(data.subscribeToStripePlan) ||
+          data.subscribeToStripePlan.status === 'incomplete'
         ) {
           throw new Error('Please try a different credit card.')
         }
@@ -303,7 +338,178 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         })
         return false
       }
-    }
+    })
+
+    const purchaseViaPaddleRef = useDynamicRef(async () => {
+      if (!Paddle) {
+        setFormState({
+          error:
+            'Paddle not loaded yet. Please try again or contact support if it persists.',
+          isSubmiting: false,
+        })
+        return
+      }
+
+      let result: {
+        checkout?: {
+          created_at: string
+          completed: boolean
+          id: string
+          coupon?: {
+            coupon_code: string
+          } | null
+          passthrough: string | null
+          prices: {
+            customer: {
+              currency: string
+              unit: string
+              unit_tax: string
+              total: string
+              total_tax: string
+            }
+            vendor: {
+              currency: string
+              unit: string
+              unit_tax: string
+              total: string
+              total_tax: string
+            }
+          }
+          redirect_url: string | null
+          test_variant: string
+        }
+        product?: {
+          quantity: number
+          id: number
+          name: string
+        }
+        user?: {
+          id: string
+          email: string
+          country: string
+        }
+      }
+
+      const passthrough = {
+        _id: authData._id,
+        github: authData.github,
+        plan,
+        planId: plan.id,
+        platformRealOS: os,
+        reason: undefined,
+        users,
+      }
+
+      try {
+        result = await new Promise((resolve, reject) => {
+          Paddle.Checkout.open({
+            allowQuantity: false,
+            closeCallback: () => {
+              reject(new Error('Cancelled'))
+            },
+            email:
+              (authData.paddle && authData.paddle.email) ||
+              authData.github.email,
+            message: plan.description,
+            passthrough: JSON.stringify(passthrough),
+            product: plan.paddleProductId,
+            successCallback: (data: typeof result, err: any) => {
+              if (err || !(data && data.checkout && data.checkout.completed)) {
+                reject(new Error(`${err || ''}` || 'Paddle payment failed.'))
+                return
+              }
+
+              resolve(data)
+            },
+            quantity,
+          })
+        })
+      } catch (error) {
+        console.error(error)
+
+        setFormState({
+          error: error.message === 'Cancelled' ? '' : `${error || ''}`,
+          isSubmiting: false,
+        })
+
+        return
+      }
+
+      if (result && result.checkout && result.checkout.completed) {
+        setFormState({
+          error: undefined,
+          isSubmiting: false,
+        })
+
+        // optimistic update. the real change will occur on server via paddle webhook
+        mergeAuthData({
+          plan: {
+            id: plan.id,
+            source: 'paddle',
+            type: plan.type || 'individual',
+
+            amount: plan.amount || 0,
+            currency: result.checkout.prices.customer.currency,
+            trialPeriodDays: 0,
+            interval: undefined,
+            intervalCount: 1,
+            label: plan.label,
+            quantity:
+              Number(result.product && result.product.quantity) || undefined,
+            transformUsage: undefined,
+            coupon:
+              (result.checkout.coupon && result.checkout.coupon.coupon_code) ||
+              undefined,
+
+            status: 'active',
+
+            startAt: new Date().toISOString(),
+            cancelAt: undefined,
+            cancelAtPeriodEnd: false,
+
+            trialStartAt: undefined,
+            trialEndAt: undefined,
+
+            currentPeriodStartAt: new Date().toISOString(),
+            currentPeriodEndAt: undefined,
+
+            last4: undefined,
+            reason: passthrough.reason,
+            userPlansToKeepUsing: undefined,
+            users,
+
+            featureFlags: plan.featureFlags,
+            banner: plan.banner,
+
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        })
+
+        if (onSuccess) onSuccess()
+      } else {
+        setFormState({
+          error:
+            'Something went wrong. Refresh the page and contact support if the error persists.',
+          isSubmiting: false,
+        })
+      }
+
+      return result
+    })
+
+    const handleSubmitRef = useDynamicRef(async () => {
+      if (plan.stripeIds && plan.stripeIds.length) {
+        subscribeToStripePlanRef.current()
+      } else if (plan.paddleProductId) {
+        purchaseViaPaddleRef.current()
+      } else {
+        setFormState({
+          error: `Product doesn't have neither Stripe not Paddle ids. Please contact support. (${plan.id})`,
+          isSubmiting: false,
+        })
+      }
+    })
 
     const isMyPlan = !!(authData.plan && authData.plan.id === plan.id)
 
@@ -312,7 +518,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         className="flex flex-col items-center w-full md:w-2/3 lg:w-150 m-auto"
         onSubmit={e => {
           e.preventDefault()
-          handleSubmit()
+          handleSubmitRef.current()
         }}
       >
         {plan.type === 'team' && (!action || action === 'update_seats') && (
@@ -363,7 +569,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                     onChange={e => {
                       setUsersStr(`${e.target.value || ''}`)
                     }}
-                    onBlur={e => {
+                    onBlur={() => {
                       setUsersStr(users.join(', '))
                     }}
                   />
@@ -406,7 +612,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           </>
         )}
 
-        {!needsToFillTheCard && (
+        {!needsToFillTheCard && !!plan.stripeIds.length && (
           <Tabs<NonNullable<typeof creditCardTab>>
             className="mb-4"
             onTabChange={tab => setCreditCardTab(tab)}
@@ -428,63 +634,66 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           </Tabs>
         )}
 
-        {!!(needsToFillTheCard || creditCardTab === 'change') && (
-          <>
-            {!needsToFillTheCard && <p className="mb-4" />}
+        {!!(needsToFillTheCard || creditCardTab === 'change') &&
+          !!plan.stripeIds.length && (
+            <>
+              {!needsToFillTheCard && <p className="mb-4" />}
 
-            <div
-              className={`self-stretch mb-4 bg-more-3 border rounded-full overflow-hidden${
-                isFocused
-                  ? ' shadow-md border-primary'
-                  : ' border-bg-less-3 shadow'
-              }`}
-              style={{ minHeight: 51 }}
-            >
-              <CardElement
-                className="self-stretch py-4 px-4"
-                onBlur={() => setIsFocused(false)}
-                onChange={e => {
-                  if (e.complete !== isCardFilled) setIsCardFilled(e.complete)
-                }}
-                onFocus={() => setIsFocused(true)}
-                style={{
-                  base: {
-                    color: theme.foregroundColor,
-                    '::placeholder': {
-                      color: theme.foregroundColorMuted65,
+              <div
+                className={`self-stretch mb-4 bg-more-3 border rounded-full overflow-hidden${
+                  isFocused
+                    ? ' shadow-md border-primary'
+                    : ' border-bg-less-3 shadow'
+                }`}
+                style={{ minHeight: 51 }}
+              >
+                <CardElement
+                  className="self-stretch py-4 px-4"
+                  onBlur={() => setIsFocused(false)}
+                  onChange={e => {
+                    if (e.complete !== isCardFilled) setIsCardFilled(e.complete)
+                  }}
+                  onFocus={() => setIsFocused(true)}
+                  style={{
+                    base: {
+                      color: theme.foregroundColor,
+                      '::placeholder': {
+                        color: theme.foregroundColorMuted65,
+                      },
+                      iconColor: theme.foregroundColor,
                     },
-                    iconColor: theme.foregroundColor,
-                  },
-                  invalid: {
-                    color: theme.red,
-                    iconColor: theme.red,
-                  },
-                }}
-              />
-            </div>
+                    invalid: {
+                      color: theme.red,
+                      iconColor: theme.red,
+                    },
+                  }}
+                />
+              </div>
 
-            <p className="mb-4 text-sm text-muted-65 italic">
-              🔒 Payment secured by{' '}
-              <a href="https://stripe.com/" target="_blank" rel="noopener">
-                Stripe
-              </a>
-              {process.env.STRIPE_PUBLIC_KEY!.startsWith('pk_test') && (
-                <span className="text-red"> (test mode)</span>
-              )}
-            </p>
-          </>
-        )}
+              <p className="mb-4 text-sm text-muted-65 italic">
+                🔒 Payment secured by{' '}
+                <a href="https://stripe.com/" target="_blank" rel="noopener">
+                  Stripe
+                </a>
+                {process.env.STRIPE_PUBLIC_KEY!.startsWith('pk_test') && (
+                  <span className="text-red"> (test mode)</span>
+                )}
+              </p>
 
-        <p className="mb-8" />
+              <p className="mb-4" />
+            </>
+          )}
+
+        <p className="mb-4" />
 
         <Button
           type="primary"
           className="mb-4"
-          disabled={!canSubmit()}
+          disabled={!canSubmitRef.current()}
           loading={formState.isSubmiting}
           onClick={e => {
             e.preventDefault()
-            handleSubmit()
+            handleSubmitRef.current()
           }}
         >
           {action === 'update_card' &&
@@ -495,7 +704,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             ? 'Update credit card'
             : `${
                 plan.interval ? 'Subscribe' : 'Purchase'
-              } for ${formatPriceAndInterval(plan.amount, plan, { quantity })}`}
+              } for ${priceLabelForQuantity}`}
         </Button>
 
         {!!(
@@ -504,10 +713,16 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           (!(authData.plan && authData.plan.amount) ||
             (authData.plan.amount && plan.amount > authData.plan.amount))
         ) && (
-          <p className="mb-4 text-xs text-muted-65">
-            {authData.plan && authData.plan.amount
-              ? 'Your card will be charged any difference immediately.'
-              : 'Your card will be charged immediately.'}
+          <p className="mb-4 text-xs text-muted-65 whitespace-pre-line">
+            {[
+              // !plan.interval && 'You are purchasing a lifetime license.',
+              // !plan.interval && 'Free upgrades from v0.x to v1.9.',
+              authData.plan && authData.plan.amount
+                ? 'Your card will be charged any difference immediately.'
+                : !plan.stripeIds.length && plan.paddleProductId
+                ? plan.description || ''
+                : 'Your card will be charged immediately.',
+            ].join('\n')}
           </p>
         )}
 

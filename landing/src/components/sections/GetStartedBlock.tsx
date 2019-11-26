@@ -1,4 +1,4 @@
-import DownloadButtons from './download/DownloadButtons'
+import CTAButtons from './CTAButtons'
 
 export interface GetStartedBlockProps {}
 
@@ -7,7 +7,7 @@ export default function GetStartedBlock(_props: GetStartedBlockProps) {
     <section id="get-started" className="bg-less-1 p-6">
       <div className="container text-center">
         <h3 className="uppercase mb-6">Get Started Now</h3>
-        <DownloadButtons center />
+        <CTAButtons center />
       </div>
     </section>
   )

@@ -540,7 +540,7 @@ export type DownloadOption =
 export type PlatformCategory = DownloadOption['category']
 export type Platform = DownloadOption['platform']
 
-export type PlanSource = 'stripe' // | 'github_marketplace' | 'opencollective' | 'appstore' | 'playstore'
+export type PlanSource = 'stripe' | 'paddle' | 'none' // | 'github_marketplace' | 'opencollective' | 'appstore' | 'playstore'
 export type PlanType = 'individual' | 'team' | undefined
 
 export interface Plan {
@@ -548,6 +548,7 @@ export interface Plan {
   type: PlanType
 
   stripeIds: [string, string] | [] // [test, prod]
+  paddleProductId?: number | undefined
 
   cannonicalId: string
   label: string

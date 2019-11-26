@@ -44,7 +44,7 @@ export const DEVHUB_LINKS = {
   ACCOUNT_PAGE: `${LANDING_BASE_URL}/account`,
   DOWNLOAD_PAGE: `${LANDING_BASE_URL}/download`,
   PRICING_PAGE: `${LANDING_BASE_URL}/pricing`,
-  SUBSCRIBE_PAGE: `${LANDING_BASE_URL}/subscribe`,
+  SUBSCRIBE_PAGE: `${LANDING_BASE_URL}/purchase`,
   SLACK_INVITATION: 'https://slack.devhubapp.com',
   GITHUB_REPOSITORY: 'https://github.com/devhubapp/devhub',
   TWITTER_PROFILE: 'https://twitter.com/devhub_app',
@@ -56,7 +56,7 @@ export const APP_DEEP_LINK_URLS = {
   preferences: `${APP_DEEP_LINK_SCHEMA}://preferences`,
   pricing: `${APP_DEEP_LINK_SCHEMA}://pricing`,
   redux: `${APP_DEEP_LINK_SCHEMA}://redux`,
-  subscribe: `${APP_DEEP_LINK_SCHEMA}://subscribe`,
+  subscribe: `${APP_DEEP_LINK_SCHEMA}://purchase`,
 }
 
 // prettier-ignore

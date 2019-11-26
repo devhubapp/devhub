@@ -12,9 +12,9 @@ import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { useAuth } from '../context/AuthContext'
 
-export interface SubscribedPageProps {}
+export interface SuccessPageProps {}
 
-export default function SubscribedPage(_props: SubscribedPageProps) {
+export default function SuccessPage(_props: SuccessPageProps) {
   const { authData } = useAuth()
 
   if (!authData.plan) return null
@@ -26,7 +26,7 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
     <LandingLayout>
       <LogoHead />
 
-      <section id="subscribed" className="container">
+      <section id="success" className="container">
         <div className="flex flex-col items-center m-auto text-center">
           <h1 className="mb-4 text-2xl sm:text-4xl whitespace-no-wrap">
             {authData.plan.status === 'incomplete' ||
@@ -38,15 +38,35 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
           {authData.plan.status === 'active' ||
           authData.plan.status === 'trialing' ? (
             <h2 className="mb-4 text-xl sm:text-2xl">
-              You've successfully subscribed to the{' '}
-              <strong>{planInfo.label}</strong> plan
-              {authData.plan.quantity && authData.plan.quantity > 1
-                ? ` (${authData.plan.quantity} seats)`
-                : ''}
+              {!authData.plan.amount ? (
+                <>
+                  You're currently on the{' '}
+                  <strong>{authData.plan.label || 'Free'}</strong> plan
+                </>
+              ) : authData.plan.interval ? (
+                <>
+                  {' '}
+                  You've successfully subscribed to the{' '}
+                  <strong>{authData.plan.label}</strong> plan
+                  {authData.plan.quantity && authData.plan.quantity > 1
+                    ? ` (${authData.plan.quantity} seats)`
+                    : ''}
+                </>
+              ) : (
+                <>
+                  {' '}
+                  You've successfully purchased{' '}
+                  <strong>{authData.plan.label}</strong>
+                  {authData.plan.quantity && authData.plan.quantity > 1
+                    ? ` (${authData.plan.quantity} seats)`
+                    : ''}
+                </>
+              )}
             </h2>
           ) : (
             <h2 className="mb-4 text-xl sm:text-2xl">
-              You've subscribed to the <strong>{planInfo.label}</strong> plan
+              You've subscribed to the <strong>{authData.plan.label}</strong>{' '}
+              plan
               {authData.plan.quantity && authData.plan.quantity > 1
                 ? ` (${authData.plan.quantity} seats)`
                 : ''}
@@ -70,7 +90,7 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
                     <>
                       <div className="mb-2">
                         These people can now
-                        <span className="text-yellow">*</span> use DevHub:{' '}
+                        <span className="text-orange">*</span> use DevHub:{' '}
                         {authData.plan.users.map((username, index) => (
                           <Fragment key={username}>
                             {index > 0 && ', '}
@@ -85,13 +105,13 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
                         ))}{' '}
                         (
                         <Link
-                          href={`/subscribe${qs.stringify(
+                          href={`/purchase${qs.stringify(
                             {
                               action: 'update_seats',
                               plan:
-                                planInfo && planInfo.id
+                                authData.plan && authData.plan.id
                                   ? activePaidPlans.find(
-                                      _p => _p.id === planInfo.id,
+                                      _p => _p.id === authData.plan!.id,
                                     )
                                     ? planInfo.cannonicalId
                                     : 'current'
@@ -125,7 +145,7 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
                         </div>
                       )}
 
-                      <p className="mb-2 text-yellow text-sm italic">
+                      <p className="mb-2 text-orange text-sm italic">
                         *Note: We are enabling the Team plan manually at this
                         moment, so it may take a few hours to have an effect on
                         your team members's accounts.
@@ -133,13 +153,13 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
                     </>
                   ) : (
                     <Link
-                      href={`/subscribe${qs.stringify(
+                      href={`/purchase${qs.stringify(
                         {
                           action: 'update_seats',
                           plan:
-                            planInfo && planInfo.id
+                            authData.plan && authData.plan.id
                               ? activePaidPlans.find(
-                                  _p => _p.id === planInfo.id,
+                                  _p => _p.id === authData.plan!.id,
                                 )
                                 ? planInfo.cannonicalId
                                 : 'current'
@@ -155,8 +175,9 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
                   )
                 ) : (
                   <>
-                    You can now open DevHub or download it below. <br />
                     What about sharing the news with your friends? 🙌
+                    <br />
+                    You can now open DevHub or download it below:
                   </>
                 )}
               </p>
@@ -184,23 +205,21 @@ export default function SubscribedPage(_props: SubscribedPageProps) {
             </>
           )}
 
-          <p className="mb-4" />
+          {!!authData.plan.interval && (
+            <>
+              <p className="mb-4" />
 
-          <div className="text-center">
-            <Link href="/account">
-              <a className="text-sm text-muted-65 text-center">
-                Manage subscription
-              </a>
-            </Link>
-          </div>
+              <div className="text-center">
+                <Link href="/account">
+                  <a className="text-sm text-muted-65 text-center">
+                    Manage subscription
+                  </a>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
     </LandingLayout>
   )
-}
-
-declare global {
-  interface Window {
-    Stripe?: (apiKey: string) => any
-  }
 }

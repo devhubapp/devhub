@@ -118,7 +118,10 @@ export function getTrialTimeLeftLabel(endAt: string) {
   const days = (new Date(endAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
   if (days < 0) return 'ended'
   if (days < 1) return `${Math.ceil(days * 24)}h left`
-  return `${Math.ceil(days)} days left`
+  if (days < 15) return `${Math.ceil(days)}d left`
+  if (days < 30) return `${Math.ceil(days / 7)}w left`
+  if (days < 11 * 30) return `${Math.ceil(days / 7)}m left`
+  return `${Math.floor(days / 365)}y left`
 }
 
 export function toKebabCase(str: string) {

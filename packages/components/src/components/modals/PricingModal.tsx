@@ -1,14 +1,13 @@
 import {
+  activePaidPlans,
   activePaidPlans as _activePaidPlans,
   activePlans as _activePlans,
   allPlans,
   constants,
   freePlan,
-  isPlanExpired,
   Plan,
   PlanID,
 } from '@devhub/core'
-import axios from 'axios'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -21,7 +20,6 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { getDefaultDevHubHeaders } from '../../utils/api'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { ButtonLink } from '../common/ButtonLink'
@@ -157,7 +155,7 @@ export function PricingModal(props: PricingModalProps) {
               : (plan && plan.banner) || false
           }
           highlightFeature={highlightFeature}
-          isPartOfAList
+          isPartOfAList={plansToShow.length > 1}
           isSelected={selectedPlanId === plan.id}
           onSelect={() => {
             setSelectedPlanId(plan.id)
@@ -172,7 +170,7 @@ export function PricingModal(props: PricingModalProps) {
           key={`pricing-plan-${plan.cannonicalId}`}
           banner
           highlightFeature={highlightFeature}
-          isPartOfAList
+          isPartOfAList={plansToShow.length > 1}
           isSelected={selectedPlanId === plan.id}
           onSelect={() => {
             setSelectedPlanId(plan.id)
@@ -188,6 +186,7 @@ export function PricingModal(props: PricingModalProps) {
       highlightFeature,
       userPlan && userPlan.amount,
       showUserPlanAtTheTop,
+      plansToShow.length > 1,
     ],
   )
 
@@ -345,9 +344,11 @@ export function PricingModal(props: PricingModalProps) {
               openOnNewTab
               type="neutral"
             >
-              {userPlan && userPlan.amount
+              {userPlan &&
+              userPlan.amount &&
+              activePaidPlans.some(p => p.interval)
                 ? 'Switch plan ↗'
-                : 'Select a plan ↗'}
+                : 'See available options ↗'}
             </ButtonLink>
           </View>
         ) : (

@@ -10,6 +10,8 @@ import './styles/devices/iphone.css'
 
 import { AppGlobalStyles } from '../src/components/styles/AppGlobalStyles'
 import { AuthProvider } from '../src/context/AuthContext'
+import { PaddleLoaderProvider } from '../src/context/PaddleLoaderContext'
+import { StripeLoaderProvider } from '../src/context/StripeLoaderContext'
 import { ThemeConsumer, ThemeProvider } from '../src/context/ThemeContext'
 
 export default class App extends NextApp {
@@ -37,24 +39,30 @@ export default class App extends NextApp {
     const { Component, pageProps } = this.props
 
     return (
-      <ThemeProvider>
-        <AuthProvider>
-          <Container>
-            <Head>
-              <title>DevHub | TweetDeck for GitHub</title>
-            </Head>
+      <StripeLoaderProvider>
+        <PaddleLoaderProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <Container>
+                <Head>
+                  <title>DevHub | TweetDeck for GitHub</title>
+                </Head>
 
-            <ThemeConsumer>
-              {({ theme }) => (
-                <div className={theme.isDark ? 'dark-theme' : 'light-theme'}>
-                  <Component {...pageProps} />
-                </div>
-              )}
-            </ThemeConsumer>
-            <AppGlobalStyles />
-          </Container>
-        </AuthProvider>
-      </ThemeProvider>
+                <ThemeConsumer>
+                  {({ theme }) => (
+                    <div
+                      className={theme.isDark ? 'dark-theme' : 'light-theme'}
+                    >
+                      <Component {...pageProps} />
+                    </div>
+                  )}
+                </ThemeConsumer>
+                <AppGlobalStyles />
+              </Container>
+            </AuthProvider>
+          </ThemeProvider>
+        </PaddleLoaderProvider>
+      </StripeLoaderProvider>
     )
   }
 }

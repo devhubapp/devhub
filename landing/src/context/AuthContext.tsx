@@ -12,6 +12,7 @@ import React, {
 } from 'react'
 
 import { getDefaultDevHubHeaders } from '../helpers'
+import { useIsMountedRef } from '../hooks/use-is-mounted-ref'
 
 export interface AuthProviderProps {
   children: React.ReactNode
@@ -26,10 +27,15 @@ export interface AuthData {
     nodeId: string
     login: string
     name: string
+    email?: string
     createdAt: string
   }
   freeTrialStartAt: string | undefined
   freeTrialEndAt: string | undefined
+  paddle?: {
+    email?: string
+    coupon?: string
+  }
   plan: UserPlan | undefined
   createdAt: string
 }
@@ -54,10 +60,12 @@ const defaultAuthData: AuthData = {
     nodeId: '',
     login: '',
     name: '',
+    email: undefined,
     createdAt: '',
   },
   freeTrialStartAt: '',
   freeTrialEndAt: '',
+  paddle: undefined,
   plan: undefined,
   createdAt: '',
 }
@@ -91,13 +99,7 @@ export function AuthProvider(props: AuthProviderProps) {
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [authData, setAuthData] = useState(defaultAuthData)
 
-  const isMountedRef = useRef(true)
-
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false
-    }
-  }, [])
+  const isMountedRef = useIsMountedRef()
 
   useLayoutEffect(() => {
     const cache = getFromCache()
@@ -327,8 +329,13 @@ export function AuthProvider(props: AuthProviderProps) {
                     nodeId
                     login
                     name
+                    email
                     createdAt
                   }
+                }
+                paddle {
+                  email
+                  coupon
                 }
                 freeTrialStartAt
                 freeTrialEndAt
@@ -336,6 +343,9 @@ export function AuthProvider(props: AuthProviderProps) {
                   id
                   source
                   type
+
+                  stripeIds
+                  paddleProductId
 
                   banner
 
@@ -404,6 +414,7 @@ export function AuthProvider(props: AuthProviderProps) {
             appToken: newAppToken,
             appTokenCreatedAt: new Date().toISOString(),
             github: user && user.github && user.github.user,
+            paddle: undefined,
             plan: user && user.plan,
             createdAt: user && user.createdAt,
             freeTrialStartAt: user && user.freeTrialStartAt,
@@ -425,6 +436,7 @@ export function AuthProvider(props: AuthProviderProps) {
   }, [])
 
   const logout = useCallback(() => {
+    Router.push('/')
     setAuthData(defaultAuthData)
     setIsLoggingIn(false)
   }, [])

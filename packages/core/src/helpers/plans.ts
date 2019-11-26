@@ -80,6 +80,8 @@ export function getUserPlan(user: DatabaseUser): UserPlan {
   return {
     ...user.plan,
     type: user.plan.type || 'individual',
+    stripeIds: user.plan.stripeIds || plan.stripeIds,
+    paddleProductId: user.plan.paddleProductId || plan.paddleProductId,
     banner: plan.banner,
     featureFlags: plan.featureFlags,
     label: user.plan.label || plan.label,
@@ -115,40 +117,13 @@ export function isPlanExpired(
 
 export function formatPrice(
   valueInCents: number,
-  {
-    currency,
-    locale = 'en-US',
-  }: {
-    currency: string
-    locale?: string
-  },
+  plan: Pick<Plan, 'currency' | 'paddleProductId' | 'transformUsage'>,
+  options: { locale?: string; quantity?: number } = {},
 ) {
-  const formatter = new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency || 'usd',
-  })
+  const { currency, transformUsage } = plan
 
-  const value = formatter.format(valueInCents / 100)
-  return value.endsWith('.00') ? value.slice(0, -3) : value
-}
+  const { locale = 'en-US', quantity } = options
 
-export function formatPriceAndInterval(
-  valueInCents: number,
-  {
-    currency,
-    interval,
-    intervalCount,
-    transformUsage,
-    type,
-  }: {
-    currency: string
-    interval: Plan['interval']
-    intervalCount: Plan['intervalCount']
-    transformUsage?: { divideBy: number; round?: 'up' | 'down' }
-    type?: Plan['type']
-  },
-  { locale = 'en-US', quantity }: { locale?: string; quantity?: number } = {},
-) {
   const formatter = new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency || 'usd',
@@ -167,7 +142,18 @@ export function formatPriceAndInterval(
   const value = formatter.format(_valueInCents / 100)
   const priceLabel = value.endsWith('.00') ? value.slice(0, -3) : value
 
-  return `${priceLabel}${
+  return priceLabel
+}
+
+export function formatInterval(
+  plan: Parameters<typeof formatPrice>[1] &
+    Pick<Plan, 'interval' | 'intervalCount' | 'type'>,
+  options: Parameters<typeof formatPrice>[2] = {},
+) {
+  const { interval, intervalCount, transformUsage, type } = plan
+  const { quantity } = options
+
+  return `${
     interval
       ? intervalCount > 1
         ? ` every ${intervalCount} ${interval}s`
@@ -182,4 +168,13 @@ export function formatPriceAndInterval(
       ? ' per user'
       : ''
   }`
+}
+
+export function formatPriceAndInterval(
+  valueInCents: number,
+  plan: Parameters<typeof formatInterval>[0],
+  options: Parameters<typeof formatInterval>[1] = {},
+) {
+  const priceLabel = formatPrice(valueInCents, plan, options)
+  return `${priceLabel}${formatInterval(plan, options)}`
 }
