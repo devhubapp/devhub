@@ -7,16 +7,18 @@ import { PricingPlanBlock } from './PricingPlanBlock'
 
 export interface PricingPlansProps {}
 
-const thereAreActiveTeamPlans = activePlans.some(plan => plan.type === 'team')
+const shouldShowPlanTypeTabs =
+  activePlans.some(plan => plan.type !== 'team') &&
+  activePlans.some(plan => plan.type === 'team')
 
 export function PricingPlans(_props: PricingPlansProps) {
   const { authData } = useAuth()
 
   const [tab, setTab] = useState<PlanType | undefined>(
-    thereAreActiveTeamPlans &&
+    shouldShowPlanTypeTabs &&
       (authData && authData.plan && authData.plan.type) === 'team'
       ? 'team'
-      : thereAreActiveTeamPlans
+      : shouldShowPlanTypeTabs
       ? 'individual'
       : undefined,
   )
@@ -26,7 +28,7 @@ export function PricingPlans(_props: PricingPlansProps) {
       plan =>
         !!(
           plan &&
-          ((!tab && !thereAreActiveTeamPlans) ||
+          ((!tab && !shouldShowPlanTypeTabs) ||
             (plan.type === tab || (tab === 'individual' && !plan.type)))
         ),
     )
@@ -37,7 +39,7 @@ export function PricingPlans(_props: PricingPlansProps) {
           key={`pricing-plan-${plan.id}`}
           banner={plan.banner}
           buttonLink={`/purchase?plan=${plan.cannonicalId}${
-            plan.paddleProductId ? '&autostart' : ''
+            '' // plan.paddleProductId ? '&autostart' : ''
           }${!(authData && authData.appToken) ? '&autologin' : ''}`}
           plan={plan}
           totalNumberOfVisiblePlans={plans.length}
@@ -57,7 +59,7 @@ export function PricingPlans(_props: PricingPlansProps) {
 
   return (
     <div className="container">
-      {!!thereAreActiveTeamPlans && (
+      {!!shouldShowPlanTypeTabs && (
         <Tabs<NonNullable<PlanType>>
           className="mb-6"
           onTabChange={id => setTab(id)}

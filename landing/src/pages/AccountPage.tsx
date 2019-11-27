@@ -152,20 +152,29 @@ export default function AccountPage(_props: AccountPageProps) {
 
         {authData.plan && authData.plan.amount > 0 ? (
           <>
-            {!!(
-              !freeTrialDays &&
-              !activePaidPlans.some(p => !!p.interval) &&
-              authData.plan.interval
-            ) && (
-              <Link
-                href={`/purchase${qs.stringify(
-                  { plan: activePaidPlans[0].cannonicalId },
-                  { addQueryPrefix: true },
-                )}`}
-              >
-                <a className="text-default">Purchase</a>
-              </Link>
-            )}
+            {!activePaidPlans.some(p => !!p.interval) &&
+              (!!(!freeTrialDays && authData.plan.interval) ? (
+                <Link
+                  href={`/purchase${qs.stringify(
+                    { plan: activePaidPlans[0].cannonicalId },
+                    { addQueryPrefix: true },
+                  )}`}
+                >
+                  <a className="text-default">Purchase</a>
+                </Link>
+              ) : (
+                <Link
+                  href={`/purchase${qs.stringify(
+                    {
+                      plan: activePaidPlans[0].cannonicalId,
+                      action: 'update_seats',
+                    },
+                    { addQueryPrefix: true },
+                  )}`}
+                >
+                  <a className="text-default">Purchase for more people</a>
+                </Link>
+              ))}
 
             <Link href="/download">
               <a className="text-default">Download</a>
@@ -182,6 +191,7 @@ export default function AccountPage(_props: AccountPageProps) {
 
             {!!(
               authData.plan &&
+              authData.plan.interval &&
               (authData.plan.type === 'team' ||
                 (authData.plan.quantity && authData.plan.quantity > 1) ||
                 (authData.plan.transformUsage &&

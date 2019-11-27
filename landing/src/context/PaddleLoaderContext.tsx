@@ -1,4 +1,3 @@
-import immer from 'immer'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useForceRerender } from '../hooks/use-force-rerender'
@@ -91,43 +90,52 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
             quantity
           ]
 
-        if (
-          cachedPricesByProductIdAndQuantityRef.current[productId] &&
-          quantity in cachedPricesByProductIdAndQuantityRef.current[productId]
-        )
-          return undefined
-
         cachedPricesByProductIdAndQuantityRef.current[productId] =
           cachedPricesByProductIdAndQuantityRef.current[productId] || {}
 
         if (!Paddle) return undefined
 
-        cachedPricesByProductIdAndQuantityRef.current[productId][
-          quantity
-        ] = undefined
+        if (
+          cachedPricesByProductIdAndQuantityRef.current[productId] &&
+          !(
+            quantity in cachedPricesByProductIdAndQuantityRef.current[productId]
+          )
+        ) {
+          cachedPricesByProductIdAndQuantityRef.current[productId][
+            quantity
+          ] = undefined
 
-        Paddle.Product.Prices(
-          productId,
-          quantity,
-          (result: PaddleProductPriceResult) => {
-            if (!('price' in result && result.price)) return
+          Paddle.Product.Prices(
+            productId,
+            quantity,
+            (result: PaddleProductPriceResult) => {
+              if (!('price' in result && result.price)) return
 
-            cachedPricesByProductIdAndQuantityRef.current = immer(
-              cachedPricesByProductIdAndQuantityRef.current,
-              draft => {
-                draft[productId] = draft[productId] || {}
-                draft[productId][quantity] = result.price
-              },
-            )
+              cachedPricesByProductIdAndQuantityRef.current = {
+                ...cachedPricesByProductIdAndQuantityRef.current,
+                [productId]: {
+                  ...(cachedPricesByProductIdAndQuantityRef.current || {})[
+                    productId
+                  ],
+                  [quantity]: {
+                    ...result.price,
+                    gross: getPriceLabelWithoutZeros(result.price.gross),
+                    net: getPriceLabelWithoutZeros(result.price.net),
+                    tax: getPriceLabelWithoutZeros(result.price.tax),
+                    tax_included: result.price.tax_included,
+                  },
+                },
+              }
 
-            forceRerender()
-          },
-        )
+              forceRerender()
+            },
+          )
+        }
 
         if (
           quantity > 1 &&
-          cachedPricesByProductIdAndQuantityRef.current[productId][1] &&
-          cachedPricesByProductIdAndQuantityRef.current[productId][1]
+          (cachedPricesByProductIdAndQuantityRef.current[productId][1] &&
+            cachedPricesByProductIdAndQuantityRef.current[productId][1]!.gross)
         ) {
           return {
             gross: estimatePriceForQuantity(
@@ -176,6 +184,11 @@ declare global {
   }
 }
 
+const _floatFormatter = new Intl.NumberFormat(undefined, {
+  style: 'decimal',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+})
 function estimatePriceForQuantity(
   priceLabelForQuantity1: string,
   quantity = 1,
@@ -189,9 +202,18 @@ function estimatePriceForQuantity(
     const newAmount = parseFloat(amount) * quantity
     if (isNaN(newAmount)) throw new Error('Failed to parse amount')
 
-    return `${currency}${newAmount.toFixed(2)}`
+    const newAmountFormatted = getPriceLabelWithoutZeros(
+      _floatFormatter.format(newAmount),
+    )
+
+    return `${currency}${newAmountFormatted}`
   } catch (error) {
     console.error(error)
     return priceLabelForQuantity1
   }
+}
+
+function getPriceLabelWithoutZeros(priceLabel: string) {
+  if (!priceLabel) return priceLabel
+  return priceLabel.endsWith('.00') ? priceLabel.slice(0, -3) : priceLabel
 }

@@ -55,11 +55,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
           activePaidPlans[0].amount ? (
             <Button
               className="mb-2 mr-2"
-              href={
-                authData.appToken
-                  ? '/purchase?autostart'
-                  : '/purchase?autologin&autostart'
-              }
+              href={authData.appToken ? '/purchase' : '/purchase?autologin'}
               type="primary"
             >
               {`Purchase for ${priceLabel}`}

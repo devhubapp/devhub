@@ -360,6 +360,7 @@ export function AuthProvider(props: AuthProviderProps) {
                     round
                   }
                   quantity
+                  coupon
 
                   status
 

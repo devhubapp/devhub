@@ -53,8 +53,10 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       isSubmiting: false,
     })
     const [usersStr, setUsersStr] = useState(
-      (authData &&
+      (plan.interval &&
+        authData &&
         authData.plan &&
+        authData.plan.interval &&
         authData.plan.users &&
         authData.plan.users
           .map(str => `${str || ''}`.replace(/[\s]/g, ''))
@@ -62,9 +64,23 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           .join(', ')) ||
         '',
     )
+    const [_showQuantityForm, setShowQuantityForm] = useState(false)
+
+    const forceShowQuantityForm = !!(
+      plan.type === 'team' ||
+      (plan.transformUsage && plan.transformUsage.divideBy > 1) ||
+      action === 'update_seats'
+    )
+    const showQuantityForm = !!(_showQuantityForm || forceShowQuantityForm)
 
     const users = _.uniq(
-      usersStr
+      (
+        usersStr ||
+        (authData.plan && authData.plan.amount && !authData.plan.interval
+          ? ''
+          : authData.github.login) ||
+        ''
+      )
         .split(',')
         .map(str => `${str || ''}`.replace(/[\s]/g, ''))
         .filter(Boolean),
@@ -90,26 +106,24 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
     const [_quantity, setQuantity] = useState<UserPlan['quantity']>(undefined)
 
-    const minimumQuantity =
-      plan.type === 'team'
+    const minimumQuantity = showQuantityForm
+      ? Math.max(
+          quantityStep > 1 ? quantityStep : 1,
+          Math.ceil(users.length / quantityStep) * quantityStep,
+        )
+      : 1
+    const quantity = showQuantityForm
+      ? _quantity && _quantity >= 1
         ? Math.max(
-            quantityStep > 1 ? quantityStep : 5,
-            Math.ceil(users.length / quantityStep) * quantityStep,
+            minimumQuantity,
+            Math.round(_quantity / quantityStep) * quantityStep,
           )
-        : 1
-    const quantity =
-      plan.type === 'team'
-        ? _quantity && _quantity >= 1
-          ? Math.max(
-              minimumQuantity,
-              Math.round(_quantity / quantityStep) * quantityStep,
-            )
-          : authData.plan &&
-            authData.plan.quantity &&
-            authData.plan.quantity > minimumQuantity
-          ? authData.plan.quantity
-          : minimumQuantity
+        : authData.plan &&
+          authData.plan.quantity &&
+          authData.plan.quantity > minimumQuantity
+        ? authData.plan.quantity
         : minimumQuantity
+      : minimumQuantity
 
     useEffect(() => {
       if (!isMountedRef.current) return
@@ -117,6 +131,9 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     }, [_quantity, quantity])
 
     useEffect(() => {
+      if (!plan.interval) return
+      if (!(authData && authData.plan && authData.plan.interval)) return
+
       setUsersStr(
         (authData &&
           authData.plan &&
@@ -128,6 +145,8 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           '',
       )
     }, [
+      !!plan.interval,
+      !!(authData && authData.plan && authData.plan.interval),
       authData &&
         authData.plan &&
         authData.plan.users &&
@@ -162,15 +181,16 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
     const canSubmitRef = useDynamicRef(() => {
       return !!(
-        isCardFilled ||
-        (!needsToFillTheCard &&
-          ((action !== 'update_seats' && !isMyPlan) ||
-            ((action === 'update_seats' || isMyPlan) &&
-              (quantity !== (authData.plan && authData.plan.quantity) ||
-                users.join(', ') !==
-                  (authData.plan &&
-                    authData.plan.users &&
-                    authData.plan.users.join(', '))))))
+        (isCardFilled ||
+          (!needsToFillTheCard &&
+            ((action !== 'update_seats' && !isMyPlan) ||
+              ((action === 'update_seats' || isMyPlan) &&
+                (quantity !== (authData.plan && authData.plan.quantity) ||
+                  users.join(', ') !==
+                    (authData.plan &&
+                      authData.plan.users &&
+                      authData.plan.users.join(', '))))))) &&
+        !(!plan.interval && showQuantityForm && quantity !== users.length)
       )
     })
 
@@ -278,7 +298,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                 planId: plan.id,
                 cardToken,
                 quantity,
-                users,
+                users: showQuantityForm ? users : [],
               },
             },
           }),
@@ -521,7 +541,30 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           handleSubmitRef.current()
         }}
       >
-        {plan.type === 'team' && (!action || action === 'update_seats') && (
+        {!!(
+          !forceShowQuantityForm &&
+          (showQuantityForm || (!plan.interval && plan.paddleProductId))
+        ) && (
+          <Tabs
+            className="mb-2"
+            onTabChange={value => {
+              setShowQuantityForm(value === 'team')
+            }}
+          >
+            <Tabs.Tab
+              id="individual"
+              title="Only for me"
+              active={!showQuantityForm}
+            />
+            <Tabs.Tab
+              id="team"
+              title="For more people"
+              active={showQuantityForm}
+            />
+          </Tabs>
+        )}
+
+        {!!(showQuantityForm && (!action || action === 'update_seats')) && (
           <>
             <p className="mb-4 font-bold text-5xl select-none">
               <span
@@ -547,8 +590,8 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               </span>
               <span className="text-default select-none">
                 {quantity === 0 || quantity > 1
-                  ? `${quantity} seats`
-                  : '1 seat'}
+                  ? `${quantity} people`
+                  : '1 person'}
               </span>
               <span
                 className="px-4 text-default cursor-pointer select-none"
@@ -558,59 +601,82 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               </span>
             </p>
 
-            {authData.plan &&
-              authData.plan.quantity &&
-              authData.plan.quantity > 1 && (
-                <>
-                  <TextInput
-                    className="mb-2 w-full text-center"
-                    placeholder="GitHub usernames, e.g.: brunolemos, gaearon, mxstbr"
-                    value={usersStr || ''}
-                    onChange={e => {
-                      setUsersStr(`${e.target.value || ''}`)
-                    }}
-                    onBlur={() => {
-                      setUsersStr(users.join(', '))
-                    }}
-                  />
+            {(showQuantityForm ||
+              (authData.plan &&
+                authData.plan.quantity &&
+                authData.plan.quantity > 1)) && (
+              <>
+                <TextInput
+                  className="mb-2 w-full text-center"
+                  placeholder={`GitHub usernames (e.g.: ${_.uniq([
+                    authData.github.login,
+                    'brunolemos',
+                    'gaearon',
+                    'thekitze',
+                  ])
+                    .filter(Boolean)
+                    .slice(0, 3)
+                    .join(', ')})`}
+                  value={usersStr || ''}
+                  onChange={e => {
+                    setUsersStr(`${e.target.value || ''}`)
+                  }}
+                  onBlur={() => {
+                    setUsersStr(_usersStr =>
+                      (_usersStr || '')
+                        .split(',')
+                        .map(str => `${str || ''}`.replace(/[\s]/g, ''))
+                        .filter(Boolean)
+                        .join(', '),
+                    )
+                  }}
+                />
 
-                  {
-                    <div className="flex flex-row items-center justify-center">
-                      {users.length ? (
-                        users.map(username => (
-                          <a
-                            key={username}
-                            href={`https://github.com/${username}`}
-                            target="_blank"
-                          >
-                            <img
-                              alt=""
+                {!!(users && (users.length > 1 || showQuantityForm)) && (
+                  <>
+                    <div className="flex flex-row flex-wrap items-center justify-center">
+                      {users.map(username => (
+                        <a
+                          key={username}
+                          href={`https://github.com/${username}`}
+                          target="_blank"
+                        >
+                          <img
+                            alt=""
+                            className="w-6 h-6 m-1 bg-less-1 rounded-full"
+                            src={`https://github.com/${username}.png`}
+                            title={`@${username}`}
+                          />
+                        </a>
+                      ))}
+
+                      {!!(quantity - users.length >= 1) &&
+                        new Array(quantity - users.length)
+                          .fill(undefined)
+                          .map((_placeholder, index) => (
+                            <div
+                              key={index}
                               className="w-6 h-6 m-1 bg-less-1 rounded-full"
-                              src={`https://github.com/${username}.png`}
-                              title={`@${username}`}
                             />
-                          </a>
-                        ))
-                      ) : (
-                        <p className="w-6 h-6 m-1" />
-                      )}
+                          ))}
                     </div>
-                  }
 
-                  {!(authData.plan.users && authData.plan.users.length) && (
-                    <p className="mb-6 text-sm text-muted-65 italic">
-                      These people will gain access to DevHub via this
-                      subscription. You can change this anytime.
+                    <p className="mb-6 text-xs text-muted-65 italic whitespace-pre-line">
+                      {plan.interval
+                        ? 'These people will gain access to DevHub via this subscription. You can change this anytime.'
+                        : 'These people will gain access to DevHub. \n' +
+                          'You can buy for your friends, followers or teammates, for example.'}
                     </p>
-                  )}
+                  </>
+                )}
 
-                  <p className="mb-2" />
-                </>
-              )}
-
-            <p className="mb-4" />
+                <p className="mb-2" />
+              </>
+            )}
           </>
         )}
+
+        <p className="mb-4" />
 
         {!needsToFillTheCard && !!plan.stripeIds.length && (
           <Tabs<NonNullable<typeof creditCardTab>>

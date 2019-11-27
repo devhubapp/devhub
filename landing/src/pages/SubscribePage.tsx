@@ -136,9 +136,9 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
         <div className="flex flex-col items-center m-auto text-center">
           <h1 className="mb-4 text-2xl sm:text-4xl">
-            {isMyPlan && action === 'update_card' ? (
+            {isMyPlan && action === 'update_card' && plan.stripeIds.length ? (
               'Update credit card'
-            ) : isMyPlan && action === 'update_seats' ? (
+            ) : isMyPlan && action === 'update_seats' && plan.interval ? (
               'Update seats'
             ) : activePaidPlans.length === 1 && !plan.interval ? (
               'Purchase DevHub'

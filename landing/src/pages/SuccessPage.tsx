@@ -85,94 +85,101 @@ export default function SuccessPage(_props: SuccessPageProps) {
           {isPlanStatusValid(authData.plan) && (
             <>
               <p className="mb-8 text-default">
-                {authData.plan.type === 'team' ? (
-                  authData.plan.users && authData.plan.users.length ? (
-                    <>
-                      <div className="mb-2">
-                        These people can now
-                        <span className="text-orange">*</span> use DevHub:{' '}
-                        {authData.plan.users.map((username, index) => (
-                          <Fragment key={username}>
-                            {index > 0 && ', '}
+                {authData.plan.users &&
+                authData.plan.users.filter(
+                  username =>
+                    `${username || ''}`.toLowerCase() !==
+                    authData.github.login.toLowerCase(),
+                ).length ? (
+                  <>
+                    <div className="mb-2">
+                      These people can now
+                      <span className="text-orange">*</span> use DevHub:{' '}
+                      {authData.plan.users.map((username, index) => (
+                        <Fragment key={username}>
+                          {index > 0 && ', '}
+                          <a
+                            className="font-bold"
+                            href={`https://github.com/${username}`}
+                            target="_blank"
+                          >
+                            {username}
+                          </a>
+                        </Fragment>
+                      ))}{' '}
+                      (
+                      <Link
+                        href={`/purchase${qs.stringify(
+                          {
+                            action: 'update_seats',
+                            plan:
+                              authData.plan && authData.plan.id
+                                ? activePaidPlans.find(
+                                    _p => _p.id === authData.plan!.id,
+                                  )
+                                  ? planInfo.cannonicalId
+                                  : 'current'
+                                : undefined,
+                          },
+                          { addQueryPrefix: true },
+                        )}`}
+                      >
+                        <a className="text-default">
+                          {authData.plan && authData.plan.interval
+                            ? 'edit'
+                            : 'buy more'}
+                        </a>
+                      </Link>
+                      )
+                    </div>
+
+                    {!!authData.plan.users.length && (
+                      <div className="flex flex-row items-center justify-center mb-2">
+                        {authData.plan.users.map(username => (
+                          <>
                             <a
-                              className="font-bold"
                               href={`https://github.com/${username}`}
                               target="_blank"
                             >
-                              {username}
+                              <img
+                                alt=""
+                                className="w-6 h-6 m-1 bg-less-1 rounded-full"
+                                src={`https://github.com/${username}.png`}
+                                title={`@${username}`}
+                              />
                             </a>
-                          </Fragment>
-                        ))}{' '}
-                        (
-                        <Link
-                          href={`/purchase${qs.stringify(
-                            {
-                              action: 'update_seats',
-                              plan:
-                                authData.plan && authData.plan.id
-                                  ? activePaidPlans.find(
-                                      _p => _p.id === authData.plan!.id,
-                                    )
-                                    ? planInfo.cannonicalId
-                                    : 'current'
-                                  : undefined,
-                            },
-                            { addQueryPrefix: true },
-                          )}`}
-                        >
-                          <a className="text-default">edit</a>
-                        </Link>
-                        )
+                          </>
+                        ))}
                       </div>
+                    )}
 
-                      {!!authData.plan.users.length && (
-                        <div className="flex flex-row items-center justify-center mb-2">
-                          {authData.plan.users.map(username => (
-                            <>
-                              <a
-                                href={`https://github.com/${username}`}
-                                target="_blank"
-                              >
-                                <img
-                                  alt=""
-                                  className="w-6 h-6 m-1 bg-less-1 rounded-full"
-                                  src={`https://github.com/${username}.png`}
-                                  title={`@${username}`}
-                                />
-                              </a>
-                            </>
-                          ))}
-                        </div>
-                      )}
-
-                      <p className="mb-2 text-orange text-sm italic">
-                        *Note: We are enabling the Team plan manually at this
-                        moment, so it may take a few hours to have an effect on
-                        your team members's accounts.
-                      </p>
-                    </>
-                  ) : (
-                    <Link
-                      href={`/purchase${qs.stringify(
-                        {
-                          action: 'update_seats',
-                          plan:
-                            authData.plan && authData.plan.id
-                              ? activePaidPlans.find(
-                                  _p => _p.id === authData.plan!.id,
-                                )
-                                ? planInfo.cannonicalId
-                                : 'current'
-                              : undefined,
-                        },
-                        { addQueryPrefix: true },
-                      )}`}
-                    >
-                      <a className="text-default">
-                        Click to manage who can use this subscription
-                      </a>
-                    </Link>
-                  )
+                    <p className="mb-2 text-orange text-sm italic">
+                      *Note: We are enabling their plans manually at this
+                      moment, so it may take a few hours to have an effect on
+                      their accounts.
+                    </p>
+                  </>
+                ) : authData.plan.type === 'team' ? (
+                  <Link
+                    href={`/purchase${qs.stringify(
+                      {
+                        action: 'update_seats',
+                        plan:
+                          authData.plan && authData.plan.id
+                            ? activePaidPlans.find(
+                                _p => _p.id === authData.plan!.id,
+                              )
+                              ? planInfo.cannonicalId
+                              : 'current'
+                            : undefined,
+                      },
+                      { addQueryPrefix: true },
+                    )}`}
+                  >
+                    <a className="text-default">
+                      Click to manage who can use this subscription
+                    </a>
+                  </Link>
                 ) : (
                   <>
                     What about sharing the news with your friends? 🙌

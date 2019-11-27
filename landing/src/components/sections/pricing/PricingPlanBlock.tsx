@@ -145,7 +145,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             {plan.label}
           </div>
 
-          <div className="mb-2 text-sm text-muted-65">{plan.description}</div>
+          <div className="mb-2 text-sm text-muted-65 whitespace-pre-line">
+            {plan.description}
+          </div>
 
           <div className="text-5xl leading-snug font-bold text-default">
             {`${priceLabelWithoutCents}`}
