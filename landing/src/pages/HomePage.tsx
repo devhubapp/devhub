@@ -1,5 +1,6 @@
 import {
   activePaidPlans,
+  constants,
   freePlan,
   freeTrialDays,
 } from '@brunolemos/devhub-core'
@@ -64,7 +65,10 @@ export default function HomePage(_props: HomePageProps) {
                 activePaidPlans && activePaidPlans.every(plan => !plan.interval)
               ) && <CheckLabel label="One-time payment (no subscription)" />}
 
-              <CheckLabel label="No code access (granular permissons)" />
+              {!constants.GITHUB_APP_HAS_CODE_ACCESS && (
+                <CheckLabel label="No code access (granular permissons)" />
+              )}
+
               <CheckLabel label="Cross-platform (desktop & mobile)" />
             </CheckLabels>
             <ResponsiveImage

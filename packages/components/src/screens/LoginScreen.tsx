@@ -1,9 +1,9 @@
+import { constants, tryParseOAuthParams } from '@devhub/core'
 import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import url from 'url'
 
-import { constants, tryParseOAuthParams } from '@devhub/core'
 import { getAppVersionLabel } from '../components/common/AppVersion'
 import { FullHeightScrollView } from '../components/common/FullHeightScrollView'
 import { GitHubLoginButton } from '../components/common/GitHubLoginButton'
@@ -21,7 +21,11 @@ import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
-import { contentPadding } from '../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  smallerTextSize,
+} from '../styles/variables'
 import {
   clearOAuthQueryParams,
   clearQueryStringFromURL,
@@ -76,9 +80,9 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    fontSize: 15,
-    fontWeight: '300',
-    lineHeight: 20,
+    fontSize: normalTextSize + 2,
+    fontWeight: '400',
+    lineHeight: normalTextSize + 4,
     textAlign: 'center',
   },
 
@@ -102,6 +106,7 @@ const styles = StyleSheet.create({
 })
 
 export const LoginScreen = React.memo(() => {
+  const fullAccessRef = useRef(false)
   const [isExecutingOAuth, setIsExecutingOAuth] = useState(false)
 
   const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
@@ -187,7 +192,9 @@ export const LoginScreen = React.memo(() => {
       analytics.trackEvent('engagement', 'login')
 
       const params = await executeOAuth('both', {
-        scope: constants.DEFAULT_GITHUB_OAUTH_SCOPES,
+        scope: fullAccessRef.current
+          ? [...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo']
+          : constants.DEFAULT_GITHUB_OAUTH_SCOPES,
       })
       const { appToken } = tryParseOAuthParams(params)
       clearOAuthQueryParams()
@@ -245,15 +252,65 @@ export const LoginScreen = React.memo(() => {
             TweetDeck for GitHub
           </ThemedText>
 
-          <Spacer height={contentPadding} />
+          <Spacer height={contentPadding * 2} />
 
           <GitHubLoginButton
             analyticsLabel="github_login_public"
-            loading={isLoggingIn || isExecutingOAuth}
-            onPress={() => loginWithGitHub()}
+            disabled={isLoggingIn || isExecutingOAuth}
+            loading={
+              !fullAccessRef.current && (isLoggingIn || isExecutingOAuth)
+            }
+            onPress={() => {
+              fullAccessRef.current = false
+              loginWithGitHub()
+            }}
+            // rightIcon="globe"
             style={styles.button}
+            subtitle={
+              constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
+              !constants.GITHUB_APP_HAS_CODE_ACCESS
+                ? 'Granular permissions'
+                : undefined
+            }
             title="Sign in with GitHub"
           />
+
+          {!!constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES && (
+            <>
+              <Spacer height={contentPadding / 2} />
+
+              <GitHubLoginButton
+                analyticsLabel="github_login_private"
+                disabled={isLoggingIn || isExecutingOAuth}
+                loading={
+                  fullAccessRef.current && (isLoggingIn || isExecutingOAuth)
+                }
+                onPress={() => {
+                  fullAccessRef.current = true
+                  loginWithGitHub()
+                }}
+                // rightIcon="lock"
+                style={styles.button}
+                subtitle="Full access"
+                title="Sign in with GitHub"
+                type="neutral"
+              />
+
+              <Spacer height={contentPadding} />
+
+              <ThemedText
+                color="foregroundColorMuted65"
+                style={[
+                  sharedStyles.textCenter,
+                  { fontSize: smallerTextSize, fontStyle: 'italic' },
+                ]}
+              >
+                "Granular permissions" is recommended for security reasons, but
+                feel free to use "Full access" to easily get private access to
+                all repositories you have access.
+              </ThemedText>
+            </>
+          )}
         </View>
 
         <Spacer height={contentPadding} />

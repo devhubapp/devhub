@@ -324,20 +324,25 @@ function* onFetchRequest(
     owner,
   )
   const githubOAuthToken = selectors.githubOAuthTokenSelector(state)!
-  const githubAppToken = selectors.githubAppTokenSelector(state)
+  const githubAppTokenDetails = selectors.githubOAuthTokenDetailsSelector(state)
   const loggedUsername = selectors.currentGitHubUsernameSelector(state)!
 
   const githubToken =
+    (githubAppTokenDetails &&
+      githubAppTokenDetails.scope &&
+      githubAppTokenDetails.scope.includes('repo') &&
+      githubAppTokenDetails.token) ||
     (subscription &&
       (subscription.type === 'activity' ||
         subscription.type === 'issue_or_pr') &&
       installationToken) ||
     githubOAuthToken ||
-    githubAppToken
+    (githubAppTokenDetails && githubAppTokenDetails.token)
 
   const appTokenType: GitHubAppTokenType =
     (githubToken === installationToken && 'app-installation') ||
-    (githubToken === githubAppToken && 'app-user-to-server') ||
+    (githubToken === (githubAppTokenDetails && githubAppTokenDetails.token) &&
+      'app-user-to-server') ||
     'oauth'
 
   const page = Math.max(1, payloadParams.page || 1)

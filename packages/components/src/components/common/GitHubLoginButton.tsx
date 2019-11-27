@@ -2,7 +2,13 @@ import React from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
 
 import { GitHubIcon } from '@devhub/core'
-import { contentPadding } from '../../styles/variables'
+import { sharedStyles } from '../../styles/shared'
+import {
+  contentPadding,
+  normalTextSize,
+  smallerTextSize,
+  smallTextSize,
+} from '../../styles/variables'
 import { Button, ButtonProps } from '../common/Button'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -29,35 +35,23 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'flex-start',
     minWidth: 250,
     paddingHorizontal: contentPadding * 2,
     overflow: 'hidden',
   },
 
-  iconWrapper: {
-    alignItems: 'center',
-    borderWidth: 0,
-    justifyContent: 'center',
-  },
-
-  mainContentContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingHorizontal: contentPadding,
-  },
-
-  title: {
+  titleText: {
     fontWeight: '600',
-    fontSize: 15,
-    lineHeight: 20,
+    fontSize: normalTextSize + 1,
+    lineHeight: normalTextSize + 6,
     textAlign: 'center',
   },
 
   subtitleText: {
     fontWeight: '400',
-    fontSize: 13,
-    lineHeight: 16,
+    fontSize: smallerTextSize,
+    lineHeight: smallerTextSize + 4,
     textAlign: 'center',
   },
 })
@@ -76,11 +70,11 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
 
   return (
     <Button
+      {...({ type: 'primary' } as any)}
       {...otherProps}
       contentContainerStyle={styles.contentContainer}
       size={50}
       style={[styles.button, sizename === '1-small' && { width: '100%' }]}
-      type="primary"
     >
       {({ foregroundThemeColor }) => (
         <>
@@ -96,22 +90,30 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
             </>
           )}
 
-          <View>
+          <View style={[sharedStyles.alignItemsFlexStart]}>
             {!!title && (
               <ThemedText
                 color={foregroundThemeColor}
                 {...textProps}
-                style={[styles.title, textProps.style]}
+                style={[styles.titleText, textProps.style]}
               >
                 {title}
+              </ThemedText>
+            )}
+
+            {!!subtitle && (
+              <ThemedText
+                color={foregroundThemeColor}
+                {...textProps}
+                style={[styles.subtitleText, textProps.style]}
+              >
+                {subtitle}
               </ThemedText>
             )}
           </View>
 
           {!!rightIcon && (
-            <View
-              style={[styles.iconWrapper, { paddingRight: contentPadding }]}
-            >
+            <>
               {!!rightIcon && (
                 <>
                   <Spacer width={contentPadding / 2} />
@@ -123,7 +125,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
                   />
                 </>
               )}
-            </View>
+            </>
           )}
         </>
       )}
