@@ -67,7 +67,6 @@ export function getDefaultUserPlan(
 
   return userPlan
 }
-
 export function getUserPlan(user: DatabaseUser): UserPlan {
   const defaultUserPlan: UserPlan = getDefaultUserPlan(user.createdAt, {
     trialStartAt: user.freeTrialStartAt,
@@ -85,6 +84,12 @@ export function getUserPlan(user: DatabaseUser): UserPlan {
 
   return {
     ...user.plan,
+
+    // workaround for 100% discount coupons
+    // change the amount to non-zero
+    // because we treat zero as the free plan all over the app
+    amount: !user.plan.amount && user.plan.coupon ? 1 : user.plan.amount || 0,
+
     type: user.plan.type || 'individual',
     stripeIds: user.plan.stripeIds || plan.stripeIds,
     paddleProductId: user.plan.paddleProductId || plan.paddleProductId,
