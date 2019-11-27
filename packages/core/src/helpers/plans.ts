@@ -23,6 +23,8 @@ export function getDefaultUserPlan(
         ).toISOString()
       : undefined
 
+  const isTrialing =
+    _trialStartAt && _trialEndAt && new Date(_trialEndAt).valueOf() > Date.now()
   const isTrialExpired =
     _trialStartAt && _trialEndAt && new Date(_trialEndAt).valueOf() < Date.now()
   const defaultPlan = isTrialExpired ? freePlan : freeTrialPlan
@@ -50,7 +52,11 @@ export function getDefaultUserPlan(
     quantity: 1,
     source: 'none',
     startAt: _trialStartAt,
-    status: defaultPlan && defaultPlan.trialPeriodDays ? 'trialing' : 'active',
+    status:
+      (defaultPlan && defaultPlan.trialPeriodDays) ||
+      (isTrialing || (isTrialExpired && !freePlan))
+        ? 'trialing'
+        : 'active',
     trialEndAt: _trialEndAt,
     trialPeriodDays: (defaultPlan && defaultPlan.trialPeriodDays) || 0,
     trialStartAt: _trialEndAt ? _trialStartAt : undefined,
@@ -101,12 +107,12 @@ export function isPlanStatusValid(
 }
 
 export function isPlanExpired(
-  plan: Pick<UserPlan, 'status' | 'trialEndAt'> | undefined,
+  plan: Pick<UserPlan, 'amount' | 'status' | 'trialEndAt'> | undefined,
 ): boolean {
   if (!plan) return false
 
   if (
-    plan.status === 'trialing' &&
+    (plan.status === 'trialing' || !plan.amount) &&
     plan.trialEndAt &&
     fixDateToISO(plan.trialEndAt)
   )

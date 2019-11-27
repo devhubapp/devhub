@@ -92,9 +92,11 @@ export default function Header(props: HeaderProps) {
             </HeaderLink> */}
 
             {!!(
-              authData &&
-              authData.appToken &&
-              (freeTrialDays || (authData.plan && authData.plan.amount))
+              (freeTrialDays &&
+                !activePaidPlans.every(plan => !plan.interval)) ||
+              (authData &&
+                authData.appToken &&
+                (freeTrialDays || (authData.plan && authData.plan.amount)))
             ) && (
               <HeaderLink
                 href="/download"

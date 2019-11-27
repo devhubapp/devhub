@@ -1,7 +1,6 @@
 import {
   activePaidPlans,
   constants,
-  freePlan,
   freeTrialDays,
 } from '@brunolemos/devhub-core'
 import classNames from 'classnames'
@@ -12,12 +11,12 @@ import { useFormattedPlanPrice } from '../../hooks/use-formatted-plan-price'
 import { useSystem } from '../../hooks/use-system'
 import Button from '../common/buttons/Button'
 
-export interface DownloadButtonsProps {
+export interface CTAButtonsProps {
   center?: boolean
   className?: string
 }
 
-export default function CTAButtons(props: DownloadButtonsProps) {
+export default function CTAButtons(props: CTAButtonsProps) {
   const { center, className } = props
 
   const { os } = useSystem()
@@ -89,7 +88,9 @@ export default function CTAButtons(props: DownloadButtonsProps) {
             </Button>
           )}
 
-          {!!(freePlan && freeTrialDays) && (
+          {!!(
+            freeTrialDays && !activePaidPlans.every(plan => !plan.interval)
+          ) && (
             <Button
               type="neutral"
               href="/download?autostart"

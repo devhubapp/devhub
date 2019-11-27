@@ -6,6 +6,7 @@ import {
   constants,
   EnhancedGitHubEvent,
   EnhancedItem,
+  freeTrialDays,
   getDateSmallText,
   getOwnerAndRepoFormattedFilter,
   getUsernamesFromFilter,
@@ -70,7 +71,13 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   const appSafeAreaInsets = useSafeArea()
   const { appOrientation } = useAppLayout()
-  const { column, columnIndex, headerDetails } = useColumn(columnId || '')
+  const {
+    column,
+    columnIndex,
+    headerDetails,
+    isOverMaxColumnLimit,
+    isOverPlanColumnLimit,
+  } = useColumn(columnId || '')
 
   const dispatch = useDispatch()
   const appToken = useReduxState(selectors.appTokenSelector)
@@ -100,13 +107,6 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     subtype === 'USER_RECEIVED_PUBLIC_EVENTS'
   const isUserActivity =
     subtype === 'USER_EVENTS' || subtype === 'USER_PUBLIC_EVENTS'
-
-  const isOverPlanColumnLimit = !!(
-    plan && columnIndex + 1 > plan.featureFlags.columnsLimit
-  )
-  const isOverMaxColumnLimit = !!(
-    columnIndex >= 0 && columnIndex + 1 > constants.COLUMNS_LIMIT
-  )
 
   const { allIncludedOwners, allIncludedRepos } = useMemo(
     () => getOwnerAndRepoFormattedFilter(column && column.filters),

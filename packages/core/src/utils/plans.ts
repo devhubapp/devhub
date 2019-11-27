@@ -71,10 +71,8 @@ const _freePlan: Plan & { id: 'free' } = {
   },
 }
 
-export const freePlan: typeof _freePlan | undefined = undefined // _freePlan
-export const freeTrialPlan: typeof _freePlan | undefined = undefined
-/*
-export const freeTrialPlan: typeof freePlan = freePlan && {
+export const freePlan: typeof _freePlan | undefined = _freePlan
+export const freeTrialPlan: typeof _freePlan | undefined = freePlan && {
   ...freePlan,
   label: 'Free trial',
   featureFlags: {
@@ -85,7 +83,6 @@ export const freeTrialPlan: typeof freePlan = freePlan && {
     enableSync: true,
   },
 }
-*/
 
 export const allPlansObj: Record<PlanID, Plan> = {
   free: _freePlan,
@@ -499,7 +496,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
     cannonicalId: 'devhub-v1',
     label: 'DevHub v1',
-    description: `Lifetime access from v0.9 to v1.9 (current: v${constants.APP_VERSION})`,
+    description: `Lifetime access from v0.9 to v1.9 \n(current: v${constants.APP_VERSION})`,
     amount: 2500,
     currency: 'usd',
     interval: undefined,

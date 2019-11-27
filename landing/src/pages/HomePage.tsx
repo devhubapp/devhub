@@ -56,9 +56,10 @@ export default function HomePage(_props: HomePageProps) {
               {!!(freePlan && !freePlan.trialPeriodDays) && (
                 <CheckLabel label="Free version" />
               )}
-              {!!freeTrialDays && (
-                <CheckLabel label={`${freeTrialDays}-day free trial`} />
-              )}
+              {!!freeTrialDays &&
+                !activePaidPlans.every(plan => !plan.interval) && (
+                  <CheckLabel label={`${freeTrialDays}-day free trial`} />
+                )}
               {!!(
                 activePaidPlans && activePaidPlans.every(plan => !plan.interval)
               ) && <CheckLabel label="One-time payment (no subscription)" />}

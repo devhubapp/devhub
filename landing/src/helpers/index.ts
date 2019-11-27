@@ -120,7 +120,7 @@ export function getTrialTimeLeftLabel(endAt: string) {
   if (days < 1) return `${Math.ceil(days * 24)}h left`
   if (days < 15) return `${Math.ceil(days)}d left`
   if (days < 30) return `${Math.ceil(days / 7)}w left`
-  if (days < 11 * 30) return `${Math.ceil(days / 7)}m left`
+  if (days < 11 * 30) return `${Math.ceil(days / 30)}mo left`
   return `${Math.floor(days / 365)}y left`
 }
 
