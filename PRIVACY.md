@@ -12,9 +12,7 @@ We might contact you via e-mail (rarely) to share things like big updates or imp
 You have the option to install DevHub's GitHub App in some specific orgs and repositories.
 This is required to enable access to activities from private repositories.
 
-DevHub will have access to issues, pull requests, comments, labels, assignees, milestones, merges, collaborators and some other metadata (e.g. repository name).
-
-DevHub does not have access to any code from any repository.
+DevHub will only request the permissions that are required to show you useful GitHub events. Due to a GitHub API limitation, code access may be requested for private repositories, but DevHub will never access any code.
 
 
 ### Diagnostics information
@@ -28,7 +26,7 @@ DevHub follows good practices of security, but 100% security can't be granted in
 
 Client-side communication is encrypted using HTTPS. Server-side tokens are encrypted or behind environment variables.
 
-We recommend being extra careful with which browser extensions you have installed to avoid token exposure to third parties.
+We recommend being mindful with which browser extensions you have installed to avoid token exposure to third parties.
 
 
 ### Support
@@ -37,4 +35,4 @@ If you find any bug, please open an issue with the details.
 
 ---
 
-Updated: June 06th, 2019.
+Updated: November 27th, 2019.
