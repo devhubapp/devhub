@@ -100,14 +100,16 @@ export default class Document extends NextDocument {
           />
 
           <link rel="shortcut icon" href="/static/favicon.ico" />
-
-          <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=UA-52350759-6"
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
+          {process.env.NODE_ENV === 'production' && (
+            <>
+              {' '}
+              <script
+                async
+                src="https://www.googletagmanager.com/gtag/js?id=UA-52350759-6"
+              />
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -116,8 +118,10 @@ export default class Document extends NextDocument {
               gtag('event', 'donthuntme')
             }
           `,
-            }}
-          />
+                }}
+              />
+            </>
+          )}
           <script async defer src="/static/js/donthuntme.js" />
         </Head>
 
