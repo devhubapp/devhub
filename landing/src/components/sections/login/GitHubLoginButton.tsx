@@ -6,6 +6,7 @@ import React, { useEffect } from 'react'
 import { useAuth } from '../../../context/AuthContext'
 import { useDynamicRef } from '../../../hooks/use-dynamic-ref'
 import { useOAuth } from '../../../hooks/use-oauth'
+import { useSystem } from '../../../hooks/use-system'
 import Button from '../../common/buttons/Button'
 
 export interface GitHubLoginButtonProps {
@@ -18,11 +19,13 @@ export default function GitHubLoginButton(props: GitHubLoginButtonProps) {
   const Router = useRouter()
   const { isExecutingOAuth, startOAuth } = useOAuth()
   const { authData, isLoggingIn } = useAuth()
+  const { category } = useSystem()
 
   const isAlreadyLoggedRef = useDynamicRef(!!(authData && authData.appToken))
   const autologin = 'autologin' in Router.query
   useEffect(() => {
     if (!autologin) return
+    if (!category || category === 'mobile') return
 
     Router.replace(
       `${Router.pathname}${qs.stringify(
@@ -33,7 +36,7 @@ export default function GitHubLoginButton(props: GitHubLoginButtonProps) {
 
     if (isAlreadyLoggedRef.current) return
     startOAuth('oauth')
-  }, [autologin])
+  }, [autologin, category])
 
   function login() {
     startOAuth(method)
