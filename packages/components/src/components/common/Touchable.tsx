@@ -88,7 +88,7 @@ export const Touchable = React.forwardRef(
 
     const onPressIn = useCallback<NonNullable<TouchableProps['onPressIn']>>(
       e => {
-        if (Platform.OS === 'web') {
+        if (Platform.OS === 'web' && e.nativeEvent) {
           pressInPagePointRef.current = {
             x: e.nativeEvent.pageX,
             y: e.nativeEvent.pageY,
@@ -104,7 +104,7 @@ export const Touchable = React.forwardRef(
       e => {
         if (_onPressOut) _onPressOut(e)
 
-        if (Platform.OS === 'web') {
+        if (Platform.OS === 'web' && e.nativeEvent) {
           const [x, y] = [e.nativeEvent.pageX, e.nativeEvent.pageY]
           if (
             Math.abs(pressInPagePointRef.current.x - x) > 1 ||
