@@ -566,7 +566,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
         {!!(showQuantityForm && (!action || action === 'update_seats')) && (
           <>
-            <p className="mb-4 font-bold text-5xl select-none">
+            <p className="mb-4 font-bold text-3xl md:text-5xl select-none">
               <span
                 className={classNames(
                   'px-4 select-none',
@@ -585,6 +585,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                         )
                     : undefined
                 }
+                style={{ touchAction: 'manipulation' }}
               >
                 ▼
               </span>
@@ -596,6 +597,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               <span
                 className="px-4 text-default cursor-pointer select-none"
                 onClick={() => setQuantity(q => (q || quantity) + quantityStep)}
+                style={{ touchAction: 'manipulation' }}
               >
                 ▲
               </span>

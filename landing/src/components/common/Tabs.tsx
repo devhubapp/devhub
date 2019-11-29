@@ -47,9 +47,9 @@ Tabs.Tab = function Tab<TabId extends string>(props: TabProps<TabId>) {
         active && 'bg-lighther-2 font-bold',
       )}
     >
-      <span>{title}</span>
+      <span className="truncate">{title}</span>
       <span
-        className="font-bold invisible pointer-events-none"
+        className="font-bold truncate invisible pointer-events-none"
         style={{ marginTop: '-1.5rem' }}
       >
         {title}
