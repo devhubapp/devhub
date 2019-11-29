@@ -162,7 +162,7 @@ function* onLoginRequest(
                 type
 
                 stripeIds
-                paddleProductId
+                paddleId
                 
                 banner
 

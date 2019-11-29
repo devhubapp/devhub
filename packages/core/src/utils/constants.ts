@@ -40,7 +40,7 @@ export const GOOGLEPLAY_ID = 'com.devhubapp'
 
 export const APP_BASE_URL = 'https://app.devhubapp.com'
 export const DEVHUB_BETA_URL = 'https://beta.devhubapp.com'
-export const API_BASE_URL = 'https://api.devhubapp.com'
+export const API_BASE_URL = 'http://192.168.15.18:5000'
 export const GRAPHQL_ENDPOINT = `${API_BASE_URL}/graphql`
 
 const LANDING_BASE_URL = 'https://devhubapp.com'

@@ -1,7 +1,9 @@
 import { Plan } from '../types'
 import * as constants from './constants'
 
-export type ActivePlanID = '5dd82d16eb2b11106f941f8d'
+export type ActivePlanID =
+  | '5de04e8c383dcda01f8fdbc2'
+  | '5dd82d16eb2b11106f941f8d'
 
 export type InactivePlanID =
   | 'free'
@@ -32,7 +34,7 @@ const _freePlan: Plan & { id: 'free' } = {
   type: undefined,
 
   stripeIds: [],
-  paddleProductId: undefined,
+  paddleId: undefined,
 
   banner: true,
 
@@ -92,7 +94,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_FZq6KR3dWwsDMD', 'plan_FYy3loKWJXBMiA'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: 'Most popular',
 
@@ -135,7 +137,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_Fa91C1UYp4I4jk', 'plan_FYy4yB7RIG9Ex5'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: true,
 
@@ -186,7 +188,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_Fa91LFrdFSM9vG', 'plan_Fa5EGSsHdZl3LG'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: true,
 
@@ -228,7 +230,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G2zZe1HdGfVwDH', 'plan_G3Lfpx8jw3Smxc'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: true,
 
@@ -256,7 +258,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G2y6Y7RtMt5oAE', 'plan_G3Li3X9Qaj9vxo'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: '20% OFF',
 
@@ -284,7 +286,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G2y7gq9I7sd8Gc', 'plan_G3Liuh6wnA8Git'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: '18% OFF',
 
@@ -312,7 +314,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G5d9TcPDExqFcc', 'plan_G5dgccnsYVmSXX'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: '10% OFF',
 
@@ -340,7 +342,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G5dAdlW5lu5Ld5', 'plan_G5dhda9cEU3r0H'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: '20% OFF',
 
@@ -368,7 +370,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_G9jW5bWfdl4T0T', 'plan_G9jQYMzS9KkKrk'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: true,
 
@@ -396,7 +398,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'individual',
 
     stripeIds: ['plan_GD3I71EXD50V2t', 'plan_GD3FmlLdmL4M9E'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: '25% OFF',
 
@@ -424,7 +426,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'team',
 
     stripeIds: ['plan_GDCxyxPMVxrmGM', 'plan_GD4d9NyJT9PZjT'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: true,
 
@@ -457,7 +459,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     type: 'team',
 
     stripeIds: ['plan_GDCyDqLyRC5Q5o', 'plan_GDCwjCwtc7aIEm'],
-    paddleProductId: undefined,
+    paddleId: undefined,
 
     banner: '29% OFF',
 
@@ -485,17 +487,47 @@ export const allPlansObj: Record<PlanID, Plan> = {
     },
   },
 
+  '5de04e8c383dcda01f8fdbc2': {
+    id: '5de04e8c383dcda01f8fdbc2',
+    type: undefined,
+
+    stripeIds: [],
+    paddleId: 577165,
+
+    banner: true,
+
+    cannonicalId: 'monthly-paddle',
+    label: 'Monthly',
+    description: '\n\n',
+    amount: 1000,
+    currency: 'usd',
+    interval: 'month',
+    intervalCount: 1,
+    trialPeriodDays: 14,
+    transformUsage: undefined,
+
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
   '5dd82d16eb2b11106f941f8d': {
     id: '5dd82d16eb2b11106f941f8d',
     type: undefined,
 
     stripeIds: [],
-    paddleProductId: 566713,
+    paddleId: 566713,
 
-    banner: false,
+    banner: 'Black Friday',
 
-    cannonicalId: 'devhub-v1',
-    label: 'DevHub v1',
+    cannonicalId: 'lifetime-v1-blackfriday19',
+    label: 'Lifetime',
     description: `Lifetime access from v0.9 to v1.9 \n(current: v${constants.APP_VERSION})`,
     amount: 2500,
     currency: 'usd',
@@ -519,6 +551,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
+  allPlansObj['5de04e8c383dcda01f8fdbc2'] as Plan & { id: ActivePlanID },
   allPlansObj['5dd82d16eb2b11106f941f8d'] as Plan & { id: ActivePlanID },
 ]
 

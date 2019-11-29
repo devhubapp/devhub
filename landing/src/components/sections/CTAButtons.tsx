@@ -98,7 +98,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
         </>
       ) : (
         <>
-          <Button type="primary" href="/download" className="mb-2">
+          <Button type="primary" href="/download" className="mb-2 mr-2">
             Download the app
           </Button>
 

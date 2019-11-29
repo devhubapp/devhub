@@ -19,22 +19,34 @@ export type PaddleProductPriceResult =
       country: string
       price: PaddleProductPrice
       quantity: number
+      recurring?: {
+        price: PaddleProductPrice
+        subscription: {
+          length: number
+          trial_days: number
+        }
+      }
     }
   | {
       success: false
       error: { code: number; message: string }
     }
 
+export interface Response {
+  price: PaddleProductPrice
+  subscription?: {
+    length: number
+    trial_days: number
+  }
+}
+
 export interface PaddleLoaderState {
   Paddle: Record<string, any> | null
   cachedPricesByProductIdAndQuantity: Record<
     number,
-    Record<number, PaddleProductPrice | undefined>
+    Record<number, Response | undefined>
   >
-  getProductPrice(
-    productId: number,
-    quantity?: number,
-  ): PaddleProductPrice | undefined
+  getProductPrice(productId: number, quantity?: number): Response | undefined
 }
 
 export const PaddleLoaderContext = React.createContext<PaddleLoaderState>({
@@ -109,7 +121,13 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
             productId,
             quantity,
             (result: PaddleProductPriceResult) => {
-              if (!('price' in result && result.price)) return
+              const price =
+                ('recurring' in result &&
+                  result.recurring &&
+                  result.recurring.price) ||
+                ('price' in result && result.price) ||
+                undefined
+              if (!price) return
 
               cachedPricesByProductIdAndQuantityRef.current = {
                 ...cachedPricesByProductIdAndQuantityRef.current,
@@ -118,11 +136,18 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
                     productId
                   ],
                   [quantity]: {
-                    ...result.price,
-                    gross: getPriceLabelWithoutZeros(result.price.gross),
-                    net: getPriceLabelWithoutZeros(result.price.net),
-                    tax: getPriceLabelWithoutZeros(result.price.tax),
-                    tax_included: result.price.tax_included,
+                    price: {
+                      ...price,
+                      gross: getPriceLabelWithoutZeros(price.gross),
+                      net: getPriceLabelWithoutZeros(price.net),
+                      tax: getPriceLabelWithoutZeros(price.tax),
+                      tax_included: price.tax_included,
+                    },
+                    subscription:
+                      ('recurring' in result &&
+                        result.recurring &&
+                        result.recurring.subscription) ||
+                      undefined,
                   },
                 },
               }
@@ -135,25 +160,30 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
         if (
           quantity > 1 &&
           (cachedPricesByProductIdAndQuantityRef.current[productId][1] &&
-            cachedPricesByProductIdAndQuantityRef.current[productId][1]!.gross)
+            cachedPricesByProductIdAndQuantityRef.current[productId][1]!.price
+              .gross)
         ) {
           return {
-            gross: estimatePriceForQuantity(
-              cachedPricesByProductIdAndQuantityRef.current[productId][1]!
-                .gross,
-              quantity,
-            ),
-            net: estimatePriceForQuantity(
-              cachedPricesByProductIdAndQuantityRef.current[productId][1]!.net,
-              quantity,
-            ),
-            tax: estimatePriceForQuantity(
-              cachedPricesByProductIdAndQuantityRef.current[productId][1]!.tax,
-              quantity,
-            ),
-            tax_included: cachedPricesByProductIdAndQuantityRef.current[
-              productId
-            ][1]!.tax_included,
+            price: {
+              gross: estimatePriceForQuantity(
+                cachedPricesByProductIdAndQuantityRef.current[productId][1]!
+                  .price.gross,
+                quantity,
+              ),
+              net: estimatePriceForQuantity(
+                cachedPricesByProductIdAndQuantityRef.current[productId][1]!
+                  .price.net,
+                quantity,
+              ),
+              tax: estimatePriceForQuantity(
+                cachedPricesByProductIdAndQuantityRef.current[productId][1]!
+                  .price.tax,
+                quantity,
+              ),
+              tax_included: cachedPricesByProductIdAndQuantityRef.current[
+                productId
+              ][1]!.price.tax_included,
+            },
           }
         }
 

@@ -9,7 +9,7 @@ export interface DatabaseUserPlan {
   type: PlanType
 
   stripeIds?: [string, string] | []
-  paddleProductId?: number
+  paddleId?: number
 
   amount: number
   currency: string

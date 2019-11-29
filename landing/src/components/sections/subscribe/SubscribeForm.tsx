@@ -156,7 +156,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     const autostart = 'autostart' in Router.query
     useEffect(() => {
       if (!autostart || !(authData && authData.appToken)) return
-      if (plan.paddleProductId && !Paddle) return
+      if (plan.paddleId && !Paddle) return
 
       Router.replace(
         `${Router.pathname}${qs.stringify(
@@ -165,18 +165,14 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         )}`,
       )
 
-      if (!plan.paddleProductId) return
+      if (!plan.paddleId) return
 
       handleSubmitRef.current()
-    }, [
-      autostart,
-      authData && authData.appToken,
-      !!plan.paddleProductId,
-      !!Paddle,
-    ])
+    }, [autostart, authData && authData.appToken, !!plan.paddleId, !!Paddle])
 
     const priceLabelForQuantity = useFormattedPlanPrice(plan.amount, plan, {
       quantity,
+      includeInterval: true,
     })
 
     const canSubmitRef = useDynamicRef(() => {
@@ -251,7 +247,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                   type
 
                   stripeIds
-                  paddleProductId
+                  paddleId
 
                   amount
                   currency
@@ -430,9 +426,11 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             email:
               (authData.paddle && authData.paddle.email) ||
               authData.github.email,
-            message: plan.description,
+            message:
+              `${plan.description || ''}`.replace(/\s/g, ' ').trim() ||
+              undefined,
             passthrough: JSON.stringify(passthrough),
-            product: plan.paddleProductId,
+            product: plan.paddleId,
             successCallback: (data: typeof result, err: any) => {
               if (err || !(data && data.checkout && data.checkout.completed)) {
                 reject(new Error(`${err || ''}` || 'Paddle payment failed.'))
@@ -521,7 +519,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     const handleSubmitRef = useDynamicRef(async () => {
       if (plan.stripeIds && plan.stripeIds.length) {
         subscribeToStripePlanRef.current()
-      } else if (plan.paddleProductId) {
+      } else if (plan.paddleId) {
         purchaseViaPaddleRef.current()
       } else {
         setFormState({
@@ -543,7 +541,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       >
         {!!(
           !forceShowQuantityForm &&
-          (showQuantityForm || (!plan.interval && plan.paddleProductId))
+          (showQuantityForm || (!plan.interval && plan.paddleId))
         ) && (
           <Tabs
             className="mb-2"
@@ -785,7 +783,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               // !plan.interval && 'Free upgrades from v0.x to v1.9.',
               authData.plan && authData.plan.amount
                 ? 'Your card will be charged any difference immediately.'
-                : !plan.stripeIds.length && plan.paddleProductId
+                : !plan.stripeIds.length && plan.paddleId
                 ? plan.description || ''
                 : 'Your card will be charged immediately.',
             ].join('\n')}

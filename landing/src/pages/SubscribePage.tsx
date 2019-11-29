@@ -192,7 +192,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
           <p className="mb-4 text-sm text-muted-65">
             {[
-              !plan.paddleProductId &&
+              !plan.paddleId &&
                 `${priceLabel}${
                   plan.currency ? ` (${plan.currency.toUpperCase()})` : ''
                 }`,
