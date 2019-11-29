@@ -39,7 +39,7 @@ export function PricingPlans(_props: PricingPlansProps) {
           key={`pricing-plan-${plan.id}`}
           banner={plan.banner}
           buttonLink={`/purchase?plan=${plan.cannonicalId}${
-            '' // plan.paddleId ? '&autostart' : ''
+            '' // plan.paddleProductId ? '&autostart' : ''
           }${!(authData && authData.appToken) ? '&autologin' : ''}`}
           plan={plan}
           totalNumberOfVisiblePlans={plans.length}
@@ -78,11 +78,11 @@ export function PricingPlans(_props: PricingPlansProps) {
           <Fragment key={`${component.key}-container`}>
             {component}
 
-            {index < pricingPlanComponents.length - 1 ? (
+            {/* {index < pricingPlanComponents.length - 1 ? (
               <div className="pr-2 sm:pr-6" />
             ) : (
-              pricingPlanComponents.length >= 1 && <div className="pr-2" />
-            )}
+              <div className="pr-2" />
+            )} */}
           </Fragment>
         ))}
       </div>

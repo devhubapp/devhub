@@ -345,7 +345,7 @@ export function AuthProvider(props: AuthProviderProps) {
                   type
 
                   stripeIds
-                  paddleId
+                  paddleProductId
 
                   banner
 

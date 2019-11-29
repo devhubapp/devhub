@@ -93,7 +93,7 @@ function* onSyncDown() {
               type
 
               stripeIds
-              paddleId
+              paddleProductId
 
               banner
 

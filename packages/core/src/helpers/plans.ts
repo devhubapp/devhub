@@ -92,7 +92,7 @@ export function getUserPlan(user: DatabaseUser): UserPlan {
 
     type: user.plan.type || 'individual',
     stripeIds: user.plan.stripeIds || plan.stripeIds,
-    paddleId: user.plan.paddleId || plan.paddleId,
+    paddleProductId: user.plan.paddleProductId || plan.paddleProductId,
     banner: plan.banner,
     featureFlags: plan.featureFlags,
     label: user.plan.label || plan.label,
@@ -128,7 +128,7 @@ export function isPlanExpired(
 
 export function formatPrice(
   valueInCents: number,
-  plan: Pick<Plan, 'currency' | 'paddleId' | 'transformUsage'>,
+  plan: Pick<Plan, 'currency' | 'paddleProductId' | 'transformUsage'>,
   options: { locale?: string; quantity?: number } = {},
 ) {
   const { currency, transformUsage } = plan

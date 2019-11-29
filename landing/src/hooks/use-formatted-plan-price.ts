@@ -17,13 +17,13 @@ export function useFormattedPlanPrice(
 
   if (!(typeof priceInCents === 'number' && plan)) return ''
 
-  if (plan.paddleId) {
-    const paddlePrice = getProductPrice(plan.paddleId, options.quantity)
+  if (plan.paddleProductId) {
+    const paddlePrice = getProductPrice(plan.paddleProductId, options.quantity)
 
-    if (paddlePrice && paddlePrice.price && paddlePrice.price.gross) {
+    if (paddlePrice && paddlePrice.gross) {
       return options.includeInterval
-        ? `${paddlePrice.price.gross}${formatInterval(plan, options)}`
-        : paddlePrice.price.gross
+        ? `${paddlePrice.gross}${formatInterval(plan, options)}`
+        : paddlePrice.gross
     }
   }
 

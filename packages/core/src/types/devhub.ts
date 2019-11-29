@@ -548,7 +548,7 @@ export interface Plan {
   type: PlanType
 
   stripeIds: [string, string] | [] // [test, prod]
-  paddleId?: number | undefined
+  paddleProductId?: number | undefined
 
   cannonicalId: string
   label: string

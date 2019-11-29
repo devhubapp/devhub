@@ -191,7 +191,7 @@ const SubscribeFormWithStripe = React.memo(
                   type
 
                   stripeIds
-                  paddleId
+                  paddleProductId
 
                   amount
                   currency

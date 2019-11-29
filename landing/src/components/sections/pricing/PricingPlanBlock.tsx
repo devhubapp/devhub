@@ -72,7 +72,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       ? _priceLabel.substr(-3)
       : ''
 
-  let subtitle = `${
+  const subtitle = `${
     plan.type === 'team' ||
     (plan.transformUsage && plan.transformUsage.divideBy > 1)
       ? '/user'
@@ -80,9 +80,6 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   }${plan.interval ? '/month' : ''}${
     estimatedMonthlyPrice !== plan.amount ? '*' : ''
   }`
-  subtitle = plan.interval
-    ? subtitle
-    : `${subtitle ? '\n' : ''}One-time payment (no subscription)`
 
   let footerText = ''
 
@@ -100,10 +97,16 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       }${_roundedPriceLabelWithInterval}`
   }
 
+  if (!plan.interval) {
+    footerText =
+      (footerText ? `${footerText}\n` : footerText) +
+      'One-time payment (no subscription)'
+  }
+
   return (
     <section
       className={classNames(
-        'pricing-plan flex flex-col flex-shrink-0',
+        'pricing-plan flex flex-col flex-shrink-0 w-full',
         totalNumberOfVisiblePlans === 1
           ? 'w-full lg:w-84'
           : totalNumberOfVisiblePlans && totalNumberOfVisiblePlans <= 2
@@ -127,12 +130,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           </div>
         ) : banner ? (
           <div
-            className={classNames(
-              banner && typeof banner === 'string' // isMyPlan
+            className={`${
+              false // isMyPlan
                 ? 'bg-primary text-primary-foreground'
-                : 'bg-less-1 text-default',
-              'text-sm leading-normal py-1 px-6 text-center font-semibold rounded-t',
-            )}
+                : 'bg-less-1 text-default'
+            } text-sm leading-normal py-1 px-6 text-center font-semibold rounded-t`}
           >
             {banner}
           </div>
