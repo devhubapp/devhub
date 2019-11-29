@@ -106,7 +106,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   return (
     <section
       className={classNames(
-        'pricing-plan flex flex-col flex-shrink-0 w-full',
+        'pricing-plan flex flex-col flex-shrink-0',
         totalNumberOfVisiblePlans === 1
           ? 'w-full lg:w-84'
           : totalNumberOfVisiblePlans && totalNumberOfVisiblePlans <= 2
@@ -179,9 +179,12 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             </>
           )}
 
-          {!!footerText && (
+          {!!(
+            footerText ||
+            (totalNumberOfVisiblePlans && totalNumberOfVisiblePlans > 1)
+          ) && (
             <div className="mb-2 text-sm text-muted-65 italic">
-              {footerText}
+              &nbsp;{footerText}&nbsp;
             </div>
           )}
 

@@ -67,8 +67,10 @@ export default function CTAButtons(props: CTAButtonsProps) {
               target="_top"
               className="mb-2 mr-2"
             >
-              {freeTrialDays
+              {activePaidPlans[0].trialPeriodDays
                 ? 'Start free trial'
+                : freeTrialDays
+                ? 'See pricing'
                 : activePaidPlans[0].interval
                 ? 'Subscribe'
                 : 'Purchase'}
@@ -80,7 +82,9 @@ export default function CTAButtons(props: CTAButtonsProps) {
               target="_top"
               className="mb-2 mr-2"
             >
-              {freeTrialDays ? 'Start free trial' : 'See pricing'}
+              {activePaidPlans[0].trialPeriodDays
+                ? 'Start free trial'
+                : 'See pricing'}
             </Button>
           )}
 

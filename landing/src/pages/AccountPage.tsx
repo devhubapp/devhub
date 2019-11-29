@@ -172,7 +172,11 @@ export default function AccountPage(_props: AccountPageProps) {
                     { addQueryPrefix: true },
                   )}`}
                 >
-                  <a className="text-default">Purchase for more people</a>
+                  <a className="text-default">
+                    {authData.plan.interval
+                      ? 'Purchase'
+                      : 'Purchase for more people'}
+                  </a>
                 </Link>
               ))}
 

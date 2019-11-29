@@ -78,11 +78,11 @@ export function PricingPlans(_props: PricingPlansProps) {
           <Fragment key={`${component.key}-container`}>
             {component}
 
-            {/* {index < pricingPlanComponents.length - 1 ? (
+            {index < pricingPlanComponents.length - 1 ? (
               <div className="pr-2 sm:pr-6" />
             ) : (
               <div className="pr-2" />
-            )} */}
+            )}
           </Fragment>
         ))}
       </div>

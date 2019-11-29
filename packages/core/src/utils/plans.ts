@@ -1,7 +1,11 @@
 import { Plan } from '../types'
 import * as constants from './constants'
 
-export type ActivePlanID = '5dd82d16eb2b11106f941f8d'
+export type ActivePlanID =
+  | '5db0d37ce59ab2d3c0bbd611'
+  | '5dd44e11b2726bb02d540b5e'
+  | '5dd4618db3ebb145268eba7c'
+  | '5dd467e799537b2378df8eea'
 
 export type InactivePlanID =
   | 'free'
@@ -13,10 +17,7 @@ export type InactivePlanID =
   | '5dba30bf7deee78cb184291d'
   | '5dc89f56bae8d4ae5245423e'
   | '5db0d5fb957ac4e5ed7bbb05'
-  | '5db0d37ce59ab2d3c0bbd611'
-  | '5dd44e11b2726bb02d540b5e'
-  | '5dd4618db3ebb145268eba7c'
-  | '5dd467e799537b2378df8eea'
+  | '5dd82d16eb2b11106f941f8d'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -519,7 +520,10 @@ export const allPlansObj: Record<PlanID, Plan> = {
 export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
-  allPlansObj['5dd82d16eb2b11106f941f8d'] as Plan & { id: ActivePlanID },
+  allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd44e11b2726bb02d540b5e'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd4618db3ebb145268eba7c'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd467e799537b2378df8eea'] as Plan & { id: ActivePlanID },
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)
