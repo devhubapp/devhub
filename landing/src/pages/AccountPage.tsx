@@ -152,11 +152,14 @@ export default function AccountPage(_props: AccountPageProps) {
 
         {authData.plan && authData.plan.amount > 0 ? (
           <>
-            {!activePaidPlans.some(p => !!p.interval) &&
+            {activePaidPlans.some(p => !p.interval) &&
               (!!(!freeTrialDays && authData.plan.interval) ? (
                 <Link
                   href={`/purchase${qs.stringify(
-                    { plan: activePaidPlans[0].cannonicalId },
+                    {
+                      plan: activePaidPlans.find(p => !p.interval)!
+                        .cannonicalId,
+                    },
                     { addQueryPrefix: true },
                   )}`}
                 >
@@ -166,7 +169,8 @@ export default function AccountPage(_props: AccountPageProps) {
                 <Link
                   href={`/purchase${qs.stringify(
                     {
-                      plan: activePaidPlans[0].cannonicalId,
+                      plan: activePaidPlans.find(p => !p.interval)!
+                        .cannonicalId,
                       action: 'update_seats',
                     },
                     { addQueryPrefix: true },

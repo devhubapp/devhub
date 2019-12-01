@@ -3,9 +3,7 @@ import * as constants from './constants'
 
 export type ActivePlanID =
   | '5db0d37ce59ab2d3c0bbd611'
-  | '5dd44e11b2726bb02d540b5e'
-  | '5dd4618db3ebb145268eba7c'
-  | '5dd467e799537b2378df8eea'
+  | '5dd82d16eb2b11106f941f8d'
 
 export type InactivePlanID =
   | 'free'
@@ -17,7 +15,9 @@ export type InactivePlanID =
   | '5dba30bf7deee78cb184291d'
   | '5dc89f56bae8d4ae5245423e'
   | '5db0d5fb957ac4e5ed7bbb05'
-  | '5dd82d16eb2b11106f941f8d'
+  | '5dd44e11b2726bb02d540b5e'
+  | '5dd4618db3ebb145268eba7c'
+  | '5dd467e799537b2378df8eea'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -235,7 +235,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
     cannonicalId: 'monthly',
     label: 'Monthly',
-    description: '',
+    description: '\n\n',
     amount: 999,
     currency: 'usd',
     interval: 'month',
@@ -493,12 +493,12 @@ export const allPlansObj: Record<PlanID, Plan> = {
     stripeIds: [],
     paddleProductId: 566713,
 
-    banner: false,
+    banner: true,
 
-    cannonicalId: 'devhub-v1',
-    label: 'DevHub v1',
+    cannonicalId: 'lifetime-v1',
+    label: 'Lifetime v1',
     description: `Lifetime access from v0.9 to v1.9 \n(current: v${constants.APP_VERSION})`,
-    amount: 2500,
+    amount: 4900,
     currency: 'usd',
     interval: undefined,
     intervalCount: 1,
@@ -521,9 +521,7 @@ export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
   allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd44e11b2726bb02d540b5e'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd4618db3ebb145268eba7c'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd467e799537b2378df8eea'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd82d16eb2b11106f941f8d'] as Plan & { id: ActivePlanID },
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)

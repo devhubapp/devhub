@@ -79,7 +79,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       : ''
   }${plan.interval ? '/month' : ''}${
     estimatedMonthlyPrice !== plan.amount ? '*' : ''
-  }`
+  }`.trim()
 
   let footerText = ''
 
@@ -166,7 +166,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
           {!!subtitle && (
             <>
-              <div className="text-sm text-muted-65">{subtitle}</div>
+              <div className="mb-2 text-sm text-muted-65">{subtitle}</div>
               {/* {plan.interval ? (
             <div className="text-sm text-muted-65">{`/${
               plan.intervalCount > 1 ? `${plan.intervalCount}-` : ''
@@ -175,14 +175,13 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             <div className="text-sm text-muted-65">&nbsp;</div>
           )} */}
 
-              <div className="pb-6" />
+              {/* <div className="pb-6" /> */}
             </>
           )}
 
-          {!!(
-            footerText ||
-            (totalNumberOfVisiblePlans && totalNumberOfVisiblePlans > 1)
-          ) && (
+          {!!footerText && (
+            // ||
+            // (totalNumberOfVisiblePlans && totalNumberOfVisiblePlans > 1)
             <div className="mb-2 text-sm text-muted-65 italic">
               &nbsp;{footerText}&nbsp;
             </div>

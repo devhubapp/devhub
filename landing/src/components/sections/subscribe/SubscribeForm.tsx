@@ -785,11 +785,16 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             {[
               // !plan.interval && 'You are purchasing a lifetime license.',
               // !plan.interval && 'Free upgrades from v0.x to v1.9.',
-              authData.plan && authData.plan.amount
+              authData.plan &&
+              authData.plan.amount &&
+              authData.plan.stripeIds &&
+              authData.plan.stripeIds.length &&
+              plan.stripeIds.length
                 ? 'Your card will be charged any difference immediately.'
-                : !plan.stripeIds.length && plan.paddleProductId
-                ? plan.description || ''
                 : 'Your card will be charged immediately.',
+              !plan.stripeIds.length &&
+                plan.paddleProductId &&
+                plan.description,
             ].join('\n')}
           </p>
         )}
