@@ -179,9 +179,10 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             </>
           )}
 
-          {!!footerText && (
-            // ||
-            // (totalNumberOfVisiblePlans && totalNumberOfVisiblePlans > 1)
+          {!!(
+            footerText ||
+            (totalNumberOfVisiblePlans && totalNumberOfVisiblePlans > 1)
+          ) && (
             <div className="mb-2 text-sm text-muted-65 italic">
               &nbsp;{footerText}&nbsp;
             </div>
