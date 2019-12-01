@@ -20,10 +20,10 @@ export function useFormattedPlanPrice(
   if (plan.paddleProductId) {
     const paddlePrice = getProductPrice(plan.paddleProductId, options.quantity)
 
-    if (paddlePrice && paddlePrice.gross) {
+    if (paddlePrice && paddlePrice.net) {
       return options.includeInterval
-        ? `${paddlePrice.gross}${formatInterval(plan, options)}`
-        : paddlePrice.gross
+        ? `${paddlePrice.net}${formatInterval(plan, options)}`
+        : paddlePrice.net
     }
   }
 
