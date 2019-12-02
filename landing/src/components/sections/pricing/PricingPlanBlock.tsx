@@ -62,15 +62,14 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     { includeInterval: true },
   )
 
-  const _cents = estimatedMonthlyPrice % 100
+  const priceLabelCents =
+    _priceLabel[_priceLabel.length - 3] === '.'
+      ? _priceLabel.substr(-3)
+      : undefined
   const priceLabelWithoutCents =
-    _cents && _priceLabel.endsWith(_cents.toString())
+    priceLabelCents && _priceLabel.endsWith(priceLabelCents)
       ? _priceLabel.substring(0, _priceLabel.length - 3)
       : _priceLabel
-  const priceLabelCents =
-    _cents && _priceLabel.endsWith(_cents.toString())
-      ? _priceLabel.substr(-3)
-      : ''
 
   const subtitle = `${
     plan.type === 'team' ||
