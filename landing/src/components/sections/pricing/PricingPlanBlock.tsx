@@ -109,7 +109,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
         'pricing-plan flex flex-col flex-shrink-0',
         totalNumberOfVisiblePlans === 1
           ? 'w-full lg:w-84'
-          : totalNumberOfVisiblePlans && totalNumberOfVisiblePlans <= 2
+          : totalNumberOfVisiblePlans && totalNumberOfVisiblePlans <= 3
           ? 'w-72'
           : 'w-64',
       )}
@@ -164,9 +164,14 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             )}
           </div>
 
-          {!!subtitle && (
+          {!!(
+            subtitle ||
+            (totalNumberOfVisiblePlans && totalNumberOfVisiblePlans > 1)
+          ) && (
             <>
-              <div className="mb-2 text-sm text-muted-65">{subtitle}</div>
+              <div className="mb-2 text-sm text-muted-65">
+                &nbsp;{subtitle}&nbsp;
+              </div>
               {/* {plan.interval ? (
             <div className="text-sm text-muted-65">{`/${
               plan.intervalCount > 1 ? `${plan.intervalCount}-` : ''
@@ -175,7 +180,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             <div className="text-sm text-muted-65">&nbsp;</div>
           )} */}
 
-              {/* <div className="pb-6" /> */}
+              <div className="pb-6" />
             </>
           )}
 

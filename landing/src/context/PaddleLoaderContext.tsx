@@ -119,9 +119,9 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
                   ],
                   [quantity]: {
                     ...result.price,
-                    gross: getPriceLabelWithoutZeros(result.price.gross),
-                    net: getPriceLabelWithoutZeros(result.price.net),
-                    tax: getPriceLabelWithoutZeros(result.price.tax),
+                    gross: getPriceLabelTweaked(result.price.gross),
+                    net: getPriceLabelTweaked(result.price.net),
+                    tax: getPriceLabelTweaked(result.price.tax),
                     tax_included: result.price.tax_included,
                   },
                 },
@@ -202,7 +202,7 @@ function estimatePriceForQuantity(
     const newAmount = parseFloat(amount) * quantity
     if (isNaN(newAmount)) throw new Error('Failed to parse amount')
 
-    const newAmountFormatted = getPriceLabelWithoutZeros(
+    const newAmountFormatted = getPriceLabelTweaked(
       _floatFormatter.format(newAmount),
     )
 
@@ -213,7 +213,10 @@ function estimatePriceForQuantity(
   }
 }
 
-function getPriceLabelWithoutZeros(priceLabel: string) {
+function getPriceLabelTweaked(priceLabel: string) {
   if (!priceLabel) return priceLabel
-  return priceLabel.endsWith('.00') ? priceLabel.slice(0, -3) : priceLabel
+  return (priceLabel.endsWith('.00')
+    ? priceLabel.slice(0, -3)
+    : priceLabel
+  ).replace('US$', '$')
 }

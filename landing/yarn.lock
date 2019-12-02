@@ -974,10 +974,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@brunolemos/devhub-core@0.98.6-11":
-  version "0.98.6-11"
-  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.98.6-11.tgz#e4c63354d22a2ad473fe2e8cc48768090bf60d53"
-  integrity sha512-e2Tbk53Qru51Js+D1SXUWWdAjU7DwclAHNJo82esQJHZXnWh/8Vsj77mkPynbsOSAUuKLm5LcfC9e8qOCjbrsA==
+"@brunolemos/devhub-core@0.98.6-13":
+  version "0.98.6-13"
+  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.98.6-13.tgz#c57284d351aa09a053cb21d0991c9638d74c3151"
+  integrity sha512-uswNplozyChX9Yy6qO4q2j2ThbWlfjHd2wM5RCKZ4os3rroTRkSMQ2iJHAnMYMcZp/ZjgxWeVw8Hp2z5s45FnQ==
   dependencies:
     "@octokit/rest" "16.20.0"
     axios "0.19.0"

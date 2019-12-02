@@ -2,10 +2,11 @@ import { Plan } from '../types'
 import * as constants from './constants'
 
 export type ActivePlanID =
-  | '5db0d37ce59ab2d3c0bbd611'
-  | '5db0d5fb957ac4e5ed7bbb05'
-  | '5dd4618db3ebb145268eba7c'
-  | '5dd467e799537b2378df8eea'
+  | '5de54fc1d6c4fded37775e71'
+  | '5de54fc29188ad514567ddb2'
+  | '5de54fc278c2188b4ec17fc7'
+  | '5de54fc30cd5acc31a86e884'
+  | '5dd82d16eb2b11106f941f8d'
 
 export type InactivePlanID =
   | 'free'
@@ -16,8 +17,12 @@ export type InactivePlanID =
   | '5dba30bd0621102b5cd0bc44'
   | '5dba30bf7deee78cb184291d'
   | '5dc89f56bae8d4ae5245423e'
-  | '5dd82d16eb2b11106f941f8d'
   | '5dd44e11b2726bb02d540b5e'
+  | '5db0d37ce59ab2d3c0bbd611'
+  | '5db0d5fb957ac4e5ed7bbb05'
+  | '5dd4618db3ebb145268eba7c'
+  | '5dd467e799537b2378df8eea'
+  | '5de552b6dde41be55811ed15'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -486,6 +491,128 @@ export const allPlansObj: Record<PlanID, Plan> = {
     },
   },
 
+  '5de54fc1d6c4fded37775e71': {
+    id: '5de54fc1d6c4fded37775e71',
+    type: 'individual',
+
+    stripeIds: ['plan_GHtKdXsTarbJQm', 'plan_GHsZlXP4v8Irqf'],
+    paddleProductId: undefined,
+
+    banner: '20% OFF',
+
+    cannonicalId: 'monthly',
+    label: 'Monthly',
+    description: '\n\n',
+    amount: 800,
+    currency: 'usd',
+    interval: 'month',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
+  '5de54fc29188ad514567ddb2': {
+    id: '5de54fc29188ad514567ddb2',
+    type: 'individual',
+
+    stripeIds: ['plan_GHtLwVwqE6dhbO', 'plan_GHsnbxegDBcrQ0'],
+    paddleProductId: undefined,
+
+    banner: '50% OFF',
+
+    cannonicalId: 'yearly',
+    label: 'Yearly',
+    description: '\n\n',
+    amount: 6000,
+    currency: 'usd',
+    interval: 'year',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
+  '5de54fc278c2188b4ec17fc7': {
+    id: '5de54fc278c2188b4ec17fc7',
+    type: 'team',
+
+    stripeIds: ['plan_GHtLrxHfn3DDkr', 'plan_GHsabiw9GfQH9N'],
+    paddleProductId: undefined,
+
+    banner: '17% OFF',
+
+    cannonicalId: 'team-monthly',
+    label: 'Team Monthly',
+    description: '\n\n',
+    amount: 2500,
+    currency: 'usd',
+    interval: 'month',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    transformUsage: {
+      divideBy: 3,
+      round: 'up',
+    },
+
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
+  '5de54fc30cd5acc31a86e884': {
+    id: '5de54fc30cd5acc31a86e884',
+    type: 'team',
+
+    stripeIds: ['plan_GHtMaMxGQtAySy', 'plan_GHsqgnLvYnfu2q'],
+    paddleProductId: undefined,
+
+    banner: '38% OFF',
+
+    cannonicalId: 'team-yearly',
+    label: 'Team Yearly',
+    description: '\n\n',
+    amount: 15000,
+    currency: 'usd',
+    interval: 'year',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    transformUsage: {
+      divideBy: 2,
+      round: 'up',
+    },
+
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
   '5dd82d16eb2b11106f941f8d': {
     id: '5dd82d16eb2b11106f941f8d',
     type: undefined,
@@ -498,7 +625,37 @@ export const allPlansObj: Record<PlanID, Plan> = {
     cannonicalId: 'lifetime-v1',
     label: 'Lifetime v1',
     description: `Lifetime access from v0.9 to v1.9 \n(current: v${constants.APP_VERSION})`,
-    amount: 4900,
+    amount: 9900,
+    currency: 'usd',
+    interval: undefined,
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    transformUsage: undefined,
+
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
+  '5de552b6dde41be55811ed15': {
+    id: '5de552b6dde41be55811ed15',
+    type: 'team',
+
+    stripeIds: [],
+    paddleProductId: 577489,
+
+    banner: true,
+
+    cannonicalId: 'team-lifetime-v1',
+    label: 'Team Lifetime v1',
+    description: `Lifetime access from v0.9 to v1.9 \n(current: v${constants.APP_VERSION})`,
+    amount: 19900,
     currency: 'usd',
     interval: undefined,
     intervalCount: 1,
@@ -520,10 +677,11 @@ export const allPlansObj: Record<PlanID, Plan> = {
 export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
-  allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & { id: ActivePlanID },
-  allPlansObj['5db0d5fb957ac4e5ed7bbb05'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd4618db3ebb145268eba7c'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd467e799537b2378df8eea'] as Plan & { id: ActivePlanID },
+  allPlansObj['5de54fc1d6c4fded37775e71'] as Plan & { id: ActivePlanID },
+  allPlansObj['5de54fc29188ad514567ddb2'] as Plan & { id: ActivePlanID },
+  allPlansObj['5de54fc278c2188b4ec17fc7'] as Plan & { id: ActivePlanID },
+  allPlansObj['5de54fc30cd5acc31a86e884'] as Plan & { id: ActivePlanID },
+  allPlansObj['5dd82d16eb2b11106f941f8d'] as Plan & { id: ActivePlanID },
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)
