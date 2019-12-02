@@ -51,7 +51,8 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
   const isMyPlan = !!(authData.plan && authData.plan.id === plan.id)
 
-  const priceLabel = useFormattedPlanPrice(plan.amount, plan, {
+  const priceLabelWithInterval = useFormattedPlanPrice(plan.amount, plan, {
+    includeInterval: true,
     quantity:
       isMyPlan && action === 'update_card'
         ? authData.plan && authData.plan.quantity
@@ -193,7 +194,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
           <p className="mb-4 text-sm text-muted-65">
             {[
               !plan.paddleProductId &&
-                `${priceLabel}${
+                `${priceLabelWithInterval}${
                   plan.currency ? ` (${plan.currency.toUpperCase()})` : ''
                 }`,
               plan.trialPeriodDays > 0

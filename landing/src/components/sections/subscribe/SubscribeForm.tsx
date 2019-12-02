@@ -175,9 +175,14 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       !!Paddle,
     ])
 
-    const priceLabelForQuantity = useFormattedPlanPrice(plan.amount, plan, {
-      quantity,
-    })
+    const priceLabelWithIntervalForQuantity = useFormattedPlanPrice(
+      plan.amount,
+      plan,
+      {
+        quantity,
+        includeInterval: true,
+      },
+    )
 
     const canSubmitRef = useDynamicRef(() => {
       return !!(
@@ -772,7 +777,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             ? 'Update credit card'
             : `${
                 plan.interval ? 'Subscribe' : 'Purchase'
-              } for ${priceLabelForQuantity}`}
+              } for ${priceLabelWithIntervalForQuantity}`}
         </Button>
 
         {!!(
