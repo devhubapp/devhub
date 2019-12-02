@@ -791,7 +791,9 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               authData.plan.stripeIds.length &&
               plan.stripeIds.length
                 ? 'Your card will be charged any difference immediately.'
-                : 'Your card will be charged immediately.',
+                : `Your card will be charged immediately${
+                    plan.trialPeriodDays ? '' : ' (this plan has no free trial)'
+                  }.`,
               !plan.stripeIds.length &&
                 plan.paddleProductId &&
                 plan.description,

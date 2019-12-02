@@ -92,8 +92,7 @@ export default function Header(props: HeaderProps) {
             </HeaderLink> */}
 
             {!!(
-              (freeTrialDays &&
-                !activePaidPlans.every(plan => !plan.interval)) ||
+              (freeTrialDays && activePaidPlans.some(plan => !plan.amount)) ||
               (authData &&
                 authData.appToken &&
                 (freeTrialDays || (authData.plan && authData.plan.amount)))

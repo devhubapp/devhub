@@ -88,9 +88,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
             </Button>
           )}
 
-          {!!(
-            freeTrialDays && !activePaidPlans.every(plan => !plan.interval)
-          ) && (
+          {!!(freeTrialDays && activePaidPlans.some(plan => !plan.amount)) && (
             <Button
               type="neutral"
               href="/download?autostart"
