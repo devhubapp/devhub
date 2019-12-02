@@ -83,18 +83,6 @@ export const installationTokenByOwnerSelector = (
   return (tokenDetails && tokenDetails.token) || undefined
 }
 
-/*
-export const installationTokenByRepoSelector = (
-  state: RootState,
-  ownerName: string | undefined,
-  repoName: string | undefined,
-) => {
-  const installation = installationByRepoSelector(state, ownerName, repoName)
-
-  const tokenDetails = installation && installation.tokenDetails
-  return (tokenDetails && tokenDetails.token) || undefined
-}
-*/
 export const installationTokenByRepoSelector = (
   state: RootState,
   ownerName: string | undefined,
@@ -102,20 +90,3 @@ export const installationTokenByRepoSelector = (
 ) => {
   return installationTokenByOwnerSelector(state, ownerName)
 }
-
-export const githubHasPrivateAccessToOwnerSelector = (
-  state: RootState,
-  ownerName: string | undefined,
-) => {
-  return !!installationTokenByOwnerSelector(state, ownerName)
-}
-
-/*
-export const githubHasPrivateAccessToRepoSelector = (
-  state: RootState,
-  ownerName: string | undefined,
-  repoName: string | undefined,
-) => {
-  return !!installationTokenByRepoSelector(state, ownerName, repoName)
-}
-*/

@@ -190,11 +190,11 @@ export async function getIssueOrPullRequestsEnhancementMap(
   items: EnhancedGitHubIssueOrPullRequest[],
   {
     cache = new Map(),
-    getGitHubInstallationTokenForRepo,
+    getGitHubPrivateTokenForRepo,
     githubOAuthToken,
   }: {
     cache: EnhancementCache | undefined | undefined
-    getGitHubInstallationTokenForRepo: (
+    getGitHubPrivateTokenForRepo: (
       owner: string | undefined,
       repo: string | undefined,
     ) => string | undefined
@@ -237,8 +237,8 @@ export async function getIssueOrPullRequestsEnhancementMap(
       if (cacheValue && Date.now() - cacheValue.timestamp < 1000 * 60 * 60)
         return cacheValue
 
-      const installationToken = getGitHubInstallationTokenForRepo(owner, repo)
-      const githubToken = installationToken || githubOAuthToken
+      const privateToken = getGitHubPrivateTokenForRepo(owner, repo)
+      const githubToken = privateToken || githubOAuthToken
 
       try {
         const { data } = await axios.get(
@@ -263,8 +263,8 @@ export async function getIssueOrPullRequestsEnhancementMap(
     const { owner, repo } = getOwnerAndRepo(repoFullName)
     if (!(owner && repo && item.number && item.url)) return
 
-    const installationToken = getGitHubInstallationTokenForRepo(owner, repo)
-    const githubToken = installationToken || githubOAuthToken
+    const privateToken = getGitHubPrivateTokenForRepo(owner, repo)
+    const githubToken = privateToken || githubOAuthToken
 
     const enhance: IssueOrPullRequestPayloadEnhancement = {}
 

@@ -1,5 +1,6 @@
 import { EMPTY_OBJ } from '../../../utils/constants'
 import { RootState } from '../../types'
+import { installationTokenByOwnerSelector } from './installations'
 
 const s = (state: RootState) => (state.github && state.github.auth) || EMPTY_OBJ
 
@@ -46,6 +47,31 @@ export const githubOAuthTokenTypeSelector = (state: RootState) => {
 export const githubOAuthTokenCreatedAtSelector = (state: RootState) => {
   const tokenDetails = githubOAuthTokenDetailsSelector(state)
   return (tokenDetails && tokenDetails.tokenCreatedAt) || undefined
+}
+
+export const getPrivateTokenByOwnerSelector = (
+  state: RootState,
+  ownerName: string | undefined,
+) => {
+  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+  if (
+    tokenDetails &&
+    tokenDetails.token &&
+    tokenDetails.scope &&
+    tokenDetails.scope.includes('repo')
+  )
+    return tokenDetails.token
+
+  const installationToken = installationTokenByOwnerSelector(state, ownerName)
+  return installationToken || undefined
+}
+
+export const getPrivateTokenByRepoSelector = (
+  state: RootState,
+  ownerName: string | undefined,
+  _repoName: string | undefined,
+) => {
+  return getPrivateTokenByOwnerSelector(state, ownerName)
 }
 
 export const currentGitHubUserSelector = (state: RootState) => {

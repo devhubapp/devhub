@@ -319,6 +319,7 @@ function* onFetchRequest(
 
   const owner = getSubscriptionOwnerOrOrg(subscription)
 
+  const privateToken = selectors.getPrivateTokenByOwnerSelector(state, owner)
   const installationToken = selectors.installationTokenByOwnerSelector(
     state,
     owner,
@@ -328,14 +329,10 @@ function* onFetchRequest(
   const loggedUsername = selectors.currentGitHubUsernameSelector(state)!
 
   const githubToken =
-    (githubAppTokenDetails &&
-      githubAppTokenDetails.scope &&
-      githubAppTokenDetails.scope.includes('repo') &&
-      githubAppTokenDetails.token) ||
     (subscription &&
       (subscription.type === 'activity' ||
         subscription.type === 'issue_or_pr') &&
-      installationToken) ||
+      privateToken) ||
     githubOAuthToken ||
     (githubAppTokenDetails && githubAppTokenDetails.token)
 
@@ -401,15 +398,11 @@ function* onFetchRequest(
         mergedItems,
         {
           cache: notificationsCache,
-          getGitHubInstallationTokenForRepo: (
+          getGitHubPrivateTokenForRepo: (
             ownerName: string | undefined,
             repoName: string | undefined,
           ) =>
-            selectors.installationTokenByRepoSelector(
-              state,
-              ownerName,
-              repoName,
-            ),
+            selectors.getPrivateTokenByRepoSelector(state, ownerName, repoName),
           githubOAuthToken,
         },
       )
@@ -504,15 +497,11 @@ function* onFetchRequest(
         mergedItems,
         {
           cache: issuesOrPullRequestsCache,
-          getGitHubInstallationTokenForRepo: (
+          getGitHubPrivateTokenForRepo: (
             ownerName: string | undefined,
             repoName: string | undefined,
           ) =>
-            selectors.installationTokenByRepoSelector(
-              state,
-              ownerName,
-              repoName,
-            ),
+            selectors.getPrivateTokenByRepoSelector(state, ownerName, repoName),
           githubOAuthToken,
         },
       )

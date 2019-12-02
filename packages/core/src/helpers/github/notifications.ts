@@ -305,11 +305,11 @@ export async function getNotificationsEnhancementMap(
   notifications: EnhancedGitHubNotification[],
   {
     cache = new Map(),
-    getGitHubInstallationTokenForRepo,
+    getGitHubPrivateTokenForRepo,
     githubOAuthToken,
   }: {
     cache: EnhancementCache | undefined | undefined
-    getGitHubInstallationTokenForRepo: (
+    getGitHubPrivateTokenForRepo: (
       owner: string | undefined,
       repo: string | undefined,
     ) => string | undefined
@@ -322,8 +322,8 @@ export async function getNotificationsEnhancementMap(
     const { owner, repo } = getOwnerAndRepo(notification.repository.full_name)
     if (!(owner && repo)) return
 
-    const installationToken = getGitHubInstallationTokenForRepo(owner, repo)
-    const githubToken = installationToken || githubOAuthToken
+    const privateToken = getGitHubPrivateTokenForRepo(owner, repo)
+    const githubToken = privateToken || githubOAuthToken
 
     const commentId = getCommentIdFromUrl(
       notification.subject.latest_comment_url,
@@ -332,7 +332,7 @@ export async function getNotificationsEnhancementMap(
     const enhance: NotificationPayloadEnhancement = {}
 
     const isPrivate = notification.repository.private
-    const hasAccess = !isPrivate || !!installationToken
+    const hasAccess = !isPrivate || !!privateToken
     if (!hasAccess) return
 
     const hasSubjectCache = cache.has(notification.subject.url)
