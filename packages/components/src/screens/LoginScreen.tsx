@@ -1,4 +1,6 @@
 import { constants, tryParseOAuthParams } from '@devhub/core'
+import axios from 'axios'
+import _ from 'lodash'
 import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
@@ -26,6 +28,7 @@ import {
   normalTextSize,
   smallerTextSize,
 } from '../styles/variables'
+import { getDefaultDevHubHeaders } from '../utils/api'
 import {
   clearOAuthQueryParams,
   clearQueryStringFromURL,
@@ -55,8 +58,8 @@ const styles = StyleSheet.create({
   },
 
   mainContentContainer: {
-    alignItems: 'center',
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
   },
 
@@ -185,7 +188,7 @@ export const LoginScreen = React.memo(() => {
     )
   }, [error])
 
-  const loginWithGitHub = async () => {
+  async function loginWithGitHub() {
     setIsExecutingOAuth(true)
 
     try {
@@ -198,6 +201,63 @@ export const LoginScreen = React.memo(() => {
       })
       const { appToken } = tryParseOAuthParams(params)
       clearOAuthQueryParams()
+      if (!appToken) throw new Error('No app token')
+
+      loginRequest({ appToken })
+      setIsExecutingOAuth(false)
+    } catch (error) {
+      const description = 'OAuth execution failed'
+      console.error(description, error)
+      setIsExecutingOAuth(false)
+
+      if (error.message === 'Canceled' || error.message === 'Timeout') return
+      bugsnag.notify(error, { description })
+
+      alert(`Login failed. ${error || ''}`)
+    }
+  }
+
+  async function loginWithGitHubPersonalAccessToken() {
+    try {
+      analytics.trackEvent('engagement', 'login')
+
+      const redirect = confirm(
+        'Redirect to create a new Personal Access Token? \nMake sure to include the "repo" and "notifications" permissions.',
+      )
+
+      let token
+      await Promise.all([
+        !!redirect &&
+          new Promise(resolve => {
+            window.open(
+              `https://github.com/settings/tokens/new?description=DevHub&scopes=${(
+                constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
+                _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
+              ).join(',')}`,
+              '_blank',
+            )
+            resolve()
+          }),
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            token = prompt('Paste the GitHub token here:')
+            if (token) resolve()
+            else reject(new Error('Canceled'))
+          }, 100)
+        }),
+      ])
+
+      setIsExecutingOAuth(true)
+
+      const response = await axios.post(
+        `${constants.API_BASE_URL}/github/personal/login`,
+        { token },
+        { headers: getDefaultDevHubHeaders({ appToken: undefined }) },
+      )
+
+      const appToken = response.data.appToken
+      clearOAuthQueryParams()
+
       if (!appToken) throw new Error('No app token')
 
       loginRequest({ appToken })
@@ -267,7 +327,8 @@ export const LoginScreen = React.memo(() => {
             // rightIcon="globe"
             style={styles.button}
             subtitle={
-              constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
+              constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
+              constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON ||
               !constants.GITHUB_APP_HAS_CODE_ACCESS
                 ? 'Granular permissions'
                 : undefined
@@ -275,7 +336,7 @@ export const LoginScreen = React.memo(() => {
             title="Sign in with GitHub"
           />
 
-          {!!constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES && (
+          {!!constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON && (
             <>
               <Spacer height={contentPadding / 2} />
 
@@ -295,7 +356,37 @@ export const LoginScreen = React.memo(() => {
                 title="Sign in with GitHub"
                 type="neutral"
               />
+            </>
+          )}
 
+          {!!constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON && (
+            <>
+              <Spacer height={contentPadding / 2} />
+
+              <GitHubLoginButton
+                analyticsLabel="github_login_personal"
+                disabled={isLoggingIn || isExecutingOAuth}
+                loading={
+                  fullAccessRef.current && (isLoggingIn || isExecutingOAuth)
+                }
+                onPress={() => {
+                  fullAccessRef.current = true
+                  loginWithGitHubPersonalAccessToken()
+                }}
+                // rightIcon="key"
+                style={styles.button}
+                subtitle="Personal token"
+                title="Sign in with GitHub"
+                type="neutral"
+              />
+            </>
+          )}
+
+          {!!(
+            constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
+            constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON
+          ) && (
+            <>
               <Spacer height={contentPadding} />
 
               <ThemedText
@@ -305,9 +396,16 @@ export const LoginScreen = React.memo(() => {
                   { fontSize: smallerTextSize, fontStyle: 'italic' },
                 ]}
               >
-                "Granular permissions" is recommended for security reasons, but
-                feel free to use "Full access" to easily get private access to
-                all repositories you have access.
+                {`"Granular permissions" is recommended, but feel free to use the ${[
+                  constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON &&
+                    '"Full access"',
+                  constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON &&
+                    '"Personal token"',
+                ]
+                  .filter(Boolean)
+                  .join(
+                    ' or ',
+                  )} option to easily get private access to all repositories you have access.`}
               </ThemedText>
             </>
           )}

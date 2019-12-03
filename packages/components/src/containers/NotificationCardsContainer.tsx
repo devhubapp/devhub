@@ -42,7 +42,7 @@ export const NotificationCardsContainer = React.memo(
     const dispatch = useDispatch()
 
     const appToken = useReduxState(selectors.appTokenSelector)
-    const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
+    const githubToken = useReduxState(selectors.githubTokenSelector)
     const githubOAuthScope = useReduxState(selectors.githubOAuthScopeSelector)
 
     // TODO: Support multiple subscriptions per column.
@@ -102,7 +102,7 @@ export const NotificationCardsContainer = React.memo(
     if (
       !(
         appToken &&
-        githubOAuthToken &&
+        githubToken &&
         githubOAuthScope &&
         githubOAuthScope.includes('notifications')
       )

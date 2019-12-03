@@ -46,7 +46,7 @@ export const EventCardsContainer = React.memo(
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
-    const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
+    const githubToken = useReduxState(selectors.githubTokenSelector)
     const { column } = useColumn(columnId)
 
     // TODO: Support multiple subscriptions per column.
@@ -138,7 +138,7 @@ export const EventCardsContainer = React.memo(
 
     if (!mainSubscription) return null
 
-    if (!(appToken && githubOAuthToken)) {
+    if (!(appToken && githubToken)) {
       return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
     }
 

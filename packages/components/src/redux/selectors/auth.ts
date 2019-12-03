@@ -9,7 +9,7 @@ import { createSelector } from 'reselect'
 import { Platform } from '../../libs/platform'
 import { EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
-import { githubAppTokenSelector, githubOAuthTokenSelector } from './github/auth'
+import { githubAppTokenSelector, githubTokenSelector } from './github/auth'
 
 const s = (state: RootState) => state.auth || EMPTY_OBJ
 
@@ -22,7 +22,7 @@ export const isLoggingInSelector = (state: RootState) => s(state).isLoggingIn
 
 export const isLoggedSelector = (state: RootState) =>
   appTokenSelector(state) &&
-  (githubAppTokenSelector(state) || githubOAuthTokenSelector(state))
+  (githubAppTokenSelector(state) || githubTokenSelector(state))
     ? !!(s(state).user && s(state).user!._id)
     : false
 

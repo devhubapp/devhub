@@ -324,8 +324,8 @@ function* onFetchRequest(
     state,
     owner,
   )
-  const githubOAuthToken = selectors.githubOAuthTokenSelector(state)!
-  const githubAppTokenDetails = selectors.githubOAuthTokenDetailsSelector(state)
+  const githubOAuthOrPersonalToken = selectors.githubTokenSelector(state)!
+  const githubAppTokenDetails = selectors.githubAppTokenDetailsSelector(state)
   const loggedUsername = selectors.currentGitHubUsernameSelector(state)!
 
   const githubToken =
@@ -333,7 +333,7 @@ function* onFetchRequest(
       (subscription.type === 'activity' ||
         subscription.type === 'issue_or_pr') &&
       privateToken) ||
-    githubOAuthToken ||
+    githubOAuthOrPersonalToken ||
     (githubAppTokenDetails && githubAppTokenDetails.token)
 
   const appTokenType: GitHubAppTokenType =
@@ -403,7 +403,7 @@ function* onFetchRequest(
             repoName: string | undefined,
           ) =>
             selectors.getPrivateTokenByRepoSelector(state, ownerName, repoName),
-          githubOAuthToken,
+          githubToken,
         },
       )
 
@@ -502,7 +502,7 @@ function* onFetchRequest(
             repoName: string | undefined,
           ) =>
             selectors.getPrivateTokenByRepoSelector(state, ownerName, repoName),
-          githubOAuthToken,
+          githubToken,
         },
       )
 

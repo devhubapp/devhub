@@ -78,6 +78,7 @@ export interface DatabaseUser {
   github: {
     app?: GitHubTokenDetails
     oauth?: GitHubTokenDetails
+    personal?: GitHubTokenDetails
     user: GraphQLGitHubUser
     installations?: Installation[]
   }

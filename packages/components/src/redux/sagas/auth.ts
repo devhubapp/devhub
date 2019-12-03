@@ -105,6 +105,7 @@ function* onLoginRequest(
             github: {
               app?: User['github']['app']
               oauth?: User['github']['oauth']
+              personal?: User['github']['personal']
               user: {
                 id: User['github']['user']['id']
                 nodeId: User['github']['user']['nodeId']
@@ -141,6 +142,12 @@ function* onLoginRequest(
                   tokenCreatedAt
                 }
                 oauth {
+                  scope
+                  token
+                  tokenType
+                  tokenCreatedAt
+                }
+                personal {
                   scope
                   token
                   tokenType
@@ -287,11 +294,11 @@ function* updateLoggedUserOnTools() {
   const user = selectors.currentUserSelector(state)
 
   const githubUser = selectors.currentGitHubUserSelector(state)
-  const githubOAuthToken = selectors.githubOAuthTokenSelector(state)
+  const githubToken = selectors.githubTokenSelector(state)
   const githubAppToken = selectors.githubAppTokenSelector(state)
   const plan = selectors.currentUserPlanSelector(state)
 
-  github.authenticate(githubOAuthToken || githubAppToken || null)
+  github.authenticate(githubToken || githubAppToken || null)
 
   analytics.setUser(user && user._id)
   analytics.setDimensions({

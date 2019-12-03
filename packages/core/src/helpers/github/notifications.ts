@@ -306,14 +306,14 @@ export async function getNotificationsEnhancementMap(
   {
     cache = new Map(),
     getGitHubPrivateTokenForRepo,
-    githubOAuthToken,
+    githubToken: _githubToken,
   }: {
     cache: EnhancementCache | undefined | undefined
     getGitHubPrivateTokenForRepo: (
       owner: string | undefined,
       repo: string | undefined,
     ) => string | undefined
-    githubOAuthToken: string
+    githubToken: string
   },
 ): Promise<Record<string, NotificationPayloadEnhancement>> {
   const promises = notifications.map(async notification => {
@@ -323,7 +323,7 @@ export async function getNotificationsEnhancementMap(
     if (!(owner && repo)) return
 
     const privateToken = getGitHubPrivateTokenForRepo(owner, repo)
-    const githubToken = privateToken || githubOAuthToken
+    const githubToken = privateToken || _githubToken
 
     const commentId = getCommentIdFromUrl(
       notification.subject.latest_comment_url,

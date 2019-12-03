@@ -1,8 +1,9 @@
-export type GitHubAppType = 'app' | 'oauth'
+export type GitHubAppType = 'app' | 'oauth' | 'personal'
 export type GitHubAppTokenType =
+  | 'app-installation'
   | 'app-user-to-server'
   | 'oauth'
-  | 'app-installation'
+  | 'personal'
 
 export type GitHubActivityType =
   | 'ORG_PUBLIC_EVENTS'

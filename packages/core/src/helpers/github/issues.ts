@@ -191,14 +191,14 @@ export async function getIssueOrPullRequestsEnhancementMap(
   {
     cache = new Map(),
     getGitHubPrivateTokenForRepo,
-    githubOAuthToken,
+    githubToken: _githubToken,
   }: {
     cache: EnhancementCache | undefined | undefined
     getGitHubPrivateTokenForRepo: (
       owner: string | undefined,
       repo: string | undefined,
     ) => string | undefined
-    githubOAuthToken: string
+    githubToken: string
   },
 ): Promise<Record<string, IssueOrPullRequestPayloadEnhancement>> {
   const repoMetas = _.uniqBy(
@@ -238,7 +238,7 @@ export async function getIssueOrPullRequestsEnhancementMap(
         return cacheValue
 
       const privateToken = getGitHubPrivateTokenForRepo(owner, repo)
-      const githubToken = privateToken || githubOAuthToken
+      const githubToken = privateToken || _githubToken
 
       try {
         const { data } = await axios.get(
@@ -264,7 +264,7 @@ export async function getIssueOrPullRequestsEnhancementMap(
     if (!(owner && repo && item.number && item.url)) return
 
     const privateToken = getGitHubPrivateTokenForRepo(owner, repo)
-    const githubToken = privateToken || githubOAuthToken
+    const githubToken = privateToken || _githubToken
 
     const enhance: IssueOrPullRequestPayloadEnhancement = {}
 

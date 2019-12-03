@@ -1,4 +1,5 @@
 import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
+import _ from 'lodash'
 import React, { useState } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -40,7 +41,10 @@ export const AdvancedSettingsModal = React.memo(
     const dispatch = useDispatch()
     const existingAppToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
-    const githubOAuthToken = useReduxState(selectors.githubOAuthTokenSelector)
+    const githubToken = useReduxState(selectors.githubTokenSelector)
+    // const githubPersonalTokenDetails = useReduxState(
+    //   selectors.githubPersonalTokenDetailsSelector,
+    // )
     const installations = useReduxState(selectors.installationsArrSelector)
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
@@ -121,9 +125,7 @@ export const AdvancedSettingsModal = React.memo(
                 style={[
                   sharedStyles.horizontal,
                   sharedStyles.alignItemsCenter,
-                  {
-                    paddingHorizontal: contentPadding,
-                  },
+                  sharedStyles.paddingHorizontal,
                 ]}
               >
                 <ThemedText color="foregroundColor" style={sharedStyles.flex}>
@@ -132,7 +134,7 @@ export const AdvancedSettingsModal = React.memo(
 
                 <Spacer flex={1} minWidth={contentPadding / 2} />
 
-                {githubOAuthToken ? (
+                {githubToken ? (
                   <ButtonLink
                     analyticsLabel="manage_oauth"
                     contentContainerStyle={{
@@ -152,7 +154,7 @@ export const AdvancedSettingsModal = React.memo(
                 ) : (
                   <Button
                     analyticsLabel={
-                      githubOAuthToken ? 'refresh_oauth_token' : 'start_oauth'
+                      githubToken ? 'refresh_oauth_token' : 'start_oauth'
                     }
                     contentContainerStyle={{
                       width: 52,
@@ -166,7 +168,7 @@ export const AdvancedSettingsModal = React.memo(
                   >
                     <ThemedIcon
                       color={foregroundThemeColor}
-                      name={githubOAuthToken ? 'sync' : 'plus'}
+                      name={githubToken ? 'sync' : 'plus'}
                       size={16}
                     />
                   </Button>
@@ -232,12 +234,12 @@ export const AdvancedSettingsModal = React.memo(
                   </Button>
                 )}
               </View>
+
+              <Spacer height={contentPadding} />
             </View>
 
             {!!githubAppToken && (
               <>
-                <Spacer height={contentPadding} />
-
                 <View>
                   <SubHeader title="GitHub App installations">
                     <>
@@ -338,9 +340,59 @@ export const AdvancedSettingsModal = React.memo(
                 </View>
               </>
             )}
+
+            <Spacer height={contentPadding} />
+
+            {/* <View>
+              <SubHeader title="Personal Access Token">
+                <Spacer flex={1} />
+
+                <ButtonLink
+                  analyticsLabel="personal_access_token"
+                  contentContainerStyle={{
+                    width: 52,
+                    paddingHorizontal: contentPadding,
+                  }}
+                  href={`https://github.com/settings/tokens/new?description=DevHub&scopes=${(
+                    constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
+                    _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
+                  ).join(',')}`}
+                  openOnNewTab
+                  size={32}
+                >
+                  <ThemedIcon
+                    color={foregroundThemeColor}
+                    name="plus"
+                    size={16}
+                  />
+                </ButtonLink>
+              </SubHeader>
+
+              <View
+                style={[
+                  sharedStyles.horizontal,
+                  sharedStyles.alignItemsCenter,
+                  sharedStyles.paddingHorizontal,
+                ]}
+              >
+                <ThemedTextInput
+                  textInputKey="personal-access-token-input"
+                  placeholder="Personal Access Token"
+                  onSubmitEditing={() => alert('TODO')}
+                  style={sharedStyles.flex}
+                  value={
+                    (githubPersonalTokenDetails &&
+                      githubPersonalTokenDetails.token) ||
+                    undefined
+                  }
+                />
+              </View>
+            </View> */}
+
+            <Spacer height={contentPadding} />
           </View>
 
-          <Spacer flex={1} minHeight={contentPadding * 2} />
+          <Spacer flex={1} minHeight={contentPadding} />
 
           <View style={sharedStyles.paddingHorizontal}>
             <Spacer height={contentPadding} />

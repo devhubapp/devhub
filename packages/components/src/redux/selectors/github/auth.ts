@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import { EMPTY_OBJ } from '../../../utils/constants'
 import { RootState } from '../../types'
 import { installationTokenByOwnerSelector } from './installations'
@@ -16,36 +18,49 @@ export const githubAppTokenSelector = (state: RootState) => {
   return (tokenDetails && tokenDetails.token) || undefined
 }
 
-export const githubAppTokenTypeSelector = (state: RootState) => {
-  const tokenDetails = githubAppTokenDetailsSelector(state)
-  return (tokenDetails && tokenDetails.tokenType) || undefined
-}
-
-export const githubAppTokenCreatedAtSelector = (state: RootState) => {
-  const tokenDetails = githubAppTokenDetailsSelector(state)
-  return (tokenDetails && tokenDetails.tokenCreatedAt) || undefined
-}
-
 export const githubOAuthTokenDetailsSelector = (state: RootState) =>
   s(state).oauth
 
+export const githubPersonalTokenDetailsSelector = (state: RootState) =>
+  s(state).personal
+
+export const githubTokenDetailsSelector = (state: RootState) => {
+  const githubPersonalTokenDetails = githubPersonalTokenDetailsSelector(state)
+  const githubOAuthTokenDetails = githubOAuthTokenDetailsSelector(state)
+
+  if (!(githubOAuthTokenDetails && githubOAuthTokenDetails.token))
+    return githubPersonalTokenDetails
+
+  if (!(githubPersonalTokenDetails && githubPersonalTokenDetails.token))
+    return githubOAuthTokenDetails
+
+  const newestTokenDate = _.max([
+    githubOAuthTokenDetails.tokenCreatedAt,
+    githubPersonalTokenDetails.token,
+  ])
+
+  if (newestTokenDate === githubPersonalTokenDetails.tokenCreatedAt)
+    return githubPersonalTokenDetails
+  return githubOAuthTokenDetails
+}
+
 export const githubOAuthScopeSelector = (state: RootState) => {
-  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+  const tokenDetails = githubTokenDetailsSelector(state)
   return (tokenDetails && tokenDetails.scope) || undefined
 }
 
-export const githubOAuthTokenSelector = (state: RootState) => {
-  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+export const githubTokenSelector = (state: RootState) => {
+  const tokenDetails = githubTokenDetailsSelector(state)
   return (tokenDetails && tokenDetails.token) || undefined
 }
 
-export const githubOAuthTokenTypeSelector = (state: RootState) => {
-  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+export const githubTokenTypeSelector = (state: RootState) => {
+  const tokenDetails = githubTokenDetailsSelector(state)
   return (tokenDetails && tokenDetails.tokenType) || undefined
 }
 
-export const githubOAuthTokenCreatedAtSelector = (state: RootState) => {
-  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+export const githubTokenCreatedAtSelector = (state: RootState) => {
+  const tokenDetails = githubTokenDetailsSelector(state)
   return (tokenDetails && tokenDetails.tokenCreatedAt) || undefined
 }
 
@@ -53,7 +68,7 @@ export const getPrivateTokenByOwnerSelector = (
   state: RootState,
   ownerName: string | undefined,
 ) => {
-  const tokenDetails = githubOAuthTokenDetailsSelector(state)
+  const tokenDetails = githubTokenDetailsSelector(state)
   if (
     tokenDetails &&
     tokenDetails.token &&

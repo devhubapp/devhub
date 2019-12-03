@@ -29,11 +29,14 @@ export const DEFAULT_THEME_PAIR: ThemePair = {
 }
 
 export const DEFAULT_GITHUB_OAUTH_SCOPES = ['notifications', 'user:email']
-export const FULL_ACCESS_GITHUB_OAUTH_SCOPES: string[] | undefined = [
+export const FULL_ACCESS_GITHUB_OAUTH_SCOPES = [
   ...DEFAULT_GITHUB_OAUTH_SCOPES,
   'repo',
 ]
 export const GITHUB_APP_HAS_CODE_ACCESS: boolean = true
+
+export const SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON: boolean = false
+export const SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON: boolean = true
 
 export const APPSTORE_ID = '1191864199'
 export const GOOGLEPLAY_ID = 'com.devhubapp'
