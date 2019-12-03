@@ -27,6 +27,10 @@ import { GraphQLUserPlan } from './graphql'
 
 type octokit = InstanceType<typeof Octokit>
 
+export interface ArchivedEnhancement {
+  // archived_at?: string
+}
+
 export interface ReadUnreadEnhancement {
   enhanced?: boolean
   last_read_at?: string
@@ -39,9 +43,12 @@ export interface SaveForLaterEnhancement {
   last_unsaved_at?: string
 }
 
-export interface NotificationPayloadEnhancement
-  extends ReadUnreadEnhancement,
-    SaveForLaterEnhancement {
+export interface BaseEnhancement
+  extends ArchivedEnhancement,
+    ReadUnreadEnhancement,
+    SaveForLaterEnhancement {}
+
+export interface NotificationPayloadEnhancement extends BaseEnhancement {
   comment?: GitHubComment
   commit?: GitHubCommit
   issue?: GitHubIssue
@@ -50,17 +57,13 @@ export interface NotificationPayloadEnhancement
   enhanced?: boolean
 }
 
-export interface IssuePayloadEnhancement
-  extends ReadUnreadEnhancement,
-    SaveForLaterEnhancement {
+export interface IssuePayloadEnhancement extends BaseEnhancement {
   merged?: undefined
   private?: boolean
   enhanced?: boolean
 }
 
-export interface PullRequestPayloadEnhancement
-  extends ReadUnreadEnhancement,
-    SaveForLaterEnhancement {
+export interface PullRequestPayloadEnhancement extends BaseEnhancement {
   merged?: boolean
   private?: boolean
   enhanced?: boolean
@@ -86,8 +89,7 @@ export interface MultipleStarEvent
 }
 
 export type EnhancedGitHubEvent = (GitHubEvent | MultipleStarEvent) &
-  ReadUnreadEnhancement &
-  SaveForLaterEnhancement
+  BaseEnhancement
 
 export type EnhancedGitHubIssue = GitHubIssue & IssuePayloadEnhancement
 

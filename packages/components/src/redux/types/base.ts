@@ -1,5 +1,5 @@
 import { InferableComponentEnhancerWithProps } from 'react-redux'
-import { Action as ReduxAction } from 'redux'
+import { Action as ReduxAction, Reducer as ReduxReducer } from 'redux'
 
 export interface Action<T extends string, P> extends ReduxAction<T> {
   payload: P
@@ -36,4 +36,8 @@ export type ExtractPropsFromConnector<
   Connector
 > = Connector extends InferableComponentEnhancerWithProps<infer T, any>
   ? T
+  : never
+
+export type ExtractStateFromReducer<R> = R extends ReduxReducer<infer S>
+  ? S
   : never

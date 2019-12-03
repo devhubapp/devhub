@@ -269,11 +269,11 @@ function* onLoginRequest(
 }
 
 function* onLoginSuccess(
-  action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
+  _action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
   clearOAuthQueryParams()
 
-  if (StoreReview.isAvailable) {
+  if (StoreReview.isAvailable && !__DEV__) {
     const state = yield select()
     const { loginSuccess: loginCount } = selectors.countersSelector(state)
 
@@ -281,6 +281,8 @@ function* onLoginSuccess(
       StoreReview.requestReview()
     }
   }
+
+  yield put(actions.cleanupArchivedItems())
 }
 
 function* updateLoggedUserOnTools() {

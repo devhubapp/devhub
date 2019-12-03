@@ -219,48 +219,9 @@ function* onSetClearedAt(
     typeof actions.setColumnClearedAtFilter
   >,
 ) {
-  if (!(action.payload.clearedAt && action.payload.columnId)) return
+  if (!action.payload.clearedAt) return
 
-  const column: Column = yield select(
-    selectors.columnSelector,
-    action.payload.columnId,
-  )
-
-  if (!(column && column.subscriptionIds && column.subscriptionIds.length))
-    return
-
-  const columns: Column[] = yield select(selectors.columnsArrSelector)
-  if (!(columns && columns.length)) return
-
-  yield all(
-    column.subscriptionIds.map(function*(subscriptionId) {
-      if (!subscriptionId) return
-
-      // deleteOlderThan will consider the clearedAt of the other columns
-      // that are also using this subscription
-      // because we cant remove their items, their columns were not cleared
-      let deleteOlderThan = action.payload.clearedAt || undefined
-
-      let hasColumnWithoutClearedAt = false
-      columns.forEach(c => {
-        if (!c.subscriptionIds.includes(subscriptionId)) return
-
-        if (!(c.filters && c.filters.clearedAt))
-          hasColumnWithoutClearedAt = true
-        if (hasColumnWithoutClearedAt) return
-
-        if (
-          c.filters &&
-          c.filters.clearedAt &&
-          (!deleteOlderThan || c.filters.clearedAt < deleteOlderThan)
-        ) {
-          deleteOlderThan = c.filters.clearedAt
-        }
-      })
-
-      if (hasColumnWithoutClearedAt) return
-    }),
-  )
+  yield put(actions.cleanupArchivedItems())
 }
 
 function* onColumnSubscriptionFilterChange(
