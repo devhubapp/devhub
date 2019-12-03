@@ -29,7 +29,7 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     subtype: undefined,
     params: {
       all: true,
-      participating: true,
+      participating: false,
     },
   }) as NotificationColumnSubscription
 
