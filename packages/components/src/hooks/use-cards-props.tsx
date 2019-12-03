@@ -6,7 +6,6 @@ import {
   constants,
   EnhancedGitHubEvent,
   EnhancedItem,
-  freeTrialDays,
   getDateSmallText,
   getOwnerAndRepoFormattedFilter,
   getUsernamesFromFilter,

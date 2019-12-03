@@ -1,6 +1,6 @@
 import { getDateSmallText, getFullDateText, Theme } from '@devhub/core'
 import React, { Fragment, useContext } from 'react'
-import { PixelRatio, StyleSheet, Text, View } from 'react-native'
+import { PixelRatio, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { Platform } from '../../libs/platform'
@@ -14,11 +14,13 @@ import {
   smallerTextSize,
   smallTextSize,
 } from '../../styles/variables'
+import { stripEmojis } from '../../utils/helpers/github/emojis'
 import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
 import { CurrentColumnContext } from '../columns/Column'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { IntervalRefresh } from '../common/IntervalRefresh'
+import { Label, smallLabelHeight } from '../common/Label'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -143,6 +145,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 
+  labelText: {
+    lineHeight: smallLabelHeight,
+    fontSize: smallerTextSize,
+    fontWeight: '300',
+    overflow: 'hidden',
+  },
+
   subitemContainer: {
     flexGrow: 1,
     flexDirection: 'row',
@@ -166,13 +175,14 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     height: sizes.githubAppMessageContainerHeight,
+    minHeight: sizes.githubAppMessageContainerHeight,
   },
 
   githubAppMessage: {
-    flex: 1,
+    flexGrow: 1,
     maxWidth: '100%',
-    lineHeight: sizes.rightTextLineHeight,
-    fontSize: smallerTextSize,
+    lineHeight: sizes.subitemLineHeight,
+    fontSize: sizes.subitemFontSize,
     fontWeight: '300',
     fontStyle: 'italic',
     overflow: 'hidden',
@@ -189,6 +199,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     icon,
     isRead,
     isSaved,
+    labels,
     link,
     nodeIdOrId,
     reason,
@@ -529,6 +540,96 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
             )}
           </View>
         </View>
+
+        {!!(labels && labels.length) && (
+          <>
+            <Spacer height={sizes.verticalSpaceSize} />
+
+            <View
+              style={[
+                sharedStyles.fullWidth,
+                sharedStyles.fullMaxWidth,
+                sharedStyles.horizontal,
+                { height: smallLabelHeight },
+              ]}
+            >
+              <Spacer
+                width={sizes.avatarContainerWidth + sizes.horizontalSpaceSize}
+              />
+
+              <ScrollView horizontal style={sharedStyles.flex}>
+                {labels.map((label, index) => (
+                  <Fragment key={`${label.name}-${label.color}`}>
+                    <Label
+                      backgroundThemeColor={backgroundThemeColor}
+                      colorThemeColor={label.color}
+                      disableEmojis
+                      hideText={false}
+                      outline={false}
+                      small
+                      textThemeColor="foregroundColorMuted65"
+                      transparent
+                      tryFixingColorHexWithoutHash
+                    >
+                      <Link
+                        TouchableComponent={GestureHandlerTouchableOpacity}
+                        enableUnderlineHover
+                        href={
+                          Platform.OS === 'android'
+                            ? undefined
+                            : 'javascript:void(0)'
+                        }
+                        openOnNewTab={false}
+                        onPress={
+                          Platform.OS === 'android' || !columnId
+                            ? undefined
+                            : (() => {
+                                return () => {
+                                  const removeIfAlreadySet = !(
+                                    KeyboardKeyIsPressed.meta ||
+                                    KeyboardKeyIsPressed.shift
+                                  )
+
+                                  const removeOthers = !(
+                                    KeyboardKeyIsPressed.alt ||
+                                    KeyboardKeyIsPressed.meta ||
+                                    KeyboardKeyIsPressed.shift
+                                  )
+
+                                  dispatch(
+                                    actions.setColumnLabelFilter({
+                                      columnId,
+                                      label: label.name,
+                                      value: KeyboardKeyIsPressed.alt
+                                        ? false
+                                        : true,
+                                      removeIfAlreadySet,
+                                      removeOthers,
+                                    }),
+                                  )
+                                }
+                              })()
+                        }
+                        style={sharedStyles.flexShrink1}
+                        textProps={{
+                          color: 'foregroundColorMuted65',
+                          numberOfLines: 1,
+                          style: styles.labelText,
+                        }}
+                      >
+                        {stripEmojis(label.name.toLowerCase())}
+                      </Link>
+                    </Label>
+
+                    {index < labels.length - 1 && (
+                      <Spacer width={contentPadding / 2} />
+                    )}
+                  </Fragment>
+                ))}
+              </ScrollView>
+            </View>
+          </>
+        )}
 
         {!!(subitems && subitems.length) &&
           subitems.map((subitem, index) => (

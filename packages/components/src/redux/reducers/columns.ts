@@ -6,6 +6,8 @@ import {
   ActivityColumnFilters,
   Column,
   filterRecordHasAnyForcedValue,
+  getQueryStringFromQueryTerms,
+  getSearchQueryTerms,
   IssueOrPullRequestColumnFilters,
   normalizeColumns,
   normalizeSubscriptions,
@@ -294,6 +296,76 @@ export const columnsReducer: Reducer<State> = (
 
         if (!filterRecordHasAnyForcedValue(column.filters.activity.actions)) {
           column.filters.activity.actions = {}
+        }
+
+        draft.updatedAt = new Date().toISOString()
+      })
+
+    case 'SET_COLUMN_LABEL_FILTER':
+      return immer(state, draft => {
+        const {
+          columnId,
+          label: _label,
+          removeIfAlreadySet,
+          removeOthers,
+          value,
+        } = action.payload
+
+        if (!draft.byId) return
+
+        const column = draft.byId[columnId] as NotificationColumn
+        if (!column) return
+
+        if (!(_label && typeof _label === 'string' && _label.trim())) return
+        const label =
+          _label.includes(' ') && _label[0] !== '"' ? `"${_label}"` : _label
+
+        column.filters = column.filters || {}
+        column.filters.notifications = column.filters.notifications || {}
+
+        column.filters.notifications.reasons =
+          column.filters.notifications.reasons || {}
+
+        const queryTerms = getSearchQueryTerms(column.filters.query || '')
+
+        const isQueryTermOfLabelType = (qt: (typeof queryTerms)[0]) =>
+          !!(
+            qt &&
+            qt.length === 3 &&
+            `${qt[0] || ''}`.toLowerCase() === 'label'
+          )
+        const isQueryTermThisLabel = (qt: (typeof queryTerms)[0]) =>
+          !!(
+            isQueryTermOfLabelType(qt) &&
+            `${qt[1] || ''}`.toLowerCase() === `${label || ''}`.toLowerCase()
+          )
+        const queryTerm = queryTerms.find(isQueryTermThisLabel)
+        const currentValue = queryTerm ? !queryTerm[2] : null
+
+        if (removeOthers) {
+          column.filters.query = getQueryStringFromQueryTerms(
+            queryTerms.filter(qt => !isQueryTermOfLabelType(qt)),
+          )
+        }
+
+        if (
+          typeof value !== 'boolean' ||
+          (removeIfAlreadySet && currentValue === value)
+        ) {
+          column.filters.query = getQueryStringFromQueryTerms(
+            queryTerms.filter(qt => !isQueryTermThisLabel(qt)),
+          )
+        } else {
+          column.filters.query = getQueryStringFromQueryTerms([
+            ...queryTerms,
+            ['label', label, !value],
+          ])
+        }
+
+        if (
+          !filterRecordHasAnyForcedValue(column.filters.notifications.reasons)
+        ) {
+          column.filters.notifications.reasons = {}
         }
 
         draft.updatedAt = new Date().toISOString()

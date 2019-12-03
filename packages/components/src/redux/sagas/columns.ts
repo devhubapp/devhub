@@ -271,6 +271,7 @@ function* onColumnSubscriptionFilterChange(
     | ExtractActionFromActionCreator<typeof actions.replaceColumnWatchingFilter>
     | ExtractActionFromActionCreator<typeof actions.setColummDraftFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnInvolvesFilter>
+    | ExtractActionFromActionCreator<typeof actions.setColumnLabelFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnOwnerFilter>
     | ExtractActionFromActionCreator<typeof actions.setColumnWatchingFilter>
     | ExtractActionFromActionCreator<
@@ -362,7 +363,8 @@ function* onColumnSubscriptionFilterChange(
               : subscription.params.owners,
           query:
             action.type === 'CLEAR_COLUMN_FILTERS' ||
-            action.type === 'REPLACE_COLUMN_FILTERS'
+            action.type === 'REPLACE_COLUMN_FILTERS' ||
+            action.type === 'SET_COLUMN_LABEL_FILTER'
               ? c.filters && c.filters.query
               : subscription.params.query,
           subjectType:
@@ -454,6 +456,7 @@ export function* columnsSagas() {
         'REPLACE_COLUMN_WATCHING_FILTER',
         'SET_COLUMN_DRAFT_FILTER',
         'SET_COLUMN_INVOLVES_FILTER',
+        'SET_COLUMN_LABEL_FILTER',
         'SET_COLUMN_OWNER_FILTER',
         'SET_COLUMN_PARTICIPATING_FILTER',
         'SET_COLUMN_REPO_FILTER',

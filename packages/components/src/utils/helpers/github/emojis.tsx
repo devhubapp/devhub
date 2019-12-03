@@ -1543,15 +1543,15 @@ export interface EmojiParseOptions {
   alt?: string
   before?: React.ReactNode
   imageProps?: Omit<ImageProps, 'source'>
-  key: string
-  stripEmojis?: boolean
+  key?: string
+  shouldStripEmojis?: boolean
 }
 
 function getComponent(
   emojiImageURL: string | undefined,
-  { alt, before, after, imageProps, stripEmojis }: EmojiParseOptions,
+  { alt, before, after, imageProps, shouldStripEmojis }: EmojiParseOptions,
 ): React.ReactNode {
-  if (stripEmojis) return null
+  if (shouldStripEmojis) return null
   if (!emojiImageURL) return null
 
   return (
@@ -1613,7 +1613,18 @@ export function parseTextWithEmojisToReactComponents(
       if (typeof item !== 'string') return item
       return parseTextWithEmojisToReactComponents_2(item, options)
     }),
-  ).map((item, index) => (
-    <Fragment key={`${options.key}-${index}`}>{item}</Fragment>
-  ))
+  ).map(
+    (options.key &&
+      ((item, index) => (
+        <Fragment key={`${options.key}-${index}`}>{item}</Fragment>
+      ))) ||
+      (item => item),
+  )
+}
+
+export function stripEmojis(text: string): string {
+  return parseTextWithEmojisToReactComponents(text, { shouldStripEmojis: true })
+    .join(' ')
+    .replace(/\s\s/g, ' ')
+    .trim()
 }

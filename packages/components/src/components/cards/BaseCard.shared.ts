@@ -65,6 +65,7 @@ import {
   smallTextSize,
 } from '../../styles/variables'
 import { fixURL } from '../../utils/helpers/github/url'
+import { smallLabelHeight } from '../common/Label'
 import { cardActionsHeight } from './partials/CardActions'
 import { cardItemSeparatorSize } from './partials/CardItemSeparator'
 
@@ -122,10 +123,16 @@ export interface BaseCardProps {
     name: GitHubIcon
     color?: keyof ThemeColors
   }
-  nodeIdOrId: string
   isRead: boolean
   isSaved: boolean
+  labels:
+    | Array<{
+        name: string
+        color?: string
+      }>
+    | undefined
   link: string
+  nodeIdOrId: string
   reason?: {
     reason: GitHubNotificationReason
     color: keyof ThemeColors
@@ -195,10 +202,11 @@ function getPrivateBannerCardProps(
     date: props.date,
     githubApp: undefined,
     icon: { color: props.iconColor || 'red', name: 'lock' },
-    nodeIdOrId: getItemNodeIdOrId(item)!,
     isRead: isItemRead(item),
     isSaved: isItemSaved(item),
+    labels: undefined,
     link: `${constants.APP_DEEP_LINK_URLS.pricing}?highlightFeature=${highlightFeature}`,
+    nodeIdOrId: getItemNodeIdOrId(item)!,
     showPrivateLock: false,
     subitems: undefined,
     subtitle: undefined,
@@ -398,15 +406,16 @@ function _getCardPropsForItem(
                 avatar: actorAvatar,
                 date,
                 icon,
-                nodeIdOrId: getItemNodeIdOrId(item)!,
                 isRead,
                 isSaved,
+                labels: undefined,
                 link:
                   event.type === 'WatchEvent' && actorAvatar.linkURL
                     ? repoIsKnown
                       ? actorAvatar.linkURL
                       : `${actorAvatar.linkURL}?tab=stars&q=${repoFullName}`
                     : forkURL || repoURL,
+                nodeIdOrId: getItemNodeIdOrId(item)!,
                 showPrivateLock: isPrivate,
                 subitems: undefined,
                 subtitle: undefined,
@@ -428,10 +437,11 @@ function _getCardPropsForItem(
                 avatar: repoAvatar,
                 date,
                 icon,
-                nodeIdOrId: getItemNodeIdOrId(item)!,
                 isRead,
                 isSaved,
+                labels: undefined,
                 link: forkURL || repoURL,
+                nodeIdOrId: getItemNodeIdOrId(item)!,
                 showPrivateLock: isPrivate,
                 subitems: undefined,
                 subtitle: undefined,
@@ -464,9 +474,9 @@ function _getCardPropsForItem(
                 : repoAvatar,
               date,
               icon,
-              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               isSaved,
+              labels: issueOrPullRequest.labels,
               link:
                 (_comment &&
                   (_comment.html_url ||
@@ -478,6 +488,7 @@ function _getCardPropsForItem(
                       commentIsInline: !!(_comment && _comment.path),
                     }))) ||
                 fixURL(issueOrPullRequest.html_url || issueOrPullRequest.url)!,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               showPrivateLock: isPrivate,
               subitems,
               subtitle: undefined,
@@ -517,9 +528,9 @@ function _getCardPropsForItem(
                 : repoAvatar,
               date,
               icon,
-              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               isSaved,
+              labels: undefined,
               link:
                 (_comment &&
                   (_comment.html_url ||
@@ -531,6 +542,7 @@ function _getCardPropsForItem(
                       commentIsInline: !!(_comment && _comment.path),
                     }))) ||
                 getCommitUrlFromOtherUrl(commit.url)!,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               showPrivateLock: isPrivate,
               subitems,
               subtitle: undefined,
@@ -572,9 +584,9 @@ function _getCardPropsForItem(
               avatar: repoAvatar,
               date,
               icon,
-              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               isSaved,
+              labels: undefined,
               link:
                 (_comment &&
                   (_comment.html_url ||
@@ -600,6 +612,7 @@ function _getCardPropsForItem(
                         commits[commits.length - 1].url,
                       )!,
                     )!,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               showPrivateLock: isPrivate,
               subitems: commits
                 .slice(0, sliceSize)
@@ -657,9 +670,9 @@ function _getCardPropsForItem(
               avatar: repoAvatar,
               date,
               icon,
-              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               isSaved,
+              labels: undefined,
               link:
                 firstLink &&
                 pages.length === 1 &&
@@ -667,6 +680,7 @@ function _getCardPropsForItem(
                 pages[0].action !== 'created'
                   ? `${firstLink}/_compare/${pages[0].sha}`
                   : firstLink || '',
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               showPrivateLock: isPrivate,
               subitems: undefined,
               subtitle: trimNewLinesAndSpaces(
@@ -694,12 +708,13 @@ function _getCardPropsForItem(
               avatar: repoAvatar,
               date,
               icon,
-              nodeIdOrId: getItemNodeIdOrId(item)!,
               isRead,
               isSaved,
+              labels: undefined,
               link:
                 release.html_url ||
                 fixURL(release.url, { tagName: branchOrTagName })!,
+              nodeIdOrId: getItemNodeIdOrId(item)!,
               showPrivateLock: isPrivate,
               subitems: [],
               subtitle: trimNewLinesAndSpaces(stripMarkdown(release.body), 120),
@@ -728,9 +743,9 @@ function _getCardPropsForItem(
             avatar: repoAvatar,
             date,
             icon,
-            nodeIdOrId: getItemNodeIdOrId(item)!,
             isRead,
             isSaved,
+            labels: undefined,
             link:
               (_comment &&
                 (_comment.html_url ||
@@ -755,6 +770,7 @@ function _getCardPropsForItem(
                   (isBranchMainEvent &&
                     `${repoURL}/tree/${branchOrTagName}`))) ||
               (__DEV__ ? '' : repoURL),
+            nodeIdOrId: getItemNodeIdOrId(item)!,
             showPrivateLock: isPrivate,
             subitems,
             subtitle: undefined,
@@ -834,13 +850,14 @@ function _getCardPropsForItem(
         avatar,
         date,
         icon,
-        nodeIdOrId: getItemNodeIdOrId(item)!,
         isRead,
         isSaved,
+        labels: issueOrPullRequest.labels,
         link: fixURL(issueOrPullRequest.html_url, {
           addBottomAnchor: issueOrPullRequest.comments > 0,
           issueOrPullRequestNumber: issueOrPullRequest.number,
         })!,
+        nodeIdOrId: getItemNodeIdOrId(item)!,
         showPrivateLock: isPrivate,
         subitems: undefined,
         subtitle: undefined,
@@ -933,9 +950,9 @@ function _getCardPropsForItem(
         },
         date: notification.updated_at,
         icon,
-        nodeIdOrId: getItemNodeIdOrId(item)!,
         isRead,
         isSaved,
+        labels: issueOrPullRequest && issueOrPullRequest.labels,
         link:
           (subject.type === 'RepositoryInvitation' &&
             getGitHubURLForRepoInvitationFromRepoURL(repoURL)) ||
@@ -964,6 +981,7 @@ function _getCardPropsForItem(
             tagName: release && release.tag_name,
           }) ||
           repoURL!,
+        nodeIdOrId: getItemNodeIdOrId(item)!,
         reason: {
           color: reasonMetadata.color,
           label: reasonMetadata.label,
@@ -1170,6 +1188,9 @@ export function getCardSizeForProps(
     ) +
     (props.action && props.action.text
       ? sizes.actionContainerHeight + sizes.verticalSpaceSize
+      : 0) +
+    (props.labels && props.labels.length
+      ? smallLabelHeight + sizes.verticalSpaceSize
       : 0) +
     (props.subitems && props.subitems.length
       ? props.subitems.length *

@@ -274,9 +274,15 @@ export function itemPassesStringSearchFilter(
   {
     dashboardFromUsername,
     plan,
+    shouldSkip,
   }: {
     dashboardFromUsername: string | undefined
     plan: UserPlan | null | undefined
+    shouldSkip?: (item: {
+      key: string | undefined
+      value: string
+      isNegated: boolean
+    }) => boolean
   },
 ) {
   const itemStrings = getItemSearchableStrings(type, item, {
@@ -298,20 +304,25 @@ export function itemPassesStringSearchFilter(
     )
       return true
 
-    const [key, value, isNegated] =
+    const [key, _value, isNegated] =
       termArr.length === 2 ? ['', termArr[0], termArr[1]] : termArr
-    if (!(value && typeof value === 'string')) return false
 
-    let searchTerm = key ? `${key}:${value}` : value
-    if (searchTerm[0] === '"' && searchTerm.slice(-1) === '"') {
-      searchTerm = searchTerm.slice(1, -1).trim()
-      if (!searchTerm) return false
-    }
+    const value =
+      _value && _value[0] === '"' && _value.slice(-1) === '"'
+        ? _value.slice(1, -1).trim()
+        : _value
+    if (!value) return false
+    if (shouldSkip && shouldSkip({ key, value, isNegated })) return true
 
+    const searchTerms = key
+      ? [`${key}:${value}`, `${key}:"${value}"`]
+      : [value, `"${value}"`]
     const found = itemStrings.some(itemString => {
       if (!(itemString && typeof itemString === 'string')) return false
 
-      return itemString.toLowerCase().includes(searchTerm.toLowerCase())
+      return searchTerms.some(searchTerm =>
+        itemString.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
     })
 
     return isNegated ? !found : found
@@ -391,7 +402,13 @@ export function columnHasAnyFilter(
 export function getFilteredIssueOrPullRequests(
   items: EnhancedGitHubIssueOrPullRequest[],
   filters: IssueOrPullRequestColumnFilters | undefined,
-  { plan }: { plan: UserPlan | null | undefined },
+  {
+    dashboardFromUsername,
+    plan,
+  }: {
+    dashboardFromUsername: string | undefined
+    plan: UserPlan | null | undefined
+  },
 ) {
   let _items = sortIssuesOrPullRequests(items)
 
@@ -412,10 +429,18 @@ export function getFilteredIssueOrPullRequests(
       )
         return false
 
-      // since we call github's search endpoint,
-      // let's let they handle this filter since they also consider all comments and other stuff
-      // if (!itemPassesStringSearchFilter('issue_or_pr', item, filters.query, { plan }))
-      //   return false
+      // we will filter only some things locally as an optimistic update (e.g. labels),
+      // but all other text filter will be handled by github only,
+      // since they consider more data like all comment content, etc
+      if (
+        !itemPassesStringSearchFilter('issue_or_pr', item, filters.query, {
+          dashboardFromUsername,
+          plan,
+          shouldSkip: ({ key, value }) =>
+            !(key === 'label' || (!key && value && value.match(/^#([0-9]+)$/))),
+        })
+      )
+        return false
 
       const isStateFilterStrict = filterRecordWithThisValueCount(
         filters.state,

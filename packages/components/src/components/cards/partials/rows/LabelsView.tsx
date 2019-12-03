@@ -5,7 +5,7 @@ import { GitHubLabel, Theme, ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
-import { hiddenLabelSize, Label, LabelProps } from '../../../common/Label'
+import { hiddenLabelSizes, Label, LabelProps } from '../../../common/Label'
 import { ScrollViewWithOverlay } from '../../../common/ScrollViewWithOverlay'
 import { TouchableOpacity } from '../../../common/TouchableOpacity'
 
@@ -13,13 +13,15 @@ export interface LabelsViewProps
   extends Omit<LabelProps, 'children' | 'color' | 'containerStyle'> {
   backgroundThemeColor: keyof ThemeColors | ((theme: Theme) => string)
   enableScrollView?: boolean
+  enableScrollViewOverlay?: boolean
   fragment?: boolean
   hideText?: boolean
   labels: Array<{
-    key: string
+    key?: string
     name: GitHubLabel['name']
-    color: GitHubLabel['color']
+    color?: GitHubLabel['color']
   }>
+  startScrollAtEnd?: boolean
   style?: ViewProps['style']
 }
 
@@ -36,9 +38,11 @@ export const LabelsView = (props: LabelsViewProps) => {
   const {
     backgroundThemeColor,
     enableScrollView,
+    enableScrollViewOverlay,
     fragment,
     hideText,
     labels,
+    startScrollAtEnd,
     style,
     ...otherProps
   } = props
@@ -46,12 +50,14 @@ export const LabelsView = (props: LabelsViewProps) => {
   const scrollViewRef = useRef<ScrollView>(null)
 
   useEffect(() => {
+    if (!startScrollAtEnd) return
     if (!scrollViewRef.current) return
+
     scrollViewRef.current.scrollToEnd({ animated: false })
-  }, [scrollViewRef.current])
+  }, [scrollViewRef.current, startScrollAtEnd])
 
   const horizontalSpacing = hideText
-    ? -hiddenLabelSize.width / 8
+    ? -hiddenLabelSizes.width / 8
     : contentPadding / 3
   const verticalSpacing = 1
 
@@ -90,16 +96,23 @@ export const LabelsView = (props: LabelsViewProps) => {
           >
             <ConditionalWrap
               condition={!!enableScrollView}
-              wrap={c => (
-                <ScrollViewWithOverlay
-                  ref={scrollViewRef}
-                  horizontal
-                  topOrLeftOverlayThemeColor={backgroundThemeColor}
-                  bottomOrRightOverlayThemeColor={backgroundThemeColor}
-                >
-                  {c}
-                </ScrollViewWithOverlay>
-              )}
+              wrap={c =>
+                enableScrollViewOverlay ? (
+                  <ScrollViewWithOverlay
+                    ref={scrollViewRef}
+                    bottomOrRightOverlayThemeColor={backgroundThemeColor}
+                    containerStyle={style}
+                    horizontal
+                    topOrLeftOverlayThemeColor={backgroundThemeColor}
+                  >
+                    {c}
+                  </ScrollViewWithOverlay>
+                ) : (
+                  <ScrollView ref={scrollViewRef} horizontal style={style}>
+                    {c}
+                  </ScrollView>
+                )
+              }
             >
               {children}
             </ConditionalWrap>
@@ -109,7 +122,7 @@ export const LabelsView = (props: LabelsViewProps) => {
     >
       {labels.map(label => (
         <Label
-          key={label.key}
+          key={label.key || label.name}
           backgroundThemeColor={backgroundThemeColor}
           colorThemeColor={label.color}
           containerStyle={[
@@ -123,6 +136,7 @@ export const LabelsView = (props: LabelsViewProps) => {
           hideText={hideText}
           outline={false}
           small
+          transparent
           {...otherProps}
         >
           {hideText && !fragment ? '' : label.name.toLowerCase()}

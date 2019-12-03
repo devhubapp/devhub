@@ -94,6 +94,16 @@ export function setColumnActivityActionFilter<
   return createAction('SET_COLUMN_ACTIVITY_ACTION_FILTER', payload)
 }
 
+export function setColumnLabelFilter(payload: {
+  columnId: string
+  label: string
+  value: boolean | null
+  removeIfAlreadySet?: boolean
+  removeOthers?: boolean
+}) {
+  return createAction('SET_COLUMN_LABEL_FILTER', payload)
+}
+
 export function setColumnReasonFilter<
   T extends GitHubNotificationReason
 >(payload: {

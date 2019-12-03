@@ -392,9 +392,11 @@ export function getGitHubIssueSearchQuery(
         )
           return ''
 
-        const [key, value, isNegated] =
+        const [key, _value, isNegated] =
           queryTerm.length === 2 ? ['', queryTerm[0], queryTerm[1]] : queryTerm
-        if (!(value && typeof value === 'string')) return false
+        if (!(_value && typeof _value === 'string')) return false
+        const value =
+          _value.includes(' ') && _value[0] !== '"' ? `"${_value}"` : _value
 
         const searchTerm = key
           ? `${key}:${value}`
@@ -402,7 +404,11 @@ export function getGitHubIssueSearchQuery(
           ? value.match(/^#([0-9]+)$/)![1]!
           : value
 
-        return isNegated ? `NOT ${searchTerm}` : searchTerm
+        return isNegated
+          ? key
+            ? `-${searchTerm}`
+            : `NOT ${searchTerm}`
+          : searchTerm
       })
       .filter(Boolean)
       .join(' ')

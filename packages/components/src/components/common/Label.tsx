@@ -1,3 +1,4 @@
+import { Theme, ThemeColors } from '@devhub/core'
 import React, { ReactNode } from 'react'
 import {
   StyleProp,
@@ -9,14 +10,17 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
-import { getReadableColor } from '../../utils/helpers/colors'
+import {
+  fixColorHexWithoutHash,
+  getReadableColor,
+} from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
+import { Spacer } from './Spacer'
 
 export interface LabelProps {
   backgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
@@ -33,9 +37,13 @@ export interface LabelProps {
   small?: boolean
   textProps?: TextProps
   textThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  transparent?: boolean
+  tryFixingColorHexWithoutHash?: boolean
 }
 
-export const hiddenLabelSize = { width: 10, height: 10 }
+export const hiddenLabelSizes = { width: 10, height: 10 }
+export const smallLabelHeight = 16
+export const normalLabelHeight = 18
 
 const styles = StyleSheet.create({
   dot: {
@@ -52,7 +60,6 @@ export const Label = React.memo((props: LabelProps) => {
   const {
     backgroundThemeColor: _backgroundThemeColor = 'backgroundColor',
     borderThemeColor: _borderThemeColor,
-    textThemeColor: _textThemeColor,
     children,
     colorThemeColor: _colorThemeColor,
     containerProps = {},
@@ -64,6 +71,9 @@ export const Label = React.memo((props: LabelProps) => {
     radius,
     small,
     textProps = {},
+    textThemeColor: _textThemeColor,
+    transparent,
+    tryFixingColorHexWithoutHash,
   } = props
 
   const backgroundThemeColor = getThemeColorOrItself(
@@ -73,22 +83,32 @@ export const Label = React.memo((props: LabelProps) => {
   const borderThemeColor = getThemeColorOrItself(theme, _borderThemeColor)
   const textThemeColor = getThemeColorOrItself(theme, _textThemeColor)
 
-  const color =
+  const _color =
     getThemeColorOrItself(theme, _colorThemeColor) ||
     theme.foregroundColorMuted65
+  const color = tryFixingColorHexWithoutHash
+    ? _color && _color === _colorThemeColor
+      ? fixColorHexWithoutHash(_color)
+      : _color
+    : _color
 
   const circleColor = getReadableColor(color, backgroundThemeColor, 0.3)
 
-  const backgroundColor = outline
-    ? undefined
-    : hideText
-    ? circleColor
-    : backgroundThemeColor
+  const backgroundColor =
+    outline || transparent
+      ? undefined
+      : hideText
+      ? circleColor
+      : backgroundThemeColor
 
   const foregroundColor =
     textThemeColor ||
-    (backgroundColor
-      ? getReadableColor(backgroundColor, backgroundColor, 0.4)
+    (backgroundColor || transparent
+      ? getReadableColor(
+          backgroundColor || backgroundThemeColor,
+          backgroundColor || backgroundThemeColor,
+          0.4,
+        )
       : getReadableColor(color, backgroundThemeColor, 0.4))
 
   const borderColor =
@@ -99,8 +119,12 @@ export const Label = React.memo((props: LabelProps) => {
       ? backgroundThemeColor
       : backgroundColor)
 
-  const width = hideText ? hiddenLabelSize.width : undefined
-  const height = hideText ? hiddenLabelSize.height : small ? 16 : 18
+  const width = hideText ? hiddenLabelSizes.width : undefined
+  const height = hideText
+    ? hiddenLabelSizes.height
+    : small
+    ? smallLabelHeight
+    : normalLabelHeight
 
   return (
     <View
@@ -138,43 +162,47 @@ export const Label = React.memo((props: LabelProps) => {
         </>
       )}
 
-      <Text
-        numberOfLines={1}
-        {...textProps}
-        style={[
-          hideText ? { width } : { minWidth: width },
-          {
-            height,
-            lineHeight: height,
-            fontSize: hideText ? 0 : small ? 11 : 12,
-            color: foregroundColor,
-            paddingLeft: hideText ? 0 : contentPadding / (small ? 3 : 2),
-          },
-          textProps && !hideText && textProps.style,
-        ]}
-        {...(!!hideText &&
-          Platform.select({
-            web: {
-              title: children && typeof children === 'string' ? children : null,
+      {hideText ? null : typeof children === 'string' ? (
+        <Text
+          numberOfLines={1}
+          {...textProps}
+          style={[
+            hideText ? { width } : { minWidth: width },
+            {
+              height,
+              lineHeight: height,
+              fontSize: hideText ? 0 : small ? 11 : 12,
+              color: foregroundColor,
+              paddingLeft: hideText ? 0 : contentPadding / (small ? 3 : 2),
             },
-          }))}
-      >
-        {hideText
-          ? ''
-          : typeof children === 'string'
-          ? parseTextWithEmojisToReactComponents(children, {
-              key: `label-text-${children}`,
-              imageProps: {
-                style: {
-                  marginHorizontal: 2,
-                  width: small ? 13 : 14,
-                  height: small ? 13 : 14,
-                },
+            textProps && !hideText && textProps.style,
+          ]}
+          {...(!!hideText &&
+            Platform.select({
+              web: {
+                title:
+                  children && typeof children === 'string' ? children : null,
               },
-              stripEmojis: disableEmojis,
-            })
-          : children}
-      </Text>
+            }))}
+        >
+          {parseTextWithEmojisToReactComponents(children, {
+            key: `label-text-${children}`,
+            imageProps: {
+              style: {
+                marginHorizontal: 2,
+                width: small ? 13 : 14,
+                height: small ? 13 : 14,
+              },
+            },
+            shouldStripEmojis: disableEmojis,
+          })}
+        </Text>
+      ) : (
+        <>
+          <Spacer width={contentPadding / (small ? 3 : 2)} />
+          {children}
+        </>
+      )}
     </View>
   )
 })

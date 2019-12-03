@@ -23,12 +23,24 @@ export function getReadableColor(
 ) {
   if (!(color && backgroundColor && minimumContrastRatio > 0)) return color
 
-  const luminanceDiff = getLuminanceDifference(color, backgroundColor)
-  const luminanceDiffAbs = Math.abs(luminanceDiff)
-  if (luminanceDiffAbs >= minimumContrastRatio) return color
+  try {
+    const luminanceDiff = getLuminanceDifference(color, backgroundColor)
+    const luminanceDiffAbs = Math.abs(luminanceDiff)
+    if (luminanceDiffAbs >= minimumContrastRatio) return color
 
-  const isDark = getLuminance(backgroundColor) <= 0.4
-  return isDark
-    ? lighten(Math.abs(minimumContrastRatio - luminanceDiffAbs), color)
-    : darken(Math.abs(minimumContrastRatio - luminanceDiffAbs), color)
+    const isDark = getLuminance(backgroundColor) <= 0.4
+    return isDark
+      ? lighten(Math.abs(minimumContrastRatio - luminanceDiffAbs), color)
+      : darken(Math.abs(minimumContrastRatio - luminanceDiffAbs), color)
+  } catch (error) {
+    console.error(error)
+    return color
+  }
+}
+
+export function fixColorHexWithoutHash(color: string) {
+  if (color && (color.length === 6 || color.length === 3) && color[0] !== '#')
+    return `#${color}`
+
+  return color || ''
 }

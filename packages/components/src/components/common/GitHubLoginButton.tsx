@@ -7,7 +7,6 @@ import {
   contentPadding,
   normalTextSize,
   smallerTextSize,
-  smallTextSize,
 } from '../../styles/variables'
 import { Button, ButtonProps } from '../common/Button'
 import { useAppLayout } from '../context/LayoutContext'

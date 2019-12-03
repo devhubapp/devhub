@@ -540,6 +540,7 @@ export function getSearchQueryFromFilter(
       queryObj[k][v] = !isNegated
     }
   })
+
   Object.entries(queryObj).forEach(([queryKey, filterRecord]) => {
     handleRecordFilter(queryKey, filterRecord)
   })
@@ -547,6 +548,25 @@ export function getSearchQueryFromFilter(
   if (remainingQuery) queries.push(remainingQuery.trim())
 
   return queries.join(' ')
+}
+
+export function getQueryStringFromQueryTerms(
+  queryTerms: Array<[string, boolean] | [string, string, boolean]>,
+) {
+  let query = ''
+  queryTerms.forEach(queryTerm => {
+    if (!queryTerm) return
+
+    if (queryTerm.length === 2) {
+      const [q, isNegated] = queryTerm
+      query = `${query.trim()} ${isNegated ? '-' : ''}${q}`.trim()
+    } else if (queryTerm.length === 3) {
+      const [k, v, isNegated] = queryTerm
+      query = `${query.trim()} ${isNegated ? '-' : ''}${k}:${v}`.trim()
+    }
+  })
+
+  return query
 }
 
 export function getSearchQueryTerms(

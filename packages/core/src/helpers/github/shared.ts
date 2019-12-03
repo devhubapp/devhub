@@ -1482,7 +1482,7 @@ export function getFilteredItems(
     return getFilteredIssueOrPullRequests(
       items as EnhancedGitHubIssueOrPullRequest[],
       filters,
-      { plan },
+      { dashboardFromUsername, plan },
     )
   }
 
@@ -1732,7 +1732,9 @@ export function getItemSearchableStrings(
         const label = labelDetails && `${labelDetails.name || ''}`
         if (!label) return
 
-        strings.push(`label:${label}`)
+        strings.push(
+          label.includes(' ') ? `label:"${label}"` : `label:${label}`,
+        )
       })
     }
     strings.push(`${issueOrPullRequest.title || ''}`)

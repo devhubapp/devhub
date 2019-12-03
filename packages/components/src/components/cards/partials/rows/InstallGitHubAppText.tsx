@@ -1,12 +1,13 @@
+import { tryParseOAuthParams } from '@devhub/core'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { tryParseOAuthParams } from '@devhub/core'
 import { useDispatch } from 'react-redux'
 import { useReduxState } from '../../../../hooks/use-redux-state'
 import { analytics } from '../../../../libs/analytics'
 import { bugsnag } from '../../../../libs/bugsnag'
 import { executeOAuth } from '../../../../libs/oauth'
+import { Platform } from '../../../../libs/platform'
 import * as actions from '../../../../redux/actions'
 import * as selectors from '../../../../redux/selectors'
 import { sharedStyles } from '../../../../styles/shared'
@@ -22,9 +23,15 @@ export interface InstallGitHubAppTextProps {
   textProps?: Omit<ThemedTextProps, 'children'>
 }
 
+const GestureHandlerTouchableOpacity = Platform.select({
+  android: () => require('react-native-gesture-handler').TouchableOpacity,
+  ios: () => require('react-native-gesture-handler').TouchableOpacity,
+  default: () => require('../../../common/TouchableOpacity').TouchableOpacity,
+})()
+
 export const styles = StyleSheet.create({
   link: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'flex-start',
     justifyContent: 'center',
     maxWidth: '100%',
@@ -75,6 +82,7 @@ export const InstallGitHubAppText = React.memo(
       if (!(existingAppToken && githubAppToken)) {
         return (
           <Link
+            TouchableComponent={GestureHandlerTouchableOpacity}
             analyticsLabel="setup_github_app_from_card"
             disabled={showLoadingIndicator}
             enableForegroundHover
@@ -89,6 +97,7 @@ export const InstallGitHubAppText = React.memo(
 
       return (
         <Link
+          TouchableComponent={GestureHandlerTouchableOpacity}
           analyticsLabel="setup_github_app_from_card"
           enableForegroundHover
           href={getGitHubAppInstallUri({
