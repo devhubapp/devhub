@@ -1,6 +1,6 @@
 {
   "name": "@devhub/components",
-  "version": "0.98.6",
+  "version": "0.98.7",
   "private": false,
   "main": "dist",
   "scripts": {
@@ -14,7 +14,7 @@
     "@brunolemos/react-window-without-virtualization": "1.8.5-withoutvirtualization.1",
     "@bugsnag/js": "6.4.1",
     "@bugsnag/plugin-react": "6.4.0",
-    "@devhub/core": "0.98.6",
+    "@devhub/core": "0.98.7",
     "@octokit/rest": "16.20.0",
     "axios": "0.19.0",
     "fbemitter": "2.1.1",

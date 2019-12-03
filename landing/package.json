@@ -1,6 +1,6 @@
 {
   "name": "@devhub/landing",
-  "version": "0.98.6",
+  "version": "0.98.7",
   "private": false,
   "main": "dist/index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "start": "next -p 3001"
   },
   "dependencies": {
-    "@brunolemos/devhub-core": "0.98.6-13",
+    "@brunolemos/devhub-core": "0.98.7-2",
     "@zeit/next-css": "1.0.1",
     "autoprefixer": "9.6.4",
     "classnames": "2.2.6",
