@@ -1,0 +1,12 @@
+diff --git a/node_modules/prop-types/prop-types.js b/node_modules/prop-types/prop-types.js
+index 867d699..da9c3b3 100644
+--- a/node_modules/prop-types/prop-types.js
++++ b/node_modules/prop-types/prop-types.js
+@@ -343,6 +343,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
+       var manualPropTypeWarningCount = 0;
+     }
+     function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
++      return
+       componentName = componentName || ANONYMOUS;
+       propFullName = propFullName || propName;
+ 

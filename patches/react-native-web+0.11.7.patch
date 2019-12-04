@@ -1,3 +1,27 @@
+diff --git a/node_modules/react-native-web/dist/cjs/modules/createStrictShapeTypeChecker/index.js b/node_modules/react-native-web/dist/cjs/modules/createStrictShapeTypeChecker/index.js
+index 74222e0..3549eb0 100644
+--- a/node_modules/react-native-web/dist/cjs/modules/createStrictShapeTypeChecker/index.js
++++ b/node_modules/react-native-web/dist/cjs/modules/createStrictShapeTypeChecker/index.js
+@@ -13,6 +13,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
+ 
+ function createStrictShapeTypeChecker(shapeTypes) {
+   function checkType(isRequired, props, propName, componentName, location) {
++    return
+     if (!props[propName]) {
+       if (isRequired) {
+         (0, _invariant.default)(false, "Required object `" + propName + "` was not specified in `" + componentName + "`.");
+diff --git a/node_modules/react-native-web/dist/modules/createStrictShapeTypeChecker/index.js b/node_modules/react-native-web/dist/modules/createStrictShapeTypeChecker/index.js
+index b6d22a3..d5fd0a2 100644
+--- a/node_modules/react-native-web/dist/modules/createStrictShapeTypeChecker/index.js
++++ b/node_modules/react-native-web/dist/modules/createStrictShapeTypeChecker/index.js
+@@ -14,6 +14,7 @@ import invariant from 'fbjs/lib/invariant';
+ 
+ function createStrictShapeTypeChecker(shapeTypes) {
+   function checkType(isRequired, props, propName, componentName, location) {
++    return
+     if (!props[propName]) {
+       if (isRequired) {
+         invariant(false, "Required object `" + propName + "` was not specified in `" + componentName + "`.");
 diff --git a/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js b/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js
 index c08437e..4bc0ae2 100644
 --- a/node_modules/react-native-web/dist/vendor/react-native/VirtualizedList/index.js
@@ -924,6 +948,18 @@ index c08437e..4bc0ae2 100644
  });
  export default VirtualizedList;
 \ No newline at end of file
+diff --git a/node_modules/react-native-web/src/modules/createStrictShapeTypeChecker/index.js b/node_modules/react-native-web/src/modules/createStrictShapeTypeChecker/index.js
+index 657b32f..02ecdd2 100644
+--- a/node_modules/react-native-web/src/modules/createStrictShapeTypeChecker/index.js
++++ b/node_modules/react-native-web/src/modules/createStrictShapeTypeChecker/index.js
+@@ -13,6 +13,7 @@ function createStrictShapeTypeChecker(shapeTypes: {
+   [key: string]: ReactPropsCheckType
+ }): ReactPropsChainableTypeChecker {
+   function checkType(isRequired, props, propName, componentName, location?, ...rest) {
++    return
+     if (!props[propName]) {
+       if (isRequired) {
+         invariant(
 diff --git a/node_modules/react-native-web/src/vendor/react-native/VirtualizedList/index.js b/node_modules/react-native-web/src/vendor/react-native/VirtualizedList/index.js
 index 7a2b1d0..1dc38c1 100644
 --- a/node_modules/react-native-web/src/vendor/react-native/VirtualizedList/index.js
