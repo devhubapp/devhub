@@ -21,7 +21,7 @@ export interface NotificationCardsProps {
   getItemByNodeIdOrId: (nodeIdOrId: string) => ItemT | undefined
   isShowingOnlyBookmarks: boolean
   itemNodeIdOrIds: string[]
-  lastFetchedSuccessfullyAt: string | undefined
+  lastFetchSuccessAt: string | undefined
   pointerEvents?: ViewProps['pointerEvents']
   refresh: EmptyCardsProps['refresh']
   swipeable: boolean
@@ -35,7 +35,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     getItemByNodeIdOrId,
     isShowingOnlyBookmarks,
     itemNodeIdOrIds,
-    lastFetchedSuccessfullyAt,
+    lastFetchSuccessAt,
     pointerEvents,
     refresh,
     swipeable,
@@ -69,7 +69,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     fetchNextPage,
     getItemByNodeIdOrId,
     itemNodeIdOrIds,
-    lastFetchedSuccessfullyAt,
+    lastFetchSuccessAt,
     refresh,
     type: 'notifications',
   })

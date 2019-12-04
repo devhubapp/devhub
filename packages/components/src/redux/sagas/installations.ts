@@ -41,9 +41,7 @@ function* init() {
 
     const userPlan = selectors.currentUserPlanSelector(state)
 
-    const lastFetchedAt = selectors.installationsLastFetchedRequestAtSelector(
-      state,
-    )
+    const lastFetchedAt = selectors.installationsLastFetchedAtSelector(state)
     const fetchedNMinutesAgo = lastFetchedAt
       ? (new Date().valueOf() - new Date(lastFetchedAt).valueOf()) / 1000 / 60
       : undefined

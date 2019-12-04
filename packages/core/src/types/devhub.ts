@@ -111,9 +111,12 @@ export interface ColumnSubscriptionData {
   canFetchMore?: boolean
   errorMessage?: string
   itemNodeIdOrIds?: string[]
-  lastFetchedAt?: string
-  lastFetchedSuccessfullyAt?: string
+  lastFetchFailureAt?: string
+  lastFetchRequestAt?: string
+  lastFetchSuccessAt?: string
   loadState?: EnhancedLoadState
+  newestItemDate?: string
+  oldestItemDate?: string
 }
 
 export type ActivityColumnSubscription = {

@@ -515,4 +515,26 @@ export default {
         })
       })
     }),
+  16: (state: RootState) =>
+    immer(state, draft => {
+      draft.subscriptions = draft.subscriptions || {}
+      draft.subscriptions.byId = draft.subscriptions.byId || {}
+
+      const subscriptionIds = Object.keys(draft.subscriptions.byId)
+      subscriptionIds.forEach(subscriptionId => {
+        const subscription = draft.subscriptions.byId![subscriptionId]
+        if (!subscription) return
+
+        subscription.data = subscription.data || {}
+        subscription.data.lastFetchRequestAt = (subscription.data as any).lastFetchedAt
+        subscription.data.lastFetchSuccessAt = (subscription.data as any).lastFetchedSuccessfullyAt
+      })
+
+      draft.github = draft.github || {}
+      draft.github.installations = draft.github.installations || {}
+      draft.github.installations.lastFetchRequestAt = (draft.github
+        .installations as any).lastFetchedAt
+      draft.github.installations.lastFetchSuccessAt = (draft.github
+        .installations as any).lastFetchedSuccessfullyAt
+    }),
 }

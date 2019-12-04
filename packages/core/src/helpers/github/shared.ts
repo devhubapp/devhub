@@ -47,15 +47,18 @@ import {
   getEventMetadata,
   getEventWatchingOwner,
   getGitHubEventSubItems,
+  getOlderOrNewerEventDate,
 } from './events'
 import {
   getGitHubIssueSearchQuery,
   getIssueOrPullRequestState,
   getIssueOrPullRequestSubjectType,
+  getOlderOrNewerIssueOrPullRequestDate,
 } from './issues'
 import {
   getGitHubNotificationSubItems,
   getNotificationSubjectType,
+  getOlderOrNewerNotificationDate,
 } from './notifications'
 import {
   defaultBaseURL,
@@ -1890,4 +1893,35 @@ export function getItemSearchableStrings(
   }
 
   return strings.map(str => `${str || ''}`).filter(Boolean)
+}
+
+export function getOlderOrNewerItemDate(
+  type: ColumnSubscription['type'],
+  order: 'newer' | 'older',
+  items: EnhancedItem[] | undefined,
+  options?: Parameters<typeof getOlderOrNewerEventDate>[2] &
+    Parameters<typeof getOlderOrNewerIssueOrPullRequestDate>[2] &
+    Parameters<typeof getOlderOrNewerNotificationDate>[2],
+): string | undefined {
+  switch (type) {
+    case 'activity': {
+      return getOlderOrNewerEventDate(order, items as any[], options)
+    }
+
+    case 'issue_or_pr': {
+      return getOlderOrNewerIssueOrPullRequestDate(
+        order,
+        items as any[],
+        options,
+      )
+    }
+
+    case 'notifications': {
+      return getOlderOrNewerNotificationDate(order, items as any[], options)
+    }
+
+    default: {
+      return undefined
+    }
+  }
 }

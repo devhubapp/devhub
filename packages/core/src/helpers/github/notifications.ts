@@ -457,12 +457,17 @@ export function enhanceNotifications(
   })
 }
 
-export function getOlderNotificationDate(
-  items: EnhancedGitHubNotification[],
-  ignoreFutureDates = true,
-) {
+export function getOlderOrNewerNotificationDate(
+  order: 'newer' | 'older',
+  items: EnhancedGitHubNotification[] | undefined,
+  { ignoreFutureDates = true } = {},
+): string | undefined {
   const now = Date.now()
-  return sortNotifications(items, 'updated_at', 'asc')
+  return sortNotifications(
+    items,
+    'updated_at',
+    order === 'newer' ? 'desc' : 'asc',
+  )
     .map(item => item.updated_at)
     .filter(
       date =>

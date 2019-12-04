@@ -1,7 +1,7 @@
 import {
   EnhancedGitHubIssueOrPullRequest,
   getDefaultPaginationPerPage,
-  getOlderIssueOrPullRequestDate,
+  getOlderOrNewerItemDate,
   getSubscriptionOwnerOrOrg,
   IssueOrPullRequestColumnSubscription,
 } from '@devhub/core'
@@ -37,7 +37,7 @@ export interface IssueOrPullRequestCardsContainerProps
     | 'getItemByNodeIdOrId'
     | 'isShowingOnlyBookmarks'
     | 'itemNodeIdOrIds'
-    | 'lastFetchedSuccessfullyAt'
+    | 'lastFetchSuccessAt'
     | 'refresh'
   > {
   columnId: string
@@ -61,9 +61,9 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       ),
     ) as IssueOrPullRequestColumnSubscription | undefined
 
-    const data = (mainSubscription && mainSubscription.data) || {}
+    const data = mainSubscription && mainSubscription.data
 
-    const _errorMessage = (data.errorMessage || '').toLowerCase()
+    const _errorMessage = ((data && data.errorMessage) || '').toLowerCase()
     const maybePrivate =
       _errorMessage.includes('not found') ||
       _errorMessage.includes('not exist') ||
@@ -88,12 +88,12 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     >(columnId, { mergeSimilar: false })
 
     const clearedAt = column && column.filters && column.filters.clearedAt
-    const olderDate = getOlderIssueOrPullRequestDate(allItems)
+    const olderDate = getOlderOrNewerItemDate('issue_or_pr', 'older', allItems)
 
     const canFetchMore =
       clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
         ? false
-        : !!data.canFetchMore
+        : !!(data && data.canFetchMore)
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
@@ -122,7 +122,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     }, [fetchData, allItems.length])
 
     const refresh = useCallback(() => {
-      if (data.errorMessage === 'Bad credentials' && appToken) {
+      if (data && data.errorMessage === 'Bad credentials' && appToken) {
         dispatch(
           actions.refreshInstallationsRequest({
             includeInstallationToken: true,
@@ -210,9 +210,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
         getItemByNodeIdOrId={getItemByNodeIdOrId}
         isShowingOnlyBookmarks={!!(column.filters && column.filters.saved)}
         itemNodeIdOrIds={filteredItemsIds}
-        lastFetchedSuccessfullyAt={
-          mainSubscription.data.lastFetchedSuccessfullyAt
-        }
+        lastFetchSuccessAt={mainSubscription.data.lastFetchSuccessAt}
         refresh={refresh}
       />
     )

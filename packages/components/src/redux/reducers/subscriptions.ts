@@ -2,6 +2,7 @@ import {
   ColumnSubscription,
   EnhancedItem,
   getItemNodeIdOrId,
+  getOlderOrNewerItemDate,
   normalizeSubscriptions,
 } from '@devhub/core'
 import immer from 'immer'
@@ -118,12 +119,12 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
-        subscription.data.lastFetchedAt = new Date().toISOString()
+        subscription.data.lastFetchRequestAt = new Date().toISOString()
 
         const { page } = action.payload.params
         const prevLoadState = subscription.data.loadState
         subscription.data.loadState =
-          page > 1
+          page && page > 1
             ? 'loading_more'
             : !prevLoadState ||
               prevLoadState === 'not_loaded' ||
@@ -146,8 +147,7 @@ export const subscriptionsReducer: Reducer<State> = (
         if (typeof action.payload.canFetchMore === 'boolean')
           subscription.data.canFetchMore = action.payload.canFetchMore
         subscription.data.errorMessage = undefined
-        subscription.data.lastFetchedAt = new Date().toISOString()
-        subscription.data.lastFetchedSuccessfullyAt = new Date().toISOString()
+        subscription.data.lastFetchSuccessAt = new Date().toISOString()
         subscription.data.loadState = 'loaded'
 
         subscription.data.itemNodeIdOrIds = action.payload.replaceAllItems
@@ -164,6 +164,30 @@ export const subscriptionsReducer: Reducer<State> = (
             subscription.data.itemNodeIdOrIds!.push(id)
           },
         )
+
+        const newestItemDate = getOlderOrNewerItemDate(
+          subscription.type,
+          'newer',
+          action.payload.data,
+        )
+        const oldestItemDate = getOlderOrNewerItemDate(
+          subscription.type,
+          'older',
+          action.payload.data,
+        )
+        if (action.payload.replaceAllItems) {
+          subscription.data.newestItemDate = newestItemDate
+          subscription.data.oldestItemDate = oldestItemDate
+        } else {
+          subscription.data.newestItemDate = _.max([
+            subscription.data.newestItemDate,
+            newestItemDate,
+          ])
+          subscription.data.oldestItemDate = _.min([
+            subscription.data.oldestItemDate,
+            oldestItemDate,
+          ])
+        }
 
         // TODO: The updatedAt from subscriptions was being changed too often
         // (everytime this fetch success action is dispatched)
@@ -183,7 +207,7 @@ export const subscriptionsReducer: Reducer<State> = (
         if (!subscription) return
 
         subscription.data = subscription.data || {}
-        subscription.data.lastFetchedAt = new Date().toISOString()
+        subscription.data.lastFetchFailureAt = new Date().toISOString()
         subscription.data.errorMessage = action.error && action.error.message
         if (action.error && Array.isArray((action.error as any).errors)) {
           const errors = (action.error as any).errors

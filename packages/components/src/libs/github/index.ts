@@ -41,15 +41,23 @@ export async function getNotifications(
   const cacheKey = JSON.stringify(['NOTIFICATIONS', params, subscriptionId])
   const cacheValue = cache[cacheKey]
 
-  const _params = params || {}
+  const _params = cleanupObject(params)
   _params.headers = _params.headers || {}
   _params.headers['If-None-Match'] = ''
 
   // Note: GitHub notifications cache doesnt work as expected.
   // It keeps returning code 304 even if read status changed.
   // Thats why its disabled by default.
+  if (useCache) {
+    if (_params.since) {
+      _params.headers['If-Modified-Since'] = _params.since
+    }
+  }
   if (cacheValue && useCache) {
-    if (cacheValue.headers['last-modified']) {
+    if (
+      cacheValue.headers['last-modified'] &&
+      !_params.headers['If-Modified-Since']
+    ) {
       _params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
     }
 
@@ -88,7 +96,7 @@ export async function getActivity<T extends GitHubActivityType>(
   const cacheKey = JSON.stringify([type, params, subscriptionId])
   const cacheValue = cache[cacheKey]
 
-  const _params = { ...params }
+  const _params = cleanupObject(params)
   _params.headers = _params.headers || {}
   _params.headers['If-None-Match'] = ''
   _params.headers.Accept = 'application/vnd.github.shadow-cat-preview'
@@ -97,8 +105,17 @@ export async function getActivity<T extends GitHubActivityType>(
     _params.headers.Authorization = `token ${githubToken}`
   }
 
+  if (useCache) {
+    if (_params.since) {
+      _params.headers['If-Modified-Since'] = _params.since
+    }
+  }
+
   if (cacheValue && useCache) {
-    if (cacheValue.headers['last-modified']) {
+    if (
+      cacheValue.headers['last-modified'] &&
+      !_params.headers['If-Modified-Since']
+    ) {
       _params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
     }
 
@@ -155,6 +172,7 @@ export async function getIssuesOrPullRequests<
   subscriptionParams: IssueOrPullRequestColumnSubscription['params'],
   requestParams: Omit<SearchIssuesAndPullRequestsParams, 'q'> & {
     headers?: Record<string, string>
+    since?: string
   },
   { githubToken = '', subscriptionId = '', useCache = true } = {},
 ) {
@@ -165,19 +183,31 @@ export async function getIssuesOrPullRequests<
   ])
   const cacheValue = cache[cacheKey]
 
-  const _requestParams: typeof requestParams = {
-    ...requestParams,
-    headers: {
-      'If-None-Match': '',
-      Accept: 'application/vnd.github.shadow-cat-preview',
-      ...(!!githubToken && { Authorization: `token ${githubToken}` }),
-      ...(!!(cacheValue && useCache && cacheValue.headers['last-modified']) && {
-        'If-Modified-Since': cacheValue.headers['last-modified'],
-      }),
-      ...(!!(cacheValue && useCache && cacheValue.headers.etag) && {
-        'If-None-Match': cacheValue.headers.etag,
-      }),
-    },
+  const _params = cleanupObject(requestParams)
+  _params.headers = {
+    ..._params.headers,
+    'If-None-Match': '',
+    Accept: 'application/vnd.github.shadow-cat-preview',
+    Authorization: githubToken && `token ${githubToken}`,
+  }
+
+  if (useCache) {
+    if (_params.since) {
+      _params.headers['If-Modified-Since'] = _params.since
+    }
+  }
+
+  if (cacheValue && useCache) {
+    if (
+      cacheValue.headers['last-modified'] &&
+      !_params.headers['If-Modified-Since']
+    ) {
+      _params.headers['If-Modified-Since'] = cacheValue.headers['last-modified']
+    }
+
+    if (cacheValue.headers.etag) {
+      _params.headers['If-None-Match'] = cacheValue.headers.etag
+    }
   }
 
   try {
@@ -185,7 +215,7 @@ export async function getIssuesOrPullRequests<
       const p: SearchIssuesAndPullRequestsParams & {
         headers?: Record<string, string>
       } = {
-        ..._.omit(_requestParams, Object.keys(subscriptionParams)),
+        ..._.omit(_params, Object.keys(subscriptionParams)),
         q: getGitHubIssueSearchQuery(subscriptionParams),
       }
 
@@ -205,4 +235,23 @@ export async function getIssuesOrPullRequests<
     if (error && error.status === 304) return cache[cacheKey]
     throw error
   }
+}
+
+export function cleanupObject<T extends Record<string, any>>(obj: T): T {
+  const result = { ...obj }
+
+  Object.entries(obj).forEach(([key, value]) => {
+    if (
+      value === 'undefined' ||
+      typeof value === 'undefined' ||
+      value === undefined ||
+      value === 'null' ||
+      value === null
+    ) {
+      // @ts-ignore
+      delete result[key]
+    }
+  })
+
+  return result
 }

@@ -7,16 +7,16 @@ import {
   EnhancedGitHubEvent,
   EnhancedGitHubIssueOrPullRequest,
   EnhancedGitHubNotification,
+  EnhancedItem,
   enhanceIssueOrPullRequests,
   EnhancementCache,
   enhanceNotifications,
   getDefaultPaginationPerPage,
   getGitHubAPIHeadersFromHeader,
   getIssueOrPullRequestsEnhancementMap,
+  getItemDate,
   getNotificationsEnhancementMap,
-  getOlderEventDate,
-  getOlderIssueOrPullRequestDate,
-  getOlderNotificationDate,
+  getOlderOrNewerItemDate,
   getSubscriptionOwnerOrOrg,
   GitHubAppTokenType,
   GitHubEvent,
@@ -136,9 +136,14 @@ function* init() {
       subscriptionsToFetch.map(function*(subscription) {
         if (!subscription) return
 
+        const lastFetchedAt = selectors.subscriptionLastFetchedAtSelector(
+          state,
+          subscription.id,
+        )
+
         const fiveMinutes = 1000 * 60 * 5
-        const timeDiff = subscription.data.lastFetchedAt
-          ? Date.now() - new Date(subscription.data.lastFetchedAt).valueOf()
+        const timeDiff = lastFetchedAt
+          ? Date.now() - new Date(lastFetchedAt).valueOf()
           : undefined
 
         if (
@@ -161,12 +166,20 @@ function* init() {
           return
         }
 
+        const replaceAllItems = isFirstTime
+
         return yield put(
           actions.fetchSubscriptionRequest({
             subscriptionType: subscription.type,
             subscriptionId: subscription.id,
-            params: { page: 1 },
-            replaceAllItems: isFirstTime,
+            params: {
+              page: 1,
+              since:
+                replaceAllItems || subscription.type === 'notifications'
+                  ? undefined
+                  : subscription.data.newestItemDate,
+            },
+            replaceAllItems,
           }),
         )
       }),
@@ -360,6 +373,7 @@ function* onFetchRequest(
     page,
     per_page: perPage,
   }
+
   const subscriptionParams = subscription && subscription.params
 
   try {
@@ -386,8 +400,16 @@ function* onFetchRequest(
         { dropPrevItems: replaceAllItems },
       )
 
-      const olderDateFromThisResponse = getOlderNotificationDate(newItems)
-      const olderItemDate = getOlderNotificationDate(mergedItems)
+      const olderDateFromThisResponse = getOlderOrNewerItemDate(
+        'notifications',
+        'older',
+        newItems,
+      )
+      const olderItemDate = getOlderOrNewerItemDate(
+        'notifications',
+        'older',
+        mergedItems,
+      )
 
       if (!notificationsCache) {
         notificationsCache = createNotificationsCache(prevItems)
@@ -447,8 +469,16 @@ function* onFetchRequest(
         { dropPrevItems: replaceAllItems },
       )
 
-      const olderDateFromThisResponse = getOlderEventDate(newItems)
-      const olderItemDate = getOlderEventDate(mergedItems)
+      const olderDateFromThisResponse = getOlderOrNewerItemDate(
+        'activity',
+        'older',
+        newItems,
+      )
+      const olderItemDate = getOlderOrNewerItemDate(
+        'activity',
+        'older',
+        mergedItems,
+      )
 
       data = newItems
 
@@ -485,8 +515,16 @@ function* onFetchRequest(
         { dropPrevItems: replaceAllItems },
       )
 
-      const olderDateFromThisResponse = getOlderIssueOrPullRequestDate(newItems)
-      const olderItemDate = getOlderIssueOrPullRequestDate(mergedItems)
+      const olderDateFromThisResponse = getOlderOrNewerItemDate(
+        'issue_or_pr',
+        'older',
+        newItems,
+      )
+      const olderItemDate = getOlderOrNewerItemDate(
+        'issue_or_pr',
+        'older',
+        mergedItems,
+      )
 
       if (!issuesOrPullRequestsCache) {
         issuesOrPullRequestsCache = createIssuesOrPullRequestsCache(prevItems)
@@ -531,6 +569,18 @@ function* onFetchRequest(
       throw new Error(
         `Unknown column subscription type: ${subscription &&
           (subscription as any).type}`,
+      )
+    }
+
+    if (data && requestParams.since) {
+      data = (data as EnhancedItem[]).filter(
+        item =>
+          !!(
+            item &&
+            requestParams.since &&
+            getItemDate(item) &&
+            getItemDate(item)! > requestParams.since
+          ),
       )
     }
 
@@ -757,9 +807,14 @@ function minimumRefetchTimeHasPassed(
       ? Math.min(Math.max(minPollingInterval, interval), 60 * minute)
       : minPollingInterval
 
+  const lastFetchedAt = _.max([
+    subscription.data.lastFetchRequestAt,
+    subscription.data.lastFetchFailureAt,
+    subscription.data.lastFetchSuccessAt,
+  ])
+
   return (
-    !subscription.data.lastFetchedAt ||
-    new Date(subscription.data.lastFetchedAt).valueOf() <=
-      Date.now() - fixedInterval
+    !lastFetchedAt ||
+    new Date(lastFetchedAt).valueOf() <= Date.now() - fixedInterval
   )
 }

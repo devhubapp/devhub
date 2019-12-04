@@ -2,7 +2,7 @@ import {
   ActivityColumnSubscription,
   EnhancedGitHubEvent,
   getDefaultPaginationPerPage,
-  getOlderEventDate,
+  getOlderOrNewerItemDate,
   getSubscriptionOwnerOrOrg,
 } from '@devhub/core'
 import React, { useCallback } from 'react'
@@ -34,7 +34,7 @@ export interface EventCardsContainerProps
     | 'getItemByNodeIdOrId'
     | 'isShowingOnlyBookmarks'
     | 'itemNodeIdOrIds'
-    | 'lastFetchedSuccessfullyAt'
+    | 'lastFetchSuccessAt'
     | 'refresh'
   > {
   columnId: string
@@ -57,9 +57,9 @@ export const EventCardsContainer = React.memo(
       ),
     ) as ActivityColumnSubscription | undefined
 
-    const data = (mainSubscription && mainSubscription.data) || {}
+    const data = mainSubscription && mainSubscription.data
 
-    const _errorMessage = (data.errorMessage || '').toLowerCase()
+    const _errorMessage = ((data && data.errorMessage) || '').toLowerCase()
     const maybePrivate =
       _errorMessage.includes('not found') ||
       _errorMessage.includes('not exist') ||
@@ -84,12 +84,12 @@ export const EventCardsContainer = React.memo(
     >(columnId, { mergeSimilar: false })
 
     const clearedAt = column && column.filters && column.filters.clearedAt
-    const olderDate = getOlderEventDate(allItems)
+    const olderDate = getOlderOrNewerItemDate('activity', 'older', allItems)
 
     const canFetchMore =
       clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
         ? false
-        : !!data.canFetchMore
+        : !!(data && data.canFetchMore)
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
@@ -118,7 +118,7 @@ export const EventCardsContainer = React.memo(
     }, [fetchData, allItems.length])
 
     const refresh = useCallback(() => {
-      if (data.errorMessage === 'Bad credentials' && appToken) {
+      if (data && data.errorMessage === 'Bad credentials' && appToken) {
         dispatch(
           actions.refreshInstallationsRequest({
             includeInstallationToken: true,
@@ -213,9 +213,7 @@ export const EventCardsContainer = React.memo(
         getItemByNodeIdOrId={getItemByNodeIdOrId}
         isShowingOnlyBookmarks={!!(column.filters && column.filters.saved)}
         itemNodeIdOrIds={filteredItemsIds}
-        lastFetchedSuccessfullyAt={
-          mainSubscription.data.lastFetchedSuccessfullyAt
-        }
+        lastFetchSuccessAt={mainSubscription.data.lastFetchSuccessAt}
         refresh={refresh}
       />
     )

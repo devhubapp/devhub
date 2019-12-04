@@ -14,12 +14,12 @@ export const installationIdsSelector = (state: RootState) =>
 export const installationOwnerNamesSelector = (state: RootState) =>
   s(state).allOwnerNames || EMPTY_ARRAY
 
-export const installationsLastFetchedRequestAtSelector = (state: RootState) =>
-  s(state).lastFetchedAt
-
-export const installationsLastFetchedSuccessfullyAtSelector = (
-  state: RootState,
-) => s(state).lastFetchedSuccessfullyAt
+export const installationsLastFetchedAtSelector = (state: RootState) =>
+  _.max([
+    s(state).lastFetchRequestAt,
+    s(state).lastFetchFailureAt,
+    s(state).lastFetchSuccessAt,
+  ])
 
 export const installationsLoadStateSelector = (state: RootState) =>
   s(state).loadState

@@ -1,7 +1,7 @@
 import {
   EnhancedGitHubNotification,
   getDefaultPaginationPerPage,
-  getOlderNotificationDate,
+  getOlderOrNewerItemDate,
   NotificationColumnSubscription,
 } from '@devhub/core'
 import React, { useCallback } from 'react'
@@ -27,7 +27,7 @@ export interface NotificationCardsContainerProps
     | 'getItemByNodeIdOrId'
     | 'isShowingOnlyBookmarks'
     | 'itemNodeIdOrIds'
-    | 'lastFetchedSuccessfullyAt'
+    | 'lastFetchSuccessAt'
     | 'refresh'
   > {
   columnId: string
@@ -53,19 +53,23 @@ export const NotificationCardsContainer = React.memo(
       ),
     ) as NotificationColumnSubscription | undefined
 
-    const data = (mainSubscription && mainSubscription.data) || {}
+    const data = mainSubscription && mainSubscription.data
 
     const { allItems, filteredItemsIds, getItemByNodeIdOrId } = useColumnData<
       EnhancedGitHubNotification
     >(columnId, { mergeSimilar: false })
 
     const clearedAt = column && column.filters && column.filters.clearedAt
-    const olderDate = getOlderNotificationDate(allItems)
+    const olderDate = getOlderOrNewerItemDate(
+      'notifications',
+      'older',
+      allItems,
+    )
 
     const canFetchMore =
       clearedAt && (!olderDate || (olderDate && clearedAt >= olderDate))
         ? false
-        : !!data.canFetchMore
+        : !!(data && data.canFetchMore)
 
     const fetchData = useCallback(
       ({ page }: { page?: number } = {}) => {
@@ -122,9 +126,7 @@ export const NotificationCardsContainer = React.memo(
         getItemByNodeIdOrId={getItemByNodeIdOrId}
         isShowingOnlyBookmarks={!!(column.filters && column.filters.saved)}
         itemNodeIdOrIds={filteredItemsIds}
-        lastFetchedSuccessfullyAt={
-          mainSubscription.data.lastFetchedSuccessfullyAt
-        }
+        lastFetchSuccessAt={mainSubscription.data.lastFetchSuccessAt}
         refresh={refresh}
       />
     )

@@ -7,29 +7,14 @@ import {
 } from '@devhub/core'
 import { createAction, createErrorActionWithPayload } from '../helpers'
 
-export function fetchColumnSubscriptionRequest(payload: {
-  columnId: string
-  replaceAllItems: boolean
-  params: {
-    [key: string]: string | number | undefined
-    page: number
-    perPage?: number
-  }
-}) {
-  return createAction('FETCH_COLUMN_SUBSCRIPTIONS', payload)
-}
-
-export function deleteColumnSubscriptions(subscriptionIds: string[]) {
-  return createAction('DELETE_COLUMN_SUBSCRIPTIONS', subscriptionIds)
-}
-
 export function fetchSubscriptionRequest(payload: {
   subscriptionType: ColumnSubscription['type']
   subscriptionId: string
   replaceAllItems: boolean
   params: {
     [key: string]: string | number | boolean | Record<string, any> | undefined
-    page: number
+    since?: string
+    page?: number
     perPage?: number
   }
 }) {
@@ -68,6 +53,17 @@ export function fetchSubscriptionFailure<E extends Error>(
     payload,
     error,
   )
+}
+export function fetchColumnSubscriptionRequest(payload: {
+  columnId: string
+  replaceAllItems: boolean
+  params: Parameters<typeof fetchSubscriptionRequest>[0]['params']
+}) {
+  return createAction('FETCH_COLUMN_SUBSCRIPTIONS', payload)
+}
+
+export function deleteColumnSubscriptions(subscriptionIds: string[]) {
+  return createAction('DELETE_COLUMN_SUBSCRIPTIONS', subscriptionIds)
 }
 
 export function saveItemsForLater(payload: {

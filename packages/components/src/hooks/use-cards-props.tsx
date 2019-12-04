@@ -54,7 +54,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   fetchNextPage,
   getItemByNodeIdOrId,
   itemNodeIdOrIds,
-  lastFetchedSuccessfullyAt,
+  lastFetchSuccessAt,
   refresh,
   type,
 }: {
@@ -62,7 +62,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   fetchNextPage: CardsFooterProps['fetchNextPage']
   getItemByNodeIdOrId: (nodeIdOrId: string) => ItemT | undefined
   itemNodeIdOrIds: string[] | undefined
-  lastFetchedSuccessfullyAt: string | undefined
+  lastFetchSuccessAt: string | undefined
   refresh: CardsFooterProps['refresh']
   type: ColumnSubscription['type']
 }) {
@@ -335,19 +335,19 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const refreshControl = useMemo(
     () => (
       <RefreshControl
-        intervalRefresh={lastFetchedSuccessfullyAt}
+        intervalRefresh={lastFetchSuccessAt}
         onRefresh={refresh}
         refreshing={false}
         title={
-          lastFetchedSuccessfullyAt
-            ? `Last updated ${getDateSmallText(lastFetchedSuccessfullyAt, {
+          lastFetchSuccessAt
+            ? `Last updated ${getDateSmallText(lastFetchSuccessAt, {
                 includeExactTime: true,
               })}`
             : 'Pull to refresh'
         }
       />
     ),
-    [lastFetchedSuccessfullyAt, refresh],
+    [lastFetchSuccessAt, refresh],
   )
 
   const OverrideRender = useMemo<{

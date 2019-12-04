@@ -72,3 +72,16 @@ export const createSubscriptionsDataSelector = () =>
       return result
     },
   )
+
+export const subscriptionLastFetchedAtSelector = createSelector(
+  (state: RootState, id: string) => subscriptionSelector(state, id),
+  subscription => {
+    if (!(subscription && subscription.data)) return
+
+    return _.max([
+      subscription.data.lastFetchRequestAt,
+      subscription.data.lastFetchFailureAt,
+      subscription.data.lastFetchSuccessAt,
+    ])
+  },
+)

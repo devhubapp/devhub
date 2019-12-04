@@ -83,12 +83,13 @@ export const eventSubjectTypes: GitHubEventSubjectType[] = [
   'Wiki',
 ]
 
-export function getOlderEventDate(
-  items: EnhancedGitHubEvent[],
-  ignoreFutureDates = true,
-) {
+export function getOlderOrNewerEventDate(
+  order: 'newer' | 'older',
+  items: EnhancedGitHubEvent[] | undefined,
+  { ignoreFutureDates = true } = {},
+): string | undefined {
   const now = Date.now()
-  return sortEvents(items, 'created_at', 'asc')
+  return sortEvents(items, 'created_at', order === 'newer' ? 'desc' : 'asc')
     .map(item => item.created_at)
     .filter(
       date =>
