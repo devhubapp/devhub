@@ -26,21 +26,10 @@ export const githubPersonalTokenDetailsSelector = (state: RootState) =>
 
 export const githubTokenDetailsSelector = (state: RootState) => {
   const githubPersonalTokenDetails = githubPersonalTokenDetailsSelector(state)
+  if (githubPersonalTokenDetails && githubPersonalTokenDetails.token)
+    return githubPersonalTokenDetails
+
   const githubOAuthTokenDetails = githubOAuthTokenDetailsSelector(state)
-
-  if (!(githubOAuthTokenDetails && githubOAuthTokenDetails.token))
-    return githubPersonalTokenDetails
-
-  if (!(githubPersonalTokenDetails && githubPersonalTokenDetails.token))
-    return githubOAuthTokenDetails
-
-  const newestTokenDate = _.max([
-    githubOAuthTokenDetails.tokenCreatedAt,
-    githubPersonalTokenDetails.token,
-  ])
-
-  if (newestTokenDate === githubPersonalTokenDetails.tokenCreatedAt)
-    return githubPersonalTokenDetails
   return githubOAuthTokenDetails
 }
 
