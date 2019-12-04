@@ -1,6 +1,7 @@
 import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
+import axios from 'axios'
 import _ from 'lodash'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
@@ -13,6 +14,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { getDefaultDevHubHeaders } from '../../utils/api'
 import { clearOAuthQueryParams } from '../../utils/helpers/auth'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Avatar } from '../common/Avatar'
@@ -37,14 +39,17 @@ export const AdvancedSettingsModal = React.memo(
     const [executingOAuth, setExecutingOAuth] = useState<GitHubAppType | null>(
       null,
     )
+    const [isRemovingPersonalToken, setIsRemovingPersonalToken] = useState(
+      false,
+    )
 
     const dispatch = useDispatch()
     const existingAppToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
     const githubToken = useReduxState(selectors.githubTokenSelector)
-    // const githubPersonalTokenDetails = useReduxState(
-    //   selectors.githubPersonalTokenDetailsSelector,
-    // )
+    const githubPersonalTokenDetails = useReduxState(
+      selectors.githubPersonalTokenDetailsSelector,
+    )
     const installations = useReduxState(selectors.installationsArrSelector)
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
@@ -80,6 +85,51 @@ export const AdvancedSettingsModal = React.memo(
         alert(`Authentication failed. ${error || ''}`)
       }
     }
+
+    const removePersonalAccessToken = useCallback(async () => {
+      try {
+        setIsRemovingPersonalToken(true)
+
+        const response = await axios.post(
+          constants.GRAPHQL_ENDPOINT,
+          {
+            query: `
+              mutation {
+                removeGitHubPersonalToken
+              }`,
+          },
+          { headers: getDefaultDevHubHeaders({ appToken: existingAppToken }) },
+        )
+
+        const { data, errors } = await response.data
+
+        if (errors && errors[0] && errors[0].message)
+          throw new Error(errors[0].message)
+
+        if (!(data && data.removeGitHubPersonalToken)) {
+          throw new Error('Not removed.')
+        }
+
+        setIsRemovingPersonalToken(false)
+
+        dispatch(
+          actions.replacePersonalTokenDetails({
+            tokenDetails: undefined,
+          }),
+        )
+
+        dispatch(actions.logout())
+
+        return true
+      } catch (error) {
+        console.error(error)
+        bugsnag.notify(error)
+
+        setIsRemovingPersonalToken(false)
+        alert(`Failed to remove personal token. \nError: ${error.message}`)
+        return false
+      }
+    }, [existingAppToken])
 
     const { foregroundThemeColor } = getButtonColors()
 
@@ -118,6 +168,66 @@ export const AdvancedSettingsModal = React.memo(
           )}
 
           <View>
+            <View>
+              <SubHeader title="Personal Access Token">
+                <Spacer flex={1} />
+
+                {!!(
+                  githubPersonalTokenDetails && githubPersonalTokenDetails.token
+                ) && (
+                  <Button
+                    analyticsLabel="remove_personal_access_token"
+                    contentContainerStyle={{
+                      width: 52,
+                      paddingHorizontal: contentPadding,
+                    }}
+                    disabled={isRemovingPersonalToken}
+                    loading={isRemovingPersonalToken}
+                    onPress={() => {
+                      removePersonalAccessToken()
+                    }}
+                    size={32}
+                    type="danger"
+                  >
+                    <ThemedIcon
+                      color={foregroundThemeColor}
+                      name="trashcan"
+                      size={16}
+                    />
+                  </Button>
+                )}
+              </SubHeader>
+
+              <View
+                style={[
+                  sharedStyles.horizontal,
+                  sharedStyles.alignItemsCenter,
+                  sharedStyles.paddingHorizontal,
+                ]}
+              >
+                {githubPersonalTokenDetails &&
+                githubPersonalTokenDetails.token ? (
+                  <ThemedText
+                    color="foregroundColorMuted65"
+                    style={sharedStyles.flex}
+                  >
+                    {new Array(githubPersonalTokenDetails.token.length)
+                      .fill('*')
+                      .join('')}
+                  </ThemedText>
+                ) : (
+                  <ThemedText
+                    color="foregroundColorMuted65"
+                    style={[sharedStyles.flex, { fontStyle: 'italic' }]}
+                  >
+                    No personal token
+                  </ThemedText>
+                )}
+              </View>
+            </View>
+
+            <Spacer height={contentPadding} />
+
             <View>
               <SubHeader title="Manage OAuth access" />
 
@@ -340,54 +450,6 @@ export const AdvancedSettingsModal = React.memo(
                 </View>
               </>
             )}
-
-            <Spacer height={contentPadding} />
-
-            {/* <View>
-              <SubHeader title="Personal Access Token">
-                <Spacer flex={1} />
-
-                <ButtonLink
-                  analyticsLabel="personal_access_token"
-                  contentContainerStyle={{
-                    width: 52,
-                    paddingHorizontal: contentPadding,
-                  }}
-                  href={`https://github.com/settings/tokens/new?description=DevHub&scopes=${(
-                    constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
-                    _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
-                  ).join(',')}`}
-                  openOnNewTab
-                  size={32}
-                >
-                  <ThemedIcon
-                    color={foregroundThemeColor}
-                    name="plus"
-                    size={16}
-                  />
-                </ButtonLink>
-              </SubHeader>
-
-              <View
-                style={[
-                  sharedStyles.horizontal,
-                  sharedStyles.alignItemsCenter,
-                  sharedStyles.paddingHorizontal,
-                ]}
-              >
-                <ThemedTextInput
-                  textInputKey="personal-access-token-input"
-                  placeholder="Personal Access Token"
-                  onSubmitEditing={() => alert('TODO')}
-                  style={sharedStyles.flex}
-                  value={
-                    (githubPersonalTokenDetails &&
-                      githubPersonalTokenDetails.token) ||
-                    undefined
-                  }
-                />
-              </View>
-            </View> */}
 
             <Spacer height={contentPadding} />
           </View>

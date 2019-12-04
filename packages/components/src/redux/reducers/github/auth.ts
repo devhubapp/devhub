@@ -30,6 +30,12 @@ export const githubAuthReducer: Reducer<State> = (
         user: action.payload.user.github.user,
       }
 
+    case 'REPLACE_PERSONAL_TOKEN_DETAILS':
+      return {
+        ...state,
+        personal: action.payload.tokenDetails,
+      }
+
     case 'LOGIN_FAILURE':
       return initialState
 
