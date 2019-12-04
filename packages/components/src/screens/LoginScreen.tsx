@@ -405,7 +405,7 @@ export const LoginScreen = React.memo(() => {
                   .filter(Boolean)
                   .join(
                     ' or ',
-                  )} option to easily get private access to all repositories you have access.`}
+                  )} option to easily get access to all private repositories you have access.`}
               </ThemedText>
             </>
           )}

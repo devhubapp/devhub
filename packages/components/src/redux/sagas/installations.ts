@@ -102,8 +102,6 @@ function* onRefreshInstallationsRequest(
     typeof actions.refreshInstallationsRequest
   >,
 ) {
-  const noGitHubAppTokenMessage = 'No GitHub App token.'
-
   try {
     const state = yield select()
 
@@ -111,7 +109,10 @@ function* onRefreshInstallationsRequest(
     if (!appToken) throw new Error('Not logged')
 
     const githubAppToken = selectors.githubAppTokenSelector(state)
-    if (!githubAppToken) throw new Error(noGitHubAppTokenMessage)
+    if (!githubAppToken) {
+      yield put(actions.refreshInstallationsNoop())
+      return
+    }
 
     const {
       // includeInstallationRepositories,
@@ -129,9 +130,7 @@ function* onRefreshInstallationsRequest(
     yield put(actions.refreshInstallationsSuccess(response))
   } catch (error) {
     console.error('Failed to fetch installations', error)
-    if (!(error && error.message === noGitHubAppTokenMessage)) {
-      bugsnag.notify(error)
-    }
+    bugsnag.notify(error)
 
     yield put(actions.refreshInstallationsFailure(error))
   }
