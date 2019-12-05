@@ -16,10 +16,13 @@ import { ThemedText } from '../components/themed/ThemedText'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
+import { Browser } from '../libs/browser'
 import { bugsnag } from '../libs/bugsnag'
+import { confirm } from '../libs/confirm'
 import { Linking } from '../libs/linking'
 import { executeOAuth } from '../libs/oauth'
 import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
+import { prompt } from '../libs/prompt'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
@@ -221,31 +224,64 @@ export const LoginScreen = React.memo(() => {
     try {
       analytics.trackEvent('engagement', 'login')
 
-      const redirect = confirm(
-        'Redirect to create a new Personal Access Token? \nMake sure to include the "repo" and "notifications" permissions.',
-      )
+      const redirect = await new Promise(resolve => {
+        confirm(
+          'Create new token?',
+          'Redirect to GitHub or paste one existing personal token. \n' +
+            'Make sure to include the "repo" and "notifications" permissions.',
+          {
+            cancelCallback: () => resolve(false),
+            cancelLabel: 'Use existing',
+            cancelable: true,
+            confirmCallback: () => resolve(true),
+            confirmLabel: 'Create new token',
+          },
+        )
+      })
 
       let token
-      await Promise.all([
-        !!redirect &&
-          new Promise(resolve => {
-            window.open(
-              `https://github.com/settings/tokens/new?description=DevHub&scopes=${(
-                constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
-                _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
-              ).join(',')}`,
-              '_blank',
-            )
+      if (redirect) {
+        await new Promise(resolve => {
+          const listener = Browser.addListener('onDismiss', () => {
+            if (listener) listener.remove()
             resolve()
-          }),
-        new Promise((resolve, reject) => {
-          setTimeout(() => {
-            token = prompt('Paste the GitHub token here:')
-            if (token) resolve()
-            else reject(new Error('Canceled'))
-          }, 100)
-        }),
-      ])
+          })
+
+          Browser.openURLOnNewTab(
+            `https://github.com/settings/tokens/new?description=DevHub&scopes=${(
+              constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
+              _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
+            ).join(',')}`,
+          )
+        })
+      }
+
+      token = await new Promise(resolveToken => {
+        prompt(
+          'Personal Access Token',
+          'Paste the GitHub token here:',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => resolveToken(),
+              style: 'cancel',
+            },
+            {
+              text: 'Continue',
+              onPress: (value: string) => resolveToken(value),
+              style: 'default',
+            },
+          ],
+          {
+            type: 'plain-text',
+            cancelable: true,
+            placeholder: 'Personal Access Token',
+            defaultValue: '',
+          },
+        )
+      })
+
+      if (!token) throw new Error('Canceled')
 
       setIsExecutingOAuth(true)
 
@@ -263,11 +299,12 @@ export const LoginScreen = React.memo(() => {
       loginRequest({ appToken })
       setIsExecutingOAuth(false)
     } catch (error) {
+      setIsExecutingOAuth(false)
+      if (error.message === 'Canceled' || error.message === 'Timeout') return
+
       const description = 'OAuth execution failed'
       console.error(description, error)
-      setIsExecutingOAuth(false)
 
-      if (error.message === 'Canceled' || error.message === 'Timeout') return
       bugsnag.notify(error, { description })
 
       alert(`Login failed. ${error || ''}`)

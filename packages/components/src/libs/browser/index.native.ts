@@ -1,7 +1,7 @@
+import { constants } from '@devhub/core'
 import { EventEmitter } from 'fbemitter'
 import InAppBrowserReborn from 'react-native-inappbrowser-reborn'
 
-import { constants } from '@devhub/core'
 import { BrowserCrossPlatform } from '.'
 import { bugsnag } from '../bugsnag'
 import { Linking } from '../linking'

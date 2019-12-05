@@ -29,6 +29,7 @@
     "react-native-haptic-feedback": "1.8.2",
     "react-native-inappbrowser-reborn": "3.1.0",
     "react-native-linear-gradient": "2.5.6",
+    "react-native-prompt-android": "1.1.0",
     "react-native-safe-area-context": "0.3.6",
     "react-native-splash-screen": "3.2.0",
     "react-native-store-review": "0.1.5",
