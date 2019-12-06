@@ -8,6 +8,7 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import { Checkbox } from '../common/Checkbox'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
@@ -66,6 +67,8 @@ export const ThemePreference = React.memo(() => {
               })
               return
             }
+
+            vibrateHapticFeedback()
 
             setTheme({
               id: theme.id,

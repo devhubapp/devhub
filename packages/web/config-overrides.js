@@ -11,8 +11,9 @@ const appIncludes = [
   resolveApp('src'),
   resolveApp('../core/src'),
   resolveApp('../components/src'),
-  resolveApp('../../node_modules/react-native-vector-icons/'),
   resolveApp('../../node_modules/react-native-gesture-handler/'),
+  resolveApp('../../node_modules/react-native-haptic-feedback/'),
+  resolveApp('../../node_modules/react-native-vector-icons/'),
 ]
 
 module.exports = function override(config, env) {

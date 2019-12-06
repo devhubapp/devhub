@@ -11,6 +11,7 @@ import {
   contentPadding,
   smallerTextSize,
 } from '../../../styles/variables'
+import { vibrateHapticFeedback } from '../../../utils/helpers/shared'
 import { KeyboardKeyIsPressed } from '../../AppKeyboardShortcuts'
 import { getColumnHeaderThemeColors } from '../../columns/ColumnHeader'
 import { Avatar } from '../../common/Avatar'
@@ -101,6 +102,8 @@ export const GenericOwnerFilterBar = React.memo(
 
     const _onItemPressRef = useDynamicRef(_onItemPress)
     const onItemPress = useCallback((item: OwnerItemT) => {
+      vibrateHapticFeedback()
+
       if (KeyboardKeyIsPressed.alt) {
         _onItemPressRef.current(
           item,

@@ -15,6 +15,7 @@ import {
   smallTextSize,
 } from '../../styles/variables'
 import { stripEmojis } from '../../utils/helpers/github/emojis'
+import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
 import { CurrentColumnContext } from '../columns/Column'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
@@ -384,21 +385,23 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                       Platform.OS === 'android'
                         ? undefined
                         : (() => {
-                            const removeIfAlreadySet = !(
-                              KeyboardKeyIsPressed.meta ||
-                              KeyboardKeyIsPressed.shift
-                            )
-
-                            const removeOthers = !(
-                              KeyboardKeyIsPressed.alt ||
-                              KeyboardKeyIsPressed.meta ||
-                              KeyboardKeyIsPressed.shift
-                            )
-
                             if (textIsOnlyIssueNumber && issueNumber) {
                               if (type === 'issue_or_pr') return
 
                               return () => {
+                                vibrateHapticFeedback()
+
+                                const removeIfAlreadySet = !(
+                                  KeyboardKeyIsPressed.meta ||
+                                  KeyboardKeyIsPressed.shift
+                                )
+
+                                const removeOthers = !(
+                                  KeyboardKeyIsPressed.alt ||
+                                  KeyboardKeyIsPressed.meta ||
+                                  KeyboardKeyIsPressed.shift
+                                )
+
                                 dispatch(
                                   actions.changeIssueNumberFilter({
                                     columnId,
@@ -414,6 +417,8 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                             }
 
                             return () => {
+                              vibrateHapticFeedback()
+
                               dispatch(
                                 actions.setColumnRepoFilter({
                                   columnId,
@@ -473,6 +478,8 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                             Platform.OS === 'android'
                               ? undefined
                               : () => {
+                                  vibrateHapticFeedback()
+
                                   const removeIfAlreadySet = !(
                                     KeyboardKeyIsPressed.meta ||
                                     KeyboardKeyIsPressed.shift
@@ -585,6 +592,8 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                             ? undefined
                             : (() => {
                                 return () => {
+                                  vibrateHapticFeedback()
+
                                   const removeIfAlreadySet = !(
                                     KeyboardKeyIsPressed.meta ||
                                     KeyboardKeyIsPressed.shift

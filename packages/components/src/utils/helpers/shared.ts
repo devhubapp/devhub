@@ -144,3 +144,21 @@ export function isBigEnoughForMultiColumnView(
 ) {
   return (sizename || getAppLayout().sizename) >= '2-medium'
 }
+
+export function vibrateHapticFeedback() {
+  if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    const ReactNativeHapticFeedback = require('react-native-haptic-feedback')
+      .default
+
+    ReactNativeHapticFeedback.trigger('selection', {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: true,
+    })
+  } else if (
+    Platform.OS === 'web' &&
+    window.navigator &&
+    window.navigator.vibrate
+  ) {
+    window.navigator.vibrate(50)
+  }
+}

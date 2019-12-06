@@ -22,6 +22,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
 import { ColumnFiltersButton } from '../columns/ColumnFiltersButton'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
@@ -89,6 +90,8 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
 
   function replaceColumnFiltersFromQueryString(q: string) {
     if (!column) return
+
+    vibrateHapticFeedback()
 
     dispatch(
       actions.replaceColumnFilters({
@@ -187,6 +190,8 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
               typeof saved === 'boolean' ? undefined : 'foregroundColorMuted65',
           }}
           onPress={() => {
+            vibrateHapticFeedback()
+
             dispatch(
               actions.setColumnSavedFilter({
                 columnId,
@@ -249,6 +254,8 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
                   <TagToken
                     label={`${key ? `${key}:${value}` : value}`}
                     onPress={() => {
+                      vibrateHapticFeedback()
+
                       const queryString = queryTerms
                         .map((_termArr, _index) => {
                           const [_key, _value, _isNegated] =

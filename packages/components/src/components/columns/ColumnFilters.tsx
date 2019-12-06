@@ -1,7 +1,3 @@
-import _ from 'lodash'
-import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react'
-import { ScrollView, View } from 'react-native'
-
 import {
   columnHasAnyFilter,
   eventActions,
@@ -30,14 +26,19 @@ import {
   notificationSubjectTypes,
   ThemeColors,
 } from '@devhub/core'
+import _ from 'lodash'
+import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react'
+import { ScrollView, View } from 'react-native'
+import { useDispatch } from 'react-redux'
+
 import { useColumn } from '../../hooks/use-column'
 import { useColumnData } from '../../hooks/use-column-data'
-import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
+import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import { columnHeaderItemContentSize } from '../columns/ColumnHeader'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
@@ -240,30 +241,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   const allowOnlyOneCategoryToBeOpenedRef = useRef(!allIsOpen)
   const allowToggleCategories = !forceOpenAll
 
-  const clearColumnFilters = useReduxAction(actions.clearColumnFilters)
-  const setColumnSavedFilter = useReduxAction(actions.setColumnSavedFilter)
-  const setColumnParticipatingFilter = useReduxAction(
-    actions.setColumnParticipatingFilter,
-  )
-  const setColumnActivityActionFilter = useReduxAction(
-    actions.setColumnActivityActionFilter,
-  )
-  // const setColumnInvolvesFilter = useReduxAction(
-  //   actions.setColumnInvolvesFilter,
-  // )
-  const setColumnOwnerFilter = useReduxAction(actions.setColumnOwnerFilter)
-  const setColumnRepoFilter = useReduxAction(actions.setColumnRepoFilter)
-  const setColumnPrivacyFilter = useReduxAction(actions.setColumnPrivacyFilter)
-  const setColumnReasonFilter = useReduxAction(actions.setColumnReasonFilter)
-  const setColummStateTypeFilter = useReduxAction(
-    actions.setColummStateTypeFilter,
-  )
-  const setColummBotFilter = useReduxAction(actions.setColummBotFilter)
-  const setColummDraftFilter = useReduxAction(actions.setColummDraftFilter)
-  const setColummSubjectTypeFilter = useReduxAction(
-    actions.setColummSubjectTypeFilter,
-  )
-  const setColumnUnreadFilter = useReduxAction(actions.setColumnUnreadFilter)
+  const dispatch = useDispatch()
 
   const toggleOpenedOptionCategory = useCallback(
     (optionCategory: ColumnFilterCategory) => {
@@ -356,10 +334,14 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               inbox={inbox}
               isOpen={openedOptionCategories.has('inbox')}
               onChange={i => {
-                setColumnParticipatingFilter({
-                  columnId: column.id,
-                  participating: i === 'participating',
-                })
+                vibrateHapticFeedback()
+
+                dispatch(
+                  actions.setColumnParticipatingFilter({
+                    columnId: column.id,
+                    participating: i === 'participating',
+                  }),
+                )
               }}
               onToggleRowVisibility={
                 allowToggleCategories
@@ -533,10 +515,14 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   enableIndeterminateState
                   label="Bookmarks"
                   onChange={checked => {
-                    setColumnSavedFilter({
-                      columnId: column.id,
-                      saved: checked,
-                    })
+                    vibrateHapticFeedback()
+
+                    dispatch(
+                      actions.setColumnSavedFilter({
+                        columnId: column.id,
+                        saved: checked,
+                      }),
+                    )
                   }}
                   right={getCheckboxRight(filteredItemsMetadata.saved)}
                 />
@@ -605,17 +591,21 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     sharedColumnOptionsStyles.checkboxSquareContainer
                   }
                   onChange={() => {
-                    setColumnUnreadFilter({
-                      columnId: column.id,
-                      unread:
-                        isReadChecked && isUnreadChecked
-                          ? false
-                          : isReadChecked
-                          ? undefined
-                          : isUnreadChecked
-                          ? undefined
-                          : false,
-                    })
+                    vibrateHapticFeedback()
+
+                    dispatch(
+                      actions.setColumnUnreadFilter({
+                        columnId: column.id,
+                        unread:
+                          isReadChecked && isUnreadChecked
+                            ? false
+                            : isReadChecked
+                            ? undefined
+                            : isUnreadChecked
+                            ? undefined
+                            : false,
+                      }),
+                    )
                   }}
                   right={getCheckboxRight({
                     read: filteredItemsMetadata.inbox[inbox].read,
@@ -636,17 +626,21 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     sharedColumnOptionsStyles.checkboxSquareContainer
                   }
                   onChange={() => {
-                    setColumnUnreadFilter({
-                      columnId: column.id,
-                      unread:
-                        isReadChecked && isUnreadChecked
-                          ? true
-                          : isUnreadChecked
-                          ? undefined
-                          : isReadChecked
-                          ? undefined
-                          : true,
-                    })
+                    vibrateHapticFeedback()
+
+                    dispatch(
+                      actions.setColumnUnreadFilter({
+                        columnId: column.id,
+                        unread:
+                          isReadChecked && isUnreadChecked
+                            ? true
+                            : isUnreadChecked
+                            ? undefined
+                            : isReadChecked
+                            ? undefined
+                            : true,
+                      }),
+                    )
                   }}
                   right={getCheckboxRight({
                     unread: filteredItemsMetadata.inbox[inbox].unread,
@@ -752,24 +746,28 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
                       onChange={value => {
-                        setColummStateTypeFilter({
-                          columnId: column.id,
-                          state: item.state,
-                          supportsOnlyOne,
-                          value: supportsOnlyOne
-                            ? typeof value === 'boolean'
-                              ? true
-                              : null
-                            : isFilterStrict
-                            ? typeof value === 'boolean'
-                              ? defaultBooleanValue
-                              : null
-                            : hasForcedValue
-                            ? typeof value === 'boolean'
-                              ? !defaultBooleanValue
-                              : null
-                            : value,
-                        })
+                        vibrateHapticFeedback()
+
+                        dispatch(
+                          actions.setColummStateTypeFilter({
+                            columnId: column.id,
+                            state: item.state,
+                            supportsOnlyOne,
+                            value: supportsOnlyOne
+                              ? typeof value === 'boolean'
+                                ? true
+                                : null
+                              : isFilterStrict
+                              ? typeof value === 'boolean'
+                                ? defaultBooleanValue
+                                : null
+                              : hasForcedValue
+                              ? typeof value === 'boolean'
+                                ? !defaultBooleanValue
+                                : null
+                              : value,
+                          }),
+                        )
                       }}
                       right={getCheckboxRight(
                         filteredItemsMetadata.state[item.state],
@@ -829,10 +827,14 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   enableIndeterminateState
                   label="Draft"
                   onChange={value => {
-                    setColummDraftFilter({
-                      columnId: column.id,
-                      draft: typeof value === 'boolean' ? value : undefined,
-                    })
+                    vibrateHapticFeedback()
+
+                    dispatch(
+                      actions.setColummDraftFilter({
+                        columnId: column.id,
+                        draft: typeof value === 'boolean' ? value : undefined,
+                      }),
+                    )
                   }}
                   right={getCheckboxRight(filteredItemsMetadata.draft)}
                   // uncheckedForegroundThemeColor="gray"
@@ -885,10 +887,14 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   enableIndeterminateState
                   label="Bots"
                   onChange={value => {
-                    setColummBotFilter({
-                      columnId: column.id,
-                      bot: typeof value === 'boolean' ? value : undefined,
-                    })
+                    vibrateHapticFeedback()
+
+                    dispatch(
+                      actions.setColummBotFilter({
+                        columnId: column.id,
+                        bot: typeof value === 'boolean' ? value : undefined,
+                      }),
+                    )
                   }}
                   right={getCheckboxRight(filteredItemsMetadata.bot)}
                 />
@@ -995,19 +1001,23 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
                       onChange={value => {
-                        setColummSubjectTypeFilter({
-                          columnId: column.id,
-                          subjectType: item.subjectType,
-                          value: isFilterStrict
-                            ? typeof value === 'boolean'
-                              ? defaultBooleanValue
-                              : null
-                            : hasForcedValue
-                            ? typeof value === 'boolean'
-                              ? !defaultBooleanValue
-                              : null
-                            : value,
-                        })
+                        vibrateHapticFeedback()
+
+                        dispatch(
+                          actions.setColummSubjectTypeFilter({
+                            columnId: column.id,
+                            subjectType: item.subjectType,
+                            value: isFilterStrict
+                              ? typeof value === 'boolean'
+                                ? defaultBooleanValue
+                                : null
+                              : hasForcedValue
+                              ? typeof value === 'boolean'
+                                ? !defaultBooleanValue
+                                : null
+                              : value,
+                          }),
+                        )
                       }}
                       right={getCheckboxRight(counterMetadataProps || {}, {
                         backgroundColor:
@@ -1108,19 +1118,23 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       label={item.label}
                       labelTooltip={item.fullDescription}
                       onChange={value => {
-                        setColumnReasonFilter({
-                          columnId: column.id,
-                          reason: item.reason,
-                          value: isFilterStrict
-                            ? typeof value === 'boolean'
-                              ? defaultBooleanValue
-                              : null
-                            : hasForcedValue
-                            ? typeof value === 'boolean'
-                              ? !defaultBooleanValue
-                              : null
-                            : value,
-                        })
+                        vibrateHapticFeedback()
+
+                        dispatch(
+                          actions.setColumnReasonFilter({
+                            columnId: column.id,
+                            reason: item.reason,
+                            value: isFilterStrict
+                              ? typeof value === 'boolean'
+                                ? defaultBooleanValue
+                                : null
+                              : hasForcedValue
+                              ? typeof value === 'boolean'
+                                ? !defaultBooleanValue
+                                : null
+                              : value,
+                          }),
+                        )
                       }}
                       right={getCheckboxRight(counterMetadataProps || {}, {
                         backgroundColor:
@@ -1219,19 +1233,23 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
                       onChange={value => {
-                        setColumnActivityActionFilter({
-                          columnId: column.id,
-                          type: item.action,
-                          value: isFilterStrict
-                            ? typeof value === 'boolean'
-                              ? defaultBooleanValue
-                              : null
-                            : hasForcedValue
-                            ? typeof value === 'boolean'
-                              ? !defaultBooleanValue
-                              : null
-                            : value,
-                        })
+                        vibrateHapticFeedback()
+
+                        dispatch(
+                          actions.setColumnActivityActionFilter({
+                            columnId: column.id,
+                            type: item.action,
+                            value: isFilterStrict
+                              ? typeof value === 'boolean'
+                                ? defaultBooleanValue
+                                : null
+                              : hasForcedValue
+                              ? typeof value === 'boolean'
+                                ? !defaultBooleanValue
+                                : null
+                              : value,
+                          }),
+                        )
                       }}
                       right={getCheckboxRight(
                         filteredItemsMetadata.eventAction[item.action] || {},
@@ -1314,17 +1332,21 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     sharedColumnOptionsStyles.checkboxSquareContainer
                   }
                   onChange={() => {
-                    setColumnPrivacyFilter({
-                      columnId: column.id,
-                      private:
-                        isPublicChecked && isPrivateChecked
-                          ? false
-                          : isPublicChecked
-                          ? undefined
-                          : isPrivateChecked
-                          ? undefined
-                          : false,
-                    })
+                    vibrateHapticFeedback()
+
+                    dispatch(
+                      actions.setColumnPrivacyFilter({
+                        columnId: column.id,
+                        private:
+                          isPublicChecked && isPrivateChecked
+                            ? false
+                            : isPublicChecked
+                            ? undefined
+                            : isPrivateChecked
+                            ? undefined
+                            : false,
+                      }),
+                    )
                   }}
                   right={getCheckboxRight(filteredItemsMetadata.privacy.public)}
                 />
@@ -1345,17 +1367,21 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     sharedColumnOptionsStyles.checkboxSquareContainer
                   }
                   onChange={() => {
-                    setColumnPrivacyFilter({
-                      columnId: column.id,
-                      private:
-                        isPublicChecked && isPrivateChecked
-                          ? true
-                          : isPrivateChecked
-                          ? undefined
-                          : isPublicChecked
-                          ? undefined
-                          : true,
-                    })
+                    vibrateHapticFeedback()
+
+                    dispatch(
+                      actions.setColumnPrivacyFilter({
+                        columnId: column.id,
+                        private:
+                          isPublicChecked && isPrivateChecked
+                            ? true
+                            : isPrivateChecked
+                            ? undefined
+                            : isPublicChecked
+                            ? undefined
+                            : true,
+                      }),
+                    )
                   }}
                   right={getCheckboxRight(
                     filteredItemsMetadata.privacy.private,
@@ -1484,19 +1510,23 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                           />
                         }
                         onChange={value => {
-                          setColumnOwnerFilter({
-                            columnId: column.id,
-                            owner,
-                            value: isOwnerFilterStrict
-                              ? typeof value === 'boolean'
-                                ? defaultBooleanValue
-                                : null
-                              : ownerFilterHasForcedValue
-                              ? typeof value === 'boolean'
-                                ? !defaultBooleanValue
-                                : null
-                              : value,
-                          })
+                          vibrateHapticFeedback()
+
+                          dispatch(
+                            actions.setColumnOwnerFilter({
+                              columnId: column.id,
+                              owner,
+                              value: isOwnerFilterStrict
+                                ? typeof value === 'boolean'
+                                  ? defaultBooleanValue
+                                  : null
+                                : ownerFilterHasForcedValue
+                                ? typeof value === 'boolean'
+                                  ? !defaultBooleanValue
+                                  : null
+                                : value,
+                            }),
+                          )
                         }}
                         right={getCheckboxRight(ownerItem.metadata!)}
                         squareContainerStyle={
@@ -1542,23 +1572,27 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                             label={repo}
                             labelTooltip={repoFullName}
                             onChange={value => {
-                              setColumnRepoFilter({
-                                columnId: column.id,
-                                owner,
-                                repo,
-                                value: thisOwnerHasStrictRepoFilter
-                                  ? typeof value === 'boolean'
-                                    ? defaultBooleanValue
-                                    : null
-                                  : thisOwnerRepoFilterHasForcedValue
-                                  ? isRepoFilterStrict &&
-                                    value !== !defaultBooleanValue
-                                    ? defaultBooleanValue
-                                    : typeof value === 'boolean'
-                                    ? !defaultBooleanValue
-                                    : null
-                                  : value,
-                              })
+                              vibrateHapticFeedback()
+
+                              dispatch(
+                                actions.setColumnRepoFilter({
+                                  columnId: column.id,
+                                  owner,
+                                  repo,
+                                  value: thisOwnerHasStrictRepoFilter
+                                    ? typeof value === 'boolean'
+                                      ? defaultBooleanValue
+                                      : null
+                                    : thisOwnerRepoFilterHasForcedValue
+                                    ? isRepoFilterStrict &&
+                                      value !== !defaultBooleanValue
+                                      ? defaultBooleanValue
+                                      : typeof value === 'boolean'
+                                      ? !defaultBooleanValue
+                                      : null
+                                    : value,
+                                }),
+                              )
                             }}
                             right={getCheckboxRight(repoItem)}
                             squareContainerStyle={
@@ -1603,7 +1637,9 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
             })
           }
           onPress={() => {
-            clearColumnFilters({ columnId: column.id })
+            vibrateHapticFeedback()
+
+            dispatch(actions.clearColumnFilters({ columnId: column.id }))
           }}
         />
       </View>
