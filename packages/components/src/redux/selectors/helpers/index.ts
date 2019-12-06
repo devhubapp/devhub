@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import memoizeState from 'memoize-state'
 import { createSelectorCreator } from 'reselect'
 
 export function shallowEqualityCheckOrDeepIfArray(a: unknown, b: unknown) {
@@ -68,5 +69,4 @@ export const createDeepEqualSelector = createSelectorCreator(
   shallowEqualityCheckOrDeepIfArray,
 )
 
-// TODO: Make a new selector optimized for arrays whose item's refs don't change
-// export const createArraySelector = createDeepEqualSelector
+export const createImmerSelector = memoizeState

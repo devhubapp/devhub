@@ -10,6 +10,7 @@ import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { currentUserPlanSelector } from './auth'
 import { columnsArrSelector } from './columns'
+import { createImmerSelector } from './helpers'
 
 const s = (state: RootState) => state.subscriptions || EMPTY_OBJ
 
@@ -19,20 +20,25 @@ export const subscriptionIdsSelector = (state: RootState) =>
 export const subscriptionSelector = (state: RootState, id: string) =>
   (s(state).byId && s(state).byId[id]) || undefined
 
-export const allSubscriptionsArrSelector = createSelector(
-  (state: RootState) => subscriptionIdsSelector(state),
-  (state: RootState) => s(state).byId,
-  (ids, byId): ColumnSubscription[] =>
-    byId && ids
-      ? (ids.map(id => byId[id]).filter(Boolean) as ColumnSubscription[])
-      : EMPTY_ARRAY,
+export const allSubscriptionsArrSelector = createImmerSelector(
+  (state: RootState) => {
+    const subscriptionIds = subscriptionIdsSelector(state)
+    const byId = s(state).byId
+
+    if (!(byId && subscriptionIds && subscriptionIds.length)) return EMPTY_ARRAY
+
+    return subscriptionIds
+      .map(id => byId[id])
+      .filter(Boolean) as ColumnSubscription[]
+  },
 )
 
-export const userSubscriptionsArrSelector = createSelector(
-  (state: RootState) => currentUserPlanSelector(state),
-  (state: RootState) => columnsArrSelector(state),
-  (state: RootState) => s(state).byId,
-  (plan, columns, byId): ColumnSubscription[] => {
+export const userSubscriptionsArrSelector = createImmerSelector(
+  (state: RootState): ColumnSubscription[] => {
+    const plan = currentUserPlanSelector(state)
+    const columns = columnsArrSelector(state)
+    const byId = s(state).byId
+
     if (!(plan && columns && columns.length && byId)) return EMPTY_ARRAY
 
     const limit =
@@ -51,30 +57,42 @@ export const userSubscriptionsArrSelector = createSelector(
   },
 )
 
-export const createSubscriptionsDataSelector = () =>
-  createSelector(
-    (state: RootState, subscriptionIds: string[]) =>
-      subscriptionIds
-        .map(id => subscriptionSelector(state, id))
-        .filter(Boolean) as ColumnSubscription[],
-    (state: RootState, _subscriptionIds: string[]) => state.data.byId,
-    (subscriptions, dataByNodeIdOrId) => {
-      const getItemByNodeIdOrId = (nodeIdOrId: string) =>
-        dataByNodeIdOrId &&
-        dataByNodeIdOrId[nodeIdOrId] &&
-        dataByNodeIdOrId[nodeIdOrId]!.item
+export const createSubscriptionsSelector = () =>
+  createImmerSelector((state: RootState, subscriptionIds: string[]) => {
+    return subscriptionIds
+      .map(id => subscriptionSelector(state, id))
+      .filter(Boolean) as ColumnSubscription[]
+  })
 
-      const result = getItemsFromSubscriptions(
-        subscriptions,
-        getItemByNodeIdOrId,
-      )
-      if (!(result && result.length)) return EMPTY_ARRAY
-      return result
-    },
+export const createSubscriptionsDataSelector = () => {
+  const subscriptionsSelector = createSubscriptionsSelector()
+  const memoizedGetItemsFromSubscriptions = createImmerSelector(
+    getItemsFromSubscriptions,
   )
 
+  return createImmerSelector((state: RootState, subscriptionIds: string[]) => {
+    const subscriptions = subscriptionsSelector(state, subscriptionIds)
+    const dataByNodeIdOrId = state.data.byId
+
+    const getItemByNodeIdOrId = (nodeIdOrId: string) =>
+      dataByNodeIdOrId &&
+      dataByNodeIdOrId[nodeIdOrId] &&
+      dataByNodeIdOrId[nodeIdOrId]!.item
+
+    const result = memoizedGetItemsFromSubscriptions(
+      subscriptions,
+      getItemByNodeIdOrId,
+    )
+
+    if (!(result && result.length)) return EMPTY_ARRAY
+
+    return result
+  })
+}
+
 export const subscriptionLastFetchedAtSelector = createSelector(
-  (state: RootState, id: string) => subscriptionSelector(state, id),
+  (state: RootState, subscriptionId: string) =>
+    subscriptionSelector(state, subscriptionId),
   subscription => {
     if (!(subscription && subscription.data)) return
 

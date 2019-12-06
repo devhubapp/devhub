@@ -83,20 +83,15 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
 
-  const subtype = useReduxState(
+  const mainSubscription = useReduxState(
     useCallback(
-      state => {
-        if (!column) return undefined
-
-        const subscription = selectors.columnSubscriptionSelector(
-          state,
-          column.id,
-        )
-        return subscription && subscription.subtype
-      },
-      [column && column.id],
+      state =>
+        selectors.createColumnSubscriptionSelector()(state, columnId || ''),
+      [columnId],
     ),
   )
+
+  const subtype = (mainSubscription && mainSubscription.subtype) || undefined
 
   const _ownerIsKnown = headerDetails && headerDetails.ownerIsKnown
   const _repoIsKnown = headerDetails && headerDetails.repoIsKnown
@@ -485,19 +480,36 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     !!(plan && plan.amount),
   ])
 
-  return {
-    OverrideRender,
-    data,
-    fixedHeaderComponent,
-    footer,
-    getItemSize,
-    getOwnerIsKnownByItemOrNodeIdOrId,
-    header,
-    itemSeparator,
-    onVisibleItemsChanged,
-    refreshControl,
-    repoIsKnown,
-    safeAreaInsets,
-    visibleItemIndexesRef,
-  }
+  return useMemo(
+    () => ({
+      OverrideRender,
+      data,
+      fixedHeaderComponent,
+      footer,
+      getItemSize,
+      getOwnerIsKnownByItemOrNodeIdOrId,
+      header,
+      itemSeparator,
+      onVisibleItemsChanged,
+      refreshControl,
+      repoIsKnown,
+      safeAreaInsets,
+      visibleItemIndexesRef,
+    }),
+    [
+      OverrideRender,
+      data,
+      fixedHeaderComponent,
+      footer,
+      getItemSize,
+      getOwnerIsKnownByItemOrNodeIdOrId,
+      header,
+      itemSeparator,
+      onVisibleItemsChanged,
+      refreshControl,
+      repoIsKnown,
+      safeAreaInsets,
+      visibleItemIndexesRef,
+    ],
+  )
 }

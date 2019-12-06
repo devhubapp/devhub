@@ -1,7 +1,7 @@
+import { constants, freeTrialDays, isPlanExpired } from '@devhub/core'
 import _ from 'lodash'
 import { useCallback, useMemo } from 'react'
 
-import { constants, freeTrialDays, isPlanExpired } from '@devhub/core'
 import * as selectors from '../redux/selectors'
 import { useReduxState } from './use-redux-state'
 
@@ -47,13 +47,26 @@ export function useColumn(columnId: string) {
       headerDetails.owner) ||
     undefined
 
-  return {
-    column,
-    columnIndex,
-    dashboardFromUsername,
-    hasCrossedColumnsLimit,
-    headerDetails,
-    isOverMaxColumnLimit,
-    isOverPlanColumnLimit,
-  }
+  return useMemo(
+    () => ({
+      column,
+      columnIndex,
+      dashboardFromUsername,
+      hasCrossedColumnsLimit,
+      headerDetails,
+      isOverMaxColumnLimit,
+      isOverPlanColumnLimit,
+      plan,
+    }),
+    [
+      column,
+      columnIndex,
+      dashboardFromUsername,
+      hasCrossedColumnsLimit,
+      headerDetails,
+      isOverMaxColumnLimit,
+      isOverPlanColumnLimit,
+      plan,
+    ],
+  )
 }

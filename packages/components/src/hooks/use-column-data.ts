@@ -86,12 +86,22 @@ export function useColumnData<ItemT extends EnhancedItem>(
     [getItemByNodeIdOrIdChangeCountRef.current],
   )
 
-  return {
-    allItems,
-    allItemsIds,
-    filteredItems,
-    filteredItemsIds,
-    getItemByNodeIdOrId,
-    hasCrossedColumnsLimit,
-  }
+  return useMemo(
+    () => ({
+      allItems,
+      allItemsIds,
+      filteredItems,
+      filteredItemsIds,
+      getItemByNodeIdOrId,
+      hasCrossedColumnsLimit,
+    }),
+    [
+      allItems,
+      allItemsIds,
+      filteredItems,
+      filteredItemsIds,
+      getItemByNodeIdOrId,
+      hasCrossedColumnsLimit,
+    ],
+  )
 }

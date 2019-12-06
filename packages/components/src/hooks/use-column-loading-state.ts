@@ -11,7 +11,7 @@ export function useColumnLoadingState(columnId: string): EnhancedLoadState {
 
   const mainSubscription = useReduxState(
     useCallback(
-      state => selectors.columnSubscriptionSelector(state, columnId),
+      state => selectors.createColumnSubscriptionSelector()(state, columnId),
       [columnId],
     ),
   )

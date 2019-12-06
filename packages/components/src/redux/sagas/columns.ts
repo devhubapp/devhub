@@ -252,7 +252,7 @@ function* onColumnSubscriptionFilterChange(
   if (!(column && column.id)) return
 
   const subscriptions: ColumnSubscription[] = yield select(
-    selectors.columnSubscriptionsSelector,
+    selectors.createColumnSubscriptionsSelector(),
     column.id,
   )
   if (!(subscriptions && subscriptions.length)) return

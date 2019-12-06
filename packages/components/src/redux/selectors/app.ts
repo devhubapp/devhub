@@ -1,11 +1,12 @@
 import { getAppLayout } from '../../components/context/LayoutContext'
+import { EMPTY_ARRAY } from '../../utils/constants'
 import { RootState } from '../types'
 import { countersSelector } from './counters'
 
 const s = (state: RootState) => state.app || {}
 
 export const allBannerMessagesSelector = (state: RootState) =>
-  s(state).banners || []
+  s(state).banners || EMPTY_ARRAY
 
 export const bannerMessageSelector = (state: RootState) => {
   const banners = allBannerMessagesSelector(state)

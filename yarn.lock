@@ -4250,6 +4250,14 @@ cosmiconfig@^5.0.0, cosmiconfig@^5.0.2, cosmiconfig@^5.0.5, cosmiconfig@^5.0.7, 
     js-yaml "^3.13.1"
     parse-json "^4.0.0"
 
+crc-32@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/crc-32/-/crc-32-1.2.0.tgz#cb2db6e29b88508e32d9dd0ec1693e7b41a18208"
+  integrity sha512-1uBwHxF+Y/4yF5G48fwnKq6QsIXheor3ZLPT80yGBV1oEUwpPojlEhQbWKVw1VwcTQyMGHK1/XMmTjmlsmTTGA==
+  dependencies:
+    exit-on-epipe "~1.0.1"
+    printj "~1.1.0"
+
 create-ecdh@^4.0.0:
   version "4.0.3"
   resolved "https://registry.npmjs.org/create-ecdh/-/create-ecdh-4.0.3.tgz#c9111b6f33045c4697f144787f9254cdc77c45ff"
@@ -5824,6 +5832,11 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
+exit-on-epipe@~1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/exit-on-epipe/-/exit-on-epipe-1.0.1.tgz#0bdd92e87d5285d267daa8171d0eb06159689692"
+  integrity sha512-h2z5mrROTxce56S+pnvAV890uu7ls7f1kEvVGJbw1OlFH3/mlJ5bkXu0KRyW94v37zzHPiUd55iLn3DA7TjWpw==
+
 exit@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/exit/-/exit-0.1.2.tgz#0632638f8d877cc82107d30a0fff1a17cba1cd0c"
@@ -6466,6 +6479,13 @@ function-bind@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
+
+function-double@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/function-double/-/function-double-1.0.4.tgz#46074f215a171594036d816fa963c2902b482c86"
+  integrity sha512-J+vMIwmWx/uY3Fc4TNeyPyQOjSbaWpHO/xj+tv8RbViLfPipFGohgOWN+kSkuWTwSZPZxMfYopECUA/9Tq8YJA==
+  dependencies:
+    util-arity "^1.1.0"
 
 functional-red-black-tree@^1.0.1:
   version "1.0.1"
@@ -9029,6 +9049,14 @@ mem@^4.0.0:
   resolved "https://registry.npmjs.org/memoize-one/-/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
   integrity sha512-HKeeBpWvqiVJD57ZUAsJNm71eHTykffzcLZVYWiVfQeI1rJtuEaS7hQiEpWfVVk18donPwJEcFKIkCmPJNOhHA==
 
+memoize-state@2.0.13:
+  version "2.0.13"
+  resolved "https://registry.npmjs.org/memoize-state/-/memoize-state-2.0.13.tgz#b237d0b3f4a15c144c09fd9deaf7028e7648f573"
+  integrity sha512-hNSof0W5220H1LCXFXM1cCNrDjJs7lhYQD4d++SEyzDZDfGkpQ2N59KEe4gMu1TFjnMv3BlHVB+TxCM/7iZJRg==
+  dependencies:
+    function-double "^1.0.4"
+    proxyequal "^2.1.0"
+
 memory-fs@^0.4.1:
   version "0.4.1"
   resolved "https://registry.npmjs.org/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"
@@ -11382,6 +11410,11 @@ pretty-format@^24.7.0, pretty-format@^24.9.0:
     ansi-styles "^3.2.0"
     react-is "^16.8.4"
 
+printj@~1.1.0:
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/printj/-/printj-1.1.2.tgz#d90deb2975a8b9f600fb3a1c94e3f4c53c78a222"
+  integrity sha512-zA2SmoLaxZyArQTOPj5LXecR+RagfPSU5Kw1qP+jkWeNlrq+eJZyY2oS68SU1Z/7/myXM4lo9716laOFAVStCQ==
+
 private@^0.1.6:
   version "0.1.8"
   resolved "https://registry.npmjs.org/private/-/private-0.1.8.tgz#2381edb3689f7a53d653190060fcf822d2f368ff"
@@ -11458,6 +11491,14 @@ proxy-addr@~2.0.5:
   dependencies:
     forwarded "~0.1.2"
     ipaddr.js "1.9.0"
+
+proxyequal@^2.1.0:
+  version "2.1.2"
+  resolved "https://registry.npmjs.org/proxyequal/-/proxyequal-2.1.2.tgz#396189698664c25129dd2c8cea773ada3f274023"
+  integrity sha512-q8GwkAYQOptCKejQ9uYgjxy6T2jS1b5qxVIhq+m5gYiPnJqemQebnf5sNAm7r9/zm30CGnjdJxG/eNahLFp+pA==
+  dependencies:
+    crc-32 "^1.2.0"
+    search-trie "^1.1.0"
 
 prr@~1.0.1:
   version "1.0.1"
@@ -12750,6 +12791,11 @@ schema-utils@^2.0.0, schema-utils@^2.0.1, schema-utils@^2.2.0:
   dependencies:
     ajv "^6.10.2"
     ajv-keywords "^3.4.1"
+
+search-trie@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/search-trie/-/search-trie-1.1.0.tgz#0060185cbf44933d979e39f01795b3265a752b2c"
+  integrity sha512-6yOUbl5+j4HdFYLPAq6xZZynNkCUVw55hFz/yl54aFWHOh03PQue8rqbkt2k6gywp3jETcNnncZUfgrF6GS48A==
 
 select-hose@^2.0.0:
   version "2.0.0"
@@ -14422,6 +14468,11 @@ utf8-byte-length@^1.0.1:
   version "1.0.4"
   resolved "https://registry.npmjs.org/utf8-byte-length/-/utf8-byte-length-1.0.4.tgz#f45f150c4c66eee968186505ab93fcbb8ad6bf61"
   integrity sha1-9F8VDExm7uloGGUFq5P8u4rWv2E=
+
+util-arity@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/util-arity/-/util-arity-1.1.0.tgz#59d01af1fdb3fede0ac4e632b0ab5f6ce97c9330"
+  integrity sha1-WdAa8f2z/t4KxOYysKtfbOl8kzA=
 
 util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   version "1.0.2"

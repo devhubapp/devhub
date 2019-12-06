@@ -6,7 +6,6 @@ import {
   EnhancedItem,
   filterRecordHasAnyForcedValue,
   getEventMetadata,
-  getFilteredItems,
   getItemNodeIdOrId,
   getOwnerAndRepo,
   GitHubEvent,

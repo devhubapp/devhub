@@ -68,7 +68,7 @@ export const APP_DEEP_LINK_URLS = {
 }
 
 // prettier-ignore
-export const EMPTY_ARRAY = Object.freeze([]) as []
+export const EMPTY_ARRAY = []
 
 // prettier-ignore
-export const EMPTY_OBJ = Object.freeze({}) as {}
+export const EMPTY_OBJ = {}

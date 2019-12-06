@@ -279,7 +279,7 @@ function* onFetchColumnSubscriptions(
 ) {
   const state = yield select()
 
-  const columnSubscriptions = selectors.columnSubscriptionsSelector(
+  const columnSubscriptions = selectors.createColumnSubscriptionsSelector()(
     state,
     action.payload.columnId,
   )

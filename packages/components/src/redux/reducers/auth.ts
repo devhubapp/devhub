@@ -61,22 +61,34 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       }
 
     case 'LOGIN_SUCCESS':
-      return {
-        appToken: action.payload.appToken || state.appToken,
-        error: null,
-        isDeletingAccount: false,
-        isLoggingIn: false,
-        user: action.payload.user && {
-          _id: action.payload.user._id,
-          freeTrialStartAt: action.payload.user.freeTrialStartAt,
-          freeTrialEndAt: action.payload.user.freeTrialEndAt,
-          plan: action.payload.user.plan,
-          lastLoginAt:
-            action.payload.user.lastLoginAt || new Date().toISOString(),
-          createdAt: action.payload.user.createdAt,
-          updatedAt: action.payload.user.updatedAt,
-        },
-      }
+      return immer(state, draft => {
+        draft.appToken = action.payload.appToken || state.appToken
+        draft.error = null
+        draft.isDeletingAccount = false
+        draft.isLoggingIn = false
+
+        if (action.payload.user) {
+          draft.user = draft.user || ({} as any)
+          draft.user!._id = action.payload.user._id
+          draft.user!.freeTrialStartAt = action.payload.user.freeTrialStartAt
+          draft.user!.freeTrialEndAt = action.payload.user.freeTrialEndAt
+
+          if (action.payload.user.plan) {
+            if (
+              !draft.user!.plan ||
+              JSON.stringify(draft.user!.plan) !==
+                JSON.stringify(action.payload.user.plan)
+            ) {
+              draft.user!.plan = action.payload.user.plan
+            }
+          }
+
+          draft.user!.lastLoginAt =
+            action.payload.user.lastLoginAt || new Date().toISOString()
+          draft.user!.createdAt = action.payload.user.createdAt
+          draft.user!.updatedAt = action.payload.user.updatedAt
+        }
+      })
 
     case 'LOGIN_FAILURE':
       return {
@@ -86,8 +98,11 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
 
     case 'UPDATE_USER_DATA': {
       return immer(state, draft => {
-        if (action.payload.plan && draft.user) {
-          Object.assign(draft.user.plan, action.payload.plan)
+        draft.user = draft.user || ({} as any)
+
+        if (action.payload.plan) {
+          draft.user!.plan = draft.user!.plan || ({} as any)
+          Object.assign(draft.user!.plan, action.payload.plan)
         }
       })
     }

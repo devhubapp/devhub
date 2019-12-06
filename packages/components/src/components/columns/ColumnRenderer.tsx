@@ -119,11 +119,14 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   } = props
 
   const columnOptionsRef = useRef<ColumnOptionsAccordion>(null)
-  const { appOrientation } = useAppLayout()
-  const { appViewMode } = useAppViewMode()
-  const { hasCrossedColumnsLimit, filteredItems } = useColumnData(columnId, {
+  const appLayout = useAppLayout()
+  const { appOrientation } = appLayout
+  const appViewModeresult = useAppViewMode()
+  const { appViewMode } = appViewModeresult
+  const columnData = useColumnData(columnId, {
     mergeSimilar: false,
   })
+  const { hasCrossedColumnsLimit, filteredItems } = columnData
   const columnsCount = useReduxState(selectors.columnCountSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)

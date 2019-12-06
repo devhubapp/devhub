@@ -745,11 +745,12 @@ export function getColumnHeaderDetails(
             mainSubscriptionSubtype: subscription.subtype,
           }
         }
+
         default: {
-          console.error(
-            `Invalid activity subtype: '${column && (column as any).subtype}'.`,
-            { column, subscription },
-          )
+          // console.error(
+          //   `Invalid activity subtype: '${column && (column as any).subtype}'.`,
+          //   { column, subscription },
+          // )
 
           return {
             icon: 'mark-github',

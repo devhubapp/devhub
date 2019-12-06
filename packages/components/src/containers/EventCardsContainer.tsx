@@ -52,7 +52,7 @@ export const EventCardsContainer = React.memo(
     // TODO: Support multiple subscriptions per column.
     const mainSubscription = useReduxState(
       useCallback(
-        state => selectors.columnSubscriptionSelector(state, columnId),
+        state => selectors.createColumnSubscriptionSelector()(state, columnId),
         [columnId],
       ),
     ) as ActivityColumnSubscription | undefined

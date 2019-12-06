@@ -1,8 +1,8 @@
 import { EnhancedItem } from '@devhub/core'
-import { createSelector } from 'reselect'
 
 import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
+import { createImmerSelector } from './helpers'
 
 const s = (state: RootState) => state.data || EMPTY_OBJ
 
@@ -15,12 +15,11 @@ export const dataReadIds = (state: RootState) => s(state).readIds
 
 export const dataSavedIds = (state: RootState) => s(state).savedIds
 
-export const itemsBySubscriptionIdsSelector = createSelector(
-  (_state: RootState, subscriptionIds: string[]) => subscriptionIds,
-  (state: RootState, _subscriptionIds: string[]) =>
-    dataNodeIdsOrIdsBySubscriptionId(state),
-  (state: RootState, _subscriptionIds: string[]) => dataByNodeIdOrId(state),
-  (subscriptionIds, idsBySubscriptionId, entryById) => {
+export const createItemsBySubscriptionIdsSelector = () => {
+  return createImmerSelector((state: RootState, subscriptionIds: string[]) => {
+    const idsBySubscriptionId = dataNodeIdsOrIdsBySubscriptionId(state)
+    const entryById = dataByNodeIdOrId(state)
+
     if (!idsBySubscriptionId) return EMPTY_ARRAY
     if (!(subscriptionIds && subscriptionIds.length)) return EMPTY_ARRAY
 
@@ -45,5 +44,5 @@ export const itemsBySubscriptionIdsSelector = createSelector(
     if (!(items && items.length)) return EMPTY_ARRAY
 
     return items
-  },
-)
+  })
+}
