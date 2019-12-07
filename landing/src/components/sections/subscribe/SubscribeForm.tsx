@@ -802,7 +802,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               !plan.stripeIds.length &&
                 plan.paddleProductId &&
                 plan.description,
-            ].join('\n')}
+            ].filter(Boolean).join('\n')}
           </p>
         )}
 
