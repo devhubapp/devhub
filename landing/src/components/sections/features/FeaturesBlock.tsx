@@ -69,18 +69,18 @@ export default function FeaturesBlock(_props: FeaturesBlockProps) {
 
       <div className="pb-16 md:pb-32" /> */}
 
-      {/* <FeatureBlock
+      <FeatureBlock
         image={{
           position: 'full',
-          src: '',
+          src: '/static/screenshots/dark/devhub-desktop-labels.jpg',
           aspectRatio: 1440 / 798,
-          alt: '',
+          alt: 'DevHub - Label filter',
         }}
-        title="Issues & Pull Requests with powerful filters"
-        subtitle="All the power of GitHub Advanced Search on your hands: filter by label, by assignee, issue status, number of comments, etc"
+        title="Filter by labels and many other filters"
+        subtitle="All columns support a common set of filters, like Label, Issue Status, Bot, Text, etc. The Issues & Pull Requests columns are special: they give you all the power of GitHub Advanced Search on your hands (filter by assignee, number of comments, ...)"
       />
 
-      <div className="pb-16 md:pb-32" /> */}
+      <div className="pb-16 md:pb-32" />
 
       <FeatureBlock
         image={{
