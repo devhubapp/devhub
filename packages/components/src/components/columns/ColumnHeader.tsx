@@ -13,7 +13,6 @@ import { useColumn } from '../../hooks/use-column'
 import { useDesktopOptions } from '../../hooks/use-desktop-options'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Browser } from '../../libs/browser'
-import { confirm } from '../../libs/confirm'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
@@ -29,6 +28,7 @@ import { ScrollViewWithOverlay } from '../common/ScrollViewWithOverlay'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { TouchableWithoutFeedback } from '../common/TouchableWithoutFeedback'
+import { useDialog } from '../context/DialogContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
@@ -79,6 +79,8 @@ export function ColumnHeader(props: ColumnHeaderProps) {
 
   const title = `${_title || ''}`.toLowerCase()
   const subtitle = `${_subtitle || ''}`.toLowerCase()
+
+  const Dialog = useDialog()
 
   const safeAreaInsets = useSafeArea()
   const dispatch = useDispatch()
@@ -232,16 +234,22 @@ export function ColumnHeader(props: ColumnHeaderProps) {
                             : ''
 
                         const DownloadConfirmationHandler = () => {
-                          confirm('Download Desktop App?', tooltip, {
-                            cancelLabel: 'Cancel',
-                            confirmLabel: 'Download',
-                            confirmCallback: () => {
-                              Browser.openURLOnNewTab(
-                                constants.DEVHUB_LINKS.DOWNLOAD_PAGE,
-                              )
+                          Dialog.show('Download Desktop App?', tooltip, [
+                            {
+                              text: 'Download',
+                              onPress: () => {
+                                Browser.openURLOnNewTab(
+                                  constants.DEVHUB_LINKS.DOWNLOAD_PAGE,
+                                )
+                              },
+                              style: 'default',
                             },
-                            destructive: false,
-                          })
+                            {
+                              text: 'Cancel',
+                              onPress: () => undefined,
+                              style: 'cancel',
+                            },
+                          ])
                         }
 
                         return (

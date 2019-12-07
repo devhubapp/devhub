@@ -38,7 +38,6 @@ export const Browser: BrowserCrossPlatform = {
 
 function registerAppStateListenerOnce() {
   const appStateHandlerOnce = (appState: AppStateStatus) => {
-    console.log('xxx appState', appState)
     if (appState === 'active') {
       AppState.removeEventListener('change', appStateHandlerOnce)
       emitter.emit('onDismiss')

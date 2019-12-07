@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux'
 
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
-import { confirm } from '../../libs/confirm'
 import { executeOAuth } from '../../libs/oauth'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
@@ -22,6 +21,7 @@ import { Button, getButtonColors } from '../common/Button'
 import { ButtonLink } from '../common/ButtonLink'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
+import { useDialog } from '../context/DialogContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -33,6 +33,8 @@ export interface AdvancedSettingsModalProps {
 export const AdvancedSettingsModal = React.memo(
   (props: AdvancedSettingsModalProps) => {
     const { showBackButton } = props
+
+    const Dialog = useDialog()
 
     const { sizename } = useAppLayout()
 
@@ -466,17 +468,23 @@ export const AdvancedSettingsModal = React.memo(
               disabled={isDeletingAccount || isLoggingIn}
               loading={isDeletingAccount}
               onPress={() =>
-                confirm(
+                Dialog.show(
                   'Delete Account?',
                   'All your columns and preferences will be lost.' +
                     ' If you login again, a new empty account will be created.',
-                  {
-                    cancelLabel: 'Cancel',
-                    confirmLabel: 'Delete',
-                    confirmCallback: () =>
-                      dispatch(actions.deleteAccountRequest()),
-                    destructive: true,
-                  },
+                  [
+                    {
+                      onPress: () => {
+                        dispatch(actions.deleteAccountRequest())
+                      },
+                      style: 'destructive',
+                      text: 'Delete',
+                    },
+                    {
+                      style: 'cancel',
+                      text: 'Cancel',
+                    },
+                  ],
                 )
               }
               type="danger"

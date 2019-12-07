@@ -9,6 +9,7 @@ import { ColumnFiltersProvider } from './context/ColumnFiltersContext'
 import { ColumnFocusProvider } from './context/ColumnFocusContext'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DeepLinkProvider } from './context/DeepLinkContext'
+import { DialogProvider } from './context/DialogContext'
 import { AppLayoutProvider } from './context/LayoutContext'
 import { ThemeProvider } from './context/ThemeContext'
 
@@ -29,7 +30,9 @@ export function AppProviders(props: AppProvidersProps) {
                 <ColumnWidthProvider>
                   <ColumnFiltersProvider>
                     <ThemeProvider>
-                      <SafeAreaProvider>{props.children}</SafeAreaProvider>
+                      <SafeAreaProvider>
+                        <DialogProvider>{props.children}</DialogProvider>
+                      </SafeAreaProvider>
                     </ThemeProvider>
                   </ColumnFiltersProvider>
                 </ColumnWidthProvider>

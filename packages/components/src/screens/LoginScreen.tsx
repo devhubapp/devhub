@@ -12,17 +12,16 @@ import { GitHubLoginButton } from '../components/common/GitHubLoginButton'
 import { Link } from '../components/common/Link'
 import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
+import { useDialog } from '../components/context/DialogContext'
 import { ThemedText } from '../components/themed/ThemedText'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
 import { Browser } from '../libs/browser'
 import { bugsnag } from '../libs/bugsnag'
-import { confirm } from '../libs/confirm'
 import { Linking } from '../libs/linking'
 import { executeOAuth } from '../libs/oauth'
 import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
-import { prompt } from '../libs/prompt'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
@@ -115,6 +114,7 @@ export const LoginScreen = React.memo(() => {
   const fullAccessRef = useRef(false)
   const [isExecutingOAuth, setIsExecutingOAuth] = useState(false)
 
+  const Dialog = useDialog()
   const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
   const error = useReduxState(selectors.authErrorSelector)
   const initialErrorRef = useRef(error)
@@ -224,52 +224,35 @@ export const LoginScreen = React.memo(() => {
     try {
       analytics.trackEvent('engagement', 'login')
 
-      const redirect = await new Promise(resolve => {
-        confirm(
-          'Create new token?',
-          'Redirect to GitHub or paste one existing personal token. \n' +
-            'Make sure to include the "repo" and "notifications" permissions.',
-          {
-            cancelCallback: () => resolve(false),
-            cancelLabel: 'Use existing',
-            cancelable: true,
-            confirmCallback: () => resolve(true),
-            confirmLabel: 'Create new token',
-          },
-        )
-      })
-
-      let token
-      if (redirect) {
-        await new Promise(resolve => {
-          const listener = Browser.addListener('onDismiss', () => {
-            if (listener) listener.remove()
-            resolve()
-          })
-
-          Browser.openURLOnNewTab(
-            `https://github.com/settings/tokens/new?description=DevHub&scopes=${(
-              constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
-              _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
-            ).join(',')}`,
-          )
-        })
-      }
-
-      token = await new Promise(resolveToken => {
-        prompt(
+      let redirected = false
+      const token = await new Promise(resolveToken => {
+        Dialog.show(
           'Personal Access Token',
-          'Paste the GitHub token here:',
+          'Paste your GitHub token here:',
           [
-            {
-              text: 'Cancel',
-              onPress: () => resolveToken(),
-              style: 'cancel',
-            },
             {
               text: 'Continue',
               onPress: (value: string) => resolveToken(value),
               style: 'default',
+            },
+            {
+              text: 'Create new token',
+              onPress: () => {
+                Browser.openURLOnNewTab(
+                  `https://github.com/settings/tokens/new?description=DevHub&scopes=${(
+                    constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
+                    _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
+                  ).join(',')}`,
+                )
+
+                redirected = true
+                resolveToken()
+              },
+            },
+            {
+              text: 'Cancel',
+              onPress: () => resolveToken(),
+              style: 'cancel',
             },
           ],
           {
@@ -280,6 +263,11 @@ export const LoginScreen = React.memo(() => {
           },
         )
       })
+
+      if (redirected && !token) {
+        loginWithGitHubPersonalAccessToken()
+        return
+      }
 
       if (!token) throw new Error('Canceled')
 
