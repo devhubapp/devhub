@@ -375,65 +375,56 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                     TouchableComponent={GestureHandlerTouchableOpacity}
                     enableUnderlineHover
                     href={
-                      Platform.OS === 'android' ||
-                      (textIsOnlyIssueNumber && type === 'issue_or_pr')
+                      textIsOnlyIssueNumber && type === 'issue_or_pr'
                         ? undefined
                         : 'javascript:void(0)'
                     }
                     openOnNewTab={false}
-                    onPress={
-                      Platform.OS === 'android'
-                        ? undefined
-                        : (() => {
-                            if (textIsOnlyIssueNumber && issueNumber) {
-                              if (type === 'issue_or_pr') return
+                    onPress={(() => {
+                      if (textIsOnlyIssueNumber && issueNumber) {
+                        if (type === 'issue_or_pr') return
 
-                              return () => {
-                                vibrateHapticFeedback()
+                        return () => {
+                          vibrateHapticFeedback()
 
-                                const removeIfAlreadySet = !(
-                                  KeyboardKeyIsPressed.meta ||
-                                  KeyboardKeyIsPressed.shift
-                                )
+                          const removeIfAlreadySet = !(
+                            KeyboardKeyIsPressed.meta ||
+                            KeyboardKeyIsPressed.shift
+                          )
 
-                                const removeOthers = !(
-                                  KeyboardKeyIsPressed.alt ||
-                                  KeyboardKeyIsPressed.meta ||
-                                  KeyboardKeyIsPressed.shift
-                                )
+                          const removeOthers = !(
+                            KeyboardKeyIsPressed.alt ||
+                            KeyboardKeyIsPressed.meta ||
+                            KeyboardKeyIsPressed.shift
+                          )
 
-                                dispatch(
-                                  actions.changeIssueNumberFilter({
-                                    columnId,
-                                    issueNumber,
-                                    removeIfAlreadySet,
-                                    removeOthers,
-                                    value: KeyboardKeyIsPressed.alt
-                                      ? false
-                                      : true,
-                                  }),
-                                )
-                              }
-                            }
+                          dispatch(
+                            actions.changeIssueNumberFilter({
+                              columnId,
+                              issueNumber,
+                              removeIfAlreadySet,
+                              removeOthers,
+                              value: KeyboardKeyIsPressed.alt ? false : true,
+                            }),
+                          )
+                        }
+                      }
 
-                            return () => {
-                              vibrateHapticFeedback()
+                      return () => {
+                        vibrateHapticFeedback()
 
-                              dispatch(
-                                actions.setColumnRepoFilter({
-                                  columnId,
-                                  owner: text!.repo!.owner,
-                                  repo: text!.repo!.name,
-                                  value: KeyboardKeyIsPressed.alt
-                                    ? false
-                                    : true,
-                                  // removeIfAlreadySet,
-                                  // removeOthers,
-                                }),
-                              )
-                            }
-                          })()
-                    }
+                        dispatch(
+                          actions.setColumnRepoFilter({
+                            columnId,
+                            owner: text!.repo!.owner,
+                            repo: text!.repo!.name,
+                            value: KeyboardKeyIsPressed.alt ? false : true,
+                            // removeIfAlreadySet,
+                            // removeOthers,
+                          }),
+                        )
+                      }
+                    })()}
                     style={sharedStyles.flexShrink1}
                     textProps={{
                       color: 'foregroundColorMuted65',
@@ -468,42 +459,32 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                         <Link
                           TouchableComponent={GestureHandlerTouchableOpacity}
                           enableUnderlineHover
-                          href={
-                            Platform.OS === 'android'
-                              ? undefined
-                              : 'javascript:void(0)'
-                          }
+                          href="javascript:void(0)"
                           openOnNewTab={false}
-                          onPress={
-                            Platform.OS === 'android'
-                              ? undefined
-                              : () => {
-                                  vibrateHapticFeedback()
+                          onPress={() => {
+                            vibrateHapticFeedback()
 
-                                  const removeIfAlreadySet = !(
-                                    KeyboardKeyIsPressed.meta ||
-                                    KeyboardKeyIsPressed.shift
-                                  )
+                            const removeIfAlreadySet = !(
+                              KeyboardKeyIsPressed.meta ||
+                              KeyboardKeyIsPressed.shift
+                            )
 
-                                  const removeOthers = !(
-                                    KeyboardKeyIsPressed.alt ||
-                                    KeyboardKeyIsPressed.meta ||
-                                    KeyboardKeyIsPressed.shift
-                                  )
+                            const removeOthers = !(
+                              KeyboardKeyIsPressed.alt ||
+                              KeyboardKeyIsPressed.meta ||
+                              KeyboardKeyIsPressed.shift
+                            )
 
-                                  dispatch(
-                                    actions.setColumnReasonFilter({
-                                      columnId,
-                                      reason: reason.reason,
-                                      value: KeyboardKeyIsPressed.alt
-                                        ? false
-                                        : true,
-                                      removeIfAlreadySet,
-                                      removeOthers,
-                                    }),
-                                  )
-                                }
-                          }
+                            dispatch(
+                              actions.setColumnReasonFilter({
+                                columnId,
+                                reason: reason.reason,
+                                value: KeyboardKeyIsPressed.alt ? false : true,
+                                removeIfAlreadySet,
+                                removeOthers,
+                              }),
+                            )
+                          }}
                           style={sharedStyles.flexShrink0}
                           textProps={{
                             color: 'foregroundColorMuted65',
@@ -581,14 +562,10 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                       <Link
                         TouchableComponent={GestureHandlerTouchableOpacity}
                         enableUnderlineHover
-                        href={
-                          Platform.OS === 'android'
-                            ? undefined
-                            : 'javascript:void(0)'
-                        }
+                        href="javascript:void(0)"
                         openOnNewTab={false}
                         onPress={
-                          Platform.OS === 'android' || !columnId
+                          !columnId
                             ? undefined
                             : (() => {
                                 return () => {

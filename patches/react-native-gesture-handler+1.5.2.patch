@@ -1,0 +1,375 @@
+diff --git a/node_modules/react-native-gesture-handler/android/build/generated/source/buildConfig/androidTest/debug/com/swmansion/gesturehandler/react/test/BuildConfig.java b/node_modules/react-native-gesture-handler/android/build/generated/source/buildConfig/androidTest/debug/com/swmansion/gesturehandler/react/test/BuildConfig.java
+new file mode 100644
+index 0000000..dc64a01
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/generated/source/buildConfig/androidTest/debug/com/swmansion/gesturehandler/react/test/BuildConfig.java
+@@ -0,0 +1,13 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package com.swmansion.gesturehandler.react.test;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = Boolean.parseBoolean("true");
++  public static final String APPLICATION_ID = "com.swmansion.gesturehandler.react.test";
++  public static final String BUILD_TYPE = "debug";
++  public static final String FLAVOR = "";
++  public static final int VERSION_CODE = 1;
++  public static final String VERSION_NAME = "1.0";
++}
+diff --git a/node_modules/react-native-gesture-handler/android/build/generated/source/buildConfig/debug/com/swmansion/gesturehandler/react/BuildConfig.java b/node_modules/react-native-gesture-handler/android/build/generated/source/buildConfig/debug/com/swmansion/gesturehandler/react/BuildConfig.java
+new file mode 100644
+index 0000000..bd6dac7
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/generated/source/buildConfig/debug/com/swmansion/gesturehandler/react/BuildConfig.java
+@@ -0,0 +1,18 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package com.swmansion.gesturehandler.react;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = Boolean.parseBoolean("true");
++  public static final String LIBRARY_PACKAGE_NAME = "com.swmansion.gesturehandler.react";
++  /**
++   * @deprecated APPLICATION_ID is misleading in libraries. For the library package name use LIBRARY_PACKAGE_NAME
++   */
++  @Deprecated
++  public static final String APPLICATION_ID = "com.swmansion.gesturehandler.react";
++  public static final String BUILD_TYPE = "debug";
++  public static final String FLAVOR = "";
++  public static final int VERSION_CODE = 1;
++  public static final String VERSION_NAME = "1.0";
++}
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml b/node_modules/react-native-gesture-handler/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..ff3611b
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.swmansion.gesturehandler.react"
++    android:versionCode="1"
++    android:versionName="1.0" >
++
++    <uses-sdk
++        android:minSdkVersion="16"
++        android:targetSdkVersion="28" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output.json b/node_modules/react-native-gesture-handler/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output.json
+new file mode 100644
+index 0000000..b5c89ae
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output.json
+@@ -0,0 +1 @@
++[{"outputType":{"type":"AAPT_FRIENDLY_MERGED_MANIFESTS"},"apkData":{"type":"MAIN","splits":[],"versionCode":1,"versionName":"1.0","enabled":true,"outputFile":"react-native-gesture-handler-debug.aar","fullName":"debug","baseName":"debug"},"path":"AndroidManifest.xml","properties":{"packageId":"com.swmansion.gesturehandler.react","split":""}}]
+\ No newline at end of file
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/incremental/packageDebugResources/compile-file-map.properties b/node_modules/react-native-gesture-handler/android/build/intermediates/incremental/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..4cdde7f
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/incremental/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1 @@
++#Sun Dec 08 19:48:36 BRST 2019
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/incremental/packageDebugResources/merger.xml b/node_modules/react-native-gesture-handler/android/build/intermediates/incremental/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..4722743
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/incremental/packageDebugResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/res"/><source path="/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/generated/res/rs/debug"/><source path="/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/res"/><source path="/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/generated/res/rs/debug"/><source path="/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/debug/res"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/debug/AndroidManifest.xml b/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/debug/AndroidManifest.xml
+new file mode 100644
+index 0000000..ff3611b
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/debug/AndroidManifest.xml
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.swmansion.gesturehandler.react"
++    android:versionCode="1"
++    android:versionName="1.0" >
++
++    <uses-sdk
++        android:minSdkVersion="16"
++        android:targetSdkVersion="28" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt b/node_modules/react-native-gesture-handler/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..e5c319e
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,13 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="com.swmansion.gesturehandler.react"
++4    android:versionCode="1"
++5    android:versionName="1.0" >
++6
++7    <uses-sdk
++8        android:minSdkVersion="16"
++8-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++9        android:targetSdkVersion="28" />
++9-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++10
++11</manifest>
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/manifest_merge_blame_file/debugAndroidTest/manifest-merger-blame-debug-androidTest-report.txt b/node_modules/react-native-gesture-handler/android/build/intermediates/manifest_merge_blame_file/debugAndroidTest/manifest-merger-blame-debug-androidTest-report.txt
+new file mode 100644
+index 0000000..036fc0b
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/manifest_merge_blame_file/debugAndroidTest/manifest-merger-blame-debug-androidTest-report.txt
+@@ -0,0 +1,36 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="com.swmansion.gesturehandler.react.test" >
++4
++5    <uses-sdk
++5-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:5:5-74
++6        android:minSdkVersion="16"
++6-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:5:15-41
++7        android:targetSdkVersion="28" />
++7-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:5:42-71
++8
++9    <instrumentation
++9-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:11:5-15:89
++10        android:name="android.test.InstrumentationTestRunner"
++10-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:11:22-75
++11        android:functionalTest="false"
++11-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:14:22-52
++12        android:handleProfiling="false"
++12-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:13:22-53
++13        android:label="Tests for com.swmansion.gesturehandler.react.test"
++13-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:15:22-87
++14        android:targetPackage="com.swmansion.gesturehandler.react.test" />
++14-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:12:22-85
++15
++16    <application
++16-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:7:5-9:19
++17        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
++17-->[androidx.core:core:1.0.1] /Users/brunolemos/.gradle/caches/transforms-2/files-2.1/6ebd315ab470d997b2cd255048b32130/core-1.0.1/AndroidManifest.xml:22:18-86
++18        android:debuggable="true" >
++18-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:7:18-43
++19        <uses-library android:name="android.test.runner" />
++19-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:8:9-60
++19-->/Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger208959645955249951.xml:8:23-57
++20    </application>
++21
++22</manifest>
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debug/output.json b/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debug/output.json
+new file mode 100644
+index 0000000..0fb7bd7
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debug/output.json
+@@ -0,0 +1 @@
++[{"outputType":{"type":"MERGED_MANIFESTS"},"apkData":{"type":"MAIN","splits":[],"versionCode":1,"versionName":"1.0","enabled":true,"outputFile":"react-native-gesture-handler-debug.aar","fullName":"debug","baseName":"debug"},"path":"../../library_manifest/debug/AndroidManifest.xml","properties":{"packageId":"com.swmansion.gesturehandler.react","split":""}}]
+\ No newline at end of file
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debugAndroidTest/AndroidManifest.xml b/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debugAndroidTest/AndroidManifest.xml
+new file mode 100644
+index 0000000..fb9ac8f
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debugAndroidTest/AndroidManifest.xml
+@@ -0,0 +1,22 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.swmansion.gesturehandler.react.test" >
++
++    <uses-sdk
++        android:minSdkVersion="16"
++        android:targetSdkVersion="28" />
++
++    <instrumentation
++        android:name="android.test.InstrumentationTestRunner"
++        android:functionalTest="false"
++        android:handleProfiling="false"
++        android:label="Tests for com.swmansion.gesturehandler.react.test"
++        android:targetPackage="com.swmansion.gesturehandler.react.test" />
++
++    <application
++        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
++        android:debuggable="true" >
++        <uses-library android:name="android.test.runner" />
++    </application>
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debugAndroidTest/output.json b/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debugAndroidTest/output.json
+new file mode 100644
+index 0000000..1a761d6
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifests/debugAndroidTest/output.json
+@@ -0,0 +1 @@
++[{"outputType":{"type":"MERGED_MANIFESTS"},"apkData":{"type":"MAIN","splits":[],"versionCode":1,"versionName":"1.0","enabled":true,"outputFile":"react-native-gesture-handler-debug-androidTest.apk","fullName":"debugAndroidTest","baseName":"debug-androidTest"},"path":"AndroidManifest.xml","properties":{}}]
+\ No newline at end of file
+diff --git a/node_modules/react-native-gesture-handler/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/react-native-gesture-handler/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..13cbeb7
+--- /dev/null
++++ b/node_modules/react-native-gesture-handler/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,37 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++	package
++		ADDED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:2:5-49
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++	android:versionName
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++		ADDED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++	android:versionCode
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++		ADDED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:1-3:12
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++	xmlns:android
++		ADDED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml:1:11-69
++uses-sdk
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++		ADDED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++		ADDED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/brunolemos/Projects/devhub/devhub/node_modules/react-native-gesture-handler/android/src/main/AndroidManifest.xml
+diff --git a/node_modules/react-native-gesture-handler/android/lib/src/main/java/com/swmansion/gesturehandler/NativeViewGestureHandler.java b/node_modules/react-native-gesture-handler/android/lib/src/main/java/com/swmansion/gesturehandler/NativeViewGestureHandler.java
+index ca69016..0a38f5b 100644
+--- a/node_modules/react-native-gesture-handler/android/lib/src/main/java/com/swmansion/gesturehandler/NativeViewGestureHandler.java
++++ b/node_modules/react-native-gesture-handler/android/lib/src/main/java/com/swmansion/gesturehandler/NativeViewGestureHandler.java
+@@ -5,6 +5,8 @@ import android.view.MotionEvent;
+ import android.view.View;
+ import android.view.ViewGroup;
+ 
++import com.swmansion.gesturehandler.react.RNGestureHandlerButtonViewManager;
++
+ public class NativeViewGestureHandler extends GestureHandler<NativeViewGestureHandler> {
+ 
+   private boolean mShouldActivateOnStart;
+@@ -34,6 +36,18 @@ public class NativeViewGestureHandler extends GestureHandler<NativeViewGestureHa
+     return super.shouldRequireToWaitForFailure(handler);
+   }
+ 
++  private boolean isPreventedFromBeginning() {
++    // RNGestureHandlerButtonViewManager is connected with logic
++    // related to handling exclusive touches which should prevent
++    // another buttons from beginning gesture recognition.
++    View view = getView();
++    if (view instanceof RNGestureHandlerButtonViewManager.ButtonViewGroup) {
++      // setting flag for an exclusive touch for buttons
++      return !((RNGestureHandlerButtonViewManager.ButtonViewGroup) view).setResponder();
++    }
++    return false;
++  }
++
+   @Override
+   public boolean shouldRecognizeSimultaneously(GestureHandler handler) {
+     if (handler instanceof NativeViewGestureHandler) {
+@@ -53,7 +67,7 @@ public class NativeViewGestureHandler extends GestureHandler<NativeViewGestureHa
+     int otherState = handler.getState();
+ 
+     if (state == STATE_ACTIVE && otherState == STATE_ACTIVE && canBeInterrupted) {
+-      // if both handlers are active and the current handler can be interruped it we return `false`
++      // if both handlers are active and the current handler can be interrupted it we return `false`
+       // as it means the other handler has turned active and returning `true` would prevent it from
+       // interrupting the current handler
+       return false;
+@@ -85,8 +99,9 @@ public class NativeViewGestureHandler extends GestureHandler<NativeViewGestureHa
+       } else if (tryIntercept(view, event)) {
+         view.onTouchEvent(event);
+         activate();
+-      } else if (state != STATE_BEGAN) {
++      } else if (state != STATE_BEGAN && !isPreventedFromBeginning()) {
+         begin();
++
+       }
+     } else if (state == STATE_ACTIVE) {
+       view.onTouchEvent(event);
+diff --git a/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerButtonViewManager.java b/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerButtonViewManager.java
+index fd625bd..c44aff2 100644
+--- a/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerButtonViewManager.java
++++ b/node_modules/react-native-gesture-handler/android/src/main/java/com/swmansion/gesturehandler/react/RNGestureHandlerButtonViewManager.java
+@@ -21,7 +21,7 @@ import com.facebook.react.uimanager.annotations.ReactProp;
+ public class RNGestureHandlerButtonViewManager extends
+         ViewGroupManager<RNGestureHandlerButtonViewManager.ButtonViewGroup> {
+ 
+-  static class ButtonViewGroup extends ViewGroup {
++  public static class ButtonViewGroup extends ViewGroup {
+ 
+     static TypedValue sResolveOutValue = new TypedValue();
+     static ButtonViewGroup sResponder;
+@@ -32,6 +32,7 @@ public class RNGestureHandlerButtonViewManager extends
+     boolean mUseForeground = false;
+     boolean mUseBorderless = false;
+     float mBorderRadius = 0;
++    private boolean mExclusive = true;
+     boolean mNeedBackgroundUpdate = false;
+ 
+ 
+@@ -50,6 +51,10 @@ public class RNGestureHandlerButtonViewManager extends
+       mNeedBackgroundUpdate = true;
+     }
+ 
++    public void setExclusive(boolean exclusive) {
++      mExclusive = exclusive;
++    }
++
+     public void setRippleColor(Integer color) {
+       mRippleColor = color;
+       mNeedBackgroundUpdate = true;
+@@ -167,14 +172,20 @@ public class RNGestureHandlerButtonViewManager extends
+       }
+     }
+ 
++    public boolean setResponder() {
++      if (sResponder == null) {
++        if (mExclusive) {
++          sResponder = this;
++        }
++        return true;
++      }
++      return false;
++    }
++
+     @Override
+     public void setPressed(boolean pressed) {
+-      if (pressed && sResponder == null) {
+-        // first button to be pressed grabs button responder
+-        sResponder = this;
+-      }
+-      if (!pressed || sResponder == this) {
+-        // we set pressed state only for current responder
++      if (!pressed || sResponder == this || (sResponder == null && !mExclusive)) {
++        // we set pressed state only for current responder if exclusive
+         super.setPressed(pressed);
+       }
+       if (!pressed && sResponder == this) {
+@@ -225,6 +236,11 @@ public class RNGestureHandlerButtonViewManager extends
+     view.setRippleColor(rippleColor);
+   }
+ 
++  @ReactProp(name = "exclusive", defaultBoolean = true)
++  public void setExclusive(ButtonViewGroup view, boolean exclusive) {
++    view.setExclusive(exclusive);
++  }
++
+   @Override
+   protected void onAfterUpdateTransaction(ButtonViewGroup view) {
+     view.updateBackground();
