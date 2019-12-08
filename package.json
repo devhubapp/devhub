@@ -36,7 +36,7 @@
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
   "dependencies": {
-    "react-native": "0.61.3"
+    "react-native": "0.61.5"
   },
   "devDependencies": {
     "concurrently": "4.1.0",
@@ -55,7 +55,7 @@
     "typescript": "3.7.2"
   },
   "resolutions": {
-    "@types/react": "16.9.13"
+    "@types/react": "16.9.15"
   },
   "husky": {
     "hooks": {
