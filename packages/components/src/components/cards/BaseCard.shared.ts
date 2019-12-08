@@ -1,4 +1,5 @@
 import {
+  AppViewMode,
   cheapestPlanWithNotifications,
   Column,
   ColumnSubscription,
@@ -100,7 +101,13 @@ export const sizes = {
 export const renderCardActions =
   Platform.OS === 'web' || constants.DISABLE_SWIPEABLE_CARDS
 
-export interface BaseCardProps {
+export interface AdditionalCardProps {
+  appViewMode: AppViewMode
+  columnId: string
+  height: number
+}
+
+export interface BaseCardProps extends AdditionalCardProps {
   action?: {
     avatar: {
       imageURL: string
@@ -118,7 +125,6 @@ export interface BaseCardProps {
     repoId?: number | string | undefined
     text?: string
   }
-  height: number
   icon: {
     name: GitHubIcon
     color?: keyof ThemeColors
@@ -192,7 +198,7 @@ function getPrivateBannerCardProps(
   props: Pick<BaseCardProps, 'avatar' | 'date'> & {
     iconColor: BaseCardProps['icon']['color']
   },
-): Omit<BaseCardProps, 'height'> {
+): Omit<BaseCardProps, keyof AdditionalCardProps> {
   const highlightFeature: keyof Plan['featureFlags'] =
     'enablePrivateRepositories'
 
@@ -247,7 +253,7 @@ function _getCardPropsForItem(
     plan: UserPlan | null | undefined
     repoIsKnown: boolean
   },
-): Omit<BaseCardProps, 'height'> {
+): Omit<BaseCardProps, keyof AdditionalCardProps> {
   switch (type) {
     case 'activity': {
       const event = item as EnhancedGitHubEvent
@@ -928,7 +934,7 @@ function _getCardPropsForItem(
 
       const reasonMetadata = getNotificationReasonMetadata(notification.reason)
 
-      const defaultProps: Omit<BaseCardProps, 'height'> = {
+      const defaultProps: Omit<BaseCardProps, keyof AdditionalCardProps> = {
         action: undefined,
         avatar: {
           imageURL:
@@ -1160,7 +1166,8 @@ export function getCardPropsForItem(
     plan: UserPlan | null | undefined
     repoIsKnown: boolean
   },
-): BaseCardProps {
+): Omit<BaseCardProps, keyof AdditionalCardProps> &
+  Pick<AdditionalCardProps, 'height'> {
   const props = _memoizedGetCardPropsForItem(
     type,
     columnId,
@@ -1173,7 +1180,7 @@ export function getCardPropsForItem(
 }
 
 export function getCardSizeForProps(
-  props: Omit<BaseCardProps, 'height'>,
+  props: Omit<BaseCardProps, keyof AdditionalCardProps>,
 ): number {
   if (!props) return 0
 

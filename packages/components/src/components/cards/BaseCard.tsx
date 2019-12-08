@@ -1,5 +1,5 @@
 import { getDateSmallText, getFullDateText, Theme } from '@devhub/core'
-import React, { Fragment, useContext } from 'react'
+import React, { Fragment } from 'react'
 import { PixelRatio, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
@@ -17,7 +17,6 @@ import {
 import { stripEmojis } from '../../utils/helpers/github/emojis'
 import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
-import { CurrentColumnContext } from '../columns/Column'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
 import { IntervalRefresh } from '../common/IntervalRefresh'
@@ -193,10 +192,13 @@ const styles = StyleSheet.create({
 export const BaseCard = React.memo((props: BaseCardProps) => {
   const {
     action,
+    appViewMode,
+    height,
+
     avatar,
+    columnId,
     date,
     githubApp,
-    height,
     icon,
     isRead,
     isSaved,
@@ -223,14 +225,15 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
       link,
     )
 
+  const isMuted = appViewMode === 'single-column' ? false : isRead
+
   const backgroundThemeColor = (theme: Theme) =>
     getCardBackgroundThemeColor({
       isDark: theme.isDark,
-      isMuted: isRead,
+      isMuted,
     })
 
   const dispatch = useDispatch()
-  const columnId = useContext(CurrentColumnContext)
 
   const textIsOnlyIssueNumber =
     text && text.text && text.text.match(/^#([0-9]+)$/)
@@ -308,7 +311,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               <ThemedText
                 color={'foregroundColor'}
                 numberOfLines={1}
-                style={[styles.title, { fontWeight: isRead ? '300' : '500' }]}
+                style={[styles.title, { fontWeight: isMuted ? '300' : '500' }]}
               >
                 {title}
               </ThemedText>
@@ -353,7 +356,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                 numberOfLines={1}
                 style={[
                   styles.subtitle,
-                  { fontWeight: isRead ? '300' : '400' },
+                  { fontWeight: isMuted ? '300' : '400' },
                 ]}
               >
                 {subtitle}
@@ -692,7 +695,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
         <Spacer flex={1} />
       </View>
 
-      <CardItemSeparator muted={isRead} />
+      <CardItemSeparator muted={isMuted} />
     </View>
   )
 })
