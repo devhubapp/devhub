@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 
 import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -62,7 +62,7 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
       if (error.message === 'Canceled' || error.message === 'Timeout') return
       bugsnag.notify(error, { description })
 
-      alert(`Authentication failed. ${error || ''}`)
+      Alert.alert(`Authentication failed. ${error || ''}`)
     }
   }
 

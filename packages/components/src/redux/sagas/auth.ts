@@ -12,6 +12,7 @@ import {
   takeLatest,
 } from 'redux-saga/effects'
 
+import { Alert } from 'react-native'
 import { analytics } from '../../libs/analytics'
 import { bugsnag } from '../../libs/bugsnag'
 import * as github from '../../libs/github'
@@ -397,8 +398,9 @@ function onDeleteAccountFailure(
   action: ExtractActionFromActionCreator<typeof actions.deleteAccountFailure>,
 ) {
   bugsnag.notify(action.error)
-  alert(
-    `Oops. Failed to delete account. Please try again.\n\n${(action.error &&
+  Alert.alert(
+    'Oops.',
+    `Failed to delete account. Please try again.\n\n${(action.error &&
       action.error.message) ||
       action.error ||
       ''}`.trim(),

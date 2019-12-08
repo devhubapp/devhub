@@ -1,6 +1,7 @@
 import { Theme, ThemeColors } from '@devhub/core/src'
 import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import {
+  Alert,
   StyleSheet,
   TouchableHighlightProps,
   TouchableOpacity,
@@ -82,7 +83,7 @@ export const Touchable = React.forwardRef(
       _onLongPress ||
       (tooltip && Platform.supportsTouch
         ? () => {
-            alert(tooltip)
+            Alert.alert(tooltip)
           }
         : undefined)
 

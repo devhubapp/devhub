@@ -15,6 +15,7 @@ import { fabSpacing } from '../common/FAB'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { QuickFeedbackRow } from '../common/QuickFeedbackRow'
 import { Spacer } from '../common/Spacer'
+import { DialogProvider } from '../context/DialogContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { Column } from './Column'
 import { ColumnHeader, ColumnHeaderProps } from './ColumnHeader'
@@ -75,70 +76,74 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
 
   return (
     <Column ref={columnRef} columnId={name} style={{ zIndex: 900 }}>
-      <ColumnHeader
-        icon={icon}
-        title={title}
-        subtitle={subtitle}
-        style={[
-          { paddingLeft: showBackButton ? contentPadding / 2 : contentPadding },
-          !hideCloseButton && { paddingRight: contentPadding / 2 },
-        ]}
-        left={
-          !!showBackButton && (
-            <>
-              <ColumnHeader.Button
-                analyticsLabel="modal"
-                analyticsAction="back"
-                name="chevron-left"
-                onPress={() => popModal()}
-                tooltip={`Back (${keyboardShortcutsById.goBack.keys[0]})`}
-              />
-
-              <Spacer width={contentPadding / 2} />
-            </>
-          )
-        }
-        right={
-          <>
-            {!hideCloseButton && (
-              <ColumnHeader.Button
-                analyticsAction="close"
-                analyticsLabel="modal"
-                name="x"
-                onPress={() => closeAllModals()}
-                tooltip={
-                  showBackButton
-                    ? 'Close'
-                    : `Close (${keyboardShortcutsById.closeModal.keys[0]})`
-                }
-              />
-            )}
-
-            {right && (
-              <View style={sharedStyles.paddingHorizontal}>{right}</View>
-            )}
-          </>
-        }
-      />
-
-      <FullHeightScrollView
-        keyboardShouldPersistTaps="handled"
-        style={sharedStyles.flex}
-      >
-        <View style={sharedStyles.flex}>{children}</View>
-
-        <View
+      <DialogProvider>
+        <ColumnHeader
+          icon={icon}
+          title={title}
+          subtitle={subtitle}
           style={[
-            sharedStyles.fullWidth,
-            sharedStyles.horizontalAndVerticallyAligned,
-            sharedStyles.paddingHorizontal,
+            {
+              paddingLeft: showBackButton ? contentPadding / 2 : contentPadding,
+            },
+            !hideCloseButton && { paddingRight: contentPadding / 2 },
           ]}
-        >
-          <QuickFeedbackRow />
-        </View>
+          left={
+            !!showBackButton && (
+              <>
+                <ColumnHeader.Button
+                  analyticsLabel="modal"
+                  analyticsAction="back"
+                  name="chevron-left"
+                  onPress={() => popModal()}
+                  tooltip={`Back (${keyboardShortcutsById.goBack.keys[0]})`}
+                />
 
-        <Spacer height={FAB.Component ? FAB.size : fabSpacing} />
-      </FullHeightScrollView>
+                <Spacer width={contentPadding / 2} />
+              </>
+            )
+          }
+          right={
+            <>
+              {!hideCloseButton && (
+                <ColumnHeader.Button
+                  analyticsAction="close"
+                  analyticsLabel="modal"
+                  name="x"
+                  onPress={() => closeAllModals()}
+                  tooltip={
+                    showBackButton
+                      ? 'Close'
+                      : `Close (${keyboardShortcutsById.closeModal.keys[0]})`
+                  }
+                />
+              )}
+
+              {right && (
+                <View style={sharedStyles.paddingHorizontal}>{right}</View>
+              )}
+            </>
+          }
+        />
+
+        <FullHeightScrollView
+          keyboardShouldPersistTaps="handled"
+          style={sharedStyles.flex}
+        >
+          <View style={sharedStyles.flex}>{children}</View>
+
+          <View
+            style={[
+              sharedStyles.fullWidth,
+              sharedStyles.horizontalAndVerticallyAligned,
+              sharedStyles.paddingHorizontal,
+            ]}
+          >
+            <QuickFeedbackRow />
+          </View>
+
+          <Spacer height={FAB.Component ? FAB.size : fabSpacing} />
+        </FullHeightScrollView>
+      </DialogProvider>
     </Column>
   )
 })

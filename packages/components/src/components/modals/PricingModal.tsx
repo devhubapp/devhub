@@ -259,7 +259,7 @@ export function PricingModal(props: PricingModalProps) {
               }),
             )
 
-            alert(
+            Alert.alert(
               `Failed to abort subscription cancellation. Please contact support. \nError: ${error.message}`,
             )
           }

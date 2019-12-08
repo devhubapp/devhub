@@ -1,6 +1,6 @@
 import { tryParseOAuthParams } from '@devhub/core'
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 
 import { useDispatch } from 'react-redux'
 import { useReduxState } from '../../../../hooks/use-redux-state'
@@ -74,7 +74,7 @@ export const InstallGitHubAppText = React.memo(
         if (error.message === 'Canceled' || error.message === 'Timeout') return
         bugsnag.notify(error, { description })
 
-        alert(`Authentication failed. ${error || ''}`)
+        Alert.alert(`Authentication failed. ${error || ''}`)
       }
     }
 

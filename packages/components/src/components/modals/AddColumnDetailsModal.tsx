@@ -23,7 +23,7 @@ import {
 } from '@devhub/core'
 import { FormikErrors, useFormik } from 'formik'
 import _ from 'lodash'
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useRef } from 'react'
 import { Keyboard, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
@@ -50,6 +50,7 @@ import { H3 } from '../common/H3'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
+import { DialogConsumer, DialogProviderState } from '../context/DialogContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -167,6 +168,7 @@ export const AddColumnDetailsModal = React.memo(
 
     const formItems = getFormItems(subscription)
 
+    const dialogRef = useRef<DialogProviderState>()
     const dispatch = useDispatch()
     const { sizename } = useAppLayout()
 
@@ -198,14 +200,14 @@ export const AddColumnDetailsModal = React.memo(
         if (!newColumnAndSubscriptions) {
           formikActions.setSubmitting(false)
 
-          const errorMessage = 'Something went wrong. Failed to create column.'
+          const errorMessage = 'Failed to create column.'
           bugsnag.notify(new Error(errorMessage), {
             formValues,
             defaultFilters,
             loggedUsername,
             subscription,
           })
-          alert(errorMessage)
+          dialogRef.current!.show('Something went wrong.', errorMessage)
 
           return
         }
@@ -340,16 +342,9 @@ export const AddColumnDetailsModal = React.memo(
         <SubHeader iconName={icon} title={headerTitle}>
           {typeof isPrivateSupported === 'boolean' &&
             (() => {
-              const contentLabel =
-                subscription.type === 'notifications'
-                  ? 'notifications'
-                  : subscription.type === 'activity'
-                  ? 'events'
-                  : 'content'
-
               const text = isPrivateSupported
-                ? `This column type supports private ${contentLabel}.`
-                : `This column type only supports public ${contentLabel}.`
+                ? `This column type supports both public and private repositories.`
+                : `Due to GitHub API limitations, this column type supports only public repositories.`
 
               return (
                 <View style={[sharedStyles.flex, sharedStyles.horizontal]}>
@@ -359,7 +354,12 @@ export const AddColumnDetailsModal = React.memo(
                     color="foregroundColorMuted65"
                     name={isPrivateSupported ? 'lock' : 'globe'}
                     onPress={() => {
-                      alert(text)
+                      dialogRef.current!.show(
+                        isPrivateSupported
+                          ? 'Private support'
+                          : 'No private support',
+                        text,
+                      )
                     }}
                     size={18}
                     style={[
@@ -670,34 +670,42 @@ export const AddColumnDetailsModal = React.memo(
         showBackButton={showBackButton}
         title="Add Column"
       >
-        <>
-          {renderHeader()}
+        <DialogConsumer>
+          {Dialog => {
+            dialogRef.current = Dialog
 
-          <Separator horizontal />
-          <Spacer height={contentPadding} />
+            return (
+              <>
+                {renderHeader()}
 
-          <View
-            style={
-              sizename <= '2-medium'
-                ? sharedStyles.flex
-                : sharedStyles.fullWidth
-            }
-          >
-            {renderContent()}
-          </View>
+                <Separator horizontal />
+                <Spacer height={contentPadding} />
 
-          <View style={sharedStyles.paddingHorizontal}>
-            <Button
-              analyticsLabel="add_column"
-              disabled={!formikProps.isValid || formikProps.isSubmitting}
-              onPress={formikProps.submitForm}
-            >
-              Add Column
-            </Button>
-          </View>
+                <View
+                  style={
+                    sizename <= '2-medium'
+                      ? sharedStyles.flex
+                      : sharedStyles.fullWidth
+                  }
+                >
+                  {renderContent()}
+                </View>
 
-          <Spacer height={contentPadding / 2} />
-        </>
+                <View style={sharedStyles.paddingHorizontal}>
+                  <Button
+                    analyticsLabel="add_column"
+                    disabled={!formikProps.isValid || formikProps.isSubmitting}
+                    onPress={formikProps.submitForm}
+                  >
+                    Add Column
+                  </Button>
+                </View>
+
+                <Spacer height={contentPadding / 2} />
+              </>
+            )
+          }}
+        </DialogConsumer>
       </ModalColumn>
     )
   },

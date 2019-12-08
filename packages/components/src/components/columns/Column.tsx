@@ -15,6 +15,7 @@ import { GenericMessageWithButtonView } from '../cards/GenericMessageWithButtonV
 import { ButtonLink } from '../common/ButtonLink'
 import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
+import { DialogProvider } from '../context/DialogContext'
 import { ThemedView } from '../themed/ThemedView'
 import { ColumnSeparator } from './ColumnSeparator'
 
@@ -116,6 +117,7 @@ export const Column = React.memo(
         key={`column-${columnId}-inner`}
         backgroundColor={backgroundColor}
         style={[
+          sharedStyles.relative,
           sharedStyles.horizontal,
           { width: columnWidth },
           sharedStyles.fullHeight,
@@ -123,33 +125,37 @@ export const Column = React.memo(
           style,
         ]}
       >
-        {!!renderLeftSeparator && <ColumnSeparator half />}
-        <View style={sharedStyles.flex}>
-          <ErrorBoundary FallbackComponent={ColumErrorFallbackComponent}>
-            <CurrentColumnContext.Provider value={columnId}>
-              {children}
-            </CurrentColumnContext.Provider>
-          </ErrorBoundary>
-        </View>
-        {!!renderRightSeparator && <ColumnSeparator half />}
+        <DialogProvider>
+          <>
+            {!!renderLeftSeparator && <ColumnSeparator half />}
+            <View style={sharedStyles.flex}>
+              <ErrorBoundary FallbackComponent={ColumErrorFallbackComponent}>
+                <CurrentColumnContext.Provider value={columnId}>
+                  {children}
+                </CurrentColumnContext.Provider>
+              </ErrorBoundary>
+            </View>
+            {!!renderRightSeparator && <ColumnSeparator half />}
 
-        <ThemedView
-          ref={columnBorderRef}
-          borderColor="foregroundColorMuted65"
-          collapsable={false}
-          pointerEvents="box-none"
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              borderWidth: 0,
-              borderRightWidth: Math.max(4, separatorThickSize),
-              borderLeftWidth: Math.max(4, separatorThickSize),
-              zIndex: 1000,
-              opacity:
-                isColumnFocused && lastUsedInputType === 'keyboard' ? 1 : 0,
-            },
-          ]}
-        />
+            <ThemedView
+              ref={columnBorderRef}
+              borderColor="foregroundColorMuted65"
+              collapsable={false}
+              pointerEvents="box-none"
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  borderWidth: 0,
+                  borderRightWidth: Math.max(4, separatorThickSize),
+                  borderLeftWidth: Math.max(4, separatorThickSize),
+                  zIndex: 1000,
+                  opacity:
+                    isColumnFocused && lastUsedInputType === 'keyboard' ? 1 : 0,
+                },
+              ]}
+            />
+          </>
+        </DialogProvider>
       </ThemedView>
     )
   }),

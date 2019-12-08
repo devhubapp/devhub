@@ -17,6 +17,7 @@ import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { ColumnSeparator } from '../columns/ColumnSeparator'
 import { separatorThickSize } from '../common/Separator'
 import { useColumnWidth } from '../context/ColumnWidthContext'
+import { DialogProvider } from '../context/DialogContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { AddColumnDetailsModal } from './AddColumnDetailsModal'
@@ -302,7 +303,7 @@ export function ModalRenderer(props: ModalRendererProps) {
                       },
                     ]}
                   >
-                    {renderModal(item)}
+                    <DialogProvider>{renderModal(item)}</DialogProvider>
                   </SpringAnimatedView>
                 ),
             )}

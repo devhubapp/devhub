@@ -6,7 +6,7 @@ export function isSupported() {
 
 export function prompt(
   _title: string | undefined,
-  _message: string,
+  _message?: string | undefined,
   _callbackOrButtons?: ((value: string) => void) | PromptButton[],
   _options?: PromptOptions,
 ) {

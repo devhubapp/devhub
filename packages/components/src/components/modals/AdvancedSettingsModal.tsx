@@ -2,7 +2,7 @@ import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
 import axios from 'axios'
 import _ from 'lodash'
 import React, { useCallback, useState } from 'react'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { useReduxState } from '../../hooks/use-redux-state'
@@ -21,7 +21,7 @@ import { Button, getButtonColors } from '../common/Button'
 import { ButtonLink } from '../common/ButtonLink'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
-import { useDialog } from '../context/DialogContext'
+import { DialogConsumer } from '../context/DialogContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -33,8 +33,6 @@ export interface AdvancedSettingsModalProps {
 export const AdvancedSettingsModal = React.memo(
   (props: AdvancedSettingsModalProps) => {
     const { showBackButton } = props
-
-    const Dialog = useDialog()
 
     const { sizename } = useAppLayout()
 
@@ -84,7 +82,7 @@ export const AdvancedSettingsModal = React.memo(
         if (error.message === 'Canceled' || error.message === 'Timeout') return
         bugsnag.notify(error, { description })
 
-        alert(`Authentication failed. ${error || ''}`)
+        Alert.alert(`Authentication failed. ${error || ''}`)
       }
     }
 
@@ -128,7 +126,9 @@ export const AdvancedSettingsModal = React.memo(
         bugsnag.notify(error)
 
         setIsRemovingPersonalToken(false)
-        alert(`Failed to remove personal token. \nError: ${error.message}`)
+        Alert.alert(
+          `Failed to remove personal token. \nError: ${error.message}`,
+        )
         return false
       }
     }, [existingAppToken])
@@ -142,371 +142,388 @@ export const AdvancedSettingsModal = React.memo(
         showBackButton={showBackButton}
         title="Advanced settings"
       >
-        <>
-          {Platform.OS === 'web' && (
-            <SubHeader title="Keyboard shortcuts">
-              <>
-                <Spacer flex={1} />
+        <DialogConsumer>
+          {Dialog => (
+            <>
+              {Platform.OS === 'web' && (
+                <SubHeader title="Keyboard shortcuts">
+                  <>
+                    <Spacer flex={1} />
+
+                    <Button
+                      analyticsLabel="show_keyboard_shortcuts"
+                      contentContainerStyle={{
+                        width: 52,
+                        paddingHorizontal: contentPadding,
+                      }}
+                      onPress={() =>
+                        dispatch(
+                          actions.pushModal({ name: 'KEYBOARD_SHORTCUTS' }),
+                        )
+                      }
+                      size={32}
+                    >
+                      <ThemedIcon
+                        name="keyboard"
+                        color={foregroundThemeColor}
+                        size={16}
+                      />
+                    </Button>
+                  </>
+                </SubHeader>
+              )}
+
+              <View>
+                <View>
+                  <SubHeader title="Personal Access Token">
+                    <Spacer flex={1} />
+
+                    {!!(
+                      githubPersonalTokenDetails &&
+                      githubPersonalTokenDetails.token
+                    ) && (
+                      <Button
+                        analyticsLabel="remove_personal_access_token"
+                        contentContainerStyle={{
+                          width: 52,
+                          paddingHorizontal: contentPadding,
+                        }}
+                        disabled={isRemovingPersonalToken}
+                        loading={isRemovingPersonalToken}
+                        onPress={() => {
+                          removePersonalAccessToken()
+                        }}
+                        size={32}
+                        type="danger"
+                      >
+                        <ThemedIcon
+                          color={foregroundThemeColor}
+                          name="trashcan"
+                          size={16}
+                        />
+                      </Button>
+                    )}
+                  </SubHeader>
+
+                  <View
+                    style={[
+                      sharedStyles.horizontal,
+                      sharedStyles.alignItemsCenter,
+                      sharedStyles.paddingHorizontal,
+                    ]}
+                  >
+                    {githubPersonalTokenDetails &&
+                    githubPersonalTokenDetails.token ? (
+                      <ThemedText
+                        color="foregroundColorMuted65"
+                        style={sharedStyles.flex}
+                      >
+                        {new Array(githubPersonalTokenDetails.token.length)
+                          .fill('*')
+                          .join('')}
+                      </ThemedText>
+                    ) : (
+                      <ThemedText
+                        color="foregroundColorMuted65"
+                        style={[sharedStyles.flex, { fontStyle: 'italic' }]}
+                      >
+                        No personal token
+                      </ThemedText>
+                    )}
+                  </View>
+                </View>
+
+                <Spacer height={contentPadding} />
+
+                <View>
+                  <SubHeader title="Manage OAuth access" />
+
+                  <View
+                    style={[
+                      sharedStyles.horizontal,
+                      sharedStyles.alignItemsCenter,
+                      sharedStyles.paddingHorizontal,
+                    ]}
+                  >
+                    <ThemedText
+                      color="foregroundColor"
+                      style={sharedStyles.flex}
+                    >
+                      GitHub OAuth
+                    </ThemedText>
+
+                    <Spacer flex={1} minWidth={contentPadding / 2} />
+
+                    {githubToken ? (
+                      <ButtonLink
+                        analyticsLabel="manage_oauth"
+                        contentContainerStyle={{
+                          width: 52,
+                          paddingHorizontal: contentPadding,
+                        }}
+                        href={`${constants.API_BASE_URL}/github/oauth/manage`}
+                        openOnNewTab
+                        size={32}
+                      >
+                        <ThemedIcon
+                          color={foregroundThemeColor}
+                          name="gear"
+                          size={16}
+                        />
+                      </ButtonLink>
+                    ) : (
+                      <Button
+                        analyticsLabel={
+                          githubToken ? 'refresh_oauth_token' : 'start_oauth'
+                        }
+                        contentContainerStyle={{
+                          width: 52,
+                          paddingHorizontal: contentPadding,
+                        }}
+                        disabled={!!executingOAuth}
+                        loading={executingOAuth === 'oauth'}
+                        loadingIndicatorStyle={{ transform: [{ scale: 0.8 }] }}
+                        onPress={() => startOAuth('oauth')}
+                        size={32}
+                      >
+                        <ThemedIcon
+                          color={foregroundThemeColor}
+                          name={githubToken ? 'sync' : 'plus'}
+                          size={16}
+                        />
+                      </Button>
+                    )}
+                  </View>
+
+                  <Spacer height={contentPadding / 2} />
+
+                  <View
+                    style={[
+                      sharedStyles.horizontal,
+                      sharedStyles.alignItemsCenter,
+                      {
+                        paddingHorizontal: contentPadding,
+                      },
+                    ]}
+                  >
+                    <ThemedText
+                      color="foregroundColor"
+                      style={sharedStyles.flex}
+                    >
+                      GitHub App
+                    </ThemedText>
+
+                    <Spacer flex={1} minWidth={contentPadding / 2} />
+
+                    {githubAppToken ? (
+                      <ButtonLink
+                        analyticsLabel="manage_app_oauth"
+                        contentContainerStyle={{
+                          width: 52,
+                          paddingHorizontal: contentPadding,
+                        }}
+                        href={`${constants.API_BASE_URL}/github/app/manage`}
+                        openOnNewTab
+                        size={32}
+                      >
+                        <ThemedIcon
+                          color={foregroundThemeColor}
+                          name="gear"
+                          size={16}
+                        />
+                      </ButtonLink>
+                    ) : (
+                      <Button
+                        analyticsLabel={
+                          githubAppToken
+                            ? 'refresh_app_oauth_token'
+                            : 'start_app_oauth'
+                        }
+                        contentContainerStyle={{
+                          width: 52,
+                          paddingHorizontal: contentPadding,
+                        }}
+                        disabled={!!executingOAuth}
+                        loading={executingOAuth === 'app'}
+                        loadingIndicatorStyle={{ transform: [{ scale: 0.8 }] }}
+                        onPress={() => startOAuth('app')}
+                        size={32}
+                      >
+                        <ThemedIcon
+                          color={foregroundThemeColor}
+                          name={githubAppToken ? 'sync' : 'plus'}
+                          size={16}
+                        />
+                      </Button>
+                    )}
+                  </View>
+
+                  <Spacer height={contentPadding} />
+                </View>
+
+                {!!githubAppToken && (
+                  <>
+                    <View>
+                      <SubHeader title="GitHub App installations">
+                        <>
+                          <Spacer flex={1} />
+
+                          {!!(
+                            githubAppToken ||
+                            installationsLoadState === 'loading'
+                          ) && (
+                            <Button
+                              analyticsLabel="refresh_installation"
+                              contentContainerStyle={{
+                                width: 52,
+                                paddingHorizontal: contentPadding,
+                              }}
+                              disabled={installationsLoadState === 'loading'}
+                              loading={installationsLoadState === 'loading'}
+                              loadingIndicatorStyle={{
+                                transform: [{ scale: 0.8 }],
+                              }}
+                              onPress={() => {
+                                dispatch(
+                                  actions.refreshInstallationsRequest({
+                                    includeInstallationToken: true,
+                                  }),
+                                )
+                              }}
+                              size={32}
+                            >
+                              <ThemedIcon
+                                color={foregroundThemeColor}
+                                name="sync"
+                                size={16}
+                              />
+                            </Button>
+                          )}
+                        </>
+                      </SubHeader>
+
+                      {installations.map(
+                        (installation, index) =>
+                          !!(
+                            installation &&
+                            installation.account &&
+                            installation.account.login &&
+                            installation.htmlUrl
+                          ) && (
+                            <View
+                              key={`github-installation-${installation.id}`}
+                              style={[
+                                sharedStyles.horizontal,
+                                sharedStyles.alignItemsCenter,
+                                {
+                                  paddingTop:
+                                    index === 0 ? 0 : contentPadding / 2,
+                                  paddingHorizontal: contentPadding,
+                                },
+                              ]}
+                            >
+                              <Avatar
+                                avatarUrl={
+                                  installation.account.avatarUrl || undefined
+                                }
+                                username={installation.account.login}
+                                linkURL={
+                                  installation.account.htmlUrl || undefined
+                                }
+                                size={24}
+                              />
+
+                              <ThemedText
+                                color="foregroundColor"
+                                style={[
+                                  sharedStyles.flex,
+                                  {
+                                    paddingHorizontal: contentPadding / 2,
+                                  },
+                                ]}
+                              >
+                                {installation.account.login}
+                              </ThemedText>
+
+                              <ButtonLink
+                                analyticsLabel="open_installation"
+                                contentContainerStyle={{
+                                  width: 52,
+                                  paddingHorizontal: contentPadding,
+                                }}
+                                href={installation.htmlUrl}
+                                openOnNewTab
+                                size={32}
+                              >
+                                <ThemedIcon
+                                  color={foregroundThemeColor}
+                                  name="gear"
+                                  size={16}
+                                />
+                              </ButtonLink>
+                            </View>
+                          ),
+                      )}
+                    </View>
+                  </>
+                )}
+
+                <Spacer height={contentPadding} />
+              </View>
+
+              <Spacer flex={1} minHeight={contentPadding} />
+
+              <View style={sharedStyles.paddingHorizontal}>
+                <Spacer height={contentPadding} />
 
                 <Button
-                  analyticsLabel="show_keyboard_shortcuts"
-                  contentContainerStyle={{
-                    width: 52,
-                    paddingHorizontal: contentPadding,
-                  }}
+                  key="delete-account-button"
+                  analyticsAction="delete_account"
+                  analyticsLabel="delete_account"
+                  disabled={isDeletingAccount || isLoggingIn}
+                  loading={isDeletingAccount}
                   onPress={() =>
-                    dispatch(actions.pushModal({ name: 'KEYBOARD_SHORTCUTS' }))
+                    Dialog.show(
+                      'Delete Account?',
+                      'All your columns and preferences will be lost.' +
+                        ' If you login again, a new empty account will be created.',
+                      [
+                        {
+                          onPress: () => {
+                            dispatch(actions.deleteAccountRequest())
+                          },
+                          style: 'destructive',
+                          text: 'Delete',
+                        },
+                        {
+                          style: 'cancel',
+                          text: 'Cancel',
+                        },
+                      ],
+                    )
                   }
-                  size={32}
+                  type="danger"
                 >
-                  <ThemedIcon
-                    name="keyboard"
-                    color={foregroundThemeColor}
-                    size={16}
-                  />
+                  Delete account
                 </Button>
-              </>
-            </SubHeader>
-          )}
 
-          <View>
-            <View>
-              <SubHeader title="Personal Access Token">
-                <Spacer flex={1} />
+                <Spacer height={contentPadding / 2} />
 
-                {!!(
-                  githubPersonalTokenDetails && githubPersonalTokenDetails.token
-                ) && (
-                  <Button
-                    analyticsLabel="remove_personal_access_token"
-                    contentContainerStyle={{
-                      width: 52,
-                      paddingHorizontal: contentPadding,
-                    }}
-                    disabled={isRemovingPersonalToken}
-                    loading={isRemovingPersonalToken}
-                    onPress={() => {
-                      removePersonalAccessToken()
-                    }}
-                    size={32}
-                    type="danger"
-                  >
-                    <ThemedIcon
-                      color={foregroundThemeColor}
-                      name="trashcan"
-                      size={16}
-                    />
-                  </Button>
-                )}
-              </SubHeader>
-
-              <View
-                style={[
-                  sharedStyles.horizontal,
-                  sharedStyles.alignItemsCenter,
-                  sharedStyles.paddingHorizontal,
-                ]}
-              >
-                {githubPersonalTokenDetails &&
-                githubPersonalTokenDetails.token ? (
-                  <ThemedText
-                    color="foregroundColorMuted65"
-                    style={sharedStyles.flex}
-                  >
-                    {new Array(githubPersonalTokenDetails.token.length)
-                      .fill('*')
-                      .join('')}
-                  </ThemedText>
-                ) : (
-                  <ThemedText
-                    color="foregroundColorMuted65"
-                    style={[sharedStyles.flex, { fontStyle: 'italic' }]}
-                  >
-                    No personal token
-                  </ThemedText>
-                )}
-              </View>
-            </View>
-
-            <Spacer height={contentPadding} />
-
-            <View>
-              <SubHeader title="Manage OAuth access" />
-
-              <View
-                style={[
-                  sharedStyles.horizontal,
-                  sharedStyles.alignItemsCenter,
-                  sharedStyles.paddingHorizontal,
-                ]}
-              >
-                <ThemedText color="foregroundColor" style={sharedStyles.flex}>
-                  GitHub OAuth
-                </ThemedText>
-
-                <Spacer flex={1} minWidth={contentPadding / 2} />
-
-                {githubToken ? (
-                  <ButtonLink
-                    analyticsLabel="manage_oauth"
-                    contentContainerStyle={{
-                      width: 52,
-                      paddingHorizontal: contentPadding,
-                    }}
-                    href={`${constants.API_BASE_URL}/github/oauth/manage`}
-                    openOnNewTab
-                    size={32}
-                  >
-                    <ThemedIcon
-                      color={foregroundThemeColor}
-                      name="gear"
-                      size={16}
-                    />
-                  </ButtonLink>
-                ) : (
-                  <Button
-                    analyticsLabel={
-                      githubToken ? 'refresh_oauth_token' : 'start_oauth'
-                    }
-                    contentContainerStyle={{
-                      width: 52,
-                      paddingHorizontal: contentPadding,
-                    }}
-                    disabled={!!executingOAuth}
-                    loading={executingOAuth === 'oauth'}
-                    loadingIndicatorStyle={{ transform: [{ scale: 0.8 }] }}
-                    onPress={() => startOAuth('oauth')}
-                    size={32}
-                  >
-                    <ThemedIcon
-                      color={foregroundThemeColor}
-                      name={githubToken ? 'sync' : 'plus'}
-                      size={16}
-                    />
-                  </Button>
-                )}
+                <Button
+                  key="logout-button"
+                  analyticsCategory="engagement"
+                  analyticsAction="logout"
+                  analyticsLabel=""
+                  onPress={() => dispatch(actions.logout())}
+                >
+                  Logout
+                </Button>
               </View>
 
               <Spacer height={contentPadding / 2} />
-
-              <View
-                style={[
-                  sharedStyles.horizontal,
-                  sharedStyles.alignItemsCenter,
-                  {
-                    paddingHorizontal: contentPadding,
-                  },
-                ]}
-              >
-                <ThemedText color="foregroundColor" style={sharedStyles.flex}>
-                  GitHub App
-                </ThemedText>
-
-                <Spacer flex={1} minWidth={contentPadding / 2} />
-
-                {githubAppToken ? (
-                  <ButtonLink
-                    analyticsLabel="manage_app_oauth"
-                    contentContainerStyle={{
-                      width: 52,
-                      paddingHorizontal: contentPadding,
-                    }}
-                    href={`${constants.API_BASE_URL}/github/app/manage`}
-                    openOnNewTab
-                    size={32}
-                  >
-                    <ThemedIcon
-                      color={foregroundThemeColor}
-                      name="gear"
-                      size={16}
-                    />
-                  </ButtonLink>
-                ) : (
-                  <Button
-                    analyticsLabel={
-                      githubAppToken
-                        ? 'refresh_app_oauth_token'
-                        : 'start_app_oauth'
-                    }
-                    contentContainerStyle={{
-                      width: 52,
-                      paddingHorizontal: contentPadding,
-                    }}
-                    disabled={!!executingOAuth}
-                    loading={executingOAuth === 'app'}
-                    loadingIndicatorStyle={{ transform: [{ scale: 0.8 }] }}
-                    onPress={() => startOAuth('app')}
-                    size={32}
-                  >
-                    <ThemedIcon
-                      color={foregroundThemeColor}
-                      name={githubAppToken ? 'sync' : 'plus'}
-                      size={16}
-                    />
-                  </Button>
-                )}
-              </View>
-
-              <Spacer height={contentPadding} />
-            </View>
-
-            {!!githubAppToken && (
-              <>
-                <View>
-                  <SubHeader title="GitHub App installations">
-                    <>
-                      <Spacer flex={1} />
-
-                      {!!(
-                        githubAppToken || installationsLoadState === 'loading'
-                      ) && (
-                        <Button
-                          analyticsLabel="refresh_installation"
-                          contentContainerStyle={{
-                            width: 52,
-                            paddingHorizontal: contentPadding,
-                          }}
-                          disabled={installationsLoadState === 'loading'}
-                          loading={installationsLoadState === 'loading'}
-                          loadingIndicatorStyle={{
-                            transform: [{ scale: 0.8 }],
-                          }}
-                          onPress={() => {
-                            dispatch(
-                              actions.refreshInstallationsRequest({
-                                includeInstallationToken: true,
-                              }),
-                            )
-                          }}
-                          size={32}
-                        >
-                          <ThemedIcon
-                            color={foregroundThemeColor}
-                            name="sync"
-                            size={16}
-                          />
-                        </Button>
-                      )}
-                    </>
-                  </SubHeader>
-
-                  {installations.map(
-                    (installation, index) =>
-                      !!(
-                        installation &&
-                        installation.account &&
-                        installation.account.login &&
-                        installation.htmlUrl
-                      ) && (
-                        <View
-                          key={`github-installation-${installation.id}`}
-                          style={[
-                            sharedStyles.horizontal,
-                            sharedStyles.alignItemsCenter,
-                            {
-                              paddingTop: index === 0 ? 0 : contentPadding / 2,
-                              paddingHorizontal: contentPadding,
-                            },
-                          ]}
-                        >
-                          <Avatar
-                            avatarUrl={
-                              installation.account.avatarUrl || undefined
-                            }
-                            username={installation.account.login}
-                            linkURL={installation.account.htmlUrl || undefined}
-                            size={24}
-                          />
-
-                          <ThemedText
-                            color="foregroundColor"
-                            style={[
-                              sharedStyles.flex,
-                              {
-                                paddingHorizontal: contentPadding / 2,
-                              },
-                            ]}
-                          >
-                            {installation.account.login}
-                          </ThemedText>
-
-                          <ButtonLink
-                            analyticsLabel="open_installation"
-                            contentContainerStyle={{
-                              width: 52,
-                              paddingHorizontal: contentPadding,
-                            }}
-                            href={installation.htmlUrl}
-                            openOnNewTab
-                            size={32}
-                          >
-                            <ThemedIcon
-                              color={foregroundThemeColor}
-                              name="gear"
-                              size={16}
-                            />
-                          </ButtonLink>
-                        </View>
-                      ),
-                  )}
-                </View>
-              </>
-            )}
-
-            <Spacer height={contentPadding} />
-          </View>
-
-          <Spacer flex={1} minHeight={contentPadding} />
-
-          <View style={sharedStyles.paddingHorizontal}>
-            <Spacer height={contentPadding} />
-
-            <Button
-              key="delete-account-button"
-              analyticsAction="delete_account"
-              analyticsLabel="delete_account"
-              disabled={isDeletingAccount || isLoggingIn}
-              loading={isDeletingAccount}
-              onPress={() =>
-                Dialog.show(
-                  'Delete Account?',
-                  'All your columns and preferences will be lost.' +
-                    ' If you login again, a new empty account will be created.',
-                  [
-                    {
-                      onPress: () => {
-                        dispatch(actions.deleteAccountRequest())
-                      },
-                      style: 'destructive',
-                      text: 'Delete',
-                    },
-                    {
-                      style: 'cancel',
-                      text: 'Cancel',
-                    },
-                  ],
-                )
-              }
-              type="danger"
-            >
-              Delete account
-            </Button>
-
-            <Spacer height={contentPadding / 2} />
-
-            <Button
-              key="logout-button"
-              analyticsCategory="engagement"
-              analyticsAction="logout"
-              analyticsLabel=""
-              onPress={() => dispatch(actions.logout())}
-            >
-              Logout
-            </Button>
-          </View>
-
-          <Spacer height={contentPadding / 2} />
-        </>
+            </>
+          )}
+        </DialogConsumer>
       </ModalColumn>
     )
   },

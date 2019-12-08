@@ -1,7 +1,15 @@
-import React, { Fragment, useContext, useMemo, useRef, useState } from 'react'
-import { KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native'
+import React, {
+  Fragment,
+  useCallback,
+  useContext,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { KeyboardAvoidingView } from 'react-native'
 
-import { useDimensions } from '../../hooks/use-dimensions'
+import useKeyPressCallback from '../../hooks/use-key-press-callback'
 import { BlurView } from '../../libs/blur-view/BlurView'
 import { Platform } from '../../libs/platform'
 import { prompt } from '../../libs/prompt'
@@ -13,6 +21,7 @@ import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Spacer } from '../common/Spacer'
 import { TextInput } from '../common/TextInput'
 import { ThemedText } from '../themed/ThemedText'
+import { ThemedTouchableWithoutFeedback } from '../themed/ThemedTouchableWithoutFeedback'
 import { ThemedView } from '../themed/ThemedView'
 
 export interface DialogProviderProps {
@@ -64,12 +73,13 @@ export function useDialog() {
   return useContext(DialogContext)
 }
 
-interface DialogViewInstance {
+export interface DialogViewInstance {
   show: (params: Parameters<typeof prompt>) => void
   hide: () => void
+  setDimensions: (dimensions: { width: number; height: number }) => void
 }
 
-interface DialogViewProps {
+export interface DialogViewProps {
   alignCenter?: boolean
 }
 
@@ -77,22 +87,32 @@ const DialogView = React.memo(
   React.forwardRef<DialogViewInstance, DialogViewProps>((props, ref) => {
     const { alignCenter = Platform.realOS !== 'android' } = props
 
-    const [promptArgs, setPromptArgs] = useState<Parameters<typeof prompt>>()
+    const [promptArgs, setPromptArgs] = useState<
+      Parameters<typeof prompt> | undefined
+    >()
     const [inputValue, setInputValue] = useState<string>()
-    const dimensions = useDimensions()
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
-    const hide = () => {
+    const hide = useCallback(() => {
       setPromptArgs(undefined)
       setInputValue(undefined)
-    }
+    }, [])
 
-    React.useImperativeHandle(
+    useImperativeHandle(
       ref,
       () => ({
         show: setPromptArgs,
         hide,
+        setDimensions,
       }),
       [],
+    )
+
+    useKeyPressCallback(
+      'Escape',
+      useCallback(() => {
+        hide()
+      }, [hide]),
     )
 
     const width = Math.min(
@@ -118,57 +138,65 @@ const DialogView = React.memo(
       : ([
           {
             text: 'Ok',
-            onPress: callback
-              ? () => {
-                  callback(inputValue || '')
-                  hide()
-                }
-              : undefined,
+            onPress: () => {
+              if (callback) callback(inputValue || '')
+              hide()
+            },
             style: 'default',
           },
-          renderInput && {
-            text: 'Cancel',
-            onPress: callback
-              ? () => {
-                  callback('')
-                  hide()
-                }
-              : undefined,
-            style: 'cancel',
-          },
+          renderInput &&
+            !(options && options.cancelable === false) && {
+              text: 'Cancel',
+              onPress: () => {
+                if (callback) callback('')
+                hide()
+              },
+              style: 'cancel',
+            },
         ].filter(Boolean) as PromptButton[])
 
     return (
-      <TouchableWithoutFeedback
-        onPress={
-          options && options.cancelable === false
-            ? undefined
-            : () => {
-                hide()
-              }
-        }
-        style={sharedStyles.absoluteFill}
+      <BlurView
+        intensity={8}
+        style={[
+          sharedStyles.absoluteFill,
+          !(dimensions.width && dimensions.height) && sharedStyles.opacity0,
+        ]}
       >
-        <BlurView intensity={8} style={sharedStyles.absoluteFill}>
-          <ThemedView
-            backgroundColor="backgroundColorDarker2"
-            style={[sharedStyles.absoluteFill, { opacity: 0.8 }]}
-          />
+        <FullHeightScrollView
+          contentContainerStyle={[
+            sharedStyles.fullWidth,
+            sharedStyles.fullHeight,
+            sharedStyles.padding,
+          ]}
+          keyboardShouldPersistTaps={
+            options && options.cancelable === false ? 'never' : 'handled'
+          }
+          style={sharedStyles.absoluteFill}
+        >
+          <>
+            <ThemedTouchableWithoutFeedback
+              backgroundColor="backgroundColorDarker2"
+              onLayout={e => {
+                setDimensions({
+                  width: e.nativeEvent.layout.width,
+                  height: e.nativeEvent.layout.height,
+                })
+              }}
+              onPress={
+                options && options.cancelable === false
+                  ? undefined
+                  : () => {
+                      hide()
+                    }
+              }
+              style={[sharedStyles.absoluteFill, { opacity: 0.8 }]}
+            />
 
-          <FullHeightScrollView
-            contentContainerStyle={[
-              sharedStyles.fullWidth,
-              sharedStyles.fullHeight,
-              sharedStyles.padding,
-            ]}
-            keyboardShouldPersistTaps={
-              options && options.cancelable === false ? 'never' : 'handled'
-            }
-            style={sharedStyles.absoluteFill}
-          >
             <KeyboardAvoidingView
               behavior="padding"
               style={[sharedStyles.flex, sharedStyles.center]}
+              pointerEvents="box-none"
             >
               <BlurView
                 intensity={12}
@@ -333,9 +361,9 @@ const DialogView = React.memo(
                 </ThemedView>
               </BlurView>
             </KeyboardAvoidingView>
-          </FullHeightScrollView>
-        </BlurView>
-      </TouchableWithoutFeedback>
+          </>
+        </FullHeightScrollView>
+      </BlurView>
     )
   }),
 )

@@ -31,7 +31,7 @@ async function askPermissionAndSetBadge(badge: number) {
   try {
     hasPermission = await firebase.messaging().hasPermission()
   } catch (error) {
-    if (__DEV__) alert(`Failed to check notifications permission. ${error}`)
+    if (__DEV__) Alert.alert(`Failed to check notifications permission. ${error}`)
   }
 
   if (!hasPermission) {
@@ -39,12 +39,12 @@ async function askPermissionAndSetBadge(badge: number) {
       await firebase.messaging().requestPermission()
       hasPermission = await firebase.messaging().hasPermission()
     } catch (error) {
-      if (__DEV__) alert(`Failed to get notifications permission. ${error}`)
+      if (__DEV__) Alert.alert(`Failed to get notifications permission. ${error}`)
     }
   }
 
   if (!hasPermission) {
-    if (__DEV__) alert('Failed to get permission to set the badge.')
+    if (__DEV__) Alert.alert('Failed to get permission to set the badge.')
     return
   }
 

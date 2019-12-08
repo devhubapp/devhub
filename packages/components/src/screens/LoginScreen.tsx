@@ -150,7 +150,7 @@ export const LoginScreen = React.memo(() => {
         if (error.message === 'Canceled' || error.message === 'Timeout') return
         bugsnag.notify(error, { description })
 
-        alert(`Login failed. ${error || ''}`)
+        Dialog.show('Login failed', `${error || ''}`)
       }
     })()
   }, [])
@@ -184,10 +184,9 @@ export const LoginScreen = React.memo(() => {
     if (!error || initialErrorRef.current === error) return
 
     const message = error && error.message
-    alert(
-      `Login failed. Please try again. ${
-        message ? ` \nError: ${message}` : ''
-      }`,
+    Dialog.show(
+      'Login failed',
+      `Please try again. ${message ? ` \nError: ${message}` : ''}`,
     )
   }, [error])
 
@@ -216,7 +215,7 @@ export const LoginScreen = React.memo(() => {
       if (error.message === 'Canceled' || error.message === 'Timeout') return
       bugsnag.notify(error, { description })
 
-      alert(`Login failed. ${error || ''}`)
+      Dialog.show('Login failed', `${error || ''}`)
     }
   }
 
@@ -295,7 +294,7 @@ export const LoginScreen = React.memo(() => {
 
       bugsnag.notify(error, { description })
 
-      alert(`Login failed. ${error || ''}`)
+      Dialog.show('Login failed', `${error || ''}`)
     }
   }
 
