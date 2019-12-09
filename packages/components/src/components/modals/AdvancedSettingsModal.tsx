@@ -174,66 +174,62 @@ export const AdvancedSettingsModal = React.memo(
               )}
 
               <View>
-                <View>
-                  <SubHeader title="Personal Access Token">
-                    <Spacer flex={1} />
+                {!!(
+                  githubPersonalTokenDetails && githubPersonalTokenDetails.token
+                ) && (
+                  <>
+                    <View>
+                      <SubHeader title="Personal Access Token">
+                        <Spacer flex={1} />
 
-                    {!!(
-                      githubPersonalTokenDetails &&
-                      githubPersonalTokenDetails.token
-                    ) && (
-                      <Button
-                        analyticsLabel="remove_personal_access_token"
-                        contentContainerStyle={{
-                          width: 52,
-                          paddingHorizontal: contentPadding,
-                        }}
-                        disabled={isRemovingPersonalToken}
-                        loading={isRemovingPersonalToken}
-                        onPress={() => {
-                          removePersonalAccessToken()
-                        }}
-                        size={32}
-                        type="danger"
-                      >
-                        <ThemedIcon
-                          color={foregroundThemeColor}
-                          name="trashcan"
-                          size={16}
-                        />
-                      </Button>
-                    )}
-                  </SubHeader>
+                        {!!(
+                          githubPersonalTokenDetails &&
+                          githubPersonalTokenDetails.token
+                        ) && (
+                          <Button
+                            analyticsLabel="remove_personal_access_token"
+                            contentContainerStyle={{
+                              width: 52,
+                              paddingHorizontal: contentPadding,
+                            }}
+                            disabled={isRemovingPersonalToken}
+                            loading={isRemovingPersonalToken}
+                            onPress={() => {
+                              removePersonalAccessToken()
+                            }}
+                            size={32}
+                            type="danger"
+                          >
+                            <ThemedIcon
+                              color={foregroundThemeColor}
+                              name="trashcan"
+                              size={16}
+                            />
+                          </Button>
+                        )}
+                      </SubHeader>
 
-                  <View
-                    style={[
-                      sharedStyles.horizontal,
-                      sharedStyles.alignItemsCenter,
-                      sharedStyles.paddingHorizontal,
-                    ]}
-                  >
-                    {githubPersonalTokenDetails &&
-                    githubPersonalTokenDetails.token ? (
-                      <ThemedText
-                        color="foregroundColorMuted65"
-                        style={sharedStyles.flex}
+                      <View
+                        style={[
+                          sharedStyles.horizontal,
+                          sharedStyles.alignItemsCenter,
+                          sharedStyles.paddingHorizontal,
+                        ]}
                       >
-                        {new Array(githubPersonalTokenDetails.token.length)
-                          .fill('*')
-                          .join('')}
-                      </ThemedText>
-                    ) : (
-                      <ThemedText
-                        color="foregroundColorMuted65"
-                        style={[sharedStyles.flex, { fontStyle: 'italic' }]}
-                      >
-                        No personal token
-                      </ThemedText>
-                    )}
-                  </View>
-                </View>
+                        <ThemedText
+                          color="foregroundColorMuted65"
+                          style={sharedStyles.flex}
+                        >
+                          {new Array(githubPersonalTokenDetails.token.length)
+                            .fill('*')
+                            .join('')}
+                        </ThemedText>
+                      </View>
+                    </View>
 
-                <Spacer height={contentPadding} />
+                    <Spacer height={contentPadding} />
+                  </>
+                )}
 
                 <View>
                   <SubHeader title="Manage OAuth access" />
