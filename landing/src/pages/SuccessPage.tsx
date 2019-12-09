@@ -193,11 +193,9 @@ export default function SuccessPage(_props: SuccessPageProps) {
                 <Button
                   type="primary"
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                    `I've just bought @devhub_app${
-                      authData.plan.type === 'team'
-                        ? ' for my team!'
-                        : " and it's awesome!"
-                    } https://devhubapp.com`,
+                    `I just bought @devhub_app${
+                      authData.plan.type === 'team' ? ' for my team!' : ''
+                    } https://devhubapp.com/`,
                   )}`}
                   target="_blank"
                   className="mb-2 mr-2"
