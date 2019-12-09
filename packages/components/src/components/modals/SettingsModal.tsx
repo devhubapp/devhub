@@ -112,15 +112,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             </View>
           )}
 
-        {!!(
-          Platform.isElectron ||
-          (Platform.OS === 'web' && sizename > '2-medium')
-        ) && (
-          <>
-            <DesktopPreferences />
-            <Spacer height={contentPadding} />
-          </>
-        )}
+        <DesktopPreferences />
 
         <ThemePreference />
 
