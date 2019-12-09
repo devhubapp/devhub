@@ -269,6 +269,7 @@ const DialogView = React.memo(
                           ? 'email'
                           : undefined
                       }
+                      blurOnSubmit
                       defaultValue={options && options.defaultValue}
                       keyboardType={
                         options.type === 'login-password' ||
@@ -279,6 +280,20 @@ const DialogView = React.memo(
                           : options.type
                       }
                       onChangeText={setInputValue}
+                      onSubmitEditing={() => {
+                        if (!inputValue) return
+
+                        const submitButton = buttons.find(
+                          button =>
+                            button &&
+                            button.onPress &&
+                            (!button.style || button.style === 'default'),
+                        )
+                        if (submitButton && submitButton.onPress) {
+                          submitButton.onPress(inputValue)
+                          hide()
+                        }
+                      }}
                       placeholder={options && options.placeholder}
                       secureTextEntry={
                         options && options.type === 'secure-text'
