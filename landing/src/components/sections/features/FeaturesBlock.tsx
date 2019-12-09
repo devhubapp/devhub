@@ -77,7 +77,7 @@ export default function FeaturesBlock(_props: FeaturesBlockProps) {
           alt: 'DevHub - Label filter',
         }}
         title="Filter by labels and many other filters"
-        subtitle="All columns support a common set of filters, like Label, Issue Status, Bot, Text, etc. The Issues & Pull Requests columns are special: they give you all the power of GitHub Advanced Search on your hands (filter by assignee, number of comments, ...)"
+        subtitle="All columns support a common set of filters, like Bot, Label, Issue Status, Text, etc. The Issues & Pull Requests columns are special: they give you all the power of GitHub Advanced Search on your hands (filter by assignee, number of comments, ...)"
       />
 
       <div className="pb-16 md:pb-32" />

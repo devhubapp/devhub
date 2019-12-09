@@ -1,4 +1,8 @@
-import { activePaidPlans, freeTrialDays } from '@brunolemos/devhub-core'
+import {
+  activePaidPlans,
+  freeTrialDays,
+  activePlans,
+} from '@brunolemos/devhub-core'
 import classNames from 'classnames'
 import Link from 'next/link'
 
@@ -92,7 +96,7 @@ export default function Header(props: HeaderProps) {
             </HeaderLink> */}
 
             {!!(
-              (freeTrialDays && activePaidPlans.some(plan => !plan.amount)) ||
+              (freeTrialDays && activePlans.some(plan => !plan.amount)) ||
               (authData &&
                 authData.appToken &&
                 (freeTrialDays || (authData.plan && authData.plan.amount)))

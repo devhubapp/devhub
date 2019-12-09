@@ -108,7 +108,11 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
     const minimumQuantity = showQuantityForm
       ? Math.max(
-          quantityStep > 1 ? quantityStep : 1,
+          quantityStep > 1
+            ? quantityStep
+            : plan.type === 'team' && plan.paddleProductId
+            ? 2
+            : 1,
           Math.ceil(users.length / quantityStep) * quantityStep,
         )
       : 1
@@ -802,7 +806,9 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               !plan.stripeIds.length &&
                 plan.paddleProductId &&
                 plan.description,
-            ].filter(Boolean).join('\n')}
+            ]
+              .filter(Boolean)
+              .join('\n')}
           </p>
         )}
 

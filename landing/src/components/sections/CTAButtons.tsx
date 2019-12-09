@@ -1,5 +1,6 @@
 import {
   activePaidPlans,
+  activePlans,
   constants,
   freeTrialDays,
 } from '@brunolemos/devhub-core'
@@ -88,7 +89,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
             </Button>
           )}
 
-          {!!(freeTrialDays && activePaidPlans.some(plan => !plan.amount)) && (
+          {!!(freeTrialDays && activePlans.some(plan => !plan.amount)) && (
             <Button
               type="neutral"
               href="/download?autostart"

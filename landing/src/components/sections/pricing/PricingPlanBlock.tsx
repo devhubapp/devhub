@@ -96,7 +96,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       }${_roundedPriceLabelWithInterval}`
   }
 
-  if (!plan.interval) {
+  if (!plan.interval && plan.amount) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
       'One-time payment (no subscription)'
@@ -106,11 +106,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     <section
       className={classNames(
         'pricing-plan flex flex-col flex-shrink-0',
-        totalNumberOfVisiblePlans === 1
-          ? 'w-full lg:w-84'
-          : totalNumberOfVisiblePlans && totalNumberOfVisiblePlans <= 3
-          ? 'w-72'
-          : 'w-64',
+        totalNumberOfVisiblePlans === 1 ? 'w-full lg:w-84' : 'w-72',
       )}
     >
       <div
@@ -187,7 +183,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             footerText ||
             (totalNumberOfVisiblePlans && totalNumberOfVisiblePlans > 1)
           ) && (
-            <div className="mb-2 text-sm text-muted-65 italic">
+            <div className="mb-2 text-sm text-muted-65 italic whitespace-pre-line">
               &nbsp;{footerText}&nbsp;
             </div>
           )}
