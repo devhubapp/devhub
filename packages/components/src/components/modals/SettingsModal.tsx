@@ -35,7 +35,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { sizename } = useAppLayout()
 
   const dispatch = useDispatch()
-  const appToken = useReduxState(selectors.githubAppTokenSelector)
+  const appToken = useReduxState(selectors.appTokenSelector)
   const username = useReduxState(selectors.currentGitHubUsernameSelector)
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
