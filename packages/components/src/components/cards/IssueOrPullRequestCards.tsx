@@ -106,6 +106,14 @@ export const IssueOrPullRequestCards = React.memo(
       visibleItemIndexesRef,
     })
 
+    const mainSubscription = useReduxState(
+      useCallback(
+        state =>
+          selectors.createColumnSubscriptionSelector()(state, columnId || ''),
+        [columnId],
+      ),
+    )
+
     const renderItem = useCallback<
       NonNullable<OneListProps<DataItemT>['renderItem']>
     >(
@@ -241,7 +249,13 @@ export const IssueOrPullRequestCards = React.memo(
         return (
           <EmptyCards
             columnId={columnId}
-            disableLoadingIndicator
+            disableLoadingIndicator={
+              !!(
+                mainSubscription &&
+                mainSubscription.data &&
+                mainSubscription.data.lastFetchSuccessAt
+              )
+            }
             errorMessage={errorMessage}
             fetchNextPage={fetchNextPage}
             refresh={refresh}

@@ -4,9 +4,11 @@ import { View, ViewProps } from 'react-native'
 
 import { useCardsKeyboard } from '../../hooks/use-cards-keyboard'
 import { DataItemT, useCardsProps } from '../../hooks/use-cards-props'
+import { useReduxState } from '../../hooks/use-redux-state'
 import { BlurView } from '../../libs/blur-view/BlurView'
 import { ErrorBoundary } from '../../libs/bugsnag'
 import { OneList, OneListProps } from '../../libs/one-list'
+import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { EmptyCards, EmptyCardsProps } from './EmptyCards'
 import { NotificationCard } from './NotificationCard'
@@ -87,6 +89,14 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
     visibleItemIndexesRef,
   })
 
+  const mainSubscription = useReduxState(
+    useCallback(
+      state =>
+        selectors.createColumnSubscriptionSelector()(state, columnId || ''),
+      [columnId],
+    ),
+  )
+
   const renderItem = useCallback<
     NonNullable<OneListProps<DataItemT>['renderItem']>
   >(
@@ -146,9 +156,15 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
       return (
         <EmptyCards
-          clearMessage="No new notifications!"
+          clearMessage="No notifications"
           columnId={columnId}
-          disableLoadingIndicator
+          disableLoadingIndicator={
+            !!(
+              mainSubscription &&
+              mainSubscription.data &&
+              mainSubscription.data.lastFetchSuccessAt
+            )
+          }
           errorMessage={errorMessage}
           fetchNextPage={fetchNextPage}
           refresh={refresh}
