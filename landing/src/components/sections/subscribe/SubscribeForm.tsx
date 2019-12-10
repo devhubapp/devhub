@@ -1,5 +1,6 @@
 import {
   constants,
+  formatPriceAndInterval,
   isPlanStatusValid,
   Plan,
   UserPlan,
@@ -16,8 +17,8 @@ import { usePaddleLoader } from '../../../context/PaddleLoaderContext'
 import { useTheme } from '../../../context/ThemeContext'
 import { getDefaultDevHubHeaders } from '../../../helpers'
 import { useDynamicRef } from '../../../hooks/use-dynamic-ref'
-import { useFormattedPlanPrice } from '../../../hooks/use-formatted-plan-price'
 import { useIsMountedRef } from '../../../hooks/use-is-mounted-ref'
+import { useLocalizedPlanDetails } from '../../../hooks/use-localized-plan-details'
 import { useSystem } from '../../../hooks/use-system'
 import Button from '../../common/buttons/Button'
 import { Tabs } from '../../common/Tabs'
@@ -37,6 +38,8 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     const Router = useRouter()
     const { Paddle } = usePaddleLoader()
 
+    const localizedPlan = useLocalizedPlanDetails(plan)
+
     const isMountedRef = useIsMountedRef()
 
     const { theme } = useTheme()
@@ -53,7 +56,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       isSubmiting: false,
     })
     const [usersStr, setUsersStr] = useState(
-      (plan.interval &&
+      (localizedPlan.interval &&
         authData &&
         authData.plan &&
         authData.plan.interval &&
@@ -67,8 +70,9 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     const [_showQuantityForm, setShowQuantityForm] = useState(false)
 
     const forceShowQuantityForm = !!(
-      plan.type === 'team' ||
-      (plan.transformUsage && plan.transformUsage.divideBy > 1) ||
+      localizedPlan.type === 'team' ||
+      (localizedPlan.transformUsage &&
+        localizedPlan.transformUsage.divideBy > 1) ||
       action === 'update_seats'
     )
     const showQuantityForm = !!(_showQuantityForm || forceShowQuantityForm)
@@ -93,15 +97,15 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           authData.plan.amount &&
           isPlanStatusValid(authData.plan)
         )) &&
-      plan.stripeIds.length
+      localizedPlan.stripeIds.length
 
     const [creditCardTab, setCreditCardTab] = useState<'current' | 'change'>(
       !needsToFillTheCard ? 'current' : 'change',
     )
 
     const quantityStep =
-      plan.transformUsage && plan.transformUsage.divideBy > 1
-        ? plan.transformUsage.divideBy
+      localizedPlan.transformUsage && localizedPlan.transformUsage.divideBy > 1
+        ? localizedPlan.transformUsage.divideBy
         : 1
 
     const [_quantity, setQuantity] = useState<UserPlan['quantity']>(undefined)
@@ -110,7 +114,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       ? Math.max(
           quantityStep > 1
             ? quantityStep
-            : plan.type === 'team' && plan.paddleProductId
+            : localizedPlan.type === 'team' && localizedPlan.paddleProductId
             ? 2
             : 1,
           Math.ceil(users.length / quantityStep) * quantityStep,
@@ -135,7 +139,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     }, [_quantity, quantity])
 
     useEffect(() => {
-      if (!plan.interval) return
+      if (!localizedPlan.interval) return
       if (!(authData && authData.plan && authData.plan.interval)) return
 
       setUsersStr(
@@ -149,7 +153,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           '',
       )
     }, [
-      !!plan.interval,
+      !!localizedPlan.interval,
       !!(authData && authData.plan && authData.plan.interval),
       authData &&
         authData.plan &&
@@ -160,7 +164,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     const autostart = 'autostart' in Router.query
     useEffect(() => {
       if (!autostart || !(authData && authData.appToken)) return
-      if (plan.paddleProductId && !Paddle) return
+      if (localizedPlan.paddleProductId && !Paddle) return
 
       Router.replace(
         `${Router.pathname}${qs.stringify(
@@ -169,22 +173,20 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         )}`,
       )
 
-      if (!plan.paddleProductId) return
+      if (!localizedPlan.paddleProductId) return
 
       handleSubmitRef.current()
     }, [
       autostart,
       authData && authData.appToken,
-      !!plan.paddleProductId,
+      !!localizedPlan.paddleProductId,
       !!Paddle,
     ])
 
-    const priceLabelWithIntervalForQuantity = useFormattedPlanPrice(
-      plan.amount,
-      plan,
+    const priceLabelWithIntervalForQuantity = formatPriceAndInterval(
+      localizedPlan,
       {
         quantity,
-        includeInterval: true,
       },
     )
 
@@ -199,7 +201,11 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                     (authData.plan &&
                       authData.plan.users &&
                       authData.plan.users.join(', '))))))) &&
-        !(!plan.interval && showQuantityForm && quantity !== users.length)
+        !(
+          !localizedPlan.interval &&
+          showQuantityForm &&
+          quantity !== users.length
+        )
       )
     })
 
@@ -207,7 +213,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       if (!canSubmitRef.current()) return
 
       if (!stripe) throw new Error('Stripe not initialized.')
-      if (!(plan.stripeIds && plan.stripeIds.length))
+      if (!(localizedPlan.stripeIds && localizedPlan.stripeIds.length))
         throw new Error('Not a Stripe product.')
 
       let cardToken
@@ -304,7 +310,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               }`,
             variables: {
               input: {
-                planId: plan.id,
+                planId: localizedPlan.id,
                 cardToken,
                 quantity,
                 users: showQuantityForm ? users : [],
@@ -422,8 +428,8 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       const passthrough = {
         _id: authData._id,
         github: authData.github,
-        plan,
-        planId: plan.id,
+        plan: localizedPlan,
+        planId: localizedPlan.id,
         platformRealOS: os,
         reason: undefined,
         users,
@@ -439,9 +445,9 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             email:
               (authData.paddle && authData.paddle.email) ||
               authData.github.email,
-            message: plan.description,
+            message: localizedPlan.description,
             passthrough: JSON.stringify(passthrough),
-            product: plan.paddleProductId,
+            product: localizedPlan.paddleProductId,
             successCallback: (data: typeof result, err: any) => {
               if (err || !(data && data.checkout && data.checkout.completed)) {
                 reject(new Error(`${err || ''}` || 'Paddle payment failed.'))
@@ -473,16 +479,16 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         // optimistic update. the real change will occur on server via paddle webhook
         mergeAuthData({
           plan: {
-            id: plan.id,
+            id: localizedPlan.id,
             source: 'paddle',
-            type: plan.type || 'individual',
+            type: localizedPlan.type || 'individual',
 
-            amount: plan.amount || 0,
+            amount: localizedPlan.amount || 0,
             currency: result.checkout.prices.customer.currency,
             trialPeriodDays: 0,
             interval: undefined,
             intervalCount: 1,
-            label: plan.label,
+            label: localizedPlan.label,
             quantity:
               Number(result.product && result.product.quantity) || undefined,
             transformUsage: undefined,
@@ -507,8 +513,8 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             userPlansToKeepUsing: undefined,
             users,
 
-            featureFlags: plan.featureFlags,
-            banner: plan.banner,
+            featureFlags: localizedPlan.featureFlags,
+            banner: localizedPlan.banner,
 
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -528,19 +534,19 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     })
 
     const handleSubmitRef = useDynamicRef(async () => {
-      if (plan.stripeIds && plan.stripeIds.length) {
+      if (localizedPlan.stripeIds && localizedPlan.stripeIds.length) {
         subscribeToStripePlanRef.current()
-      } else if (plan.paddleProductId) {
+      } else if (localizedPlan.paddleProductId) {
         purchaseViaPaddleRef.current()
       } else {
         setFormState({
-          error: `Product doesn't have neither Stripe not Paddle ids. Please contact support. (${plan.id})`,
+          error: `Product doesn't have neither Stripe not Paddle ids. Please contact support. (${localizedPlan.id})`,
           isSubmiting: false,
         })
       }
     })
 
-    const isMyPlan = !!(authData.plan && authData.plan.id === plan.id)
+    const isMyPlan = !!(authData.plan && authData.plan.id === localizedPlan.id)
 
     return (
       <form
@@ -552,7 +558,8 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       >
         {!!(
           !forceShowQuantityForm &&
-          (showQuantityForm || (!plan.interval && plan.paddleProductId))
+          (showQuantityForm ||
+            (!localizedPlan.interval && localizedPlan.paddleProductId))
         ) && (
           <Tabs
             className="mb-2"
@@ -673,7 +680,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                     </div>
 
                     <p className="mb-6 text-xs text-muted-65 italic whitespace-pre-line">
-                      {plan.interval
+                      {localizedPlan.interval
                         ? 'These people will gain access to DevHub via this subscription. You can change this anytime.'
                         : 'These people will gain access to DevHub. \n' +
                           'You can buy for your friends, followers or teammates, for example.'}
@@ -689,7 +696,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
         <p className="mb-4" />
 
-        {!needsToFillTheCard && !!plan.stripeIds.length && (
+        {!needsToFillTheCard && !!localizedPlan.stripeIds.length && (
           <Tabs<NonNullable<typeof creditCardTab>>
             className="mb-4"
             onTabChange={tab => setCreditCardTab(tab)}
@@ -712,7 +719,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         )}
 
         {!!(needsToFillTheCard || creditCardTab === 'change') &&
-          !!plan.stripeIds.length && (
+          !!localizedPlan.stripeIds.length && (
             <>
               {!needsToFillTheCard && <p className="mb-4" />}
 
@@ -776,36 +783,39 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           {action === 'update_card' &&
           authData.plan &&
           authData.plan.id === plan.id &&
-          plan.amount === authData.plan.amount &&
+          localizedPlan.amount === authData.plan.amount &&
           authData.plan.quantity === quantity
             ? 'Update credit card'
             : `${
-                plan.interval ? 'Subscribe' : 'Purchase'
+                localizedPlan.interval ? 'Subscribe' : 'Purchase'
               } for ${priceLabelWithIntervalForQuantity}`}
         </Button>
 
         {!!(
-          plan.amount &&
-          !plan.trialPeriodDays &&
+          localizedPlan.amount &&
+          !localizedPlan.trialPeriodDays &&
           (!(authData.plan && authData.plan.amount) ||
-            (authData.plan.amount && plan.amount > authData.plan.amount))
+            (authData.plan.amount &&
+              localizedPlan.amount > authData.plan.amount))
         ) && (
           <p className="mb-4 text-xs text-muted-65 whitespace-pre-line">
             {[
-              // !plan.interval && 'You are purchasing a lifetime license.',
-              // !plan.interval && 'Free upgrades from v0.x to v1.9.',
+              // !localizedPlan.interval && 'You are purchasing a lifetime license.',
+              // !localizedPlan.interval && 'Free upgrades from v0.x to v1.9.',
               authData.plan &&
               authData.plan.amount &&
               authData.plan.stripeIds &&
               authData.plan.stripeIds.length &&
-              plan.stripeIds.length
+              localizedPlan.stripeIds.length
                 ? 'Your card will be charged any difference immediately.'
                 : `Your card will be charged immediately${
-                    plan.trialPeriodDays ? '' : ' (this plan has no free trial)'
+                    localizedPlan.trialPeriodDays
+                      ? ''
+                      : ' (this plan has no free trial)'
                   }.`,
-              !plan.stripeIds.length &&
-                plan.paddleProductId &&
-                plan.description,
+              !localizedPlan.stripeIds.length &&
+                localizedPlan.paddleProductId &&
+                localizedPlan.description,
             ]
               .filter(Boolean)
               .join('\n')}

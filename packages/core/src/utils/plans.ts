@@ -1,16 +1,10 @@
 import { Plan } from '../types'
 import * as constants from './constants'
 
-export type ActivePlanID =
-  | 'free'
-  | '5ded8bd7fcf793f771a0264c'
-  | '5ded8e946bcd42efb0e6094a'
-  | '5de54fc278c2188b4ec17fc7'
-  | '5de54fc30cd5acc31a86e884'
-  | '5dd82d16eb2b11106f941f8d'
-  | '5de552b6dde41be55811ed15'
+export type ActivePlanID = '5def28820f73d2a6fca95d45'
 
 export type InactivePlanID =
+  | 'free'
   | '5d4b8e85d123d1d770d93825'
   | '5d4b8e44ab1ba20b9ef4a1ba'
   | '5d4b8e4de70bd8c61c13a6a9'
@@ -25,6 +19,14 @@ export type InactivePlanID =
   | '5de54fc1d6c4fded37775e71'
   | '5de54fc29188ad514567ddb2'
   | '5dd44e11b2726bb02d540b5e'
+  | '5ded8bd7fcf793f771a0264c'
+  | '5ded8e946bcd42efb0e6094a'
+  | '5de54fc278c2188b4ec17fc7'
+  | '5de54fc30cd5acc31a86e884'
+  | '5de552b6dde41be55811ed15'
+  | '5dee983f450f010aa1c9ca10'
+  | '5dd82d16eb2b11106f941f8d'
+  | '5def259daae626775b89a2d0'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -627,7 +629,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     cannonicalId: 'lifetime-v1',
     label: 'Lifetime v1',
     description: `Lifetime access from v0.9 to v1.9 \n(current: v${constants.APP_VERSION})`,
-    amount: 14900,
+    amount: 5900,
     currency: 'usd',
     interval: undefined,
     intervalCount: 1,
@@ -730,18 +732,98 @@ export const allPlansObj: Record<PlanID, Plan> = {
       enablePushNotifications: true,
     },
   },
+
+  '5dee983f450f010aa1c9ca10': {
+    id: '5dee983f450f010aa1c9ca10',
+    type: undefined,
+
+    stripeIds: [],
+    paddleProductId: 578122,
+
+    banner: false,
+
+    cannonicalId: 'paddle-6mo',
+    label: '',
+    description: '',
+    amount: 4900,
+    currency: 'usd',
+    interval: 'month',
+    intervalCount: 6,
+    trialPeriodDays: 14,
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
+  '5def259daae626775b89a2d0': {
+    id: '5def259daae626775b89a2d0',
+    type: 'individual',
+
+    stripeIds: ['plan_GKgA6MdMkebG4g', 'plan_GKg8ENlpVmLVCr'],
+    paddleProductId: undefined,
+
+    banner: false,
+
+    cannonicalId: 'stripe-6mo',
+    label: '',
+    description: '',
+    amount: 4900,
+    currency: 'usd',
+    interval: 'month',
+    intervalCount: 6,
+    trialPeriodDays: 14,
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
+
+  '5def28820f73d2a6fca95d45': {
+    id: '5def28820f73d2a6fca95d45',
+    type: 'individual',
+
+    stripeIds: ['plan_GKgKdyVaWtpiY1', 'plan_GKgMTwxlYpV0rr'],
+    paddleProductId: undefined,
+
+    banner: false,
+
+    cannonicalId: 'stripe-3mo',
+    label: '',
+    description: '',
+    amount: 2900,
+    currency: 'usd',
+    interval: 'month',
+    intervalCount: 3,
+    trialPeriodDays: 14,
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
 }
 
 export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
-  freeTrialPlan,
-  allPlansObj['5ded8bd7fcf793f771a0264c'] as Plan & { id: ActivePlanID },
-  allPlansObj['5ded8e946bcd42efb0e6094a'] as Plan & { id: ActivePlanID },
-  allPlansObj['5de54fc278c2188b4ec17fc7'] as Plan & { id: ActivePlanID },
-  allPlansObj['5de54fc30cd5acc31a86e884'] as Plan & { id: ActivePlanID },
-  allPlansObj['5dd82d16eb2b11106f941f8d'] as Plan & { id: ActivePlanID },
-  allPlansObj['5de552b6dde41be55811ed15'] as Plan & { id: ActivePlanID },
+  allPlansObj['5def28820f73d2a6fca95d45'] as Plan & {
+    id: ActivePlanID
+  },
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)
@@ -755,7 +837,7 @@ export const cheapestPlanWithNotifications = activePlans
   .sort((a, b) => a.amount - b.amount)[0]
 
 export const freeTrialDays =
-  (freeTrialPlan && (freeTrialPlan as any).trialPeriodDays) ||
+  // (freeTrialPlan && (freeTrialPlan as any).trialPeriodDays) ||
   (activePaidPlans &&
     activePaidPlans[0] &&
     activePaidPlans[0].trialPeriodDays) ||

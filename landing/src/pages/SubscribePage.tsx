@@ -1,4 +1,10 @@
-import { activePaidPlans, allPlans, Plan } from '@brunolemos/devhub-core'
+import {
+  activePaidPlans,
+  allPlans,
+  formatPrice,
+  formatPriceAndInterval,
+  Plan,
+} from '@brunolemos/devhub-core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import qs from 'qs'
@@ -15,7 +21,7 @@ import {
 } from '../components/sections/subscribe/SubscribeForm'
 import { useAuth } from '../context/AuthContext'
 import { useStripeLoader } from '../context/StripeLoaderContext'
-import { useFormattedPlanPrice } from '../hooks/use-formatted-plan-price'
+import { useLocalizedPlanDetails } from '../hooks/use-localized-plan-details'
 
 export interface SubscribePageProps {}
 
@@ -49,10 +55,11 @@ export default function SubscribePage(_props: SubscribePageProps) {
     (userPlan && userPlan.id && plans.find(p => p.id === userPlan.id)) ||
     plans[0]
 
-  const isMyPlan = !!(authData.plan && authData.plan.id === plan.id)
+  const localizedPlan = useLocalizedPlanDetails(plan)
 
-  const priceLabelWithInterval = useFormattedPlanPrice(plan.amount, plan, {
-    includeInterval: true,
+  const isMyPlan = !!(authData.plan && authData.plan.id === localizedPlan.id)
+
+  const priceLabelWithInterval = formatPriceAndInterval(plan, {
     quantity:
       isMyPlan && action === 'update_card'
         ? authData.plan && authData.plan.quantity
@@ -64,7 +71,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
       return <GitHubLoginButton />
     }
 
-    if (!plan) return null
+    if (!localizedPlan) return null
 
     return (
       <>
@@ -74,7 +81,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
               <SubscribeForm
                 action={action}
                 onSuccess={() => Router.push('/success')}
-                plan={plan}
+                plan={localizedPlan}
               />
             </Elements>
           </StripeProvider>
@@ -82,9 +89,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
         {authData.plan && authData.plan.amount > 0 && (
           <Link href="/account">
-            <a className="mb-4 text-sm text-muted-65">
-              Manage existing subscription
-            </a>
+            <a className="mb-4 text-sm text-muted-65">Manage existing plan</a>
           </Link>
         )}
 
@@ -128,7 +133,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
     )
   }
 
-  if (!plan) return null
+  if (!localizedPlan) return null
 
   return (
     <LandingLayout>
@@ -137,11 +142,15 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
         <div className="flex flex-col items-center m-auto text-center">
           <h1 className="mb-4 text-2xl sm:text-4xl">
-            {isMyPlan && action === 'update_card' && plan.stripeIds.length ? (
+            {isMyPlan &&
+            action === 'update_card' &&
+            localizedPlan.stripeIds.length ? (
               'Update credit card'
-            ) : isMyPlan && action === 'update_seats' && plan.interval ? (
+            ) : isMyPlan &&
+              action === 'update_seats' &&
+              localizedPlan.interval ? (
               'Update seats'
-            ) : activePaidPlans.length === 1 && !plan.interval ? (
+            ) : activePaidPlans.length === 1 && !localizedPlan.interval ? (
               'Purchase DevHub'
             ) : (
               <>
@@ -149,43 +158,51 @@ export default function SubscribePage(_props: SubscribePageProps) {
                   ? isMyPlan
                     ? 'Update my '
                     : 'Switch to '
-                  : plan.interval
+                  : localizedPlan.interval
                   ? 'Subscribe to '
                   : 'Purchase '}
-                <Select<Plan['cannonicalId']>
-                  onChange={option => {
-                    Router.replace(
-                      `${Router.pathname}${qs.stringify(
-                        {
-                          ...Router.query,
-                          plan: option,
-                        },
-                        { addQueryPrefix: true },
-                      )}`,
-                    )
-                  }}
-                >
-                  {plans.map(p => (
-                    <Select.Option
-                      key={`subscribe-plan-option-${p.cannonicalId}`}
-                      id={
-                        authData.plan &&
-                        authData.plan.id === p.id &&
-                        !activePaidPlans.find(_p => _p.id === p.id)
-                          ? 'current'
-                          : p.cannonicalId
-                      }
-                      selected={p.id === plan.id}
+                {!!(plans.length > 1 || plans[0].label) && (
+                  <>
+                    <Select<Plan['cannonicalId']>
+                      onChange={option => {
+                        Router.replace(
+                          `${Router.pathname}${qs.stringify(
+                            {
+                              ...Router.query,
+                              plan: option,
+                            },
+                            { addQueryPrefix: true },
+                          )}`,
+                        )
+                      }}
+                      placeholder="DevHub"
                     >
-                      {authData.plan &&
-                      authData.plan &&
-                      authData.plan.id === p.id &&
-                      p.id !== plan.id
-                        ? `${p.label.toLowerCase()} (current)`
-                        : p.label.toLowerCase()}
-                    </Select.Option>
-                  ))}
-                </Select>{' '}
+                      {plans.map(
+                        p =>
+                          !!p.label && (
+                            <Select.Option
+                              key={`subscribe-plan-option-${p.cannonicalId}`}
+                              id={
+                                authData.plan &&
+                                authData.plan.id === p.id &&
+                                !activePaidPlans.find(_p => _p.id === p.id)
+                                  ? 'current'
+                                  : p.cannonicalId
+                              }
+                              selected={p.id === localizedPlan.id}
+                            >
+                              {authData.plan &&
+                              authData.plan &&
+                              authData.plan.id === p.id &&
+                              p.id !== localizedPlan.id
+                                ? `${p.label.toLowerCase()} (current)`
+                                : p.label.toLowerCase()}
+                            </Select.Option>
+                          ),
+                      )}
+                    </Select>{' '}
+                  </>
+                )}
                 plan
               </>
             )}
@@ -193,12 +210,14 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
           <p className="mb-4 text-sm text-muted-65">
             {[
-              !plan.paddleProductId &&
+              !localizedPlan.paddleProductId &&
                 `${priceLabelWithInterval}${
-                  plan.currency ? ` (${plan.currency.toUpperCase()})` : ''
+                  localizedPlan.currency
+                    ? ` (${localizedPlan.currency.toUpperCase()})`
+                    : ''
                 }`,
-              plan.trialPeriodDays > 0
-                ? `${plan.trialPeriodDays}-day free trial`
+              localizedPlan.trialPeriodDays > 0
+                ? `${localizedPlan.trialPeriodDays}-day free trial`
                 : '',
               isMyPlan &&
               authData.plan &&
@@ -206,7 +225,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
               authData.plan.quantity > 1
                 ? `Currently at ${authData.plan.quantity} seats`
                 : '',
-              plan.interval
+              localizedPlan.interval
                 ? 'Cancel anytime'
                 : 'One-time payment (no subscription)',
             ]
@@ -217,7 +236,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
           {!!(
             authData.plan &&
             authData.plan.type === 'team' &&
-            plan.type !== 'team'
+            localizedPlan.type !== 'team'
           ) && (
             <>
               <p className="mb-4 text-sm text-orange">

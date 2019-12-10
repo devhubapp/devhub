@@ -228,7 +228,6 @@ export function ColumnHeader(props: ColumnHeaderProps) {
                               cheapestPlanWithNotifications &&
                               cheapestPlanWithNotifications.amount
                             ? `Unlock Push Notifications and other features for ${formatPriceAndInterval(
-                                cheapestPlanWithNotifications.amount,
                                 cheapestPlanWithNotifications,
                               )}`
                             : ''

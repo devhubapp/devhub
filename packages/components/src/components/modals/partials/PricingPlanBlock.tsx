@@ -86,7 +86,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       : ''
   }`
 
-  const _priceLabel = formatPrice(estimatedMonthlyPrice, plan)
+  const _priceLabel = formatPrice({ ...plan, amount: estimatedMonthlyPrice })
   const _cents = estimatedMonthlyPrice % 100
   const priceLabelWithoutCents =
     _cents && _priceLabel.endsWith(_cents.toString())
@@ -106,12 +106,13 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   ) {
     footerText =
       footerText +
-      `*Billed ${plan.amount % 100 > 50 ? '~' : ''}${formatPriceAndInterval(
-        plan.amount % 100 > 50
-          ? plan.amount + (100 - (plan.amount % 100))
-          : plan.amount,
-        plan,
-      )}`
+      `*Billed ${plan.amount % 100 > 50 ? '~' : ''}${formatPriceAndInterval({
+        ...plan,
+        amount:
+          plan.amount % 100 > 50
+            ? plan.amount + (100 - (plan.amount % 100))
+            : plan.amount,
+      })}`
   }
 
   if (isMyPlan && userPlan && userPlan.cancelAt && showCurrentPlanDetails) {

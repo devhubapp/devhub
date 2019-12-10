@@ -13,8 +13,9 @@ const Buy: NextPage<SubscribePageProps> = () => {
 
   useEffect(() => {
     if (activePaidPlans.some(p => !!p.interval)) return
+
     Router.replace(
-      `/buy${qs.stringify(Router.query, { addQueryPrefix: true })}`,
+      `/purchase${qs.stringify(Router.query, { addQueryPrefix: true })}`,
     )
   }, [])
 

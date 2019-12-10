@@ -220,7 +220,6 @@ function getPrivateBannerCardProps(
       text:
         cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
           ? `Unlock private repos for ${formatPriceAndInterval(
-              cheapestPlanWithNotifications.amount,
               cheapestPlanWithNotifications,
             )}`
           : 'Tap to unlock private repos',

@@ -183,7 +183,6 @@ export const DesktopPreferences = React.memo(() => {
                   }}
                   textStyle={{ fontWeight: '300' }}
                 >{`Unlock Push Notifications and other features for ${formatPriceAndInterval(
-                  cheapestPlanWithNotifications.amount,
                   cheapestPlanWithNotifications,
                 )}`}</Button>
               </ThemedView>

@@ -511,7 +511,7 @@ const SubscribeFormWithStripe = React.memo(
                         : userPlan && userPlan.amount > plan.amount
                         ? 'Downgrade to'
                         : 'Unlock for'
-                    } ${formatPriceAndInterval(plan.amount, plan, {
+                    } ${formatPriceAndInterval(plan, {
                       quantity,
                     })}`
                 : userPlan && userPlan.amount > 0

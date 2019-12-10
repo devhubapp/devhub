@@ -195,7 +195,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               cheapestPlanWithNotifications &&
               cheapestPlanWithNotifications.amount
                 ? `Unlock private repos for ${formatPriceAndInterval(
-                    cheapestPlanWithNotifications.amount,
                     cheapestPlanWithNotifications,
                   )}`
                 : 'Tap to unlock Private Repositories',

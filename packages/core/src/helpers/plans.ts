@@ -92,7 +92,6 @@ export function getUserPlan(user: DatabaseUser): UserPlan {
 
     type: user.plan.type || 'individual',
     stripeIds: user.plan.stripeIds || plan.stripeIds,
-    paddleProductId: user.plan.paddleProductId || plan.paddleProductId,
     banner: plan.banner,
     featureFlags: plan.featureFlags,
     label: user.plan.label || plan.label,
@@ -127,18 +126,27 @@ export function isPlanExpired(
 }
 
 export function formatPrice(
-  valueInCents: number,
-  plan: Pick<Plan, 'currency' | 'paddleProductId' | 'transformUsage'>,
+  plan: Pick<Plan, 'amount' | 'currency' | 'transformUsage'>,
   options: { locale?: string; quantity?: number } = {},
 ) {
-  const { currency, transformUsage } = plan
+  const { amount, currency, transformUsage } = plan
 
   const { locale = 'en-US', quantity } = options
 
-  const formatter = new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency || 'usd',
-  })
+  const formatter = (() => {
+    try {
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency || 'usd',
+      })
+    } catch (error) {
+      return {
+        format(v: number) {
+          return `${currency || ''}${v.toFixed(2)}`
+        },
+      }
+    }
+  })()
 
   const _roundedUnits =
     quantity && quantity > 1
@@ -148,7 +156,7 @@ export function formatPrice(
           : Math.ceil(quantity / transformUsage.divideBy)
         : quantity
       : 1
-  const _valueInCents = valueInCents * _roundedUnits
+  const _valueInCents = amount * _roundedUnits
 
   const value = formatter.format(_valueInCents / 100)
   const priceLabel = value.endsWith('.00') ? value.slice(0, -3) : value
@@ -157,9 +165,8 @@ export function formatPrice(
 }
 
 export function formatInterval(
-  plan: Parameters<typeof formatPrice>[1] &
-    Pick<Plan, 'interval' | 'intervalCount' | 'type'>,
-  options: Parameters<typeof formatPrice>[2] = {},
+  plan: Pick<Plan, 'interval' | 'intervalCount' | 'transformUsage' | 'type'>,
+  options: Parameters<typeof formatPrice>[1] = {},
 ) {
   const { interval, intervalCount, transformUsage, type } = plan
   const { quantity } = options
@@ -182,10 +189,11 @@ export function formatInterval(
 }
 
 export function formatPriceAndInterval(
-  valueInCents: number,
-  plan: Parameters<typeof formatInterval>[0],
-  options: Parameters<typeof formatInterval>[1] = {},
+  plan: Parameters<typeof formatPrice>[0] &
+    Parameters<typeof formatInterval>[0],
+  options: Parameters<typeof formatPrice>[1] &
+    Parameters<typeof formatInterval>[1] = {},
 ) {
-  const priceLabel = formatPrice(valueInCents, plan, options)
+  const priceLabel = formatPrice(plan, options)
   return `${priceLabel}${formatInterval(plan, options)}`
 }

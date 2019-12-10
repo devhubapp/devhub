@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import React, { ReactElement } from 'react'
 
 export interface SelectProps<T extends string> {
-  children: Array<ReactElement<SelectOptionProps<T>>>
+  children: Array<ReactElement<SelectOptionProps<T>> | false>
   onChange: (option: T) => void
   placeholder?: string
 }
@@ -18,7 +18,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
 
   const childrenArr = React.Children.toArray(children)
   const selectedIndex = childrenArr.findIndex(
-    child => child.props.selected === true,
+    child => child && child.props.selected === true,
   )
 
   return (
@@ -51,29 +51,33 @@ export function Select<T extends string>(props: SelectProps<T>) {
               }}
             >
               <span className="flex flex-col bg-default border border-bg-less-2 rounded-lg shadow overflow-hidden">
-                {React.Children.map(children, child => (
-                  <span
-                    className={classNames(
-                      'w-full px-2 py-1 whitespace-no-wrap',
-                      childrenArr.length > 1 &&
-                        'hover:bg-less-2 cursor-pointer',
-                    )}
-                    onClick={
-                      onChange ? () => onChange(child.props.id) : undefined
-                    }
-                  >
-                    <span className="text-default">{child}</span>
-                    <small
-                      className={classNames(
-                        'text-default',
-                        !child.props.selected && 'opacity-0',
-                      )}
-                      style={{ fontSize: '75%' }}
-                    >
-                      {` ▼`}
-                    </small>
-                  </span>
-                ))}
+                {React.Children.map(
+                  children,
+                  child =>
+                    !!child && (
+                      <span
+                        className={classNames(
+                          'w-full px-2 py-1 whitespace-no-wrap',
+                          childrenArr.length > 1 &&
+                            'hover:bg-less-2 cursor-pointer',
+                        )}
+                        onClick={
+                          onChange ? () => onChange(child.props.id) : undefined
+                        }
+                      >
+                        <span className="text-default">{child}</span>
+                        <small
+                          className={classNames(
+                            'text-default',
+                            !child.props.selected && 'opacity-0',
+                          )}
+                          style={{ fontSize: '75%' }}
+                        >
+                          {` ▼`}
+                        </small>
+                      </span>
+                    ),
+                )}
               </span>
             </span>
           )}

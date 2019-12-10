@@ -1,10 +1,16 @@
-import { activePlans, Plan } from '@brunolemos/devhub-core'
+import {
+  activePlans,
+  formatInterval,
+  formatPrice,
+  formatPriceAndInterval,
+  Plan,
+} from '@brunolemos/devhub-core'
 import classNames from 'classnames'
 import qs from 'qs'
 import React from 'react'
 
 import { useAuth } from '../../../context/AuthContext'
-import { useFormattedPlanPrice } from '../../../hooks/use-formatted-plan-price'
+import { useLocalizedPlanDetails } from '../../../hooks/use-localized-plan-details'
 import Button from '../../common/buttons/Button'
 import CheckLabel from '../../common/CheckLabel'
 
@@ -12,6 +18,7 @@ export interface PricingPlanBlockProps {
   banner?: string | boolean
   buttonLabel?: string
   buttonLink: string
+  forceShowAsMonthly?: boolean
   plan: Plan
   totalNumberOfVisiblePlans?: number
 }
@@ -21,46 +28,52 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     banner: _banner,
     buttonLabel,
     buttonLink,
+    forceShowAsMonthly = false,
     plan,
     totalNumberOfVisiblePlans,
   } = props
 
   const { authData } = useAuth()
 
+  const localizedPlan = useLocalizedPlanDetails(plan)
   const userPlan = authData && authData.plan
   const userPlanIsActive =
     userPlan && userPlan.id && activePlans.find(p => p.id === userPlan!.id)
-  const isMyPlan = userPlan && userPlan.id === plan.id
+  const isMyPlan = userPlan && userPlan.id === localizedPlan.id
 
   const banner = userPlanIsActive
     ? isMyPlan
-      ? plan.interval
-        ? 'Current plan'
+      ? localizedPlan.interval
+        ? 'Current localizedPlan'
         : 'You bought this'
       : _banner || true
     : _banner
 
-  const estimatedMonthlyPrice =
-    (plan.interval === 'day'
-      ? plan.amount * 30
-      : plan.interval === 'week'
-      ? plan.amount * 4
-      : plan.interval === 'year'
-      ? plan.amount / 12
-      : plan.amount) /
-    (plan.intervalCount || 1) /
-    (plan.transformUsage && plan.transformUsage.divideBy > 1
-      ? plan.transformUsage.divideBy
-      : 1)
+  const modifiedAmount = forceShowAsMonthly
+    ? (localizedPlan.interval === 'day'
+        ? localizedPlan.amount * 30
+        : localizedPlan.interval === 'week'
+        ? localizedPlan.amount * 4
+        : localizedPlan.interval === 'year'
+        ? localizedPlan.amount / 12
+        : localizedPlan.amount) /
+      (localizedPlan.intervalCount || 1) /
+      (localizedPlan.transformUsage && localizedPlan.transformUsage.divideBy > 1
+        ? localizedPlan.transformUsage.divideBy
+        : 1)
+    : localizedPlan.amount
 
-  const _priceLabel = useFormattedPlanPrice(estimatedMonthlyPrice, plan)
-  const _roundedPriceLabelWithInterval = useFormattedPlanPrice(
-    plan.amount % 100 > 50
-      ? plan.amount + (100 - (plan.amount % 100))
-      : plan.amount,
-    plan,
-    { includeInterval: true },
-  )
+  const _priceLabel = formatPrice({
+    ...localizedPlan,
+    amount: modifiedAmount,
+  })
+  const _roundedPriceLabelWithInterval = formatPriceAndInterval({
+    ...localizedPlan,
+    amount:
+      localizedPlan.amount % 100 > 50
+        ? localizedPlan.amount + (100 - (localizedPlan.amount % 100))
+        : localizedPlan.amount,
+  })
 
   const priceLabelCents =
     _priceLabel[_priceLabel.length - 3] === '.'
@@ -72,40 +85,60 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       : _priceLabel
 
   const subtitle = `${
-    plan.type === 'team' ||
-    (plan.transformUsage && plan.transformUsage.divideBy > 1)
+    localizedPlan.type === 'team' ||
+    (localizedPlan.transformUsage && localizedPlan.transformUsage.divideBy > 1)
       ? '/user'
       : ''
-  }${plan.interval ? '/month' : ''}${
-    estimatedMonthlyPrice !== plan.amount ? '*' : ''
-  }`.trim()
+  }${
+    forceShowAsMonthly
+      ? '/month'
+      : localizedPlan.interval
+      ? formatInterval(localizedPlan)
+      : ''
+  }${modifiedAmount !== localizedPlan.amount ? '*' : ''}`.trim()
 
   let footerText = ''
 
-  if (!plan.amount && plan.trialPeriodDays) {
+  if (!localizedPlan.amount && localizedPlan.trialPeriodDays) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
-      `Free for ${plan.trialPeriodDays} days`
+      `Free for ${localizedPlan.trialPeriodDays} days`
   }
 
-  if (estimatedMonthlyPrice !== plan.amount) {
+  if (modifiedAmount !== localizedPlan.amount) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
       `*Billed ${
-        plan.amount % 100 > 50 ? '~' : ''
+        localizedPlan.amount % 100 > 50 ? '~' : ''
       }${_roundedPriceLabelWithInterval}`
   }
 
-  if (!plan.interval && plan.amount) {
+  if (!localizedPlan.interval && localizedPlan.amount) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
       'One-time payment (no subscription)'
   }
 
+  if (
+    !footerText &&
+    localizedPlan.interval &&
+    localizedPlan.amount &&
+    totalNumberOfVisiblePlans === 1
+  ) {
+    if (localizedPlan.trialPeriodDays) {
+      footerText =
+        (footerText ? `${footerText}\n` : footerText) +
+        `${localizedPlan.trialPeriodDays}-day free trial`
+    }
+    footerText =
+      (footerText ? `${footerText}\n` : footerText) +
+      'Cancel anytime with one click'
+  }
+
   return (
     <section
       className={classNames(
-        'pricing-plan flex flex-col flex-shrink-0',
+        'pricing-localizedPlan flex flex-col flex-shrink-0',
         totalNumberOfVisiblePlans === 1 ? 'w-full lg:w-84' : 'w-72',
       )}
     >
@@ -137,11 +170,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
         <div className="p-6 text-center">
           <div className="text-base leading-loose font-bold text-default">
-            {plan.label}
+            {localizedPlan.label}
           </div>
 
           <div className="mb-2 text-sm text-muted-65 whitespace-pre-line">
-            {plan.description}
+            {localizedPlan.description}
           </div>
 
           <div className="text-5xl leading-snug font-bold text-default">
@@ -167,10 +200,10 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               <div className="mb-2 text-sm text-muted-65">
                 &nbsp;{subtitle}&nbsp;
               </div>
-              {/* {plan.interval ? (
+              {/* {localizedPlan.interval ? (
             <div className="text-sm text-muted-65">{`/${
-              plan.intervalCount > 1 ? `${plan.intervalCount}-` : ''
-            }${plan.interval}`}</div>
+              localizedPlan.intervalCount > 1 ? `${localizedPlan.intervalCount}-` : ''
+            }${localizedPlan.interval}`}</div>
           ) : (
             <div className="text-sm text-muted-65">&nbsp;</div>
           )} */}
@@ -191,11 +224,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           <div className="pb-6" />
 
           {isMyPlan ? (
-            plan.type === 'team' ? (
+            localizedPlan.type === 'team' ? (
               <Button
                 type="primary"
                 href={`/purchase${qs.stringify(
-                  { plan: userPlan && userPlan.id },
+                  { localizedPlan: userPlan && userPlan.id },
                   { addQueryPrefix: true },
                 )}`}
               >
@@ -216,13 +249,15 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
         </div>
       </div>
 
-      {!!(plan.featureLabels && plan.featureLabels.length) && (
+      {!!(
+        localizedPlan.featureLabels && localizedPlan.featureLabels.length
+      ) && (
         <div className="p-4">
           <div className="pb-2" />
 
-          {plan.featureLabels.map((feature, index) => (
+          {localizedPlan.featureLabels.map((feature, index) => (
             <CheckLabel
-              key={`pricing-plan-${plan.id}-feature-${index}`}
+              key={`pricing-localizedPlan-${localizedPlan.id}-feature-${index}`}
               label={feature.label}
               checkProps={{
                 className: feature.available ? 'text-primary' : 'invisible',

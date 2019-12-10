@@ -1,6 +1,7 @@
 import {
   activePaidPlans,
   allPlansObj,
+  formatPrice,
   freeTrialDays,
 } from '@brunolemos/devhub-core'
 import Link from 'next/link'
@@ -12,7 +13,6 @@ import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'
 import { getTrialTimeLeftLabel } from '../helpers'
-import { useFormattedPlanPrice } from '../hooks/use-formatted-plan-price'
 
 export interface AccountPageProps {}
 
@@ -27,11 +27,12 @@ export default function AccountPage(_props: AccountPageProps) {
 
   const planInfo = authData.plan && allPlansObj[authData.plan.id]
 
-  const priceLabelForQuantity = useFormattedPlanPrice(
-    authData && authData.plan && authData.plan.amount,
-    authData.plan,
-    authData.plan && { quantity: authData.plan.quantity },
-  )
+  const priceLabelForQuantity = authData.plan
+    ? formatPrice(
+        authData.plan,
+        authData.plan && { quantity: authData.plan.quantity },
+      )
+    : ''
 
   function renderContent() {
     if (!(authData.appToken && authData.github && authData.github.login)) {

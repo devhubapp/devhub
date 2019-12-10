@@ -327,7 +327,6 @@ export const ColumnOptions = React.memo(
             }}
           >
             {`Unlock desktop notifications for ${formatPriceAndInterval(
-              cheapestPlanWithNotifications.amount,
               cheapestPlanWithNotifications,
             )}`.toUpperCase()}
           </Link> */}

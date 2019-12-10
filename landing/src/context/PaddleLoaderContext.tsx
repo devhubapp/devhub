@@ -7,18 +7,28 @@ export interface PaddleLoaderProps {
   children: React.ReactNode
 }
 
-export interface PaddleProductPrice {
+export interface PaddlePrice {
   gross: string
   net: string
   tax: string
   tax_included: false
 }
 
-export type PaddleProductPriceResult =
+export interface PaddleSubscription {
+  length: number
+  trial_days: number
+  type: 'day' | 'week' | 'month' | 'year'
+}
+
+export type PaddlePriceResult =
   | {
       country: string
-      price: PaddleProductPrice
+      price: PaddlePrice
       quantity: number
+      recurring?: {
+        price: PaddlePrice
+        subscription: PaddleSubscription
+      }
     }
   | {
       success: false
@@ -29,12 +39,9 @@ export interface PaddleLoaderState {
   Paddle: Record<string, any> | null
   cachedPricesByProductIdAndQuantity: Record<
     number,
-    Record<number, PaddleProductPrice | undefined>
+    Record<number, PaddlePrice | undefined>
   >
-  getProductPrice(
-    productId: number,
-    quantity?: number,
-  ): PaddleProductPrice | undefined
+  getProductPrice(productId: number, quantity?: number): PaddlePrice | undefined
 }
 
 export const PaddleLoaderContext = React.createContext<PaddleLoaderState>({
@@ -108,8 +115,14 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
           Paddle.Product.Prices(
             productId,
             quantity,
-            (result: PaddleProductPriceResult) => {
-              if (!('price' in result && result.price)) return
+            (result: PaddlePriceResult) => {
+              const price =
+                result &&
+                (('recurring' in result &&
+                  result.recurring &&
+                  result.recurring.price) ||
+                  ('price' in result && result.price))
+              if (!price) return
 
               cachedPricesByProductIdAndQuantityRef.current = {
                 ...cachedPricesByProductIdAndQuantityRef.current,
@@ -118,11 +131,11 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
                     productId
                   ],
                   [quantity]: {
-                    ...result.price,
-                    gross: getPriceLabelTweaked(result.price.gross),
-                    net: getPriceLabelTweaked(result.price.net),
-                    tax: getPriceLabelTweaked(result.price.tax),
-                    tax_included: result.price.tax_included,
+                    ...price,
+                    gross: getPriceLabelTweaked(price.gross),
+                    net: getPriceLabelTweaked(price.net),
+                    tax: getPriceLabelTweaked(price.tax),
+                    tax_included: price.tax_included,
                   },
                 },
               }

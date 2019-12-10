@@ -2,13 +2,14 @@ import {
   activePaidPlans,
   activePlans,
   constants,
+  formatPrice,
   freeTrialDays,
 } from '@brunolemos/devhub-core'
 import classNames from 'classnames'
 
 import { useAuth } from '../../context/AuthContext'
 import { getSystemLabel } from '../../helpers'
-import { useFormattedPlanPrice } from '../../hooks/use-formatted-plan-price'
+import { useLocalizedPlanDetails } from '../../hooks/use-localized-plan-details'
 import { useSystem } from '../../hooks/use-system'
 import Button from '../common/buttons/Button'
 
@@ -22,10 +23,8 @@ export default function CTAButtons(props: CTAButtonsProps) {
 
   const { os } = useSystem()
   const { authData } = useAuth()
-  const priceLabel = useFormattedPlanPrice(
-    activePaidPlans[0].amount,
-    activePaidPlans[0],
-  )
+  const localizedPlan = useLocalizedPlanDetails(activePaidPlans[0])
+  const priceLabel = localizedPlan ? formatPrice(localizedPlan) : ''
 
   return (
     <div
@@ -59,7 +58,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
               href={authData.appToken ? '/purchase' : '/purchase?autologin'}
               type="primary"
             >
-              {`Purchase for ${priceLabel}`}
+              {`Purchase${priceLabel ? ` for ${priceLabel}` : ''}`}
             </Button>
           ) : activePaidPlans.length === 1 && activePaidPlans[0] ? (
             <Button
