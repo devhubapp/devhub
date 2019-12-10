@@ -44,13 +44,25 @@
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Keyboard shortcuts**: Do anything using only the keyboard ([see shortcuts below](#keyboard-shortcuts));
 - [x] **Theme support**: Choose between 6 light or dark themes; Automatically toggle on day/night switch;
-- [x] **And more!**: Desktop apps, native mobile apps, open source, modern tech stack, ...
+- [x] **And more!**: Desktop apps, native mobile apps, open source, modern tech 
+, ...
 
 <br/>
 
 
 
 ## Tech Stack
+
+### Landing page
+
+- [TypeScript](https://github.com/Microsoft/TypeScript)
+- [Next.js](https://github.com/zeit/next.js/) (React)
+- [Tailwind CSS](https://github.com/tailwindcss/tailwindcss)
+- [Zeit Now](https://github.com/zeit/now)
+
+### App
+
+#### Client
 
 - [TypeScript](https://github.com/Microsoft/TypeScript)
 - [Create React App](https://github.com/facebook/create-react-app)
@@ -62,8 +74,14 @@
 - [Redux Persist](https://github.com/rt2zz/redux-persist)
 - [Redux Saga](https://github.com/redux-saga/redux-saga/)
 - [Reselect](https://github.com/reduxjs/reselect)
-- [GraphQL](https://github.com/facebook/graphql)
 
+#### Server
+
+- [Node.js](https://github.com/nodejs/node)
+- [TypeScript](https://github.com/Microsoft/TypeScript)
+- [GraphQL](https://github.com/facebook/graphql)
+- [MongoDB](https://github.com/mongodb/mongo)
+- [Heroku](https://heroku.com/)
 
 <br/>
 <br/>
