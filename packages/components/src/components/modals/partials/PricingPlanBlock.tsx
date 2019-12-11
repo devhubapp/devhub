@@ -28,12 +28,12 @@ export const defaultPricingBlockWidth = 230
 export interface PricingPlanBlockProps {
   banner?: string | boolean
   highlightFeature?: keyof Plan['featureFlags']
-  isPartOfAList: boolean
   isSelected?: boolean | undefined
   onSelect?: (() => void) | undefined
   plan: Plan
   showCurrentPlanDetails: boolean
   showFeatures?: boolean
+  totalNumberOfVisiblePlans: number
   width?: string | number
 }
 
@@ -41,12 +41,12 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   const {
     banner: _banner,
     highlightFeature,
-    isPartOfAList,
     isSelected,
     onSelect,
     plan,
     showCurrentPlanDetails,
     showFeatures,
+    totalNumberOfVisiblePlans,
     width = defaultPricingBlockWidth,
   } = props
 
@@ -55,7 +55,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   const isMyPlan = userPlan && userPlan.id && userPlan!.id === plan.id
   const banner =
-    isMyPlan && isPartOfAList
+    isMyPlan && totalNumberOfVisiblePlans > 1
       ? plan.interval
         ? 'Current plan'
         : 'You bought this'
@@ -240,7 +240,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
                 color="foregroundColorMuted65"
                 style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
               >
-                {plan.description}
+                {totalNumberOfVisiblePlans === 1
+                  ? plan.description.trim()
+                  : plan.description}
               </ThemedText>
 
               <Spacer height={contentPadding / 2} />
@@ -267,7 +269,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             )}
           </ThemedText>
 
-          {!!(plan.amount || isPartOfAList) && (
+          {!!(plan.amount || totalNumberOfVisiblePlans > 1) && (
             <>
               <ThemedText
                 color="foregroundColorMuted65"
@@ -303,7 +305,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
           <Spacer height={contentPadding} />
 
-          {!!(footerText || isPartOfAList) && (
+          {!!(footerText || totalNumberOfVisiblePlans > 1) && (
             <>
               <IntervalRefresh interval={1000}>
                 {() => (

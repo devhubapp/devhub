@@ -176,7 +176,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           </div>
 
           <div className="mb-2 text-sm text-muted-65 whitespace-pre-line">
-            {localizedPlan.description}
+            {totalNumberOfVisiblePlans === 1
+              ? localizedPlan.description.trim()
+              : localizedPlan.description}
           </div>
 
           <div className="text-5xl leading-snug font-bold text-default">

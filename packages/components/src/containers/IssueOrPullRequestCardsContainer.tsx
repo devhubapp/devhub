@@ -47,7 +47,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
   (props: IssueOrPullRequestCardsContainerProps) => {
     const { columnId, ...otherProps } = props
 
-    const { column } = useColumn(columnId)
+    const { column, hasCrossedColumnsLimit } = useColumn(columnId)
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -139,7 +139,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
     }
 
-    if (maybePrivate) {
+    if (maybePrivate && !hasCrossedColumnsLimit) {
       if (!githubAppToken) return <NoTokenView githubAppType="app" />
 
       if (ownerResponse.loadingState === 'loading') {

@@ -7,6 +7,7 @@ import {
   getColumnOption,
   getFilteredItems,
   getItemDate,
+  getItemNodeIdOrId,
   ItemPushNotification,
 } from '@devhub/core'
 import { PixelRatio } from 'react-native'
@@ -55,7 +56,11 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     [],
   )
 
-  const columns = loggedUsername && !isPlanExpired ? _columns : []
+  const columns = loggedUsername
+    ? isPlanExpired
+      ? _columns.slice(0, (freePlan && freePlan.featureFlags.columnsLimit) || 0)
+      : _columns
+    : []
 
   const unreadIds = new Set<string>([])
   const pushNotifications = new Set<CardPushNotification>([])
@@ -137,10 +142,11 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     )
 
     unreadColumnItems.forEach(item => {
-      if (!(item && item.id)) return
+      const itemNodeIdOrId = getItemNodeIdOrId(item)
+      if (!itemNodeIdOrId) return
 
-      if (showAppIconUnreadIndicator && !unreadIds.has(`${item.id}`)) {
-        unreadIds.add(`${item.id}`)
+      if (showAppIconUnreadIndicator && !unreadIds.has(`${itemNodeIdOrId}`)) {
+        unreadIds.add(`${itemNodeIdOrId}`)
       }
 
       const itemDate = getItemDate(item)
@@ -195,7 +201,9 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     <UnreadCountContext.Provider
       value={
         unreadIds.size ||
-        (isPlanExpired && !(freePlan && !freePlan.trialPeriodDays) ? 1 : 0)
+        (isPlanExpired && !(freePlan && freePlan.featureFlags.columnsLimit)
+          ? 1
+          : 0)
       }
     >
       {props.children}

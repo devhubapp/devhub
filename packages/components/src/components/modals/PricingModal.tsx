@@ -155,7 +155,6 @@ export function PricingModal(props: PricingModalProps) {
               : (plan && plan.banner) || false
           }
           highlightFeature={highlightFeature}
-          isPartOfAList={plansToShow.length > 1}
           isSelected={selectedPlanId === plan.id}
           onSelect={() => {
             setSelectedPlanId(plan.id)
@@ -164,13 +163,13 @@ export function PricingModal(props: PricingModalProps) {
           plan={plan}
           showCurrentPlanDetails={!showUserPlanAtTheTop}
           showFeatures
+          totalNumberOfVisiblePlans={plansToShow.length}
         />
       ) : (
         <PricingPlanBlock
           key={`pricing-plan-${plan.cannonicalId}`}
           banner
           highlightFeature={highlightFeature}
-          isPartOfAList={plansToShow.length > 1}
           isSelected={selectedPlanId === plan.id}
           onSelect={() => {
             setSelectedPlanId(plan.id)
@@ -179,6 +178,7 @@ export function PricingModal(props: PricingModalProps) {
           plan={plan}
           showCurrentPlanDetails={!showUserPlanAtTheTop}
           showFeatures
+          totalNumberOfVisiblePlans={plansToShow.length}
         />
       ),
     [
@@ -310,9 +310,9 @@ export function PricingModal(props: PricingModalProps) {
               <PricingPlanBlock
                 key="pricing-current-plan"
                 banner={false}
-                isPartOfAList={false}
                 plan={userPlanDetails!}
                 showCurrentPlanDetails
+                totalNumberOfVisiblePlans={1}
                 width="100%"
               />
             </View>

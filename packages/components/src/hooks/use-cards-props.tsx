@@ -352,7 +352,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   }>(() => {
     if (!(column && column.id)) return { Component: undefined, overlay: false }
 
-    if (isPlanExpired) {
+    if (isPlanExpired && !(plan && plan.featureFlags.columnsLimit)) {
       return {
         Component: () => (
           <EmptyCards
@@ -414,26 +414,18 @@ export function useCardsProps<ItemT extends EnhancedItem>({
             columnId={column.id}
             emoji="rocket"
             errorButtonView={
-              <Button
+              <ButtonLink
                 analyticsLabel="unlock_more_columns_button"
-                children="Unlock more columns"
-                onPress={() => {
-                  const nextPlan = activePlans.find(
-                    p => p.featureFlags.columnsLimit > columnIndex + 1,
-                  )
-                  dispatch(
-                    actions.pushModal({
-                      name: 'PRICING',
-                      params: {
-                        highlightFeature: 'columnsLimit',
-                        initialSelectedPlanId: nextPlan && nextPlan.id,
-                      },
-                    }),
-                  )
-                }}
+                children="Unlock more columns ↗"
+                href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
+                openOnNewTab
               />
             }
-            errorMessage={`You have exceeded the limit of ${plan.featureFlags.columnsLimit} columns.`}
+            errorMessage={`You have exceeded the limit of ${
+              plan.featureFlags.columnsLimit
+            }${plan.amount ? '' : ' free'} ${
+              plan.featureFlags.columnsLimit === 1 ? 'column' : 'columns'
+            }.`}
             errorTitle="Limit exceeded"
             fetchNextPage={undefined}
             loadState="error"
@@ -513,6 +505,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     isPlanExpired,
     appToken,
     !!(plan && plan.amount),
+    !!(plan && plan.featureFlags.columnsLimit),
     isPlanStatusValid(plan),
   ])
 

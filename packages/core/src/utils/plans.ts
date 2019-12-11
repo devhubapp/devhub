@@ -74,11 +74,11 @@ const _freePlan: Plan & { id: 'free' } = {
   ],
 
   featureFlags: {
-    columnsLimit: 0,
-    enableFilters: false,
-    enableSync: false,
-    enablePrivateRepositories: false,
-    enablePushNotifications: false,
+    columnsLimit: 1,
+    enableFilters: true,
+    enableSync: true,
+    enablePrivateRepositories: true,
+    enablePushNotifications: true,
   },
 }
 
