@@ -11,6 +11,7 @@ import Button from '../components/common/buttons/Button'
 import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { useAuth } from '../context/AuthContext'
+import { getPurchaseOrSubscribeRoute } from '../helpers'
 
 export interface SuccessPageProps {}
 
@@ -109,7 +110,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
                       ))}{' '}
                       (
                       <Link
-                        href={`/purchase${qs.stringify(
+                        href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
                           {
                             action: 'update_seats',
                             plan:
@@ -161,7 +162,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
                   </>
                 ) : authData.plan.type === 'team' ? (
                   <Link
-                    href={`/purchase${qs.stringify(
+                    href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
                       {
                         action: 'update_seats',
                         plan:

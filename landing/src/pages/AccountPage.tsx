@@ -14,7 +14,7 @@ import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'
-import { getTrialTimeLeftLabel } from '../helpers'
+import { getPurchaseOrSubscribeRoute, getTrialTimeLeftLabel } from '../helpers'
 
 export interface AccountPageProps {}
 
@@ -164,7 +164,7 @@ export default function AccountPage(_props: AccountPageProps) {
             {activePaidPlans.some(p => !p.interval) &&
               (!!(!freeTrialDays && authData.plan.interval) ? (
                 <Link
-                  href={`/purchase${qs.stringify(
+                  href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
                     {
                       plan: activePaidPlans.find(p => !p.interval)!
                         .cannonicalId,
@@ -176,7 +176,7 @@ export default function AccountPage(_props: AccountPageProps) {
                 </Link>
               ) : (
                 <Link
-                  href={`/purchase${qs.stringify(
+                  href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
                     {
                       plan: activePaidPlans.find(p => !p.interval)!
                         .cannonicalId,
@@ -215,7 +215,7 @@ export default function AccountPage(_props: AccountPageProps) {
                   authData.plan.transformUsage.divideBy > 1))
             ) && (
               <Link
-                href={`/purchase${qs.stringify(
+                href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
                   {
                     action: 'update_seats',
                     plan:
@@ -234,7 +234,7 @@ export default function AccountPage(_props: AccountPageProps) {
 
             {!!(authData.plan && authData.plan.interval) && (
               <Link
-                href={`/purchase${qs.stringify(
+                href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
                   {
                     action: 'update_card',
                     plan:
@@ -270,7 +270,7 @@ export default function AccountPage(_props: AccountPageProps) {
         ) : (
           <>
             {activePaidPlans.length === 1 && activePaidPlans[0] ? (
-              <Link href="/purchase">
+              <Link href={`/${getPurchaseOrSubscribeRoute()}`}>
                 <a className="text-default">
                   {freeTrialDays
                     ? 'Start free trial'

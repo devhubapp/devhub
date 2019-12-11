@@ -10,6 +10,7 @@ import qs from 'qs'
 import React from 'react'
 
 import { useAuth } from '../../../context/AuthContext'
+import { getPurchaseOrSubscribeRoute } from '../../../helpers'
 import { useLocalizedPlanDetails } from '../../../hooks/use-localized-plan-details'
 import Button from '../../common/buttons/Button'
 import CheckLabel from '../../common/CheckLabel'
@@ -228,7 +229,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             localizedPlan.type === 'team' ? (
               <Button
                 type="primary"
-                href={`/purchase${qs.stringify(
+                href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
                   { localizedPlan: userPlan && userPlan.id },
                   { addQueryPrefix: true },
                 )}`}

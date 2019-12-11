@@ -8,7 +8,7 @@ import {
 import classNames from 'classnames'
 
 import { useAuth } from '../../context/AuthContext'
-import { getSystemLabel } from '../../helpers'
+import { getPurchaseOrSubscribeRoute, getSystemLabel } from '../../helpers'
 import { useLocalizedPlanDetails } from '../../hooks/use-localized-plan-details'
 import { useSystem } from '../../hooks/use-system'
 import Button from '../common/buttons/Button'
@@ -55,7 +55,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
           activePaidPlans[0].amount ? (
             <Button
               className="mb-2 mr-2"
-              href={authData.appToken ? '/purchase' : '/purchase?autologin'}
+              href={authData.appToken ? `/${getPurchaseOrSubscribeRoute()}` : `/${getPurchaseOrSubscribeRoute()}?autologin`}
               type="primary"
             >
               {`Purchase${priceLabel ? ` for ${priceLabel}` : ''}`}
@@ -63,7 +63,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
           ) : activePaidPlans.length === 1 && activePaidPlans[0] ? (
             <Button
               type="primary"
-              href="/purchase"
+              href={`/${getPurchaseOrSubscribeRoute()}`}
               target="_top"
               className="mb-2 mr-2"
             >

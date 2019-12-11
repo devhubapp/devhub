@@ -2,6 +2,7 @@ import { activePlans, PlanType } from '@brunolemos/devhub-core'
 import React, { Fragment, useMemo, useState } from 'react'
 
 import { useAuth } from '../../../context/AuthContext'
+import { getPurchaseOrSubscribeRoute } from '../../../helpers'
 import { Tabs } from '../../common/Tabs'
 import { PricingPlanBlock } from './PricingPlanBlock'
 
@@ -38,7 +39,7 @@ export function PricingPlans(_props: PricingPlansProps) {
         <PricingPlanBlock
           key={`pricing-plan-${plan.id}`}
           banner={plan.banner}
-          buttonLink={`/purchase?plan=${plan.cannonicalId}${
+          buttonLink={`/${getPurchaseOrSubscribeRoute()}?plan=${plan.cannonicalId}${
             '' // plan.paddleProductId ? '&autostart' : ''
           }${!(authData && authData.appToken) ? '&autologin' : ''}`}
           plan={plan}

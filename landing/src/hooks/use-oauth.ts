@@ -19,6 +19,10 @@ export function useOAuth() {
     gitHubAppType: GitHubAppType | 'both',
     options: { appToken?: string; scope?: string[] | undefined } = {},
   ) {
+    if (isExecutingOAuth) return
+
+    setIsExecutingOAuth(true)
+
     const { appToken, scope = constants.DEFAULT_GITHUB_OAUTH_SCOPES } = options
 
     const platform = getPlatform()
@@ -40,7 +44,6 @@ export function useOAuth() {
     )
 
     setPopupWindow(popup)
-    setIsExecutingOAuth(true)
   }
 
   useWindowEvent(

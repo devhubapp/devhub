@@ -22,6 +22,8 @@ export default function GitHubLoginButton(props: GitHubLoginButtonProps) {
   const { category } = useSystem()
 
   const isAlreadyLoggedRef = useDynamicRef(!!(authData && authData.appToken))
+  const isExecutingOAuthRef = useDynamicRef(isExecutingOAuth)
+
   const autologin = 'autologin' in Router.query
   useEffect(() => {
     if (!autologin) return
@@ -35,8 +37,9 @@ export default function GitHubLoginButton(props: GitHubLoginButtonProps) {
     )
 
     if (isAlreadyLoggedRef.current) return
+    if (isExecutingOAuthRef.current) return
     startOAuth('oauth')
-  }, [autologin, category])
+  }, [autologin, !category || category === 'mobile'])
 
   function login() {
     startOAuth(method)

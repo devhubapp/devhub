@@ -52,7 +52,7 @@ export const DEVHUB_LINKS = {
   ACCOUNT_PAGE: `${LANDING_BASE_URL}/account`,
   DOWNLOAD_PAGE: `${LANDING_BASE_URL}/download`,
   PRICING_PAGE: `${LANDING_BASE_URL}/pricing`,
-  SUBSCRIBE_PAGE: `${LANDING_BASE_URL}/purchase`,
+  SUBSCRIBE_PAGE: `${LANDING_BASE_URL}/subscribe`,
   SLACK_INVITATION: 'https://slack.devhubapp.com',
   GITHUB_REPOSITORY: 'https://github.com/devhubapp/devhub',
   TWITTER_PROFILE: 'https://twitter.com/devhub_app',

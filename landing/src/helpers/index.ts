@@ -1,4 +1,5 @@
 import {
+  activePaidPlans,
   constants,
   DevHubHeaders,
   OS,
@@ -133,4 +134,8 @@ export function toKebabCase(str: string) {
   if (!(matches && matches.length)) return str
 
   return matches.map(s => s.toLowerCase()).join('-')
+}
+
+export function getPurchaseOrSubscribeRoute() {
+  return activePaidPlans.some(p => !!p.interval) ? 'subscribe' : 'purchase'
 }
