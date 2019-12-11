@@ -9,6 +9,7 @@ import {
   getDateSmallText,
   getOwnerAndRepoFormattedFilter,
   getUsernamesFromFilter,
+  isPlanStatusValid,
 } from '@devhub/core'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { View } from 'react-native'
@@ -406,65 +407,99 @@ export function useCardsProps<ItemT extends EnhancedItem>({
       }
     }
 
+    if (isOverPlanColumnLimit && plan && plan.featureFlags.columnsLimit) {
+      return {
+        Component: () => (
+          <EmptyCards
+            columnId={column.id}
+            emoji="rocket"
+            errorButtonView={
+              <Button
+                analyticsLabel="unlock_more_columns_button"
+                children="Unlock more columns"
+                onPress={() => {
+                  const nextPlan = activePlans.find(
+                    p => p.featureFlags.columnsLimit > columnIndex + 1,
+                  )
+                  dispatch(
+                    actions.pushModal({
+                      name: 'PRICING',
+                      params: {
+                        highlightFeature: 'columnsLimit',
+                        initialSelectedPlanId: nextPlan && nextPlan.id,
+                      },
+                    }),
+                  )
+                }}
+              />
+            }
+            errorMessage={`You have exceeded the limit of ${plan.featureFlags.columnsLimit} columns.`}
+            errorTitle="Limit exceeded"
+            fetchNextPage={undefined}
+            loadState="error"
+            refresh={undefined}
+          />
+        ),
+        overlay: true,
+      }
+    }
+
+    if (!isPlanStatusValid(plan)) {
+      return {
+        Component: () => (
+          <EmptyCards
+            columnId={column.id}
+            emoji="warning"
+            errorButtonView={
+              <ButtonLink
+                analyticsLabel="select_a_plan_button"
+                analyticsCategory="invalid_plan"
+                children="Fix my subscription ↗"
+                href={`${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${appToken}`}
+                openOnNewTab
+              />
+            }
+            errorMessage={`Your current subscription status is ${
+              plan && plan.status ? `"${plan.status}"` : 'invalid'
+            }. This is usually fixed by updating your credit card.`}
+            errorTitle="Action needed"
+            fetchNextPage={undefined}
+            loadState="error"
+            refresh={undefined}
+          />
+        ),
+        overlay: true,
+      }
+    }
+
     if (isOverPlanColumnLimit) {
       return {
-        Component: () =>
-          plan && plan.featureFlags.columnsLimit ? (
-            <EmptyCards
-              columnId={column.id}
-              emoji="rocket"
-              errorButtonView={
-                <Button
-                  analyticsLabel="unlock_more_columns_button"
-                  children="Unlock more columns"
-                  onPress={() => {
-                    const nextPlan = activePlans.find(
-                      p => p.featureFlags.columnsLimit > columnIndex + 1,
-                    )
-                    dispatch(
-                      actions.pushModal({
-                        name: 'PRICING',
-                        params: {
-                          highlightFeature: 'columnsLimit',
-                          initialSelectedPlanId: nextPlan && nextPlan.id,
-                        },
-                      }),
-                    )
-                  }}
-                />
-              }
-              errorMessage={`You have exceeded the limit of ${plan.featureFlags.columnsLimit} columns.`}
-              errorTitle="Limit exceeded"
-              fetchNextPage={undefined}
-              loadState="error"
-              refresh={undefined}
-            />
-          ) : (
-            <EmptyCards
-              columnId={column.id}
-              emoji="lock"
-              errorButtonView={
-                <ButtonLink
-                  analyticsLabel="select_a_plan_button"
-                  analyticsCategory="invalid_plan"
-                  children={
-                    activePaidPlans.some(p => p.interval)
-                      ? plan && plan.amount
-                        ? 'Switch plan ↗'
-                        : 'Select a plan ↗'
-                      : 'See available options ↗'
-                  }
-                  href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
-                  openOnNewTab
-                />
-              }
-              errorMessage="You need a paid plan to keep using DevHub."
-              errorTitle="Upgrade to a paid plan"
-              fetchNextPage={undefined}
-              loadState="error"
-              refresh={undefined}
-            />
-          ),
+        Component: () => (
+          <EmptyCards
+            columnId={column.id}
+            emoji="lock"
+            errorButtonView={
+              <ButtonLink
+                analyticsLabel="select_a_plan_button"
+                analyticsCategory="invalid_plan"
+                children={
+                  activePaidPlans.some(p => p.interval)
+                    ? plan && plan.amount
+                      ? 'Switch plan ↗'
+                      : 'Select a plan ↗'
+                    : 'See available options ↗'
+                }
+                href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
+                openOnNewTab
+              />
+            }
+            errorMessage="You need a paid plan to keep using DevHub."
+            errorTitle="Upgrade to a paid plan"
+            fetchNextPage={undefined}
+            loadState="error"
+            refresh={undefined}
+          />
+        ),
         overlay: true,
       }
     }
@@ -478,6 +513,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     isPlanExpired,
     appToken,
     !!(plan && plan.amount),
+    isPlanStatusValid(plan),
   ])
 
   return useMemo(

@@ -30,8 +30,9 @@ export function useColumn(columnId: string) {
 
   const isOverPlanColumnLimit = !!(
     plan &&
-    columnIndex + 1 > plan.featureFlags.columnsLimit &&
-    (plan.featureFlags.columnsLimit || (freeTrialDays || isPlanExpired(plan)))
+    (columnIndex + 1 > plan.featureFlags.columnsLimit &&
+      (plan.featureFlags.columnsLimit ||
+        (freeTrialDays || isPlanExpired(plan))))
   )
   const isOverMaxColumnLimit = !!(
     columnIndex >= 0 && columnIndex + 1 > constants.COLUMNS_LIMIT

@@ -274,7 +274,7 @@ const SubscribeFormWithStripe = React.memo(
         dispatch(actions.updateUserData({ plan: data.subscribeToStripePlan }))
 
         if (
-          !isPlanStatusValid(data.subscribeToStripePlan) ||
+          !isPlanStatusValid(data.subscribeToStripePlan) &&
           data.subscribeToStripePlan.status === 'incomplete'
         ) {
           throw new Error('Please try a different credit card.')

@@ -6,6 +6,7 @@ import {
   getUserURLFromLogin,
   GitHubIcon,
   isItemRead,
+  isPlanStatusValid,
   ModalPayload,
   ThemeColors,
 } from '@devhub/core'
@@ -350,7 +351,8 @@ export const SidebarOrBottomBar = React.memo(
               (userPlan &&
                 userPlan.status === 'active' &&
                 userPlan.cancelAtPeriodEnd &&
-                userPlan.cancelAt)
+                userPlan.cancelAt) ||
+              !isPlanStatusValid(userPlan)
             )
           }
           unreadIndicatorColor={
@@ -358,7 +360,8 @@ export const SidebarOrBottomBar = React.memo(
             (userPlan &&
               userPlan.status === 'active' &&
               userPlan.cancelAtPeriodEnd &&
-              userPlan.cancelAt)
+              userPlan.cancelAt) ||
+            !isPlanStatusValid(userPlan)
               ? 'red'
               : undefined
           }

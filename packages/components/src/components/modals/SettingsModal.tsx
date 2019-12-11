@@ -87,6 +87,10 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                           : userPlan.amount
                           ? ' (trial)'
                           : ' trial'
+                        : !isPlanStatusValid(userPlan) &&
+                          userPlan &&
+                          userPlan.status
+                        ? ` (${userPlan.status})`
                         : ''
                     } ↗`}</ThemedText>
                     {!!(
@@ -98,8 +102,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                         userPlan.cancelAt) ||
                       (userPlan &&
                         userPlan.status &&
-                        (!isPlanStatusValid(userPlan) ||
-                          userPlan.status === 'incomplete'))
+                        !isPlanStatusValid(userPlan))
                     ) && (
                       <>
                         <Spacer width={contentPadding / 2} />

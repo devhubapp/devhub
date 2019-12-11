@@ -1,9 +1,11 @@
 import {
   activePaidPlans,
   allPlansObj,
-  formatPrice,
+  formatPriceAndInterval,
   freeTrialDays,
+  isPlanStatusValid,
 } from '@brunolemos/devhub-core'
+import classNames from 'classnames'
 import Link from 'next/link'
 import qs from 'qs'
 import React from 'react'
@@ -28,7 +30,7 @@ export default function AccountPage(_props: AccountPageProps) {
   const planInfo = authData.plan && allPlansObj[authData.plan.id]
 
   const priceLabelForQuantity = authData.plan
-    ? formatPrice(
+    ? formatPriceAndInterval(
         authData.plan,
         authData.plan && { quantity: authData.plan.quantity },
       )
@@ -94,7 +96,13 @@ export default function AccountPage(_props: AccountPageProps) {
           <>
             <h2 className="mb-2 text-md sm:text-xl">
               Status:{' '}
-              <span className="text-default">
+              <span
+                className={classNames(
+                  !isPlanStatusValid(authData.plan)
+                    ? 'text-red'
+                    : 'text-default',
+                )}
+              >
                 {authData.plan.status === 'trialing'
                   ? authData.plan.trialEndAt &&
                     authData.plan.trialEndAt > new Date().toISOString()
@@ -239,7 +247,11 @@ export default function AccountPage(_props: AccountPageProps) {
                   { addQueryPrefix: true },
                 )}`}
               >
-                <a className="text-default">Update credit card</a>
+                <a className="text-default">
+                  {!isPlanStatusValid(authData.plan)
+                    ? '👉 Update credit card 👈'
+                    : 'Update credit card'}
+                </a>
               </Link>
             )}
 
