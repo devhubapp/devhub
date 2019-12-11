@@ -1170,7 +1170,7 @@ const emojis = {
   seven: 'unicode/0037-20e3',
   seychelles: 'unicode/1f1f8-1f1e8',
   shallow_pan_of_food: 'unicode/1f958',
-  shamrock: 'unicode/2618',
+  shamrock: 'unicode/2630',
   shark: 'unicode/1f988',
   shaved_ice: 'unicode/1f367',
   sheep: 'unicode/1f411',

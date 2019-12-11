@@ -38,7 +38,7 @@ export function AppVersion() {
 }
 
 export function getAppVersionLabel() {
-  const buildNumber = 2618
+  const buildNumber = 2630
 
   return `v${constants.APP_VERSION}${
     constants.IS_BETA && !constants.APP_VERSION.includes('beta')
