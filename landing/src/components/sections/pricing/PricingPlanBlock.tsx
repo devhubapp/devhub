@@ -103,6 +103,17 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
       `Free for ${localizedPlan.trialPeriodDays} days`
+  } else if (
+    localizedPlan.amount &&
+    activePlans.some(p => !p.amount && p.trialPeriodDays)
+  ) {
+    //
+  } else if (localizedPlan.trialPeriodDays) {
+    footerText =
+      (footerText ? `${footerText}\n` : footerText) +
+      `${localizedPlan.trialPeriodDays}-day free trial`
+  } else if (localizedPlan.amount && !localizedPlan.trialPeriodDays) {
+    footerText = (footerText ? `${footerText}\n` : footerText) + 'No free trial'
   }
 
   if (modifiedAmount !== localizedPlan.amount) {
@@ -119,17 +130,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       'One-time payment (no subscription)'
   }
 
-  if (
-    !footerText &&
-    localizedPlan.interval &&
-    localizedPlan.amount &&
-    totalNumberOfVisiblePlans === 1
-  ) {
-    if (localizedPlan.trialPeriodDays) {
-      footerText =
-        (footerText ? `${footerText}\n` : footerText) +
-        `${localizedPlan.trialPeriodDays}-day free trial`
-    }
+  if (!footerText && localizedPlan.interval && localizedPlan.amount) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
       'Cancel anytime with one click'
