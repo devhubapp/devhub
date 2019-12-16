@@ -4,9 +4,12 @@
   background-color: transparent;
 }
 
-::-webkit-scrollbar-thumb
-{
+::-webkit-scrollbar-thumb {
   background-color: transparent;
+}
+
+* {
+  scrollbar-width: none;
 }
 
 *:focus {
