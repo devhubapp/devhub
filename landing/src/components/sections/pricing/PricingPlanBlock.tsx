@@ -133,8 +133,10 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   if (!footerText && localizedPlan.interval && localizedPlan.amount) {
     footerText =
-      (footerText ? `${footerText}\n` : footerText) +
-      'Cancel anytime with one click'
+      (footerText ? `${footerText}\n` : footerText) + localizedPlan.interval ===
+      'year'
+        ? 'Cancel anytime, no refund'
+        : 'Cancel anytime with one click'
   }
 
   return (

@@ -3,8 +3,8 @@ import * as constants from './constants'
 
 export type ActivePlanID =
   | 'free'
-  | '5def28820f73d2a6fca95d45'
-  | '5dd82d16eb2b11106f941f8d'
+  | '5db0d37ce59ab2d3c0bbd611'
+  | '5de54fc29188ad514567ddb2'
 
 export type InactivePlanID =
   | '5d4b8e85d123d1d770d93825'
@@ -14,12 +14,9 @@ export type InactivePlanID =
   | '5dba30bd0621102b5cd0bc44'
   | '5dba30bf7deee78cb184291d'
   | '5dc89f56bae8d4ae5245423e'
-  | '5db0d37ce59ab2d3c0bbd611'
-  | '5db0d5fb957ac4e5ed7bbb05'
   | '5dd4618db3ebb145268eba7c'
   | '5dd467e799537b2378df8eea'
   | '5de54fc1d6c4fded37775e71'
-  | '5de54fc29188ad514567ddb2'
   | '5dd44e11b2726bb02d540b5e'
   | '5ded8bd7fcf793f771a0264c'
   | '5ded8e946bcd42efb0e6094a'
@@ -28,6 +25,9 @@ export type InactivePlanID =
   | '5de552b6dde41be55811ed15'
   | '5dee983f450f010aa1c9ca10'
   | '5def259daae626775b89a2d0'
+  | '5def28820f73d2a6fca95d45'
+  | '5dd82d16eb2b11106f941f8d'
+  | '5db0d5fb957ac4e5ed7bbb05'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -245,7 +245,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
     cannonicalId: 'monthly',
     label: 'Monthly',
-    description: '',
+    description: '\n\n',
     amount: 999,
     currency: 'usd',
     interval: 'month',
@@ -301,7 +301,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
     cannonicalId: 'yearly',
     label: 'Yearly',
-    description: '',
+    description: '\n\n',
     amount: 6900,
     currency: 'usd',
     interval: 'year',
@@ -823,10 +823,10 @@ export const allPlans = Object.values(allPlansObj)
 
 export const activePlans: Array<Plan & { id: ActivePlanID }> = [
   freeTrialPlan,
-  allPlansObj['5def28820f73d2a6fca95d45'] as Plan & {
+  allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & {
     id: ActivePlanID
   },
-  allPlansObj['5dd82d16eb2b11106f941f8d'] as Plan & {
+  allPlansObj['5de54fc29188ad514567ddb2'] as Plan & {
     id: ActivePlanID
   },
 ]
