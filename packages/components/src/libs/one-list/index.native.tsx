@@ -90,6 +90,7 @@ export const OneList = (React.memo(
       renderItem,
       safeAreaInsets,
       snapToAlignment,
+      ...restProps
     } = props
 
     const onVisibleItemsChangedRef = useRef(onVisibleItemsChanged)
@@ -331,6 +332,7 @@ export const OneList = (React.memo(
                           )
                         : 1)
                     }
+                    {...restProps}
                   />
                 )
               }

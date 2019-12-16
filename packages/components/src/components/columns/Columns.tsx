@@ -173,6 +173,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
       ref={listRef}
       key="columns-list"
       data={columnIds}
+      data-scrollbar
       disableVirtualization
       ListEmptyComponent={NoColumns}
       estimatedItemSize={columnWidth}

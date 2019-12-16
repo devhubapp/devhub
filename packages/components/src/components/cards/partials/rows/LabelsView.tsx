@@ -87,6 +87,7 @@ export const LabelsView = (props: LabelsViewProps) => {
                 ? sharedStyles.flexNoWrap
                 : sharedStyles.flexWrap,
               {
+                backgroundColor: 'blue',
                 marginHorizontal: -horizontalSpacing,
                 marginVertical: -verticalSpacing,
               },
@@ -100,15 +101,25 @@ export const LabelsView = (props: LabelsViewProps) => {
                 enableScrollViewOverlay ? (
                   <ScrollViewWithOverlay
                     ref={scrollViewRef}
+                    alwaysBounceHorizontal={false}
+                    alwaysBounceVertical={false}
                     bottomOrRightOverlayThemeColor={backgroundThemeColor}
                     containerStyle={style}
+                    data-scrollbar={false}
                     horizontal
                     topOrLeftOverlayThemeColor={backgroundThemeColor}
                   >
                     {c}
                   </ScrollViewWithOverlay>
                 ) : (
-                  <ScrollView ref={scrollViewRef} horizontal style={style}>
+                  <ScrollView
+                    ref={scrollViewRef}
+                    alwaysBounceHorizontal={false}
+                    alwaysBounceVertical={false}
+                    data-scrollbar={false}
+                    horizontal
+                    style={style}
+                  >
                     {c}
                   </ScrollView>
                 )

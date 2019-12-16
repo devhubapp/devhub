@@ -548,7 +548,13 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                 width={sizes.avatarContainerWidth + sizes.horizontalSpaceSize}
               />
 
-              <ScrollView horizontal style={sharedStyles.flex}>
+              <ScrollView
+                alwaysBounceHorizontal={false}
+                alwaysBounceVertical={false}
+                data-scrollbar={false}
+                horizontal
+                style={sharedStyles.flex}
+              >
                 {labels.map((label, index) => (
                   <Fragment key={`${label.name}-${label.color}`}>
                     <Label

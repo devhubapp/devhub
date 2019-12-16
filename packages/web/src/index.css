@@ -1,15 +1,37 @@
-::-webkit-scrollbar {
+*:not([data-scrollbar="true"]), [data-scrollbar="false"] {
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+
+[data-scrollbar="true"] {
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme-background-color-less-2) transparent;
+}
+
+:not([data-scrollbar="true"])::-webkit-scrollbar {
   width: 0px;
   height: 0px;
+}
+
+[data-scrollbar="true"]::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
   background-color: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: transparent;
+  background-color: var(--theme-background-color-less-2);
+  border-radius: 2px;
 }
 
-* {
-  scrollbar-width: none;
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--theme-primary-background-color);
 }
 
 *:focus {

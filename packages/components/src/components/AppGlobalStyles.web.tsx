@@ -15,14 +15,6 @@ function getStyles(params: { theme: Theme }) {
   const invertedTheme = t.invert()
 
   return `
-    ::-webkit-scrollbar-thumb {
-      background-color: ${
-        separatorColorLuminance > backgroundColorLuminance
-          ? lighten(0.025, separatorColor)
-          : darken(0.025, separatorColor)
-      };
-    }
-
     *:focus {
       outline-color: ${t.primaryBackgroundColor};
     }

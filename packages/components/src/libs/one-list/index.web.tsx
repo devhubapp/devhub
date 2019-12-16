@@ -152,14 +152,14 @@ const Row = React.memo(
   }),
 )
 
-const innerElementType = React.forwardRef<
+const InnerElementType = React.forwardRef<
   any,
   {
     [key: string]: any
     style: { width?: string | number; height?: string | number }
   }
 >((props, ref) => {
-  const { style: _style, ...otherProps } = props
+  const { style: _style, ...restProps } = props
 
   const safeAreaInsets = useContext(OneListSafeAreaContext)
 
@@ -185,7 +185,7 @@ const innerElementType = React.forwardRef<
         : _style.height,
   }
 
-  return <div ref={ref} style={style} {...otherProps} />
+  return <div ref={ref} style={style} {...restProps} />
 })
 
 export const OneList = (React.memo(
@@ -211,6 +211,7 @@ export const OneList = (React.memo(
       renderItem,
       safeAreaInsets,
       snapToAlignment,
+      ...restProps
     } = props
 
     const List = props.disableVirtualization
@@ -455,6 +456,11 @@ export const OneList = (React.memo(
       ],
     )
 
+    const OuterElementType = useCallback(
+      (p: any) => <div {...p} {...restProps} />,
+      [],
+    )
+
     return (
       <View
         pointerEvents={pointerEvents}
@@ -496,7 +502,8 @@ export const OneList = (React.memo(
                       key="variable-size-list"
                       estimatedItemSize={estimatedItemSize}
                       height={horizontal ? '100%' : height}
-                      innerElementType={innerElementType}
+                      innerElementType={InnerElementType}
+                      outerElementType={OuterElementType}
                       itemCount={itemCount}
                       itemData={itemData}
                       itemKey={itemKey}
