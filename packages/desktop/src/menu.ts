@@ -339,7 +339,7 @@ export function getMainMenuItems() {
         ...(__DEV__ ? getDeveloperMenuItems() : []),
         { type: 'separator' },
         { role: 'resetzoom', enabled },
-        { role: 'zoomin', enabled },
+        { role: 'zoomin', enabled, accelerator: 'CommandOrControl+=' },
         { role: 'zoomout', enabled },
       ],
     },
