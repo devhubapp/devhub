@@ -66,17 +66,23 @@ export function createWindow() {
   })
 
   win.on('show', () => {
+    menu.updateMenu()
+
     screenId = screen.getDisplayFromWindow(win).id
     tray.updateTrayHightlightMode()
     updateBrowserWindowOptions()
   })
 
   win.on('hide', () => {
+    menu.updateMenu()
+
     const _tray = tray.getTray()
     if (_tray) _tray.setHighlightMode('selection')
   })
 
   win.on('close', e => {
+    menu.updateMenu()
+
     if (process.platform === 'darwin' && !forceQuit) {
       e.preventDefault()
       win.hide()
@@ -101,6 +107,8 @@ export function createWindow() {
   })
 
   win.on('blur', () => {
+    menu.updateMenu()
+
     function shouldHide() {
       const isSameDisplay = screen.getDisplayFromCursor().id === screenId
 
