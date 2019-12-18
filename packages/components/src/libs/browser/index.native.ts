@@ -25,7 +25,7 @@ export const Browser: BrowserCrossPlatform = {
     return null
   },
   dismiss: InAppBrowserReborn.close,
-  openURL: async url => {
+  openURL: async (url, options) => {
     try {
       const isAvailable = await InAppBrowserReborn.isAvailable()
       if (!isAvailable) throw new Error('InAppBrowser not available.')
@@ -38,6 +38,7 @@ export const Browser: BrowserCrossPlatform = {
         secondaryToolbarColor: foregroundColor,
         toolbarColor: backgroundColor,
         waitForRedirectDelay: 500,
+        ...(options && options.native),
       })
 
       emitter.emit('onDismiss')
@@ -52,8 +53,8 @@ export const Browser: BrowserCrossPlatform = {
       return Linking.openURL(url)
     }
   },
-  openURLOnNewTab: url => {
-    Browser.openURL(url)
+  openURLOnNewTab: (...args) => {
+    Browser.openURL(...args)
   },
   setBackgroundColor: color => {
     backgroundColor = color

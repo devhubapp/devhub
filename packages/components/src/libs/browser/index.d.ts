@@ -1,3 +1,5 @@
+import { InAppBrowserOptions } from 'react-native-inappbrowser-reborn'
+
 export interface BrowserCrossPlatform {
   addListener: {
     (event: 'url', handler: (payload: { url: string }) => void): {
@@ -8,7 +10,10 @@ export interface BrowserCrossPlatform {
     } | null
   }
   dismiss(): void
-  openURL(url: string): Promise<void>
+  openURL(
+    url: string,
+    options?: { native?: InAppBrowserOptions },
+  ): Promise<void>
   openURLOnNewTab(url: string): void
   setBackgroundColor(color: string): void
   setForegroundColor(color: string): void
