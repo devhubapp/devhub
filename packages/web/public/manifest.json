@@ -1,7 +1,7 @@
 {
   "name": "DevHub",
   "short_name": "DevHub",
-  "description": "TweetDeck for GitHub",
+  "description": "Unified view for GitHub activities",
   "lang": "en-US",
   "start_url": "./?utm_source=web_app_manifest",
   "display": "standalone",

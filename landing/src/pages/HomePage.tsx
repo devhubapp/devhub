@@ -41,15 +41,38 @@ export default function HomePage(_props: HomePageProps) {
 
         <div className="container flex flex-col lg:flex-row">
           <div className="mb-12 lg:mb-0">
-            <div className="flex flex-col lg:w-8/12 items-center m-auto mb-8 text-center">
+            <div className="flex flex-col lg:w-9/12 items-center m-auto mb-8 text-center">
               <h1 className="text-4xl sm:text-5xl">
-                DevHub is like TweetDeck, but&nbsp;for&nbsp;GitHub
+                DevHub allows you to handle GitHub activities with a unified
+                view
               </h1>
 
-              <h2>
-                Create columns with filters; Manage Notifications, Issues, Pull
-                Requests and Repository Activities; Bookmark things for later;
-                Enable Desktop Push Notifications.
+              <h2
+                className="lg:w-8/12 text-primary font-thin uppercase italic"
+                style={{
+                  textShadow: 'rgba(0, 0, 0, 0.2) 1px 1px 5px',
+                }}
+              >
+                Also Known As "
+                <a
+                  href="https://www.google.com/search?q=tweetdeck+by+twitter&tbm=isch"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  TweetDeck
+                </a>{' '}
+                for{' '}
+                <a href="https://github.com" target="_blank" rel="noopener">
+                  GitHub
+                </a>
+                "
+              </h2>
+
+              <h2 className="w-full xl:w-9/12">
+                Create columns for the repositories and people that matters to
+                you; Manage Notifications, Issues, Pull Requests &amp;
+                Activities; Bookmark things for later; Enable Desktop Push
+                Notifications.
               </h2>
             </div>
             <CTAButtons center className="mb-2" />

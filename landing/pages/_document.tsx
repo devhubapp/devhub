@@ -1,7 +1,7 @@
 import NextDocument, { Head, Main, NextScript } from 'next/document'
 import React from 'react'
 
-const shortDescriptionTitle = 'TweetDeck for GitHub'
+const shortDescriptionTitle = 'Unified view for GitHub activities'
 const shortDescriptionContent =
   'Create columns with filters; Manage Notifications, Issues, Pull Requests and Repository Activities; Bookmark things for later; Enable Desktop Push Notifications.'
 const fullDescription = `${shortDescriptionTitle}. ${shortDescriptionContent}`

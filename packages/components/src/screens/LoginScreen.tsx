@@ -333,7 +333,7 @@ export const LoginScreen = React.memo(() => {
           <Spacer height={contentPadding / 2} />
 
           <ThemedText color="foregroundColorMuted65" style={styles.subtitle}>
-            TweetDeck for GitHub
+            Unified view for GitHub activities
           </ThemedText>
 
           <Spacer height={contentPadding * 2} />
