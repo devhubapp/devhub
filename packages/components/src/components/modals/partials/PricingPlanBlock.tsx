@@ -275,12 +275,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
                 color="foregroundColorMuted65"
                 style={[sharedStyles.textCenter, { fontSize: smallTextSize }]}
               >
-                {`${
-                  plan.type === 'team' ||
-                  (plan.transformUsage && plan.transformUsage.divideBy > 1)
-                    ? '/user'
-                    : ''
-                }${plan.interval ? '/month' : ''}${
+                {`${plan.interval ? '/month' : ''}${
                   estimatedMonthlyPrice !== plan.amount ? '*' : ''
                 }` || ' '}
               </ThemedText>

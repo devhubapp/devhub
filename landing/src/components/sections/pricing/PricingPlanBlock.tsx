@@ -86,11 +86,6 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       : _priceLabel
 
   const subtitle = `${
-    localizedPlan.type === 'team' ||
-    (localizedPlan.transformUsage && localizedPlan.transformUsage.divideBy > 1)
-      ? '/user'
-      : ''
-  }${
     forceShowAsMonthly
       ? '/month'
       : localizedPlan.interval

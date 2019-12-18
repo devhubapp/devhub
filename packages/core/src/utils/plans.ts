@@ -4,7 +4,9 @@ import * as constants from './constants'
 export type ActivePlanID =
   | 'free'
   | '5db0d37ce59ab2d3c0bbd611'
-  | '5de54fc29188ad514567ddb2'
+  | '5dd44e11b2726bb02d540b5e'
+  | '5dd4618db3ebb145268eba7c'
+  | '5dfab6e1f63a5fda5bddb40f'
 
 export type InactivePlanID =
   | '5d4b8e85d123d1d770d93825'
@@ -14,20 +16,19 @@ export type InactivePlanID =
   | '5dba30bd0621102b5cd0bc44'
   | '5dba30bf7deee78cb184291d'
   | '5dc89f56bae8d4ae5245423e'
-  | '5dd4618db3ebb145268eba7c'
-  | '5dd467e799537b2378df8eea'
   | '5de54fc1d6c4fded37775e71'
-  | '5dd44e11b2726bb02d540b5e'
   | '5ded8bd7fcf793f771a0264c'
   | '5ded8e946bcd42efb0e6094a'
   | '5de54fc278c2188b4ec17fc7'
-  | '5de54fc30cd5acc31a86e884'
   | '5de552b6dde41be55811ed15'
   | '5dee983f450f010aa1c9ca10'
   | '5def259daae626775b89a2d0'
   | '5def28820f73d2a6fca95d45'
   | '5dd82d16eb2b11106f941f8d'
   | '5db0d5fb957ac4e5ed7bbb05'
+  | '5de54fc29188ad514567ddb2'
+  | '5de54fc30cd5acc31a86e884'
+  | '5dd467e799537b2378df8eea'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -441,7 +442,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
     cannonicalId: 'team-monthly',
     label: 'Team Monthly',
-    description: '',
+    description: '\n\n',
     amount: 4900,
     currency: 'usd',
     interval: 'month',
@@ -474,7 +475,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
     cannonicalId: 'team-yearly',
     label: 'Team Yearly',
-    description: '',
+    description: '\n\n',
     amount: 25200,
     currency: 'usd',
     interval: 'year',
@@ -817,18 +818,49 @@ export const allPlansObj: Record<PlanID, Plan> = {
       enablePushNotifications: true,
     },
   },
+
+  '5dfab6e1f63a5fda5bddb40f': {
+    id: '5dfab6e1f63a5fda5bddb40f',
+    type: 'team',
+
+    stripeIds: ['plan_GNxyeVqQGVbaKY', 'plan_GNxvchw3CxXnUh'],
+    paddleProductId: undefined,
+
+    banner: '30% OFF',
+
+    cannonicalId: 'team-yearly',
+    label: 'Team Yearly',
+    description: '\n\n',
+    amount: 24900,
+    currency: 'usd',
+    interval: 'year',
+    intervalCount: 1,
+    trialPeriodDays: 0,
+    transformUsage: {
+      divideBy: 3,
+      round: 'up',
+    },
+
+    featureLabels: [],
+
+    featureFlags: {
+      columnsLimit: constants.COLUMNS_LIMIT,
+      enableFilters: true,
+      enableSync: true,
+      enablePrivateRepositories: true,
+      enablePushNotifications: true,
+    },
+  },
 }
 
 export const allPlans = Object.values(allPlansObj)
 
-export const activePlans: Array<Plan & { id: ActivePlanID }> = [
+export const activePlans: Plan[] = [
   freeTrialPlan,
-  allPlansObj['5db0d37ce59ab2d3c0bbd611'] as Plan & {
-    id: ActivePlanID
-  },
-  allPlansObj['5de54fc29188ad514567ddb2'] as Plan & {
-    id: ActivePlanID
-  },
+  allPlansObj['5db0d37ce59ab2d3c0bbd611'],
+  allPlansObj['5dd44e11b2726bb02d540b5e'],
+  allPlansObj['5dd4618db3ebb145268eba7c'],
+  allPlansObj['5dfab6e1f63a5fda5bddb40f'],
 ]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)

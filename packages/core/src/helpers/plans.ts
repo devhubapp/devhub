@@ -186,6 +186,13 @@ export function formatInterval(
   const { quantity } = options
 
   return `${
+    quantity && quantity >= 1
+      ? ''
+      : (type === 'team' && !transformUsage) ||
+        (transformUsage && !(transformUsage.divideBy > 1))
+      ? '/user'
+      : ''
+  }${
     interval
       ? intervalCount > 1
         ? ` every ${intervalCount} ${interval}s`
