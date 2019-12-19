@@ -43,8 +43,7 @@ export default function HomePage(_props: HomePageProps) {
           <div className="mb-12 lg:mb-0">
             <div className="flex flex-col lg:w-9/12 items-center m-auto mb-8 text-center">
               <h1 className="text-4xl sm:text-5xl">
-                DevHub allows you to handle GitHub activities with a unified
-                view
+                GitHub activities with a unified view
               </h1>
 
               <h2
@@ -53,7 +52,7 @@ export default function HomePage(_props: HomePageProps) {
                   textShadow: 'rgba(0, 0, 0, 0.2) 1px 1px 5px',
                 }}
               >
-                Also Known As "
+                <span title="Also Known As">AKA</span> "
                 <a
                   href="https://www.google.com/search?q=tweetdeck+by+twitter&tbm=isch"
                   target="_blank"
