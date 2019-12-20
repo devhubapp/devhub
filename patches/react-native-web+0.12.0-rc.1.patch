@@ -1,0 +1,60 @@
+diff --git a/node_modules/react-native-web/dist/cjs/exports/TextInput/index.js b/node_modules/react-native-web/dist/cjs/exports/TextInput/index.js
+index a7e82d0..7bf3c0c 100644
+--- a/node_modules/react-native-web/dist/cjs/exports/TextInput/index.js
++++ b/node_modules/react-native-web/dist/cjs/exports/TextInput/index.js
+@@ -296,6 +296,7 @@ function (_React$Component) {
+         _this$props6$numberOf = _this$props6.numberOfLines,
+         numberOfLines = _this$props6$numberOf === void 0 ? 1 : _this$props6$numberOf,
+         placeholder = _this$props6.placeholder,
++        placeholderTextColor = _this$props6.placeholderTextColor,
+         returnKeyType = _this$props6.returnKeyType,
+         _this$props6$secureTe = _this$props6.secureTextEntry,
+         secureTextEntry = _this$props6$secureTe === void 0 ? false : _this$props6$secureTe,
+@@ -354,6 +355,7 @@ function (_React$Component) {
+       onKeyPress: this._handleKeyPress,
+       onSelect: normalizeEventHandler(this._handleSelectionChange),
+       placeholder: placeholder,
++      placeholderTextColor: placeholderTextColor,
+       readOnly: !editable,
+       ref: this._setNode,
+       spellCheck: spellCheck != null ? spellCheck : autoCorrect,
+diff --git a/node_modules/react-native-web/dist/exports/TextInput/index.js b/node_modules/react-native-web/dist/exports/TextInput/index.js
+index a7692c2..fc151eb 100644
+--- a/node_modules/react-native-web/dist/exports/TextInput/index.js
++++ b/node_modules/react-native-web/dist/exports/TextInput/index.js
+@@ -289,6 +289,7 @@ function (_React$Component) {
+         _this$props6$numberOf = _this$props6.numberOfLines,
+         numberOfLines = _this$props6$numberOf === void 0 ? 1 : _this$props6$numberOf,
+         placeholder = _this$props6.placeholder,
++        placeholderTextColor = _this$props6.placeholderTextColor,
+         returnKeyType = _this$props6.returnKeyType,
+         _this$props6$secureTe = _this$props6.secureTextEntry,
+         secureTextEntry = _this$props6$secureTe === void 0 ? false : _this$props6$secureTe,
+@@ -347,6 +348,7 @@ function (_React$Component) {
+       onKeyPress: this._handleKeyPress,
+       onSelect: normalizeEventHandler(this._handleSelectionChange),
+       placeholder: placeholder,
++      placeholderTextColor: placeholderTextColor,
+       readOnly: !editable,
+       ref: this._setNode,
+       spellCheck: spellCheck != null ? spellCheck : autoCorrect,
+diff --git a/node_modules/react-native-web/src/exports/TextInput/index.js b/node_modules/react-native-web/src/exports/TextInput/index.js
+index 6b520ff..7205612 100644
+--- a/node_modules/react-native-web/src/exports/TextInput/index.js
++++ b/node_modules/react-native-web/src/exports/TextInput/index.js
+@@ -107,6 +107,7 @@ class TextInput extends React.Component<TextInputProps> {
+       multiline = false,
+       numberOfLines = 1,
+       placeholder,
++      placeholderTextColor,
+       returnKeyType,
+       secureTextEntry = false,
+       spellCheck,
+@@ -162,6 +163,7 @@ class TextInput extends React.Component<TextInputProps> {
+       onKeyPress: this._handleKeyPress,
+       onSelect: normalizeEventHandler(this._handleSelectionChange),
+       placeholder,
++      placeholderTextColor,
+       readOnly: !editable,
+       ref: this._setNode,
+       spellCheck: spellCheck != null ? spellCheck : autoCorrect,

@@ -194,6 +194,7 @@ export const OneList = (React.memo(
       ListEmptyComponent,
       containerStyle,
       data,
+      disableVirtualization,
       estimatedItemSize,
       footer,
       forceRerenderOnRefChange,
@@ -207,14 +208,14 @@ export const OneList = (React.memo(
       overscanCount,
       pagingEnabled,
       pointerEvents,
-      // refreshControl, // TODO
+      refreshControl: _refreshControl, // TODO
       renderItem,
       safeAreaInsets,
       snapToAlignment,
       ...restProps
     } = props
 
-    const List = props.disableVirtualization
+    const List = disableVirtualization
       ? VariableSizeListWithoutVirtualization
       : VariableSizeList
 

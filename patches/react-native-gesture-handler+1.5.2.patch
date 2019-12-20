@@ -1,3 +1,37 @@
+diff --git a/node_modules/react-native-gesture-handler/GestureComponents.js b/node_modules/react-native-gesture-handler/GestureComponents.js
+index 3d75db8..b660dce 100644
+--- a/node_modules/react-native-gesture-handler/GestureComponents.js
++++ b/node_modules/react-native-gesture-handler/GestureComponents.js
+@@ -37,9 +37,6 @@ module.exports = {
+   get TextInput() {
+     return memoizeWrap(ReactNative.TextInput);
+   },
+-  get ToolbarAndroid() {
+-    return memoizeWrap(ReactNative.ToolbarAndroid);
+-  },
+   get DrawerLayoutAndroid() {
+     const DrawerLayoutAndroid = memoizeWrap(ReactNative.DrawerLayoutAndroid, {
+       disallowInterruption: true,
+diff --git a/node_modules/react-native-gesture-handler/GestureComponents.web.js b/node_modules/react-native-gesture-handler/GestureComponents.web.js
+index 9d2a339..e0c7455 100644
+--- a/node_modules/react-native-gesture-handler/GestureComponents.web.js
++++ b/node_modules/react-native-gesture-handler/GestureComponents.web.js
+@@ -4,7 +4,6 @@ import {
+   FlatList as RNFlatList,
+   Switch as RNSwitch,
+   TextInput as RNTextInput,
+-  ToolbarAndroid as RNToolbarAndroid,
+   ScrollView as RNScrollView,
+ } from 'react-native';
+ 
+@@ -20,7 +19,6 @@ export const Switch = createNativeWrapper(RNSwitch, {
+   disallowInterruption: true,
+ });
+ export const TextInput = createNativeWrapper(RNTextInput);
+-export const ToolbarAndroid = createNativeWrapper(RNToolbarAndroid);
+ export const DrawerLayoutAndroid = createNativeWrapper(RNDrawerLayoutAndroid, {
+   disallowInterruption: true,
+ });
 diff --git a/node_modules/react-native-gesture-handler/android/build/generated/source/buildConfig/androidTest/debug/com/swmansion/gesturehandler/react/test/BuildConfig.java b/node_modules/react-native-gesture-handler/android/build/generated/source/buildConfig/androidTest/debug/com/swmansion/gesturehandler/react/test/BuildConfig.java
 new file mode 100644
 index 0000000..dc64a01
@@ -373,3 +407,18 @@ index fd625bd..c44aff2 100644
    @Override
    protected void onAfterUpdateTransaction(ButtonViewGroup view) {
      view.updateBackground();
+diff --git a/node_modules/react-native-gesture-handler/react-native-gesture-handler.d.ts b/node_modules/react-native-gesture-handler/react-native-gesture-handler.d.ts
+index 58b12ec..061e832 100644
+--- a/node_modules/react-native-gesture-handler/react-native-gesture-handler.d.ts
++++ b/node_modules/react-native-gesture-handler/react-native-gesture-handler.d.ts
+@@ -437,10 +437,6 @@ declare module 'react-native-gesture-handler' {
+     NativeViewGestureHandlerProperties & TextInputProperties
+   > {}
+ 
+-  export class ToolbarAndroid extends React.Component<
+-    NativeViewGestureHandlerProperties & ToolbarAndroidProperties
+-  > {}
+-
+   export class DrawerLayoutAndroid extends React.Component<
+     NativeViewGestureHandlerProperties & DrawerLayoutAndroidProperties
+   > {}
