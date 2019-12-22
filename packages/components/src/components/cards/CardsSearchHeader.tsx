@@ -433,6 +433,10 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
               name="search"
               onPress={() => {
                 batch(() => {
+                  if (showTextInput && isPendingSave) {
+                    formikProps.submitForm()
+                  }
+
                   if (forceShowTextInput) {
                     setIsFocused(false)
                     setForceShowTextInput(false)
