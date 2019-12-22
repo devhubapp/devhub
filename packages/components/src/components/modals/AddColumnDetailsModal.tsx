@@ -639,7 +639,7 @@ export const AddColumnDetailsModal = React.memo(
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
       return renderGenericFormTextInput('owner', required, {
-        placeholder: `E.g.: ${loggedUsername}, facebook`,
+        placeholder: `E.g.: ${loggedUsername}`,
         ...textInputProps,
       })
     }
