@@ -55,7 +55,7 @@ export const CardsOwnerFilterBar = React.memo(
     )
 
     const {
-      allForcedOwners,
+      allExistingOwners,
       allForcedRepos,
       allIncludedOwners,
       ownerFilters,
@@ -80,13 +80,13 @@ export const CardsOwnerFilterBar = React.memo(
           ),
           {
             dashboardFromUsername,
-            forceIncludeTheseOwners: allForcedOwners,
+            forceIncludeTheseOwners: allExistingOwners,
             forceIncludeTheseRepos: allForcedRepos,
             plan,
           },
         ),
       [
-        allForcedOwners,
+        allExistingOwners,
         allForcedRepos,
         allItems,
         column && column.filters,
@@ -178,12 +178,30 @@ export const CardsOwnerFilterBar = React.memo(
     const onItemPress = useCallback<GenericOwnerFilterBarProps['onItemPress']>(
       (item, setOrReplace, value) => {
         if (setOrReplace === 'replace') {
-          dispatch(
-            actions.replaceColumnOwnerFilter({
-              columnId,
-              owner: value ? item.owner : null,
-            }),
-          )
+          if (!value && column && column.type === 'issue_or_pr') {
+            dispatch(
+              actions.replaceColumnFilters({
+                columnId,
+                filters: {
+                  ...(column && column.filters),
+                  owners: _.mapValues(
+                    (column && column.filters && column.filters.owners) || {},
+                    () => ({
+                      value: true,
+                      repos: undefined,
+                    }),
+                  ),
+                },
+              }),
+            )
+          } else {
+            dispatch(
+              actions.replaceColumnOwnerFilter({
+                columnId,
+                owner: value ? item.owner : null,
+              }),
+            )
+          }
         } else {
           dispatch(
             actions.setColumnOwnerFilter({
@@ -195,13 +213,14 @@ export const CardsOwnerFilterBar = React.memo(
           return
         }
       },
-      [columnId],
+      [columnId, column && column.type],
     )
 
     const memoizedDataObjReference = useMemo(() => data, [JSON.stringify(data)])
 
     return (
       <GenericOwnerFilterBar
+        columnType={column && column.type}
         data={memoizedDataObjReference}
         onItemPress={onItemPress}
       />

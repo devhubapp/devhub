@@ -139,8 +139,10 @@ export function getOwnerAndRepoFormattedFilter(
   )
   const repoFilters: typeof ownerFilters = {}
 
+  const allExistingOwners = Object.keys(ownerFiltersWithRepos)
+
   if (ownerFiltersWithRepos) {
-    Object.keys(ownerFiltersWithRepos).forEach(owner => {
+    allExistingOwners.forEach(owner => {
       if (
         !(ownerFiltersWithRepos[owner] && ownerFiltersWithRepos[owner]!.repos)
       )
@@ -171,7 +173,7 @@ export function getOwnerAndRepoFormattedFilter(
   )
 
   const allForcedOwners = _.sortBy(
-    Object.keys(ownerFiltersWithRepos)
+    allExistingOwners
       .filter(
         ownerFilterWithRepo =>
           !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
@@ -191,7 +193,7 @@ export function getOwnerAndRepoFormattedFilter(
   )
 
   const allIncludedOwners = _.sortBy(
-    Object.keys(ownerFiltersWithRepos)
+    allExistingOwners
       .filter(
         ownerFilterWithRepo =>
           !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
@@ -205,6 +207,7 @@ export function getOwnerAndRepoFormattedFilter(
   )
 
   return {
+    allExistingOwners,
     allForcedOwners,
     allForcedRepos,
     allIncludedOwners,

@@ -1,16 +1,11 @@
 import _ from 'lodash'
-import { darken, getLuminance, lighten } from 'polished'
 import React, { useMemo } from 'react'
 
 import { Theme, themeColorFields } from '@devhub/core'
-import { getSeparatorThemeColors } from './common/Separator'
 import { useTheme } from './context/ThemeContext'
 
 function getStyles(params: { theme: Theme }) {
   const { theme: t } = params
-  const separatorColor = t[getSeparatorThemeColors(t.backgroundColor)[0]]
-  const separatorColorLuminance = getLuminance(separatorColor)
-  const backgroundColorLuminance = getLuminance(t.backgroundColor)
 
   const invertedTheme = t.invert()
 

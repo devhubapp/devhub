@@ -577,7 +577,14 @@ export const columnsReducer: Reducer<State> = (
         if (!column) return
 
         column.filters = column.filters || {}
-        column.filters.owners = {}
+        column.filters.owners = column.filters.owners || {}
+
+        Object.keys(column.filters.owners).forEach(existingOwner => {
+          if (column.filters!.owners![existingOwner]) {
+            column.filters!.owners![existingOwner]!.value = undefined
+            column.filters!.owners![existingOwner]!.repos = undefined
+          }
+        })
 
         if (owner) {
           column.filters.owners[owner] = {

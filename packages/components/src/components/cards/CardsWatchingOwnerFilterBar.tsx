@@ -146,6 +146,7 @@ export const CardsWatchingOwnerFilterBar = React.memo(
 
     return (
       <GenericOwnerFilterBar
+        columnType={column && column.type}
         data={memoizedDataObjReference}
         onItemPress={onItemPress}
       />

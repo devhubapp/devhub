@@ -1,3 +1,4 @@
+import { Column } from '@devhub/core'
 import _ from 'lodash'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { FlatListProps, View } from 'react-native'
@@ -32,6 +33,7 @@ export interface OwnerItemT {
   value: boolean | null
 }
 export interface GenericOwnerFilterBarProps {
+  columnType: Column['type'] | undefined
   data: OwnerItemT[]
   onItemPress: (
     item: OwnerItemT,
@@ -66,7 +68,7 @@ const renderScrollComponent = Platform.select<
 
 export const GenericOwnerFilterBar = React.memo(
   (props: GenericOwnerFilterBarProps) => {
-    const { data, onItemPress: _onItemPress } = props
+    const { columnType, data, onItemPress: _onItemPress } = props
 
     const listRef = useRef<typeof OneList>(null)
 
@@ -101,45 +103,56 @@ export const GenericOwnerFilterBar = React.memo(
     )
 
     const _onItemPressRef = useDynamicRef(_onItemPress)
-    const onItemPress = useCallback((item: OwnerItemT) => {
-      vibrateHapticFeedback()
+    const onItemPress = useCallback(
+      (item: OwnerItemT) => {
+        vibrateHapticFeedback()
 
-      if (KeyboardKeyIsPressed.alt) {
+        if (KeyboardKeyIsPressed.alt) {
+          _onItemPressRef.current(
+            item,
+            'set',
+            item.value === false
+              ? columnType === 'issue_or_pr'
+                ? true
+                : null
+              : false,
+          )
+          return
+        }
+
+        if (KeyboardKeyIsPressed.meta || KeyboardKeyIsPressed.shift) {
+          _onItemPressRef.current(item, 'set', item.value ? null : true)
+          return
+        }
+
+        if (item.value === false) {
+          _onItemPressRef.current(
+            item,
+            'set',
+            columnType === 'issue_or_pr' ? true : null,
+          )
+          return
+        }
+
         _onItemPressRef.current(
           item,
-          'set',
-          item.value === false ? null : false,
+          'replace',
+          item.value && forcedValueCountRef.current === 1 ? null : true,
         )
-        return
-      }
 
-      if (KeyboardKeyIsPressed.meta || KeyboardKeyIsPressed.shift) {
-        _onItemPressRef.current(item, 'set', item.value ? null : true)
-        return
-      }
-
-      if (item.value === false) {
-        _onItemPressRef.current(item, 'set', null)
-        return
-      }
-
-      _onItemPressRef.current(
-        item,
-        'replace',
-        item.value && forcedValueCountRef.current === 1 ? null : true,
-      )
-
-      if (listRef.current && item.index >= 0) {
-        try {
-          listRef.current.scrollToIndex(item.index, {
-            animated: true,
-            alignment: 'center',
-          })
-        } catch (e) {
-          //
+        if (listRef.current && item.index >= 0) {
+          try {
+            listRef.current.scrollToIndex(item.index, {
+              animated: true,
+              alignment: 'center',
+            })
+          } catch (e) {
+            //
+          }
         }
-      }
-    }, [])
+      },
+      [columnType],
+    )
 
     const renderItem = useCallback<OneListProps<OwnerItemT>['renderItem']>(
       ({ item }) => {

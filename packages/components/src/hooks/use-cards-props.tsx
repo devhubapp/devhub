@@ -1,6 +1,5 @@
 import {
   activePaidPlans,
-  activePlans,
   Column,
   ColumnSubscription,
   constants,
@@ -11,9 +10,9 @@ import {
   getUsernamesFromFilter,
   isPlanStatusValid,
 } from '@devhub/core'
+import _ from 'lodash'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { View } from 'react-native'
-import { useDispatch } from 'react-redux'
 
 import {
   getCardPropsForItem,
@@ -35,14 +34,12 @@ import {
 } from '../components/cards/CardsWatchingOwnerFilterBar'
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { ColumnLoadingIndicator } from '../components/columns/ColumnLoadingIndicator'
-import { Button } from '../components/common/Button'
 import { ButtonLink } from '../components/common/ButtonLink'
 import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
 import { RefreshControl } from '../components/common/RefreshControl'
 import { useAppLayout } from '../components/context/LayoutContext'
 import { OneListProps } from '../libs/one-list'
 import { useSafeArea } from '../libs/safe-area-view'
-import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
 import { useColumn } from './use-column'
@@ -79,7 +76,6 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     isOverPlanColumnLimit,
   } = useColumn(columnId || '')
 
-  const dispatch = useDispatch()
   const appToken = useReduxState(selectors.appTokenSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
@@ -103,19 +99,13 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const isUserActivity =
     subtype === 'USER_EVENTS' || subtype === 'USER_PUBLIC_EVENTS'
 
-  const { allIncludedOwners, allIncludedRepos } = useMemo(
+  const { allIncludedOwners, allIncludedRepos, allExistingOwners } = useMemo(
     () => getOwnerAndRepoFormattedFilter(column && column.filters),
     [column && column.filters && column.filters.owners],
   )
 
   const allUsernamesFromFilter =
     (column && getUsernamesFromFilter(type, column.filters).allUsernames) || []
-
-  const allOwnersFromFilter =
-    (column &&
-      getUsernamesFromFilter(type, column.filters, { whitelist: ['owner'] })
-        .allUsernames) ||
-    []
 
   const allWatchingFromFilter =
     (column &&
@@ -223,9 +213,9 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const header = useMemo<OneListProps<DataItemT>['header']>(() => {
     const renderOwnerFilterBar = !!(
       column &&
-      ((data || []).length || allOwnersFromFilter.length) &&
+      ((data || []).length || allExistingOwners.length) &&
       (!_ownerIsKnown ||
-        (column.type === 'issue_or_pr' && allUsernamesFromFilter.length > 1)) &&
+        (column.type === 'issue_or_pr' && allExistingOwners.length > 1)) &&
       !isDashboard
     )
 

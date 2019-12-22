@@ -88,19 +88,37 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
 
   const queryTerms = getSearchQueryTerms(allFiltersQuery)
 
-  function replaceColumnFiltersFromQueryString(q: string) {
+  function replaceColumnFiltersFromQueryString(
+    q: string,
+    {
+      preserveExistingOwners = !!(column && column.type === 'issue_or_pr'),
+    } = {},
+  ) {
     if (!column) return
 
     vibrateHapticFeedback()
 
-    dispatch(
-      actions.replaceColumnFilters({
-        columnId: column.id,
-        filters: getFilterFromSearchQuery(column.type, q, {
-          clearedAt: column.filters && column.filters.clearedAt,
-        }),
-      }),
+    const filters: Column['filters'] = getFilterFromSearchQuery(
+      column.type,
+      q,
+      { clearedAt: column.filters && column.filters.clearedAt },
     )
+
+    if (preserveExistingOwners) {
+      filters.owners = filters.owners || {}
+      Object.keys((column.filters && column.filters.owners) || {}).forEach(
+        existingOwner => {
+          if (!filters.owners![existingOwner]) {
+            filters.owners![existingOwner] = {
+              value: undefined,
+              repos: undefined,
+            }
+          }
+        },
+      )
+    }
+
+    dispatch(actions.replaceColumnFilters({ columnId: column.id, filters }))
   }
 
   const formikProps = useFormik({
@@ -312,7 +330,9 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
                               .join(' ')
                               .trim()
 
-                            replaceColumnFiltersFromQueryString(queryString)
+                            replaceColumnFiltersFromQueryString(queryString, {
+                              preserveExistingOwners: false,
+                            })
                           }
                     }
                     size={searchBarMainContentHeight}
