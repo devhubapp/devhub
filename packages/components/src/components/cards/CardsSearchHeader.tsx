@@ -122,8 +122,9 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
   }
 
   const formikProps = useFormik({
-    enableReinitialize: !isFocused,
+    enableReinitialize: true,
     initialValues: {
+      allFiltersQuery, // here just to reset the form on change
       query: (column && column.filters && column.filters.query) || '',
     },
     onSubmit(values) {
