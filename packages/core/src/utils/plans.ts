@@ -1,10 +1,14 @@
 import { Plan } from '../types'
 import * as constants from './constants'
 
-export type ActivePlanID = '5dd82d16eb2b11106f941f8d'
+export type ActivePlanID =
+  | 'free'
+  | '5db0d37ce59ab2d3c0bbd611'
+  | '5dd44e11b2726bb02d540b5e'
+  | '5dd4618db3ebb145268eba7c'
+  | '5dfab6e1f63a5fda5bddb40f'
 
 export type InactivePlanID =
-  | 'free'
   | '5d4b8e85d123d1d770d93825'
   | '5d4b8e44ab1ba20b9ef4a1ba'
   | '5d4b8e4de70bd8c61c13a6a9'
@@ -20,14 +24,11 @@ export type InactivePlanID =
   | '5dee983f450f010aa1c9ca10'
   | '5def259daae626775b89a2d0'
   | '5def28820f73d2a6fca95d45'
+  | '5dd82d16eb2b11106f941f8d'
   | '5db0d5fb957ac4e5ed7bbb05'
   | '5de54fc29188ad514567ddb2'
   | '5de54fc30cd5acc31a86e884'
   | '5dd467e799537b2378df8eea'
-  | '5db0d37ce59ab2d3c0bbd611'
-  | '5dd44e11b2726bb02d540b5e'
-  | '5dd4618db3ebb145268eba7c'
-  | '5dfab6e1f63a5fda5bddb40f'
 
 export type PlanID = ActivePlanID | InactivePlanID
 
@@ -630,7 +631,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     cannonicalId: 'lifetime-v1',
     label: 'Lifetime v1',
     description: `Lifetime access from v0.9 to v1.9 \n(current: v${constants.APP_VERSION})`,
-    amount: 3500,
+    amount: 9900,
     currency: 'usd',
     interval: undefined,
     intervalCount: 1,
@@ -660,7 +661,7 @@ export const allPlansObj: Record<PlanID, Plan> = {
     cannonicalId: 'team-lifetime-v1',
     label: 'Team Lifetime v1',
     description: `Lifetime access from v0.9 to v1.9 \n(current: v${constants.APP_VERSION})`,
-    amount: 3500,
+    amount: 9900,
     currency: 'usd',
     interval: undefined,
     intervalCount: 1,
@@ -854,7 +855,13 @@ export const allPlansObj: Record<PlanID, Plan> = {
 
 export const allPlans = Object.values(allPlansObj)
 
-export const activePlans: Plan[] = [allPlansObj['5dd82d16eb2b11106f941f8d']]
+export const activePlans: Plan[] = [
+  freeTrialPlan,
+  allPlansObj['5db0d37ce59ab2d3c0bbd611'],
+  allPlansObj['5dd44e11b2726bb02d540b5e'],
+  allPlansObj['5dd4618db3ebb145268eba7c'],
+  allPlansObj['5dfab6e1f63a5fda5bddb40f'],
+]
 
 export const activePaidPlans = activePlans.filter(plan => plan.amount > 0)
 
