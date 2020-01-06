@@ -1,6 +1,6 @@
 {
-  "name": "@devhub/core",
-  "version": "0.99.1",
+  "name": "@brunolemos/devhub-core",
+  "version": "0.99.1-5",
   "private": false,
   "main": "dist/index.js",
   "scripts": {

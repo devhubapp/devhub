@@ -43,7 +43,7 @@ export default function HomePage(_props: HomePageProps) {
           <div className="mb-12 lg:mb-0">
             <div className="flex flex-col lg:w-9/12 items-center m-auto mb-8 text-center">
               <h1 className="text-4xl sm:text-5xl">
-                GitHub activities with a unified view
+                A unified view for GitHub activities
               </h1>
 
               <h2
