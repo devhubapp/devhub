@@ -4,9 +4,14 @@
   "alias": "devhubapp.com",
   "version": 2,
   "builds": [
-    { "src": "next.config.js", "use": "@now/next" }
+    {
+      "src": "next.config.js",
+      "use": "@now/next"
+    }
   ],
-  "regions": ["all"],
+  "regions": [
+    "all"
+  ],
   "github": {
     "enabled": false,
     "autoAlias": false
