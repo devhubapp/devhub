@@ -1,6 +1,5 @@
 import {
   constants,
-  freePlan,
   getColumnOption,
   getUserAvatarByUsername,
   getUserURLFromLogin,
@@ -53,6 +52,7 @@ import {
   getColumnHeaderThemeColors,
 } from '../columns/ColumnHeader'
 import { useAppLayout } from '../context/LayoutContext'
+import { usePlans } from '../context/PlansContext'
 import { getTheme } from '../context/ThemeContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
@@ -165,6 +165,7 @@ export const SidebarOrBottomBar = React.memo(
 
     const { sizename } = useAppLayout()
     const safeAreaInsets = useSafeArea()
+    const { freePlan } = usePlans()
 
     const dispatch = useDispatch()
     const bannerMessage = useReduxState(selectors.bannerMessageSelector)

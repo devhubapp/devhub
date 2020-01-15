@@ -1,5 +1,4 @@
 import {
-  cheapestPlanWithNotifications,
   constants,
   formatPriceAndInterval,
   getColumnOptionMetadata,
@@ -22,6 +21,7 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { Switch } from '../common/Switch'
 import { useAppLayout } from '../context/LayoutContext'
+import { usePlans } from '../context/PlansContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
@@ -34,6 +34,8 @@ export const DesktopPreferences = React.memo(() => {
     enablePushNotificationsSound,
     isMenuBarMode,
   } = useDesktopOptions()
+
+  const { cheapestPlanWithNotifications } = usePlans()
 
   const { sizename } = useAppLayout()
 

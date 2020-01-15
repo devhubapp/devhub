@@ -1,5 +1,4 @@
 import {
-  cheapestPlanWithNotifications,
   constants,
   formatPriceAndInterval,
   getColumnOption,
@@ -29,6 +28,7 @@ import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { TouchableWithoutFeedback } from '../common/TouchableWithoutFeedback'
 import { useDialog } from '../context/DialogContext'
+import { usePlans } from '../context/PlansContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
@@ -84,6 +84,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
 
   const safeAreaInsets = useSafeArea()
   const dispatch = useDispatch()
+  const { cheapestPlanWithNotifications } = usePlans()
   const bannerMessage = useReduxState(selectors.bannerMessageSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const { column } = useColumn(columnId || '')

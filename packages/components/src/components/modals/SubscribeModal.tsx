@@ -1,4 +1,4 @@
-import { activePlans, freePlan, PlanID } from '@devhub/core'
+import { PlanID } from '@devhub/core'
 import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -13,6 +13,7 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
+import { usePlans } from '../context/PlansContext'
 import { ThemedText } from '../themed/ThemedText'
 import { SubscribeForm } from './partials/SubscribeForm'
 import { SubscribeFormProps } from './partials/SubscribeForm.shared'
@@ -27,8 +28,9 @@ export function SubscribeModal(props: SubscribeModalProps) {
 
   const dispatch = useDispatch()
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
+  const { freePlan, plans } = usePlans()
 
-  const plan = planId && activePlans.find(p => p.id === planId)
+  const plan = planId && plans.find(p => p.id === planId)
 
   const trialDays = (plan && plan.trialPeriodDays) || 0
 

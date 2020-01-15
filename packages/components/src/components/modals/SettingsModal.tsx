@@ -1,4 +1,4 @@
-import { constants, freePlan, isPlanStatusValid } from '@devhub/core'
+import { constants, isPlanStatusValid } from '@devhub/core'
 import React from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -20,6 +20,7 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { UnreadDot } from '../common/UnreadDot'
 import { useAppLayout } from '../context/LayoutContext'
+import { usePlans } from '../context/PlansContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { DesktopPreferences } from '../widgets/DesktopPreferences'
@@ -33,6 +34,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { showBackButton } = props
 
   const { sizename } = useAppLayout()
+  const { freePlan } = usePlans()
 
   const dispatch = useDispatch()
   const appToken = useReduxState(selectors.appTokenSelector)

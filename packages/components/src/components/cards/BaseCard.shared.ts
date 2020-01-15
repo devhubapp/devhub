@@ -1,6 +1,5 @@
 import {
   AppViewMode,
-  cheapestPlanWithNotifications,
   Column,
   ColumnSubscription,
   constants,
@@ -217,12 +216,13 @@ function getPrivateBannerCardProps(
     subitems: undefined,
     subtitle: undefined,
     text: {
-      text:
-        cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
-          ? `Unlock private repos for ${formatPriceAndInterval(
-              cheapestPlanWithNotifications,
-            )}`
-          : 'Tap to unlock private repos',
+      text: 'Tap to unlock private repos',
+      // text:
+      //   cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
+      //     ? `Unlock private repos for ${formatPriceAndInterval(
+      //         cheapestPlanWithNotifications,
+      //       )}`
+      //     : 'Tap to unlock private repos',
     },
     title:
       type === 'activity'

@@ -1,12 +1,8 @@
-import {
-  activePaidPlans,
-  freeTrialDays,
-  activePlans,
-} from '@brunolemos/devhub-core'
 import classNames from 'classnames'
 import Link from 'next/link'
 
 import { useAuth } from '../../../context/AuthContext'
+import { usePlans } from '../../../context/PlansContext'
 import { ThemeSwitcher } from '../../common/ThemeSwitcher'
 import HeaderLink from './HeaderLink'
 
@@ -21,6 +17,7 @@ export interface HeaderProps {
 export default function Header(props: HeaderProps) {
   const { fixed } = props
 
+  const { freeTrialDays, paidPlans, plans } = usePlans()
   const { authData } = useAuth()
 
   return (
@@ -79,7 +76,7 @@ export default function Header(props: HeaderProps) {
               Features
             </HeaderLink>
 
-            {activePaidPlans.length > 1 && (
+            {paidPlans.length > 1 && (
               <HeaderLink
                 href="/pricing"
                 className={twClasses.headerLink__rightMargin}
@@ -96,7 +93,7 @@ export default function Header(props: HeaderProps) {
             </HeaderLink> */}
 
             {!!(
-              (freeTrialDays && activePlans.some(plan => !plan.amount)) ||
+              (freeTrialDays && plans.some(plan => !plan.amount)) ||
               (authData &&
                 authData.appToken &&
                 (freeTrialDays || (authData.plan && authData.plan.amount)))

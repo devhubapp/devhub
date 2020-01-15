@@ -53,7 +53,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
 
-  const isMyPlan = userPlan && userPlan.id && userPlan!.id === plan.id
+  const isMyPlan = userPlan && userPlan.id && userPlan.id === plan.id
   const banner =
     isMyPlan && totalNumberOfVisiblePlans > 1
       ? plan.interval

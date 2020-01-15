@@ -1,10 +1,4 @@
-import {
-  activePaidPlans,
-  allPlans,
-  formatPrice,
-  formatPriceAndInterval,
-  Plan,
-} from '@brunolemos/devhub-core'
+import { formatPriceAndInterval, Plan } from '@brunolemos/devhub-core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import qs from 'qs'
@@ -20,6 +14,7 @@ import {
   SubscribeFormProps,
 } from '../components/sections/subscribe/SubscribeForm'
 import { useAuth } from '../context/AuthContext'
+import { usePlans } from '../context/PlansContext'
 import { useStripeLoader } from '../context/StripeLoaderContext'
 import { useLocalizedPlanDetails } from '../hooks/use-localized-plan-details'
 
@@ -29,20 +24,17 @@ export default function SubscribePage(_props: SubscribePageProps) {
   const Router = useRouter()
 
   const { authData, logout } = useAuth()
-
-  const userPlan = allPlans.find(
-    p => p.id === (authData && authData.plan && authData.plan.id),
-  )
+  const { paidPlans, userPlanInfo } = usePlans()
 
   const plans = useMemo(() => {
-    if (!userPlan || !userPlan.amount) return activePaidPlans
-    if (activePaidPlans.find(p => p.id === userPlan.id)) return activePaidPlans
-    return [userPlan].concat(activePaidPlans)
-  }, [userPlan, activePaidPlans])
+    if (!userPlanInfo || !userPlanInfo.amount) return paidPlans
+    if (paidPlans.find(p => p.id === userPlanInfo.id)) return paidPlans
+    return [userPlanInfo].concat(paidPlans)
+  }, [userPlanInfo, paidPlans])
 
   const _planFromQuery = Router.query.plan as string | undefined
   const planFromQuery =
-    (_planFromQuery === 'current' && userPlan) ||
+    (_planFromQuery === 'current' && userPlanInfo) ||
     (_planFromQuery && plans.find(p => p.cannonicalId === _planFromQuery)) ||
     undefined
 
@@ -52,7 +44,9 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
   const plan =
     planFromQuery ||
-    (userPlan && userPlan.id && plans.find(p => p.id === userPlan.id)) ||
+    (userPlanInfo &&
+      userPlanInfo.id &&
+      plans.find(p => p.id === userPlanInfo.id)) ||
     plans[0]
 
   const localizedPlan = useLocalizedPlanDetails(plan)
@@ -150,7 +144,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
               action === 'update_seats' &&
               localizedPlan.interval ? (
               'Update seats'
-            ) : activePaidPlans.length === 1 && !localizedPlan.interval ? (
+            ) : paidPlans.length === 1 && !localizedPlan.interval ? (
               'Purchase DevHub'
             ) : (
               <>
@@ -185,7 +179,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
                               id={
                                 authData.plan &&
                                 authData.plan.id === p.id &&
-                                !activePaidPlans.find(_p => _p.id === p.id)
+                                !paidPlans.find(_p => _p.id === p.id)
                                   ? 'current'
                                   : p.cannonicalId
                               }

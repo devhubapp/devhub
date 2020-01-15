@@ -1,8 +1,8 @@
 import {
-  activePaidPlans,
   constants,
   DevHubHeaders,
   OS,
+  Plan,
   Platform,
   PlatformCategory,
 } from '@brunolemos/devhub-core'
@@ -136,6 +136,8 @@ export function toKebabCase(str: string) {
   return matches.map(s => s.toLowerCase()).join('-')
 }
 
-export function getPurchaseOrSubscribeRoute() {
-  return activePaidPlans.some(p => !!p.interval) ? 'subscribe' : 'purchase'
+export function getPurchaseOrSubscribeRoute(activePlans: Plan[]) {
+  return activePlans.some(p => !!(p && p.amount > 0 && p.interval))
+    ? 'subscribe'
+    : 'purchase'
 }

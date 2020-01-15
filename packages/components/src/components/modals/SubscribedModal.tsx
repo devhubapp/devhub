@@ -1,4 +1,4 @@
-import { allPlans, freePlan, PlanID } from '@devhub/core'
+import { PlanID } from '@devhub/core'
 import React, { useEffect } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -14,6 +14,7 @@ import { ModalColumn } from '../columns/ModalColumn'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
 import { Spacer } from '../common/Spacer'
+import { usePlans } from '../context/PlansContext'
 import { ThemedText } from '../themed/ThemedText'
 
 const logo = require('@devhub/web/public/static/media/logo.png') // tslint:disable-line no-var-requires
@@ -29,8 +30,10 @@ export function SubscribedModal(props: SubscribedModalProps) {
   const dispatch = useDispatch()
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
 
+  const { freePlan, plans } = usePlans()
+
   const planId = _planId || (userPlan && userPlan.id)
-  const plan = planId && allPlans.find(p => p.id === planId)
+  const plan = planId && plans.find(p => p.id === planId)
 
   useEffect(() => {
     if (freePlan && !freePlan.trialPeriodDays && !(plan && plan.id)) {

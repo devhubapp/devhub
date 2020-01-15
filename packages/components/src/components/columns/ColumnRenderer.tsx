@@ -1,5 +1,4 @@
 import {
-  cheapestPlanWithNotifications,
   Column as ColumnT,
   columnHasAnyFilter,
   constants,
@@ -37,6 +36,7 @@ import {
   FreeTrialHeaderMessageProps,
 } from '../common/FreeTrialHeaderMessage'
 import { useAppLayout } from '../context/LayoutContext'
+import { usePlans } from '../context/PlansContext'
 import { Column } from './Column'
 import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
 import { ColumnHeader } from './ColumnHeader'
@@ -127,6 +127,8 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
     mergeSimilar: false,
   })
   const { hasCrossedColumnsLimit, filteredItems } = columnData
+
+  const { cheapestPlanWithNotifications } = usePlans()
   const columnsCount = useReduxState(selectors.columnCountSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)

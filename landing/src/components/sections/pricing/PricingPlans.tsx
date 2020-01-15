@@ -1,31 +1,35 @@
-import { activePlans, PlanType } from '@brunolemos/devhub-core'
+import { PlanType } from '@brunolemos/devhub-core'
+import Link from 'next/link'
 import React, { Fragment, useMemo, useState } from 'react'
 
 import { useAuth } from '../../../context/AuthContext'
+import { usePlans } from '../../../context/PlansContext'
 import { getPurchaseOrSubscribeRoute } from '../../../helpers'
 import { Tabs } from '../../common/Tabs'
 import { PricingPlanBlock } from './PricingPlanBlock'
 
 export interface PricingPlansProps {}
 
-const shouldShowPlanTypeTabs =
-  activePlans.some(plan => plan.type !== 'team') &&
-  activePlans.some(plan => plan.type === 'team')
-
 export function PricingPlans(_props: PricingPlansProps) {
   const { authData } = useAuth()
+  const { plans } = usePlans()
 
-  const [tab, setTab] = useState<PlanType | undefined>(
-    shouldShowPlanTypeTabs &&
-      (authData && authData.plan && authData.plan.type) === 'team'
+  const shouldShowPlanTypeTabs =
+    plans.some(plan => plan.type !== 'team') &&
+    plans.some(plan => plan.type === 'team')
+
+  const [_tab, setTab] = useState<PlanType | undefined>(undefined)
+  const tab =
+    _tab ||
+    (shouldShowPlanTypeTabs &&
+    (authData && authData.plan && authData.plan.type) === 'team'
       ? 'team'
       : shouldShowPlanTypeTabs
       ? 'individual'
-      : undefined,
-  )
+      : undefined)
 
   const pricingPlanComponents = useMemo(() => {
-    const plans = activePlans.filter(
+    const filteredPlans = plans.filter(
       plan =>
         !!(
           plan &&
@@ -34,16 +38,18 @@ export function PricingPlans(_props: PricingPlansProps) {
         ),
     )
 
-    return plans.map(plan =>
+    return filteredPlans.map(plan =>
       plan.amount > 0 ? (
         <PricingPlanBlock
           key={`pricing-plan-${plan.id}`}
           banner={plan.banner}
-          buttonLink={`/${getPurchaseOrSubscribeRoute()}?plan=${plan.cannonicalId}${
+          buttonLink={`/${getPurchaseOrSubscribeRoute(plans)}?plan=${
+            plan.cannonicalId
+          }${
             '' // plan.paddleProductId ? '&autostart' : ''
           }${!(authData && authData.appToken) ? '&autologin' : ''}`}
           plan={plan}
-          totalNumberOfVisiblePlans={plans.length}
+          totalNumberOfVisiblePlans={filteredPlans.length}
         />
       ) : (
         <PricingPlanBlock
@@ -52,7 +58,7 @@ export function PricingPlans(_props: PricingPlansProps) {
           buttonLink={`/download?plan=${plan.cannonicalId}`}
           buttonLabel="Download"
           plan={plan}
-          totalNumberOfVisiblePlans={plans.length}
+          totalNumberOfVisiblePlans={filteredPlans.length}
         />
       ),
     )

@@ -1,5 +1,4 @@
 import {
-  activePlans,
   formatInterval,
   formatPrice,
   formatPriceAndInterval,
@@ -14,6 +13,7 @@ import { getPurchaseOrSubscribeRoute } from '../../../helpers'
 import { useLocalizedPlanDetails } from '../../../hooks/use-localized-plan-details'
 import Button from '../../common/buttons/Button'
 import CheckLabel from '../../common/CheckLabel'
+import { usePlans } from '../../../context/PlansContext'
 
 export interface PricingPlanBlockProps {
   banner?: string | boolean
@@ -35,11 +35,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   } = props
 
   const { authData } = useAuth()
-
+  const { plans } = usePlans()
   const localizedPlan = useLocalizedPlanDetails(plan)
   const userPlan = authData && authData.plan
   const userPlanIsActive =
-    userPlan && userPlan.id && activePlans.find(p => p.id === userPlan!.id)
+    userPlan && userPlan.id && plans.find(p => p.id === userPlan!.id)
   const isMyPlan = userPlan && userPlan.id === localizedPlan.id
 
   const banner = userPlanIsActive
@@ -101,7 +101,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       `Free for ${localizedPlan.trialPeriodDays} days`
   } else if (
     localizedPlan.amount &&
-    activePlans.some(p => !p.amount && p.trialPeriodDays)
+    plans.some(p => !p.amount && p.trialPeriodDays)
   ) {
     //
   } else if (localizedPlan.trialPeriodDays) {
@@ -228,7 +228,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             localizedPlan.type === 'team' ? (
               <Button
                 type="primary"
-                href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
+                href={`/${getPurchaseOrSubscribeRoute(plans)}${qs.stringify(
                   { localizedPlan: userPlan && userPlan.id },
                   { addQueryPrefix: true },
                 )}`}

@@ -1,13 +1,4 @@
-import {
-  activePaidPlans,
-  activePaidPlans as _activePaidPlans,
-  activePlans as _activePlans,
-  allPlans,
-  constants,
-  freePlan,
-  Plan,
-  PlanID,
-} from '@devhub/core'
+import { constants, Plan, PlanID } from '@devhub/core'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -27,6 +18,7 @@ import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { usePlans } from '../context/PlansContext'
 import {
   defaultPricingBlockWidth,
   PricingPlanBlock,
@@ -38,8 +30,7 @@ export interface PricingModalProps {
   showBackButton: boolean
 }
 
-const plansToShow =
-  freePlan && !freePlan.trialPeriodDays ? _activePlans : _activePaidPlans
+const allowChangePlansOnThisApp = false
 
 export function PricingModal(props: PricingModalProps) {
   const {
@@ -57,44 +48,48 @@ export function PricingModal(props: PricingModalProps) {
   const columnCount = useReduxState(selectors.columnCountSelector)
   const columnWidth = useColumnWidth()
 
+  const { freePlan, plans, paidPlans, userPlanInfo } = usePlans()
+
+  const plansToShow = freePlan && !freePlan.trialPeriodDays ? plans : paidPlans
+
   const highlightFeature: PricingModalProps['highlightFeature'] =
     _highlightFeature ||
     (userPlan && columnCount >= userPlan.featureFlags.columnsLimit
       ? 'columnsLimit'
       : undefined)
 
-  const userPlanDetails =
-    userPlan && userPlan.id && allPlans.find(p => p.id === userPlan.id)
   const userPlanStillExist = !!(
     userPlan &&
     userPlan.id &&
     plansToShow.find(p => p.id === userPlan.id)
   )
 
-  const showUserPlanAtTheTop = true
+  const showUserPlanAtTheTop = !!userPlanInfo
   /*
     userPlan &&
-    ((userPlanDetails &&
-      (userPlanDetails.amount ||
-        (userPlanDetails.trialPeriodDays && !isPlanExpired(userPlan))) &&
+    ((userPlanInfo &&
+      (userPlanInfo.amount ||
+        (userPlanInfo.trialPeriodDays && !isPlanExpired(userPlan))) &&
       !userPlanStillExist) ||
       userPlan.cancelAt ||
       userPlan.type === 'team')
   */
 
-  const [selectedPlanId, setSelectedPlanId] = useState<PlanID | undefined>(
-    () =>
-      (initialSelectedPlanId &&
-      plansToShow.find(p => p.id === initialSelectedPlanId)
-        ? initialSelectedPlanId
-        : undefined) ||
+  const [_selectedPlanId, setSelectedPlanId] = useState<PlanID | undefined>(
+    undefined,
+  )
+  const selectedPlanId =
+    _selectedPlanId ||
+    ((initialSelectedPlanId &&
+    plansToShow.find(p => p.id === initialSelectedPlanId)
+      ? initialSelectedPlanId
+      : undefined) ||
       (_highlightFeature &&
       plansToShow.find(p => p.featureFlags[_highlightFeature] === true)
         ? plansToShow.find(p => p.featureFlags[_highlightFeature] === true)!.id
         : undefined) ||
       (userPlan && userPlanStillExist && userPlan.id) ||
-      undefined,
-  )
+      undefined)
 
   const selectedPlan =
     selectedPlanId && plansToShow.find(p => p.id === selectedPlanId)
@@ -302,7 +297,7 @@ export function PricingModal(props: PricingModalProps) {
       title="Subscribe"
     >
       <>
-        {!!showUserPlanAtTheTop && (
+        {!!(showUserPlanAtTheTop && userPlanInfo) && (
           <>
             <SubHeader title="CURRENT PLAN" />
 
@@ -310,7 +305,7 @@ export function PricingModal(props: PricingModalProps) {
               <PricingPlanBlock
                 key="pricing-current-plan"
                 banner={false}
-                plan={userPlanDetails!}
+                plan={userPlanInfo}
                 showCurrentPlanDetails
                 totalNumberOfVisiblePlans={1}
                 width="100%"
@@ -332,7 +327,7 @@ export function PricingModal(props: PricingModalProps) {
           </>
         )}
 
-        {showUserPlanAtTheTop ? (
+        {showUserPlanAtTheTop && !allowChangePlansOnThisApp ? (
           <View
             style={[sharedStyles.fullWidth, sharedStyles.paddingHorizontal]}
           >
@@ -344,9 +339,7 @@ export function PricingModal(props: PricingModalProps) {
               openOnNewTab
               type="neutral"
             >
-              {userPlan &&
-              userPlan.amount &&
-              activePaidPlans.some(p => p.interval)
+              {userPlan && userPlan.amount && paidPlans.some(p => p.interval)
                 ? 'Switch plan ↗'
                 : 'See available options ↗'}
             </ButtonLink>
@@ -357,7 +350,7 @@ export function PricingModal(props: PricingModalProps) {
 
             <SubHeader
               title={
-                userPlanDetails && userPlanDetails.amount
+                userPlanInfo && userPlanInfo.amount
                   ? 'CHANGE PLAN'
                   : 'SELECT A PLAN'
               }

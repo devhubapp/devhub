@@ -57,6 +57,7 @@ export interface LoginActivity {
 
 export interface GraphQLUserPlan extends DatabaseUserPlan {
   banner?: string | boolean
+  description?: string
   featureFlags: {
     columnsLimit: number
     enableFilters: boolean

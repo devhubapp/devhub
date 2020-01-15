@@ -1,5 +1,4 @@
 import {
-  activePaidPlans,
   Column,
   ColumnSubscription,
   constants,
@@ -38,6 +37,7 @@ import { ButtonLink } from '../components/common/ButtonLink'
 import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
 import { RefreshControl } from '../components/common/RefreshControl'
 import { useAppLayout } from '../components/context/LayoutContext'
+import { usePlans } from '../components/context/PlansContext'
 import { OneListProps } from '../libs/one-list'
 import { useSafeArea } from '../libs/safe-area-view'
 import * as selectors from '../redux/selectors'
@@ -75,6 +75,8 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     isOverMaxColumnLimit,
     isOverPlanColumnLimit,
   } = useColumn(columnId || '')
+
+  const { paidPlans } = usePlans()
 
   const appToken = useReduxState(selectors.appTokenSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
@@ -354,7 +356,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                   analyticsCategory="plan_expired"
                   analyticsLabel="select_a_plan_button"
                   children={
-                    activePaidPlans.some(p => p.interval)
+                    paidPlans.some(p => p.interval)
                       ? plan && plan.amount
                         ? 'Switch plan ↗'
                         : 'Select a plan ↗'
@@ -465,7 +467,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                 analyticsLabel="select_a_plan_button"
                 analyticsCategory="invalid_plan"
                 children={
-                  activePaidPlans.some(p => p.interval)
+                  paidPlans.some(p => p.interval)
                     ? plan && plan.amount
                       ? 'Switch plan ↗'
                       : 'Select a plan ↗'

@@ -1157,10 +1157,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@brunolemos/devhub-core@0.99.1-4":
-  version "0.99.1-4"
-  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.99.1-4.tgz#b33796149e1b63ab4c5182e7fdb32cf7fb8e8ea6"
-  integrity sha512-MUn15QPrU80JpJrFvEBb+5ZecZ0r0WIuraZXRUAGHqcTIChc3KP/7Y1zPQ7ZEWcRMh6h6LZbumh3I0B4lKnUBA==
+"@brunolemos/devhub-core@0.99.1-7":
+  version "0.99.1-7"
+  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.99.1-7.tgz#cba94f3637a20ce52752c6a2bc1ac6925f6277ae"
+  integrity sha512-Ry/ArEXc090+zohC5nuURbPE34H4xjarDVI5ZPx9pRtRTmlGPX1604vtZTVT734/sibaAsZayIQhqJRXRGLZ/A==
   dependencies:
     "@octokit/rest" "16.20.0"
     axios "0.19.0"

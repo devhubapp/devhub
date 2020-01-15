@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import qs from 'qs'
 import { useEffect } from 'react'
 
+import { usePlans } from '../src/context/PlansContext'
 import { getPurchaseOrSubscribeRoute } from '../src/helpers'
 import SubscribePage from '../src/pages/SubscribePage'
 
@@ -11,8 +12,10 @@ export interface SubscribePageProps {}
 const Buy: NextPage<SubscribePageProps> = () => {
   const Router = useRouter()
 
+  const { plans } = usePlans()
+
   useEffect(() => {
-    const route = getPurchaseOrSubscribeRoute()
+    const route = getPurchaseOrSubscribeRoute(plans)
     if (route === 'subscribe') return
 
     Router.replace(

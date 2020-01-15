@@ -1,9 +1,4 @@
-import {
-  activePaidPlans,
-  constants,
-  freePlan,
-  freeTrialDays,
-} from '@brunolemos/devhub-core'
+import { constants } from '@brunolemos/devhub-core'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
@@ -16,11 +11,13 @@ import CTAButtons from '../components/sections/CTAButtons'
 import FeaturesBlock from '../components/sections/features/FeaturesBlock'
 import GetStartedBlock from '../components/sections/GetStartedBlock'
 import UsedByCompaniesBlock from '../components/sections/UsedByCompaniesBlock'
+import { usePlans } from '../context/PlansContext'
 
 export interface HomePageProps {}
 
 export default function HomePage(_props: HomePageProps) {
   const Router = useRouter()
+  const { paidPlans, freePlan, freeTrialDays } = usePlans()
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -79,13 +76,12 @@ export default function HomePage(_props: HomePageProps) {
               {!!(freePlan && !freePlan.trialPeriodDays) && (
                 <CheckLabel label="Free version" />
               )}
-              {!!freeTrialDays &&
-                !activePaidPlans.every(plan => !plan.interval) && (
-                  <CheckLabel label={`${freeTrialDays}-day free trial`} />
-                )}
-              {!!(
-                activePaidPlans && activePaidPlans.every(plan => !plan.interval)
-              ) && <CheckLabel label="One-time payment (no subscription)" />}
+              {!!freeTrialDays && !paidPlans.every(plan => !plan.interval) && (
+                <CheckLabel label={`${freeTrialDays}-day free trial`} />
+              )}
+              {!!(paidPlans && paidPlans.every(plan => !plan.interval)) && (
+                <CheckLabel label="One-time payment (no subscription)" />
+              )}
 
               {!constants.GITHUB_APP_HAS_CODE_ACCESS && (
                 <CheckLabel label="No code access (granular permissons)" />

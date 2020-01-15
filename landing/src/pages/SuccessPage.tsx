@@ -1,8 +1,4 @@
-import {
-  activePaidPlans,
-  allPlansObj,
-  isPlanStatusValid,
-} from '@brunolemos/devhub-core'
+import { isPlanStatusValid } from '@brunolemos/devhub-core'
 import Link from 'next/link'
 import qs from 'qs'
 import React, { Fragment } from 'react'
@@ -11,17 +7,17 @@ import Button from '../components/common/buttons/Button'
 import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import { useAuth } from '../context/AuthContext'
+import { usePlans } from '../context/PlansContext'
 import { getPurchaseOrSubscribeRoute } from '../helpers'
 
 export interface SuccessPageProps {}
 
 export default function SuccessPage(_props: SuccessPageProps) {
   const { authData } = useAuth()
+  const { plans, paidPlans, userPlanInfo } = usePlans()
 
   if (!authData.plan) return null
-
-  const planInfo = allPlansObj[authData.plan.id]
-  if (!planInfo) return null
+  if (!userPlanInfo) return null
 
   return (
     <LandingLayout>
@@ -110,15 +106,17 @@ export default function SuccessPage(_props: SuccessPageProps) {
                       ))}{' '}
                       (
                       <Link
-                        href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
+                        href={`/${getPurchaseOrSubscribeRoute(
+                          plans,
+                        )}${qs.stringify(
                           {
                             action: 'update_seats',
                             plan:
                               authData.plan && authData.plan.id
-                                ? activePaidPlans.find(
+                                ? paidPlans.find(
                                     _p => _p.id === authData.plan!.id,
                                   )
-                                  ? planInfo.cannonicalId
+                                  ? userPlanInfo.cannonicalId
                                   : 'current'
                                 : undefined,
                           },
@@ -162,15 +160,13 @@ export default function SuccessPage(_props: SuccessPageProps) {
                   </>
                 ) : authData.plan.type === 'team' ? (
                   <Link
-                    href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
+                    href={`/${getPurchaseOrSubscribeRoute(plans)}${qs.stringify(
                       {
                         action: 'update_seats',
                         plan:
                           authData.plan && authData.plan.id
-                            ? activePaidPlans.find(
-                                _p => _p.id === authData.plan!.id,
-                              )
-                              ? planInfo.cannonicalId
+                            ? paidPlans.find(_p => _p.id === authData.plan!.id)
+                              ? userPlanInfo.cannonicalId
                               : 'current'
                             : undefined,
                       },

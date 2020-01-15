@@ -1,13 +1,8 @@
-import {
-  activePaidPlans,
-  activePlans,
-  constants,
-  formatPrice,
-  freeTrialDays,
-} from '@brunolemos/devhub-core'
+import { constants, formatPrice } from '@brunolemos/devhub-core'
 import classNames from 'classnames'
 
 import { useAuth } from '../../context/AuthContext'
+import { usePlans } from '../../context/PlansContext'
 import { getPurchaseOrSubscribeRoute, getSystemLabel } from '../../helpers'
 import { useLocalizedPlanDetails } from '../../hooks/use-localized-plan-details'
 import { useSystem } from '../../hooks/use-system'
@@ -23,7 +18,8 @@ export default function CTAButtons(props: CTAButtonsProps) {
 
   const { os } = useSystem()
   const { authData } = useAuth()
-  const localizedPlan = useLocalizedPlanDetails(activePaidPlans[0])
+  const { freeTrialDays, paidPlans, plans } = usePlans()
+  const localizedPlan = useLocalizedPlanDetails(paidPlans[0])
   const priceLabel = localizedPlan ? formatPrice(localizedPlan) : ''
 
   return (
@@ -50,28 +46,32 @@ export default function CTAButtons(props: CTAButtonsProps) {
         </>
       ) : os ? (
         <>
-          {activePaidPlans.length === 1 &&
-          !activePaidPlans[0].interval &&
-          activePaidPlans[0].amount ? (
+          {paidPlans.length === 1 &&
+          !paidPlans[0].interval &&
+          paidPlans[0].amount ? (
             <Button
               className="mb-2 mr-2"
-              href={authData.appToken ? `/${getPurchaseOrSubscribeRoute()}` : `/${getPurchaseOrSubscribeRoute()}?autologin`}
+              href={
+                authData.appToken
+                  ? `/${getPurchaseOrSubscribeRoute(plans)}`
+                  : `/${getPurchaseOrSubscribeRoute(plans)}?autologin`
+              }
               type="primary"
             >
               {`Purchase${priceLabel ? ` for ${priceLabel}` : ''}`}
             </Button>
-          ) : activePaidPlans.length === 1 && activePaidPlans[0] ? (
+          ) : paidPlans.length === 1 && paidPlans[0] ? (
             <Button
               type="primary"
-              href={`/${getPurchaseOrSubscribeRoute()}`}
+              href={`/${getPurchaseOrSubscribeRoute(plans)}`}
               target="_top"
               className="mb-2 mr-2"
             >
-              {activePaidPlans[0].trialPeriodDays
+              {paidPlans[0].trialPeriodDays
                 ? 'Start free trial'
                 : freeTrialDays
                 ? 'See pricing'
-                : activePaidPlans[0].interval
+                : paidPlans[0].interval
                 ? 'Subscribe'
                 : 'Purchase'}
             </Button>
@@ -82,13 +82,13 @@ export default function CTAButtons(props: CTAButtonsProps) {
               target="_top"
               className="mb-2 mr-2"
             >
-              {activePaidPlans[0].trialPeriodDays
+              {paidPlans[0].trialPeriodDays
                 ? 'Start free trial'
                 : 'See pricing'}
             </Button>
           )}
 
-          {!!(freeTrialDays && activePlans.some(plan => !plan.amount)) && (
+          {!!(freeTrialDays && plans.some(plan => !plan.amount)) && (
             <Button
               type="neutral"
               href="/download?autostart"

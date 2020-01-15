@@ -1,4 +1,3 @@
-import { activePaidPlans } from '@brunolemos/devhub-core'
 import Link from 'next/link'
 
 const twClasses = {

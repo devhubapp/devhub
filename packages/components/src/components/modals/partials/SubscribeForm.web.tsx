@@ -1,8 +1,6 @@
 import {
-  activePlans,
   constants,
   formatPriceAndInterval,
-  freePlan,
   isPlanStatusValid,
   UserPlan,
 } from '@devhub/core'
@@ -27,6 +25,7 @@ import { StripeLoader } from '../../common/StripeLoader.web'
 import { SubHeader } from '../../common/SubHeader'
 import { defaultTextInputHeight } from '../../common/TextInput'
 import { useAppLayout } from '../../context/LayoutContext'
+import { usePlans } from '../../context/PlansContext'
 import { useTheme } from '../../context/ThemeContext'
 import { ThemedText } from '../../themed/ThemedText'
 import { ThemedTextInput } from '../../themed/ThemedTextInput'
@@ -46,6 +45,7 @@ const SubscribeFormWithStripe = React.memo(
     const dispatch = useDispatch()
     const appToken = useReduxState(selectors.appTokenSelector)
     const userPlan = useReduxState(selectors.currentUserPlanSelector)
+    const { plans, freePlan } = usePlans()
 
     const isMountedRef = useRef(true)
     const [userPlansToKeepUsing, setUserPlansToKeepUsing] = useState(false)
@@ -294,7 +294,7 @@ const SubscribeFormWithStripe = React.memo(
       }
     }
 
-    const plan = planId && activePlans.find(p => p.id === planId)
+    const plan = planId && plans.find(p => p.id === planId)
 
     return (
       <form onSubmit={handleSubmit}>

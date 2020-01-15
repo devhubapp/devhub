@@ -1,12 +1,5 @@
-import {
-  activePlans,
-  getDefaultUserPlan,
-  GraphQLUserPlan,
-  isPlanExpired,
-} from '@devhub/core'
-import { createSelector } from 'reselect'
+import { isPlanExpired } from '@devhub/core'
 
-import { Platform } from '../../libs/platform'
 import { EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { githubAppTokenSelector, githubTokenSelector } from './github/auth'
@@ -35,48 +28,10 @@ export const currentUserSelector = (state: RootState) => {
   return user
 }
 
-export const currentUserPlanSelector = createSelector(
-  (state: RootState) => {
-    const user = currentUserSelector(state)
-    return (user && user.plan) || undefined
-  },
-  (state: RootState) => {
-    const user = currentUserSelector(state)
-    return (user && user.createdAt) || undefined
-  },
-  (state: RootState) => {
-    const user = currentUserSelector(state)
-    return (user && user.freeTrialStartAt) || undefined
-  },
-  (state: RootState) => {
-    const user = currentUserSelector(state)
-    return (user && user.freeTrialEndAt) || undefined
-  },
-  (
-    plan,
-    createdAt,
-    freeTrialStartAt,
-    freeTrialEndAt,
-  ): GraphQLUserPlan | undefined => {
-    if (Platform.OS !== 'web') {
-      return {
-        ...plan,
-        ...activePlans.slice(-1)[0],
-        status: 'active',
-      } as GraphQLUserPlan
-    }
-
-    return (
-      plan ||
-      (createdAt &&
-        getDefaultUserPlan(createdAt, {
-          trialStartAt: freeTrialStartAt,
-          trialEndAt: freeTrialEndAt,
-        })) ||
-      undefined
-    )
-  },
-)
+export const currentUserPlanSelector = (state: RootState) => {
+  const user = currentUserSelector(state)
+  return (user && user.plan) || undefined
+}
 
 export const isPlanExpiredSelector = (state: RootState): boolean => {
   const plan = currentUserPlanSelector(state)

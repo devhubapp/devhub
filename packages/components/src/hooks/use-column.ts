@@ -1,11 +1,14 @@
-import { constants, freeTrialDays, isPlanExpired } from '@devhub/core'
+import { constants, isPlanExpired } from '@devhub/core'
 import _ from 'lodash'
 import { useCallback, useMemo } from 'react'
 
+import { usePlans } from '../components/context/PlansContext'
 import * as selectors from '../redux/selectors'
 import { useReduxState } from './use-redux-state'
 
 export function useColumn(columnId: string) {
+  const { freeTrialDays } = usePlans()
+
   const column = useReduxState(
     useCallback(state => selectors.columnSelector(state, columnId), [columnId]),
   )

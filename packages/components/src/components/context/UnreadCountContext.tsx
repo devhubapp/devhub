@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useMemo, useRef } from 'react'
 
 import {
   ColumnSubscription,
-  freePlan,
   getColumnHeaderDetails,
   getColumnOption,
   getFilteredItems,
@@ -20,6 +19,7 @@ import {
   CardPushNotification,
   getCardPushNotificationItem,
 } from '../cards/BaseCard.shared'
+import { usePlans } from './PlansContext'
 
 export interface UnreadCountProviderProps {
   children?: React.ReactNode
@@ -41,6 +41,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const subscriptions = useReduxState(selectors.userSubscriptionsArrSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
+  const { freePlan } = usePlans()
 
   // Re-render when changing the data
   useReduxState(selectors.dataNodeIdsOrIdsBySubscriptionId)

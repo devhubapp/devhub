@@ -1,11 +1,6 @@
 import React from 'react'
 
-import {
-  cheapestPlanWithNotifications,
-  Column,
-  constants,
-  getColumnOption,
-} from '@devhub/core'
+import { Column, constants, getColumnOption } from '@devhub/core'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
@@ -22,6 +17,7 @@ import { Link } from '../common/Link'
 import { Separator } from '../common/Separator'
 import { Spacer } from '../common/Spacer'
 import { useAppLayout } from '../context/LayoutContext'
+import { usePlans } from '../context/PlansContext'
 import { keyboardShortcutsById } from '../modals/KeyboardShortcutsModal'
 import { ThemedView } from '../themed/ThemedView'
 import { sharedColumnOptionsStyles } from './options/shared'
@@ -40,6 +36,7 @@ export const ColumnOptions = React.memo(
     const columnsCount = useReduxState(selectors.columnCountSelector)
     const plan = useReduxState(selectors.currentUserPlanSelector)
 
+    const { cheapestPlanWithNotifications } = usePlans()
     const { appOrientation } = useAppLayout()
     const { appViewMode } = useAppViewMode()
     const { column, columnIndex, hasCrossedColumnsLimit } = useColumn(columnId)

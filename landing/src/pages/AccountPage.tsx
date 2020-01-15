@@ -1,8 +1,5 @@
 import {
-  activePaidPlans,
-  allPlansObj,
   formatPriceAndInterval,
-  freeTrialDays,
   isPlanStatusValid,
 } from '@brunolemos/devhub-core'
 import classNames from 'classnames'
@@ -14,6 +11,7 @@ import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
 import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'
+import { usePlans } from '../context/PlansContext'
 import { getPurchaseOrSubscribeRoute, getTrialTimeLeftLabel } from '../helpers'
 
 export interface AccountPageProps {}
@@ -27,7 +25,7 @@ export default function AccountPage(_props: AccountPageProps) {
     logout,
   } = useAuth()
 
-  const planInfo = authData.plan && allPlansObj[authData.plan.id]
+  const { plans, freeTrialDays, paidPlans, userPlanInfo } = usePlans()
 
   const priceLabelForQuantity = authData.plan
     ? formatPriceAndInterval(
@@ -60,12 +58,12 @@ export default function AccountPage(_props: AccountPageProps) {
         </h1>
 
         <h2 className="mb-0 text-xl sm:text-2xl">
-          {!!(planInfo && authData.plan) ? (
+          {!!userPlanInfo && authData.plan ? (
             <>
               {authData.plan.interval ? 'Current plan: ' : 'You bought '}
               <strong className="text-default">
                 {authData.plan.label ||
-                  planInfo.label ||
+                  userPlanInfo.label ||
                   (authData.plan.amount ? 'Paid' : 'None')}
               </strong>
               {!!(
@@ -149,11 +147,11 @@ export default function AccountPage(_props: AccountPageProps) {
         {!!(
           authData.plan &&
           !authData.plan.interval &&
-          planInfo &&
-          planInfo.description
+          userPlanInfo &&
+          userPlanInfo.description
         ) && (
           <p className="mb-2 text-sm text-muted-default italic">
-            {planInfo.description}
+            {userPlanInfo.description}
           </p>
         )}
 
@@ -161,13 +159,12 @@ export default function AccountPage(_props: AccountPageProps) {
 
         {authData.plan && authData.plan.amount > 0 ? (
           <>
-            {activePaidPlans.some(p => !p.interval) &&
+            {paidPlans.some(p => !p.interval) &&
               (!!(!freeTrialDays && authData.plan.interval) ? (
                 <Link
-                  href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
+                  href={`/${getPurchaseOrSubscribeRoute(plans)}${qs.stringify(
                     {
-                      plan: activePaidPlans.find(p => !p.interval)!
-                        .cannonicalId,
+                      plan: paidPlans.find(p => !p.interval)!.cannonicalId,
                     },
                     { addQueryPrefix: true },
                   )}`}
@@ -176,10 +173,9 @@ export default function AccountPage(_props: AccountPageProps) {
                 </Link>
               ) : (
                 <Link
-                  href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
+                  href={`/${getPurchaseOrSubscribeRoute(plans)}${qs.stringify(
                     {
-                      plan: activePaidPlans.find(p => !p.interval)!
-                        .cannonicalId,
+                      plan: paidPlans.find(p => !p.interval)!.cannonicalId,
                       action: 'update_seats',
                     },
                     { addQueryPrefix: true },
@@ -198,8 +194,7 @@ export default function AccountPage(_props: AccountPageProps) {
             </Link>
 
             {!!(
-              authData.plan.interval &&
-              activePaidPlans.some(plan => plan.interval)
+              authData.plan.interval && paidPlans.some(plan => plan.interval)
             ) && (
               <Link href="/pricing">
                 <a className="text-default">Switch plan</a>
@@ -215,13 +210,14 @@ export default function AccountPage(_props: AccountPageProps) {
                   authData.plan.transformUsage.divideBy > 1))
             ) && (
               <Link
-                href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
+                href={`/${getPurchaseOrSubscribeRoute(plans)}${qs.stringify(
                   {
                     action: 'update_seats',
                     plan:
-                      planInfo && planInfo.id
-                        ? activePaidPlans.find(_p => _p.id === planInfo.id)
-                          ? planInfo.cannonicalId
+                      authData.plan && authData.plan.id
+                        ? paidPlans.find(_p => _p.id === authData.plan!.id)
+                          ? paidPlans.find(_p => _p.id === authData.plan!.id)!
+                              .cannonicalId
                           : 'current'
                         : undefined,
                   },
@@ -234,13 +230,14 @@ export default function AccountPage(_props: AccountPageProps) {
 
             {!!(authData.plan && authData.plan.interval) && (
               <Link
-                href={`/${getPurchaseOrSubscribeRoute()}${qs.stringify(
+                href={`/${getPurchaseOrSubscribeRoute(plans)}${qs.stringify(
                   {
                     action: 'update_card',
                     plan:
-                      planInfo && planInfo.id
-                        ? activePaidPlans.find(_p => _p.id === planInfo.id)
-                          ? planInfo.cannonicalId
+                      authData.plan && authData.plan.id
+                        ? paidPlans.find(_p => _p.id === authData.plan!.id)
+                          ? paidPlans.find(_p => _p.id === authData.plan!.id)!
+                              .cannonicalId
                           : 'current'
                         : undefined,
                   },
@@ -269,12 +266,12 @@ export default function AccountPage(_props: AccountPageProps) {
           </>
         ) : (
           <>
-            {activePaidPlans.length === 1 && activePaidPlans[0] ? (
-              <Link href={`/${getPurchaseOrSubscribeRoute()}`}>
+            {paidPlans.length === 1 && paidPlans[0] ? (
+              <Link href={`/${getPurchaseOrSubscribeRoute(plans)}`}>
                 <a className="text-default">
                   {freeTrialDays
                     ? 'Start free trial'
-                    : activePaidPlans[0].interval
+                    : paidPlans[0].interval
                     ? 'Subscribe'
                     : 'Purchase'}
                 </a>
@@ -282,7 +279,7 @@ export default function AccountPage(_props: AccountPageProps) {
             ) : (
               <Link href="/pricing">
                 <a className="text-default">
-                  {activePaidPlans.some(plan => plan.interval)
+                  {paidPlans.some(plan => plan.interval)
                     ? 'Subscribe to a plan'
                     : 'See plans'}
                 </a>

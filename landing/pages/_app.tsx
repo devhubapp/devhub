@@ -11,6 +11,7 @@ import './styles/devices/iphone.css'
 import { AppGlobalStyles } from '../src/components/styles/AppGlobalStyles'
 import { AuthProvider } from '../src/context/AuthContext'
 import { PaddleLoaderProvider } from '../src/context/PaddleLoaderContext'
+import { PlansProvider } from '../src/context/PlansContext'
 import { StripeLoaderProvider } from '../src/context/StripeLoaderContext'
 import { ThemeConsumer, ThemeProvider } from '../src/context/ThemeContext'
 
@@ -39,30 +40,32 @@ export default class App extends NextApp {
     const { Component, pageProps } = this.props
 
     return (
-      <StripeLoaderProvider>
-        <PaddleLoaderProvider>
-          <ThemeProvider>
-            <AuthProvider>
-              <Container>
-                <Head>
-                  <title>DevHub | Unified view for GitHub activities</title>
-                </Head>
+      <AuthProvider>
+        <StripeLoaderProvider>
+          <PaddleLoaderProvider>
+            <ThemeProvider>
+              <PlansProvider>
+                <Container>
+                  <Head>
+                    <title>DevHub | Unified view for GitHub activities</title>
+                  </Head>
 
-                <ThemeConsumer>
-                  {({ theme }) => (
-                    <div
-                      className={theme.isDark ? 'dark-theme' : 'light-theme'}
-                    >
-                      <Component {...pageProps} />
-                    </div>
-                  )}
-                </ThemeConsumer>
-                <AppGlobalStyles />
-              </Container>
-            </AuthProvider>
-          </ThemeProvider>
-        </PaddleLoaderProvider>
-      </StripeLoaderProvider>
+                  <ThemeConsumer>
+                    {({ theme }) => (
+                      <div
+                        className={theme.isDark ? 'dark-theme' : 'light-theme'}
+                      >
+                        <Component {...pageProps} />
+                      </div>
+                    )}
+                  </ThemeConsumer>
+                  <AppGlobalStyles />
+                </Container>
+              </PlansProvider>
+            </ThemeProvider>
+          </PaddleLoaderProvider>
+        </StripeLoaderProvider>
+      </AuthProvider>
     )
   }
 }
