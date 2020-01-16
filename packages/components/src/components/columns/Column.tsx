@@ -3,6 +3,7 @@ import React, { ReactNode, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import url from 'url'
 
+import { useAppViewMode } from '../../hooks/use-app-view-mode'
 import { useEmitter } from '../../hooks/use-emitter'
 import { useIsColumnFocused } from '../../hooks/use-is-column-focused'
 import { useLastInputType } from '../../hooks/use-last-input-type'
@@ -55,6 +56,7 @@ export const Column = React.memo(
     const columnWidth = useColumnWidth()
     const isColumnFocused = useIsColumnFocused(columnId)
     const lastUsedInputType = useLastInputType()
+    const { appViewMode } = useAppViewMode()
 
     useEffect(() => {
       return () => {
@@ -105,10 +107,15 @@ export const Column = React.memo(
       if (!columnBorderRef.current) return
       columnBorderRef.current.setNativeProps({
         style: {
-          opacity: isColumnFocused && lastUsedInputType === 'keyboard' ? 1 : 0,
+          opacity:
+            isColumnFocused &&
+            lastUsedInputType === 'keyboard' &&
+            appViewMode === 'multi-column'
+              ? 1
+              : 0,
         },
       })
-    }, [isColumnFocused, lastUsedInputType])
+    }, [appViewMode, isColumnFocused, lastUsedInputType])
 
     return (
       <ThemedView
