@@ -69,6 +69,10 @@ import { smallLabelHeight } from '../common/Label'
 import { cardActionsHeight } from './partials/CardActions'
 import { cardItemSeparatorSize } from './partials/CardItemSeparator'
 
+// since we moved plans to the server we cant get this statically anymore
+// only via the usePlans hook
+const cheapestPlanWithNotifications: Plan | undefined = undefined
+
 const _iconSize = smallAvatarSize - 4
 const _iconContainerSize = smallAvatarSize
 const _actionFontSize = smallerTextSize
@@ -179,14 +183,16 @@ function getRepoText({
   const repoNameOrFullName =
     (ownerIsKnown && getOwnerAndRepo(repoFullName).repo) || repoFullName
 
-  if (repoIsKnown && issueOrPullRequestNumber)
-    return `#${issueOrPullRequestNumber || ''}`
+  if (issueOrPullRequestNumber) {
+    if (repoIsKnown) return `#${issueOrPullRequestNumber}`
+    if (repoNameOrFullName)
+      return `${repoNameOrFullName}#${issueOrPullRequestNumber}`
+  }
 
-  if (repoNameOrFullName && issueOrPullRequestNumber)
-    return `${repoNameOrFullName}#${issueOrPullRequestNumber}`
-
-  if (repoNameOrFullName && branchOrTagName)
-    return `${repoNameOrFullName}#${branchOrTagName}`
+  if (branchOrTagName) {
+    if (repoIsKnown) return `${branchOrTagName}`
+    if (repoNameOrFullName) return `${repoNameOrFullName}#${branchOrTagName}`
+  }
 
   return repoNameOrFullName
 }
@@ -216,13 +222,12 @@ function getPrivateBannerCardProps(
     subitems: undefined,
     subtitle: undefined,
     text: {
-      text: 'Tap to unlock private repos',
-      // text:
-      //   cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
-      //     ? `Unlock private repos for ${formatPriceAndInterval(
-      //         cheapestPlanWithNotifications,
-      //       )}`
-      //     : 'Tap to unlock private repos',
+      text:
+        cheapestPlanWithNotifications && cheapestPlanWithNotifications.amount
+          ? `Unlock private repos for ${formatPriceAndInterval(
+              cheapestPlanWithNotifications,
+            )}`
+          : 'Tap to unlock private repos',
     },
     title:
       type === 'activity'
@@ -721,8 +726,20 @@ function _getCardPropsForItem(
                 fixURL(release.url, { tagName: branchOrTagName })!,
               nodeIdOrId: getItemNodeIdOrId(item)!,
               showPrivateLock: isPrivate,
-              subitems: [],
-              subtitle: trimNewLinesAndSpaces(stripMarkdown(release.body), 120),
+              subitems: [
+                {
+                  avatar: {
+                    imageURL: getUserAvatarFromObject(
+                      release.author,
+                      {},
+                      PixelRatio.getPixelSizeForLayoutSize,
+                    )!,
+                    linkURL: getUserURLFromObject(release.author)!,
+                  },
+                  text: trimNewLinesAndSpaces(stripMarkdown(release.body), 120),
+                },
+              ],
+              subtitle: undefined,
               text: {
                 text: getRepoText({
                   branchOrTagName:
@@ -1003,6 +1020,7 @@ function _getCardPropsForItem(
             repoIsKnown,
             issueOrPullRequestNumber:
               (issueOrPullRequest && issueOrPullRequest.number) || undefined,
+            branchOrTagName: release && release.tag_name,
           })!,
           repo: { owner: repoOwnerName!, name: repoName!, url: repoURL! },
         },
@@ -1100,10 +1118,29 @@ function _getCardPropsForItem(
             ...defaultProps,
             ...(release &&
               release.body && {
-                subtitle: trimNewLinesAndSpaces(
-                  stripMarkdown(release.body),
-                  120,
-                ),
+                ...(defaultProps.text &&
+                  release.tag_name === defaultProps.text.text && {
+                    text: {
+                      text: ' ',
+                    },
+                  }),
+                subitems: [
+                  ...(defaultProps.subitems || []),
+                  {
+                    avatar: {
+                      imageURL: getUserAvatarFromObject(
+                        release.author,
+                        {},
+                        PixelRatio.getPixelSizeForLayoutSize,
+                      )!,
+                      linkURL: getUserURLFromObject(release.author)!,
+                    },
+                    text: trimNewLinesAndSpaces(
+                      stripMarkdown(release.body),
+                      120,
+                    ),
+                  },
+                ],
               }),
           }
         }
