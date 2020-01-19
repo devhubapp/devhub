@@ -20,7 +20,7 @@
     "classnames": "2.2.6",
     "isomorphic-unfetch": "3.0.0",
     "lodash": "4.17.15",
-    "next": "9.1.7",
+    "next": "9.2.0",
     "next-transpile-modules": "2.3.1",
     "qs": "6.9.1",
     "react": "16.10.2",
