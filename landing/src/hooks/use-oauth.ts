@@ -23,7 +23,7 @@ export function useOAuth() {
 
     setIsExecutingOAuth(true)
 
-    const { appToken, scope = constants.DEFAULT_GITHUB_OAUTH_SCOPES } = options
+    const { appToken, scope = ['user:email'] } = options
 
     const platform = getPlatform()
 
