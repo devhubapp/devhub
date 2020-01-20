@@ -1,21 +1,23 @@
 {
   "name": "@devhub/landing",
-  "version": "0.99.1",
+  "version": "0.100.0",
   "private": false,
   "main": "dist/index.js",
   "scripts": {
     "clean": "shx rm -f *.tsbuildinfo && shx rm -rf dist && mkdirp dist",
     "compile": "cd .",
     "deploy": "yarn now",
-    "export": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' ts-node ./src/scripts/refresh-cached-public-plans && next build && next export",
+    "export": "yarn run-scripts && next build && next export",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
     "now": "now",
+    "postinstall": "yarn run-scripts",
     "prepare": "cd .",
+    "run-scripts": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' ts-node ./src/scripts/refresh-cached-public-plans",
     "start": "next -p 3001"
   },
   "dependencies": {
-    "@brunolemos/devhub-core": "0.99.1-7",
+    "@brunolemos/devhub-core": "0.100.0",
     "@zeit/next-css": "1.0.1",
     "autoprefixer": "9.6.4",
     "classnames": "2.2.6",
