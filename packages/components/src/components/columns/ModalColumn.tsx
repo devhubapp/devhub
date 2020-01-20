@@ -131,15 +131,19 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         >
           <View style={sharedStyles.flex}>{children}</View>
 
-          <View
-            style={[
-              sharedStyles.fullWidth,
-              sharedStyles.horizontalAndVerticallyAligned,
-              sharedStyles.paddingHorizontal,
-            ]}
-          >
-            <QuickFeedbackRow />
-          </View>
+          {!(['ADD_COLUMN', 'ADD_COLUMN_DETAILS'] as Array<
+            ModalPayload['name']
+          >).includes(name) && (
+            <View
+              style={[
+                sharedStyles.fullWidth,
+                sharedStyles.horizontalAndVerticallyAligned,
+                sharedStyles.paddingHorizontal,
+              ]}
+            >
+              <QuickFeedbackRow />
+            </View>
+          )}
 
           <Spacer height={FAB.Component ? FAB.size : fabSpacing} />
         </FullHeightScrollView>
