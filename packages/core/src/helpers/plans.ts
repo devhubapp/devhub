@@ -39,10 +39,10 @@ export function isPlanExpired(
 }
 
 export function formatPrice(
-  plan: Pick<Plan, 'amount' | 'currency' | 'transformUsage'>,
+  plan: Pick<Plan, 'amount' | 'currency' | 'transformUsage'> | undefined,
   options: { locale?: string; quantity?: number } = {},
 ) {
-  const { amount, currency, transformUsage } = plan
+  const { amount, currency, transformUsage } = plan || {}
 
   const { locale = 'en-US', quantity } = options
 
@@ -69,7 +69,7 @@ export function formatPrice(
           : Math.ceil(quantity / transformUsage.divideBy)
         : quantity
       : 1
-  const _valueInCents = amount * _roundedUnits
+  const _valueInCents = (amount || 0) * _roundedUnits
 
   const value = formatter.format(_valueInCents / 100)
   const priceLabel = value.endsWith('.00') ? value.slice(0, -3) : value
@@ -78,10 +78,12 @@ export function formatPrice(
 }
 
 export function formatInterval(
-  plan: Pick<Plan, 'interval' | 'intervalCount' | 'transformUsage' | 'type'>,
+  plan:
+    | Pick<Plan, 'interval' | 'intervalCount' | 'transformUsage' | 'type'>
+    | undefined,
   options: Parameters<typeof formatPrice>[1] = {},
 ) {
-  const { interval, intervalCount, transformUsage, type } = plan
+  const { interval, intervalCount, transformUsage, type } = plan || {}
   const { quantity } = options
 
   return `${
@@ -93,7 +95,7 @@ export function formatInterval(
       : ''
   }${
     interval
-      ? intervalCount > 1
+      ? intervalCount && intervalCount > 1
         ? ` every ${intervalCount} ${interval}s`
         : `/${interval}`
       : ''
@@ -109,8 +111,10 @@ export function formatInterval(
 }
 
 export function formatPriceAndInterval(
-  plan: Parameters<typeof formatPrice>[0] &
-    Parameters<typeof formatInterval>[0],
+  plan:
+    | (NonNullable<Parameters<typeof formatPrice>[0]> &
+        NonNullable<Parameters<typeof formatInterval>[0]>)
+    | undefined,
   options: Parameters<typeof formatPrice>[1] &
     Parameters<typeof formatInterval>[1] = {},
 ) {

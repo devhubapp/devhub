@@ -15,8 +15,8 @@ export function PricingPlans(_props: PricingPlansProps) {
   const { plans } = usePlans()
 
   const shouldShowPlanTypeTabs =
-    plans.some(plan => plan.type !== 'team') &&
-    plans.some(plan => plan.type === 'team')
+    plans.some(plan => plan && plan.type !== 'team') &&
+    plans.some(plan => plan && plan.type === 'team')
 
   const [_tab, setTab] = useState<PlanType | undefined>(undefined)
   const tab =
@@ -39,7 +39,7 @@ export function PricingPlans(_props: PricingPlansProps) {
     )
 
     return filteredPlans.map(plan =>
-      plan.amount > 0 ? (
+      plan && plan.amount > 0 ? (
         <PricingPlanBlock
           key={`pricing-plan-${plan.id}`}
           banner={plan.banner}
@@ -51,7 +51,7 @@ export function PricingPlans(_props: PricingPlansProps) {
           plan={plan}
           totalNumberOfVisiblePlans={filteredPlans.length}
         />
-      ) : (
+      ) : plan ? (
         <PricingPlanBlock
           key={`pricing-plan-${plan.cannonicalId}`}
           banner
@@ -60,7 +60,7 @@ export function PricingPlans(_props: PricingPlansProps) {
           plan={plan}
           totalNumberOfVisiblePlans={filteredPlans.length}
         />
-      ),
+      ) : null,
     )
   }, [tab])
 
@@ -81,17 +81,19 @@ export function PricingPlans(_props: PricingPlansProps) {
       )}
 
       <div className="flex flex-row lg:justify-center items-stretch -ml-8 sm:ml-0 -mr-8 sm:mr-0 pl-8 sm:pl-0 pr-8 sm:pr-0 overflow-x-scroll md:overflow-x-auto">
-        {pricingPlanComponents.map((component, index) => (
-          <Fragment key={`${component.key}-container`}>
-            {component}
+        {pricingPlanComponents.map((component, index) =>
+          component ? (
+            <Fragment key={`${component.key}-container`}>
+              {component}
 
-            {index < pricingPlanComponents.length - 1 ? (
-              <div className="pr-2 sm:pr-6" />
-            ) : (
-              <div className="pr-2" />
-            )}
-          </Fragment>
-        ))}
+              {index < pricingPlanComponents.length - 1 ? (
+                <div className="pr-2 sm:pr-6" />
+              ) : (
+                <div className="pr-2" />
+              )}
+            </Fragment>
+          ) : null,
+        )}
       </div>
 
       <p className="block sm:hidden mb-4" />

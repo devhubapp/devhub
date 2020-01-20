@@ -47,6 +47,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
       ) : os ? (
         <>
           {paidPlans.length === 1 &&
+          paidPlans[0] &&
           !paidPlans[0].interval &&
           paidPlans[0].amount ? (
             <Button
@@ -82,13 +83,13 @@ export default function CTAButtons(props: CTAButtonsProps) {
               target="_top"
               className="mb-2 mr-2"
             >
-              {paidPlans[0].trialPeriodDays
+              {paidPlans[0] && paidPlans[0].trialPeriodDays
                 ? 'Start free trial'
                 : 'See pricing'}
             </Button>
           )}
 
-          {!!(freeTrialDays && plans.some(plan => !plan.amount)) && (
+          {!!(freeTrialDays && plans.some(plan => !!plan && !plan.amount)) && (
             <Button
               type="neutral"
               href="/download?autostart"

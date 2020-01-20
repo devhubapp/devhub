@@ -356,7 +356,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                   analyticsCategory="plan_expired"
                   analyticsLabel="select_a_plan_button"
                   children={
-                    paidPlans.some(p => p.interval)
+                    paidPlans.some(p => p && p.interval)
                       ? plan && plan.amount
                         ? 'Switch plan ↗'
                         : 'Select a plan ↗'
@@ -467,7 +467,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                 analyticsLabel="select_a_plan_button"
                 analyticsCategory="invalid_plan"
                 children={
-                  paidPlans.some(p => p.interval)
+                  paidPlans.some(p => p && p.interval)
                     ? plan && plan.amount
                       ? 'Switch plan ↗'
                       : 'Select a plan ↗'

@@ -30,7 +30,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
   const { freePlan, plans } = usePlans()
 
-  const plan = planId && plans.find(p => p.id === planId)
+  const plan = planId && plans.find(p => p && p.id === planId)
 
   const trialDays = (plan && plan.trialPeriodDays) || 0
 

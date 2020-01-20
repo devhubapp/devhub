@@ -114,7 +114,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
                             plan:
                               authData.plan && authData.plan.id
                                 ? paidPlans.find(
-                                    _p => _p.id === authData.plan!.id,
+                                    _p => _p && _p.id === authData.plan!.id,
                                   )
                                   ? userPlanInfo.cannonicalId
                                   : 'current'
@@ -165,7 +165,9 @@ export default function SuccessPage(_props: SuccessPageProps) {
                         action: 'update_seats',
                         plan:
                           authData.plan && authData.plan.id
-                            ? paidPlans.find(_p => _p.id === authData.plan!.id)
+                            ? paidPlans.find(
+                                _p => _p && _p.id === authData.plan!.id,
+                              )
                               ? userPlanInfo.cannonicalId
                               : 'current'
                             : undefined,

@@ -38,7 +38,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     const Router = useRouter()
     const { Paddle } = usePaddleLoader()
 
-    const localizedPlan = useLocalizedPlanDetails(plan)
+    const localizedPlan = useLocalizedPlanDetails(plan)!
 
     const isMountedRef = useIsMountedRef()
 

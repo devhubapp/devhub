@@ -28,30 +28,36 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
   const plans = useMemo(() => {
     if (!userPlanInfo || !userPlanInfo.amount) return paidPlans
-    if (paidPlans.find(p => p.id === userPlanInfo.id)) return paidPlans
-    return [userPlanInfo].concat(paidPlans)
+    if (paidPlans.find(p => p && p.id === userPlanInfo.id)) return paidPlans
+    return [userPlanInfo].concat(paidPlans as Plan[])
   }, [userPlanInfo, paidPlans])
 
   const _planFromQuery = Router.query.plan as string | undefined
   const planFromQuery =
     (_planFromQuery === 'current' && userPlanInfo) ||
-    (_planFromQuery && plans.find(p => p.cannonicalId === _planFromQuery)) ||
+    (_planFromQuery &&
+      plans.find(p => p && p.cannonicalId === _planFromQuery)) ||
     undefined
 
   const action = Router.query.action as SubscribeFormProps['action']
 
   const { Stripe: stripe } = useStripeLoader()
 
-  const plan =
+  const plan: Plan | undefined =
     planFromQuery ||
     (userPlanInfo &&
       userPlanInfo.id &&
-      plans.find(p => p.id === userPlanInfo.id)) ||
-    plans[0]
+      plans.find(p => p && p.id === userPlanInfo.id)) ||
+    plans[0] ||
+    undefined
 
   const localizedPlan = useLocalizedPlanDetails(plan)
 
-  const isMyPlan = !!(authData.plan && authData.plan.id === localizedPlan.id)
+  const isMyPlan = !!(
+    localizedPlan &&
+    authData.plan &&
+    authData.plan.id === localizedPlan.id
+  )
 
   const priceLabelWithInterval = formatPriceAndInterval(plan, {
     quantity:
@@ -155,7 +161,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
                   : localizedPlan.interval
                   ? 'Subscribe to '
                   : 'Purchase '}
-                {!!(plans.length > 1 || plans[0].label) && (
+                {!!(plans.length > 1 || (plans[0] && plans[0].label)) && (
                   <>
                     <Select<Plan['cannonicalId']>
                       onChange={option => {
@@ -173,13 +179,13 @@ export default function SubscribePage(_props: SubscribePageProps) {
                     >
                       {plans.map(
                         p =>
-                          !!p.label && (
+                          !!(p && p.label) && (
                             <Select.Option
                               key={`subscribe-plan-option-${p.cannonicalId}`}
                               id={
                                 authData.plan &&
                                 authData.plan.id === p.id &&
-                                !paidPlans.find(_p => _p.id === p.id)
+                                !paidPlans.find(_p => _p && _p.id === p.id)
                                   ? 'current'
                                   : p.cannonicalId
                               }

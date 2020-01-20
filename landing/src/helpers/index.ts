@@ -136,7 +136,9 @@ export function toKebabCase(str: string) {
   return matches.map(s => s.toLowerCase()).join('-')
 }
 
-export function getPurchaseOrSubscribeRoute(activePlans: Plan[]) {
+export function getPurchaseOrSubscribeRoute(
+  activePlans: Array<Plan | undefined>,
+) {
   return activePlans.some(p => !!(p && p.amount > 0 && p.interval))
     ? 'subscribe'
     : 'purchase'

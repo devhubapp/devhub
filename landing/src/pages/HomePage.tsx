@@ -76,12 +76,13 @@ export default function HomePage(_props: HomePageProps) {
               {!!(freePlan && !freePlan.trialPeriodDays) && (
                 <CheckLabel label="Free version" />
               )}
-              {!!freeTrialDays && !paidPlans.every(plan => !plan.interval) && (
-                <CheckLabel label={`${freeTrialDays}-day free trial`} />
-              )}
-              {!!(paidPlans && paidPlans.every(plan => !plan.interval)) && (
-                <CheckLabel label="One-time payment (no subscription)" />
-              )}
+              {!!freeTrialDays &&
+                !paidPlans.every(plan => !!plan && !plan.interval) && (
+                  <CheckLabel label={`${freeTrialDays}-day free trial`} />
+                )}
+              {!!(
+                paidPlans && paidPlans.every(plan => !!plan && !plan.interval)
+              ) && <CheckLabel label="One-time payment (no subscription)" />}
 
               {!constants.GITHUB_APP_HAS_CODE_ACCESS && (
                 <CheckLabel label="No code access (granular permissons)" />

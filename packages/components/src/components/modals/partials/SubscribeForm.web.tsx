@@ -294,7 +294,7 @@ const SubscribeFormWithStripe = React.memo(
       }
     }
 
-    const plan = planId && plans.find(p => p.id === planId)
+    const plan = planId && plans.find(p => p && p.id === planId)
 
     return (
       <form onSubmit={handleSubmit}>

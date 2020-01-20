@@ -7,5 +7,6 @@ dist
 node_modules
 npm-debug.log*
 out
+scripts/out
 yarn-debug.log*
 yarn-error.log*

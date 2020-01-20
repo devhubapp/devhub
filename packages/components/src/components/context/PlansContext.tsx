@@ -16,8 +16,8 @@ export interface PlansState {
   freePlan: Plan | undefined
   freeTrialDays: number
   freeTrialPlan: Plan | undefined
-  paidPlans: Plan[]
-  plans: Plan[]
+  paidPlans: Array<Plan | undefined>
+  plans: Array<Plan | undefined>
   userPlanInfo: Plan | undefined
 }
 
@@ -68,11 +68,11 @@ export function PlansProvider(props: PlansProps) {
                   plan.featureFlags.enablePushNotifications
                 ),
             )
-            .sort((a, b) => a.amount - b.amount)[0],
+            .sort((a, b) => (a && b ? a.amount - b.amount : 0))[0],
           freePlan: data.freePlan,
           freeTrialDays: data.freeTrialDays,
           freeTrialPlan: data.freeTrialPlan,
-          paidPlans: data.plans.filter(plan => plan.amount > 0),
+          paidPlans: data.plans.filter(plan => !!(plan && plan.amount > 0)),
           plans: data.plans,
           userPlanInfo: data.userPlanInfo,
         })

@@ -39,7 +39,7 @@ export function PricingModal(props: PricingModalProps) {
     showBackButton,
   } = props
 
-  const flatListRef = useRef<FlatList<Plan>>(null)
+  const flatListRef = useRef<FlatList<Plan | undefined>>(null)
   const { sizename } = useAppLayout()
   const hasCalledOnLayoutRef = useRef(false)
   const dispatch = useDispatch()
@@ -61,7 +61,7 @@ export function PricingModal(props: PricingModalProps) {
   const userPlanStillExist = !!(
     userPlan &&
     userPlan.id &&
-    plansToShow.find(p => p.id === userPlan.id)
+    plansToShow.find(p => p && p.id === userPlan.id)
   )
 
   const showUserPlanAtTheTop = !!userPlanInfo
@@ -81,24 +81,26 @@ export function PricingModal(props: PricingModalProps) {
   const selectedPlanId =
     _selectedPlanId ||
     ((initialSelectedPlanId &&
-    plansToShow.find(p => p.id === initialSelectedPlanId)
+    plansToShow.find(p => p && p.id === initialSelectedPlanId)
       ? initialSelectedPlanId
       : undefined) ||
       (_highlightFeature &&
-      plansToShow.find(p => p.featureFlags[_highlightFeature] === true)
-        ? plansToShow.find(p => p.featureFlags[_highlightFeature] === true)!.id
+      plansToShow.find(p => p && p.featureFlags[_highlightFeature] === true)
+        ? plansToShow.find(
+            p => p && p.featureFlags[_highlightFeature] === true,
+          )!.id
         : undefined) ||
       (userPlan && userPlanStillExist && userPlan.id) ||
       undefined)
 
   const selectedPlan =
-    selectedPlanId && plansToShow.find(p => p.id === selectedPlanId)
+    selectedPlanId && plansToShow.find(p => p && p.id === selectedPlanId)
 
   const scrollToPlan = useCallback(
     (planId: PlanID | undefined) => {
       if (!flatListRef.current) return
 
-      const index = plansToShow.findIndex(p => p.id === planId)
+      const index = plansToShow.findIndex(p => p && p.id === planId)
       if (!(index >= 0 && index < plansToShow.length)) return
 
       flatListRef.current.scrollToOffset({
@@ -118,7 +120,7 @@ export function PricingModal(props: PricingModalProps) {
   }, [scrollToPlan, selectedPlanId])
 
   const getItemLayout = useCallback<
-    NonNullable<FlatListProps<Plan>['getItemLayout']>
+    NonNullable<FlatListProps<Plan | undefined>['getItemLayout']>
   >(
     (_data, index) => ({
       index,
@@ -129,7 +131,7 @@ export function PricingModal(props: PricingModalProps) {
   )
 
   const onLayout = useCallback<
-    NonNullable<FlatListProps<Plan>['onLayout']>
+    NonNullable<FlatListProps<Plan | undefined>['onLayout']>
   >(() => {
     if (!hasCalledOnLayoutRef.current) {
       scrollToPlan(selectedPlanId)
@@ -138,10 +140,10 @@ export function PricingModal(props: PricingModalProps) {
   }, [scrollToPlan, selectedPlanId])
 
   const renderItem = useCallback<
-    NonNullable<FlatListProps<Plan>['renderItem']>
+    NonNullable<FlatListProps<Plan | undefined>['renderItem']>
   >(
     ({ item: plan }) =>
-      plan.amount > 0 ? (
+      plan && plan.amount > 0 ? (
         <PricingPlanBlock
           key={`pricing-plan-${plan.id}`}
           banner={
@@ -160,7 +162,7 @@ export function PricingModal(props: PricingModalProps) {
           showFeatures
           totalNumberOfVisiblePlans={plansToShow.length}
         />
-      ) : (
+      ) : plan ? (
         <PricingPlanBlock
           key={`pricing-plan-${plan.cannonicalId}`}
           banner
@@ -175,7 +177,7 @@ export function PricingModal(props: PricingModalProps) {
           showFeatures
           totalNumberOfVisiblePlans={plansToShow.length}
         />
-      ),
+      ) : null,
     [
       selectedPlanId,
       highlightFeature,
@@ -339,7 +341,9 @@ export function PricingModal(props: PricingModalProps) {
               openOnNewTab
               type="neutral"
             >
-              {userPlan && userPlan.amount && paidPlans.some(p => p.interval)
+              {userPlan &&
+              userPlan.amount &&
+              paidPlans.some(p => p && p.interval)
                 ? 'Switch plan ↗'
                 : 'See available options ↗'}
             </ButtonLink>

@@ -33,7 +33,7 @@ export function SubscribedModal(props: SubscribedModalProps) {
   const { freePlan, plans } = usePlans()
 
   const planId = _planId || (userPlan && userPlan.id)
-  const plan = planId && plans.find(p => p.id === planId)
+  const plan = planId && plans.find(p => p && p.id === planId)
 
   useEffect(() => {
     if (freePlan && !freePlan.trialPeriodDays && !(plan && plan.id)) {

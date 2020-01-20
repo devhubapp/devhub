@@ -2,13 +2,13 @@ import { Plan } from '@brunolemos/devhub-core'
 
 import { usePaddleLoader } from '../context/PaddleLoaderContext'
 
-export function useLocalizedPlanDetails<P extends Plan>(
-  plan: P,
+export function useLocalizedPlanDetails<P extends Plan | undefined>(
+  plan: P | undefined,
   { quantity = 1 }: { quantity?: number } = {},
-): P {
+): P | undefined {
   const { getProductPrice } = usePaddleLoader()
 
-  if (plan.paddleProductId) {
+  if (plan && plan.paddleProductId) {
     const paddlePrice = getProductPrice(plan.paddleProductId, quantity)
 
     if (paddlePrice && paddlePrice.net) {

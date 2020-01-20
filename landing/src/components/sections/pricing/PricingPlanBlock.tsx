@@ -9,11 +9,11 @@ import qs from 'qs'
 import React from 'react'
 
 import { useAuth } from '../../../context/AuthContext'
+import { usePlans } from '../../../context/PlansContext'
 import { getPurchaseOrSubscribeRoute } from '../../../helpers'
 import { useLocalizedPlanDetails } from '../../../hooks/use-localized-plan-details'
 import Button from '../../common/buttons/Button'
 import CheckLabel from '../../common/CheckLabel'
-import { usePlans } from '../../../context/PlansContext'
 
 export interface PricingPlanBlockProps {
   banner?: string | boolean
@@ -37,14 +37,17 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   const { authData } = useAuth()
   const { plans } = usePlans()
   const localizedPlan = useLocalizedPlanDetails(plan)
+
+  if (!localizedPlan) return null
+
   const userPlan = authData && authData.plan
   const userPlanIsActive =
-    userPlan && userPlan.id && plans.find(p => p.id === userPlan!.id)
-  const isMyPlan = userPlan && userPlan.id === localizedPlan.id
+    userPlan && userPlan.id && plans.find(p => p && p.id === userPlan!.id)
+  const isMyPlan = !!(userPlan && userPlan.id === localizedPlan.id)
 
   const banner = userPlanIsActive
     ? isMyPlan
-      ? localizedPlan.interval
+      ? localizedPlan && localizedPlan.interval
         ? 'Current localizedPlan'
         : 'You bought this'
       : _banner || true
@@ -101,7 +104,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       `Free for ${localizedPlan.trialPeriodDays} days`
   } else if (
     localizedPlan.amount &&
-    plans.some(p => !p.amount && p.trialPeriodDays)
+    plans.some(p => p && !p.amount && p.trialPeriodDays)
   ) {
     //
   } else if (localizedPlan.trialPeriodDays) {
