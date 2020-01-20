@@ -1,5 +1,4 @@
 import {
-  AppViewMode,
   Column,
   ColumnSubscription,
   constants,
@@ -105,7 +104,7 @@ export const renderCardActions =
   Platform.OS === 'web' || constants.DISABLE_SWIPEABLE_CARDS
 
 export interface AdditionalCardProps {
-  appViewMode: AppViewMode
+  // appViewMode: AppViewMode
   columnId: string
   height: number
 }

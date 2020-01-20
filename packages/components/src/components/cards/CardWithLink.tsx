@@ -55,7 +55,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
 
   const dispatch = useDispatch()
   const plan = useReduxState(selectors.currentUserPlanSelector)
-  const { appViewMode } = useAppViewMode()
+  // const { appViewMode } = useAppViewMode()
 
   const item = useItem(nodeIdOrId)
 
@@ -76,12 +76,12 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
         <BaseCard
           key={`${type}-base-card-${getItemNodeIdOrId(item)!}`}
           {..._cardProps}
-          appViewMode={appViewMode}
+          // appViewMode={appViewMode}
           columnId={columnId}
         />
       ),
     }
-  }, [appViewMode, columnId, item, ownerIsKnown, plan, repoIsKnown])
+  }, [/* appViewMode, */ columnId, item, ownerIsKnown, plan, repoIsKnown])
 
   const isReadRef = useDynamicRef(!!(cardProps && cardProps.isRead))
 
@@ -113,8 +113,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
             theme[
               getCardBackgroundThemeColor({
                 isDark: theme.isDark,
-                isMuted:
-                  appViewMode === 'single-column' ? false : isReadRef.current,
+                isMuted: false, // appViewMode === 'single-column' ? false : isReadRef.current,
                 isHovered: isHoveredRef.current,
               })
             ],
@@ -132,7 +131,9 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
         },
       })
     }
-  }, [appViewMode])
+  }, [
+    /*appViewMode*/
+  ])
 
   const handleFocusChange = useCallback(
     (value, disableDomFocus?: boolean) => {
@@ -186,7 +187,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
       backgroundThemeColor={theme =>
         getCardBackgroundThemeColor({
           isDark: theme.isDark,
-          isMuted: appViewMode === 'single-column' ? false : cardProps.isRead,
+          isMuted: false, // appViewMode === 'single-column' ? false : cardProps.isRead,
           // isHovered: !Platform.supportsTouch && isFocusedRef.current,
         })
       }
@@ -245,13 +246,13 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
 
       {CardComponent}
 
-      {appViewMode === 'single-column' && (
+      {/* {appViewMode === 'single-column' && (
         <CardLeftBorder
           style={{
             opacity: !!(cardProps && !cardProps.isRead) ? 1 : 0,
           }}
         />
-      )}
+      )} */}
 
       {!!isSaved && <CardSavedIndicator />}
     </Link>

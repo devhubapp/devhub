@@ -15,7 +15,6 @@ import {
   smallTextSize,
 } from '../../styles/variables'
 import { fixColorHexWithoutHash } from '../../utils/helpers/colors'
-import { stripEmojis } from '../../utils/helpers/github/emojis'
 import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
@@ -193,7 +192,7 @@ const styles = StyleSheet.create({
 export const BaseCard = React.memo((props: BaseCardProps) => {
   const {
     action,
-    appViewMode,
+    // appViewMode,
     height,
 
     avatar,
@@ -226,7 +225,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
       link,
     )
 
-  const isMuted = appViewMode === 'single-column' ? false : isRead
+  const isMuted = false // appViewMode === 'single-column' ? false : isRead
 
   const backgroundThemeColor = (theme: Theme) =>
     getCardBackgroundThemeColor({
@@ -317,6 +316,13 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                 {title}
               </ThemedText>
 
+              {!!showPrivateLock && (
+                <>
+                  <Text children="  " />
+                  <ThemedIcon name="lock" color="foregroundColorMuted65" />
+                </>
+              )}
+
               <IntervalRefresh date={date}>
                 {() => {
                   const dateText = getDateSmallText(date)
@@ -335,20 +341,42 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                       >
                         {dateText.toLowerCase()}
                       </ThemedText>
-
-                      {!!showPrivateLock && (
-                        <>
-                          <Text children="  " />
-                          <ThemedIcon
-                            name="lock"
-                            color="foregroundColorMuted65"
-                          />
-                        </>
-                      )}
                     </>
                   )
                 }}
               </IntervalRefresh>
+
+              {!isRead &&
+                (() => {
+                  const dotSize = smallTextSize / 2
+
+                  return (
+                    <>
+                      <Text children="  " />
+
+                      <View
+                        style={{
+                          width: dotSize,
+                          height: dotSize + 1,
+                          paddingTop: 1,
+                        }}
+                        pointerEvents="none"
+                      >
+                        <ThemedView
+                          backgroundColor={
+                            (reason && reason.color) || 'primaryBackgroundColor'
+                          }
+                          style={{
+                            width: dotSize,
+                            height: dotSize,
+                            borderRadius: dotSize / 2,
+                          }}
+                          pointerEvents="none"
+                        />
+                      </View>
+                    </>
+                  )
+                })()}
             </View>
 
             {!!subtitle && (
@@ -448,86 +476,59 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                   </ThemedText>
                 )}
 
-                {!!(reason && reason.label && columnId) &&
-                  (() => {
-                    const dotSize = smallTextSize / 2
-                    const dotSpacing = contentPadding / 3
+                {!!(reason && reason.label && columnId) && (
+                  <View
+                    style={[
+                      sharedStyles.horizontalAndVerticallyAligned,
+                      sharedStyles.flexShrink0,
+                    ]}
+                  >
+                    <Link
+                      TouchableComponent={GestureHandlerTouchableOpacity}
+                      enableUnderlineHover
+                      href="javascript:void(0)"
+                      openOnNewTab={false}
+                      onPress={() => {
+                        vibrateHapticFeedback()
 
-                    return (
-                      <View
-                        style={[
-                          sharedStyles.horizontalAndVerticallyAligned,
-                          sharedStyles.flexShrink0,
-                        ]}
-                      >
-                        <Link
-                          TouchableComponent={GestureHandlerTouchableOpacity}
-                          enableUnderlineHover
-                          href="javascript:void(0)"
-                          openOnNewTab={false}
-                          onPress={() => {
-                            vibrateHapticFeedback()
+                        const removeIfAlreadySet = !(
+                          KeyboardKeyIsPressed.meta ||
+                          KeyboardKeyIsPressed.shift
+                        )
 
-                            const removeIfAlreadySet = !(
-                              KeyboardKeyIsPressed.meta ||
-                              KeyboardKeyIsPressed.shift
-                            )
+                        const removeOthers = !(
+                          KeyboardKeyIsPressed.alt ||
+                          KeyboardKeyIsPressed.meta ||
+                          KeyboardKeyIsPressed.shift
+                        )
 
-                            const removeOthers = !(
-                              KeyboardKeyIsPressed.alt ||
-                              KeyboardKeyIsPressed.meta ||
-                              KeyboardKeyIsPressed.shift
-                            )
-
-                            dispatch(
-                              actions.setColumnReasonFilter({
-                                columnId,
-                                reason: reason.reason,
-                                value: KeyboardKeyIsPressed.alt ? false : true,
-                                removeIfAlreadySet,
-                                removeOthers,
-                              }),
-                            )
-                          }}
-                          style={sharedStyles.flexShrink0}
-                          textProps={{
-                            color: 'foregroundColorMuted65',
-                            numberOfLines: 1,
-                            style: [
-                              styles.reason,
-                              { minWidth: reason.label.length * 7 },
-                            ],
-                          }}
-                          {...Platform.select({
-                            web: { title: reason.tooltip },
-                          })}
-                        >
-                          {reason.label.toLowerCase()}
-                        </Link>
-
-                        <Spacer width={dotSpacing} pointerEvents="none" />
-
-                        <View
-                          style={{
-                            width: dotSize,
-                            height: dotSize + 1,
-                            paddingTop: 1,
-                          }}
-                          pointerEvents="none"
-                        >
-                          <ThemedView
-                            backgroundColor={reason.color}
-                            style={{
-                              width: dotSize,
-                              height: dotSize,
-                              borderRadius: dotSize / 2,
-                            }}
-                            pointerEvents="none"
-                          />
-                        </View>
-                      </View>
-                    )
-                  })()}
+                        dispatch(
+                          actions.setColumnReasonFilter({
+                            columnId,
+                            reason: reason.reason,
+                            value: KeyboardKeyIsPressed.alt ? false : true,
+                            removeIfAlreadySet,
+                            removeOthers,
+                          }),
+                        )
+                      }}
+                      style={sharedStyles.flexShrink0}
+                      textProps={{
+                        color: 'foregroundColorMuted65',
+                        numberOfLines: 1,
+                        style: [
+                          styles.reason,
+                          { minWidth: reason.label.length * 7 },
+                        ],
+                      }}
+                      {...Platform.select({
+                        web: { title: reason.tooltip },
+                      })}
+                    >
+                      {reason.label.toLowerCase()}
+                    </Link>
+                  </View>
+                )}
               </View>
             )}
           </View>
