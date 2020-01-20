@@ -1,4 +1,4 @@
-import { Platform } from '../types'
+import { OS, Platform } from '../types'
 
 export interface DevHubHeaders {
   Authorization: string
@@ -8,6 +8,6 @@ export interface DevHubHeaders {
   DEVHUB_IS_LANDING: boolean
   DEVHUB_PLATFORM_IS_ELECTRON: boolean
   DEVHUB_PLATFORM_OS: Platform
-  DEVHUB_PLATFORM_REAL_OS: Platform
+  DEVHUB_PLATFORM_REAL_OS: OS
   DEVHUB_VERSION: string
 }
