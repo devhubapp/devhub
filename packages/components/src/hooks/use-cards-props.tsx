@@ -11,7 +11,7 @@ import {
 } from '@devhub/core'
 import _ from 'lodash'
 import React, { useCallback, useMemo, useRef } from 'react'
-import { View } from 'react-native'
+import { Dimensions, View } from 'react-native'
 
 import {
   getCardPropsForItem,
@@ -32,6 +32,7 @@ import {
   cardsWatchingOwnerFilterBarTotalHeight,
 } from '../components/cards/CardsWatchingOwnerFilterBar'
 import { EmptyCards } from '../components/cards/EmptyCards'
+import { columnHeaderHeight } from '../components/columns/ColumnHeader'
 import { ColumnLoadingIndicator } from '../components/columns/ColumnLoadingIndicator'
 import { ButtonLink } from '../components/common/ButtonLink'
 import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
@@ -275,12 +276,28 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     refresh,
     topSpacing: (!data.length && header && header.size) || 0,
   }
-  const sticky = !!(!fetchNextPage && cardsFooterProps.clearedAt)
-  // && // TODO
-  // itemLayouts[itemLayouts.length - 1] &&
-  // itemLayouts[itemLayouts.length - 1]!.offset +
-  //   itemLayouts[itemLayouts.length - 1]!.length <
-  //   windowHeight - ((header && header.size) || 0) - columnHeaderHeight
+
+  let _tempTotalOffset = 0
+  const sticky = !!(
+    !fetchNextPage &&
+    cardsFooterProps.clearedAt &&
+    itemNodeIdOrIds &&
+    !itemNodeIdOrIds.some((nodeIdOrId, index) => {
+      const itemSize = getItemSize(nodeIdOrId, index)
+      if (!itemSize) return
+
+      _tempTotalOffset += itemSize
+
+      if (
+        _tempTotalOffset >
+        Dimensions.get('window').height -
+          ((header && header.size) || 0) -
+          columnHeaderHeight
+      ) {
+        return true
+      }
+    })
+  )
 
   const footer = useMemo<OneListProps<DataItemT>['footer']>(() => {
     if (isOverMaxColumnLimit || isOverPlanColumnLimit) return undefined
