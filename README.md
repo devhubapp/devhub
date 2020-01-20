@@ -112,3 +112,5 @@ Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
 
 Copyright (c) 2019 Bruno Lemos.<br />
 By using DevHub you agree with its [privacy](PRIVACY.md) policy and [license](LICENSE.md).
+
+<!-- v0.100.0 -->
