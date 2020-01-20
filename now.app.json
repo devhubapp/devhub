@@ -4,7 +4,10 @@
   "alias": "app.devhubapp.com",
   "version": 2,
   "builds": [
-    { "src": "packages/web/dist/**", "use": "@now/static" }
+    {
+      "src": "packages/web/dist/**",
+      "use": "@now/static"
+    }
   ],
   "routes": [
     {
@@ -17,10 +20,12 @@
     },
     {
       "src": "/(.*)",
-      "status": 301, "headers": { "Location": "/" }
+      "status": 301,
+      "headers": {
+        "Location": "/"
+      }
     }
   ],
-  "regions": ["all"],
   "github": {
     "enabled": false,
     "autoAlias": false

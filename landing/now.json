@@ -9,9 +9,6 @@
       "use": "@now/next"
     }
   ],
-  "regions": [
-    "all"
-  ],
   "github": {
     "enabled": false,
     "autoAlias": false
