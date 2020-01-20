@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
+import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Browser } from '../../libs/browser'
 import { bugsnag } from '../../libs/bugsnag'
@@ -114,6 +115,16 @@ export function PricingModal(props: PricingModalProps) {
     },
     [plansToShow],
   )
+
+  const appTokenRef = useDynamicRef(appToken)
+  useEffect(() => {
+    if (allowChangePlansOnThisApp) return
+
+    dispatch(actions.closeAllModals())
+    Browser.openURLOnNewTab(
+      `${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appTokenRef.current}&hideFreePlan`,
+    )
+  }, [])
 
   useEffect(() => {
     scrollToPlan(selectedPlanId)
