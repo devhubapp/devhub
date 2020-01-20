@@ -4,8 +4,9 @@ import { ScrollView, StyleSheet, ViewProps } from 'react-native'
 import { GitHubLabel, Theme, ThemeColors } from '@devhub/core'
 import { sharedStyles } from '../../../../styles/shared'
 import { contentPadding } from '../../../../styles/variables'
+import { fixColorHexWithoutHash } from '../../../../utils/helpers/colors'
 import { ConditionalWrap } from '../../../common/ConditionalWrap'
-import { hiddenLabelSizes, Label, LabelProps } from '../../../common/Label'
+import { Label, LabelProps } from '../../../common/Label'
 import { ScrollViewWithOverlay } from '../../../common/ScrollViewWithOverlay'
 import { TouchableOpacity } from '../../../common/TouchableOpacity'
 
@@ -15,7 +16,6 @@ export interface LabelsViewProps
   enableScrollView?: boolean
   enableScrollViewOverlay?: boolean
   fragment?: boolean
-  hideText?: boolean
   labels: Array<{
     key?: string
     name: GitHubLabel['name']
@@ -40,7 +40,6 @@ export const LabelsView = (props: LabelsViewProps) => {
     enableScrollView,
     enableScrollViewOverlay,
     fragment,
-    hideText,
     labels,
     startScrollAtEnd,
     style,
@@ -56,22 +55,8 @@ export const LabelsView = (props: LabelsViewProps) => {
     scrollViewRef.current.scrollToEnd({ animated: false })
   }, [scrollViewRef.current, startScrollAtEnd])
 
-  const horizontalSpacing = hideText
-    ? -hiddenLabelSizes.width / 8
-    : contentPadding / 3
+  const horizontalSpacing = contentPadding / 3
   const verticalSpacing = 1
-
-  const texts = labels
-    .map(label => label && label.name)
-    .filter(text => !!text && typeof text === 'string')
-
-  const tooltip = hideText
-    ? texts.length === 1
-      ? `Label: ${texts[0]}`
-      : texts.length > 1
-      ? `Labels:\n${texts.join('\n')}`
-      : ''
-    : ''
 
   return (
     <ConditionalWrap
@@ -93,7 +78,6 @@ export const LabelsView = (props: LabelsViewProps) => {
               },
               style,
             ]}
-            tooltip={tooltip}
           >
             <ConditionalWrap
               condition={!!enableScrollView}
@@ -134,8 +118,7 @@ export const LabelsView = (props: LabelsViewProps) => {
       {labels.map(label => (
         <Label
           key={label.key || label.name}
-          backgroundThemeColor={backgroundThemeColor}
-          colorThemeColor={label.color}
+          colorThemeColor={fixColorHexWithoutHash(label.color)}
           containerStyle={[
             sharedStyles.alignSelfFlexStart,
             {
@@ -144,13 +127,10 @@ export const LabelsView = (props: LabelsViewProps) => {
             },
           ]}
           disableEmojis
-          hideText={hideText}
-          outline={false}
           small
-          transparent
           {...otherProps}
         >
-          {hideText && !fragment ? '' : label.name.toLowerCase()}
+          {label.name.toLowerCase()}
         </Label>
       ))}
     </ConditionalWrap>

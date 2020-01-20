@@ -8,7 +8,7 @@ import { getThemeColorOrItself } from './helpers'
 export interface ThemedTextProps extends Omit<TextProps, 'style'> {
   backgroundColor?: keyof ThemeColors | ((theme: Theme) => string)
   children?: React.ReactNode
-  color?: keyof ThemeColors | ((theme: Theme) => string)
+  color?: keyof ThemeColors | ((theme: Theme) => string) | string
   style?: StyleProp<Omit<TextStyle, 'backgroundColor' | 'color'>>
   themeTransformer?: ThemeTransformer
 }

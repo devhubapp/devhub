@@ -38,7 +38,7 @@ export function getReadableColor(
   }
 }
 
-export function fixColorHexWithoutHash(color: string) {
+export function fixColorHexWithoutHash(color: string | undefined) {
   if (color && (color.length === 6 || color.length === 3) && color[0] !== '#')
     return `#${color}`
 

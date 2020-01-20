@@ -14,6 +14,7 @@ import {
   smallerTextSize,
   smallTextSize,
 } from '../../styles/variables'
+import { fixColorHexWithoutHash } from '../../utils/helpers/colors'
 import { stripEmojis } from '../../utils/helpers/github/emojis'
 import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
@@ -557,64 +558,53 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               >
                 {labels.map((label, index) => (
                   <Fragment key={`${label.name}-${label.color}`}>
-                    <Label
-                      backgroundThemeColor={backgroundThemeColor}
-                      colorThemeColor={label.color}
-                      disableEmojis
-                      hideText={false}
-                      outline={false}
-                      small
-                      textThemeColor="foregroundColorMuted65"
-                      transparent
-                      tryFixingColorHexWithoutHash
+                    <Link
+                      TouchableComponent={GestureHandlerTouchableOpacity}
+                      enableUnderlineHover={false}
+                      href="javascript:void(0)"
+                      openOnNewTab={false}
+                      onPress={
+                        !columnId
+                          ? undefined
+                          : (() => {
+                              return () => {
+                                vibrateHapticFeedback()
+
+                                const removeIfAlreadySet = !(
+                                  KeyboardKeyIsPressed.meta ||
+                                  KeyboardKeyIsPressed.shift
+                                )
+
+                                const removeOthers = !(
+                                  KeyboardKeyIsPressed.alt ||
+                                  KeyboardKeyIsPressed.meta ||
+                                  KeyboardKeyIsPressed.shift
+                                )
+
+                                dispatch(
+                                  actions.setColumnLabelFilter({
+                                    columnId,
+                                    label: label.name,
+                                    value: KeyboardKeyIsPressed.alt
+                                      ? false
+                                      : true,
+                                    removeIfAlreadySet,
+                                    removeOthers,
+                                  }),
+                                )
+                              }
+                            })()
+                      }
+                      style={sharedStyles.flexShrink1}
                     >
-                      <Link
-                        TouchableComponent={GestureHandlerTouchableOpacity}
-                        enableUnderlineHover
-                        href="javascript:void(0)"
-                        openOnNewTab={false}
-                        onPress={
-                          !columnId
-                            ? undefined
-                            : (() => {
-                                return () => {
-                                  vibrateHapticFeedback()
-
-                                  const removeIfAlreadySet = !(
-                                    KeyboardKeyIsPressed.meta ||
-                                    KeyboardKeyIsPressed.shift
-                                  )
-
-                                  const removeOthers = !(
-                                    KeyboardKeyIsPressed.alt ||
-                                    KeyboardKeyIsPressed.meta ||
-                                    KeyboardKeyIsPressed.shift
-                                  )
-
-                                  dispatch(
-                                    actions.setColumnLabelFilter({
-                                      columnId,
-                                      label: label.name,
-                                      value: KeyboardKeyIsPressed.alt
-                                        ? false
-                                        : true,
-                                      removeIfAlreadySet,
-                                      removeOthers,
-                                    }),
-                                  )
-                                }
-                              })()
-                        }
-                        style={sharedStyles.flexShrink1}
-                        textProps={{
-                          color: 'foregroundColorMuted65',
-                          numberOfLines: 1,
-                          style: styles.labelText,
-                        }}
+                      <Label
+                        colorThemeColor={fixColorHexWithoutHash(label.color)}
+                        disableEmojis
+                        small
                       >
-                        {stripEmojis(label.name.toLowerCase())}
-                      </Link>
-                    </Label>
+                        {label.name.toLowerCase()}
+                      </Label>
+                    </Link>
 
                     {index < labels.length - 1 && (
                       <Spacer width={contentPadding / 2} />
