@@ -4,10 +4,10 @@ import {
   ColumnOptions,
   ColumnsAndSubscriptions,
   ColumnSubscriptionCreation,
+  EnhancedGitHubNotification,
   GitHubEventAction,
   GitHubEventSubjectType,
   GitHubIssueOrPullRequestSubjectType,
-  GitHubNotificationReason,
   GitHubNotificationSubjectType,
   GitHubStateType,
   NotificationColumnFilters,
@@ -105,7 +105,7 @@ export function setColumnLabelFilter(payload: {
 }
 
 export function setColumnReasonFilter<
-  T extends GitHubNotificationReason
+  T extends EnhancedGitHubNotification['reason']
 >(payload: {
   columnId: string
   reason: T

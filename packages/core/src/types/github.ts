@@ -243,6 +243,7 @@ export interface GitHubPullRequest {
   merged_by: GitHubUser // User
   comments: number // 0
   review_comments: number // 0
+  requested_reviewers?: GitHubUser[] | null // []
   commits: number // 2
   additions: number // 4
   deletions: number // 4
@@ -864,7 +865,7 @@ export type GitHubNotificationReason =
   | 'invitation' // You accepted an invitation to contribute to the repository.
   | 'manual' // You subscribed to the thread (via an Issue or Pull Request).
   | 'mention' // You were specifically @mentioned in the content.
-  | 'review_requested' // Someone requested your review on a pull request
+  | 'review_requested' // Someone requested your review (or your team's) on a pull request
   | 'security_alert' // Potential security vulnerability alert
   | 'state_change' // You changed the thread state (for example, closing an Issue or merging a PR).
   | 'subscribed' // You're watching the repository.

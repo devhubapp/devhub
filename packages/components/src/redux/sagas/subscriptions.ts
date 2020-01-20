@@ -425,6 +425,7 @@ function* onFetchRequest(
             repoName: string | undefined,
           ) =>
             selectors.getPrivateTokenByRepoSelector(state, ownerName, repoName),
+          githubLogin: loggedUsername,
           githubToken,
         },
       )

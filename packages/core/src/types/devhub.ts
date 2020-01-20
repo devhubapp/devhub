@@ -27,6 +27,10 @@ import { GraphQLUserPlan } from './graphql'
 
 type octokit = InstanceType<typeof Octokit>
 
+export type EnhancedGitHubNotificationReason =
+  | GitHubNotificationReason
+  | 'team_review_requested'
+
 export interface ArchivedEnhancement {
   // archived_at?: string
 }
@@ -51,10 +55,12 @@ export interface BaseEnhancement
 export interface NotificationPayloadEnhancement extends BaseEnhancement {
   comment?: GitHubComment
   commit?: GitHubCommit
+  enhanced?: boolean
   issue?: GitHubIssue
   pullRequest?: GitHubPullRequest
+  reason?: EnhancedGitHubNotificationReason
   release?: GitHubRelease
-  enhanced?: boolean
+  requestedMyReview?: boolean
 }
 
 export interface IssuePayloadEnhancement extends BaseEnhancement {
@@ -74,8 +80,10 @@ export type IssueOrPullRequestPayloadEnhancement =
   | PullRequestPayloadEnhancement
 
 export interface EnhancedGitHubNotification
-  extends GitHubNotification,
-    NotificationPayloadEnhancement {}
+  extends Omit<GitHubNotification, 'reason'>,
+    NotificationPayloadEnhancement {
+  reason: EnhancedGitHubNotificationReason
+}
 
 export interface GitHubEnhancedEventBase {
   merged: string[]
@@ -262,7 +270,7 @@ export interface IssueOrPullRequestColumnFilters extends BaseColumnFilters {
 export interface NotificationColumnFilters extends BaseColumnFilters {
   notifications?: {
     participating?: boolean
-    reasons?: Partial<Record<GitHubNotificationReason, boolean>>
+    reasons?: Partial<Record<EnhancedGitHubNotification['reason'], boolean>>
   }
   subjectTypes?: Partial<Record<GitHubNotificationSubjectType, boolean>>
 }
@@ -480,7 +488,10 @@ export interface ItemsFilterMetadata {
     Record<GitHubItemSubjectType, ItemFilterCountMetadata | undefined>
   >
   subscriptionReason: Partial<
-    Record<GitHubNotificationReason, ItemFilterCountMetadata | undefined>
+    Record<
+      EnhancedGitHubNotification['reason'],
+      ItemFilterCountMetadata | undefined
+    >
   >
   eventAction: Partial<Record<GitHubEventAction, ItemFilterCountMetadata>>
   privacy: Record<GitHubPrivacy, ItemFilterCountMetadata>

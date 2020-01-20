@@ -14,6 +14,7 @@ import {
   isItemRead,
   isItemSaved,
   IssueOrPullRequestColumnSubscription,
+  NotificationColumn,
   removeUselessURLsFromResponseItem,
 } from '@devhub/core'
 import immer from 'immer'
@@ -535,5 +536,29 @@ export default {
         .installations as any).lastFetchedAt
       draft.github.installations.lastFetchSuccessAt = (draft.github
         .installations as any).lastFetchedSuccessfullyAt
+    }),
+  17: (state: RootState) =>
+    immer(state, draft => {
+      draft.columns = draft.columns || {}
+      draft.columns.byId = draft.columns.byId || {}
+
+      const columnIds = Object.keys(draft.columns.byId)
+      columnIds.forEach(columnId => {
+        const column = draft.columns.byId![columnId] as NotificationColumn
+
+        if (!(column && column.type === 'notifications')) return
+
+        if (
+          column &&
+          column.filters &&
+          column.filters.notifications &&
+          column.filters.notifications.reasons &&
+          typeof column.filters.notifications.reasons.review_requested ===
+            'boolean'
+        ) {
+          column.filters.notifications.reasons.team_review_requested =
+            column.filters.notifications.reasons.review_requested
+        }
+      })
     }),
 }

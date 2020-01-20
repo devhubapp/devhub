@@ -10,9 +10,9 @@ import {
   GitHubIssueOrPullRequest,
   GitHubLabel,
   GitHubNotification,
-  GitHubNotificationReason,
   GitHubNotificationSubjectType,
   GitHubPullRequest,
+  GitHubUser,
   NotificationPayloadEnhancement,
   ThemeColors,
   UserPlan,
@@ -36,7 +36,9 @@ import {
   getRepoFullNameFromObject,
 } from './url'
 
-export const notificationReasons: GitHubNotificationReason[] = [
+export const notificationReasons: Array<
+  EnhancedGitHubNotification['reason']
+> = [
   'assign',
   'author',
   'comment',
@@ -48,6 +50,7 @@ export const notificationReasons: GitHubNotificationReason[] = [
   'state_change',
   'subscribed',
   'team_mention',
+  'team_review_requested',
 ]
 
 export const notificationSubjectTypes: GitHubNotificationSubjectType[] = [
@@ -60,7 +63,7 @@ export const notificationSubjectTypes: GitHubNotificationSubjectType[] = [
 ]
 
 export function getNotificationSubjectType(
-  notification: GitHubNotification,
+  notification: Pick<GitHubNotification, 'subject'>,
 ): GitHubNotificationSubjectType | null {
   if (!(notification && notification.subject && notification.subject.type))
     return null
@@ -69,7 +72,7 @@ export function getNotificationSubjectType(
 }
 
 export function getNotificationIconAndColor(
-  notification: GitHubNotification,
+  notification: Pick<GitHubNotification, 'subject'>,
   payload: GitHubIssueOrPullRequest | undefined,
 ): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
   const { subject } = notification
@@ -105,7 +108,7 @@ export function getNotificationIconAndColor(
 }
 
 export function getNotificationReasonMetadata<
-  T extends GitHubNotificationReason
+  T extends EnhancedGitHubNotification['reason']
 >(
   reason: T,
 ): {
@@ -201,10 +204,20 @@ export function getNotificationReasonMetadata<
     case 'review_requested':
       return {
         reason,
-        color: 'yellow',
+        color: 'orange',
         fullDescription: 'Someone requested your review in the pull request',
         // smallDescription: 'Review requested',
         label: 'Review requested',
+      }
+
+    case 'team_review_requested':
+      return {
+        reason,
+        color: 'yellow',
+        fullDescription:
+          "Someone requested your team's review in the pull request",
+        // smallDescription: 'Team review requested',
+        label: 'Team review requested',
       }
 
     case 'security_alert':
@@ -274,7 +287,9 @@ export function mergeNotificationPreservingEnhancement(
       newItem.last_unsaved_at,
     ]),
     pullRequest: existingItem.pullRequest,
+    reason: existingItem.reason,
     release: existingItem.release,
+    requestedMyReview: existingItem.requestedMyReview,
     updated_at: _.max([existingItem.updated_at, newItem.updated_at])!,
   }
 
@@ -307,6 +322,7 @@ export async function getNotificationsEnhancementMap(
     cache = new Map(),
     getGitHubPrivateTokenForRepo,
     githubToken: _githubToken,
+    githubLogin: _githubLogin,
   }: {
     cache: EnhancementCache | undefined | undefined
     getGitHubPrivateTokenForRepo: (
@@ -314,8 +330,11 @@ export async function getNotificationsEnhancementMap(
       repo: string | undefined,
     ) => string | undefined
     githubToken: string
+    githubLogin: string
   },
 ): Promise<Record<string, NotificationPayloadEnhancement>> {
+  const githubLogin = `${_githubLogin || ''}`.toLowerCase().trim()
+
   const promises = notifications.map(async notification => {
     if (!(notification.repository && notification.repository.full_name)) return
 
@@ -376,6 +395,30 @@ export async function getNotificationsEnhancementMap(
         if (!enhance.enhanced) enhance.enhanced = false
         return
       }
+
+      // if (
+      //   subjectField === 'pullRequest' &&
+      //   enhance.pullRequest &&
+      //   notification.reason === 'review_requested' &&
+      //   !enhance.requestedMyReview
+      // ) {
+      //   try {
+      //     const { data } = await axios.get(
+      //       `${notification.subject.url}/reviews?access_token=${githubToken}`,
+      //     )
+
+      //     if (data && data.length) {
+      //       enhance.requestedMyReview = !!data.find(
+      //         (item: { user?: GitHubUser }) =>
+      //           item &&
+      //           item.user &&
+      //           githubLogin === `${item.user.login || ''}`.toLowerCase().trim(),
+      //       )
+      //     }
+      //   } catch (error) {
+      //     //
+      //   }
+      // }
     } else if (hasSubjectCache) {
       if (subjectCache && subjectCache.data) {
         enhance[subjectField] = subjectCache.data
@@ -411,6 +454,25 @@ export async function getNotificationsEnhancementMap(
         enhance.comment = commentCache.data
         enhance.enhanced = true
       } else if (!enhance.enhanced) enhance.enhanced = false
+    }
+
+    if (
+      githubLogin &&
+      enhance.pullRequest &&
+      enhance.pullRequest.requested_reviewers
+    ) {
+      if (!enhance.requestedMyReview) {
+        enhance.requestedMyReview = !!enhance.pullRequest.requested_reviewers.find(
+          u => githubLogin === `${u.login || ''}`.toLowerCase().trim(),
+        )
+      }
+    }
+
+    if (
+      notification.reason === 'review_requested' &&
+      enhance.requestedMyReview === false
+    ) {
+      enhance.reason = 'team_review_requested'
     }
 
     if (!Object.keys(enhance).length) return

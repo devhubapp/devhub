@@ -35,7 +35,6 @@ import {
   getUserURLFromObject,
   GitHubIcon,
   GitHubIssueOrPullRequest,
-  GitHubNotificationReason,
   GitHubPullRequest,
   GitHubPushEvent,
   isDraft,
@@ -142,7 +141,7 @@ export interface BaseCardProps extends AdditionalCardProps {
   link: string
   nodeIdOrId: string
   reason?: {
-    reason: GitHubNotificationReason
+    reason: EnhancedGitHubNotification['reason']
     color: keyof ThemeColors
     label: string
     tooltip?: string

@@ -189,7 +189,9 @@ export function isEventPrivate(event: EnhancedGitHubEvent) {
   )
 }
 
-export function isNotificationPrivate(notification: GitHubNotification) {
+export function isNotificationPrivate(
+  notification: Pick<GitHubNotification, 'repository'>,
+) {
   if (!notification) return false
   return !!(notification.repository && notification.repository.private)
 }
