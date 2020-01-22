@@ -104,7 +104,7 @@ export function formatInterval(
       ? ''
       : transformUsage && transformUsage.divideBy > 1
       ? ` every ${transformUsage.divideBy} users`
-      : type === 'team'
+      : type === 'team' && !(transformUsage && !(transformUsage.divideBy > 1))
       ? ' per user'
       : ''
   }`

@@ -29,7 +29,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     banner: _banner,
     buttonLabel,
     buttonLink,
-    forceShowAsMonthly = false,
+    forceShowAsMonthly = true,
     plan,
     totalNumberOfVisiblePlans,
   } = props
@@ -90,7 +90,15 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   const subtitle = `${
     forceShowAsMonthly
-      ? '/month'
+      ? formatInterval({
+          ...plan,
+          interval: 'month',
+          intervalCount: 1,
+          transformUsage: {
+            divideBy: 1,
+            round: 'up',
+          },
+        })
       : localizedPlan.interval
       ? formatInterval(localizedPlan)
       : ''
