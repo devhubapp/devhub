@@ -111,7 +111,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
       `${localizedPlan.trialPeriodDays}-day free trial`
-  } else if (localizedPlan.amount && !localizedPlan.trialPeriodDays) {
+  } else if (
+    localizedPlan.amount &&
+    !localizedPlan.trialPeriodDays &&
+    plans.some(p => p && p.trialPeriodDays)
+  ) {
     footerText = (footerText ? `${footerText}\n` : footerText) + 'No free trial'
   }
 
