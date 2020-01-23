@@ -62,7 +62,7 @@ export function PricingPlans(_props: PricingPlansProps) {
         />
       ) : null,
     )
-  }, [tab])
+  }, [plans, tab])
 
   return (
     <div className="container">

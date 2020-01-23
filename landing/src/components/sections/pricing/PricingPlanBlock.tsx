@@ -90,15 +90,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   const subtitle = `${
     forceShowAsMonthly
-      ? formatInterval({
-          ...plan,
-          interval: 'month',
-          intervalCount: 1,
-          transformUsage: {
-            divideBy: 1,
-            round: 'up',
-          },
-        })
+      ? `${plan.type === 'team' ? '/user' : ''}/month`
       : localizedPlan.interval
       ? formatInterval(localizedPlan)
       : ''
@@ -133,6 +125,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       `*Billed ${
         localizedPlan.amount % 100 > 50 ? '~' : ''
       }${_roundedPriceLabelWithInterval}`
+  } else if (
+    forceShowAsMonthly &&
+    plans.find(p => p && p.interval !== 'month')
+  ) {
+    footerText = `${footerText || ' '}\n`
   }
 
   if (!localizedPlan.interval && localizedPlan.amount) {

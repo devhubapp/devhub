@@ -12,7 +12,6 @@ import {
   GitHubNotification,
   GitHubNotificationSubjectType,
   GitHubPullRequest,
-  GitHubUser,
   NotificationPayloadEnhancement,
   ThemeColors,
   UserPlan,

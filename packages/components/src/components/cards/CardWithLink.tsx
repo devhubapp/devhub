@@ -3,8 +3,6 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { StyleSheet, TouchableHighlightProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
-import { useAppViewMode } from '../../hooks/use-app-view-mode'
-import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
 import { useIsItemFocused } from '../../hooks/use-is-item-focused'
 import { useItem } from '../../hooks/use-item'
@@ -26,7 +24,6 @@ import {
 import { ThemedView } from '../themed/ThemedView'
 import { BaseCard } from './BaseCard'
 import { getCardPropsForItem } from './BaseCard.shared'
-import { CardLeftBorder } from './partials/CardLeftBorder'
 import { CardSavedIndicator } from './partials/CardSavedIndicator'
 
 export interface CardWithLinkProps {
@@ -83,7 +80,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
     }
   }, [/* appViewMode, */ columnId, item, ownerIsKnown, plan, repoIsKnown])
 
-  const isReadRef = useDynamicRef(!!(cardProps && cardProps.isRead))
+  // const isReadRef = useDynamicRef(!!(cardProps && cardProps.isRead))
 
   const onPress = useCallback<NonNullable<LinkProps['onPress']>>(
     e => {
