@@ -15,6 +15,7 @@ export default function FloatingFooter(_props: FloatingFooterProps) {
         className={classNames(
           fixed && 'fixed bottom-0 left-0 right-0',
           'mt-10',
+          !isFocused && 'sm:pointer-events-none',
         )}
         style={{
           ...(fixed && {
@@ -36,7 +37,7 @@ export default function FloatingFooter(_props: FloatingFooterProps) {
             <QuickFeedbackInput
               className={classNames(
                 /* isFocused ? 'w-full' : */ 'w-full sm:w-auto',
-                'text-center',
+                'text-center pointer-events-auto',
               )}
               onBlur={() => {
                 setIsFocused(false)
