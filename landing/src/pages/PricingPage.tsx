@@ -6,7 +6,7 @@ import { usePlans } from '../context/PlansContext'
 export interface PricingPageProps {}
 
 export default function PricingPage(_props: PricingPageProps) {
-  const { paidPlans } = usePlans()
+  const { dealCode, paidPlans } = usePlans()
 
   return (
     <LandingLayout>
@@ -15,7 +15,11 @@ export default function PricingPage(_props: PricingPageProps) {
 
         <div className="container">
           <h1>
-            {paidPlans.length === 1 ? 'Simple pricing' : 'Choose your plan'}
+            {dealCode
+              ? 'Your Deal Pricing'
+              : paidPlans.length === 1
+              ? 'Simple pricing'
+              : 'Choose your plan'}
           </h1>
         </div>
 

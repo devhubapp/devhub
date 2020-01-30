@@ -23,7 +23,7 @@
     "strict": true
   },
   "include": [
-    "src"
+    "src", "pages"
   ],
   "exclude": [
     "node_modules"

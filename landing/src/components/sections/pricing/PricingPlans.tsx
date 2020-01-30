@@ -12,7 +12,7 @@ export interface PricingPlansProps {}
 
 export function PricingPlans(_props: PricingPlansProps) {
   const { authData } = useAuth()
-  const { plans } = usePlans()
+  const { dealCode, plans } = usePlans()
 
   const shouldShowPlanTypeTabs =
     plans.some(plan => plan && plan.type !== 'team') &&
@@ -27,6 +27,11 @@ export function PricingPlans(_props: PricingPlansProps) {
       : shouldShowPlanTypeTabs
       ? 'individual'
       : undefined)
+
+  // const previousDealCodeRef = useRef(dealCode)
+  // useEffect(() => {
+  //   if (dealCode) previousDealCodeRef.current = dealCode
+  // }, [dealCode])
 
   const pricingPlanComponents = useMemo(() => {
     const filteredPlans = plans.filter(
@@ -100,6 +105,54 @@ export function PricingPlans(_props: PricingPlansProps) {
       <small className="block sm:hidden italic text-sm text-muted-65 text-center">
         TIP: Scroll horizontally to see all plans
       </small>
+
+      <p className="block mb-4" />
+
+      <div className="flex flex-row justify-center text-center">
+        <Link href="/deal">
+          <a className="block italic text-sm text-muted-65 text-center">
+            {dealCode
+              ? 'Switch deal code'
+              : // : previousDealCodeRef.current
+                // ? 'Apply new deal code'
+                'Apply deal code'}
+          </a>
+        </Link>
+
+        {/* {dealCode ? (
+          <>
+            <p className="px-1 italic text-sm text-muted-65">|</p>
+
+            <a
+              className="block italic text-sm text-muted-65 text-center"
+              href="javascript:void(0)"
+              onClick={() => {
+                trySetDealCode(null).catch(() => {
+                  //
+                })
+              }}
+            >
+              See normal pricing
+            </a>
+          </>
+        ) : previousDealCodeRef.current ? (
+          <>
+            <p className="px-1 italic text-sm text-muted-65">|</p>
+
+            <a
+              className="block italic text-sm text-muted-65 text-center"
+              href="javascript:void(0)"
+              onClick={() => {
+                trySetDealCode(previousDealCodeRef.current).catch(() => {
+                  //
+                })
+              }}
+            >
+              Restore deal pricing
+            </a>
+          </>
+        ) : null} */}
+      </div>
     </div>
   )
 }

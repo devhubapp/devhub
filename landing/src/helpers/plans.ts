@@ -7,7 +7,8 @@ export interface PlansProps {
   children: React.ReactNode
 }
 
-export interface PlansState {
+export interface PlansStateData {
+  dealCode: string | undefined
   freePlan: Plan | undefined
   freeTrialDays: number
   freeTrialPlan: Plan | undefined
@@ -16,8 +17,13 @@ export interface PlansState {
   userPlanInfo: Plan | undefined
 }
 
-let cachedPublicPlans: PlansState
-export function getCachedPublicPlans(): PlansState | undefined {
+export interface PlansState extends PlansStateData {
+  loadingState: 'initial' | 'cached' | 'loading' | 'loaded' | 'error'
+  trySetDealCode(dealCode: string | undefined | null): Promise<void>
+}
+
+let cachedPublicPlans: PlansStateData
+export function getCachedPublicPlans(): PlansStateData | undefined {
   if (cachedPublicPlans) return cachedPublicPlans
 
   try {
@@ -29,22 +35,31 @@ export function getCachedPublicPlans(): PlansState | undefined {
 }
 
 const _fetch = typeof fetch === 'function' ? fetch : require('node-fetch') // tslint:disable-line no-var-requires
-export async function fetchPlansState(appToken?: string): Promise<PlansState> {
-  const response = await _fetch(`${constants.API_BASE_URL}/plans`, {
-    method: 'GET',
-    headers: {
-      ...getDefaultDevHubHeaders({ appToken }),
-      'Content-Type': 'application/json',
+export async function fetchPlansState({
+  appToken,
+  dealCode,
+}: { appToken?: string; dealCode?: string | null } = {}): Promise<
+  PlansStateData
+> {
+  const response = await _fetch(
+    `${constants.API_BASE_URL}/plans${dealCode ? `?dealCode=${dealCode}` : ''}`,
+    {
+      method: 'GET',
+      headers: {
+        ...getDefaultDevHubHeaders({ appToken }),
+        'Content-Type': 'application/json',
+      },
     },
-  })
+  )
 
-  const data = (await response.json()) as PlansState
+  const data = (await response.json()) as PlansStateData
 
   if (!(data && data.plans)) {
     throw new Error('Something went wrong')
   }
 
   return {
+    dealCode: data.dealCode,
     freePlan: data.freePlan,
     freeTrialDays: data.freeTrialDays,
     freeTrialPlan: data.freeTrialPlan,

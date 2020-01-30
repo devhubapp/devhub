@@ -1,11 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import {
   fetchPlansState,
   getCachedPublicPlans,
   PlansState,
 } from '../helpers/plans'
-import { useDynamicRef } from '../hooks/use-dynamic-ref'
 import { useAuth } from './AuthContext'
 
 export interface PlansProps {
@@ -13,42 +19,85 @@ export interface PlansProps {
 }
 
 const initialState: PlansState = {
+  dealCode: undefined,
   freePlan: undefined,
   freeTrialDays: 0,
   freeTrialPlan: undefined,
   paidPlans: [],
   plans: [],
   userPlanInfo: undefined,
+
+  loadingState: 'initial',
+  trySetDealCode() {
+    throw new Error('[PlansContext] Not yet initialized.')
+  },
 }
 
 export const PlansContext = React.createContext(initialState)
 PlansContext.displayName = 'PlansContext'
 
 export function PlansProvider(props: PlansProps) {
-  const [state, setState] = useState(getCachedPublicPlans() || initialState)
+  const [state, setState] = useState<PlansState>({
+    ...initialState,
+    ...getCachedPublicPlans(),
+    ...(getCachedPublicPlans() ? { loadingState: 'cached' } : {}),
+  })
 
   const { authData } = useAuth()
 
-  const stateRef = useDynamicRef(state)
-  useEffect(() => {
-    if (stateRef.current === getCachedPublicPlans() && !authData.appToken)
-      return
-    ;(async () => {
+  const tryRefetchPlansForDealCode = useCallback(
+    async (dealCode: string | undefined | null): Promise<void> => {
+      countRef.current = countRef.current + 1
+      const currentRequest = countRef.current
+
       try {
-        const s = await fetchPlansState(authData.appToken)
-        setState(s)
+        setState(v => ({ ...v, loadingState: 'loading' }))
+        const data = await fetchPlansState({
+          appToken: authData.appToken,
+          dealCode,
+        })
+
+        if (currentRequest !== countRef.current) return
+
+        setState(v => ({ ...v, ...data, loadingState: 'loaded' }))
       } catch (error) {
-        //
+        setState(v => ({ ...v, loadingState: 'error' }))
+        // if (dealCode) tryRefetchPlansForDealCode(null)
+        throw error
       }
-    })()
+    },
+    [authData.appToken],
+  )
+
+  const countRef = useRef(0)
+  useEffect(() => {
+    if (
+      state.loadingState === 'cached' &&
+      !authData.appToken &&
+      !state.dealCode
+    )
+      return
+
+    tryRefetchPlansForDealCode(state.dealCode).catch(() => {
+      //
+    })
   }, [
     !!authData.appToken,
     authData.github.login,
     authData.plan && authData.plan.id,
+    state.dealCode,
   ])
 
+  const value = useMemo(
+    () => ({
+      ...state,
+      trySetDealCode: tryRefetchPlansForDealCode,
+    }),
+    [state, tryRefetchPlansForDealCode],
+  )
+
   return (
-    <PlansContext.Provider value={state}>
+    <PlansContext.Provider value={value}>
       {props.children}
     </PlansContext.Provider>
   )

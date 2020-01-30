@@ -110,3 +110,21 @@ export interface DatabaseUser {
     | undefined
   feedbacks?: DatabaseUserFeedback[]
 }
+
+export interface DatabaseDeal {
+  code: string
+  planIds: string[]
+  // rules?: {
+  //   emailSuffix?: string
+  //   orgs?: string[]
+  //   platforms?: string[]
+  //   users?: string[]
+  //   usersLimit?: number
+  // }
+  // statistics?: {
+  //   claimedBy?: string[]
+  //   usedBy?: string[]
+  // }
+  // expiresAt?: string
+  createdAt: string
+}
