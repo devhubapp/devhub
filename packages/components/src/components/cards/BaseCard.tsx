@@ -296,7 +296,10 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
             >
               <ThemedIcon
                 name={icon.name}
-                color={icon.color || 'foregroundColor'}
+                color={
+                  icon.color ||
+                  (isRead ? 'foregroundColorMuted65' : 'foregroundColor')
+                }
                 style={styles.icon}
               />
             </ThemedView>
@@ -309,7 +312,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
             <View style={sharedStyles.horizontalAndVerticallyAligned}>
               <ThemedText
-                color={'foregroundColor'}
+                color={isRead ? 'foregroundColorMuted65' : 'foregroundColor'}
                 numberOfLines={1}
                 style={[styles.title, { fontWeight: isMuted ? '300' : '500' }]}
               >
@@ -381,7 +384,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
             {!!subtitle && (
               <ThemedText
-                color={'foregroundColor'}
+                color={isRead ? 'foregroundColorMuted65' : 'foregroundColor'}
                 numberOfLines={1}
                 style={[
                   styles.subtitle,
