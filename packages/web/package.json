@@ -24,7 +24,7 @@
     "react-app-polyfill": "1.0.4",
     "react-art": "16.12.0",
     "react-dom": "16.12.0",
-    "react-native-web": "0.12.0-rc.1",
+    "react-native-web": "0.12.0",
     "react-scripts": "3.2.0",
     "react-stripe-elements": "5.0.1",
     "resize-observer-polyfill": "1.5.1",
