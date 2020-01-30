@@ -1,11 +1,11 @@
 import React, { useMemo, useRef } from 'react'
 import { FlatList, FlatListProps, View } from 'react-native'
 
-import { sharedStyles } from '../../styles/shared'
-import { AutoSizer } from '../auto-sizer'
-import { bugsnag } from '../bugsnag'
-import { Platform } from '../platform'
-import { OneListInstance, OneListProps } from './index.shared'
+import { sharedStyles } from '../../../styles/shared'
+import { AutoSizer } from '../../auto-sizer'
+import { bugsnag } from '../../bugsnag'
+import { Platform } from '../../platform'
+import { OneListInstance, OneListProps } from '../index.shared'
 
 export { OneListProps }
 

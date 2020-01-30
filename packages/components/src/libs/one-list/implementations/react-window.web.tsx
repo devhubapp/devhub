@@ -16,11 +16,11 @@ import {
   VariableSizeListProps,
 } from 'react-window'
 
-import { useDynamicRef } from '../../hooks/use-dynamic-ref'
-import { sharedStyles } from '../../styles/shared'
-import { AutoSizer } from '../auto-sizer'
-import { bugsnag } from '../bugsnag'
-import { OneListInstance, OneListProps } from './index.shared'
+import { useDynamicRef } from '../../../hooks/use-dynamic-ref'
+import { sharedStyles } from '../../../styles/shared'
+import { AutoSizer } from '../../auto-sizer'
+import { bugsnag } from '../../bugsnag'
+import { OneListInstance, OneListProps } from '../index.shared'
 
 export { OneListProps }
 
