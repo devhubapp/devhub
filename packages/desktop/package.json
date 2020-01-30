@@ -103,7 +103,7 @@
     "electron-timber": "0.5.1",
     "nodemon": "1.19.3",
     "tslint": "5.20.1",
-    "typescript": "3.7.2",
+    "typescript": "3.7.5",
     "wait-on": "3.3.0"
   }
 }

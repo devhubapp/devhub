@@ -52,7 +52,7 @@
     "tslint": "5.20.1",
     "tslint-config-prettier": "1.18.0",
     "tslint-react": "4.1.0",
-    "typescript": "3.7.2"
+    "typescript": "3.7.5"
   },
   "resolutions": {
     "@types/react": "16.9.15"
