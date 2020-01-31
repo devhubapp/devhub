@@ -69,4 +69,12 @@ export const createDeepEqualSelector = createSelectorCreator(
   shallowEqualityCheckOrDeepIfArray,
 )
 
-export const createImmerSelector = memoizeState
+export function createImmerSelector<T>(fn: T) {
+  return memoizeState(fn, {
+    equalCheck: true,
+    nestedEquality: true,
+    safe: true,
+    shallowCheck: true,
+    strictArity: false,
+  })
+}
