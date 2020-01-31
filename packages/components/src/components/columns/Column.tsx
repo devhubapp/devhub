@@ -1,5 +1,5 @@
 import { Theme, ThemeColors } from '@devhub/core'
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import url from 'url'
 
@@ -64,58 +64,56 @@ export const Column = React.memo(
       }
     }, [])
 
-    useEmitter('FOCUS_ON_COLUMN', payload => {
-      if (!columnBorderRef.current) return
-
-      if (!(payload.columnId && payload.columnId === columnId)) {
-        columnBorderRef.current.setNativeProps({ style: { opacity: 0 } })
-        return
-      }
-
-      if (payload.highlight) {
-        columnBorderRef.current.setNativeProps({ style: { opacity: 1 } })
-
-        setTimeout(() => {
+    const showPermanentColumnIndicator = !!(
+      isColumnFocused &&
+      lastUsedInputType === 'keyboard' &&
+      appViewMode === 'multi-column'
+    )
+    useEmitter(
+      'FOCUS_ON_COLUMN',
+      useCallback(
+        payload => {
           if (!columnBorderRef.current) return
-          columnBorderRef.current.setNativeProps({ style: { opacity: 0 } })
-        }, 1000)
-      }
 
-      if (
-        Platform.OS === 'web' &&
-        columnRef.current &&
-        !payload.focusOnVisibleItem
-      ) {
-        const currentFocusedNodeTag =
-          typeof document !== 'undefined' &&
-          document &&
-          document.activeElement &&
-          document.activeElement.tagName
+          if (!(payload.columnId && payload.columnId === columnId)) {
+            columnBorderRef.current.setNativeProps({ style: { opacity: 0 } })
+            return
+          }
 
-        if (
-          !(
-            currentFocusedNodeTag &&
-            currentFocusedNodeTag.toLowerCase() === 'input'
-          )
-        ) {
-          tryFocus(columnRef.current)
-        }
-      }
-    })
+          if (payload.highlight || showPermanentColumnIndicator) {
+            columnBorderRef.current.setNativeProps({ style: { opacity: 1 } })
 
-    useEffect(() => {
-      if (!columnBorderRef.current) return
-      columnBorderRef.current.setNativeProps({
-        style: {
-          opacity:
-            isColumnFocused &&
-            lastUsedInputType === 'keyboard' &&
-            appViewMode === 'multi-column'
-              ? 1
-              : 0,
+            setTimeout(() => {
+              if (!columnBorderRef.current || showPermanentColumnIndicator)
+                return
+              columnBorderRef.current.setNativeProps({ style: { opacity: 0 } })
+            }, 1000)
+          }
+
+          if (
+            Platform.OS === 'web' &&
+            columnRef.current &&
+            !payload.focusOnVisibleItem
+          ) {
+            const currentFocusedNodeTag =
+              typeof document !== 'undefined' &&
+              document &&
+              document.activeElement &&
+              document.activeElement.tagName
+
+            if (
+              !(
+                currentFocusedNodeTag &&
+                currentFocusedNodeTag.toLowerCase() === 'input'
+              )
+            ) {
+              tryFocus(columnRef.current)
+            }
+          }
         },
-      })
-    }, [appViewMode, isColumnFocused, lastUsedInputType])
+        [columnId, showPermanentColumnIndicator],
+      ),
+    )
 
     return (
       <ThemedView

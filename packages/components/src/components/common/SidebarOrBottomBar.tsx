@@ -56,6 +56,7 @@ import { usePlans } from '../context/PlansContext'
 import { getTheme } from '../context/ThemeContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
+import { ThemedTouchableOpacity } from '../themed/ThemedTouchableOpacity'
 import { ThemedTouchableWithoutFeedback } from '../themed/ThemedTouchableWithoutFeedback'
 import { ThemedView } from '../themed/ThemedView'
 import { Avatar } from './Avatar'
@@ -838,7 +839,7 @@ export const SidebarOrBottomBarItem = React.memo(
         condition
         wrap={c =>
           onPress ? (
-            <ThemedTouchableWithoutFeedback
+            <ThemedTouchableOpacity
               key={`sidebar-or-bottom-bar-item-${columnId}-inner`}
               backgroundColor={
                 selected && !horizontal
