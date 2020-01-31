@@ -142,10 +142,12 @@ export function getEventMetadata(
     ('repos' in event && getRepoFullNameFromObject(event.repos[0]))
 
   const isDraftPR =
-    ('pull_request' in event.payload && isDraft(event.payload.pull_request)) ||
-    ('issue' in event.payload &&
-      isPullRequest(event.payload.issue) &&
-      isDraft(event.payload.issue as GitHubPullRequest))
+    event &&
+    event.payload &&
+    (('pull_request' in event.payload && isDraft(event.payload.pull_request)) ||
+      ('issue' in event.payload &&
+        isPullRequest(event.payload.issue) &&
+        isDraft(event.payload.issue as GitHubPullRequest)))
 
   const issueText = issueOrPullRequestIsKnown ? 'this issue' : 'an issue'
   const pullRequestText = issueOrPullRequestIsKnown

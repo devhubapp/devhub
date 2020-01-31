@@ -419,6 +419,8 @@ export function getFilteredIssueOrPullRequests(
 
   if (filters && columnHasAnyFilter('issue_or_pr', filters)) {
     _items = _items.filter(item => {
+      if (!item) return
+
       const subjectType = getIssueOrPullRequestSubjectType(item)
       const issueOrPR = getItemIssueOrPullRequest('issue_or_pr', item)
 
@@ -537,6 +539,8 @@ export function getFilteredNotifications(
 
   if (filters && columnHasAnyFilter('notifications', filters)) {
     _notifications = _notifications.filter(item => {
+      if (!item) return
+
       const subjectType = getNotificationSubjectType(item)
       const issueOrPR = getItemIssueOrPullRequest('notifications', item)
 
@@ -671,6 +675,8 @@ export function getFilteredEvents(
 
   if (filters && columnHasAnyFilter('activity', filters)) {
     _events = _events.filter(item => {
+      if (!item) return
+
       const subjectType = getEventMetadata(item).subjectType
       const issueOrPR = getItemIssueOrPullRequest('activity', item)
 
