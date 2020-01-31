@@ -458,7 +458,9 @@ export const OneList = (React.memo(
     )
 
     const OuterElementType = useCallback(
-      (p: any) => <div {...p} {...restProps} />,
+      React.forwardRef<any, any>((_props, _ref) => (
+        <div ref={_ref} {..._props} {...restProps} />
+      )),
       [],
     )
 

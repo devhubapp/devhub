@@ -17,6 +17,7 @@ export interface OneListInstance {
 
 export interface OneListProps<ItemT> {
   ListEmptyComponent?: React.ComponentType
+  children?: never
   containerStyle?: ViewProps['style']
   data: ItemT[]
   disableVirtualization?: boolean
