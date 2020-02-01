@@ -52,7 +52,7 @@ import { PixelRatio } from 'react-native'
 
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
-import { memoizeMultipleArguments } from '../../redux/selectors/helpers'
+import { betterMemoize } from '../../redux/selectors/helpers'
 import { ExtractActionFromActionCreator } from '../../redux/types/base'
 import {
   avatarSize,
@@ -1150,7 +1150,7 @@ function _getCardPropsForItem(
   }
 }
 
-const _memoizedGetCardPropsForItemFnByColumnId = memoizeMultipleArguments(
+const _memoizedGetCardPropsForItemFnByColumnId = betterMemoize(
   (_columnId: string) => (
     type: ColumnSubscription['type'],
     item: EnhancedItem,
@@ -1167,7 +1167,7 @@ const _memoizedGetCardPropsForItemFnByColumnId = memoizeMultipleArguments(
   10,
 )
 
-const _memoizedGetCardPropsForItem = memoizeMultipleArguments(
+const _memoizedGetCardPropsForItem = betterMemoize(
   (
     type: ColumnSubscription['type'],
     columnId: string,

@@ -10,21 +10,23 @@ import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { currentUserPlanSelector } from './auth'
 import { columnsArrSelector } from './columns'
-import { createImmerSelector } from './helpers'
+import { betterMemoize, createShallowEqualSelector } from './helpers'
 
 const s = (state: RootState) => state.subscriptions || EMPTY_OBJ
 
 export const subscriptionIdsSelector = (state: RootState) =>
   s(state).allIds || EMPTY_ARRAY
 
+export const subscriptionsByIdSelector = (state: RootState) =>
+  s(state).byId || EMPTY_OBJ
+
 export const subscriptionSelector = (state: RootState, id: string) =>
-  (s(state).byId && s(state).byId[id]) || undefined
+  subscriptionsByIdSelector(state)[id] || undefined
 
-export const allSubscriptionsArrSelector = createImmerSelector(
-  (state: RootState) => {
-    const subscriptionIds = subscriptionIdsSelector(state)
-    const byId = s(state).byId
-
+export const allSubscriptionsArrSelector = createShallowEqualSelector(
+  (state: RootState) => s(state).byId,
+  (state: RootState) => subscriptionIdsSelector(state),
+  (byId, subscriptionIds) => {
     if (!(byId && subscriptionIds && subscriptionIds.length)) return EMPTY_ARRAY
 
     return subscriptionIds
@@ -33,12 +35,11 @@ export const allSubscriptionsArrSelector = createImmerSelector(
   },
 )
 
-export const userSubscriptionsArrSelector = createImmerSelector(
-  (state: RootState): ColumnSubscription[] => {
-    const plan = currentUserPlanSelector(state)
-    const columns = columnsArrSelector(state)
-    const byId = s(state).byId
-
+export const userSubscriptionsArrSelector = createShallowEqualSelector(
+  (state: RootState) => currentUserPlanSelector(state),
+  (state: RootState) => columnsArrSelector(state),
+  (state: RootState) => subscriptionsByIdSelector(state),
+  (plan, columns, byId): ColumnSubscription[] => {
     if (!(plan && columns && columns.length && byId)) return EMPTY_ARRAY
 
     const limit =
@@ -58,36 +59,44 @@ export const userSubscriptionsArrSelector = createImmerSelector(
 )
 
 export const createSubscriptionsSelector = () =>
-  createImmerSelector((state: RootState, subscriptionIds: string[]) => {
-    return subscriptionIds
-      .map(id => subscriptionSelector(state, id))
-      .filter(Boolean) as ColumnSubscription[]
-  })
+  createShallowEqualSelector(
+    (_state: RootState, subscriptionIds: string[]) =>
+      subscriptionIds || EMPTY_ARRAY,
+    (state: RootState, _subscriptionIds: string[]) =>
+      subscriptionsByIdSelector(state),
+    (subscriptionIds, byId) => {
+      return subscriptionIds
+        .map(id => byId[id])
+        .filter(Boolean) as ColumnSubscription[]
+    },
+  )
 
 export const createSubscriptionsDataSelector = () => {
   const subscriptionsSelector = createSubscriptionsSelector()
-  const memoizedGetItemsFromSubscriptions = createImmerSelector(
+  const memoizedGetItemsFromSubscriptions = betterMemoize(
     getItemsFromSubscriptions,
   )
 
-  return createImmerSelector((state: RootState, subscriptionIds: string[]) => {
-    const subscriptions = subscriptionsSelector(state, subscriptionIds)
-    const dataByNodeIdOrId = state.data.byId
+  return createShallowEqualSelector(
+    (state: RootState, subscriptionIds: string[]) =>
+      subscriptionsSelector(state, subscriptionIds),
+    (state: RootState, _subscriptionIds: string[]) => state.data.byId,
+    (subscriptions, dataByNodeIdOrId) => {
+      const getItemByNodeIdOrId = (nodeIdOrId: string) =>
+        dataByNodeIdOrId &&
+        dataByNodeIdOrId[nodeIdOrId] &&
+        dataByNodeIdOrId[nodeIdOrId]!.item
 
-    const getItemByNodeIdOrId = (nodeIdOrId: string) =>
-      dataByNodeIdOrId &&
-      dataByNodeIdOrId[nodeIdOrId] &&
-      dataByNodeIdOrId[nodeIdOrId]!.item
+      const result = memoizedGetItemsFromSubscriptions(
+        subscriptions,
+        getItemByNodeIdOrId,
+      )
 
-    const result = memoizedGetItemsFromSubscriptions(
-      subscriptions,
-      getItemByNodeIdOrId,
-    )
+      if (!(result && result.length)) return EMPTY_ARRAY
 
-    if (!(result && result.length)) return EMPTY_ARRAY
-
-    return result
-  })
+      return result
+    },
+  )
 }
 
 export const subscriptionLastFetchedAtSelector = createSelector(

@@ -1,4 +1,3 @@
-import { setAutoFreeze } from 'immer'
 import React, { Fragment } from 'react'
 
 import '../libs/analytics'
@@ -12,10 +11,6 @@ import { AppIconBadge } from './common/AppIconBadge'
 import { UnreadCountProvider } from './context/UnreadCountContext'
 
 enableNetworkInterceptors()
-
-// workaround to memoize-state/proxyequal proxy bug
-// @see https://github.com/theKashey/proxyequal/issues/25
-setAutoFreeze(false)
 
 // TODO: Enable StrictMode after react-native fixes it
 // @see https://github.com/facebook/react-native/issues/22186

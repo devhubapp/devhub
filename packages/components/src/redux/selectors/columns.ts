@@ -9,9 +9,10 @@ import { EMPTY_ARRAY, EMPTY_OBJ } from '../../utils/constants'
 import { RootState } from '../types'
 import { createItemsBySubscriptionIdsSelector } from './data'
 import { currentGitHubUsernameSelector } from './github'
-import { createImmerSelector } from './helpers'
+import { betterMemoize, createShallowEqualSelector } from './helpers'
 import {
   createSubscriptionsDataSelector,
+  subscriptionsByIdSelector,
   subscriptionSelector,
 } from './subscriptions'
 
@@ -30,27 +31,32 @@ export const columnIdsSelector = (state: RootState) =>
 export const columnCountSelector = (state: RootState) =>
   columnIdsSelector(state).length
 
-export const columnsArrSelector = createImmerSelector((state: RootState) => {
-  const byId = s(state).byId
-  const columnIds = columnIdsSelector(state)
-
-  if (!(byId && columnIds)) return EMPTY_ARRAY
-
-  return columnIds.map(columnId => byId[columnId]).filter(Boolean) as Column[]
-})
+export const columnsArrSelector = createShallowEqualSelector(
+  (state: RootState) => s(state).byId,
+  (state: RootState) => columnIdsSelector(state),
+  (byId, columnIds) => {
+    if (!(byId && columnIds)) return EMPTY_ARRAY
+    return columnIds.map(columnId => byId[columnId]).filter(Boolean) as Column[]
+  },
+)
 
 export const hasCreatedColumnSelector = (state: RootState) =>
   s(state).byId !== null
 
 export const createColumnSubscriptionsSelector = () =>
-  createImmerSelector((state: RootState, columnId: string) => {
-    const column = columnSelector(state, columnId)
-    const subscriptionIds = (column && column.subscriptionIds) || EMPTY_ARRAY
-
-    return subscriptionIds
-      .map(subscriptionId => subscriptionSelector(state, subscriptionId))
-      .filter(Boolean) as ColumnSubscription[]
-  })
+  createShallowEqualSelector(
+    (state: RootState, columnId: string) => {
+      const column = columnSelector(state, columnId)
+      const subscriptionIds = (column && column.subscriptionIds) || EMPTY_ARRAY
+      return subscriptionIds
+    },
+    (state: RootState) => subscriptionsByIdSelector(state),
+    (subscriptionIds, subscriptionsById) => {
+      return subscriptionIds
+        .map(subscriptionId => subscriptionsById[subscriptionId])
+        .filter(Boolean) as ColumnSubscription[]
+    },
+  )
 
 export const createColumnSubscriptionSelector = () => {
   const columnSubscriptionsSelector = createColumnSubscriptionsSelector()
@@ -67,25 +73,23 @@ export const createColumnSubscriptionSelector = () => {
 
 export const createColumnHeaderDetailsSelector = () => {
   const columnSubscriptionsSelector = createColumnSubscriptionsSelector()
-  const getColumnHeaderDetailsMemoized = createImmerSelector(
-    getColumnHeaderDetails,
+  const getColumnHeaderDetailsMemoized = betterMemoize(getColumnHeaderDetails)
+
+  return createShallowEqualSelector(
+    (state: RootState, columnId: string) => columnSelector(state, columnId),
+    (state: RootState, columnId: string) =>
+      columnSubscriptionsSelector(state, columnId),
+    (state: RootState, _columnId: string) =>
+      currentGitHubUsernameSelector(state),
+    (column, subscriptions, loggedUsername) => {
+      return getColumnHeaderDetailsMemoized(
+        column,
+        subscriptions,
+        { loggedUsername },
+        PixelRatio.getPixelSizeForLayoutSize,
+      )
+    },
   )
-
-  return createImmerSelector((state: RootState, columnId: string) => {
-    const subscriptions = columnSubscriptionsSelector(state, columnId)
-
-    const column = columnSelector(state, columnId)
-    if (!column) return undefined
-
-    const loggedUsername = currentGitHubUsernameSelector(state)
-
-    return getColumnHeaderDetailsMemoized(
-      column,
-      subscriptions,
-      { loggedUsername },
-      PixelRatio.getPixelSizeForLayoutSize,
-    )
-  })
 }
 
 export const createColumnDataSelector = () => {

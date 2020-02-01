@@ -1,17 +1,14 @@
 import _ from 'lodash'
-import memoizeState from 'memoize-state'
+import { shallowEqual } from 'react-redux'
 import { createSelectorCreator } from 'reselect'
 
-export function shallowEqualityCheckOrDeepIfArray(a: unknown, b: unknown) {
-  return a === b || (Array.isArray(a) && _.isEqual(a, b))
-}
-
-const refIsEqual = (a: any, b: any) => a === b
-
+// Better Memoize supports a custom equality check function and a custom cache size.
+// Is also re-runs the equality checks in the final result
+// to avoid changing the result reference when possible.
 // tslint:disable-next-line ban-types
-export function memoizeMultipleArguments<F extends Function>(
+export function betterMemoize<F extends Function>(
   func: F,
-  equalityCheck = refIsEqual,
+  equalityCheck = shallowEqual,
   cacheSize = 1,
 ): F {
   let cacheArr: Array<{ args: unknown[]; result: unknown }> = []
@@ -64,17 +61,4 @@ export function memoizeMultipleArguments<F extends Function>(
   }) as any) as F
 }
 
-export const createDeepEqualSelector = createSelectorCreator(
-  memoizeMultipleArguments,
-  shallowEqualityCheckOrDeepIfArray,
-)
-
-export function createImmerSelector<T>(fn: T) {
-  return memoizeState(fn, {
-    equalCheck: true,
-    nestedEquality: true,
-    safe: true,
-    shallowCheck: true,
-    strictArity: false,
-  })
-}
+export const createShallowEqualSelector = createSelectorCreator(betterMemoize)

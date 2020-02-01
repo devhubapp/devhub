@@ -24,7 +24,6 @@
     "hoist-non-react-statics": "3.3.0",
     "immer": "4.0.1",
     "lodash": "4.17.15",
-    "memoize-state": "2.0.13",
     "moment": "2.24.0",
     "polished": "3.4.1",
     "qs": "6.9.1",
