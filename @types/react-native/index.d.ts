@@ -19,4 +19,9 @@ declare module 'react-native' {
     export const Text: AnimatedComponent<typeof Text>
     export const ScrollView: AnimatedComponent<typeof ScrollView>
   }
+
+  // react-native-web
+  export interface SwitchProps {
+    activeThumbColor?: string
+  }
 }

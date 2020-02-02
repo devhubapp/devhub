@@ -1,4 +1,3 @@
-import { lighten } from 'polished'
 import React from 'react'
 import {
   Switch as SwitchComponent,
@@ -7,9 +6,7 @@ import {
 
 import { Theme, ThemeColors } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
-import { Platform } from '../../libs/platform'
 import { useTheme } from '../context/ThemeContext'
-import { getThemeColorOrItself } from '../themed/helpers'
 
 export interface SwitchProps extends SwitchPropsOriginal {
   analyticsLabel: string | undefined
@@ -27,12 +24,6 @@ export function Switch(props: SwitchProps) {
   } = props
 
   const theme = useTheme()
-
-  const color = getThemeColorOrItself(
-    theme,
-    _color || 'primaryBackgroundColor',
-    { enableCSSVariable: false },
-  )!
 
   const onValueChange: typeof _onValueChange =
     analyticsLabel && _onValueChange
@@ -52,22 +43,12 @@ export function Switch(props: SwitchProps) {
       data-switch
       data-switch-disabled={!!props.disabled}
       onValueChange={onValueChange}
-      {...Platform.select({
-        android: {
-          thumbColor: otherProps.value ? color : 'gray',
-          trackColor: {
-            false: 'lightgray',
-            true: lighten(0.4, color),
-          },
-        },
-        ios: {
-          trackColor: { false: '', true: color },
-        },
-        web: {
-          activeThumbColor: '#FFFFFF',
-          onTintColor: color,
-        },
-      })}
+      activeThumbColor={theme.primaryBackgroundColor}
+      thumbColor={theme.primaryBackgroundColor}
+      trackColor={{
+        false: theme.backgroundColorLess2,
+        true: theme.backgroundColorLess2,
+      }}
       {...otherProps}
     />
   )
