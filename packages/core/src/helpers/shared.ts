@@ -578,7 +578,7 @@ export function getSearchQueryTerms(
 
   const result: Array<[string, boolean] | [string, string, boolean]> = []
 
-  const q = query.replace(/(^|\s)NOT(\s)/gi, '$1-').trim()
+  const q = query.trim()
 
     // TODO: Fix regex with backslash
     // ;(q.match(/("-?([^\\][^"])+")/g) || []).forEach((str, index) => {
@@ -588,10 +588,12 @@ export function getSearchQueryTerms(
     // })
   ;(
     q.match(
-      /(-?[a-zA-Z]+:"[^"]+")|(-?[a-zA-Z]+:[^ \n$]+)|(-?"[^"]+")|([^ $]+)/g,
+      /((-|NOT )?[a-zA-Z]+:"[^"]+")|((-|NOT )?[a-zA-Z]+:[^ \n$]+)|((-|NOT )?"[^"]+")|(-|NOT )?([^ $]+)/gi,
     ) || []
-  ).forEach(queryItem => {
-    if (!queryItem) return
+  ).forEach(_queryItem => {
+    if (!_queryItem) return
+
+    const queryItem = _queryItem.replace(/^(^|\s)NOT(\s)/gi, '$1-')
 
     const [_keyOrValue, ..._values] =
       queryItem[0] === '"' || (queryItem[0] === '-' && queryItem[1] === '"')
