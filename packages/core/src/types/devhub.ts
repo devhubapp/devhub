@@ -557,7 +557,7 @@ export type PlatformCategory = DownloadOption['category']
 export type Platform = DownloadOption['platform']
 
 export type PlanSource = 'stripe' | 'paddle' | 'none' // | 'github_marketplace' | 'opencollective' | 'appstore' | 'playstore'
-export type PlanType = 'individual' | 'team' | undefined
+export type PlanType = 'individual' | 'team' | 'custom' | undefined
 
 export interface Plan {
   id: PlanID

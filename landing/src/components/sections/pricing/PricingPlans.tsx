@@ -14,17 +14,25 @@ export function PricingPlans(_props: PricingPlansProps) {
   const { authData } = useAuth()
   const { dealCode, plans } = usePlans()
 
-  const shouldShowPlanTypeTabs =
-    plans.some(plan => plan && plan.type !== 'team') &&
-    plans.some(plan => plan && plan.type === 'team')
+  const planTypesCounters = plans.reduce<
+    Partial<Record<NonNullable<PlanType>, number>>
+  >((obj, plan) => {
+    if (!(plan && plan.type)) return obj
+    obj[plan.type] = (obj[plan.type] || 0) + 1
+    return obj
+  }, {})
+
+  const hasMultiplePlanTypes = Object.keys(planTypesCounters).length > 1
 
   const [_tab, setTab] = useState<PlanType | undefined>(undefined)
   const tab =
     _tab ||
-    (shouldShowPlanTypeTabs &&
+    (hasMultiplePlanTypes &&
     (authData && authData.plan && authData.plan.type) === 'team'
       ? 'team'
-      : shouldShowPlanTypeTabs
+      : (authData && authData.plan && authData.plan.type) === 'custom'
+      ? 'custom'
+      : hasMultiplePlanTypes
       ? 'individual'
       : undefined)
 
@@ -38,7 +46,7 @@ export function PricingPlans(_props: PricingPlansProps) {
       plan =>
         !!(
           plan &&
-          ((!tab && !shouldShowPlanTypeTabs) ||
+          ((!tab && !hasMultiplePlanTypes) ||
             (plan.type === tab || (tab === 'individual' && !plan.type)))
         ),
     )
@@ -57,31 +65,49 @@ export function PricingPlans(_props: PricingPlansProps) {
           totalNumberOfVisiblePlans={filteredPlans.length}
         />
       ) : plan ? (
-        <PricingPlanBlock
-          key={`pricing-plan-${plan.cannonicalId}`}
-          banner
-          buttonLink={`/download?plan=${plan.cannonicalId}`}
-          buttonLabel="Download"
-          plan={plan}
-          totalNumberOfVisiblePlans={filteredPlans.length}
-        />
+        plan.type === 'custom' ? (
+          <PricingPlanBlock
+            key={`pricing-plan-${plan.cannonicalId}`}
+            banner
+            buttonLink={`mailto:bruno@devhubapp.com`}
+            buttonLabel="Contact us"
+            plan={plan}
+            totalNumberOfVisiblePlans={filteredPlans.length}
+          />
+        ) : (
+          <PricingPlanBlock
+            key={`pricing-plan-${plan.cannonicalId}`}
+            banner
+            buttonLink={`/download?plan=${plan.cannonicalId}`}
+            buttonLabel="Download"
+            plan={plan}
+            totalNumberOfVisiblePlans={filteredPlans.length}
+          />
+        )
       ) : null,
     )
   }, [plans, tab])
 
   return (
     <div className="container">
-      {!!shouldShowPlanTypeTabs && (
+      {!!hasMultiplePlanTypes && (
         <Tabs<NonNullable<PlanType>>
           className="mb-6"
           onTabChange={id => setTab(id)}
         >
-          <Tabs.Tab
-            active={tab === 'individual'}
-            id="individual"
-            title="Individual"
-          />
-          <Tabs.Tab active={tab === 'team'} id="team" title="Team" />
+          {!!planTypesCounters.individual && (
+            <Tabs.Tab
+              active={tab === 'individual'}
+              id="individual"
+              title="Individual"
+            />
+          )}
+          {!!planTypesCounters.team && (
+            <Tabs.Tab active={tab === 'team'} id="team" title="Team" />
+          )}
+          {!!planTypesCounters.custom && (
+            <Tabs.Tab active={tab === 'custom'} id="custom" title="Custom" />
+          )}
         </Tabs>
       )}
 

@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 
 export interface TabsProps<TabId extends string> {
   className?: string
-  children: Array<ReactElement<TabProps<TabId>>>
+  children: Array<ReactElement<TabProps<TabId>> | false | null>
   onTabChange: (id: TabId) => void
 }
 
@@ -18,14 +18,18 @@ export function Tabs<TabId extends string>(props: TabsProps<TabId>) {
           className,
         )}
       >
-        {React.Children.map(children, child => (
-          <div
-            className="cursor-pointer"
-            onClick={() => onTabChange(child.props.id)}
-          >
-            {child}
-          </div>
-        ))}
+        {React.Children.map(
+          children,
+          child =>
+            !!child && (
+              <div
+                className="cursor-pointer"
+                onClick={() => onTabChange(child.props.id)}
+              >
+                {child}
+              </div>
+            ),
+        )}
       </div>
     </div>
   )

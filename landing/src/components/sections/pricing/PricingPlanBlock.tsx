@@ -89,7 +89,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       : _priceLabel
 
   const subtitle = `${
-    forceShowAsMonthly
+    localizedPlan.type === 'custom' && !Number(priceLabelWithoutCents)
+      ? ' '
+      : forceShowAsMonthly
       ? `${plan.type === 'team' ? '/user' : ''}/month`
       : localizedPlan.interval
       ? formatInterval(localizedPlan)
@@ -125,11 +127,6 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       `*Billed ${
         localizedPlan.amount % 100 > 50 ? '~' : ''
       }${_roundedPriceLabelWithInterval}`
-  } else if (
-    forceShowAsMonthly &&
-    plans.find(p => p && p.interval !== 'month')
-  ) {
-    footerText = `${footerText || ' '}\n`
   }
 
   if (!localizedPlan.interval && localizedPlan.amount) {
@@ -138,12 +135,32 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       'One-time payment (no subscription)'
   }
 
+  if (
+    !footerText &&
+    localizedPlan.type === 'custom' &&
+    buttonLink &&
+    buttonLink.startsWith('mailto:')
+  ) {
+    footerText =
+      (footerText ? `${footerText}\n` : footerText) +
+      `Contact us: ${buttonLink.replace('mailto:', '')}`
+  }
+
   if (!footerText && localizedPlan.interval && localizedPlan.amount) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) + localizedPlan.interval ===
       'year'
         ? 'Cancel anytime, no refund'
         : 'Cancel anytime with one click'
+  }
+
+  if (
+    !footerText &&
+    forceShowAsMonthly &&
+    plans.find(p => p && p.interval !== 'month') &&
+    modifiedAmount === localizedPlan.amount
+  ) {
+    footerText = `${footerText || ' '}\n`
   }
 
   return (
@@ -191,17 +208,26 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           </div>
 
           <div className="text-5xl leading-snug font-bold text-default">
-            {`${priceLabelWithoutCents}`}
-            {!!priceLabelCents && (
-              <small>
-                <small>
+            {localizedPlan.type === 'custom' &&
+            !Number(priceLabelWithoutCents) ? (
+              '$?'
+            ) : (
+              <>
+                {priceLabelWithoutCents}
+                {!!priceLabelCents && (
                   <small>
                     <small>
-                      <small className="text-muted-65">{priceLabelCents}</small>
+                      <small>
+                        <small>
+                          <small className="text-muted-65">
+                            {priceLabelCents}
+                          </small>
+                        </small>
+                      </small>
                     </small>
                   </small>
-                </small>
-              </small>
+                )}
+              </>
             )}
           </div>
 
@@ -213,14 +239,6 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               <div className="mb-2 text-sm text-muted-65">
                 &nbsp;{subtitle}&nbsp;
               </div>
-              {/* {localizedPlan.interval ? (
-            <div className="text-sm text-muted-65">{`/${
-              localizedPlan.intervalCount > 1 ? `${localizedPlan.intervalCount}-` : ''
-            }${localizedPlan.interval}`}</div>
-          ) : (
-            <div className="text-sm text-muted-65">&nbsp;</div>
-          )} */}
-
               <div className="pb-6" />
             </>
           )}
