@@ -613,7 +613,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
       if (currentOpenedModal) dispatch(actions.closeAllModals())
 
       if (isColumnFocused) {
-        emitter.emit('SCROLL_TOP_COLUMN', { columnId })
+        if (!currentOpenedModal) emitter.emit('SCROLL_TOP_COLUMN', { columnId })
       } else {
         emitter.emit('FOCUS_ON_COLUMN', {
           animated: !currentOpenedModal,

@@ -6,6 +6,8 @@ import {
 
 import { Theme, ThemeColors } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
+import { Platform } from '../../libs/platform'
+import { mutedOpacity } from '../../styles/variables'
 import { useTheme } from '../context/ThemeContext'
 
 export interface SwitchProps extends SwitchPropsOriginal {
@@ -20,6 +22,7 @@ export function Switch(props: SwitchProps) {
     analyticsValue,
     color: _color,
     onValueChange: _onValueChange,
+    style,
     ...otherProps
   } = props
 
@@ -40,14 +43,20 @@ export function Switch(props: SwitchProps) {
 
   return (
     <SwitchComponent
+      activeThumbColor={theme.white}
       data-switch
       data-switch-disabled={!!props.disabled}
       onValueChange={onValueChange}
-      activeThumbColor={theme.primaryBackgroundColor}
-      thumbColor={theme.primaryBackgroundColor}
+      style={[
+        style,
+        Platform.OS === 'android' && {
+          opacity: otherProps.disabled ? mutedOpacity : 1,
+        },
+      ]}
+      thumbColor={theme.white}
       trackColor={{
-        false: theme.backgroundColorLess2,
-        true: theme.backgroundColorLess2,
+        false: theme.backgroundColorLess5,
+        true: theme.primaryBackgroundColor,
       }}
       {...otherProps}
     />
