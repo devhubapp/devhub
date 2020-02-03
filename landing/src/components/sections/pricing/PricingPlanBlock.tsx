@@ -92,7 +92,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     localizedPlan.type === 'custom' && !Number(priceLabelWithoutCents)
       ? ' '
       : forceShowAsMonthly
-      ? `${plan.type === 'team' ? '/user' : ''}/month`
+      ? `${plan.type === 'team' ? '/user' : ''}${plan.interval ? '/month' : ''}`
       : localizedPlan.interval
       ? formatInterval(localizedPlan)
       : ''
@@ -100,13 +100,34 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   let footerText = ''
 
+  if (modifiedAmount !== localizedPlan.amount) {
+    footerText =
+      (footerText ? `${footerText}\n` : footerText) +
+      `*Billed ${
+        localizedPlan.amount % 100 > 50 ? '~' : ''
+      }${_roundedPriceLabelWithInterval}`
+  } else if (
+    forceShowAsMonthly &&
+    plans.find(p => p && p.interval && p.interval !== 'month')
+  ) {
+    footerText = `${footerText || ''} `
+  }
+
   if (!localizedPlan.amount && localizedPlan.trialPeriodDays) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
-      `Free for ${localizedPlan.trialPeriodDays} days`
+      `${localizedPlan.amount ? 'Free for' : 'Try for'} ${
+        localizedPlan.trialPeriodDays
+      } days`
   } else if (
     localizedPlan.amount &&
-    plans.some(p => p && !p.amount && p.trialPeriodDays)
+    plans.some(
+      p =>
+        p &&
+        (!p.type || p.type === 'individual') &&
+        !p.amount &&
+        p.trialPeriodDays,
+    )
   ) {
     //
   } else if (localizedPlan.trialPeriodDays) {
@@ -119,14 +140,6 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     plans.some(p => p && p.trialPeriodDays)
   ) {
     footerText = (footerText ? `${footerText}\n` : footerText) + 'No free trial'
-  }
-
-  if (modifiedAmount !== localizedPlan.amount) {
-    footerText =
-      (footerText ? `${footerText}\n` : footerText) +
-      `*Billed ${
-        localizedPlan.amount % 100 > 50 ? '~' : ''
-      }${_roundedPriceLabelWithInterval}`
   }
 
   if (!localizedPlan.interval && localizedPlan.amount) {
@@ -146,12 +159,12 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       `Contact us: ${buttonLink.replace('mailto:', '')}`
   }
 
-  if (!footerText && localizedPlan.interval && localizedPlan.amount) {
+  if (localizedPlan.interval && localizedPlan.amount) {
     footerText =
-      (footerText ? `${footerText}\n` : footerText) + localizedPlan.interval ===
-      'year'
+      (footerText ? `${footerText}\n` : footerText) +
+      (localizedPlan.interval === 'year' && !localizedPlan.trialPeriodDays
         ? 'Cancel anytime, no refund'
-        : 'Cancel anytime with one click'
+        : 'Cancel anytime with one click')
   }
 
   if (
