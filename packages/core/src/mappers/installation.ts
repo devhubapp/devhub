@@ -1,9 +1,9 @@
+import { Octokit } from '@octokit/rest'
 import {
   WebhookPayloadInstallationInstallation,
   WebhookPayloadInstallationRepositoriesItem,
 } from '@octokit/webhooks'
 
-import { AppsListInstallationsForAuthenticatedUserResponseInstallationsItem } from '@octokit/rest'
 import {
   genericGitHubResponseMapper,
   getOwnerAndRepo,
@@ -38,7 +38,7 @@ export function fromGitHubInstallation(
 
 export function fromGitHubUserInstallation(
   installation:
-    | AppsListInstallationsForAuthenticatedUserResponseInstallationsItem
+    | Octokit.AppsListInstallationsForAuthenticatedUserResponseInstallationsItem
     | undefined,
 ): GraphQLGitHubInstallation | null {
   if (!(installation && installation.id)) return null
@@ -58,7 +58,7 @@ export function fromGitHubUserInstallation(
 
 export function fromInstallationAccount(
   account:
-    | AppsListInstallationsForAuthenticatedUserResponseInstallationsItem['account']
+    | Octokit.AppsListInstallationsForAuthenticatedUserResponseInstallationsItem['account']
     | undefined,
 ): GraphQLGitHubInstallation['account'] | null {
   if (!(account && account.id)) return null

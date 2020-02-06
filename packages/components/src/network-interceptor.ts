@@ -1,8 +1,8 @@
+import { Octokit } from '@octokit/rest'
 import axios from 'axios'
 import _ from 'lodash'
 import { StatusBar } from 'react-native'
 
-import { octokit } from './libs/github'
 import { Platform } from './libs/platform'
 
 let axiosRequestsCount = 0
@@ -51,7 +51,7 @@ export function enableAxiosNetworkInterceptor() {
   )
 }
 
-export function enableOctokitNetworkInterceptor() {
+export function enableOctokitNetworkInterceptor(octokit: Octokit) {
   octokit.hook.before('request', () => {
     octokitRequestsCount = octokitRequestsCount + 1
     updateActivityLoadingIndicator()
@@ -72,7 +72,9 @@ export function enableOctokitNetworkInterceptor() {
 
 export function enableNetworkInterceptors() {
   enableAxiosNetworkInterceptor()
-  enableOctokitNetworkInterceptor()
+
+  // Moved to ../libs/github because it needs to receive the octokit instance
+  // enableOctokitNetworkInterceptor()
 }
 
 function updateActivityLoadingIndicator() {

@@ -13,7 +13,6 @@ import { betterMemoize, createShallowEqualSelector } from './helpers'
 import {
   createSubscriptionsDataSelector,
   subscriptionsByIdSelector,
-  subscriptionSelector,
 } from './subscriptions'
 
 const s = (state: RootState) => state.columns || EMPTY_OBJ

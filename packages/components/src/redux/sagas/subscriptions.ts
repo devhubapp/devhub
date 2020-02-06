@@ -27,7 +27,7 @@ import {
   mergeIssuesOrPullRequestsPreservingEnhancement,
   mergeNotificationsPreservingEnhancement,
 } from '@devhub/core'
-import { Response } from '@octokit/rest'
+import { Octokit } from '@octokit/rest'
 import _ from 'lodash'
 import { AppState, InteractionManager } from 'react-native'
 import {
@@ -47,12 +47,7 @@ import {
 import { Browser } from '../../libs/browser'
 import { bugsnag } from '../../libs/bugsnag'
 import { emitter } from '../../libs/emitter'
-import {
-  getActivity,
-  getIssuesOrPullRequests,
-  getNotifications,
-  octokit,
-} from '../../libs/github'
+import * as github from '../../libs/github'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { ExtractActionFromActionCreator } from '../types/base'
@@ -106,7 +101,7 @@ function* init() {
     const subscriptions = selectors.allSubscriptionsArrSelector(state)
     if (!(subscriptions && subscriptions.length)) continue
 
-    const github = selectors.githubAPIHeadersSelector(state)
+    const githubHeaders = selectors.githubAPIHeadersSelector(state)
 
     // TODO: Eventually the number of subscriptions wont be 1x1 with the number of columns
     // Because columns will be able to have multiple subscriptions.
@@ -125,8 +120,8 @@ function* init() {
           (forceFetchAll ||
             minimumRefetchTimeHasPassed(
               s,
-              typeof github.pollInterval === 'number'
-                ? github.pollInterval * 1000
+              typeof githubHeaders.pollInterval === 'number'
+                ? githubHeaders.pollInterval * 1000
                 : undefined,
             )),
       )
@@ -384,9 +379,9 @@ function* onFetchRequest(
     let headers
     if (subscription && subscription.type === 'notifications') {
       const response = yield call(
-        getNotifications,
+        github.getNotifications,
         { ...requestParams, ...subscriptionParams },
-        { subscriptionId },
+        { githubToken, subscriptionId },
       )
       headers = (response && response.headers) || {}
 
@@ -453,10 +448,10 @@ function* onFetchRequest(
           : undefined
     } else if (subscription && subscription.type === 'activity') {
       const response = yield call(
-        getActivity,
+        github.getActivity,
         subscription.subtype,
         { ...requestParams, ...subscriptionParams },
-        { subscriptionId, githubToken },
+        { githubToken, subscriptionId },
       )
       headers = (response && response.headers) || {}
 
@@ -498,11 +493,11 @@ function* onFetchRequest(
           : undefined
     } else if (subscription && subscription.type === 'issue_or_pr') {
       const response = yield call(
-        getIssuesOrPullRequests,
+        github.getIssuesOrPullRequests,
         subscription.subtype,
         subscriptionParams as IssueOrPullRequestColumnSubscription['params'],
         requestParams,
-        { subscriptionId, githubToken },
+        { githubToken, subscriptionId },
       )
       headers = (response && response.headers) || {}
 
@@ -662,6 +657,12 @@ function* onMarkItemsAsReadOrUnread(
   if (type !== 'notifications') return
   if (!(itemNodeIdOrIds && itemNodeIdOrIds.length)) return
 
+  const state = yield select()
+  const githubToken = selectors.githubTokenSelector(state)
+  if (!githubToken) return
+
+  const octokit = github.getOctokitForToken(githubToken)
+
   const results = yield all(
     itemNodeIdOrIds.map(function*(itemNodeIdOrId, index) {
       const threadId = itemNodeIdOrId && parseInt(`${itemNodeIdOrId}`, 10)
@@ -681,7 +682,7 @@ function* onMarkItemsAsReadOrUnread(
   )
 
   const failedIds: string[] = results
-    .map((result: Response<any>, index: number) =>
+    .map((result: Octokit.AnyResponse, index: number) =>
       result &&
       ((result.status >= 200 && result.status < 400) || result.status === 404)
         ? undefined
@@ -714,6 +715,12 @@ function* onMarkAllNotificationsAsReadOrUnread(
   // @see https://github.com/octokit/rest.js/issues/1232
   if (unread) return
 
+  const state = yield select()
+  const githubToken = selectors.githubTokenSelector(state)
+  if (!githubToken) return
+
+  const octokit = github.getOctokitForToken(githubToken)
+
   try {
     yield octokit.activity.markAsRead({})
   } catch (e) {
@@ -741,6 +748,12 @@ function* onMarkRepoNotificationsAsReadOrUnread(
   // GitHub api does not support marking as unread yet :(
   // @see https://github.com/octokit/rest.js/issues/1232
   if (unread) return
+
+  const state = yield select()
+  const githubToken = selectors.githubTokenSelector(state)
+  if (!githubToken) return
+
+  const octokit = github.getOctokitForToken(githubToken)
 
   try {
     if (!(owner && repo))

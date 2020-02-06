@@ -248,9 +248,11 @@ export async function getIssueOrPullRequestsEnhancementMap(
       const githubToken = privateToken || _githubToken
 
       try {
-        const { data } = await axios.get(
-          `${repoAPIURL}?access_token=${githubToken}`,
-        )
+        const { data } = await axios.get(repoAPIURL!, {
+          headers: {
+            Authorization: githubToken && `token ${githubToken}`,
+          },
+        })
         cache.set(repoURL!, { data, timestamp: Date.now() })
       } catch (error) {
         console.error('Failed to load repository.', repoAPIURL, repoURL, error)
@@ -292,12 +294,12 @@ export async function getIssueOrPullRequestsEnhancementMap(
           new Date(item.updated_at).valueOf() > mergedCache.timestamp))
     ) {
       try {
-        const { status } = await axios.get(
-          `${mergeUrl}?access_token=${githubToken}`,
-          {
-            validateStatus: s => s === 204 || s === 404,
+        const { status } = await axios.get(mergeUrl, {
+          headers: {
+            Authorization: githubToken && `token ${githubToken}`,
           },
-        )
+          validateStatus: s => s === 204 || s === 404,
+        })
 
         enhance.merged = status === 204
         enhance.enhanced = true

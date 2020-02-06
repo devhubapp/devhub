@@ -22,7 +22,7 @@ import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxState } from '../hooks/use-redux-state'
-import { octokit } from '../libs/github'
+import * as github from '../libs/github'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
@@ -72,7 +72,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
     const subscriptionOwnerOrOrg = getSubscriptionOwnerOrOrg(mainSubscription)
 
     const ownerResponse = useGitHubAPI(
-      octokit.users.getByUsername,
+      github.getOctokitForToken(githubToken!).users.getByUsername,
       maybePrivate && subscriptionOwnerOrOrg
         ? { username: subscriptionOwnerOrOrg }
         : null,

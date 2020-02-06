@@ -26,7 +26,7 @@ export const subscriptionSelector = (state: RootState, id: string) =>
 export const allSubscriptionsArrSelector = createShallowEqualSelector(
   (state: RootState) => s(state).byId,
   (state: RootState) => subscriptionIdsSelector(state),
-  (byId, subscriptionIds) => {
+  (byId, subscriptionIds): ColumnSubscription[] => {
     if (!(byId && subscriptionIds && subscriptionIds.length)) return EMPTY_ARRAY
 
     return subscriptionIds

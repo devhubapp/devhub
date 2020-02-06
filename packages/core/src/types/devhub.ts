@@ -1,4 +1,4 @@
-import Octokit from '@octokit/rest'
+import { Octokit } from '@octokit/rest'
 
 import { FeatureFlagId, PlanID } from '../utils'
 import {
@@ -24,8 +24,6 @@ import {
   GitHubWatchEvent,
 } from './github'
 import { GraphQLUserPlan } from './graphql'
-
-type octokit = InstanceType<typeof Octokit>
 
 export type EnhancedGitHubNotificationReason =
   | GitHubNotificationReason
@@ -137,55 +135,55 @@ export type ActivityColumnSubscription = {
   | {
       subtype: 'ORG_PUBLIC_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listEventsForOrg']
+        Octokit['activity']['listEventsForOrg']
       >
     }
   | {
       subtype: 'PUBLIC_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listPublicEvents']
+        Octokit['activity']['listPublicEvents']
       >
     }
   | {
       subtype: 'REPO_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listRepoEvents']
+        Octokit['activity']['listRepoEvents']
       >
     }
   | {
       subtype: 'REPO_NETWORK_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listPublicEventsForRepoNetwork']
+        Octokit['activity']['listPublicEventsForRepoNetwork']
       >
     }
   | {
       subtype: 'USER_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listEventsForUser']
+        Octokit['activity']['listEventsForUser']
       >
     }
   | {
       subtype: 'USER_ORG_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listEventsForOrg']
+        Octokit['activity']['listEventsForOrg']
       >
     }
   | {
       subtype: 'USER_PUBLIC_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listPublicEventsForUser']
+        Octokit['activity']['listPublicEventsForUser']
       >
     }
   | {
       subtype: 'USER_RECEIVED_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listReceivedEventsForUser']
+        Octokit['activity']['listReceivedEventsForUser']
       >
     }
   | {
       subtype: 'USER_RECEIVED_PUBLIC_EVENTS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listReceivedPublicEventsForUser']
+        Octokit['activity']['listReceivedPublicEventsForUser']
       >
     })
 
@@ -220,13 +218,13 @@ export type NotificationColumnSubscription = {
   | {
       subtype: undefined | ''
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listNotifications']
+        Octokit['activity']['listNotifications']
       >
     }
   | {
       subtype: 'REPO_NOTIFICATIONS'
       params: GitHubExtractParamsFromMethod<
-        octokit['activity']['listNotificationsForRepo']
+        Octokit['activity']['listNotificationsForRepo']
       >
     })
 

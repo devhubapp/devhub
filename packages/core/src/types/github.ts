@@ -1,3 +1,5 @@
+import { Octokit } from '@octokit/rest'
+
 export type GitHubAppType = 'app' | 'oauth' | 'personal'
 export type GitHubAppTokenType =
   | 'app-installation'
@@ -17,16 +19,18 @@ export type GitHubActivityType =
   | 'USER_RECEIVED_PUBLIC_EVENTS'
 
 export type GitHubExtractParamsFromMethod<F> = F extends (
-  params: infer P,
-  callback: any,
+  params?: infer P,
 ) => any
-  ? P
+  ? Omit<P, keyof Octokit.RequestOptions>
+  : F extends (params: infer P, callback: any) => any
+  ? Omit<P, keyof Octokit.RequestOptions>
   : never
 
 export type GitHubExtractResponseFromMethod<F> = F extends (
-  params: any,
-  callback: any,
+  params?: any,
 ) => infer R
+  ? (R extends Promise<infer RR> ? RR : R)
+  : F extends (params: any, callback: any) => infer R
   ? R extends Promise<infer RR>
     ? RR
     : R

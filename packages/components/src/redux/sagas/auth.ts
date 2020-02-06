@@ -297,11 +297,7 @@ function* updateLoggedUserOnTools() {
   const user = selectors.currentUserSelector(state)
 
   const githubUser = selectors.currentGitHubUserSelector(state)
-  const githubToken = selectors.githubTokenSelector(state)
-  const githubAppToken = selectors.githubAppTokenSelector(state)
   const plan = selectors.currentUserPlanSelector(state)
-
-  github.authenticate(githubToken || githubAppToken || null)
 
   analytics.setUser(user && user._id)
   analytics.setDimensions({
@@ -337,7 +333,7 @@ function* onLoginFailure(
 }
 
 function onLogout() {
-  github.authenticate('')
+  github.clearOctokitInstances()
   clearOAuthQueryParams()
 }
 

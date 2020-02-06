@@ -1,30 +1,29 @@
-import Octokit, { SearchIssuesAndPullRequestsParams } from '@octokit/rest'
-import _ from 'lodash'
-
 import {
   getGitHubIssueSearchQuery,
   GitHubActivityType,
   IssueOrPullRequestColumnSubscription,
 } from '@devhub/core'
+import { Octokit } from '@octokit/rest'
+import _ from 'lodash'
 
-export const octokit = new Octokit()
+import { enableOctokitNetworkInterceptor } from '../../network-interceptor'
 
-export function authenticate(token: string | null) {
-  try {
-    if (!token) {
-      octokit.authenticate(null as any)
-      return false
-    }
+const _defaultGitHubToken = new Octokit()
+const _octokitByToken = new Map<string, typeof _defaultGitHubToken>()
 
-    octokit.authenticate({
-      type: 'oauth',
-      token,
-    })
-
-    return true
-  } catch (e) {
-    return false
+export function getOctokitForToken(token: string | null) {
+  if (token && !_octokitByToken.has(token)) {
+    const newOctokit = new Octokit({ auth: token })
+    enableOctokitNetworkInterceptor(newOctokit)
+    _octokitByToken.set(token, newOctokit)
   }
+
+  const octokit = _octokitByToken.get(token || 'none')
+  return octokit || _defaultGitHubToken
+}
+
+export function clearOctokitInstances() {
+  _octokitByToken.clear()
 }
 
 const cache: Record<
@@ -36,7 +35,15 @@ export async function getNotifications(
   params: (
     | Octokit.ActivityListNotificationsParams
     | Octokit.ActivityListNotificationsForRepoParams) & { headers?: any } = {},
-  { subscriptionId = '', useCache = false } = {},
+  {
+    githubToken,
+    subscriptionId = '',
+    useCache = false,
+  }: {
+    githubToken: string
+    subscriptionId?: string
+    useCache?: boolean
+  },
 ) {
   const cacheKey = JSON.stringify(['NOTIFICATIONS', params, subscriptionId])
   const cacheValue = cache[cacheKey]
@@ -70,6 +77,8 @@ export async function getNotifications(
   if (!useCache) (_params as any).timestamp = Date.now()
 
   try {
+    const octokit = getOctokitForToken(githubToken)
+
     const response =
       'owner' in _params && _params.owner && _params.repo
         ? await octokit.activity.listNotificationsForRepo(_params)
@@ -91,7 +100,15 @@ export async function getNotifications(
 export async function getActivity<T extends GitHubActivityType>(
   type: T,
   params: any = {},
-  { githubToken = '', subscriptionId = '', useCache = true } = {},
+  {
+    githubToken,
+    subscriptionId = '',
+    useCache = true,
+  }: {
+    githubToken: string
+    subscriptionId?: string
+    useCache?: boolean
+  },
 ) {
   const cacheKey = JSON.stringify([type, params, subscriptionId])
   const cacheValue = cache[cacheKey]
@@ -100,10 +117,6 @@ export async function getActivity<T extends GitHubActivityType>(
   _params.headers = _params.headers || {}
   _params.headers['If-None-Match'] = ''
   _params.headers.Accept = 'application/vnd.github.shadow-cat-preview'
-
-  if (githubToken) {
-    _params.headers.Authorization = `token ${githubToken}`
-  }
 
   if (useCache) {
     if (_params.since) {
@@ -126,6 +139,8 @@ export async function getActivity<T extends GitHubActivityType>(
 
   try {
     const response = await (() => {
+      const octokit = getOctokitForToken(githubToken)
+
       switch (type) {
         case 'ORG_PUBLIC_EVENTS':
           return octokit.activity.listPublicEventsForOrg(_params)
@@ -170,11 +185,19 @@ export async function getIssuesOrPullRequests<
 >(
   type: T,
   subscriptionParams: IssueOrPullRequestColumnSubscription['params'],
-  requestParams: Omit<SearchIssuesAndPullRequestsParams, 'q'> & {
+  requestParams: Omit<Octokit.SearchIssuesAndPullRequestsParams, 'q'> & {
     headers?: Record<string, string>
     since?: string
   },
-  { githubToken = '', subscriptionId = '', useCache = true } = {},
+  {
+    githubToken,
+    subscriptionId = '',
+    useCache = true,
+  }: {
+    githubToken: string
+    subscriptionId?: string
+    useCache?: boolean
+  },
 ) {
   const cacheKey = JSON.stringify([
     type,
@@ -188,7 +211,6 @@ export async function getIssuesOrPullRequests<
     ..._params.headers,
     'If-None-Match': '',
     Accept: 'application/vnd.github.shadow-cat-preview',
-    Authorization: githubToken && `token ${githubToken}`,
   }
 
   if (useCache) {
@@ -212,7 +234,9 @@ export async function getIssuesOrPullRequests<
 
   try {
     const response = await (() => {
-      const p: SearchIssuesAndPullRequestsParams & {
+      const octokit = getOctokitForToken(githubToken)
+
+      const p: Octokit.SearchIssuesAndPullRequestsParams & {
         headers?: Record<string, string>
       } = {
         ..._.omit(_params, Object.keys(subscriptionParams)),

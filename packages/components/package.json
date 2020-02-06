@@ -15,7 +15,7 @@
     "@bugsnag/js": "6.4.1",
     "@bugsnag/plugin-react": "6.4.0",
     "@devhub/core": "0.100.1",
-    "@octokit/rest": "16.20.0",
+    "@octokit/rest": "16.43.1",
     "axios": "0.19.0",
     "fbemitter": "2.1.1",
     "flatted": "2.0.1",

@@ -371,9 +371,11 @@ export async function getNotificationsEnhancementMap(
         new Date(notification.updated_at).valueOf() > subjectCache.timestamp)
     ) {
       try {
-        const { data } = await axios.get(
-          `${notification.subject.url}?access_token=${githubToken}`,
-        )
+        const { data } = await axios.get(notification.subject.url, {
+          headers: {
+            Authorization: githubToken && `token ${githubToken}`,
+          },
+        })
         if (
           !(
             data &&
@@ -403,7 +405,12 @@ export async function getNotificationsEnhancementMap(
       // ) {
       //   try {
       //     const { data } = await axios.get(
-      //       `${notification.subject.url}/reviews?access_token=${githubToken}`,
+      //       `${notification.subject.url}/reviews`,
+      //       {
+      //         headers: {
+      //           Authorization: githubToken && `token ${githubToken}`,
+      //         },
+      //       },
       //     )
 
       //     if (data && data.length) {
@@ -428,7 +435,12 @@ export async function getNotificationsEnhancementMap(
     if (commentId && !hasCommentCache) {
       try {
         const { data } = await axios.get(
-          `${notification.subject.latest_comment_url}?access_token=${githubToken}`,
+          notification.subject.latest_comment_url,
+          {
+            headers: {
+              Authorization: githubToken && `token ${githubToken}`,
+            },
+          },
         )
         if (!(data && data.id)) throw new Error('Invalid response')
 
