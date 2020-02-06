@@ -2,7 +2,7 @@ import { ThemeName, ThemePair } from '../types'
 
 const pkg = require('../../package.json') // tslint:disable-line
 
-export const APP_VERSION = pkg.version as string
+export const APP_VERSION = `${pkg.version || ''}`.replace(/\-\d+$/g, '')
 
 const _window = typeof window !== 'undefined' ? window : undefined
 export const HOSTNAME =
