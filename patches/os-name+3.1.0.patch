@@ -1,0 +1,15 @@
+diff --git a/node_modules/os-name/index.native.js b/node_modules/os-name/index.native.js
+new file mode 100644
+index 0000000..da50ffc
+--- /dev/null
++++ b/node_modules/os-name/index.native.js
+@@ -0,0 +1,9 @@
++'use strict';
++
++const { Platform } = require('react-native');
++
++const osName = (platform, release) => {
++	return Platform.OS;
++};
++
++module.exports = osName;

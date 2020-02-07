@@ -14,6 +14,12 @@ if (window.Intl) {
   window.Intl = require('intl')
 }
 
+// @octokit/rest (universal-user-agent) polyfill for react-native
+// @see https://github.com/gr2m/universal-user-agent/issues/37
+if (!process.version) {
+  process.version = require('@devhub/core/src/utils/constants').APP_VERSION
+}
+
 const { App } = require('@devhub/components/src/components/App')
 
 AppRegistry.registerComponent('devhub', () => App)
