@@ -28,7 +28,7 @@ export function getReadableColor(
     const luminanceDiffAbs = Math.abs(luminanceDiff)
     if (luminanceDiffAbs >= minimumContrastRatio) return color
 
-    const isDark = getLuminance(backgroundColor) <= 0.4
+    const isDark = getLuminance(backgroundColor) <= 0.2
     return isDark
       ? lighten(Math.abs(minimumContrastRatio - luminanceDiffAbs), color)
       : darken(Math.abs(minimumContrastRatio - luminanceDiffAbs), color)

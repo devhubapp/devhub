@@ -34,7 +34,7 @@ export function createThemeFromColor(
   } = {},
 ): Theme {
   const luminance = getLuminance(color)
-  const isDark = luminance <= 0.4
+  const isDark = luminance <= 0.2
   const staticColors = getStaticColors({ isDark })
 
   let primaryBackgroundColor = '#49D3B4'
