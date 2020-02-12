@@ -9,11 +9,11 @@ export interface AutoSizerProps extends Pick<ViewProps, 'style'> {
     width,
     height,
   }: {
-    width: number
-    height: number
+    width: number | undefined
+    height: number | undefined
   }) => React.ReactNode
-  defaultHeight?: number
-  defaultWidth?: number
+  defaultHeight: number
+  defaultWidth: number
   disableHeight?: boolean
   disableWidth?: boolean
   onResize?: ({ width, height }: { width: number; height: number }) => void
@@ -102,7 +102,7 @@ export function AutoSizer(props: AutoSizerProps) {
       pointerEvents="box-none"
       style={[styles.container, viewProps.style]}
     >
-      {!!(result.width || result.height) && children(result)}
+      {children(result)}
     </View>
   )
 }

@@ -490,38 +490,38 @@ export const OneList = (React.memo(
           ]}
         >
           {data.length > 0 ? (
-            <AutoSizer disableWidth={!horizontal} disableHeight={horizontal}>
-              {({ width, height }) =>
-                !!(
-                  (horizontal && width > 0) ||
-                  (!horizontal && height > 0)
-                ) && (
-                  <OneListSafeAreaContext.Provider
-                    value={safeAreaInsets || defaultSafeAreaInsets}
+            <AutoSizer
+              defaultWidth={0}
+              defaultHeight={0}
+              disableWidth={!horizontal}
+              disableHeight={horizontal}
+            >
+              {({ width, height }) => (
+                <OneListSafeAreaContext.Provider
+                  value={safeAreaInsets || defaultSafeAreaInsets}
+                >
+                  <List
+                    ref={variableSizeListRef}
+                    innerRef={variableSizeListInnerRef}
+                    key="variable-size-list"
+                    estimatedItemSize={estimatedItemSize}
+                    height={!horizontal ? height || 0 : '100%'}
+                    innerElementType={InnerElementType}
+                    outerElementType={OuterElementType}
+                    itemCount={itemCount}
+                    itemData={itemData}
+                    itemKey={itemKey}
+                    itemSize={itemSize}
+                    layout={horizontal ? 'horizontal' : 'vertical'}
+                    onItemsRendered={onItemsRendered}
+                    overscanCount={overscanCount}
+                    width={horizontal ? width || 0 : '100%'}
+                    style={style}
                   >
-                    <List
-                      ref={variableSizeListRef}
-                      innerRef={variableSizeListInnerRef}
-                      key="variable-size-list"
-                      estimatedItemSize={estimatedItemSize}
-                      height={horizontal ? '100%' : height}
-                      innerElementType={InnerElementType}
-                      outerElementType={OuterElementType}
-                      itemCount={itemCount}
-                      itemData={itemData}
-                      itemKey={itemKey}
-                      itemSize={itemSize}
-                      layout={horizontal ? 'horizontal' : 'vertical'}
-                      onItemsRendered={onItemsRendered}
-                      overscanCount={overscanCount}
-                      width={horizontal ? width : '100%'}
-                      style={style}
-                    >
-                      {Row}
-                    </List>
-                  </OneListSafeAreaContext.Provider>
-                )
-              }
+                    {Row}
+                  </List>
+                </OneListSafeAreaContext.Provider>
+              )}
             </AutoSizer>
           ) : ListEmptyComponent ? (
             <ListEmptyComponent />

@@ -19,7 +19,7 @@ import {
   ThemeColors,
 } from '@devhub/core'
 import React, { useCallback, useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Dimensions, StyleSheet, View } from 'react-native'
 import { useDispatch, useStore } from 'react-redux'
 
 import { useAppViewMode } from '../../hooks/use-app-view-mode'
@@ -35,6 +35,7 @@ import {
   FreeTrialHeaderMessage,
   FreeTrialHeaderMessageProps,
 } from '../common/FreeTrialHeaderMessage'
+import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { usePlans } from '../context/PlansContext'
 import { Column } from './Column'
@@ -123,6 +124,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const { appOrientation } = appLayout
   const appViewModeresult = useAppViewMode()
   const { appViewMode } = appViewModeresult
+  const columnWidth = useColumnWidth()
   const columnData = useColumnData(columnId, {
     mergeSimilar: false,
   })
@@ -397,6 +399,8 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         ]}
       >
         <AutoSizer
+          defaultWidth={columnWidth}
+          defaultHeight={Dimensions.get('window').height}
           style={[
             sharedStyles.relative,
             sharedStyles.flex,
