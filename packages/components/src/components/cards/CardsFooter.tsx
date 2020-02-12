@@ -79,7 +79,6 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
             loading={loadState === 'loading_more'}
             onPress={fetchNextPage}
             round={isEmpty}
-            type={isEmpty ? undefined : 'transparent'}
           />
           {!isEmpty && <CardItemSeparator muted />}
         </View>
