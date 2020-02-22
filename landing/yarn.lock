@@ -1162,10 +1162,10 @@
   resolved "https://registry.npmjs.org/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@devhub/core@npm:@brunolemos/devhub-core@0.100.2":
-  version "0.100.2"
-  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.100.2.tgz#7cf71f575cd66771d65f90128072c231d9dafd2e"
-  integrity sha512-eP8+vIADRQja6dQsPW7YYAqif7+oTWAyX/QnmGKDdBw+T4hmuK13H09idFUWmqFpdeDvGvCidacYWec4prdANw==
+"@devhub/core@npm:@brunolemos/devhub-core@0.100.2-2":
+  version "0.100.2-2"
+  resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.100.2-2.tgz#e559846d449e96df244a604b84e73d02abd8f351"
+  integrity sha512-DUFsJb67u7iQFU40XrU3hGWOpALagt3PlZP8wc31YdIwXvas/zP+QXw5GjItJcQNPRiGO5AkTpdhrxl/HXL9vQ==
   dependencies:
     "@octokit/rest" "16.43.1"
     axios "0.19.0"
