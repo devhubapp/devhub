@@ -1,7 +1,4 @@
-import {
-  formatPriceAndInterval,
-  isPlanStatusValid,
-} from '@brunolemos/devhub-core'
+import { formatPriceAndInterval, isPlanStatusValid } from '@devhub/core'
 import classNames from 'classnames'
 import Link from 'next/link'
 import qs from 'qs'

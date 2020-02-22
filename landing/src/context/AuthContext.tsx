@@ -1,4 +1,4 @@
-import { constants, UserPlan } from '@brunolemos/devhub-core'
+import { constants, UserPlan } from '@devhub/core'
 import { useRouter } from 'next/router'
 import qs from 'qs'
 import React, {

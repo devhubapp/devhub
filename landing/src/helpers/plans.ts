@@ -1,4 +1,4 @@
-import { constants, Plan } from '@brunolemos/devhub-core'
+import { constants, Plan } from '@devhub/core'
 import React from 'react'
 
 import { getDefaultDevHubHeaders } from '../helpers'

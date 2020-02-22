@@ -1,4 +1,4 @@
-import { Plan } from '@brunolemos/devhub-core'
+import { Plan } from '@devhub/core'
 
 import { usePaddleLoader } from '../context/PaddleLoaderContext'
 

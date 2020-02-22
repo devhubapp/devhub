@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react'
 
-import { OS, PlatformCategory } from '@brunolemos/devhub-core'
+import { OS, PlatformCategory } from '@devhub/core'
 import { getOSName, getPlatformCategory } from '../helpers'
 
 interface System {

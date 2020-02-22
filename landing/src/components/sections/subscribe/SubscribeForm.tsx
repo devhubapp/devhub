@@ -4,7 +4,7 @@ import {
   isPlanStatusValid,
   Plan,
   UserPlan,
-} from '@brunolemos/devhub-core'
+} from '@devhub/core'
 import classNames from 'classnames'
 import _ from 'lodash'
 import { useRouter } from 'next/router'

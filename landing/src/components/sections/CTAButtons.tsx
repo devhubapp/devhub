@@ -1,4 +1,4 @@
-import { constants, formatPrice } from '@brunolemos/devhub-core'
+import { constants, formatPrice } from '@devhub/core'
 import classNames from 'classnames'
 
 import { useAuth } from '../../context/AuthContext'

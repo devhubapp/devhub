@@ -1,4 +1,4 @@
-import { formatPriceAndInterval, Plan } from '@brunolemos/devhub-core'
+import { formatPriceAndInterval, Plan } from '@devhub/core'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import qs from 'qs'

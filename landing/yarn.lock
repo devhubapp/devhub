@@ -1157,7 +1157,12 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@brunolemos/devhub-core@0.100.2":
+"@csstools/convert-colors@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.npmjs.org/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
+  integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
+
+"@devhub/core@npm:@brunolemos/devhub-core@0.100.2":
   version "0.100.2"
   resolved "https://registry.npmjs.org/@brunolemos/devhub-core/-/devhub-core-0.100.2.tgz#7cf71f575cd66771d65f90128072c231d9dafd2e"
   integrity sha512-eP8+vIADRQja6dQsPW7YYAqif7+oTWAyX/QnmGKDdBw+T4hmuK13H09idFUWmqFpdeDvGvCidacYWec4prdANw==
@@ -1171,11 +1176,6 @@
     moment "2.24.0"
     polished "3.4.1"
     qs "6.9.1"
-
-"@csstools/convert-colors@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
-  integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
 "@fimbul/bifrost@^0.21.0":
   version "0.21.0"

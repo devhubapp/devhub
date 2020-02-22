@@ -1,4 +1,4 @@
-import { Theme, themes } from '@brunolemos/devhub-core'
+import { Theme, themes } from '@devhub/core'
 import React, { useContext, useMemo, useState } from 'react'
 
 export interface ThemeProviderProps {

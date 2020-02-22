@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 
-import { Theme, themeColorFields } from '@brunolemos/devhub-core'
+import { Theme, themeColorFields } from '@devhub/core'
 import { useTheme } from '../../context/ThemeContext'
 import { toKebabCase } from '../../helpers'
 

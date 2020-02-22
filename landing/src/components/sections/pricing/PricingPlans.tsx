@@ -1,4 +1,4 @@
-import { PlanType } from '@brunolemos/devhub-core'
+import { PlanType } from '@devhub/core'
 import Link from 'next/link'
 import React, { Fragment, useMemo, useState } from 'react'
 

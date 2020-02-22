@@ -1,4 +1,4 @@
-import { GitHubAppType } from '@brunolemos/devhub-core'
+import { GitHubAppType } from '@devhub/core'
 import { useRouter } from 'next/router'
 import qs from 'qs'
 import React, { useEffect } from 'react'

@@ -1,4 +1,4 @@
-import { constants } from '@brunolemos/devhub-core'
+import { constants } from '@devhub/core'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 

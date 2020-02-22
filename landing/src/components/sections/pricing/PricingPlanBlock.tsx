@@ -3,7 +3,7 @@ import {
   formatPrice,
   formatPriceAndInterval,
   Plan,
-} from '@brunolemos/devhub-core'
+} from '@devhub/core'
 import classNames from 'classnames'
 import qs from 'qs'
 import React from 'react'

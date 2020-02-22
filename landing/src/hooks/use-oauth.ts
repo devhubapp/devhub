@@ -1,10 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import {
-  constants,
-  GitHubAppType,
-  tryParseOAuthParams,
-} from '@brunolemos/devhub-core'
+import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
 import { useAuth } from '../context/AuthContext'
 import { getPlatform } from '../helpers'
 import { useWindowEvent } from './use-window-event'

@@ -1,4 +1,4 @@
-import { isPlanStatusValid } from '@brunolemos/devhub-core'
+import { isPlanStatusValid } from '@devhub/core'
 import Link from 'next/link'
 import qs from 'qs'
 import React, { Fragment } from 'react'
