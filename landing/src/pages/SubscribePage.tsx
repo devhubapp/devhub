@@ -24,12 +24,12 @@ export default function SubscribePage(_props: SubscribePageProps) {
   const Router = useRouter()
 
   const { authData, logout } = useAuth()
-  const { paidPlans, userPlanInfo } = usePlans()
+  const { dealCode, paidPlans, userPlanInfo } = usePlans()
 
   const plans = useMemo(() => {
     if (!userPlanInfo || !userPlanInfo.amount) return paidPlans
     if (paidPlans.find(p => p && p.id === userPlanInfo.id)) return paidPlans
-    return [userPlanInfo].concat(paidPlans as Plan[])
+    return paidPlans.concat(userPlanInfo)
   }, [userPlanInfo, paidPlans])
 
   const _planFromQuery = Router.query.plan as string | undefined
@@ -80,6 +80,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
             <Elements>
               <SubscribeForm
                 action={action}
+                dealCode={dealCode}
                 onSuccess={() => Router.push('/success')}
                 plan={localizedPlan}
               />

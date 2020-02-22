@@ -168,6 +168,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
 
         {!!(Platform.OS === 'web') && (
           <SubscribeForm
+            // dealCode={dealCode} // TODO
             planId={plan && plan.id}
             onSubscribe={onSubscribeOrDowngrade}
           />

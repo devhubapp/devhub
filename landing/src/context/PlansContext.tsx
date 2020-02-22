@@ -27,6 +27,7 @@ const initialState: PlansState = {
   plans: [],
   userPlanInfo: undefined,
 
+  errorMessage: undefined,
   loadingState: 'initial',
   trySetDealCode() {
     throw new Error('[PlansContext] Not yet initialized.')
@@ -51,7 +52,11 @@ export function PlansProvider(props: PlansProps) {
       const currentRequest = countRef.current
 
       try {
-        setState(v => ({ ...v, loadingState: 'loading' }))
+        setState(v => ({
+          ...v,
+          errorMessage: undefined,
+          loadingState: 'loading',
+        }))
         const data = await fetchPlansState({
           appToken: authData.appToken,
           dealCode,
@@ -59,9 +64,22 @@ export function PlansProvider(props: PlansProps) {
 
         if (currentRequest !== countRef.current) return
 
-        setState(v => ({ ...v, ...data, loadingState: 'loaded' }))
+        setState(v => ({
+          ...v,
+          ...data,
+          errorMessage: undefined,
+          loadingState: 'loaded',
+        }))
       } catch (error) {
-        setState(v => ({ ...v, loadingState: 'error' }))
+        setState(v => ({
+          ...v,
+          errorMessage:
+            `${(error && error.response && error.response.message) ||
+              (error && error.message) ||
+              error ||
+              ''}` || undefined,
+          loadingState: 'error',
+        }))
         // if (dealCode) tryRefetchPlansForDealCode(null)
         throw error
       }

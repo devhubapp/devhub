@@ -1,4 +1,4 @@
-import { isPlanStatusValid } from '@devhub/core'
+import { addDashesToString, isPlanStatusValid } from '@devhub/core'
 import Link from 'next/link'
 import qs from 'qs'
 import React, { Fragment } from 'react'
@@ -6,6 +6,7 @@ import React, { Fragment } from 'react'
 import Button from '../components/common/buttons/Button'
 import { LogoHead } from '../components/common/LogoHead'
 import LandingLayout from '../components/layouts/LandingLayout'
+import GitHubLoginButton from '../components/sections/login/GitHubLoginButton'
 import { useAuth } from '../context/AuthContext'
 import { usePlans } from '../context/PlansContext'
 import { getPurchaseOrSubscribeRoute } from '../helpers'
@@ -16,8 +17,26 @@ export default function SuccessPage(_props: SuccessPageProps) {
   const { authData } = useAuth()
   const { plans, paidPlans, userPlanInfo } = usePlans()
 
-  if (!authData.plan) return null
-  if (!userPlanInfo) return null
+  if (!(authData.plan && userPlanInfo))
+    return (
+      <LandingLayout>
+        <LogoHead />
+
+        <section id="success" className="container">
+          <div className="flex flex-col items-center m-auto text-center">
+            <GitHubLoginButton />
+          </div>
+        </section>
+      </LandingLayout>
+    )
+
+  const dealCodeToShare =
+    authData.plan && authData.plan.dealCode
+      ? `${addDashesToString(
+          authData.plan.dealCode,
+          authData.github.id ? authData.github.id.length + 2 : 4,
+        )}${authData.github.id ? `-RF${authData.github.id}` : ''}`
+      : undefined
 
   return (
     <LandingLayout>
@@ -179,6 +198,17 @@ export default function SuccessPage(_props: SuccessPageProps) {
                       Click to manage who can use this subscription
                     </a>
                   </Link>
+                ) : dealCodeToShare ? (
+                  <>
+                    You can share this same deal with up to 3 people:
+                    <br />
+                    <strong>Deal code to share</strong>:{' '}
+                    <span className="text-primary">{dealCodeToShare}</span> 🙌
+                    <br />
+                    <small className="text-muted-65 italic">
+                      (This code won't show up again, feel free to copy it now)
+                    </small>
+                  </>
                 ) : (
                   <>
                     What about sharing the news with your friends? 🙌
@@ -193,7 +223,11 @@ export default function SuccessPage(_props: SuccessPageProps) {
                   type="primary"
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                     `I just bought @devhub_app${
-                      authData.plan.type === 'team' ? ' for my team!' : ''
+                      authData.plan.type === 'team'
+                        ? ' for my team!'
+                        : dealCodeToShare
+                        ? ` using the deal code ${dealCodeToShare}`
+                        : ''
                     } https://devhubapp.com/`,
                   )}`}
                   target="_blank"

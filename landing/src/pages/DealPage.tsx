@@ -22,7 +22,7 @@ export default function DealPage(_props: DealPageProps) {
 
   const { authData } = useAuth()
 
-  const { dealCode, loadingState, trySetDealCode } = usePlans()
+  const { dealCode, errorMessage, loadingState, trySetDealCode } = usePlans()
 
   const [code, setCode] = useState<string>(dealCode || '')
   const [submitionResultCount, setSubmitionResultCount] = useState(0)
@@ -107,7 +107,7 @@ export default function DealPage(_props: DealPageProps) {
 
         {loadingState === 'error' && (
           <p className="mb-4 text-sm text-red italic">
-            Failed to fetch deal details
+            {`Failed to apply deal${errorMessage ? `: ${errorMessage}` : ''}`}
           </p>
         )}
       </form>

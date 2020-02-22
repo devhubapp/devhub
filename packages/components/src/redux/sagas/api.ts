@@ -108,6 +108,9 @@ function* onSyncDown() {
                 round
               }
               quantity
+              coupon
+
+              dealCode
 
               status
 

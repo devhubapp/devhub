@@ -26,6 +26,7 @@ import { TextInput } from '../../common/TextInput'
 
 export interface SubscribeFormProps {
   action?: 'update_card' | 'update_seats'
+  dealCode: string | undefined
   plan: Plan
   onSuccess: () => void
 }
@@ -33,7 +34,7 @@ export interface SubscribeFormProps {
 export const SubscribeForm = injectStripe<SubscribeFormProps>(
   // tslint:disable-next-line ter-prefer-arrow-callback no-shadowed-variable
   function SubscribeForm(props) {
-    const { action, children, onSuccess, plan, stripe } = props
+    const { action, children, dealCode, onSuccess, plan, stripe } = props
 
     const Router = useRouter()
     const { Paddle } = usePaddleLoader()
@@ -279,6 +280,9 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                     round
                   }
                   quantity
+                  coupon
+
+                  dealCode
 
                   status
 
@@ -427,6 +431,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
       const passthrough = {
         _id: authData._id,
+        dealCode,
         github: authData.github,
         plan: localizedPlan,
         planId: localizedPlan.id,
@@ -495,6 +500,13 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             coupon:
               (result.checkout.coupon && result.checkout.coupon.coupon_code) ||
               undefined,
+
+            dealCode: dealCode
+              ? dealCode
+                  .toUpperCase()
+                  .replace(/\-?RF([0-9]+)$/, '')
+                  .replace(/\-/g, '')
+              : undefined,
 
             status: 'active',
 

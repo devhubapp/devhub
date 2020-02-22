@@ -204,6 +204,9 @@ const SubscribeFormWithStripe = React.memo(
                     round
                   }
                   quantity
+                  coupon
+
+                  dealCode
 
                   status
 

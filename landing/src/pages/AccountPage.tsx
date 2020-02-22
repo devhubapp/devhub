@@ -78,6 +78,8 @@ export default function AccountPage(_props: AccountPageProps) {
                 </small>
               )}
             </>
+          ) : userPlanInfo ? (
+            userPlanInfo.label
           ) : (
             'Free plan'
           )}

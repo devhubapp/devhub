@@ -361,6 +361,8 @@ export function AuthProvider(props: AuthProviderProps) {
                   quantity
                   coupon
 
+                  dealCode
+
                   status
 
                   startAt

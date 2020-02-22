@@ -185,6 +185,9 @@ function* onLoginRequest(
                   round
                 }
                 quantity
+                coupon
+
+                dealCode
 
                 status
 

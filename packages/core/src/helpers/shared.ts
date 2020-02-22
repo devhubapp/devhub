@@ -1258,3 +1258,20 @@ export function fixDateToISO(
   return new Date(timestamp).toISOString()
 }
 // new Date(new Date('2019-11-24 22:48:21').getTime() + (new Date().getTimezoneOffset() * 60 * 1000))
+
+export function addDashesToString(str: string | undefined, addDashEvery = 0) {
+  if (!(str && typeof str === 'string')) return undefined
+  if (!(addDashEvery && addDashEvery >= 1)) return str
+
+  return str
+    .split('')
+    .reduce<string[]>((arr, char) => {
+      if (arr.length && arr[arr.length - 1].length < addDashEvery) {
+        arr[arr.length - 1] += `${char}`
+        return arr
+      }
+
+      return [...arr, char]
+    }, [])
+    .join('-')
+}

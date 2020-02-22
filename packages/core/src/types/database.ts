@@ -26,6 +26,9 @@ export interface DatabaseUserPlan {
   quantity: number | undefined
   coupon?: string
 
+  dealCode?: string
+  referralId?: string
+
   status:
     | 'incomplete'
     | 'incomplete_expired'

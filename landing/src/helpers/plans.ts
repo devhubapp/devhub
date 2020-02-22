@@ -18,6 +18,7 @@ export interface PlansStateData {
 }
 
 export interface PlansState extends PlansStateData {
+  errorMessage: string | undefined
   loadingState: 'initial' | 'cached' | 'loading' | 'loaded' | 'error'
   trySetDealCode(dealCode: string | undefined | null): Promise<void>
 }
@@ -55,7 +56,7 @@ export async function fetchPlansState({
   const data = (await response.json()) as PlansStateData
 
   if (!(data && data.plans)) {
-    throw new Error('Something went wrong')
+    throw new Error((data as any).message || 'Something went wrong')
   }
 
   return {
