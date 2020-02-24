@@ -1,4 +1,4 @@
-import NextApp, { Container } from 'next/app'
+import NextApp from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 
@@ -45,22 +45,20 @@ export default class App extends NextApp {
           <PaddleLoaderProvider>
             <ThemeProvider>
               <PlansProvider>
-                <Container>
-                  <Head>
-                    <title>DevHub | Unified view for GitHub activities</title>
-                  </Head>
+                <Head>
+                  <title>DevHub | Unified view for GitHub activities</title>
+                </Head>
 
-                  <ThemeConsumer>
-                    {({ theme }) => (
-                      <div
-                        className={theme.isDark ? 'dark-theme' : 'light-theme'}
-                      >
-                        <Component {...pageProps} />
-                      </div>
-                    )}
-                  </ThemeConsumer>
-                  <AppGlobalStyles />
-                </Container>
+                <ThemeConsumer>
+                  {({ theme }) => (
+                    <div
+                      className={theme.isDark ? 'dark-theme' : 'light-theme'}
+                    >
+                      <Component {...pageProps} />
+                    </div>
+                  )}
+                </ThemeConsumer>
+                <AppGlobalStyles />
               </PlansProvider>
             </ThemeProvider>
           </PaddleLoaderProvider>
