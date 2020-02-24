@@ -11,13 +11,13 @@ export function useLocalizedPlanDetails<P extends Plan | undefined>(
   if (plan && plan.paddleProductId) {
     const paddlePrice = getProductPrice(plan.paddleProductId, quantity)
 
-    if (paddlePrice && paddlePrice.net) {
+    if (paddlePrice && paddlePrice.gross) {
       return {
         ...plan,
         amount: Math.floor(
-          parseFloat(paddlePrice.net.replace(/[^0-9]+/, '')) * 100,
+          parseFloat(paddlePrice.gross.replace(/[^0-9]+/, '')) * 100,
         ),
-        currency: paddlePrice.net.match(/[^0-9]+/)![0],
+        currency: paddlePrice.gross.match(/[^0-9]+/)![0],
         // interval: undefined, // TODO
         // intervalCount: 1, // TODO,
         type: plan.type,

@@ -148,7 +148,7 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
         if (
           quantity > 1 &&
           (cachedPricesByProductIdAndQuantityRef.current[productId][1] &&
-            cachedPricesByProductIdAndQuantityRef.current[productId][1]!.net)
+            cachedPricesByProductIdAndQuantityRef.current[productId][1]!.gross)
         ) {
           return {
             gross: estimatePriceForQuantity(
