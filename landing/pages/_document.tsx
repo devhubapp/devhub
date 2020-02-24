@@ -1,4 +1,4 @@
-import NextDocument, { Head, Main, NextScript } from 'next/document'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
 import React from 'react'
 
 const shortDescriptionTitle = 'Unified view for GitHub activities'
@@ -8,29 +8,25 @@ const fullDescription = `${shortDescriptionTitle}. ${shortDescriptionContent}`
 const screenshot =
   'https://devhubapp.com/static/screenshots/devhub-desktop-zoomed-dark.jpg'
 
-export default class Document extends NextDocument {
+export default class MyDocument extends Document {
   render() {
     return (
-      <html lang="en">
+      <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
-          <base target="_top" />
 
           <meta name="description" content={fullDescription} />
 
-          {/* Google / Search Engine Tags */}
           <meta itemProp="name" content={shortDescriptionTitle} />
           <meta itemProp="description" content={shortDescriptionContent} />
           <meta itemProp="image" content={screenshot} />
 
-          {/* Facebook Meta Tags */}
           <meta property="og:url" content="https://devhubapp.com" />
           <meta property="og:type" content="website" />
           <meta property="og:title" content={shortDescriptionTitle} />
           <meta property="og:description" content={shortDescriptionContent} />
           <meta property="og:image" content={screenshot} />
 
-          {/* Twitter Meta Tags */}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content={shortDescriptionTitle} />
           <meta name="twitter:description" content={shortDescriptionContent} />
@@ -122,7 +118,6 @@ export default class Document extends NextDocument {
               />
             </>
           )}
-          {/* <script async defer src="/static/js/donthuntme.js" /> */}
         </Head>
 
         <body
@@ -133,7 +128,7 @@ export default class Document extends NextDocument {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     )
   }
 }
