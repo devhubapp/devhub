@@ -9888,10 +9888,10 @@ normalize-url@^4.1.0:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-4.5.0.tgz#453354087e6ca96957bd8f5baf753f5982142129"
   integrity sha512-2s47yzUxdexf1OhyRi4Em83iQk0aPvwTddtFz4hnSSw9dCEsLEGf6SwIO8ss/19S9iBb5sJaOuTvTGDeZI00BQ==
 
-now@16.7.1:
-  version "16.7.1"
-  resolved "https://registry.npmjs.org/now/-/now-16.7.1.tgz#b936ee398588849d0374bb76196e43b8cbe14738"
-  integrity sha512-iAf6eUaVXc2phDUcM2kYCevhSmk10DRWEraRAUstwUChx14DJRB1Kb65M65Bk13qBXkHIjdfTAH2dR4s1y64+w==
+now@18.0.0:
+  version "18.0.0"
+  resolved "https://registry.npmjs.org/now/-/now-18.0.0.tgz#e6689205346e354f822b1f5feb2c0d7d570c172f"
+  integrity sha512-MVskFV3xH1hMkpTewPCb3p0SQ17hL7EI1Zb+Ij2wYiRV3X0a6G91GdE2vvFlhsK6rhRHKHZnDQkZ0AnkpnfzHA==
 
 npm-path@^2.0.2:
   version "2.0.4"

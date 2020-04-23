@@ -1,6 +1,5 @@
 {
   "public": true,
-  "name": "devhub-beta",
   "alias": "beta.devhubapp.com",
   "version": 2,
   "builds": [

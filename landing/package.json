@@ -43,7 +43,7 @@
     "@types/styled-jsx": "2.2.8",
     "mkdirp": "0.5.1",
     "node-fetch": "2.6.0",
-    "now": "16.7.1",
+    "now": "18.0.0",
     "prettier": "1.18.2",
     "ts-node": "8.6.2",
     "tslint": "5.20.1",

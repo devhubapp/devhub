@@ -10,3 +10,5 @@ out
 scripts/out
 yarn-debug.log*
 yarn-error.log*
+
+.now
