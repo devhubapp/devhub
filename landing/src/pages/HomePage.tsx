@@ -93,7 +93,7 @@ export default function HomePage(_props: HomePageProps) {
             <ResponsiveImage
               alt="DevHub Screenshot with 4 columns: Notifications, Facebook activity, TailwindCSS activity and Filters"
               src="/static/screenshots/dark/devhub-desktop.jpg"
-              aspectRatio={1440 / 798}
+              aspectRatio={1440 / 878}
               enableBorder
               minHeight={500}
             />
