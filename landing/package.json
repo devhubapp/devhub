@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "shx rm -f *.tsbuildinfo && shx rm -rf dist && mkdirp dist",
     "compile": "cd .",
-    "deploy": "yarn now",
+    "deploy": "yarn compile && yarn now",
     "export": "yarn run-scripts && next build && next export",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
     "lint": "tslint -p .",
