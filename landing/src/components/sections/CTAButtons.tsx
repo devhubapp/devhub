@@ -18,7 +18,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
 
   const { os } = useSystem()
   const { authData } = useAuth()
-  const { freeTrialDays, paidPlans, plans } = usePlans()
+  const { freeTrialDays, freePlan, paidPlans, plans } = usePlans()
   const localizedPlan = useLocalizedPlanDetails(paidPlans[0])
   const priceLabel = localizedPlan ? formatPrice(localizedPlan) : ''
 
@@ -89,7 +89,10 @@ export default function CTAButtons(props: CTAButtonsProps) {
             </Button>
           )}
 
-          {!!(freeTrialDays && plans.some(plan => !!plan && !plan.amount)) && (
+          {!!(
+            (freeTrialDays || freePlan) &&
+            plans.some(plan => !!plan && !plan.amount)
+          ) && (
             <Button
               type="neutral"
               href="/download?autostart"

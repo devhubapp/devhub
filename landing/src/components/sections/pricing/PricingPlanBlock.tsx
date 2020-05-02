@@ -149,14 +149,14 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   }
 
   if (
-    !footerText &&
+    !(footerText || '').trim() &&
     localizedPlan.type === 'custom' &&
     buttonLink &&
     buttonLink.startsWith('mailto:')
   ) {
     footerText =
       (footerText ? `${footerText}\n` : footerText) +
-      `Contact us: ${buttonLink.replace('mailto:', '')}`
+      `${buttonLink.replace('mailto:', '')}`
   }
 
   if (localizedPlan.interval && localizedPlan.amount) {
