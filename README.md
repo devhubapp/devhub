@@ -145,7 +145,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 - [Redux Saga](https://github.com/redux-saga/redux-saga/)
 - [Reselect](https://github.com/reduxjs/reselect)
 - [GraphQL](https://github.com/facebook/graphql)
-
+- [Electron](https://github.com/electron/electron)
 
 <br/>
 
