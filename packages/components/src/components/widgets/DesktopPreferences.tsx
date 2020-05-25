@@ -62,6 +62,7 @@ export const DesktopPreferences = React.memo(() => {
               <View style={[sharedStyles.center, sharedStyles.horizontal]}>
                 <ThemedIcon
                   color="foregroundColor"
+                  family="octicon"
                   name="desktop-download"
                   size={16}
                 />

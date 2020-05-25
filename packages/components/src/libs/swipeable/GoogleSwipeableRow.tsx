@@ -1,10 +1,9 @@
-import { GitHubIcon } from '@devhub/core'
 import React from 'react'
 import { Animated, StyleSheet } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
-import { MaterialIcons, Octicons } from '../../libs/vector-icons'
+import { IconProp, MaterialIcons, Octicons } from '../../libs/vector-icons'
 import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import {
   BaseSwipeableRow,
@@ -17,16 +16,9 @@ export { defaultWidth } from './BaseSwipeableRow'
 
 const iconSize = 20
 
-export type GoogleSwipeableRowAction = BaseSwipeableRowAction &
-  (
-    | {
-        iconFamily: 'octicons'
-        icon: GitHubIcon
-      }
-    | {
-        iconFamily: 'material'
-        icon: string
-      })
+export type GoogleSwipeableRowAction = BaseSwipeableRowAction & {
+  icon: IconProp
+}
 
 export interface GoogleSwipeableRowProps
   extends BaseSwipeableRowProps<GoogleSwipeableRowAction> {}
@@ -72,7 +64,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
     }
 
     const AnimatedIcon =
-      action.iconFamily === 'material'
+      action.icon && action.icon.family === 'material'
         ? AnimatedMaterialIcons
         : AnimatedOcticons
 
@@ -86,7 +78,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
         onPress={pressHandler}
       >
         <AnimatedIcon
-          name={action.icon}
+          {...action.icon}
           size={iconSize}
           color={action.foregroundColor || '#FF0000'}
           style={[styles.actionIcon, { transform: [transform] }] as any}
@@ -126,7 +118,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
     }
 
     const AnimatedIcon =
-      action.iconFamily === 'material'
+      action.icon && action.icon.family === 'material'
         ? AnimatedMaterialIcons
         : AnimatedOcticons
 
@@ -143,7 +135,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
         onPress={pressHandler}
       >
         <AnimatedIcon
-          name={action.icon}
+          {...action.icon}
           size={iconSize}
           color={action.foregroundColor || '#FF0000'}
           style={[styles.actionIcon, { transform: [transform] }] as any}

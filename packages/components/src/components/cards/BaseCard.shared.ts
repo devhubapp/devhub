@@ -33,7 +33,6 @@ import {
   getUserAvatarFromObject,
   getUserURLFromEmail,
   getUserURLFromObject,
-  GitHubIcon,
   GitHubIssueOrPullRequest,
   GitHubPullRequest,
   GitHubPushEvent,
@@ -51,6 +50,7 @@ import {
 import { PixelRatio } from 'react-native'
 
 import { Platform } from '../../libs/platform'
+import { IconProp } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import { betterMemoize } from '../../redux/selectors/helpers'
 import { ExtractActionFromActionCreator } from '../../redux/types/base'
@@ -126,10 +126,7 @@ export interface BaseCardProps extends AdditionalCardProps {
     repoId?: number | string | undefined
     text?: string
   }
-  icon: {
-    name: GitHubIcon
-    color?: keyof ThemeColors
-  }
+  icon: IconProp
   isRead: boolean
   isSaved: boolean
   labels:
@@ -210,7 +207,7 @@ function getPrivateBannerCardProps(
     avatar: props.avatar,
     date: props.date,
     githubApp: undefined,
-    icon: { color: props.iconColor || 'red', name: 'lock' },
+    icon: { color: props.iconColor || 'red', family: 'octicon', name: 'lock' },
     isRead: isItemRead(item),
     isSaved: isItemSaved(item),
     labels: undefined,
@@ -315,7 +312,7 @@ function _getCardPropsForItem(
         .toLowerCase()}${_actionText.substr(1)}`
 
       const iconDetails = getEventIconAndColor(event)
-      const icon = { name: iconDetails.icon, color: iconDetails.color }
+      const icon = iconDetails as IconProp
 
       const repoURL = fixURL(
         repos[0].html_url || getRepoUrlFromOtherUrl(repos[0].url),
@@ -855,7 +852,7 @@ function _getCardPropsForItem(
       const date =
         issueOrPullRequest.updated_at || issueOrPullRequest.created_at
 
-      const icon = { name: iconDetails.icon, color: iconDetails.color }
+      const icon = iconDetails as IconProp
 
       if (isPrivate && !canSee) {
         return getPrivateBannerCardProps(type, item, {
@@ -917,7 +914,7 @@ function _getCardPropsForItem(
         notification,
         (issueOrPullRequest || undefined) as any,
       )
-      const icon = { name: iconDetails.icon, color: iconDetails.color }
+      const icon = iconDetails as IconProp
 
       const subitems = ((): BaseCardProps['subitems'] => {
         if (!(_comment && _comment.body)) return undefined

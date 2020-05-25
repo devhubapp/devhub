@@ -74,8 +74,12 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                   size={32}
                 >
                   <View style={[sharedStyles.center, sharedStyles.horizontal]}>
-                    {/* <ThemedIcon color="foregroundColor" name="pencil" />
-                  <Spacer width={contentPadding / 2} /> */}
+                    {/* <ThemedIcon
+                      color="foregroundColor"
+                      family="octicon"
+                      name="pencil"
+                    />
+                    <Spacer width={contentPadding / 2} /> */}
                     <ThemedText color="foregroundColor">{`${
                       userPlan
                         ? userPlan.label || (userPlan.amount ? 'Paid' : 'Free')
@@ -148,7 +152,12 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
               onPress={() => openAppStore({ showReviewModal: true })}
               size={32}
             >
-              <ThemedIcon color="foregroundColor" name="star" size={16} />
+              <ThemedIcon
+                color="foregroundColor"
+                family="octicon"
+                name="star"
+                size={16}
+              />
             </Button>
           </SubHeader>
         ) : Platform.realOS === 'ios' || Platform.realOS === 'android' ? (
@@ -162,6 +171,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             >
               <ThemedIcon
                 color="foregroundColor"
+                family="octicon"
                 name="device-mobile"
                 size={16}
               />

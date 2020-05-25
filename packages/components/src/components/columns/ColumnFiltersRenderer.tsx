@@ -285,13 +285,14 @@ export const ColumnFiltersRenderer = React.memo(
         >
           {header === 'header' ? (
             <ColumnHeader
-              icon="settings"
+              icon={{ family: 'octicon', name: 'settings' }}
               title="Filters"
               right={
                 !inlineMode &&
                 !!close && (
                   <ColumnHeader.Button
                     key="column-flters-close-button"
+                    family="octicon"
                     name="x"
                     onPress={() => close()}
                     tooltip="Close"

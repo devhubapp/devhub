@@ -164,6 +164,7 @@ export const AdvancedSettingsModal = React.memo(
                       size={32}
                     >
                       <ThemedIcon
+                        family="octicon"
                         name="keyboard"
                         color={foregroundThemeColor}
                         size={16}
@@ -202,6 +203,7 @@ export const AdvancedSettingsModal = React.memo(
                           >
                             <ThemedIcon
                               color={foregroundThemeColor}
+                              family="octicon"
                               name="trashcan"
                               size={16}
                             />
@@ -263,6 +265,7 @@ export const AdvancedSettingsModal = React.memo(
                       >
                         <ThemedIcon
                           color={foregroundThemeColor}
+                          family="octicon"
                           name="gear"
                           size={16}
                         />
@@ -284,6 +287,7 @@ export const AdvancedSettingsModal = React.memo(
                       >
                         <ThemedIcon
                           color={foregroundThemeColor}
+                          family="octicon"
                           name={githubToken ? 'sync' : 'plus'}
                           size={16}
                         />
@@ -324,6 +328,7 @@ export const AdvancedSettingsModal = React.memo(
                       >
                         <ThemedIcon
                           color={foregroundThemeColor}
+                          family="octicon"
                           name="gear"
                           size={16}
                         />
@@ -347,6 +352,7 @@ export const AdvancedSettingsModal = React.memo(
                       >
                         <ThemedIcon
                           color={foregroundThemeColor}
+                          family="octicon"
                           name={githubAppToken ? 'sync' : 'plus'}
                           size={16}
                         />
@@ -390,6 +396,7 @@ export const AdvancedSettingsModal = React.memo(
                             >
                               <ThemedIcon
                                 color={foregroundThemeColor}
+                                family="octicon"
                                 name="sync"
                                 size={16}
                               />
@@ -453,6 +460,7 @@ export const AdvancedSettingsModal = React.memo(
                               >
                                 <ThemedIcon
                                   color={foregroundThemeColor}
+                                  family="octicon"
                                   name="gear"
                                   size={16}
                                 />

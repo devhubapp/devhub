@@ -90,8 +90,7 @@ export function useFAB(): { Component: React.ReactNode; size: number } {
           <FAB
             key="fab"
             analyticsLabel="add_column"
-            iconName="plus"
-            iconStyle={iconStyle}
+            icon={{ family: 'octicon', name: 'plus', style: iconStyle }}
             onPress={() => replaceModal({ name: 'ADD_COLUMN' })}
             tooltip={`Add column (${keyboardShortcutsById.addColumn.keys[0]})`}
             useBrandColor
@@ -130,8 +129,7 @@ export function useFAB(): { Component: React.ReactNode; size: number } {
             <FAB
               analyticsLabel="close_modals"
               key="fab"
-              iconName="x"
-              iconStyle={iconStyle}
+              icon={{ family: 'octicon', name: 'x', style: iconStyle }}
               onPress={() => closeAllModals()}
               tooltip={`Close (${keyboardShortcutsById.closeModal.keys[0]})`}
             />

@@ -15,7 +15,7 @@ import { Browser } from '../../libs/browser'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
-import { OcticonIconProps } from '../../libs/vector-icons'
+import { IconProp } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -48,7 +48,7 @@ export function getColumnHeaderThemeColors(): {
 export interface ColumnHeaderProps {
   avatar?: { imageURL: string; linkURL: string }
   columnId?: string
-  icon?: OcticonIconProps['name']
+  icon?: IconProp
   left?: ReactNode
   right?: ReactNode
   style?: StyleProp<ViewStyle>
@@ -155,9 +155,8 @@ export function ColumnHeader(props: ColumnHeaderProps) {
             ) : icon ? (
               <>
                 <ThemedIcon
+                  {...icon}
                   color="foregroundColor"
-                  family="octicon"
-                  name={icon}
                   size={columnHeaderItemContentSize * 1.1}
                 />
                 <Spacer width={(contentPadding * 2) / 3} />
@@ -294,6 +293,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
                           >
                             <ThemedIcon
                               color="foregroundColorMuted40"
+                              family="octicon"
                               name="bell"
                               size={smallerTextSize}
                               {...Platform.select({ web: { title: tooltip } })}

@@ -1,9 +1,10 @@
 import { Theme, ThemeColors, ThemeTransformer } from '@devhub/core'
 import React from 'react'
 import { StyleProp } from 'react-native'
+import { IconProps } from 'react-native-vector-icons/Icon'
 
 import {
-  MaterialIconProps,
+  IconProp,
   MaterialIcons,
   OcticonIconProps,
   Octicons,
@@ -15,13 +16,8 @@ export type ThemedIconProps = {
   color?: keyof ThemeColors | ((theme: Theme) => string)
   style?: StyleProp<Omit<OcticonIconProps['style'], 'color'>>
   themeTransformer?: ThemeTransformer
-} & (
-  | ({
-      family?: 'octicon'
-    } & Omit<OcticonIconProps, 'color' | 'style'>)
-  | ({
-      family?: 'material'
-    } & Omit<MaterialIconProps, 'color' | 'style'>))
+} & IconProp &
+  Omit<IconProps, 'color' | 'style' | 'name'>
 
 export const ThemedIcon = React.memo(
   React.forwardRef<Octicons | MaterialIcons, ThemedIconProps>((props, ref) => {

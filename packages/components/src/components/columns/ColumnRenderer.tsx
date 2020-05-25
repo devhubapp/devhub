@@ -10,7 +10,6 @@ import {
   getDateSmallText,
   getDefaultPaginationPerPage,
   getItemNodeIdOrId,
-  GitHubIcon,
   isEventPrivate,
   isItemRead,
   isItemSaved,
@@ -27,6 +26,7 @@ import { useColumnData } from '../../hooks/use-column-data'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { AutoSizer } from '../../libs/auto-sizer'
 import { emitter } from '../../libs/emitter'
+import { IconProp } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -93,7 +93,7 @@ export interface ColumnRendererProps {
   columnId: string
   columnIndex: number
   columnType: ColumnT['type']
-  icon: GitHubIcon
+  icon: IconProp
   owner: string | undefined
   pagingEnabled?: boolean
   repo: string | undefined
@@ -293,6 +293,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 clearableItems.length ? 'clear_column' : 'unclear_column'
               }
               disabled={hasCrossedColumnsLimit || !clearableItems.length}
+              family="octicon"
               name="check"
               onPress={() => {
                 dispatch(
@@ -317,6 +318,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
                 !hasOneUnreadItem ? 'mark_as_unread' : 'mark_as_read'
               }
               disabled={hasCrossedColumnsLimit || !filteredItems.length}
+              family="octicon"
               name={!hasOneUnreadItem ? 'mail' : 'mail-read'}
               onPress={() => {
                 const unread = !hasOneUnreadItem
@@ -383,6 +385,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               key="column-options-toggle-button"
               analyticsAction="toggle"
               analyticsLabel="column_options"
+              family="octicon"
               name="gear"
               onPress={toggleOptions}
               tooltip="Options"

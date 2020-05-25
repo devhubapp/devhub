@@ -348,7 +348,7 @@ export const LoginScreen = React.memo(() => {
               fullAccessRef.current = false
               loginWithGitHub()
             }}
-            // rightIcon="globe"
+            // rightIcon={{ family: 'octicon', name: 'globe' }}
             style={styles.button}
             subtitle={
               constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
@@ -374,7 +374,7 @@ export const LoginScreen = React.memo(() => {
                   fullAccessRef.current = true
                   loginWithGitHub()
                 }}
-                // rightIcon="lock"
+                // rightIcon={{ family: 'octicon', name: 'lock' }}
                 style={styles.button}
                 subtitle="Full access"
                 title="Sign in with GitHub"
@@ -397,7 +397,7 @@ export const LoginScreen = React.memo(() => {
                   fullAccessRef.current = true
                   loginWithGitHubPersonalAccessToken()
                 }}
-                // rightIcon="key"
+                // rightIcon={{ family: 'octicon', name: 'key' }}
                 style={styles.button}
                 subtitle="Personal token"
                 title="Sign in with GitHub"

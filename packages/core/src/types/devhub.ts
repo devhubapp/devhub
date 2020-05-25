@@ -9,7 +9,6 @@ import {
   GitHubEventAction,
   GitHubEventSubjectType,
   GitHubExtractParamsFromMethod,
-  GitHubIcon,
   GitHubIssue,
   GitHubIssueOrPullRequestSubjectType,
   GitHubItemSubjectType,
@@ -24,6 +23,7 @@ import {
   GitHubWatchEvent,
 } from './github'
 import { GraphQLUserPlan } from './graphql'
+import { ThemeColors } from './themes'
 
 export type EnhancedGitHubNotificationReason =
   | GitHubNotificationReason
@@ -378,7 +378,7 @@ export type ColumnParamField = 'all' | 'org' | 'owner' | 'repo' | 'username'
 
 export interface AddColumnDetailsPayload {
   title: string
-  icon: GitHubIcon
+  icon: GenericIconProp
   subscription: Pick<ColumnSubscription, 'type' | 'subtype'>
   defaultFilters?: Partial<Column['filters']>
   defaultParams?: Partial<Record<ColumnParamField, any>>
@@ -605,4 +605,10 @@ export interface ItemPushNotification<
   body: string
   imageURL?: string
   onClickDispatchAction?: A
+}
+
+export interface GenericIconProp {
+  family: string
+  name: string
+  color?: keyof ThemeColors
 }

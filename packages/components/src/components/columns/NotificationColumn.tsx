@@ -5,6 +5,7 @@ import {
   NotificationCardsContainer,
   NotificationCardsContainerProps,
 } from '../../containers/NotificationCardsContainer'
+import { IconProp } from '../../libs/vector-icons'
 import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 
 export interface NotificationColumnProps
@@ -54,7 +55,7 @@ export const NotificationColumn = React.memo(
         columnId={columnId}
         columnIndex={columnIndex}
         columnType="notifications"
-        icon={headerDetails.icon}
+        icon={headerDetails.icon as IconProp}
         owner={headerDetails.owner}
         pagingEnabled={pagingEnabled}
         repo={headerDetails.repo}

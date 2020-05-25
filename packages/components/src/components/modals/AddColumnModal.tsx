@@ -2,7 +2,6 @@ import {
   AddColumnDetailsPayload,
   ColumnSubscription,
   constants,
-  GitHubIcon,
 } from '@devhub/core'
 import { rgba } from 'polished'
 import React, { useCallback, useLayoutEffect, useRef } from 'react'
@@ -13,6 +12,7 @@ import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { Platform } from '../../libs/platform'
+import { IconProp } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -36,7 +36,7 @@ export interface AddColumnModalProps {
 const columnTypes: Array<{
   title: string
   type: ColumnSubscription['type']
-  icon: GitHubIcon
+  icon: IconProp
   items: Array<{
     payload: AddColumnDetailsPayload | null
   }>
@@ -46,11 +46,11 @@ const columnTypes: Array<{
   {
     title: 'Notifications',
     type: 'notifications',
-    icon: 'bell',
+    icon: { family: 'octicon', name: 'bell' },
     items: [
       {
         payload: {
-          icon: 'bell',
+          icon: { family: 'octicon', name: 'bell' },
           title: 'Notifications',
           subscription: {
             type: 'notifications',
@@ -64,11 +64,11 @@ const columnTypes: Array<{
   {
     title: 'Issues & Pull Requests',
     type: 'issue_or_pr',
-    icon: 'issue-opened',
+    icon: { family: 'octicon', name: 'issue-opened' },
     items: [
       {
         payload: {
-          icon: 'issue-opened',
+          icon: { family: 'octicon', name: 'issue-opened' },
           title: 'Issues',
           subscription: {
             type: 'issue_or_pr',
@@ -79,7 +79,7 @@ const columnTypes: Array<{
       },
       {
         payload: {
-          icon: 'issue-opened',
+          icon: { family: 'octicon', name: 'issue-opened' },
           title: 'Issues & Pull Requests',
           subscription: {
             type: 'issue_or_pr',
@@ -90,7 +90,7 @@ const columnTypes: Array<{
       },
       {
         payload: {
-          icon: 'git-pull-request',
+          icon: { family: 'octicon', name: 'git-pull-request' },
           title: 'Pull Requests',
           subscription: {
             type: 'issue_or_pr',
@@ -104,11 +104,11 @@ const columnTypes: Array<{
   {
     title: 'Activities',
     type: 'activity',
-    icon: 'note',
+    icon: { family: 'octicon', name: 'note' },
     items: [
       {
         payload: {
-          icon: 'person',
+          icon: { family: 'octicon', name: 'person' },
           title: 'User activity',
           subscription: {
             type: 'activity',
@@ -119,7 +119,7 @@ const columnTypes: Array<{
       },
       {
         payload: {
-          icon: 'home',
+          icon: { family: 'octicon', name: 'home' },
           title: 'User dashboard',
           subscription: {
             type: 'activity',
@@ -130,7 +130,7 @@ const columnTypes: Array<{
       },
       {
         payload: {
-          icon: 'repo',
+          icon: { family: 'octicon', name: 'repo' },
           title: 'Repository activity',
           subscription: {
             type: 'activity',
@@ -141,7 +141,7 @@ const columnTypes: Array<{
       },
       {
         payload: {
-          icon: 'organization',
+          icon: { family: 'octicon', name: 'organization' },
           title: 'Organization activity',
           subscription: {
             type: 'activity',
@@ -161,7 +161,7 @@ function AddColumnModalItem({
   title,
 }: {
   disabled?: boolean
-  icon: GitHubIcon
+  icon: IconProp
   payload: AddColumnDetailsPayload | null
   title: string
 }) {
@@ -252,8 +252,8 @@ function AddColumnModalItem({
         ]}
       >
         <ThemedIcon
+          {...icon}
           color="foregroundColor"
-          name={icon}
           size={18}
           style={{ width: 20 }}
         />
@@ -309,7 +309,11 @@ export function AddColumnModal(props: AddColumnModalProps) {
                   disabled={
                     hasReachedColumnLimit || !item.payload || group.soon
                   }
-                  icon={item.payload ? item.payload.icon : 'mark-github'}
+                  icon={
+                    item.payload
+                      ? (item.payload.icon as IconProp)
+                      : { family: 'octicon', name: 'mark-github' }
+                  }
                   payload={item.payload}
                   title={item.payload ? item.payload.title : 'Not available'}
                 />

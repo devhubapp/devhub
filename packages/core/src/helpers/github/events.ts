@@ -4,6 +4,7 @@ import moment from 'moment'
 
 import {
   EnhancedGitHubEvent,
+  GenericIconProp,
   GitHubComment,
   GitHubCommitCommentEvent,
   GitHubEnhancedEventBase,
@@ -12,7 +13,6 @@ import {
   GitHubEventSubjectType,
   GitHubForkEvent,
   GitHubGollumEvent,
-  GitHubIcon,
   GitHubIssue,
   GitHubIssuesEvent,
   GitHubMemberEvent,
@@ -750,52 +750,63 @@ export function sortEvents(
 
 export function getEventIconAndColor(
   event: EnhancedGitHubEvent,
-): { color?: keyof ThemeColors; icon: GitHubIcon; subIcon?: GitHubIcon } {
+): GenericIconProp & {
+  color?: keyof ThemeColors
+  subIcon?: GenericIconProp
+} {
   switch (event.type) {
     case 'CommitCommentEvent':
       return {
         ...getCommitIconAndColor(),
-        subIcon: 'comment-discussion',
+        subIcon: { family: 'octicon', name: 'comment-discussion' },
       }
 
     case 'CreateEvent': {
       switch (event.payload.ref_type) {
         case 'repository':
-          return { icon: 'repo' }
+          return { family: 'octicon', name: 'repo' }
         case 'branch':
-          return { icon: 'git-branch' }
+          return { family: 'octicon', name: 'git-branch' }
         case 'tag':
-          return { icon: 'tag' }
+          return { family: 'octicon', name: 'tag' }
         default:
-          return { icon: 'plus' }
+          return { family: 'octicon', name: 'plus' }
       }
     }
 
     case 'DeleteEvent': {
       switch (event.payload.ref_type) {
         case 'repository':
-          return { icon: 'repo', color: 'lightRed' }
+          return {
+            family: 'octicon',
+            name: 'repo',
+            color: 'lightRed',
+          }
         case 'branch':
-          return { icon: 'git-branch', color: 'lightRed' }
+          return {
+            family: 'octicon',
+            name: 'git-branch',
+            color: 'lightRed',
+          }
         case 'tag':
-          return { icon: 'tag', color: 'lightRed' }
+          return { family: 'octicon', name: 'tag', color: 'lightRed' }
         default:
-          return { icon: 'trashcan' }
+          return { family: 'octicon', name: 'trashcan' }
       }
     }
 
     case 'ForkEvent':
-      return { icon: 'repo-forked' }
+      return { family: 'octicon', name: 'repo-forked' }
 
     case 'GollumEvent':
-      return { icon: 'book' }
+      return { family: 'octicon', name: 'book' }
 
     case 'IssueCommentEvent': {
       return {
         ...(isPullRequest(event.payload.issue)
           ? getPullRequestIconAndColor(event.payload.issue as GitHubPullRequest)
           : getIssueIconAndColor(event.payload.issue)),
-        subIcon: 'comment-discussion',
+        subIcon: { family: 'octicon', name: 'comment-discussion' },
       }
     }
 
@@ -811,7 +822,8 @@ export function getEventIconAndColor(
         case 'reopened':
           return {
             ...getIssueIconAndColor({ state: 'open' } as GitHubIssue),
-            icon: 'issue-reopened',
+            family: 'octicon',
+            name: 'issue-reopened',
           }
         // case 'assigned':
         // case 'unassigned':
@@ -825,10 +837,10 @@ export function getEventIconAndColor(
       }
     }
     case 'MemberEvent':
-      return { icon: 'person' }
+      return { family: 'octicon', name: 'person' }
 
     case 'PublicEvent':
-      return { icon: 'globe', color: 'blue' }
+      return { family: 'octicon', name: 'globe', color: 'blue' }
 
     case 'PullRequestEvent': {
       const pullRequest = event.payload.pull_request
@@ -859,14 +871,12 @@ export function getEventIconAndColor(
     case 'PullRequestReviewEvent': {
       return {
         ...getPullRequestIconAndColor(event.payload.pull_request),
-        subIcon: 'comment-discussion',
+        subIcon: { family: 'octicon', name: 'comment-discussion' },
       }
     }
 
     case 'PushEvent':
-      return {
-        icon: 'code',
-      }
+      return { family: 'octicon', name: 'code' }
 
     case 'ReleaseEvent':
       return isTagMainEvent(event)
@@ -875,12 +885,12 @@ export function getEventIconAndColor(
 
     case 'WatchEvent':
     case 'WatchEvent:OneUserMultipleRepos':
-      return { icon: 'star', color: 'yellow' }
+      return { family: 'octicon', name: 'star', color: 'yellow' }
 
     default: {
       const message = `Unknown event type: ${(event as any).type}`
       console.error(message)
-      return { icon: 'mark-github' }
+      return { family: 'octicon', name: 'mark-github' }
     }
   }
 }

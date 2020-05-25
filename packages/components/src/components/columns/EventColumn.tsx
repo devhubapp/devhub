@@ -5,6 +5,7 @@ import {
   EventCardsContainer,
   EventCardsContainerProps,
 } from '../../containers/EventCardsContainer'
+import { IconProp } from '../../libs/vector-icons'
 import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 
 export interface EventColumnProps
@@ -50,7 +51,7 @@ export const EventColumn = React.memo((props: EventColumnProps) => {
       columnId={columnId}
       columnType="activity"
       columnIndex={columnIndex}
-      icon={headerDetails.icon}
+      icon={headerDetails.icon as IconProp}
       owner={headerDetails.owner}
       pagingEnabled={pagingEnabled}
       repo={headerDetails.repo}

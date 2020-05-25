@@ -295,7 +295,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               style={styles.iconContainer}
             >
               <ThemedIcon
-                name={icon.name}
+                {...icon}
                 color={
                   icon.color ||
                   (isRead ? 'foregroundColorMuted65' : 'foregroundColor')
@@ -322,7 +322,11 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
               {!!showPrivateLock && (
                 <>
                   <Text children="  " />
-                  <ThemedIcon name="lock" color="foregroundColorMuted65" />
+                  <ThemedIcon
+                    family="octicon"
+                    name="lock"
+                    color="foregroundColorMuted65"
+                  />
                 </>
               )}
 

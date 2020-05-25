@@ -13,9 +13,9 @@ import {
   EnhancedGitHubNotification,
   EnhancedGitHubPullRequest,
   EnhancedItem,
+  GenericIconProp,
   GitHubAPIHeaders,
   GitHubComment,
-  GitHubIcon,
   GitHubIssueOrPullRequest,
   GitHubItemSubjectType,
   GitHubPrivacy,
@@ -540,7 +540,7 @@ export function getColumnHeaderDetails(
 ):
   | {
       avatarProps?: HeaderDetailsAvatarProps
-      icon: GitHubIcon
+      icon: GenericIconProp
       owner?: string
       ownerIsKnown: boolean
       repo?: string
@@ -577,7 +577,7 @@ export function getColumnHeaderDetails(
               linkURL: getUserURLFromLogin(s.params!.org!, { baseURL })!,
               type: 'org',
             },
-            icon: 'organization',
+            icon: { family: 'octicon', name: 'organization' },
             owner: s.params!.org,
             ownerIsKnown: true,
             repoIsKnown: false,
@@ -588,7 +588,7 @@ export function getColumnHeaderDetails(
         }
         case 'PUBLIC_EVENTS': {
           return {
-            icon: 'rss',
+            icon: { family: 'octicon', name: 'rss' },
             ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: 'Activity',
@@ -611,7 +611,7 @@ export function getColumnHeaderDetails(
                   linkURL: `${baseURL}/${s.params!.owner}/${s.params!.repo}`,
                   type: 'repo',
                 },
-            icon: 'repo',
+            icon: { family: 'octicon', name: 'repo' },
             ownerIsKnown: true,
             repoIsKnown: true,
             owner: s.params!.owner,
@@ -636,7 +636,7 @@ export function getColumnHeaderDetails(
                   linkURL: `${baseURL}/${s.params!.owner}/${s.params!.repo}`,
                   type: 'repo',
                 },
-            icon: 'repo',
+            icon: { family: 'octicon', name: 'repo' },
             ownerIsKnown: false,
             repoIsKnown: false,
             owner: s.params!.owner,
@@ -663,7 +663,7 @@ export function getColumnHeaderDetails(
                   })!,
                   type: 'user',
                 },
-            icon: 'person',
+            icon: { family: 'octicon', name: 'person' },
             owner: s.params!.username,
             ownerIsKnown: false,
             repoIsKnown: false,
@@ -683,7 +683,7 @@ export function getColumnHeaderDetails(
               linkURL: getUserURLFromLogin(s.params!.org!, { baseURL })!,
               type: 'org',
             },
-            icon: 'organization',
+            icon: { family: 'octicon', name: 'organization' },
             owner: s.params!.org,
             ownerIsKnown: true,
             repoIsKnown: false,
@@ -709,7 +709,7 @@ export function getColumnHeaderDetails(
                   })!,
                   type: 'user',
                 },
-            icon: 'person',
+            icon: { family: 'octicon', name: 'person' },
             owner: s.params!.username,
             ownerIsKnown: false,
             repoIsKnown: false,
@@ -736,7 +736,7 @@ export function getColumnHeaderDetails(
                   })!,
                   type: 'user',
                 },
-            icon: 'home',
+            icon: { family: 'octicon', name: 'home' },
             owner: s.params!.username,
             ownerIsKnown: false,
             repoIsKnown: false,
@@ -753,7 +753,7 @@ export function getColumnHeaderDetails(
           // )
 
           return {
-            icon: 'mark-github',
+            icon: { family: 'octicon', name: 'mark-github' },
             ownerIsKnown: false,
             repoIsKnown: false,
             subtitle: (column && (column as any).subtype) || '',
@@ -845,16 +845,16 @@ export function getColumnHeaderDetails(
               '',
             ...(s.subtype === 'ISSUES'
               ? {
-                  icon: 'issue-opened',
+                  icon: { family: 'octicon', name: 'issue-opened' },
                   subtitle: `Issues${subtitleSuffix}`,
                 }
               : s.subtype === 'PULLS'
               ? {
-                  icon: 'git-pull-request',
+                  icon: { family: 'octicon', name: 'git-pull-request' },
                   subtitle: `Pull Requests${subtitleSuffix}`,
                 }
               : {
-                  icon: 'issue-opened',
+                  icon: { family: 'octicon', name: 'issue-opened' },
                   subtitle: `Issues & PRs${subtitleSuffix}`,
                 }),
           }
@@ -868,7 +868,7 @@ export function getColumnHeaderDetails(
       switch (s.subtype) {
         case 'REPO_NOTIFICATIONS': {
           return {
-            icon: 'bell',
+            icon: { family: 'octicon', name: 'bell' },
             ownerIsKnown: true,
             repoIsKnown: true,
             owner: (s && s.params && s.params.owner) || '',
@@ -881,7 +881,7 @@ export function getColumnHeaderDetails(
 
         default: {
           return {
-            icon: 'bell',
+            icon: { family: 'octicon', name: 'bell' },
             ownerIsKnown: false,
             repoIsKnown: false,
             subtitle:
@@ -911,7 +911,7 @@ export function getColumnHeaderDetails(
         },
       )
       return {
-        icon: 'mark-github',
+        icon: { family: 'octicon', name: 'mark-github' },
         ownerIsKnown: false,
         repoIsKnown: false,
         subtitle: (column && (column as any).type) || '',
@@ -974,33 +974,37 @@ export const issueOrPullRequestStateTypes: GitHubStateType[] = [
   'merged',
 ]
 
-export function getCommitIconAndColor(): {
-  icon: GitHubIcon
-  color?: keyof ThemeColors
-  tooltip: string
-} {
-  return { icon: 'git-commit', color: 'blueGray', tooltip: 'Commit' }
-}
-
-export function getReleaseIconAndColor(): {
-  icon: GitHubIcon
+export function getCommitIconAndColor(): GenericIconProp & {
   color?: keyof ThemeColors
   tooltip: string
 } {
   return {
-    icon: 'rocket',
+    family: 'octicon',
+    name: 'git-commit',
+    color: 'blueGray',
+    tooltip: 'Commit',
+  }
+}
+
+export function getReleaseIconAndColor(): GenericIconProp & {
+  color?: keyof ThemeColors
+  tooltip: string
+} {
+  return {
+    family: 'octicon',
+    name: 'rocket',
     color: 'pink',
     tooltip: 'Release',
   }
 }
 
-export function getTagIconAndColor(): {
-  icon: GitHubIcon
+export function getTagIconAndColor(): GenericIconProp & {
   color?: keyof ThemeColors
   tooltip: string
 } {
   return {
-    icon: 'tag',
+    family: 'octicon',
+    name: 'tag',
     color: 'gray',
     tooltip: 'Tag',
   }
@@ -1012,35 +1016,39 @@ export function getPullRequestIconAndColor(pullRequest: {
   merged: GitHubPullRequest['merged'] | undefined
   merged_at: GitHubPullRequest['merged_at'] | undefined
   mergeable_state: GitHubPullRequest['mergeable_state'] | undefined
-}): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
+}): GenericIconProp & { color?: keyof ThemeColors; tooltip: string } {
   const draft = isDraft(pullRequest)
   const state = getIssueOrPullRequestState(pullRequest)
 
   switch (state) {
     case 'open':
       return {
-        icon: 'git-pull-request',
+        family: 'octicon',
+        name: 'git-pull-request',
         color: draft ? 'gray' : 'green',
         tooltip: `Open${draft ? ' draft' : ''} pull request`,
       }
 
     case 'closed':
       return {
-        icon: 'git-pull-request',
+        family: 'octicon',
+        name: 'git-pull-request',
         color: 'lightRed',
         tooltip: `Closed${draft ? ' draft' : ''} pull request`,
       }
 
     case 'merged':
       return {
-        icon: 'git-merge',
+        family: 'octicon',
+        name: 'git-merge',
         color: 'purple',
         tooltip: `Merged pull request`,
       }
 
     default:
       return {
-        icon: 'git-pull-request',
+        family: 'octicon',
+        name: 'git-pull-request',
         tooltip: 'Pull Request',
       }
   }
@@ -1050,7 +1058,7 @@ export function getIssueIconAndColor(issue: {
   state?: GitHubPullRequest['state']
   merged_at?: GitHubPullRequest['merged_at']
   html_url: GitHubPullRequest['html_url']
-}): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
+}): GenericIconProp & { color?: keyof ThemeColors; tooltip: string } {
   const { state } = issue
 
   if (isPullRequest(issue)) {
@@ -1060,20 +1068,26 @@ export function getIssueIconAndColor(issue: {
   switch (state) {
     case 'open':
       return {
-        icon: 'issue-opened',
+        family: 'octicon',
+        name: 'issue-opened',
         color: 'green',
         tooltip: `Open issue`,
       }
 
     case 'closed':
       return {
-        icon: 'issue-closed',
+        family: 'octicon',
+        name: 'issue-closed',
         color: 'lightRed',
         tooltip: 'Closed issue',
       }
 
     default:
-      return { icon: 'issue-opened', tooltip: 'Issue' }
+      return {
+        family: 'octicon',
+        name: 'issue-opened',
+        tooltip: 'Issue',
+      }
   }
 }
 

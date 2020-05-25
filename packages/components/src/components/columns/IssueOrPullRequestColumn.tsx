@@ -5,6 +5,7 @@ import {
   IssueOrPullRequestCardsContainer,
   IssueOrPullRequestCardsContainerProps,
 } from '../../containers/IssueOrPullRequestCardsContainer'
+import { IconProp } from '../../libs/vector-icons'
 import { ColumnRenderer, ColumnRendererProps } from './ColumnRenderer'
 
 export interface IssueOrPullRequestColumnProps
@@ -55,7 +56,7 @@ export const IssueOrPullRequestColumn = React.memo(
         columnId={columnId}
         columnIndex={columnIndex}
         columnType="issue_or_pr"
-        icon={headerDetails.icon}
+        icon={headerDetails.icon as IconProp}
         owner={headerDetails.owner}
         pagingEnabled={pagingEnabled}
         repo={headerDetails.repo}

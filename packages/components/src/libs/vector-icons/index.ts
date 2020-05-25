@@ -1,6 +1,19 @@
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Octicons from 'react-native-vector-icons/Octicons'
+import { ThemeColors } from '@devhub/core'
 
-export * from './index.shared'
+import { MaterialIconProps } from './fonts/material/Material'
+import { OcticonIconProps } from './fonts/octicons/Octicons'
 
-export { MaterialIcons, Octicons }
+export * from './fonts/material/Material'
+export * from './fonts/octicons/Octicons'
+
+export type IconProp = {
+  color?: keyof ThemeColors
+} & (
+  | ({
+      family: 'octicon'
+      name: OcticonIconProps['name']
+    })
+  | ({
+      family: 'material'
+      name: MaterialIconProps['name']
+    }))

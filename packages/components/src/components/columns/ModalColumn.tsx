@@ -93,6 +93,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
                 <ColumnHeader.Button
                   analyticsLabel="modal"
                   analyticsAction="back"
+                  family="octicon"
                   name="chevron-left"
                   onPress={() => popModal()}
                   tooltip={`Back (${keyboardShortcutsById.goBack.keys[0]})`}
@@ -108,6 +109,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
                 <ColumnHeader.Button
                   analyticsAction="close"
                   analyticsLabel="modal"
+                  family="octicon"
                   name="x"
                   onPress={() => closeAllModals()}
                   tooltip={

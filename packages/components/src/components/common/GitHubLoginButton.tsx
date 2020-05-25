@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, TextProps, View } from 'react-native'
 
-import { GitHubIcon } from '@devhub/core'
+import { IconProp } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
 import {
   contentPadding,
@@ -17,10 +17,10 @@ import { Spacer } from './Spacer'
 export interface GitHubLoginButtonProps
   extends Omit<ButtonProps, 'children' | 'colors' | 'onPress'> {
   horizontal?: boolean
-  leftIcon?: GitHubIcon
+  leftIcon?: IconProp
   loading?: boolean
   onPress: () => void
-  rightIcon?: GitHubIcon
+  rightIcon?: IconProp
   subtitle?: string
   textProps?: TextProps
   title?: string
@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
 
 export function GitHubLoginButton(props: GitHubLoginButtonProps) {
   const {
-    leftIcon = 'mark-github',
-    rightIcon = '',
+    leftIcon,
+    rightIcon,
     subtitle = '',
     textProps = {},
     title = '',
@@ -77,11 +77,11 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
     >
       {({ foregroundThemeColor }) => (
         <>
-          {!!leftIcon && (
+          {!!(leftIcon && leftIcon.name) && (
             <>
               <ThemedIcon
+                {...leftIcon}
                 color={foregroundThemeColor}
-                name={leftIcon}
                 size={20}
               />
 
@@ -111,19 +111,15 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
             )}
           </View>
 
-          {!!rightIcon && (
+          {!!(rightIcon && rightIcon.name) && (
             <>
-              {!!rightIcon && (
-                <>
-                  <Spacer width={contentPadding / 2} />
+              <Spacer width={contentPadding / 2} />
 
-                  <ThemedIcon
-                    color={foregroundThemeColor}
-                    name={rightIcon}
-                    size={20}
-                  />
-                </>
-              )}
+              <ThemedIcon
+                {...rightIcon}
+                color={foregroundThemeColor}
+                size={20}
+              />
             </>
           )}
         </>

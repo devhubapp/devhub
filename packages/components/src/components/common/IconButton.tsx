@@ -4,11 +4,12 @@ import { StyleSheet } from 'react-native'
 import { ThemeColors } from '@devhub/core'
 import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
+import { IconProp } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { getTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
-import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import {
@@ -20,7 +21,7 @@ export type IconButtonProps = TouchableWithoutFeedbackProps & {
   active?: boolean
   size?: number
   type?: 'primary' | 'neutral' | 'danger'
-} & Pick<ThemedIconProps, 'family' | 'name'>
+} & IconProp
 
 export const defaultIconButtonSize = 17
 

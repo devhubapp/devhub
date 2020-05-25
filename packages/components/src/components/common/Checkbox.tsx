@@ -1,11 +1,10 @@
 import React, { useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { Theme, ThemeColors } from '@devhub/core'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallerTextSize } from '../../styles/variables'
-import { ThemedIcon } from '../themed/ThemedIcon'
+import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { Spacer } from './Spacer'
@@ -57,9 +56,9 @@ export interface CheckboxProps {
   squareContainerStyle?: StyleProp<ViewStyle>
   useBrandColor?: boolean
 
-  checkedBackgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
-  checkedForegroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
-  uncheckedBackgroundThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
+  checkedBackgroundThemeColor?: ThemedIconProps['color']
+  checkedForegroundThemeColor?: ThemedIconProps['color']
+  uncheckedBackgroundThemeColor?: ThemedIconProps['color']
   // uncheckedForegroundThemeColor?:
   //   | keyof ThemeColors
   //   | ((theme: Theme) => string)
@@ -191,6 +190,7 @@ export function Checkbox(props: CheckboxProps) {
           >
             <ThemedIcon
               color={checkedForegroundThemeColor}
+              family="octicon"
               name="check"
               size={size - 5}
               style={[

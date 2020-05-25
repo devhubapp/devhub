@@ -31,6 +31,7 @@ import * as Yup from 'yup'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { bugsnag } from '../../libs/bugsnag'
 import { Platform } from '../../libs/platform'
+import { IconProp } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -339,7 +340,7 @@ export const AddColumnDetailsModal = React.memo(
 
     function renderHeader() {
       return (
-        <SubHeader iconName={icon} title={headerTitle}>
+        <SubHeader icon={icon as IconProp} title={headerTitle}>
           {typeof isPrivateSupported === 'boolean' &&
             (() => {
               const text = isPrivateSupported
@@ -352,6 +353,7 @@ export const AddColumnDetailsModal = React.memo(
 
                   <ThemedIcon
                     color="foregroundColorMuted65"
+                    family="octicon"
                     name={isPrivateSupported ? 'lock' : 'globe'}
                     onPress={() => {
                       dialogRef.current!.show(

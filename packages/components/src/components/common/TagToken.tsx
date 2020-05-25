@@ -1,11 +1,12 @@
 import React from 'react'
 import { View } from 'react-native'
 
+import { IconProp } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, smallTextSize } from '../../styles/variables'
 import { Button, ButtonProps } from '../common/Button'
 import { Spacer } from '../common/Spacer'
-import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
+import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
 
 export type TagTokenProps = {
@@ -22,7 +23,7 @@ export type TagTokenProps = {
       label: string
     }
   | {
-      icon: Pick<ThemedIconProps, 'family' | 'name' | 'color'>
+      icon: IconProp
       label?: undefined
     })
 
@@ -73,9 +74,8 @@ export const TagToken = React.memo((props: TagTokenProps) => {
 
         {icon ? (
           <ThemedIcon
-            color={icon.color || 'foregroundColor'}
-            family={icon.family as any}
-            name={icon.name as any}
+            {...icon}
+            color={(icon.color as any) || 'foregroundColor'}
             style={iconOrLabelStyle}
           />
         ) : (
@@ -117,6 +117,7 @@ export const TagToken = React.memo((props: TagTokenProps) => {
               {({ foregroundThemeColor }) => (
                 <ThemedIcon
                   color={foregroundThemeColor}
+                  family="octicon"
                   name="x"
                   size={smallTextSize - 3}
                   style={{

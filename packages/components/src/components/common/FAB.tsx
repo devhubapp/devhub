@@ -1,8 +1,8 @@
-import { GitHubIcon } from '@devhub/core'
 import React, { useRef, useState } from 'react'
 import { StyleProp, TextStyle } from 'react-native'
 
 import { useHover } from '../../hooks/use-hover'
+import { IconProp } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding } from '../../styles/variables'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -18,23 +18,14 @@ export const fabSpacing = contentPadding / 2 // + Math.max(0, (fabSize - default
 
 export interface FABProps extends ThemedTouchableOpacityProps {
   children?: string | React.ReactElement<any>
-  iconName?: GitHubIcon
-  iconStyle?: StyleProp<TextStyle> | any
+  icon?: IconProp & { style?: StyleProp<TextStyle> | any }
   onPress: ThemedTouchableOpacityProps['onPress']
   tooltip: string
   useBrandColor?: boolean
 }
 
 export function FAB(props: FABProps) {
-  const {
-    children,
-    iconName,
-    iconStyle,
-    style,
-    tooltip,
-    useBrandColor,
-    ...otherProps
-  } = props
+  const { children, icon, style, tooltip, useBrandColor, ...otherProps } = props
 
   const [isPressing, setIsPressing] = useState(false)
 
@@ -96,10 +87,10 @@ export function FAB(props: FABProps) {
           },
         ]}
       >
-        {typeof iconName === 'string' ? (
+        {!!(icon && icon.name) ? (
           <ThemedIcon
+            {...icon}
             color={useBrandColor ? 'primaryForegroundColor' : 'foregroundColor'}
-            name={iconName}
             style={[
               {
                 width: fabSize / 2,
@@ -109,7 +100,7 @@ export function FAB(props: FABProps) {
                 fontSize: fabSize / 2,
                 textAlign: 'center',
               },
-              iconStyle,
+              icon.style,
             ]}
           />
         ) : typeof children === 'string' ? (

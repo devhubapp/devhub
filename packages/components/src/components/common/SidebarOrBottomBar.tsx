@@ -3,7 +3,6 @@ import {
   getColumnOption,
   getUserAvatarByUsername,
   getUserURLFromLogin,
-  GitHubIcon,
   isItemRead,
   isPlanStatusValid,
   ModalPayload,
@@ -39,6 +38,7 @@ import { useReduxState } from '../../hooks/use-redux-state'
 import { emitter } from '../../libs/emitter'
 import { Platform } from '../../libs/platform'
 import { useSafeArea } from '../../libs/safe-area-view'
+import { IconProp } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -336,7 +336,7 @@ export const SidebarOrBottomBar = React.memo(
       () => (
         <SidebarOrBottomBarItem
           horizontal={horizontal}
-          icon="gear"
+          icon={{ family: 'octicon', name: 'gear' }}
           onPress={() =>
             small &&
             currentOpenedModal &&
@@ -502,7 +502,7 @@ export const SidebarOrBottomBar = React.memo(
             {!(horizontal && shouldRenderFAB({ sizename })) && (
               <SidebarOrBottomBarItem
                 horizontal={horizontal}
-                icon="plus"
+                icon={{ family: 'octicon', name: 'plus' }}
                 onPress={() =>
                   dispatch(actions.replaceModal({ name: 'ADD_COLUMN' }))
                 }
@@ -599,7 +599,12 @@ export const SidebarOrBottomBarColumnItem = React.memo(
         }
 
       return {
-        icon: (headerDetails && headerDetails.icon) || 'mark-github',
+        icon:
+          (headerDetails && headerDetails.icon) ||
+          ({
+            family: 'octicon',
+            name: 'mark-github',
+          } as IconProp),
       }
     }, [
       headerDetails &&
@@ -676,7 +681,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
     return (
       <SidebarOrBottomBarItem
         key={`sidebar-or-bottom-bar-column-item-${columnId}-inner`}
-        {...avatarAndIconProps}
+        {...(avatarAndIconProps as any)}
         columnId={columnId}
         horizontal={horizontal}
         hoverListRef={hoverListRef}
@@ -708,7 +713,7 @@ export type SidebarOrBottomBarItemProps = {
   | { columnId?: string; onPress?: () => void }) &
   (
     | ({ children: React.ReactNode; icon?: undefined; avatar?: undefined })
-    | ({ children?: undefined; icon: GitHubIcon; avatar?: undefined })
+    | ({ children?: undefined; icon: IconProp; avatar?: undefined })
     | ({ children?: undefined; avatar: string; icon?: undefined }))
 
 export const SidebarOrBottomBarItem = React.memo(
@@ -885,8 +890,8 @@ export const SidebarOrBottomBarItem = React.memo(
               />
             ) : icon ? (
               <ThemedIcon
+                {...icon}
                 color="foregroundColor"
-                name={icon}
                 style={styles.icon}
               />
             ) : null}

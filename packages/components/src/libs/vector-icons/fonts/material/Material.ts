@@ -1,16 +1,13 @@
 import { IconProps } from 'react-native-vector-icons/Icon'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
-import { GitHubIcon } from '@devhub/core'
+export { MaterialIcons }
 
 export interface MaterialIconProps extends IconProps {
-  name: MaterialIconsName
+  name: MaterialIconName
 }
 
-export interface OcticonIconProps extends IconProps {
-  name: GitHubIcon
-}
-
-export type MaterialIconsName =
+export type MaterialIconName =
   | '3d-rotation'
   | 'ac-unit'
   | 'access-alarm'

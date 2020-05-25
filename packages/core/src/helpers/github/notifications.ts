@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {
   EnhancedGitHubNotification,
   EnhancementCache,
-  GitHubIcon,
+  GenericIconProp,
   GitHubIssue,
   GitHubIssueOrPullRequest,
   GitHubLabel,
@@ -73,7 +73,7 @@ export function getNotificationSubjectType(
 export function getNotificationIconAndColor(
   notification: Pick<GitHubNotification, 'subject'>,
   payload: GitHubIssueOrPullRequest | undefined,
-): { icon: GitHubIcon; color?: keyof ThemeColors; tooltip: string } {
+): GenericIconProp & { color?: keyof ThemeColors; tooltip: string } {
   const { subject } = notification
   const { type } = subject
 
@@ -88,20 +88,26 @@ export function getNotificationIconAndColor(
       return getReleaseIconAndColor()
     case 'RepositoryInvitation':
       return {
-        icon: 'mail',
+        family: 'octicon',
+        name: 'mail',
         color: undefined,
         tooltip: 'Repository invitation',
       }
     case 'RepositoryVulnerabilityAlert':
       return {
-        icon: 'alert',
+        family: 'octicon',
+        name: 'alert',
         color: 'orange',
         tooltip: 'Repository vulnerability alert',
       }
     default: {
       const message = `Unknown notification subject type: ${type}`
       console.error(message)
-      return { icon: 'bell', tooltip: '' }
+      return {
+        family: 'octicon',
+        name: 'bell',
+        tooltip: '',
+      }
     }
   }
 }

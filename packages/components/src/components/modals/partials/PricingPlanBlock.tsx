@@ -352,6 +352,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
                     ? 'primaryBackgroundColor'
                     : 'foregroundColorMuted65'
                 }
+                family="octicon"
                 name="check"
                 style={[
                   { lineHeight: normalTextSize + (contentPadding * 3) / 4 },
