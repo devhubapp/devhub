@@ -485,7 +485,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 hasChanged={typeof savedForLater === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'saved_for_later'}
-                icon={{ family: 'material', name: 'bookmark' }}
+                icon={{ family: 'octicon', name: 'bookmark' }}
                 isOpen={openedOptionCategories.has('saved_for_later')}
                 onToggle={
                   allowToggleCategories

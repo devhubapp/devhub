@@ -63,7 +63,7 @@ export function SwipeableCard(props: CardWithLinkProps) {
               }),
           icon: {
             family: 'octicons',
-            name: isRead ? 'primitive-dot' : 'mail-read',
+            name: isRead ? 'dot-fill' : 'dot',
           },
           key: 'read',
           label: 'Read',
@@ -73,20 +73,23 @@ export function SwipeableCard(props: CardWithLinkProps) {
       ]}
       rightActions={[
         {
+          key: 'bookmark',
+          onPress: handleSave,
           ...(isItemSaved(item)
             ? {
                 backgroundColor: theme.backgroundColorDarker2,
                 foregroundColor: theme.foregroundColor,
+                icon: { family: 'octicon', name: 'bookmark-slash-fill' },
+                type: 'FULL',
+                label: 'Unsave',
               }
             : {
                 backgroundColor: theme.primaryBackgroundColor,
                 foregroundColor: theme.primaryForegroundColor,
+                icon: { family: 'octicon', name: 'bookmark-fill' },
+                type: 'FULL',
+                label: 'Save',
               }),
-          icon: { family: 'material', name: 'bookmark' },
-          key: 'bookmark',
-          label: 'Bookmark',
-          onPress: handleSave,
-          type: 'FULL',
         },
       ]}
     >

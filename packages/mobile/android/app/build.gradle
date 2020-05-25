@@ -82,13 +82,18 @@ project.ext.react = [
     enableHermes: false  // clean and rebuild if changing
 ]
 
+apply from: "../../../../node_modules/react-native/react.gradle"
+
 project.ext.vectoricons = [
-    iconFontNames: [ 'MaterialIcons.ttf', 'Octicons.ttf' ]
+    iconFontsDir: '../../../..',
+    iconFontNames: [
+        'node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf',
+        'node_modules/react-native-vector-icons/Fonts/Octicons.ttf',
+        'packages/components/src/libs/vector-icons/fonts/octicons2/generated/Octicons2.ttf'
+    ]
 ]
 
 apply from: "../../../../node_modules/react-native-vector-icons/fonts.gradle"
-
-apply from: "../../../../node_modules/react-native/react.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:

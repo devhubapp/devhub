@@ -1379,6 +1379,13 @@
     react-dev-utils "^9.1.0"
     sockjs-client "^1.4.0"
 
+"@primer/octicons-v2@canary":
+  version "0.0.0-53e900d"
+  resolved "https://registry.npmjs.org/@primer/octicons-v2/-/octicons-v2-0.0.0-53e900d.tgz#6fb26263048ab0428702fbdce82961ed1aceed89"
+  integrity sha512-jjsIKGBuYe7apU7gjzHX4RHq9u9P6ZB+TE57QzV6O6p4T7XWqj9+fN3DS8y5lKxvTXbh7CujntMYwTjcH2FbnQ==
+  dependencies:
+    object-assign "^4.1.1"
+
 "@react-native-community/cli-debugger-ui@^3.0.0":
   version "3.0.0"
   resolved "https://registry.npmjs.org/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-3.0.0.tgz#d01d08d1e5ddc1633d82c7d84d48fff07bd39416"

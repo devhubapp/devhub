@@ -16,6 +16,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2E2927DC2349943200715E2C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E2927DA2349943200715E2C /* MaterialIcons.ttf */; };
 		2E2927DD2349943200715E2C /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E2927DB2349943200715E2C /* Octicons.ttf */; };
+		2E2927DD2349943200715E2D /* Octicons2.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E2927DB2349943200715E2D /* Octicons2.ttf */; };
 		2E45A21723496F110053996B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E45A21623496F100053996B /* GoogleService-Info.plist */; };
 		4578FADE7502E585C9814BF8 /* libPods-devhub-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0045F1D5AF47796A29055548 /* libPods-devhub-tvOS.a */; };
 		81BCF2023C3F5674F4DBFB6A /* libPods-devhub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29BED532BEC7CF80B3F3CB44 /* libPods-devhub.a */; };
@@ -46,6 +47,7 @@
 		2D02E47B1E0B4A5D006451C7 /* DevHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DevHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E2927DA2349943200715E2C /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		2E2927DB2349943200715E2C /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		2E2927DB2349943200715E2D /* Octicons2.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons2.ttf; path = "../../components/src/libs/vector-icons/fonts/octicons2/generated/Octicons2.ttf"; sourceTree = "<group>"; };
 		2E45A21623496F100053996B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "devhub/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2EA17DFF2349913900323BD5 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../../../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		394F6FEBB59FCA58651331E2 /* Pods-devhub-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-devhub-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-devhub-tvOSTests/Pods-devhub-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				2E2927DA2349943200715E2C /* MaterialIcons.ttf */,
 				2E2927DB2349943200715E2C /* Octicons.ttf */,
+				2E2927DB2349943200715E2D /* Octicons2.ttf */,
 			);
 			name = devhub;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 			files = (
 				2E2927DC2349943200715E2C /* MaterialIcons.ttf in Resources */,
 				2E2927DD2349943200715E2C /* Octicons.ttf in Resources */,
+				2E2927DD2349943200715E2D /* Octicons2.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				2E45A21723496F110053996B /* GoogleService-Info.plist in Resources */,

@@ -23,7 +23,7 @@ export type IconButtonProps = TouchableWithoutFeedbackProps & {
   type?: 'primary' | 'neutral' | 'danger'
 } & IconProp
 
-export const defaultIconButtonSize = 17
+export const defaultIconButtonSize = 16
 
 export function IconButton(props: IconButtonProps) {
   const {
