@@ -1,47 +1,45 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.devhubapp">
+  package="com.devhubapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".MainApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+      android:name=".MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme">
+      <activity
+        android:name=".MainActivity"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity
-            android:name=".MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+        android:launchMode="singleTask"
+        android:windowSoftInputMode="adjustResize">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        <intent-filter>
+          <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Accepts URIs that begin with "http://github.com/” -->
-                <!-- note that the leading "/" is required for pathPrefix-->
-                <!--<data android:scheme="http" android:host="github.com" android:pathPrefix="/" />-->
-                <!--<data android:scheme="https" android:host="github.com" android:pathPrefix="/" />-->
-                <!--<data android:scheme="http" android:host="api.github.com" android:pathPrefix="/" />-->
-                <!--<data android:scheme="https" android:host="api.github.com" android:pathPrefix="/" />-->
+          <!-- Accepts URIs that begin with "http://github.com/” -->
+          <!-- note that the leading "/" is required for pathPrefix-->
+          <!--<data android:scheme="http" android:host="github.com" android:pathPrefix="/" />-->
+          <!--<data android:scheme="https" android:host="github.com" android:pathPrefix="/" />-->
+          <!--<data android:scheme="http" android:host="api.github.com" android:pathPrefix="/" />-->
+          <!--<data android:scheme="https" android:host="api.github.com" android:pathPrefix="/" />-->
 
-                <!-- Accepts URIs that begin with "devhub://” -->
-                <data android:scheme="devhub" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+          <!-- Accepts URIs that begin with "devhub://” -->
+          <data android:scheme="devhub" />
+      </intent-filter>
+    </activity>
+      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>
 
 </manifest>

@@ -36,7 +36,7 @@
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
   "dependencies": {
-    "react-native": "0.61.5"
+    "react-native": "0.63.0-rc.1"
   },
   "devDependencies": {
     "@primer/octicons-v2": "canary",
@@ -56,7 +56,7 @@
     "typescript": "3.7.5"
   },
   "resolutions": {
-    "@types/react": "16.9.15"
+    "@types/react": "16.9.35"
   },
   "husky": {
     "hooks": {

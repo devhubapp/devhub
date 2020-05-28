@@ -7,7 +7,7 @@
     "clean": "cd .",
     "compile": "tsc -b --incremental",
     "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
-    "ios": "react-native run-ios --simulator \"iPhone 11 Pro Max\"",
+    "ios": "react-native run-ios",
     "lint": "tslint -p .",
     "prepare": "cd .. && yarn patch-package",
     "start": "react-native start",
@@ -23,8 +23,8 @@
     "bugsnag-react-native": "2.23.2",
     "intl": "1.2.5",
     "intl-locales-supported": "1.6.0",
-    "react": "16.12.0",
-    "react-native": "0.61.5",
+    "react": "16.13.1",
+    "react-native": "0.63.0-rc.1",
     "react-native-gesture-handler": "1.5.2",
     "react-native-haptic-feedback": "1.10.0",
     "react-native-inappbrowser-reborn": "3.1.0",
@@ -36,10 +36,12 @@
     "react-native-vector-icons": "6.6.0"
   },
   "devDependencies": {
-    "@react-native-community/eslint-config": "0.0.5",
-    "babel-jest": "24.9.0",
-    "jest": "24.9.0",
-    "react-test-renderer": "16.12.0"
+    "@react-native-community/eslint-config": "1.1.0",
+    "babel-jest": "26.0.1",
+    "jest": "26.0.1",
+    "metro-react-native-babel-preset": "0.59.0",
+    "react-test-renderer": "16.13.1",
+    "ts-jest": "26.0.0"
   },
   "jest": {
     "preset": "react-native"
