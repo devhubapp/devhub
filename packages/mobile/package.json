@@ -25,7 +25,7 @@
     "intl-locales-supported": "1.6.0",
     "react": "16.13.1",
     "react-native": "0.63.0-rc.1",
-    "react-native-gesture-handler": "1.5.2",
+    "react-native-gesture-handler": "1.6.1",
     "react-native-haptic-feedback": "1.10.0",
     "react-native-inappbrowser-reborn": "3.1.0",
     "react-native-linear-gradient": "2.5.6",
