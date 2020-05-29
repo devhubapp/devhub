@@ -5,9 +5,11 @@
 #import <React/RCTLinkingManager.h>
 #import <React/RCTRootView.h>
 
+#if !TARGET_OS_MACCATALYST
 #import <Firebase.h>
+#endif
 
-#if DEBUG
+#if DEBUG && !TARGET_OS_MACCATALYST
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
 #import <FlipperKitUserDefaultsPlugin/FKUserDefaultsPlugin.h>
@@ -30,9 +32,9 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-#if DEBUG
+  #if DEBUG && !TARGET_OS_MACCATALYST
 //  InitializeFlipper(application);
-#endif
+  #endif
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -48,7 +50,9 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
+  #if !TARGET_OS_MACCATALYST
   [FIRApp configure];
+  #endif
 
   return YES;
 }

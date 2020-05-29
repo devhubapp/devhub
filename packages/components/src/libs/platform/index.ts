@@ -1,23 +1,32 @@
 import { Platform as _Platform } from 'react-native'
 
 import {
-  PlataformSelectSpecifics,
+  PlataformSelectSpecificsEnhanced,
   PlatformName,
   PlatformRealOS,
   PlatformSelectOptions,
 } from './index.shared'
 
+const isMacOS = !!(
+  (_Platform as any).constants &&
+  (_Platform as any).constants.systemName === 'Mac OS X'
+)
+
 export const Platform = {
   ..._Platform,
+  isDesktop: isMacOS,
   isElectron: false,
+  isMacOS,
   isStandalone: true,
   OS: _Platform.OS as PlatformName,
-  realOS: _Platform.OS as PlatformRealOS,
+  realOS: (isMacOS ? 'macos' : _Platform.OS) as PlatformRealOS,
   selectUsingRealOS<T>(
-    specifics: PlataformSelectSpecifics<T>,
+    specifics: PlataformSelectSpecificsEnhanced<T>,
     _options?: PlatformSelectOptions,
   ) {
-    return _Platform.select(specifics)
+    return Platform.realOS in specifics
+      ? specifics[Platform.realOS]
+      : _Platform.select(specifics)
   },
   supportsTouch: true,
 }

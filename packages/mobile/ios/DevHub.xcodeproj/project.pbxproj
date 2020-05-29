@@ -39,6 +39,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = devhub/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = devhub/main.m; sourceTree = "<group>"; };
 		29BED532BEC7CF80B3F3CB44 /* libPods-devhub.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-devhub.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E08182524816E84006E5525 /* DevHub.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DevHub.entitlements; path = devhub/DevHub.entitlements; sourceTree = "<group>"; };
 		2E2927DA2349943200715E2C /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		2E2927DB2349943200715E2C /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		2E2927DB2349943200715E2D /* Octicons2.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons2.ttf; path = "../../components/src/libs/vector-icons/fonts/octicons2/generated/Octicons2.ttf"; sourceTree = "<group>"; };
@@ -66,6 +67,7 @@
 		13B07FAE1A68108700A75B9A /* devhub */ = {
 			isa = PBXGroup;
 			children = (
+				2E08182524816E84006E5525 /* DevHub.entitlements */,
 				2E45A21623496F100053996B /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -368,6 +370,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = devhub/DevHub.entitlements;
 				CURRENT_PROJECT_VERSION = 2689;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
@@ -416,6 +419,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.devhubapp;
 				PRODUCT_NAME = DevHub;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "devhub-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -430,6 +434,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = devhub/DevHub.entitlements;
 				CURRENT_PROJECT_VERSION = 2689;
 				DEVELOPMENT_TEAM = JNXGJS86YQ;
 				HEADER_SEARCH_PATHS = (
@@ -477,6 +482,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.devhubapp;
 				PRODUCT_NAME = DevHub;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "devhub-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

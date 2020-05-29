@@ -83,6 +83,7 @@ const realOS = getOSName() || 'web'
 export const Platform = {
   realOS,
   ..._Platform,
+  isDesktop: isElectron(),
   isElectron: isElectron(),
   isStandalone: (window.navigator as any).standalone,
   OS: _Platform.OS as PlatformName,

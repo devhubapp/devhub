@@ -12,7 +12,7 @@ export interface State {
 
 const initialState: State = {
   banners: [
-    (Platform.OS === 'ios' || Platform.OS === 'android') && {
+    !Platform.isDesktop && {
       createdAt: '2019-09-23T00:00:00.000Z',
       disableOnSmallScreens: false,
       href: constants.DEVHUB_LINKS.LANDING_PAGE_HOME,

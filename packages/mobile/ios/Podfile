@@ -1,3 +1,5 @@
+load 'remove_unsupported_libraries.rb'
+
 require_relative '../../../node_modules/react-native/scripts/react_native_pods'
 require_relative '../../../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
@@ -6,7 +8,15 @@ platform :ios, '10.0'
 target 'devhub' do
   config = use_native_modules!
 
-  use_react_native!(:path => config["reactNativePath"]) 
+  use_react_native!(:path => config['reactNativePath'])
+
+  def unsupported_pods
+      ['FlipperKit', 'Firebase', 'RNFBAnalytics', 'RNFBApp']
+  end
+
+  def supported_pods
+      ['React']
+  end
 
   # Enables Flipper.
   #
@@ -15,6 +25,8 @@ target 'devhub' do
   use_flipper!
   post_install do |installer|
     flipper_post_install(installer)
+    # $verbose = true
+    installer.configure_support_catalyst(supported_pods, unsupported_pods)
   end
 end
 
@@ -30,7 +42,7 @@ def flipper_post_install(installer)
       end
     end
   end
-  file_name = Dir.glob("*.xcodeproj")[0]
+  file_name = Dir.glob('*.xcodeproj')[0]
   app_project = Xcodeproj::Project.open(file_name)
   app_project.native_targets.each do |target|
     target.build_configurations.each do |config|

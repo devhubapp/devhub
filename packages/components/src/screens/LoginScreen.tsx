@@ -22,6 +22,7 @@ import { bugsnag } from '../libs/bugsnag'
 import { Linking } from '../libs/linking'
 import { executeOAuth } from '../libs/oauth'
 import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
+import { Platform } from '../libs/platform'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
@@ -338,27 +339,29 @@ export const LoginScreen = React.memo(() => {
 
           <Spacer height={contentPadding * 2} />
 
-          <GitHubLoginButton
-            analyticsLabel="github_login_public"
-            disabled={isLoggingIn || isExecutingOAuth}
-            loading={
-              !fullAccessRef.current && (isLoggingIn || isExecutingOAuth)
-            }
-            onPress={() => {
-              fullAccessRef.current = false
-              loginWithGitHub()
-            }}
-            // rightIcon={{ family: 'octicon', name: 'globe' }}
-            style={styles.button}
-            subtitle={
-              constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
-              constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON ||
-              !constants.GITHUB_APP_HAS_CODE_ACCESS
-                ? 'Granular permissions'
-                : undefined
-            }
-            title="Sign in with GitHub"
-          />
+          {!Platform.isMacOS && (
+            <GitHubLoginButton
+              analyticsLabel="github_login_public"
+              disabled={isLoggingIn || isExecutingOAuth}
+              loading={
+                !fullAccessRef.current && (isLoggingIn || isExecutingOAuth)
+              }
+              onPress={() => {
+                fullAccessRef.current = false
+                loginWithGitHub()
+              }}
+              // rightIcon={{ family: 'octicon', name: 'globe' }}
+              style={styles.button}
+              subtitle={
+                constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
+                constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON ||
+                !constants.GITHUB_APP_HAS_CODE_ACCESS
+                  ? 'Granular permissions'
+                  : undefined
+              }
+              title="Sign in with GitHub"
+            />
+          )}
 
           {!!constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON && (
             <>
@@ -401,38 +404,39 @@ export const LoginScreen = React.memo(() => {
                 style={styles.button}
                 subtitle="Personal token"
                 title="Sign in with GitHub"
-                type="neutral"
+                type={Platform.isMacOS ? 'primary' : 'neutral'}
               />
             </>
           )}
 
-          {!!(
-            constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
-            constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON
-          ) && (
-            <>
-              <Spacer height={contentPadding} />
+          {!Platform.isMacOS &&
+            !!(
+              constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
+              constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON
+            ) && (
+              <>
+                <Spacer height={contentPadding} />
 
-              <ThemedText
-                color="foregroundColorMuted65"
-                style={[
-                  sharedStyles.textCenter,
-                  { fontSize: smallerTextSize, fontStyle: 'italic' },
-                ]}
-              >
-                {`"Granular permissions" is recommended, but feel free to use the ${[
-                  constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON &&
-                    '"Full access"',
-                  constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON &&
-                    '"Personal token"',
-                ]
-                  .filter(Boolean)
-                  .join(
-                    ' or ',
-                  )} option to easily get access to all private repositories you have access.`}
-              </ThemedText>
-            </>
-          )}
+                <ThemedText
+                  color="foregroundColorMuted65"
+                  style={[
+                    sharedStyles.textCenter,
+                    { fontSize: smallerTextSize, fontStyle: 'italic' },
+                  ]}
+                >
+                  {`"Granular permissions" is recommended, but feel free to use the ${[
+                    constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON &&
+                      '"Full access"',
+                    constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON &&
+                      '"Personal token"',
+                  ]
+                    .filter(Boolean)
+                    .join(
+                      ' or ',
+                    )} option to easily get access to all private repositories you have access.`}
+                </ThemedText>
+              </>
+            )}
         </View>
 
         <Spacer height={contentPadding} />
