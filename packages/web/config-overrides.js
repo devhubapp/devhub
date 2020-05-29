@@ -39,7 +39,7 @@ module.exports = function override(config, env) {
   if (__DEV__) {
     // fast refresh
     config.plugins.push(
-      new ReactRefreshWebpackPlugin({ disableRefreshCheck: true }),
+      new ReactRefreshWebpackPlugin({ forceEnable: true }),
     )
     config.module.rules[2].oneOf[1].options.plugins.push(
       require.resolve('react-refresh/babel'),

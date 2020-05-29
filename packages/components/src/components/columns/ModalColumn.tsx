@@ -1,6 +1,6 @@
 import { ModalPayload } from '@devhub/core'
 import React, { useEffect, useRef } from 'react'
-import { NativeComponent, View } from 'react-native'
+import { View } from 'react-native'
 
 import { useFAB } from '../../hooks/use-fab'
 import { useReduxAction } from '../../hooks/use-redux-action'
@@ -43,7 +43,7 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
     title,
   } = props
 
-  const columnRef = useRef<NativeComponent>(null)
+  const columnRef = useRef<View>(null)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const closeAllModals = useReduxAction(actions.closeAllModals)
   const popModal = useReduxAction(actions.popModal)

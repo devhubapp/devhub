@@ -36,7 +36,6 @@ const propsToLinearGradient = ({
 
 export function LinearGradient(props: LinearGradientProps) {
   const {
-    accessibilityStates: _accessibilityStates,
     animated,
     colors,
     end,
