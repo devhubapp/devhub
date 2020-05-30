@@ -8,7 +8,7 @@ export const scaleFactor = isSuperSmallScreen
   : Platform.isMacOS
   ? 1.3
   : Platform.realOS === 'ios' || Platform.realOS === 'android'
-  ? 1
+  ? 1.1
   : 1
 
 export const avatarSize = 40 * scaleFactor
