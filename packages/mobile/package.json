@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@devhub/components": "0.100.2",
-    "@react-native-firebase/analytics": "6.0.0",
-    "@react-native-firebase/app": "6.0.0",
+    "@react-native-firebase/analytics": "7.1.2",
+    "@react-native-firebase/app": "7.1.4",
     "bugsnag-react-native": "2.23.2",
     "intl": "1.2.5",
     "intl-locales-supported": "1.6.0",

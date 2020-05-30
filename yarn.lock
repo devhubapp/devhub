@@ -2036,22 +2036,22 @@
   resolved "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
-"@react-native-firebase/analytics@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/analytics/-/analytics-6.0.0.tgz#d36537fa96d9fe7f7a1d5024aad627269a4c960c"
-  integrity sha512-3JvqTtelLYd8pVS4v1aIaR0HixXcm5QK2ahtjmDy68v1sFz/Y6tgKmbWpj90cWS9Pe1R71bKuT5L0wu1vfvLtg==
+"@react-native-firebase/analytics@7.1.2":
+  version "7.1.2"
+  resolved "https://registry.npmjs.org/@react-native-firebase/analytics/-/analytics-7.1.2.tgz#dbcdecc44db1d06b286db2869432ad4d92627940"
+  integrity sha512-t3HhlDiZMjNthUukdLxkYFvI27QyD+wjyILMH8HBHdaf+lWy29xzXavPRY1iFdJGiNx9SIAAECD0N50t6Sb0vQ==
 
-"@react-native-firebase/app-types@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/app-types/-/app-types-6.0.0.tgz#f254a289db5acf83983107b5f4e6836f4bf8c220"
-  integrity sha512-hrTQhrkhvLi9kquol/bFBgByfl3rwCk/kTPZ1ad2O3i+Iy0VgWHyFuo55HIMocVIe3471br++bao+Df1qBKTdQ==
+"@react-native-firebase/app-types@6.7.2":
+  version "6.7.2"
+  resolved "https://registry.npmjs.org/@react-native-firebase/app-types/-/app-types-6.7.2.tgz#d2e1530af5702e00578914b41468898c10d3289c"
+  integrity sha512-pIwc6e0ZINw6PJqNVsAxzOVJUDg6au2TdulY+ZOYQ11SPDs5I2n9likoGrElPmJjajT4s9h87uz/6PWP2k9PxQ==
 
-"@react-native-firebase/app@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-6.0.0.tgz#b60fc9da3f8af20ae0072abadde39f511c555f84"
-  integrity sha512-ND1mFZ8UkgPDkXlqUBWhQQrFgkFSwdy8ay5cWZiCAJMFYgN7lfgHyNPkHGMYxlnYJVp7rlxR4e2W+sSWz7pF/Q==
+"@react-native-firebase/app@7.1.4":
+  version "7.1.4"
+  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-7.1.4.tgz#394dd04bb2eedfa7cb6ea5301110cd16946cec67"
+  integrity sha512-9v4kTxrdLilqQZ1JmznEQNVYz8du/EGuBGeUPAODNL/slvREpveZeTvr7sbkM7jMLASxwGG5Iii+HucfJw3G+g==
   dependencies:
-    "@react-native-firebase/app-types" "6.0.0"
+    "@react-native-firebase/app-types" "6.7.2"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
