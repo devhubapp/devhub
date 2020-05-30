@@ -170,7 +170,7 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
         {...props}
         ref={this.swipeableRef}
         friction={2}
-        leftThreshold={30 * scaleFactor}
+        leftThreshold={40 * scaleFactor}
         renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions}
         rightThreshold={40 * scaleFactor}
