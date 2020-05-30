@@ -3,7 +3,7 @@ import React from 'react'
 import { View } from 'react-native'
 import { IconProp } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, scaleFactor } from '../../styles/variables'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { H2 } from './H2'
 import { Spacer } from './Spacer'
@@ -29,7 +29,7 @@ export function SubHeader(props: SubHeaderProps) {
       ]}
     >
       {!!(icon && icon.name) && (
-        <ThemedIcon {...icon} color="foregroundColor" size={18} />
+        <ThemedIcon {...icon} color="foregroundColor" size={18 * scaleFactor} />
       )}
 
       {!!title && (

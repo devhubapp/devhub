@@ -1,21 +1,19 @@
 import { Theme, ThemeColors } from '@devhub/core'
 import React, { ReactNode } from 'react'
-import {
-  StyleProp,
-  Text,
-  TextProps,
-  View,
-  ViewProps,
-  ViewStyle,
-} from 'react-native'
+import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 
-import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  smallerTextSize,
+  smallTextSize,
+} from '../../styles/variables'
 import { getReadableColor } from '../../utils/helpers/colors'
 import { parseTextWithEmojisToReactComponents } from '../../utils/helpers/github/emojis'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
+import { Text, TextProps } from './Text'
 
 export interface LabelProps {
   children:
@@ -35,8 +33,10 @@ export interface LabelProps {
   textThemeColor?: keyof ThemeColors | ((theme: Theme) => string)
 }
 
-export const smallLabelHeight = Platform.OS === 'web' ? 16 : 18
-export const normalLabelHeight = Platform.OS === 'web' ? 18 : 20
+export const smallLabelFontSize = smallerTextSize
+export const normalLabelFontSize = smallTextSize
+export const smallLabelHeight = smallLabelFontSize * 1.5
+export const normalLabelHeight = normalLabelFontSize * 1.5
 
 export const Label = React.memo((props: LabelProps) => {
   const theme = useTheme()
@@ -92,7 +92,7 @@ export const Label = React.memo((props: LabelProps) => {
             {
               height,
               lineHeight: height,
-              fontSize: small ? 11 : 12,
+              fontSize: small ? smallLabelFontSize : normalLabelFontSize,
               color: foregroundColor,
             },
             textProps && textProps.style,
@@ -102,9 +102,9 @@ export const Label = React.memo((props: LabelProps) => {
             key: `label-text-${children}`,
             imageProps: {
               style: {
-                marginHorizontal: 2,
-                width: small ? 13 : 14,
-                height: small ? 13 : 14,
+                marginHorizontal: contentPadding / (small ? 4 : 2),
+                width: small ? smallTextSize : normalTextSize,
+                height: small ? smallTextSize : normalTextSize,
               },
             },
             shouldStripEmojis: disableEmojis,

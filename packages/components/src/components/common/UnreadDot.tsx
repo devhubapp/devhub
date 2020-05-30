@@ -2,10 +2,11 @@ import { ThemeColors } from '@devhub/core'
 import React from 'react'
 import { StyleSheet, View, ViewProps } from 'react-native'
 
+import { scaleFactor } from '../../styles/variables'
 import { useTheme } from '../context/ThemeContext'
 import { ThemedView } from '../themed/ThemedView'
 
-export const defaultUnreadIndicatorSize = 12
+export const defaultUnreadIndicatorSize = 12 * scaleFactor
 
 export interface UnreadDotProps {
   backgroundColor?: keyof ThemeColors
@@ -48,8 +49,8 @@ const styles = StyleSheet.create({
     borderRadius: defaultUnreadIndicatorSize / 2,
   },
   unreadIndicator_noborder: {
-    width: defaultUnreadIndicatorSize - 4,
-    height: defaultUnreadIndicatorSize - 4,
+    width: defaultUnreadIndicatorSize - 4 * scaleFactor,
+    height: defaultUnreadIndicatorSize - 4 * scaleFactor,
     borderWidth: 0,
     borderRadius: (defaultUnreadIndicatorSize - 4) / 2,
   },

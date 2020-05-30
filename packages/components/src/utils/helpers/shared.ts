@@ -3,6 +3,7 @@ import qs from 'qs'
 import { ReactNode } from 'react'
 import { findDOMNode } from 'react-dom'
 
+import { PixelRatio } from 'react-native'
 import {
   AppLayoutProviderState,
   getAppLayout,
@@ -161,4 +162,8 @@ export function vibrateHapticFeedback() {
   ) {
     window.navigator.vibrate(50)
   }
+}
+
+export function roundToEven(n: number) {
+  return n + (n % 2)
 }

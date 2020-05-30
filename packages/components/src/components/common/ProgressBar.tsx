@@ -4,12 +4,13 @@ import { AppState, InteractionManager, View } from 'react-native'
 import { useSpring } from 'react-spring/native'
 
 import { sharedStyles } from '../../styles/shared'
+import { scaleFactor } from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedView } from '../animated/spring/SpringAnimatedView'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
 
-export const progressBarHeight = 1
+export const progressBarHeight = 1 * scaleFactor
 
 export interface ProgressBarProps {
   color?: keyof ThemeColors

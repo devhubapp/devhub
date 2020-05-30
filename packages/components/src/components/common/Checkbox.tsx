@@ -1,17 +1,28 @@
 import React, { useRef } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import {
+  PixelRatio,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, smallerTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  scaleFactor,
+  smallerTextSize,
+} from '../../styles/variables'
+import { roundToEven } from '../../utils/helpers/shared'
 import { ThemedIcon, ThemedIconProps } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
 import { Spacer } from './Spacer'
 import { TouchableOpacity, TouchableOpacityProps } from './TouchableOpacity'
 
-export const checkboxBorderRadius = 4
-export const defaultCheckboxSize = 16
+export const checkboxBorderRadius = 4 * scaleFactor
+export const defaultCheckboxSize = 16 * scaleFactor
 export const checkboxLabelSpacing = contentPadding / 2
 
 const styles = StyleSheet.create({
@@ -79,7 +90,7 @@ export function Checkbox(props: CheckboxProps) {
     left,
     onChange,
     right,
-    size = defaultCheckboxSize,
+    size: _size = defaultCheckboxSize,
     squareContainerStyle,
 
     checkedBackgroundThemeColor = 'primaryBackgroundColor',
@@ -89,6 +100,7 @@ export function Checkbox(props: CheckboxProps) {
   } = props
 
   const disabled = _disabled || !onChange
+  const size = roundToEven(_size)
 
   const lastBooleanRef = useRef(
     typeof props.checked === 'boolean'
@@ -121,7 +133,7 @@ export function Checkbox(props: CheckboxProps) {
     }, 1)
   }
 
-  const borderWidth = 1
+  const borderWidth = PixelRatio.roundToNearestPixel(1 * scaleFactor)
 
   return (
     <TouchableOpacity
@@ -139,7 +151,10 @@ export function Checkbox(props: CheckboxProps) {
           styles.checkboxContainer,
           {
             width: size,
-            height: Math.max(20, size + 4),
+            height: Math.max(
+              roundToEven(20 * scaleFactor),
+              size + 4 * scaleFactor,
+            ),
             borderRadius: circle ? size / 2 : checkboxBorderRadius,
           },
           disabled && sharedStyles.muted,
@@ -173,13 +188,9 @@ export function Checkbox(props: CheckboxProps) {
                   : uncheckedBackgroundThemeColor
               }
               style={{
-                width: Math.floor(
-                  (isIndeterminateState ? size * 0.8 : size) - 2 * borderWidth,
-                ),
-                height: Math.floor(
-                  (isIndeterminateState ? size * 0.8 : size) - 2 * borderWidth,
-                ),
-                borderRadius: circle ? size / 2 : checkboxBorderRadius / 2,
+                width: Math.floor(isIndeterminateState ? size * 0.8 : size),
+                height: Math.floor(isIndeterminateState ? size * 0.8 : size),
+                borderRadius: circle ? size / 2 : checkboxBorderRadius,
               }}
             />
           </View>
@@ -192,20 +203,11 @@ export function Checkbox(props: CheckboxProps) {
               color={checkedForegroundThemeColor}
               family="octicon"
               name="check"
-              size={size - 5}
+              size={size - 5 * scaleFactor}
               style={[
                 sharedStyles.textCenter,
                 {
-                  lineHeight: size - 5,
-                  ...Platform.selectUsingRealOS({
-                    ios: {
-                      paddingTop: 1,
-                    },
-                    android: {},
-                    default: {
-                      paddingBottom: 1,
-                    },
-                  }),
+                  lineHeight: size - 5 * scaleFactor,
                   opacity: checked ? 1 : 0,
                 },
               ]}

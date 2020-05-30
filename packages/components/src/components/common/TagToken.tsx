@@ -3,7 +3,11 @@ import { View } from 'react-native'
 
 import { IconProp } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, smallTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  scaleFactor,
+  smallTextSize,
+} from '../../styles/variables'
 import { Button, ButtonProps } from '../common/Button'
 import { Spacer } from '../common/Spacer'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -34,16 +38,16 @@ export const TagToken = React.memo((props: TagTokenProps) => {
     onPress,
     onRemove,
     removeTooltip = 'Remove',
-    size = smallTextSize + 4 + contentPadding + 2,
+    size = smallTextSize + 4 * scaleFactor + contentPadding + 2,
     strikethrough,
     tooltip,
     transparent,
   } = props
 
   const iconOrLabelStyle: ThemedTextProps['style'] = {
-    marginTop: icon ? 2 : -1,
-    lineHeight: smallTextSize + 5 + (icon ? 4 : 0),
-    fontSize: smallTextSize + (icon ? 4 : 0),
+    marginTop: (icon ? 2 : -1) * scaleFactor,
+    lineHeight: smallTextSize + (5 + (icon ? 4 : 0)) * scaleFactor,
+    fontSize: smallTextSize + (icon ? 4 : 0) * scaleFactor,
     fontWeight: '300',
     textAlign: 'center',
     textDecorationLine: strikethrough && !icon ? 'line-through' : 'none',
@@ -102,15 +106,15 @@ export const TagToken = React.memo((props: TagTokenProps) => {
                 left: contentPadding / 4,
               }}
               style={{
-                marginTop: 1,
+                marginTop: 1 * scaleFactor,
               }}
               contentContainerStyle={{
                 paddingHorizontal: 0,
-                width: smallTextSize + 3,
-                height: smallTextSize + 3,
+                width: smallTextSize + 3 * scaleFactor,
+                height: smallTextSize + 3 * scaleFactor,
               }}
               onPress={onRemove}
-              size={smallTextSize + 3}
+              size={smallTextSize + 3 * scaleFactor}
               tooltip={removeTooltip}
               type="custom"
             >
@@ -119,9 +123,9 @@ export const TagToken = React.memo((props: TagTokenProps) => {
                   color={foregroundThemeColor}
                   family="octicon"
                   name="x"
-                  size={smallTextSize - 3}
+                  size={smallTextSize - 3 * scaleFactor}
                   style={{
-                    lineHeight: smallTextSize + 3,
+                    lineHeight: smallTextSize + 3 * scaleFactor,
                   }}
                 />
               )}

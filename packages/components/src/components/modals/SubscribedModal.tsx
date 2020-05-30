@@ -9,7 +9,11 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, normalTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  scaleFactor,
+} from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Avatar } from '../common/Avatar'
 import { Button } from '../common/Button'
@@ -74,15 +78,15 @@ export function SubscribedModal(props: SubscribedModalProps) {
             borderColor="backgroundColorLess2"
             disableLink
             shape="circle"
-            size={70}
+            size={70 * scaleFactor}
             style={{ borderWidth: 4 }}
           />
           <Spacer height={contentPadding} />
           <ThemedText
             color="foregroundColor"
             style={{
-              lineHeight: 36,
-              fontSize: 30,
+              lineHeight: 36 * scaleFactor,
+              fontSize: 30 * scaleFactor,
               fontWeight: 'bold',
               textAlign: 'center',
             }}
@@ -92,7 +96,11 @@ export function SubscribedModal(props: SubscribedModalProps) {
           <Spacer height={contentPadding} />
           <ThemedText
             color="foregroundColorMuted65"
-            style={{ lineHeight: 24, fontSize: 18, textAlign: 'center' }}
+            style={{
+              lineHeight: 24 * scaleFactor,
+              fontSize: 18 * scaleFactor,
+              textAlign: 'center',
+            }}
           >
             {plan && plan.amount ? (
               <>
@@ -155,7 +163,7 @@ export function SubscribedModal(props: SubscribedModalProps) {
               <ThemedText
                 color="foregroundColor"
                 style={{
-                  lineHeight: normalTextSize + 4,
+                  lineHeight: normalTextSize + 4 * scaleFactor,
                   fontSize: normalTextSize,
                   textAlign: 'center',
                 }}
@@ -170,7 +178,7 @@ export function SubscribedModal(props: SubscribedModalProps) {
           <ThemedText
             color="foregroundColor"
             style={{
-              lineHeight: normalTextSize + 4,
+              lineHeight: normalTextSize + 4 * scaleFactor,
               fontSize: normalTextSize,
               textAlign: 'center',
             }}

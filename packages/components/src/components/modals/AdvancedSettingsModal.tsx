@@ -12,7 +12,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, scaleFactor } from '../../styles/variables'
 import { getDefaultDevHubHeaders } from '../../utils/api'
 import { clearOAuthQueryParams } from '../../utils/helpers/auth'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -153,7 +153,7 @@ export const AdvancedSettingsModal = React.memo(
                     <Button
                       analyticsLabel="show_keyboard_shortcuts"
                       contentContainerStyle={{
-                        width: 52,
+                        width: 52 * scaleFactor,
                         paddingHorizontal: contentPadding,
                       }}
                       onPress={() =>
@@ -161,13 +161,13 @@ export const AdvancedSettingsModal = React.memo(
                           actions.pushModal({ name: 'KEYBOARD_SHORTCUTS' }),
                         )
                       }
-                      size={32}
+                      size={32 * scaleFactor}
                     >
                       <ThemedIcon
                         family="octicon"
                         name="keyboard"
                         color={foregroundThemeColor}
-                        size={16}
+                        size={16 * scaleFactor}
                       />
                     </Button>
                   </>
@@ -190,7 +190,7 @@ export const AdvancedSettingsModal = React.memo(
                           <Button
                             analyticsLabel="remove_personal_access_token"
                             contentContainerStyle={{
-                              width: 52,
+                              width: 52 * scaleFactor,
                               paddingHorizontal: contentPadding,
                             }}
                             disabled={isRemovingPersonalToken}
@@ -198,14 +198,14 @@ export const AdvancedSettingsModal = React.memo(
                             onPress={() => {
                               removePersonalAccessToken()
                             }}
-                            size={32}
+                            size={32 * scaleFactor}
                             type="danger"
                           >
                             <ThemedIcon
                               color={foregroundThemeColor}
                               family="octicon"
                               name="trashcan"
-                              size={16}
+                              size={16 * scaleFactor}
                             />
                           </Button>
                         )}
@@ -256,18 +256,18 @@ export const AdvancedSettingsModal = React.memo(
                       <ButtonLink
                         analyticsLabel="manage_oauth"
                         contentContainerStyle={{
-                          width: 52,
+                          width: 52 * scaleFactor,
                           paddingHorizontal: contentPadding,
                         }}
                         href={`${constants.API_BASE_URL}/github/oauth/manage`}
                         openOnNewTab
-                        size={32}
+                        size={32 * scaleFactor}
                       >
                         <ThemedIcon
                           color={foregroundThemeColor}
                           family="octicon"
                           name="gear"
-                          size={16}
+                          size={16 * scaleFactor}
                         />
                       </ButtonLink>
                     ) : (
@@ -276,20 +276,20 @@ export const AdvancedSettingsModal = React.memo(
                           githubToken ? 'refresh_oauth_token' : 'start_oauth'
                         }
                         contentContainerStyle={{
-                          width: 52,
+                          width: 52 * scaleFactor,
                           paddingHorizontal: contentPadding,
                         }}
                         disabled={!!executingOAuth}
                         loading={executingOAuth === 'oauth'}
                         loadingIndicatorStyle={{ transform: [{ scale: 0.8 }] }}
                         onPress={() => startOAuth('oauth')}
-                        size={32}
+                        size={32 * scaleFactor}
                       >
                         <ThemedIcon
                           color={foregroundThemeColor}
                           family="octicon"
                           name={githubToken ? 'sync' : 'plus'}
-                          size={16}
+                          size={16 * scaleFactor}
                         />
                       </Button>
                     )}
@@ -319,18 +319,18 @@ export const AdvancedSettingsModal = React.memo(
                       <ButtonLink
                         analyticsLabel="manage_app_oauth"
                         contentContainerStyle={{
-                          width: 52,
+                          width: 52 * scaleFactor,
                           paddingHorizontal: contentPadding,
                         }}
                         href={`${constants.API_BASE_URL}/github/app/manage`}
                         openOnNewTab
-                        size={32}
+                        size={32 * scaleFactor}
                       >
                         <ThemedIcon
                           color={foregroundThemeColor}
                           family="octicon"
                           name="gear"
-                          size={16}
+                          size={16 * scaleFactor}
                         />
                       </ButtonLink>
                     ) : (
@@ -341,20 +341,20 @@ export const AdvancedSettingsModal = React.memo(
                             : 'start_app_oauth'
                         }
                         contentContainerStyle={{
-                          width: 52,
+                          width: 52 * scaleFactor,
                           paddingHorizontal: contentPadding,
                         }}
                         disabled={!!executingOAuth}
                         loading={executingOAuth === 'app'}
                         loadingIndicatorStyle={{ transform: [{ scale: 0.8 }] }}
                         onPress={() => startOAuth('app')}
-                        size={32}
+                        size={32 * scaleFactor}
                       >
                         <ThemedIcon
                           color={foregroundThemeColor}
                           family="octicon"
                           name={githubAppToken ? 'sync' : 'plus'}
-                          size={16}
+                          size={16 * scaleFactor}
                         />
                       </Button>
                     )}
@@ -377,7 +377,7 @@ export const AdvancedSettingsModal = React.memo(
                             <Button
                               analyticsLabel="refresh_installation"
                               contentContainerStyle={{
-                                width: 52,
+                                width: 52 * scaleFactor,
                                 paddingHorizontal: contentPadding,
                               }}
                               disabled={installationsLoadState === 'loading'}
@@ -392,13 +392,13 @@ export const AdvancedSettingsModal = React.memo(
                                   }),
                                 )
                               }}
-                              size={32}
+                              size={32 * scaleFactor}
                             >
                               <ThemedIcon
                                 color={foregroundThemeColor}
                                 family="octicon"
                                 name="sync"
-                                size={16}
+                                size={16 * scaleFactor}
                               />
                             </Button>
                           )}
@@ -433,7 +433,7 @@ export const AdvancedSettingsModal = React.memo(
                                 linkURL={
                                   installation.account.htmlUrl || undefined
                                 }
-                                size={24}
+                                size={24 * scaleFactor}
                               />
 
                               <ThemedText
@@ -451,18 +451,18 @@ export const AdvancedSettingsModal = React.memo(
                               <ButtonLink
                                 analyticsLabel="open_installation"
                                 contentContainerStyle={{
-                                  width: 52,
+                                  width: 52 * scaleFactor,
                                   paddingHorizontal: contentPadding,
                                 }}
                                 href={installation.htmlUrl}
                                 openOnNewTab
-                                size={32}
+                                size={32 * scaleFactor}
                               >
                                 <ThemedIcon
                                   color={foregroundThemeColor}
                                   family="octicon"
                                   name="gear"
-                                  size={16}
+                                  size={16 * scaleFactor}
                                 />
                               </ButtonLink>
                             </View>

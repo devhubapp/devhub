@@ -9,7 +9,11 @@ export interface EnterpriseSetupModalProps {
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  scaleFactor,
+} from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Button } from '../common/Button'
 import { H3 } from '../common/H3'
@@ -34,7 +38,10 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
       <View style={[sharedStyles.flex, { padding: contentPadding }]}>
         <Spacer height={contentPadding} />
 
-        <ThemedText color="foregroundColor" style={{ lineHeight: 16 }}>
+        <ThemedText
+          color="foregroundColor"
+          style={{ lineHeight: normalTextSize + 2 * scaleFactor }}
+        >
           To enable DevHub on your GitHub Enterprise, contact us via e-mail
           below:{' '}
         </ThemedText>

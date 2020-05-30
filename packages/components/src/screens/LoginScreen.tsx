@@ -3,7 +3,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, View } from 'react-native'
 import url from 'url'
 
 import { getAppVersionLabel } from '../components/common/AppVersion'
@@ -14,6 +14,7 @@ import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
 import { useDialog } from '../components/context/DialogContext'
 import { ThemedText } from '../components/themed/ThemedText'
+import { useDimensions } from '../hooks/use-dimensions'
 import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { analytics } from '../libs/analytics'
@@ -29,6 +30,7 @@ import { sharedStyles } from '../styles/shared'
 import {
   contentPadding,
   normalTextSize,
+  scaleFactor,
   smallerTextSize,
 } from '../styles/variables'
 import { getDefaultDevHubHeaders } from '../utils/api'
@@ -43,12 +45,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'center',
-    maxWidth: 400,
     width: '100%',
   },
 
   contentContainer: {
-    flex: 1,
     alignItems: 'stretch',
     alignSelf: 'center',
     justifyContent: 'center',
@@ -67,28 +67,29 @@ const styles = StyleSheet.create({
   },
 
   footer: {
+    height: normalTextSize * 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   logo: {
     alignSelf: 'center',
-    height: 80,
+    height: 80 * scaleFactor,
     marginBottom: contentPadding / 2,
-    width: 80,
+    width: 80 * scaleFactor,
   },
 
   title: {
-    fontSize: 30,
+    fontSize: 30 * scaleFactor,
     fontWeight: 'bold',
-    lineHeight: 36,
+    lineHeight: 36 * scaleFactor,
     textAlign: 'center',
   },
 
   subtitle: {
-    fontSize: normalTextSize + 2,
+    fontSize: normalTextSize + 2 * scaleFactor,
     fontWeight: '400',
-    lineHeight: normalTextSize + 4,
+    lineHeight: normalTextSize + 4 * scaleFactor,
     textAlign: 'center',
   },
 
@@ -100,8 +101,8 @@ const styles = StyleSheet.create({
   footerLink: {},
 
   footerLinkText: {
-    fontSize: 14,
-    lineHeight: 18,
+    fontSize: normalTextSize,
+    lineHeight: normalTextSize * 1.5,
     textAlign: 'center',
   },
 
@@ -120,6 +121,7 @@ export const LoginScreen = React.memo(() => {
   const error = useReduxState(selectors.authErrorSelector)
   const initialErrorRef = useRef(error)
   const loginRequest = useReduxAction(actions.loginRequest)
+  const dimensions = useDimensions('width')
 
   useEffect(() => {
     analytics.trackScreenView('LOGIN_SCREEN')
@@ -303,7 +305,10 @@ export const LoginScreen = React.memo(() => {
     <Screen>
       <FullHeightScrollView
         alwaysBounceVertical={false}
-        style={styles.container}
+        style={[
+          styles.container,
+          { maxWidth: Math.min(400 * scaleFactor, dimensions.width) },
+        ]}
         contentContainerStyle={styles.contentContainer}
       >
         <View style={styles.header} />
@@ -442,7 +447,7 @@ export const LoginScreen = React.memo(() => {
         <Spacer height={contentPadding} />
 
         <View style={styles.footer}>
-          <View style={sharedStyles.horizontal}>
+          <ScrollView horizontal>
             <Link
               analyticsCategory="loginscreen"
               analyticsLabel="twitter"
@@ -498,7 +503,7 @@ export const LoginScreen = React.memo(() => {
             >
               {getAppVersionLabel()}
             </Link>
-          </View>
+          </ScrollView>
         </View>
       </FullHeightScrollView>
     </Screen>

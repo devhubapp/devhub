@@ -15,7 +15,11 @@ import { bugsnag } from '../../../libs/bugsnag'
 import * as actions from '../../../redux/actions'
 import * as selectors from '../../../redux/selectors'
 import { sharedStyles } from '../../../styles/shared'
-import { contentPadding, smallTextSize } from '../../../styles/variables'
+import {
+  contentPadding,
+  scaleFactor,
+  smallTextSize,
+} from '../../../styles/variables'
 import { getDefaultDevHubHeaders } from '../../../utils/api'
 import { Button } from '../../common/Button'
 import { Checkbox } from '../../common/Checkbox'
@@ -315,8 +319,8 @@ const SubscribeFormWithStripe = React.memo(
                 target="_blank"
                 rel="noopener"
                 style={{
-                  width: 18 * poweredByStripeBannerAspectRatio,
-                  height: 18,
+                  width: 18 * poweredByStripeBannerAspectRatio * scaleFactor,
+                  height: 18 * scaleFactor,
                 }}
               >
                 <img
@@ -327,8 +331,8 @@ const SubscribeFormWithStripe = React.memo(
                       : poweredByStripeDarkBanner
                   }
                   style={{
-                    width: 18 * poweredByStripeBannerAspectRatio,
-                    height: 18,
+                    width: 18 * poweredByStripeBannerAspectRatio * scaleFactor,
+                    height: 18 * scaleFactor,
                   }}
                 />
               </a>

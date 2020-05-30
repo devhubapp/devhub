@@ -1,5 +1,4 @@
-import { Text, TextProps } from 'react-native'
-
+import { Text, TextProps } from '../../common/Text'
 import { createSpringAnimatedComponent } from './helpers'
 
 export interface SpringAnimatedTextProps extends TextProps {}

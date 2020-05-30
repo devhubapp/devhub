@@ -5,6 +5,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   contentPadding,
   normalTextSize,
+  scaleFactor,
   smallTextSize,
 } from '../../styles/variables'
 import {
@@ -69,8 +70,8 @@ export const GenericMessageWithButtonView = React.memo(
           style={[
             sharedStyles.textCenter,
             {
-              lineHeight: normalTextSize + 4 + 2,
-              fontSize: normalTextSize + 4,
+              lineHeight: normalTextSize + (4 + 2) * scaleFactor,
+              fontSize: normalTextSize + 4 * scaleFactor,
               fontWeight: '600',
             },
           ]}
@@ -87,7 +88,7 @@ export const GenericMessageWithButtonView = React.memo(
               style={[
                 sharedStyles.textCenter,
                 {
-                  lineHeight: smallTextSize + 3,
+                  lineHeight: smallTextSize + 3 * scaleFactor,
                   fontSize: smallTextSize,
                   fontWeight: '300',
                 },

@@ -8,7 +8,11 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  scaleFactor,
+} from '../../styles/variables'
 import { openAppStore } from '../../utils/helpers/shared'
 import { ModalColumn } from '../columns/ModalColumn'
 import { AppVersion } from '../common/AppVersion'
@@ -51,7 +55,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
           <Avatar
             backgroundColorLoading=""
             shape="circle"
-            size={28}
+            size={28 * scaleFactor}
             username={username}
           />
         ) : (
@@ -71,7 +75,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 <ButtonLink
                   href={`${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${appToken}`}
                   openOnNewTab
-                  size={32}
+                  size={32 * scaleFactor}
                 >
                   <View style={[sharedStyles.center, sharedStyles.horizontal]}>
                     {/* <ThemedIcon
@@ -150,13 +154,13 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             <Button
               analyticsLabel="rate_app"
               onPress={() => openAppStore({ showReviewModal: true })}
-              size={32}
+              size={32 * scaleFactor}
             >
               <ThemedIcon
                 color="foregroundColor"
                 family="octicon"
                 name="star"
-                size={16}
+                size={16 * scaleFactor}
               />
             </Button>
           </SubHeader>
@@ -167,19 +171,19 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             <Button
               analyticsLabel="download_native_app"
               onPress={() => openAppStore({ showReviewModal: false })}
-              size={32}
+              size={32 * scaleFactor}
             >
               <ThemedIcon
                 color="foregroundColor"
                 family="octicon"
                 name="device-mobile"
-                size={16}
+                size={16 * scaleFactor}
               />
             </Button>
           </SubHeader>
         ) : null}
 
-        <View style={{ minHeight: 32 }}>
+        <View style={{ minHeight: 32 * scaleFactor }}>
           <SubHeader title="Community">
             <Spacer flex={1} />
 
@@ -193,8 +197,8 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 textProps={{
                   color: 'foregroundColor',
                   style: {
-                    fontSize: 14,
-                    lineHeight: 18,
+                    fontSize: normalTextSize,
+                    lineHeight: normalTextSize * 1.5,
                     textAlign: 'center',
                   },
                 }}
@@ -221,8 +225,8 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 textProps={{
                   color: 'foregroundColor',
                   style: {
-                    fontSize: 14,
-                    lineHeight: 18,
+                    fontSize: normalTextSize,
+                    lineHeight: normalTextSize * 1.5,
                     textAlign: 'center',
                   },
                 }}
@@ -249,8 +253,8 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 textProps={{
                   color: 'foregroundColor',
                   style: {
-                    fontSize: 14,
-                    lineHeight: 18,
+                    fontSize: normalTextSize,
+                    lineHeight: normalTextSize * 1.5,
                     textAlign: 'center',
                   },
                 }}

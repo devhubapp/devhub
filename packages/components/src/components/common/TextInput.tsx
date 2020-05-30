@@ -6,7 +6,12 @@ import {
 
 import { ThemeTransformer } from '@devhub/core'
 import { useHover } from '../../hooks/use-hover'
-import { contentPadding, radius } from '../../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  radius,
+  scaleFactor,
+} from '../../styles/variables'
 import { useTheme } from '../context/ThemeContext'
 
 export interface TextInputProps extends Omit<TextInputOriginalProps, 'style'> {
@@ -31,13 +36,13 @@ export interface TextInputProps extends Omit<TextInputOriginalProps, 'style'> {
   themeTransformer?: ThemeTransformer
 }
 
-export const defaultTextInputHeight = 40
+export const defaultTextInputHeight = 40 * scaleFactor
 
 export const TextInput = React.forwardRef(
   (props: TextInputProps, receivedRef: any) => {
     const {
       disableBlurOnEsc,
-      fontSize = 14,
+      fontSize = normalTextSize,
       multiline,
       size: _size,
       style,
@@ -114,7 +119,7 @@ export const TextInput = React.forwardRef(
         }}
         style={[
           {
-            lineHeight: Math.min(fontSize + 4, size),
+            lineHeight: Math.min(fontSize + 4 * scaleFactor, size),
             height: size,
             margin: 0,
             paddingVertical: multiline ? contentPadding / 2 : 0,

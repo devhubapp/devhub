@@ -6,7 +6,11 @@ import { useDispatch } from 'react-redux'
 import { Platform } from '../../../libs/platform'
 import * as actions from '../../../redux/actions'
 import { sharedStyles } from '../../../styles/shared'
-import { contentPadding, smallerTextSize } from '../../../styles/variables'
+import {
+  contentPadding,
+  scaleFactor,
+  smallerTextSize,
+} from '../../../styles/variables'
 import { Link } from '../../common/Link'
 import { Spacer } from '../../common/Spacer'
 import { sizes } from '../BaseCard.shared'
@@ -23,7 +27,7 @@ export interface CardActionsProps {
   type: ColumnSubscription['type']
 }
 
-export const cardActionsHeight = smallerTextSize + 3
+export const cardActionsHeight = smallerTextSize + 3 * scaleFactor
 
 export function CardActions(props: CardActionsProps) {
   const {
@@ -63,7 +67,10 @@ export function CardActions(props: CardActionsProps) {
         }}
         textProps={{
           color: muted ? 'foregroundColorMuted40' : 'foregroundColorMuted65',
-          style: { lineHeight: smallerTextSize + 3, fontSize: smallerTextSize },
+          style: {
+            lineHeight: smallerTextSize + 3 * scaleFactor,
+            fontSize: smallerTextSize,
+          },
         }}
       >
         {isSaved ? 'saved' : 'save'}

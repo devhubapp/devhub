@@ -3,10 +3,11 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Theme, ThemeColors } from '@devhub/core'
+import { scaleFactor } from '../../styles/variables'
 import { ThemedView } from '../themed/ThemedView'
 
-export const separatorSize = 2
-export const separatorThickSize = 5
+export const separatorSize = 2 * scaleFactor
+export const separatorThickSize = 5 * scaleFactor
 
 export const getSeparatorThemeColors = _.memoize((_backgroundColor: string): [
   keyof ThemeColors,

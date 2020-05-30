@@ -7,7 +7,11 @@ export interface KeyboardShortcutsModalProps {
 }
 
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, smallTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  scaleFactor,
+  smallTextSize,
+} from '../../styles/variables'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Spacer } from '../common/Spacer'
 import { ThemedText } from '../themed/ThemedText'
@@ -130,7 +134,7 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
                 color="foregroundColor"
                 style={{
                   marginBottom: contentPadding,
-                  lineHeight: 16,
+                  lineHeight: 16 * scaleFactor,
                 }}
               >
                 {ks.description}

@@ -19,7 +19,11 @@ import { IconProp } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, smallerTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  scaleFactor,
+  smallerTextSize,
+} from '../../styles/variables'
 import { Avatar } from '../common/Avatar'
 import { IconButton, IconButtonProps } from '../common/IconButton'
 import { Link } from '../common/Link'
@@ -56,11 +60,12 @@ export interface ColumnHeaderProps {
   title: string
 }
 
-export const columnHeaderItemContentSize = 17
-const columnHeaderTitleSize = columnHeaderItemContentSize - 1
-const columnHeaderTitleLineHeight = columnHeaderTitleSize + 4
-const columnHeaderSubtitleSize = columnHeaderItemContentSize - 5
-const columnHeaderSubtitleLineHeight = columnHeaderSubtitleSize + 4
+export const columnHeaderItemContentSize = 17 * scaleFactor
+const columnHeaderTitleSize = columnHeaderItemContentSize - 1 * scaleFactor
+const columnHeaderTitleLineHeight = columnHeaderTitleSize + 4 * scaleFactor
+const columnHeaderSubtitleSize = columnHeaderItemContentSize - 5 * scaleFactor
+const columnHeaderSubtitleLineHeight =
+  columnHeaderSubtitleSize + 4 * scaleFactor
 
 export const columnHeaderHeight =
   contentPadding + columnHeaderTitleLineHeight + columnHeaderSubtitleLineHeight
@@ -316,7 +321,7 @@ export function ColumnHeader(props: ColumnHeaderProps) {
                                   backgroundColor="lightRed"
                                   style={{
                                     width: 1,
-                                    height: smallerTextSize + 4,
+                                    height: smallerTextSize + 4 * scaleFactor,
                                     transform: [{ rotateZ: '45deg' }],
                                   }}
                                   pointerEvents="none"

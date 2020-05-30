@@ -1,6 +1,6 @@
 import { getDateSmallText, getFullDateText, Theme } from '@devhub/core'
 import React, { Fragment } from 'react'
-import { PixelRatio, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { PixelRatio, ScrollView, StyleSheet, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { Platform } from '../../libs/platform'
@@ -10,6 +10,7 @@ import {
   avatarSize,
   contentPadding,
   normalTextSize,
+  scaleFactor,
   smallAvatarSize,
   smallerTextSize,
   smallTextSize,
@@ -23,6 +24,7 @@ import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Label, smallLabelHeight } from '../common/Label'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
+import { Text } from '../common/Text'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
 import { ThemedView } from '../themed/ThemedView'
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
 
   action: {
     flex: 1,
-    lineHeight: sizes.actionFontSize + 2,
+    lineHeight: sizes.actionFontSize + 2 * scaleFactor,
     fontSize: sizes.actionFontSize,
     fontWeight: '300',
     overflow: 'hidden',
@@ -326,6 +328,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                     family="octicon"
                     name="lock"
                     color="foregroundColorMuted65"
+                    size={smallTextSize}
                   />
                 </>
               )}
@@ -364,7 +367,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                       <View
                         style={{
                           width: dotSize,
-                          height: dotSize + 1,
+                          height: dotSize + 1 * scaleFactor,
                           paddingTop: 1,
                         }}
                         pointerEvents="none"

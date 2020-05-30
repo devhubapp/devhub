@@ -58,6 +58,7 @@ import {
   avatarSize,
   contentPadding,
   normalTextSize,
+  scaleFactor,
   smallAvatarSize,
   smallerTextSize,
   smallTextSize,
@@ -71,13 +72,13 @@ import { cardItemSeparatorSize } from './partials/CardItemSeparator'
 // only via the usePlans hook
 const cheapestPlanWithNotifications: Plan | undefined = undefined
 
-const _iconSize = smallAvatarSize - 4
+const _iconSize = smallAvatarSize - 4 * scaleFactor
 const _iconContainerSize = smallAvatarSize
 const _actionFontSize = smallerTextSize
 const _subitemFontSize = smallTextSize
-const _subitemLineHeight = _subitemFontSize + 2
+const _subitemLineHeight = _subitemFontSize + 2 * scaleFactor
 export const sizes = {
-  cardPadding: contentPadding * (2 / 3),
+  cardPadding: contentPadding,
   iconSize: PixelRatio.roundToNearestPixel(_iconSize),
   iconContainerSize: _iconContainerSize,
   avatarContainerWidth: PixelRatio.roundToNearestPixel(
@@ -95,7 +96,7 @@ export const sizes = {
   ),
   horizontalSpaceSize: contentPadding / 2,
   rightInnerTopSpacing: 0,
-  rightTextLineHeight: normalTextSize + 6,
+  rightTextLineHeight: normalTextSize + 6 * scaleFactor,
   verticalSpaceSize: contentPadding / 2,
 }
 
@@ -1281,7 +1282,7 @@ export function getCardPushNotificationItem(
     },
   }
 
-  const notificationSize = 100
+  const githubAvatarSize = 100
 
   switch (column.type) {
     case 'activity': {
@@ -1387,12 +1388,12 @@ export function getCardPushNotificationItem(
           (_comment &&
             getUserAvatarFromObject(
               _comment.user,
-              { size: notificationSize },
+              { size: githubAvatarSize },
               PixelRatio.getPixelSizeForLayoutSize,
             )) ||
           getUserAvatarByAvatarURL(
             cardProps.avatar.imageURL,
-            { size: notificationSize },
+            { size: githubAvatarSize },
             PixelRatio.getPixelSizeForLayoutSize,
           ),
         onClickDispatchAction,
@@ -1435,7 +1436,7 @@ export function getCardPushNotificationItem(
           .join('\n'),
         imageURL: getUserAvatarByAvatarURL(
           cardProps.avatar.imageURL,
-          { size: notificationSize },
+          { size: githubAvatarSize },
           PixelRatio.getPixelSizeForLayoutSize,
         ),
         onClickDispatchAction,
@@ -1485,12 +1486,12 @@ export function getCardPushNotificationItem(
           (_comment &&
             getUserAvatarFromObject(
               _comment.user,
-              { size: notificationSize },
+              { size: githubAvatarSize },
               PixelRatio.getPixelSizeForLayoutSize,
             )) ||
           getUserAvatarByAvatarURL(
             cardProps.avatar.imageURL,
-            { size: notificationSize },
+            { size: githubAvatarSize },
             PixelRatio.getPixelSizeForLayoutSize,
           ),
         onClickDispatchAction,

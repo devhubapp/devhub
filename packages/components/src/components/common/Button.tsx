@@ -5,7 +5,7 @@ import { StyleSheet, View, ViewProps } from 'react-native'
 import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { sharedStyles } from '../../styles/shared'
-import { normalTextSize, radius } from '../../styles/variables'
+import { normalTextSize, radius, scaleFactor } from '../../styles/variables'
 import { getTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
 import {
@@ -50,7 +50,7 @@ export type ButtonProps = Omit<ThemedTouchableHighlightProps, 'children'> & {
         }
       })
 
-export const defaultButtonSize = 40
+export const defaultButtonSize = 40 * scaleFactor
 
 export function Button(props: ButtonProps) {
   const {
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    lineHeight: normalTextSize + 4,
+    lineHeight: normalTextSize + 4 * scaleFactor,
     fontSize: normalTextSize,
     fontWeight: '600',
     textAlign: 'center',

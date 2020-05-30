@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, scaleFactor } from '../../styles/variables'
 import { Avatar } from '../common/Avatar'
 import { Link } from '../common/Link'
 import { Spacer } from '../common/Spacer'
@@ -29,7 +29,7 @@ export function AccountSettings() {
           },
         ]}
       >
-        <Avatar size={28} username={username} />
+        <Avatar size={28 * scaleFactor} username={username} />
         <Spacer width={contentPadding / 2} />
         <ThemedText color="foregroundColor">Logged in as </ThemedText>
         <Link

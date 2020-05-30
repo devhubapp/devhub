@@ -16,7 +16,11 @@ import { IconProp } from '../../libs/vector-icons'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  scaleFactor,
+} from '../../styles/variables'
 import { getDefaultReactSpringAnimationConfig } from '../../utils/helpers/animations'
 import { SpringAnimatedTouchableOpacity } from '../animated/spring/SpringAnimatedTouchableOpacity'
 import { ModalColumn } from '../columns/ModalColumn'
@@ -254,8 +258,8 @@ function AddColumnModalItem({
         <ThemedIcon
           {...icon}
           color="foregroundColor"
-          size={18}
-          style={{ width: 20 }}
+          size={18 * scaleFactor}
+          style={{ width: 20 * scaleFactor }}
         />
 
         <Spacer width={contentPadding / 2} />
@@ -341,8 +345,8 @@ export function AddColumnModal(props: AddColumnModalProps) {
                 {
                   marginTop: contentPadding,
                   paddingHorizontal: contentPadding,
-                  lineHeight: 20,
-                  fontSize: 14,
+                  lineHeight: normalTextSize * 1.5,
+                  fontSize: normalTextSize,
                 },
               ]}
             >

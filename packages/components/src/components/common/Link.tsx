@@ -6,7 +6,7 @@ import React, {
   useLayoutEffect,
   useRef,
 } from 'react'
-import { GestureResponderEvent, StyleSheet, Text, View } from 'react-native'
+import { GestureResponderEvent, StyleSheet, View } from 'react-native'
 
 import { useHover } from '../../hooks/use-hover'
 import { Browser } from '../../libs/browser'
@@ -136,7 +136,7 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
 
   const _defaultRef = useRef<View>(null)
   const containerRef = (ref as any) || _defaultRef
-  const textRef = useRef<Text | null>(null)
+  const textRef = useRef<ThemedText | null>(null)
   const initialIsHovered = useHover(
     enableBackgroundHover || enableForegroundHover || enableUnderlineHover
       ? containerRef

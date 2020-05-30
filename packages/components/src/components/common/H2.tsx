@@ -1,7 +1,7 @@
 import React from 'react'
 import { TextProps } from 'react-native'
 
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, normalTextSize } from '../../styles/variables'
 import { ThemedText, ThemedTextProps } from '../themed/ThemedText'
 
 export type H2Props = TextProps & {
@@ -21,6 +21,7 @@ export function H2(props: H2Props) {
       style={[
         {
           marginBottom: withMargin ? contentPadding : undefined,
+          fontSize: normalTextSize,
           fontWeight: '600',
         },
         style,

@@ -5,7 +5,7 @@ import {
   Plan,
 } from '@devhub/core'
 import React from 'react'
-import { Platform, Text, View } from 'react-native'
+import { Platform, View } from 'react-native'
 
 import { useReduxState } from '../../../hooks/use-redux-state'
 import * as selectors from '../../../redux/selectors'
@@ -14,11 +14,13 @@ import {
   contentPadding,
   normalTextSize,
   radius,
+  scaleFactor,
   smallTextSize,
 } from '../../../styles/variables'
 import { Checkbox } from '../../common/Checkbox'
 import { IntervalRefresh } from '../../common/IntervalRefresh'
 import { Spacer } from '../../common/Spacer'
+import { Text } from '../../common/Text'
 import { ThemedIcon } from '../../themed/ThemedIcon'
 import { ThemedText } from '../../themed/ThemedText'
 import { ThemedTouchableOpacity } from '../../themed/ThemedTouchableOpacity'
@@ -223,7 +225,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               sharedStyles.fullWidth,
               sharedStyles.textCenter,
               {
-                lineHeight: normalTextSize + 6,
+                lineHeight: normalTextSize + 6 * scaleFactor,
                 fontSize: normalTextSize,
                 fontWeight: '800',
               },
@@ -254,9 +256,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             style={[
               sharedStyles.textCenter,
               {
-                height: normalTextSize + 40,
-                lineHeight: normalTextSize + 40,
-                fontSize: normalTextSize + 30,
+                height: normalTextSize + 40 * scaleFactor,
+                lineHeight: normalTextSize + 40 * scaleFactor,
+                fontSize: normalTextSize + 30 * scaleFactor,
                 fontWeight: '800',
               },
             ]}

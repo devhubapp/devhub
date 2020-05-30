@@ -6,7 +6,7 @@ import { useHover } from '../../hooks/use-hover'
 import { Platform } from '../../libs/platform'
 import { IconProp } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, scaleFactor } from '../../styles/variables'
 import { AccordionView } from '../common/AccordionView'
 import { ConditionalWrap } from '../common/ConditionalWrap'
 import { Separator } from '../common/Separator'
@@ -148,7 +148,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
             color="foregroundColor"
             selectable={false}
             style={{
-              lineHeight: 22,
+              lineHeight: 22 * scaleFactor,
               width: headerItemFixedIconSize,
               fontSize: headerItemFixedIconSize,
               textAlign: 'center',
@@ -177,7 +177,9 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
                   : 'foregroundColorMuted65'
               }
               numberOfLines={1}
-              style={{ fontSize: subtitle ? 12 : 10 }}
+              style={{
+                fontSize: subtitle ? 12 * scaleFactor : 10 * scaleFactor,
+              }}
             >
               {subtitle || '●'}
             </ThemedText>

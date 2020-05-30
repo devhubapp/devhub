@@ -10,6 +10,7 @@ import { sharedStyles } from '../../../styles/shared'
 import {
   avatarSize,
   contentPadding,
+  scaleFactor,
   smallerTextSize,
 } from '../../../styles/variables'
 import { vibrateHapticFeedback } from '../../../utils/helpers/shared'
@@ -43,7 +44,7 @@ export interface GenericOwnerFilterBarProps {
 }
 
 const ownerTextFontSize = smallerTextSize // 12
-const ownerTextLineHeight = smallerTextSize + 4 // 16
+const ownerTextLineHeight = smallerTextSize + 4 * scaleFactor // 16
 const itemWidth = avatarSize + 2 * contentPadding // 72
 const itemContentHeight = avatarSize + contentPadding / 2 + ownerTextLineHeight // 64
 const itemContentPadding = cardSizes.cardPadding

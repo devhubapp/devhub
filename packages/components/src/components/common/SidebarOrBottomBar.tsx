@@ -45,6 +45,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   contentPadding,
   mutedOpacity,
+  scaleFactor,
   smallerTextSize,
 } from '../../styles/variables'
 import {
@@ -73,18 +74,18 @@ export interface SidebarOrBottomBarProps {
   type: 'sidebar' | 'bottombar'
 }
 
-export const sidebarIconSize = 20
+export const sidebarIconSize = 20 * scaleFactor
 export const sidebarAvatarSize = sidebarIconSize
 export const sidebarUnreadIndicatorSize = defaultUnreadIndicatorSize
 export const sidebarItemHeight = sidebarIconSize + (contentPadding * 3) / 2
-export const sidebarWidth = 50
+export const sidebarWidth = 50 * scaleFactor
 
-export const bottomBarIconSize = 20
+export const bottomBarIconSize = 20 * scaleFactor
 export const bottomBarAvatarSize = bottomBarIconSize
 export const bottomBarLabelSize = smallerTextSize - 2
 export const bottomBarUnreadIndicatorSize = defaultUnreadIndicatorSize
 export const bottomBarItemWidth =
-  sidebarIconSize + (contentPadding * 3) / 2 + 16
+  sidebarIconSize + (contentPadding * 3) / 2 + 16 * scaleFactor
 export const bottomBarLabelContainerHeight =
   bottomBarLabelSize + contentPadding / 3
 export const bottomBarHeight = 50 + bottomBarLabelContainerHeight

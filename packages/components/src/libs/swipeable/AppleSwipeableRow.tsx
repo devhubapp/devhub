@@ -1,9 +1,15 @@
 import React from 'react'
-import { Animated, StyleSheet, Text } from 'react-native'
+import { Animated, StyleSheet } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
+import { Text } from '../../components/common/Text'
 import { sharedStyles } from '../../styles/shared'
+import {
+  contentPadding,
+  normalTextSize,
+  scaleFactor,
+} from '../../styles/variables'
 import {
   BaseSwipeableRow,
   BaseSwipeableRowAction,
@@ -97,12 +103,32 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
       translateX:
         placement === 'LEFT'
           ? dragAnimatedValue.interpolate({
-              inputRange: [0, 50, 100, 101],
-              outputRange: [-20, 0, 0, 1],
+              inputRange: [
+                0,
+                50 * scaleFactor,
+                100 * scaleFactor,
+                101 * scaleFactor,
+              ],
+              outputRange: [
+                -20 * scaleFactor,
+                0 * scaleFactor,
+                0 * scaleFactor,
+                1 * scaleFactor,
+              ],
             })
           : dragAnimatedValue.interpolate({
-              inputRange: [-101, -100, -50, 0],
-              outputRange: [-1, 0, 0, 20],
+              inputRange: [
+                -101 * scaleFactor,
+                -100 * scaleFactor,
+                -50 * scaleFactor,
+                0 * scaleFactor,
+              ],
+              outputRange: [
+                -1 * scaleFactor,
+                0 * scaleFactor,
+                0 * scaleFactor,
+                20 * scaleFactor,
+              ],
             }),
     }
 
@@ -144,10 +170,10 @@ export class AppleSwipeableRow extends BaseSwipeableRow<
         {...props}
         ref={this.swipeableRef}
         friction={2}
-        leftThreshold={30}
+        leftThreshold={30 * scaleFactor}
         renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions}
-        rightThreshold={40}
+        rightThreshold={40 * scaleFactor}
       >
         {children}
       </Swipeable>
@@ -163,7 +189,7 @@ const styles = StyleSheet.create({
 
   actionText: {
     backgroundColor: 'transparent',
-    fontSize: 16,
-    padding: 10,
+    fontSize: normalTextSize,
+    padding: (contentPadding * 2) / 3,
   },
 })

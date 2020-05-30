@@ -37,6 +37,7 @@ import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import {
   contentPadding,
+  scaleFactor,
   smallerTextSize,
   smallTextSize,
 } from '../../styles/variables'
@@ -363,7 +364,7 @@ export const AddColumnDetailsModal = React.memo(
                         text,
                       )
                     }}
-                    size={18}
+                    size={18 * scaleFactor}
                     style={[
                       Platform.select({
                         web: {

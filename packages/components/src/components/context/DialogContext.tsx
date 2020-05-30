@@ -15,7 +15,11 @@ import { Platform } from '../../libs/platform'
 import { prompt } from '../../libs/prompt'
 import { PromptButton } from '../../libs/prompt/index.shared'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, normalTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  normalTextSize,
+  scaleFactor,
+} from '../../styles/variables'
 import { Button, ButtonProps } from '../common/Button'
 import { FullHeightScrollView } from '../common/FullHeightScrollView'
 import { Spacer } from '../common/Spacer'
@@ -231,7 +235,7 @@ const DialogView = React.memo(
                         style={[
                           alignCenter && sharedStyles.textCenter,
                           {
-                            fontSize: normalTextSize + 4,
+                            fontSize: normalTextSize + 4 * scaleFactor,
                             fontWeight: 'bold',
                           },
                         ]}

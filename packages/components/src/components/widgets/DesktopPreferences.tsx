@@ -13,7 +13,7 @@ import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, radius } from '../../styles/variables'
+import { contentPadding, radius, scaleFactor } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { ButtonLink } from '../common/ButtonLink'
 import { H3 } from '../common/H3'
@@ -57,14 +57,14 @@ export const DesktopPreferences = React.memo(() => {
               analyticsLabel="download_desktop_app"
               href={constants.DEVHUB_LINKS.DOWNLOAD_PAGE}
               openOnNewTab
-              size={32}
+              size={32 * scaleFactor}
             >
               <View style={[sharedStyles.center, sharedStyles.horizontal]}>
                 <ThemedIcon
                   color="foregroundColor"
                   family="octicon"
                   name="desktop-download"
-                  size={16}
+                  size={16 * scaleFactor}
                 />
                 <Spacer width={contentPadding / 2} />
                 <ThemedText color="foregroundColor">Download</ThemedText>

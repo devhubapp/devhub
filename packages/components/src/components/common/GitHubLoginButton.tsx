@@ -6,6 +6,7 @@ import { sharedStyles } from '../../styles/shared'
 import {
   contentPadding,
   normalTextSize,
+  scaleFactor,
   smallerTextSize,
 } from '../../styles/variables'
 import { Button, ButtonProps } from '../common/Button'
@@ -42,15 +43,15 @@ const styles = StyleSheet.create({
 
   titleText: {
     fontWeight: '600',
-    fontSize: normalTextSize + 1,
-    lineHeight: normalTextSize + 6,
+    fontSize: normalTextSize + 1 * scaleFactor,
+    lineHeight: normalTextSize + 6 * scaleFactor,
     textAlign: 'center',
   },
 
   subtitleText: {
     fontWeight: '400',
     fontSize: smallerTextSize,
-    lineHeight: smallerTextSize + 4,
+    lineHeight: smallerTextSize + 4 * scaleFactor,
     textAlign: 'center',
   },
 })
@@ -72,7 +73,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
       {...({ type: 'primary' } as any)}
       {...otherProps}
       contentContainerStyle={styles.contentContainer}
-      size={50}
+      size={50 * scaleFactor}
       style={[styles.button, sizename === '1-small' && { width: '100%' }]}
     >
       {({ foregroundThemeColor }) => (
@@ -82,7 +83,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
               <ThemedIcon
                 {...leftIcon}
                 color={foregroundThemeColor}
-                size={20}
+                size={20 * scaleFactor}
               />
 
               <Spacer width={contentPadding / 2} />
@@ -118,7 +119,7 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
               <ThemedIcon
                 {...rightIcon}
                 color={foregroundThemeColor}
-                size={20}
+                size={20 * scaleFactor}
               />
             </>
           )}

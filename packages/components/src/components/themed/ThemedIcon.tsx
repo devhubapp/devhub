@@ -9,6 +9,7 @@ import {
   OcticonIconProps,
   Octicons,
 } from '../../libs/vector-icons'
+import { normalTextSize } from '../../styles/variables'
 import { useTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from './helpers'
 
@@ -24,6 +25,7 @@ export const ThemedIcon = React.memo(
     const {
       color: _color,
       family = 'octicon',
+      size = normalTextSize,
       themeTransformer,
       ...otherProps
     } = props
@@ -35,9 +37,11 @@ export const ThemedIcon = React.memo(
     })
 
     if (family === 'material')
-      return <MaterialIcons ref={ref} {...otherProps} color={color} />
+      return (
+        <MaterialIcons ref={ref} {...otherProps} color={color} size={size} />
+      )
 
-    return <Octicons ref={ref} {...otherProps} color={color} />
+    return <Octicons ref={ref} {...otherProps} color={color} size={size} />
   }),
 )
 

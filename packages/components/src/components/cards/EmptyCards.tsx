@@ -4,7 +4,7 @@ import { Image, View } from 'react-native'
 
 import { useColumnLoadingState } from '../../hooks/use-column-loading-state'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, scaleFactor } from '../../styles/variables'
 import {
   getEmojiImageURL,
   GitHubEmoji,
@@ -132,7 +132,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
           <>
             <Image
               source={{ uri: clearEmojiURL }}
-              style={{ width: 24, height: 24 }}
+              style={{ width: 24 * scaleFactor, height: 24 * scaleFactor }}
             />
 
             {!!clearMessage && <Spacer height={contentPadding / 2} />}
@@ -145,7 +145,7 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
             style={[
               sharedStyles.textCenter,
               {
-                fontSize: 20,
+                fontSize: 20 * scaleFactor,
                 fontWeight: '200',
               },
             ]}

@@ -1,7 +1,11 @@
 import React from 'react'
 
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding, smallTextSize } from '../../styles/variables'
+import {
+  contentPadding,
+  scaleFactor,
+  smallTextSize,
+} from '../../styles/variables'
 import {
   ThemedTextInput,
   ThemedTextInputProps,
@@ -15,7 +19,7 @@ export interface SearchBarProps extends ThemedTextInputProps {
 }
 
 export const searchBarOuterSpacing = contentPadding / 2
-export const searchBarMainContentHeight = 36
+export const searchBarMainContentHeight = 36 * scaleFactor
 export const searchBarTotalHeight =
   searchBarMainContentHeight + searchBarOuterSpacing * 2
 

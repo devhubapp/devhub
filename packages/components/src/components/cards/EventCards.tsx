@@ -204,7 +204,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
             : undefined
         }
         data={data}
-        estimatedItemSize={getItemSize(data[0], 0) || 89}
+        estimatedItemSize={getItemSize(data[0], 0) || 123}
         footer={footer}
         forceRerenderOnRefChange={getItemByNodeIdOrId}
         getItemKey={getItemKey}

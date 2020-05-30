@@ -6,7 +6,7 @@ import { useDynamicRef } from '../../hooks/use-dynamic-ref'
 import { useHover } from '../../hooks/use-hover'
 import { IconProp } from '../../libs/vector-icons'
 import { sharedStyles } from '../../styles/shared'
-import { contentPadding } from '../../styles/variables'
+import { contentPadding, scaleFactor } from '../../styles/variables'
 import { getTheme } from '../context/ThemeContext'
 import { getThemeColorOrItself } from '../themed/helpers'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -23,7 +23,7 @@ export type IconButtonProps = TouchableWithoutFeedbackProps & {
   type?: 'primary' | 'neutral' | 'danger'
 } & IconProp
 
-export const defaultIconButtonSize = 16
+export const defaultIconButtonSize = 16 * scaleFactor
 
 export function IconButton(props: IconButtonProps) {
   const {
