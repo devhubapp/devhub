@@ -249,6 +249,7 @@ export const ColumnOptions = React.memo(
           ) : null}
         </View>
 
+        {/*
         {(Platform.realOS === 'ios' || Platform.realOS === 'android') && (
           <View
             style={[
@@ -290,6 +291,7 @@ export const ColumnOptions = React.memo(
         )}
 
         <Spacer height={contentPadding / 2} />
+        */}
 
         {!!(
           enableDesktopPushNotificationsOption.platformSupports &&
