@@ -188,9 +188,15 @@ export function Checkbox(props: CheckboxProps) {
                   : uncheckedBackgroundThemeColor
               }
               style={{
-                width: Math.floor(isIndeterminateState ? size * 0.8 : size),
-                height: Math.floor(isIndeterminateState ? size * 0.8 : size),
-                borderRadius: circle ? size / 2 : checkboxBorderRadius,
+                width:
+                  Math.floor(isIndeterminateState ? size * 0.8 : size) -
+                  (isIndeterminateState ? borderWidth : 0),
+                height:
+                  Math.floor(isIndeterminateState ? size * 0.8 : size) -
+                  (isIndeterminateState ? borderWidth : 0),
+                borderRadius: circle
+                  ? size / 2
+                  : checkboxBorderRadius / (isIndeterminateState ? 2 : 1),
               }}
             />
           </View>
