@@ -356,37 +356,29 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                 }}
               </IntervalRefresh>
 
-              {!isRead &&
-                (() => {
-                  const dotSize = smallTextSize / 2
+              {!!isSaved && (
+                <>
+                  <Text children="  " />
+                  <ThemedIcon
+                    family="octicon"
+                    name="bookmark"
+                    color="orange"
+                    size={smallTextSize}
+                  />
+                </>
+              )}
 
-                  return (
-                    <>
-                      <Text children="  " />
-
-                      <View
-                        style={{
-                          width: dotSize,
-                          height: dotSize + 1 * scaleFactor,
-                          paddingTop: 1,
-                        }}
-                        pointerEvents="none"
-                      >
-                        <ThemedView
-                          backgroundColor={
-                            (reason && reason.color) || 'primaryBackgroundColor'
-                          }
-                          style={{
-                            width: dotSize,
-                            height: dotSize,
-                            borderRadius: dotSize / 2,
-                          }}
-                          pointerEvents="none"
-                        />
-                      </View>
-                    </>
-                  )
-                })()}
+              {!isRead && (
+                <>
+                  <Text children="  " />
+                  <ThemedIcon
+                    family="octicon"
+                    name="dot-fill"
+                    color={(reason && reason.color) || 'primaryBackgroundColor'}
+                    size={smallTextSize}
+                  />
+                </>
+              )}
             </View>
 
             {!!subtitle && (

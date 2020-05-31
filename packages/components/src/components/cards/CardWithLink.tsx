@@ -24,7 +24,6 @@ import {
 import { ThemedView } from '../themed/ThemedView'
 import { BaseCard } from './BaseCard'
 import { getCardPropsForItem } from './BaseCard.shared'
-import { CardSavedIndicator } from './partials/CardSavedIndicator'
 
 export interface CardWithLinkProps {
   columnId: string
@@ -250,8 +249,6 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
           }}
         />
       )} */}
-
-      {!!isSaved && <CardSavedIndicator />}
     </Link>
   )
 })
