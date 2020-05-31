@@ -78,7 +78,8 @@ const _actionFontSize = smallerTextSize
 const _subitemFontSize = smallTextSize
 const _subitemLineHeight = _subitemFontSize + 2 * scaleFactor
 export const sizes = {
-  cardPadding: contentPadding,
+  cardPaddingVertical: contentPadding,
+  cardPaddingHorizontal: contentPadding / 2,
   iconSize: PixelRatio.roundToNearestPixel(_iconSize),
   iconContainerSize: _iconContainerSize,
   avatarContainerWidth: PixelRatio.roundToNearestPixel(
@@ -95,8 +96,9 @@ export const sizes = {
     smallAvatarSize,
   ),
   horizontalSpaceSize: contentPadding / 2,
-  rightInnerTopSpacing: 0,
-  rightTextLineHeight: normalTextSize + 6 * scaleFactor,
+  titleLineHeight: normalTextSize * 1.2,
+  subtitleLineHeight: smallerTextSize * 1.2,
+  textLineHeight: smallerTextSize * 1.2,
   verticalSpaceSize: contentPadding / 2,
 }
 
@@ -1217,13 +1219,16 @@ export function getCardSizeForProps(
   if (!props) return 0
 
   return (
-    sizes.cardPadding * 2 +
+    sizes.cardPaddingVertical * 2 +
     Math.max(
       sizes.avatarContainerHeight,
-      sizes.rightInnerTopSpacing +
-        (props.title ? sizes.rightTextLineHeight : 0) +
-        (props.subtitle ? sizes.rightTextLineHeight : 0) +
-        (props.text && props.text.text ? sizes.rightTextLineHeight : 0),
+      (props.title ? sizes.titleLineHeight : 0) +
+        (props.subtitle
+          ? sizes.subtitleLineHeight + sizes.verticalSpaceSize
+          : 0) +
+        (props.text && props.text.text
+          ? sizes.textLineHeight + sizes.verticalSpaceSize
+          : 0),
     ) +
     (props.action && props.action.text
       ? sizes.actionContainerHeight + sizes.verticalSpaceSize

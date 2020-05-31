@@ -49,7 +49,7 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
 
   const fixedWidth =
     columnWidth -
-    (cardSizes.cardPadding +
+    (cardSizes.cardPaddingHorizontal +
       cardSizes.avatarContainerWidth +
       cardSizes.horizontalSpaceSize)
 

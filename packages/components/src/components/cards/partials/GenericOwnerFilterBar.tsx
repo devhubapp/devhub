@@ -47,8 +47,9 @@ const ownerTextFontSize = smallerTextSize // 12
 const ownerTextLineHeight = smallerTextSize + 4 * scaleFactor // 16
 const itemWidth = avatarSize + 2 * contentPadding // 72
 const itemContentHeight = avatarSize + contentPadding / 2 + ownerTextLineHeight // 64
-const itemContentPadding = cardSizes.cardPadding
-const itemContentWithPaddingHeight = itemContentHeight + 2 * itemContentPadding // 85,33
+const itemContentPaddingVertical = cardSizes.cardPaddingVertical
+const itemContentWithPaddingHeight =
+  itemContentHeight + 2 * itemContentPaddingVertical // 85,33
 export const cardsGenericOwnerFilterBarTotalHeight =
   itemContentWithPaddingHeight + separatorSize // 87,33
 
@@ -186,7 +187,7 @@ export const GenericOwnerFilterBar = React.memo(
                 width: itemWidth - 2,
                 height: itemContentWithPaddingHeight,
                 marginHorizontal: 1,
-                paddingVertical: cardSizes.cardPadding,
+                paddingVertical: cardSizes.cardPaddingVertical,
               },
               item.value === false && sharedStyles.muted,
             ]}
@@ -282,7 +283,7 @@ export const GenericOwnerFilterBar = React.memo(
             data={data}
             horizontal
             keyExtractor={getItemKey}
-            overlaySize={itemContentPadding}
+            overlaySize={itemContentPaddingVertical}
             renderItem={renderItem}
             renderScrollComponent={renderScrollComponent}
             topOrLeftOverlayThemeColor={getColumnHeaderThemeColors().normal}
