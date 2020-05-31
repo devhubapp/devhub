@@ -1218,33 +1218,33 @@ export function getCardSizeForProps(
 ): number {
   if (!props) return 0
 
-  return (
+  return PixelRatio.roundToNearestPixel(
     sizes.cardPaddingVertical * 2 +
-    Math.max(
-      sizes.avatarContainerHeight,
-      (props.title ? sizes.titleLineHeight : 0) +
-        (props.subtitle
-          ? sizes.subtitleLineHeight + sizes.verticalSpaceSize
-          : 0) +
-        (props.text && props.text.text
-          ? sizes.textLineHeight + sizes.verticalSpaceSize
-          : 0),
-    ) +
-    (props.action && props.action.text
-      ? sizes.actionContainerHeight + sizes.verticalSpaceSize
-      : 0) +
-    (props.labels && props.labels.length
-      ? smallLabelHeight + sizes.verticalSpaceSize
-      : 0) +
-    (props.subitems && props.subitems.length
-      ? props.subitems.length *
-        (sizes.subitemContainerHeight + sizes.verticalSpaceSize)
-      : 0) +
-    (props.githubApp
-      ? sizes.githubAppMessageContainerHeight + sizes.verticalSpaceSize
-      : 0) +
-    (renderCardActions ? cardActionsHeight + sizes.verticalSpaceSize : 0) +
-    cardItemSeparatorSize
+      Math.max(
+        sizes.avatarContainerHeight,
+        (props.title ? sizes.titleLineHeight : 0) +
+          (props.subtitle
+            ? sizes.subtitleLineHeight + sizes.verticalSpaceSize
+            : 0) +
+          (props.text && props.text.text
+            ? sizes.textLineHeight + sizes.verticalSpaceSize
+            : 0),
+      ) +
+      (props.action && props.action.text
+        ? sizes.actionContainerHeight + sizes.verticalSpaceSize
+        : 0) +
+      (props.labels && props.labels.length
+        ? smallLabelHeight + sizes.verticalSpaceSize
+        : 0) +
+      (props.subitems && props.subitems.length
+        ? props.subitems.length *
+          (sizes.subitemContainerHeight + sizes.verticalSpaceSize)
+        : 0) +
+      (props.githubApp
+        ? sizes.githubAppMessageContainerHeight + sizes.verticalSpaceSize
+        : 0) +
+      (renderCardActions ? cardActionsHeight + sizes.verticalSpaceSize : 0) +
+      cardItemSeparatorSize,
   )
 }
 
