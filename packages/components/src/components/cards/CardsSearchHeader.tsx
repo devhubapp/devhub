@@ -204,7 +204,11 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
         <TagToken
           icon={{
             family: 'octicon',
-            name: saved ? 'bookmark-fill' : 'bookmark',
+            name: saved
+              ? 'bookmark-fill'
+              : saved === false
+              ? 'bookmark-slash-fill'
+              : 'bookmark',
             color:
               typeof saved === 'boolean' ? undefined : 'foregroundColorMuted65',
           }}

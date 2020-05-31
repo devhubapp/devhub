@@ -467,7 +467,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
         {allColumnOptionCategories.includes('saved_for_later') &&
           (() => {
-            const savedForLater = column.filters && column.filters.saved
+            const saved = column.filters && column.filters.saved
 
             // const filteredItemsMetadata = getItemsFilterMetadata(
             //   column.type,
@@ -482,10 +482,17 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
             return (
               <ColumnOptionsRow
                 enableBackgroundHover={allowToggleCategories}
-                hasChanged={typeof savedForLater === 'boolean'}
+                hasChanged={typeof saved === 'boolean'}
                 headerItemFixedIconSize={columnHeaderItemContentSize}
                 hideSeparator={lastColumnCategory === 'saved_for_later'}
-                icon={{ family: 'octicon', name: 'bookmark' }}
+                icon={{
+                  family: 'octicon',
+                  name: saved
+                    ? 'bookmark-fill'
+                    : saved === false
+                    ? 'bookmark-slash-fill'
+                    : 'bookmark',
+                }}
                 isOpen={openedOptionCategories.has('saved_for_later')}
                 onToggle={
                   allowToggleCategories
@@ -493,18 +500,12 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : undefined
                 }
                 right={
-                  savedForLater === true
-                    ? 'Only'
-                    : savedForLater === false
-                    ? 'Excluded'
-                    : ''
+                  saved === true ? 'Only' : saved === false ? 'Excluded' : ''
                 }
                 title="Bookmarks"
               >
                 <Checkbox
-                  checked={
-                    typeof savedForLater === 'boolean' ? savedForLater : null
-                  }
+                  checked={typeof saved === 'boolean' ? saved : null}
                   containerStyle={
                     sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding
                   }
