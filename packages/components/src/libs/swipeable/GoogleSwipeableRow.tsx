@@ -151,7 +151,7 @@ export class GoogleSwipeableRow extends BaseSwipeableRow<
       <Swipeable
         {...props}
         ref={this.swipeableRef}
-        friction={2}
+        friction={1}
         leftThreshold={40 * scaleFactor}
         onSwipeableLeftWillOpen={() => {
           const fullAction = props.leftActions.find(a => a.type === 'FULL')
