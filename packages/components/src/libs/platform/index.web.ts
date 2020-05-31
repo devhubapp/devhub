@@ -85,6 +85,7 @@ export const Platform = {
   ..._Platform,
   isDesktop: isElectron(),
   isElectron: isElectron(),
+  isPad: false,
   isStandalone: (window.navigator as any).standalone,
   OS: _Platform.OS as PlatformName,
   selectUsingRealOS<T>(specifics: PlataformSelectSpecificsEnhanced<T>) {

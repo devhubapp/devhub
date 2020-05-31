@@ -1,4 +1,4 @@
-import { Platform as _Platform } from 'react-native'
+import { Platform as _Platform, PlatformIOSStatic } from 'react-native'
 
 import {
   PlataformSelectSpecificsEnhanced,
@@ -17,6 +17,7 @@ export const Platform = {
   isDesktop: isMacOS,
   isElectron: false,
   isMacOS,
+  isPad: !!(_Platform as PlatformIOSStatic).isPad,
   isStandalone: true,
   OS: _Platform.OS as PlatformName,
   realOS: (isMacOS ? 'macos' : _Platform.OS) as PlatformRealOS,

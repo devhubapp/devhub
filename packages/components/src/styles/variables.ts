@@ -5,7 +5,7 @@ import { Platform } from '../libs/platform'
 const isSuperSmallScreen = Dimensions.get('screen').width < 350
 export const scaleFactor = isSuperSmallScreen
   ? 1
-  : Platform.isMacOS
+  : Platform.isMacOS || Platform.isPad
   ? 1.3
   : Platform.realOS === 'ios' || Platform.realOS === 'android'
   ? 1.1
