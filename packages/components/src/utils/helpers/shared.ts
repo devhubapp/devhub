@@ -165,5 +165,5 @@ export function vibrateHapticFeedback() {
 }
 
 export function roundToEven(n: number) {
-  return n + (n % 2)
+  return Math.round(n) + (Math.round(n) % 2)
 }

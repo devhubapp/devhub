@@ -188,12 +188,12 @@ export function Checkbox(props: CheckboxProps) {
                   : uncheckedBackgroundThemeColor
               }
               style={{
-                width:
-                  Math.floor(isIndeterminateState ? size * 0.8 : size) -
-                  (isIndeterminateState ? borderWidth : 0),
-                height:
-                  Math.floor(isIndeterminateState ? size * 0.8 : size) -
-                  (isIndeterminateState ? borderWidth : 0),
+                width: roundToEven(
+                  isIndeterminateState ? size - borderWidth * 4 : size,
+                ),
+                height: roundToEven(
+                  isIndeterminateState ? size - borderWidth * 4 : size,
+                ),
                 borderRadius: circle
                   ? size / 2
                   : checkboxBorderRadius / (isIndeterminateState ? 2 : 1),
@@ -209,11 +209,10 @@ export function Checkbox(props: CheckboxProps) {
               color={checkedForegroundThemeColor}
               family="octicon"
               name="check"
-              size={size - 5 * scaleFactor}
+              size={size - 4 * scaleFactor}
               style={[
                 sharedStyles.textCenter,
                 {
-                  lineHeight: size - 5 * scaleFactor,
                   opacity: checked ? 1 : 0,
                 },
               ]}
