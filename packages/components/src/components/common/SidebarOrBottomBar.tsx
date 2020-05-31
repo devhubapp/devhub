@@ -337,7 +337,7 @@ export const SidebarOrBottomBar = React.memo(
       () => (
         <SidebarOrBottomBarItem
           horizontal={horizontal}
-          icon={{ family: 'octicon', name: 'gear' }}
+          icon={{ family: 'octicon', name: 'settings' }}
           onPress={() =>
             small &&
             currentOpenedModal &&

@@ -63,7 +63,7 @@ export function SwipeableCard(props: CardWithLinkProps) {
               }),
           icon: {
             family: 'octicons',
-            name: isRead ? 'dot-fill' : 'dot',
+            name: isRead ? 'eye-closed' : 'eye',
           },
           key: 'read',
           label: 'Read',

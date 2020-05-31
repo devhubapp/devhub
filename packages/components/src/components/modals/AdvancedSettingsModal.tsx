@@ -266,7 +266,7 @@ export const AdvancedSettingsModal = React.memo(
                         <ThemedIcon
                           color={foregroundThemeColor}
                           family="octicon"
-                          name="gear"
+                          name="tools"
                           size={16 * scaleFactor}
                         />
                       </ButtonLink>
@@ -329,7 +329,7 @@ export const AdvancedSettingsModal = React.memo(
                         <ThemedIcon
                           color={foregroundThemeColor}
                           family="octicon"
-                          name="gear"
+                          name="tools"
                           size={16 * scaleFactor}
                         />
                       </ButtonLink>
@@ -461,7 +461,7 @@ export const AdvancedSettingsModal = React.memo(
                                 <ThemedIcon
                                   color={foregroundThemeColor}
                                   family="octicon"
-                                  name="gear"
+                                  name="tools"
                                   size={16 * scaleFactor}
                                 />
                               </ButtonLink>

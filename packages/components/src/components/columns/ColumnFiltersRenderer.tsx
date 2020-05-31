@@ -285,7 +285,7 @@ export const ColumnFiltersRenderer = React.memo(
         >
           {header === 'header' ? (
             <ColumnHeader
-              icon={{ family: 'octicon', name: 'settings' }}
+              icon={{ family: 'octicon', name: 'filter' }}
               title="Filters"
               right={
                 !inlineMode &&

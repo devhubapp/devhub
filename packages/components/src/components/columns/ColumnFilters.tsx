@@ -559,8 +559,8 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   family: 'octicon',
                   name:
                     column.filters && column.filters.unread === true
-                      ? 'mail'
-                      : 'mail-read',
+                      ? 'eye-closed'
+                      : 'eye',
                 }}
                 isOpen={openedOptionCategories.has('unread')}
                 onToggle={

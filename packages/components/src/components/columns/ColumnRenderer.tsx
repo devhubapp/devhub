@@ -319,7 +319,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               }
               disabled={hasCrossedColumnsLimit || !filteredItems.length}
               family="octicon"
-              name={!hasOneUnreadItem ? 'mail' : 'mail-read'}
+              name={!hasOneUnreadItem ? 'eye-closed' : 'eye'}
               onPress={() => {
                 const unread = !hasOneUnreadItem
 
@@ -386,7 +386,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
               analyticsAction="toggle"
               analyticsLabel="column_options"
               family="octicon"
-              name="gear"
+              name="settings"
               onPress={toggleOptions}
               tooltip="Options"
             />
