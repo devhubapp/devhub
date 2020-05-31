@@ -72,7 +72,12 @@ export const Columns = React.memo((props: ColumnsProps) => {
 
       listRef.current.scrollToIndex(index, {
         animated: payload.animated,
-        alignment: 'smart',
+        alignment:
+          index === 0
+            ? 'start'
+            : index >= columnIds.length - 1
+            ? 'end'
+            : 'smart',
       })
     },
     [columnIds],
