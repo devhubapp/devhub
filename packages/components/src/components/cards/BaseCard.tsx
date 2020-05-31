@@ -20,6 +20,7 @@ import { vibrateHapticFeedback } from '../../utils/helpers/shared'
 import { KeyboardKeyIsPressed } from '../AppKeyboardShortcuts'
 import { getCardBackgroundThemeColor } from '../columns/ColumnRenderer'
 import { Avatar } from '../common/Avatar'
+import { ConditionalWrap } from '../common/ConditionalWrap'
 import { IntervalRefresh } from '../common/IntervalRefresh'
 import { Label, smallLabelHeight } from '../common/Label'
 import { Link } from '../common/Link'
@@ -110,7 +111,6 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    flexGrow: 1,
     lineHeight: sizes.rightTextLineHeight,
     fontSize: smallerTextSize,
     fontWeight: '300',
@@ -405,74 +405,86 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                 ]}
               >
                 {text.repo && text.repo.owner && text.repo.name && columnId ? (
-                  <Link
-                    TouchableComponent={GestureHandlerTouchableOpacity}
-                    enableUnderlineHover
-                    href={
-                      textIsOnlyIssueNumber && type === 'issue_or_pr'
-                        ? undefined
-                        : 'javascript:void(0)'
-                    }
-                    openOnNewTab={false}
-                    onPress={(() => {
-                      if (textIsOnlyIssueNumber && issueNumber) {
-                        if (type === 'issue_or_pr') return
+                  <ConditionalWrap
+                    condition={Platform.OS !== 'web'}
+                    wrap={c => (
+                      <View style={[sharedStyles.flex, sharedStyles.flexWrap]}>
+                        {c}
+                      </View>
+                    )}
+                  >
+                    <Link
+                      TouchableComponent={GestureHandlerTouchableOpacity}
+                      enableUnderlineHover
+                      href={
+                        textIsOnlyIssueNumber && type === 'issue_or_pr'
+                          ? undefined
+                          : 'javascript:void(0)'
+                      }
+                      openOnNewTab={false}
+                      onPress={(() => {
+                        if (textIsOnlyIssueNumber && issueNumber) {
+                          if (type === 'issue_or_pr') return
+
+                          return () => {
+                            vibrateHapticFeedback()
+
+                            const removeIfAlreadySet = !(
+                              KeyboardKeyIsPressed.meta ||
+                              KeyboardKeyIsPressed.shift
+                            )
+
+                            const removeOthers = !(
+                              KeyboardKeyIsPressed.alt ||
+                              KeyboardKeyIsPressed.meta ||
+                              KeyboardKeyIsPressed.shift
+                            )
+
+                            dispatch(
+                              actions.changeIssueNumberFilter({
+                                columnId,
+                                issueNumber,
+                                removeIfAlreadySet,
+                                removeOthers,
+                                value: KeyboardKeyIsPressed.alt ? false : true,
+                              }),
+                            )
+                          }
+                        }
 
                         return () => {
                           vibrateHapticFeedback()
 
-                          const removeIfAlreadySet = !(
-                            KeyboardKeyIsPressed.meta ||
-                            KeyboardKeyIsPressed.shift
-                          )
-
-                          const removeOthers = !(
-                            KeyboardKeyIsPressed.alt ||
-                            KeyboardKeyIsPressed.meta ||
-                            KeyboardKeyIsPressed.shift
-                          )
-
                           dispatch(
-                            actions.changeIssueNumberFilter({
+                            actions.setColumnRepoFilter({
                               columnId,
-                              issueNumber,
-                              removeIfAlreadySet,
-                              removeOthers,
+                              owner: text!.repo!.owner,
+                              repo: text!.repo!.name,
                               value: KeyboardKeyIsPressed.alt ? false : true,
+                              // removeIfAlreadySet,
+                              // removeOthers,
                             }),
                           )
                         }
-                      }
-
-                      return () => {
-                        vibrateHapticFeedback()
-
-                        dispatch(
-                          actions.setColumnRepoFilter({
-                            columnId,
-                            owner: text!.repo!.owner,
-                            repo: text!.repo!.name,
-                            value: KeyboardKeyIsPressed.alt ? false : true,
-                            // removeIfAlreadySet,
-                            // removeOthers,
-                          }),
-                        )
-                      }
-                    })()}
-                    style={sharedStyles.flexShrink1}
-                    textProps={{
-                      color: 'foregroundColorMuted65',
-                      numberOfLines: 1,
-                      style: styles.text,
-                    }}
-                  >
-                    {text.text}
-                  </Link>
+                      })()}
+                      style={[
+                        sharedStyles.flexShrink1,
+                        sharedStyles.flexNoGrow,
+                      ]}
+                      textProps={{
+                        color: 'foregroundColorMuted65',
+                        numberOfLines: 1,
+                        style: styles.text,
+                      }}
+                    >
+                      {text.text}
+                    </Link>
+                  </ConditionalWrap>
                 ) : (
                   <ThemedText
                     color="foregroundColorMuted65"
                     numberOfLines={1}
-                    style={[styles.text, sharedStyles.flexShrink1]}
+                    style={[styles.text, sharedStyles.flex]}
                   >
                     {text.text}
                   </ThemedText>
@@ -485,6 +497,8 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                       sharedStyles.flexShrink0,
                     ]}
                   >
+                    <Spacer width={contentPadding / 2} />
+
                     <Link
                       TouchableComponent={GestureHandlerTouchableOpacity}
                       enableUnderlineHover
