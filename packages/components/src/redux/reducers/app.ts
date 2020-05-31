@@ -1,9 +1,8 @@
-import { BannerMessage, constants } from '@devhub/core'
+import { BannerMessage } from '@devhub/core'
 import immer from 'immer'
 import _ from 'lodash'
 import { REHYDRATE } from 'redux-persist'
 
-import { Platform } from '../../libs/platform'
 import { Reducer } from '../types'
 
 export interface State {
@@ -11,18 +10,7 @@ export interface State {
 }
 
 const initialState: State = {
-  banners: [
-    !Platform.isDesktop && {
-      createdAt: '2019-09-23T00:00:00.000Z',
-      disableOnSmallScreens: false,
-      href: constants.DEVHUB_LINKS.LANDING_PAGE_HOME,
-      id: 'desktop_push_notifications',
-      message:
-        'Did you know? DevHub is also available for Desktop, with Push Notifications! ' +
-        'Download it on your macOS, Windows or Linux computer at devhubapp.com.',
-      minLoginCount: 0,
-    },
-  ].filter(Boolean) as State['banners'],
+  banners: [].filter(Boolean) as State['banners'],
 }
 
 export const appReducer: Reducer<State> = (state = initialState, action) => {
@@ -41,6 +29,7 @@ export const appReducer: Reducer<State> = (state = initialState, action) => {
               if (!(banner && banner.id)) return banner
               if (banner.id === 'join_our_slack') return
               if (banner.id === 'new_layout_mode') return
+              if (banner.id === 'desktop_push_notifications') return
 
               const updatedBanner = initialState.banners.find(
                 b => b.id === banner.id,
