@@ -1,15 +1,16 @@
-import { Dimensions } from 'react-native'
+import { Dimensions, PixelRatio } from 'react-native'
 
 import { Platform } from '../libs/platform'
 
 const isSuperSmallScreen = Dimensions.get('screen').width < 350
-export const scaleFactor = isSuperSmallScreen
-  ? 1
-  : Platform.isMacOS || Platform.isPad
-  ? 1.3
-  : Platform.realOS === 'ios' || Platform.realOS === 'android'
-  ? 1.1
-  : 1
+export const scaleFactor =
+  (isSuperSmallScreen
+    ? 1
+    : Platform.isMacOS || Platform.isPad
+    ? 1.3
+    : Platform.realOS === 'ios' || Platform.realOS === 'android'
+    ? 1.1
+    : 1) * (PixelRatio.getFontScale() || 1)
 
 export const avatarSize = 40 * scaleFactor
 export const smallAvatarSize = 18 * scaleFactor

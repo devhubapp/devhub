@@ -45,7 +45,10 @@ export function calculateColumnWidth({
     windowWidth -
     (getAppLayout().appOrientation === 'portrait' ? 0 : sidebarWidth)
 
-  const minWidth = _minWidth && _minWidth > 0 ? _minWidth : 0
+  const minWidth = Math.min(
+    _minWidth && _minWidth > 0 ? _minWidth : 0,
+    windowWidth,
+  )
   const maxWidth = Math.min(
     windowWidth <= APP_LAYOUT_BREAKPOINTS.MEDIUM
       ? availableWidth

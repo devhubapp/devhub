@@ -16,7 +16,12 @@ export const propsToScale = [
 
 export const Text = React.forwardRef<TextOriginal, TextProps>((props, ref) => {
   return (
-    <TextOriginal ref={ref} {...props} style={[styles.default, props.style]} />
+    <TextOriginal
+      ref={ref}
+      allowFontScaling={false}
+      {...props}
+      style={[styles.default, props.style]}
+    />
   )
 })
 export type Text = TextOriginal
