@@ -327,7 +327,7 @@ export function AddColumnModal(props: AddColumnModalProps) {
             {groupIndex < columnTypes.length - 1 && (
               <>
                 <Spacer height={contentPadding / 2} />
-                <Separator horizontal />
+                <Separator leftOffset={contentPadding} horizontal />
                 <Spacer height={contentPadding / 2} />
               </>
             )}

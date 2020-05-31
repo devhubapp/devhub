@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
@@ -6,15 +5,16 @@ import { Theme, ThemeColors } from '@devhub/core'
 import { scaleFactor } from '../../styles/variables'
 import { ThemedView } from '../themed/ThemedView'
 
-export const separatorSize = 2 * scaleFactor
+export const separatorSize = 1 * scaleFactor
 export const separatorThickSize = 5 * scaleFactor
 
-export const getSeparatorThemeColors = _.memoize((_backgroundColor: string): [
-  keyof ThemeColors,
-  keyof ThemeColors | undefined,
-] => {
-  return ['backgroundColorDarker1', 'backgroundColorLighther1']
-})
+export function getSeparatorThemeColor({
+  isDark,
+}: {
+  isDark: boolean
+}): keyof ThemeColors {
+  return isDark ? 'backgroundColorLighther1' : 'backgroundColorDarker1'
+}
 
 const styles = StyleSheet.create({
   absoluteTop: {
@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
 
 export interface SeparatorProps {
   absolute?: 'none' | 'top' | 'bottom' | 'left' | 'right'
-  backgroundThemeColor1?: keyof ThemeColors
-  backgroundThemeColor2?: keyof ThemeColors
+  backgroundThemeColor?: keyof ThemeColors
   half?: boolean
   horizontal: boolean
   inverted?: boolean
+  leftOffset?: number
   thick?: boolean
   zIndex?: number
 }
@@ -60,33 +60,20 @@ export interface SeparatorProps {
 export const Separator = React.memo((props: SeparatorProps) => {
   const {
     absolute,
-    backgroundThemeColor1: _backgroundThemeColor1,
-    backgroundThemeColor2: _backgroundThemeColor2,
+    backgroundThemeColor: _backgroundThemeColor,
     half,
     horizontal,
     inverted,
+    leftOffset,
     thick,
     zIndex,
   } = props
 
-  const backgroundThemeColor1 =
-    _backgroundThemeColor1 ||
-    ((theme: Theme) => getSeparatorThemeColors(theme.backgroundColor)[0])
+  const backgroundThemeColor =
+    _backgroundThemeColor ||
+    ((theme: Theme) => getSeparatorThemeColor({ isDark: theme.isDark }))
 
-  const backgroundThemeColor2 = _backgroundThemeColor1
-    ? _backgroundThemeColor2
-    : (theme: Theme) => getSeparatorThemeColors(theme.backgroundColor)[1]
-
-  const _twoSeparators = !!(
-    backgroundThemeColor1 &&
-    backgroundThemeColor2 &&
-    !half
-  )
-
-  const size =
-    (thick ? separatorThickSize : separatorSize) /
-    (half ? 2 : 1) /
-    (_twoSeparators ? 2 : 1)
+  const size = (thick ? separatorThickSize : separatorSize) / (half ? 2 : 1)
 
   const absoluteStyle =
     absolute === 'top'
@@ -115,21 +102,14 @@ export const Separator = React.memo((props: SeparatorProps) => {
             }
           : { flexDirection: inverted ? 'row-reverse' : 'row', height: '100%' },
         absoluteStyle,
+        !!leftOffset && { marginLeft: leftOffset },
         !!zIndex && { zIndex },
       ]}
       pointerEvents="none"
     >
-      {!!backgroundThemeColor1 && (
+      {!!backgroundThemeColor && (
         <ThemedView
-          backgroundColor={backgroundThemeColor1}
-          style={separatorStyle}
-          pointerEvents="none"
-        />
-      )}
-
-      {!!backgroundThemeColor2 && !!_twoSeparators && (
-        <ThemedView
-          backgroundColor={backgroundThemeColor2}
+          backgroundColor={backgroundThemeColor}
           style={separatorStyle}
           pointerEvents="none"
         />

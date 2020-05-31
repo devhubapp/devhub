@@ -59,7 +59,7 @@ export function ColumnSeparator(props: ColumnSeparatorProps) {
   return (
     <Separator
       absolute={absolute}
-      backgroundThemeColor1="backgroundColorDarker2"
+      backgroundThemeColor="backgroundColorDarker2"
       half={half}
       horizontal={false}
       thick

@@ -722,7 +722,14 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
         <Spacer flex={1} />
       </View>
 
-      <CardItemSeparator muted={isMuted} />
+      <CardItemSeparator
+        leftOffset={
+          sizes.cardPaddingHorizontal +
+          sizes.avatarContainerWidth +
+          sizes.horizontalSpaceSize
+        }
+        muted={isMuted}
+      />
     </View>
   )
 })
