@@ -91,7 +91,7 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
         >
           <Button
             analyticsLabel="show_cleared"
-            children="Show cleared items"
+            children="Show done items"
             onPress={() => {
               dispatch(
                 actions.setColumnClearedAtFilter({

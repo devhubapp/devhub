@@ -1,4 +1,10 @@
-import { Column, EnhancedItem, isItemRead, isItemSaved } from '@devhub/core'
+import {
+  Column,
+  EnhancedItem,
+  getDefaultPaginationPerPage,
+  isItemRead,
+  isItemSaved,
+} from '@devhub/core'
 import { RefObject, useCallback, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -341,6 +347,38 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
         }),
       )
     }, [getItemByNodeIdOrId, itemNodeIdOrIds]),
+  )
+
+  useMultiKeyPressCallback(
+    ['Shift', 'd'],
+    useCallback(() => {
+      if (!isColumnFocusedRef.current) return
+
+      const hasItemsToMarkAsDone = itemNodeIdOrIds.some(nodeIdOrId => {
+        const item = getItemByNodeIdOrId(nodeIdOrId)
+        return !!(item && !isItemSaved(item)) /* && isItemRead(item) */
+      })
+
+      dispatch(
+        actions.setColumnClearedAtFilter({
+          columnId,
+          clearedAt: hasItemsToMarkAsDone ? new Date().toISOString() : null,
+        }),
+      )
+
+      if (!hasItemsToMarkAsDone) {
+        dispatch(
+          actions.fetchColumnSubscriptionRequest({
+            columnId,
+            params: {
+              page: 1,
+              perPage: getDefaultPaginationPerPage(type),
+            },
+            replaceAllItems: false,
+          }),
+        )
+      }
+    }, [getItemByNodeIdOrId, itemNodeIdOrIds, type]),
   )
 
   useKeyPressCallback(

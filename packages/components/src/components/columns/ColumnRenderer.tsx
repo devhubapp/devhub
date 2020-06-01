@@ -137,7 +137,7 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   const dispatch = useDispatch()
   const store = useStore()
 
-  const clearableItems = (filteredItems as any[]).filter(
+  const hasItemsToMarkAsDone = !!(filteredItems as any[]).some(
     (
       item:
         | EnhancedGitHubEvent
@@ -290,16 +290,16 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
             <ColumnHeader.Button
               key="column-options-button-clear-column"
               analyticsLabel={
-                clearableItems.length ? 'clear_column' : 'unclear_column'
+                hasItemsToMarkAsDone ? 'clear_column' : 'unclear_column'
               }
-              disabled={hasCrossedColumnsLimit || !clearableItems.length}
+              disabled={hasCrossedColumnsLimit || !hasItemsToMarkAsDone}
               family="octicon"
               name="check"
               onPress={() => {
                 dispatch(
                   actions.setColumnClearedAtFilter({
                     columnId,
-                    clearedAt: clearableItems.length
+                    clearedAt: hasItemsToMarkAsDone
                       ? new Date().toISOString()
                       : null,
                   }),
@@ -307,9 +307,9 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
 
                 focusColumn()
 
-                if (!clearableItems.length) refresh()
+                if (!hasItemsToMarkAsDone) refresh()
               }}
-              tooltip="Clear items"
+              tooltip="Done"
             />
 
             <ColumnHeader.Button

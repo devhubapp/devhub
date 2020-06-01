@@ -27,6 +27,7 @@ const clearMessages = [
   'Good job!',
   'Great work!',
   'You rock!',
+  'Well done!',
 ]
 
 const emojis: GitHubEmoji[] = ['+1', 'muscle', 'tada', '100']
