@@ -18,7 +18,11 @@ export function Select<T extends string>(props: SelectProps<T>) {
 
   const childrenArr = React.Children.toArray(children)
   const selectedIndex = childrenArr.findIndex(
-    child => child && child.props.selected === true,
+    child =>
+      typeof child === 'object' &&
+      'props' in child &&
+      child.props &&
+      child.props.selected === true,
   )
 
   return (
