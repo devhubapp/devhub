@@ -46,6 +46,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
         </>
       ) : os ? (
         <>
+          {/*
           {paidPlans.length === 1 &&
           paidPlans[0] &&
           !paidPlans[0].interval &&
@@ -88,19 +89,29 @@ export default function CTAButtons(props: CTAButtonsProps) {
                 : 'See pricing'}
             </Button>
           )}
+          */}
 
           {!!(
             (freeTrialDays || freePlan) &&
             plans.some(plan => !!plan && !plan.amount)
           ) && (
             <Button
-              type="neutral"
+              type="primary"
               href="/download?autostart"
               className="mb-2 mr-2"
             >
               {`Download for ${getSystemLabel(os)}`}
             </Button>
           )}
+
+          <Button
+            type="neutral"
+            href={constants.APP_BASE_URL}
+            target="_top"
+            className="mb-2"
+          >
+            Use web version
+          </Button>
         </>
       ) : (
         <>
@@ -114,7 +125,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
             target="_top"
             className="mb-2"
           >
-            Open web version
+            Use web version
           </Button>
         </>
       )}
