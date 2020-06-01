@@ -1,6 +1,6 @@
 {
   "name": "@devhub/web",
-  "version": "0.100.2",
+  "version": "0.101.0",
   "private": false,
   "homepage": "./",
   "scripts": {
@@ -18,7 +18,7 @@
     "test": "react-app-rewired test"
   },
   "dependencies": {
-    "@devhub/components": "0.100.2",
+    "@devhub/components": "0.101.0",
     "localforage": "1.7.3",
     "react": "16.13.1",
     "react-app-polyfill": "1.0.4",

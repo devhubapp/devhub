@@ -1,6 +1,6 @@
 {
   "name": "@devhub/mobile",
-  "version": "0.100.2",
+  "version": "0.101.0",
   "private": false,
   "scripts": {
     "android": "react-native run-android",
@@ -17,7 +17,7 @@
     "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
-    "@devhub/components": "0.100.2",
+    "@devhub/components": "0.101.0",
     "@react-native-firebase/analytics": "7.1.2",
     "@react-native-firebase/app": "7.1.4",
     "bugsnag-react-native": "2.23.2",
