@@ -115,21 +115,12 @@ export default function Header(props: HeaderProps) {
               </HeaderLink>
             )}
 
-            {authData && authData.appToken ? (
-              <HeaderLink
-                href="/account"
-                className={twClasses.headerLink__rightMargin}
-              >
-                My account
-              </HeaderLink>
-            ) : (
-              <HeaderLink
-                href="/account?autologin"
-                className={twClasses.headerLink__rightMargin}
-              >
-                Login
-              </HeaderLink>
-            )}
+            <HeaderLink
+              href="/account"
+              className={twClasses.headerLink__rightMargin}
+            >
+              My account
+            </HeaderLink>
 
             <span className="pr-2" />
 
