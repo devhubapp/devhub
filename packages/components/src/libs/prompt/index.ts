@@ -1,3 +1,5 @@
+import { Alert } from 'react-native'
+
 import { PromptButton, PromptOptions } from './index.shared'
 
 export function isSupported() {
@@ -11,5 +13,5 @@ export function prompt(
   _options?: PromptOptions,
 ) {
   console.error('[prompt] Not supported.')
-  if (__DEV__) alert('Prompt not supported.')
+  if (__DEV__) Alert.alert('Prompt not supported.')
 }

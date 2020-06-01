@@ -29,7 +29,7 @@ import {
 } from '@devhub/core'
 import { Octokit } from '@octokit/rest'
 import _ from 'lodash'
-import { AppState, InteractionManager } from 'react-native'
+import { Alert, AppState, InteractionManager } from 'react-native'
 import {
   actionChannel,
   all,
@@ -719,7 +719,7 @@ function* _markAllGitHubNotificationsAsReadOrUnread({
   try {
     yield octokit.activity.markAsRead({})
   } catch (error) {
-    alert(
+    Alert.alert(
       `Failed to mark all notifications as ${
         unread ? 'unread' : 'read'
       }. ${error}`,
@@ -794,18 +794,14 @@ function* onMarkEverythingAsReadWithConfirmation(
   >,
 ) {
   const confirmed = yield new Promise(resolve => {
-    confirm(
-      'Mark all columns as read?',
-      'Mark all items from all columns as read? This cannot be undone.',
-      {
-        confirmCallback() {
-          resolve(true)
-        },
-        cancelCallback() {
-          resolve(false)
-        },
+    confirm('Mark all columns as read?', 'This cannot be undone.', {
+      confirmCallback() {
+        resolve(true)
       },
-    )
+      cancelCallback() {
+        resolve(false)
+      },
+    })
   })
 
   if (!confirmed) return

@@ -19,14 +19,14 @@ export const confirm: ConfirmFn = (
     message,
     [
       {
-        text: cancelLabel || 'Cancel',
-        onPress: cancelCallback || (() => undefined),
-        style: 'cancel',
-      },
-      {
         text: confirmLabel || 'Ok',
         onPress: confirmCallback || (() => undefined),
         style: destructive ? 'destructive' : undefined,
+      },
+      {
+        text: cancelLabel || 'Cancel',
+        onPress: cancelCallback || (() => undefined),
+        style: 'cancel',
       },
     ],
     { cancelable },
