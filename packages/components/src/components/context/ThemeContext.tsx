@@ -1,4 +1,5 @@
 import React, { useCallback, useContext, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
 import {
   defaultTheme,
@@ -8,7 +9,9 @@ import {
 } from '@devhub/core'
 import { useReduxState } from '../../hooks/use-redux-state'
 import { useReduxStateCallback } from '../../hooks/use-redux-state-callback'
+import { Appearance } from '../../libs/appearence'
 import { Browser } from '../../libs/browser'
+import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { getColumnHeaderThemeColors } from '../columns/ColumnHeader'
 
@@ -25,6 +28,8 @@ ThemeContext.displayName = 'ThemeContext'
 
 let _theme: Theme = defaultTheme
 export function ThemeProvider(props: ThemeProviderProps) {
+  const dispatch = useDispatch()
+
   const theme = useReduxState(selectors.themeSelector)
   _theme = theme
 
@@ -33,6 +38,16 @@ export function ThemeProvider(props: ThemeProviderProps) {
     Browser.setBackgroundColor(theme[headerThemeColors.normal])
     Browser.setForegroundColor(theme.foregroundColor)
   }, [theme])
+
+  useEffect(() => {
+    const listener = Appearance.addChangeListener(preferences => {
+      dispatch(actions.appearenceColorSchemeChanged(preferences.colorScheme))
+    })
+
+    return () => {
+      listener.remove()
+    }
+  }, [])
 
   return (
     <ThemeContext.Provider value={theme}>

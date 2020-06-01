@@ -16,10 +16,17 @@ export function loadCustomTheme(color: string) {
   return createThemeFromColor(color, 'custom', 'Custom')
 }
 
-export function loadTheme(
-  theme?: ThemePair,
-  preferredDarkTheme?: ThemePair,
-  preferredLightTheme?: ThemePair,
+export function loadThemeBase(
+  theme: ThemePair,
+  {
+    preferredDarkTheme,
+    preferredLightTheme,
+    prefersDarkTheme,
+  }: {
+    preferredDarkTheme?: ThemePair
+    preferredLightTheme?: ThemePair
+    prefersDarkTheme?: boolean
+  } = {},
 ): Theme {
   const _theme = theme || constants.DEFAULT_THEME_PAIR
 
@@ -45,20 +52,21 @@ export function loadTheme(
     const lightTheme: Theme =
       _preferredLightTheme || themes[constants.DEFAULT_LIGHT_THEME]!
 
-    return isNight() ? darkTheme : lightTheme
+    const _prefersDarkTheme =
+      typeof prefersDarkTheme === 'boolean' ? prefersDarkTheme : isNight()
+    return _prefersDarkTheme ? darkTheme : lightTheme
   }
 
   return (
     themes[_theme.id] ||
-    loadTheme(
+    loadThemeBase(
       { id: 'auto', color: _theme.color },
-      preferredDarkTheme,
-      preferredLightTheme,
+      { preferredDarkTheme, preferredLightTheme, prefersDarkTheme },
     )
   )
 }
 
-export const defaultTheme = loadTheme(constants.DEFAULT_THEME_PAIR)
+export const defaultTheme = loadThemeBase(constants.DEFAULT_THEME_PAIR)
 
 export const staticColorFields: Array<keyof StaticThemeColors> = [
   'black',

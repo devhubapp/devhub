@@ -63,7 +63,7 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 - [x] **Home/Dashboard**: See yours or other users' home screen (a.k.a. GitHub Dashboard), a great way to discover interesting repositories;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
 - [x] **Keyboard shortcuts**: Do anything using only the keyboard ([see shortcuts below](#keyboard-shortcuts));
-- [x] **Theme support**: Choose between 6 light or dark themes; Automatically toggle on day/night switch;
+- [x] **Theme support**: Choose between 6 light or dark themes; Automatically detect system preference;
 - [x] **And more!**: Desktop apps, native mobile apps, open source, modern tech stack, ...
 
 <br/>

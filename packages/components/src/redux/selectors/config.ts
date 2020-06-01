@@ -1,7 +1,9 @@
 import { createSelector } from 'reselect'
 
-import { constants, isNight, loadTheme, ThemePair } from '@devhub/core'
+import { constants, isNight, ThemePair } from '@devhub/core'
+import { Appearance } from '../../libs/appearence'
 import { EMPTY_OBJ } from '../../utils/constants'
+import { loadTheme } from '../../utils/helpers/theme'
 import { RootState } from '../types'
 
 const s = (state: RootState) => state.config || EMPTY_OBJ
@@ -25,6 +27,9 @@ export const themeSelector = createSelector(
   themePairSelector,
   preferredDarkThemePairSelector,
   preferredLightThemePairSelector,
-  isNight,
-  loadTheme,
+  () => Appearance.getColorScheme(),
+  () => isNight(),
+  (theme, preferredDarkTheme, preferredLightTheme, _colorScheme, _isNight) => {
+    return loadTheme(theme, { preferredDarkTheme, preferredLightTheme })
+  },
 )

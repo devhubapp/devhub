@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { darkThemesArr, isNight, lightThemesArr, Theme } from '@devhub/core'
 import { useReduxAction } from '../../hooks/use-redux-action'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { Appearance } from '../../libs/appearence'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -60,7 +61,12 @@ export const ThemePreference = React.memo(() => {
             typeof checked === 'boolean' ||
             (currentThemeId === 'auto' && checked === null)
           ) {
-            if (currentThemeId === 'auto' && theme.isDark === isNight()) {
+            if (
+              currentThemeId === 'auto' &&
+              theme.isDark ===
+                (Appearance.getColorScheme() === 'dark' ||
+                  (Appearance.getColorScheme() !== 'light' && isNight()))
+            ) {
               setPreferrableTheme({
                 id: theme.id,
                 color: theme.backgroundColor,
@@ -106,7 +112,7 @@ export const ThemePreference = React.memo(() => {
             sharedStyles.justifyContentSpaceBetween,
           ]}
         >
-          <H3>Auto toggle on day/night</H3>
+          <H3>Auto detect system preference</H3>
           <Switch
             analyticsLabel="auto_theme"
             onValueChange={enableAutoTheme =>
