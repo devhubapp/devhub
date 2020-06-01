@@ -50,9 +50,9 @@ export const keyboardShortcutsById = {
     keys: ['Shift R'],
     description: 'Mark column as read/unread',
   },
-  markEverythingAsRead: {
+  markEverythingAsDone: {
     keys: ['Shift Esc'],
-    description: 'Mark everything as read, from all columns',
+    description: 'Mark all columns as done',
   },
   toggleSave: { keys: ['S'], description: 'Save/unsave item' },
   toggleDoneAllFromColumn: {
@@ -94,7 +94,7 @@ export const keyboardShortcuts = [
   keyboardShortcutsById.selectNextColumn,
   keyboardShortcutsById.toggleRead,
   keyboardShortcutsById.toggleReadAllFromColumn,
-  keyboardShortcutsById.markEverythingAsRead,
+  keyboardShortcutsById.markEverythingAsDone,
   keyboardShortcutsById.toggleSave,
   keyboardShortcutsById.toggleDoneAllFromColumn,
   keyboardShortcutsById.moveColumnLeft,

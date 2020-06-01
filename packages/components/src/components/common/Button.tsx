@@ -1,5 +1,5 @@
 import { ThemeColors } from '@devhub/core'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, View, ViewProps } from 'react-native'
 
 import { useHover } from '../../hooks/use-hover'
@@ -20,6 +20,7 @@ import {
 import { ThemedView } from '../themed/ThemedView'
 
 export type ButtonProps = Omit<ThemedTouchableHighlightProps, 'children'> & {
+  autoFocus?: boolean
   children:
     | React.ReactNode
     | ((colors: { foregroundThemeColor: keyof ThemeColors }) => React.ReactNode)
@@ -54,6 +55,7 @@ export const defaultButtonSize = 40 * scaleFactor
 
 export function Button(props: ButtonProps) {
   const {
+    autoFocus,
     children,
     colors,
     contentContainerStyle,
@@ -140,6 +142,11 @@ export function Button(props: ButtonProps) {
     ),
   )
 
+  useEffect(() => {
+    if (autoFocus && innerTouchableRef.current)
+      innerTouchableRef.current.focus()
+  }, [autoFocus])
+
   return (
     <ThemedView
       ref={containerViewRef}
@@ -161,6 +168,7 @@ export function Button(props: ButtonProps) {
       <>
         <ThemedTouchableHighlight
           ref={innerTouchableRef}
+          accessibilityRole="button"
           backgroundColor={undefined}
           underlayColor={backgroundHoverThemeColor}
           {...otherProps}

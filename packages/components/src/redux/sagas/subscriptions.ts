@@ -794,20 +794,52 @@ function* onMarkEverythingAsReadWithConfirmation(
   >,
 ) {
   const confirmed = yield new Promise(resolve => {
-    confirm('Mark all columns as read?', 'This cannot be undone.', {
-      confirmCallback() {
-        resolve(true)
+    confirm(
+      'Mark all as read?',
+      'All your GitHub notifications and all columns will be marked as read. ' +
+        'This cannot be undone.',
+      {
+        confirmCallback() {
+          resolve(true)
+        },
+        cancelCallback() {
+          resolve(false)
+        },
       },
-      cancelCallback() {
-        resolve(false)
-      },
-    })
+    )
   })
 
   if (!confirmed) return
 
   yield put(actions.markEverythingAsRead())
   yield _markAllGitHubNotificationsAsReadOrUnread({ unread: false })
+}
+
+function* onClearAllColumnsWithConfirmation(
+  _action: ExtractActionFromActionCreator<
+    typeof actions.clearAllColumnsWithConfirmation
+  >,
+) {
+  const confirmed = yield new Promise(resolve => {
+    confirm(
+      'Clear all columns?',
+      'All columns will become empty. ' +
+        'Your GitHub notifications will be marked as read. ' +
+        'This cannot be undone.',
+      {
+        confirmCallback() {
+          resolve(true)
+        },
+        cancelCallback() {
+          resolve(false)
+        },
+      },
+    )
+  })
+
+  if (!confirmed) return
+
+  yield put(actions.clearAllColumns())
 }
 
 export function* subscriptionsSagas() {
@@ -835,6 +867,10 @@ export function* subscriptionsSagas() {
     yield takeLatest(
       'MARK_EVERYTHING_AS_READ_WITH_CONFIRMATION',
       onMarkEverythingAsReadWithConfirmation,
+    ),
+    yield takeLatest(
+      'CLEAR_ALL_COLUMNS_WITH_CONFIRMATION',
+      onClearAllColumnsWithConfirmation,
     ),
   ])
 }

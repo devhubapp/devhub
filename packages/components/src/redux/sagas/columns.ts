@@ -1,5 +1,12 @@
 import { AppState, InteractionManager } from 'react-native'
-import { all, call, put, select, takeLatest } from 'redux-saga/effects'
+import {
+  all,
+  call,
+  put,
+  select,
+  takeEvery,
+  takeLatest,
+} from 'redux-saga/effects'
 
 import {
   ActivityColumnSubscriptionCreation,
@@ -214,13 +221,12 @@ function* onDeleteColumn(
   }
 }
 
-function* onSetClearedAt(
+function* onClearColumnOrColumns(
   action: ExtractActionFromActionCreator<
-    typeof actions.setColumnClearedAtFilter
+    typeof actions.setColumnClearedAtFilter | typeof actions.clearAllColumns
   >,
 ) {
-  if (!action.payload.clearedAt) return
-
+  if (action.payload.clearedAt === null) return
   yield put(actions.cleanupArchivedItems())
 }
 
@@ -405,10 +411,13 @@ function* onColumnSubscriptionFilterChange(
 
 export function* columnsSagas() {
   yield all([
-    yield takeLatest('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
-    yield takeLatest('MOVE_COLUMN', onMoveColumn),
-    yield takeLatest('DELETE_COLUMN', onDeleteColumn),
-    yield takeLatest('SET_COLUMN_CLEARED_AT_FILTER', onSetClearedAt),
+    yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
+    yield takeEvery('MOVE_COLUMN', onMoveColumn),
+    yield takeEvery('DELETE_COLUMN', onDeleteColumn),
+    yield takeLatest(
+      ['SET_COLUMN_CLEARED_AT_FILTER', 'CLEAR_ALL_COLUMNS'],
+      onClearColumnOrColumns,
+    ),
     yield takeLatest(
       [
         'CLEAR_COLUMN_FILTERS',

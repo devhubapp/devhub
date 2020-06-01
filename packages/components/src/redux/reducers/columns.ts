@@ -694,13 +694,37 @@ export const columnsReducer: Reducer<State> = (
         const column = draft.byId[action.payload.columnId]
         if (!column) return
 
+        const now = new Date().toISOString()
+
         column.filters = column.filters || {}
         column.filters.clearedAt =
           action.payload.clearedAt === null
             ? undefined
-            : action.payload.clearedAt || new Date().toISOString()
+            : action.payload.clearedAt || now
 
-        draft.updatedAt = new Date().toISOString()
+        draft.updatedAt = now
+      })
+
+    case 'CLEAR_ALL_COLUMNS':
+      return immer(state, draft => {
+        if (!draft.byId) return
+
+        draft.allIds = draft.allIds || []
+
+        const now = new Date().toISOString()
+
+        draft.allIds.forEach(columnId => {
+          const column = draft.byId![columnId]
+          if (!column) return
+
+          column.filters = column.filters || {}
+          column.filters.clearedAt =
+            action.payload.clearedAt === null
+              ? undefined
+              : action.payload.clearedAt || now
+
+          draft.updatedAt = now
+        })
       })
 
     case 'CHANGE_ISSUE_NUMBER_FILTER':

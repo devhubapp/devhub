@@ -327,18 +327,22 @@ const DialogView = React.memo(
                                   return 'primary'
                                 })()
                               : 'neutral'
+
+                          const disabled =
+                            (!button.onPress && button.style !== 'cancel') ||
+                            (buttonType === 'primary' &&
+                              renderInput &&
+                              !inputValue)
+
                           return (
                             <Fragment
                               key={`dialog-button-${button.text || index}`}
                             >
                               <Button
-                                disabled={
-                                  (!button.onPress &&
-                                    button.style !== 'cancel') ||
-                                  (buttonType === 'primary' &&
-                                    renderInput &&
-                                    !inputValue)
+                                autoFocus={
+                                  buttonType === 'primary' && !disabled
                                 }
+                                disabled={disabled}
                                 onPress={() => {
                                   if (button.onPress) {
                                     button.onPress(inputValue || '')

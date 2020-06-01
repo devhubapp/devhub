@@ -216,6 +216,16 @@ export function setColumnClearedAtFilter(payload: {
   return createAction('SET_COLUMN_CLEARED_AT_FILTER', payload)
 }
 
+export function clearAllColumnsWithConfirmation(
+  payload: { clearedAt?: string | null } = {},
+) {
+  return createAction('CLEAR_ALL_COLUMNS_WITH_CONFIRMATION', payload)
+}
+
+export function clearAllColumns(payload: { clearedAt?: string | null } = {}) {
+  return createAction('CLEAR_ALL_COLUMNS', payload)
+}
+
 export function changeIssueNumberFilter(payload: {
   columnId: string
   issueNumber: number

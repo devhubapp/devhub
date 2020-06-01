@@ -85,7 +85,7 @@ export const AppKeyboardShortcuts = React.memo(() => {
   useMultiKeyPressCallback(
     ['Shift', 'Escape'],
     useCallback(() => {
-      dispatch(actions.markEverythingAsReadWithConfirmation())
+      dispatch(actions.clearAllColumnsWithConfirmation())
     }, []),
   )
 
