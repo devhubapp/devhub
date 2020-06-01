@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import React, { useCallback, useMemo, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { useFocusedColumn } from '../components/context/ColumnFocusContext'
 import useKeyPressCallback from '../hooks/use-key-press-callback'
 import useMultiKeyPressCallback from '../hooks/use-multi-key-press-callback'
-import { useReduxAction } from '../hooks/use-redux-action'
 import { useReduxState } from '../hooks/use-redux-state'
 import { emitter } from '../libs/emitter'
 import { Platform } from '../libs/platform'
@@ -21,11 +21,7 @@ export const AppKeyboardShortcuts = React.memo(() => {
   const columnIds = useReduxState(selectors.columnIdsSelector)
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const { focusedColumnId, focusedColumnIndex } = useFocusedColumn()
-
-  const moveColumn = useReduxAction(actions.moveColumn)
-  const popModal = useReduxAction(actions.popModal)
-  const pushModal = useReduxAction(actions.pushModal)
-  const replaceModal = useReduxAction(actions.replaceModal)
+  const dispatch = useDispatch()
 
   const keyboardShortcutsParamsRef = useRef({
     currentOpenedModal,
@@ -79,9 +75,17 @@ export const AppKeyboardShortcuts = React.memo(() => {
       )
         (document.activeElement as any).blur()
 
-      if (keyboardShortcutsParamsRef.current.currentOpenedModal) popModal()
+      if (keyboardShortcutsParamsRef.current.currentOpenedModal)
+        dispatch(actions.popModal())
       else if (Platform.isElectron && window.ipc)
         window.ipc.send('exit-full-screen')
+    }, []),
+  )
+
+  useMultiKeyPressCallback(
+    ['Shift', 'Escape'],
+    useCallback(() => {
+      dispatch(actions.markEverythingAsReadWithConfirmation())
     }, []),
   )
 
@@ -96,7 +100,7 @@ export const AppKeyboardShortcuts = React.memo(() => {
         )
       )
         return
-      replaceModal({ name: 'ADD_COLUMN' })
+      dispatch(actions.replaceModal({ name: 'ADD_COLUMN' }))
     }, []),
   )
 
@@ -111,7 +115,7 @@ export const AppKeyboardShortcuts = React.memo(() => {
         )
       )
         return
-      replaceModal({ name: 'SETTINGS' })
+      dispatch(actions.replaceModal({ name: 'SETTINGS' }))
     }, []),
   )
 
@@ -255,10 +259,12 @@ export const AppKeyboardShortcuts = React.memo(() => {
     if (keyboardShortcutsParamsRef.current.currentOpenedModal) return
     if (!keyboardShortcutsParamsRef.current.focusedColumnId) return
 
-    moveColumn({
-      columnId: keyboardShortcutsParamsRef.current.focusedColumnId,
-      columnIndex: keyboardShortcutsParamsRef.current.focusedColumnIndex - 1,
-    })
+    dispatch(
+      actions.moveColumn({
+        columnId: keyboardShortcutsParamsRef.current.focusedColumnId,
+        columnIndex: keyboardShortcutsParamsRef.current.focusedColumnIndex - 1,
+      }),
+    )
   }, [])
   useMultiKeyPressCallback(['Alt', 'ArrowUp'], moveColumnTopOrLeft)
   useMultiKeyPressCallback(['Alt', 'ArrowLeft'], moveColumnTopOrLeft)
@@ -267,16 +273,18 @@ export const AppKeyboardShortcuts = React.memo(() => {
     if (keyboardShortcutsParamsRef.current.currentOpenedModal) return
     if (!keyboardShortcutsParamsRef.current.focusedColumnId) return
 
-    moveColumn({
-      columnId: keyboardShortcutsParamsRef.current.focusedColumnId,
-      columnIndex: keyboardShortcutsParamsRef.current.focusedColumnIndex + 1,
-    })
+    dispatch(
+      actions.moveColumn({
+        columnId: keyboardShortcutsParamsRef.current.focusedColumnId,
+        columnIndex: keyboardShortcutsParamsRef.current.focusedColumnIndex + 1,
+      }),
+    )
   }, [])
   useMultiKeyPressCallback(['Alt', 'ArrowDown'], moveColumnBottomOrRight)
   useMultiKeyPressCallback(['Alt', 'ArrowRight'], moveColumnBottomOrRight)
 
   const showKeyboardShortcuts = useCallback(() => {
-    pushModal({ name: 'KEYBOARD_SHORTCUTS' })
+    dispatch(actions.pushModal({ name: 'KEYBOARD_SHORTCUTS' }))
   }, [])
 
   useKeyPressCallback('?', showKeyboardShortcuts)

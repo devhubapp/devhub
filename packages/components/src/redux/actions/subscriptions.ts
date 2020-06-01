@@ -98,6 +98,14 @@ export function markRepoNotificationsAsReadOrUnread(payload: {
   return createAction('MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD', payload)
 }
 
+export function markEverythingAsReadWithConfirmation() {
+  return createAction('MARK_EVERYTHING_AS_READ_WITH_CONFIRMATION')
+}
+
+export function markEverythingAsRead() {
+  return createAction('MARK_EVERYTHING_AS_READ')
+}
+
 export function openItem(payload: {
   columnId: Column['id']
   columnType: Column['type']

@@ -321,6 +321,28 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
     }, [getItemByNodeIdOrId, itemNodeIdOrIds]),
   )
 
+  useMultiKeyPressCallback(
+    ['Shift', 'r'],
+    useCallback(() => {
+      if (!isColumnFocusedRef.current) return
+
+      const hasOneUnreadItem = itemNodeIdOrIds.some(nodeIdOrId => {
+        const item = getItemByNodeIdOrId(nodeIdOrId)
+        if (!item) return
+
+        return !isItemRead(item)
+      })
+
+      dispatch(
+        actions.markItemsAsReadOrUnread({
+          type,
+          itemNodeIdOrIds,
+          unread: !hasOneUnreadItem,
+        }),
+      )
+    }, [getItemByNodeIdOrId, itemNodeIdOrIds]),
+  )
+
   useKeyPressCallback(
     ' ',
     useCallback(() => {

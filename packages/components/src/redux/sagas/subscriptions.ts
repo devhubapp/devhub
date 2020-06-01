@@ -46,6 +46,7 @@ import {
 
 import { Browser } from '../../libs/browser'
 import { bugsnag } from '../../libs/bugsnag'
+import { confirm } from '../../libs/confirm'
 import { emitter } from '../../libs/emitter'
 import * as github from '../../libs/github'
 import * as actions from '../actions'
@@ -702,15 +703,9 @@ function* onMarkItemsAsReadOrUnread(
   }
 }
 
-function* onMarkAllNotificationsAsReadOrUnread(
-  action: ExtractActionFromActionCreator<
-    typeof actions.markAllNotificationsAsReadOrUnread
-  >,
-) {
-  const { localOnly, unread } = action.payload
-
-  if (localOnly) return
-
+function* _markAllGitHubNotificationsAsReadOrUnread({
+  unread,
+}: { unread?: boolean } = {}) {
   // GitHub api does not support marking as unread yet :(
   // @see https://github.com/octokit/rest.js/issues/1232
   if (unread) return
@@ -723,17 +718,33 @@ function* onMarkAllNotificationsAsReadOrUnread(
 
   try {
     yield octokit.activity.markAsRead({})
-  } catch (e) {
-    console.error('Failed to mark all notifications as read', e)
-    bugsnag.notify(e)
-
-    yield put(
-      actions.markAllNotificationsAsReadOrUnread({
-        localOnly: true,
-        unread: !unread,
-      }),
+  } catch (error) {
+    alert(
+      `Failed to mark all notifications as ${
+        unread ? 'unread' : 'read'
+      }. ${error}`,
     )
+    bugsnag.notify(error)
+
+    // yield put(
+    //   actions.markAllNotificationsAsReadOrUnread({
+    //     localOnly: true,
+    //     unread: !unread,
+    //   }),
+    // )
   }
+}
+
+function* onMarkAllNotificationsAsReadOrUnread(
+  action: ExtractActionFromActionCreator<
+    typeof actions.markAllNotificationsAsReadOrUnread
+  >,
+) {
+  const { localOnly, unread } = action.payload
+
+  if (localOnly) return
+
+  yield _markAllGitHubNotificationsAsReadOrUnread({ unread })
 }
 
 function* onMarkRepoNotificationsAsReadOrUnread(
@@ -777,6 +788,32 @@ function* onMarkRepoNotificationsAsReadOrUnread(
   }
 }
 
+function* onMarkEverythingAsReadWithConfirmation(
+  _action: ExtractActionFromActionCreator<
+    typeof actions.markEverythingAsReadWithConfirmation
+  >,
+) {
+  const confirmed = yield new Promise(resolve => {
+    confirm(
+      'Mark all columns as read?',
+      'Mark all items from all columns as read? This cannot be undone.',
+      {
+        confirmCallback() {
+          resolve(true)
+        },
+        cancelCallback() {
+          resolve(false)
+        },
+      },
+    )
+  })
+
+  if (!confirmed) return
+
+  yield put(actions.markEverythingAsRead())
+  yield _markAllGitHubNotificationsAsReadOrUnread({ unread: false })
+}
+
 export function* subscriptionsSagas() {
   yield all([
     yield fork(init),
@@ -798,6 +835,10 @@ export function* subscriptionsSagas() {
     yield takeEvery(
       'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD',
       onMarkRepoNotificationsAsReadOrUnread,
+    ),
+    yield takeLatest(
+      'MARK_EVERYTHING_AS_READ_WITH_CONFIRMATION',
+      onMarkEverythingAsReadWithConfirmation,
     ),
   ])
 }

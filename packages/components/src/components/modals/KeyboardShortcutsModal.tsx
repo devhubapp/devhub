@@ -46,7 +46,15 @@ export const keyboardShortcutsById = {
   },
   selectNextColumn: { keys: ['→', 'L'], description: 'Select next column' },
   toggleRead: { keys: ['R'], description: 'Mark item as read/unread' },
-  toggleSave: { keys: ['S'], description: 'Toggle save item for later' },
+  toggleReadAllFromColumn: {
+    keys: ['Shift R'],
+    description: 'Mark column as read/unread',
+  },
+  markEverythingAsRead: {
+    keys: ['Shift Esc'],
+    description: 'Mark everything as read, from all columns',
+  },
+  toggleSave: { keys: ['S'], description: 'Save/unsave item' },
   moveColumnLeft: {
     keys: ['Alt ←', 'Alt ↑'],
     description: 'Move column to the left',
@@ -81,6 +89,8 @@ export const keyboardShortcuts = [
   keyboardShortcutsById.selectPreviousColumn,
   keyboardShortcutsById.selectNextColumn,
   keyboardShortcutsById.toggleRead,
+  keyboardShortcutsById.toggleReadAllFromColumn,
+  keyboardShortcutsById.markEverythingAsRead,
   keyboardShortcutsById.toggleSave,
   keyboardShortcutsById.moveColumnLeft,
   keyboardShortcutsById.moveColumnRight,

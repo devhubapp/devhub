@@ -192,8 +192,10 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
             const isSaved = isItemSaved(mergedItem)
             draft.savedIds = draft.savedIds || []
             if (isSaved) {
-              if (!draft.savedIds.includes(nodeIdOrId))
+              if (!draft.savedIds.includes(nodeIdOrId)) {
                 draft.savedIds.push(nodeIdOrId)
+                draft.updatedAt = now
+              }
             } else {
               if (draft.savedIds.includes(nodeIdOrId)) {
                 draft.savedIds = draft.savedIds.filter(
@@ -236,26 +238,48 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
           if (action.type === 'MARK_ITEMS_AS_READ_OR_UNREAD') {
             draft.readIds = draft.readIds || []
             if (!action.payload.unread) {
-              if (!draft.readIds.includes(id)) draft.readIds.push(id)
-              entry.item.last_read_at = now
-              entry.updatedAt = now
+              if (!draft.readIds.includes(id)) {
+                draft.readIds.push(id)
+                entry.updatedAt = now
+              }
+
+              if (!isItemRead(entry.item)) {
+                entry.item.last_read_at = now
+                entry.updatedAt = now
+              }
             } else {
-              if (draft.readIds.includes(id))
+              if (draft.readIds.includes(id)) {
                 draft.readIds = draft.readIds.filter(_id => _id !== id)
-              entry.item.last_unread_at = now
-              entry.updatedAt = now
+                entry.updatedAt = now
+              }
+
+              if (isItemRead(entry.item)) {
+                entry.item.last_unread_at = now
+                entry.updatedAt = now
+              }
             }
           } else if (action.type === 'SAVE_ITEMS_FOR_LATER') {
             draft.savedIds = draft.savedIds || []
             if (action.payload.save) {
-              if (!draft.savedIds.includes(id)) draft.savedIds.push(id)
-              entry.item.last_saved_at = now
-              entry.updatedAt = now
+              if (!draft.savedIds.includes(id)) {
+                draft.savedIds.push(id)
+                entry.updatedAt = now
+              }
+
+              if (!isItemSaved(entry.item)) {
+                entry.item.last_saved_at = now
+                entry.updatedAt = now
+              }
             } else {
-              if (draft.savedIds.includes(id))
+              if (draft.savedIds.includes(id)) {
                 draft.savedIds = draft.savedIds.filter(_id => _id !== id)
-              entry.item.last_unsaved_at = now
-              entry.updatedAt = now
+                entry.updatedAt = now
+              }
+
+              if (isItemSaved(entry.item)) {
+                entry.item.last_unsaved_at = now
+                entry.updatedAt = now
+              }
             }
           }
         })
@@ -293,19 +317,52 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
 
           draft.readIds = draft.readIds || []
           if (!action.payload.unread) {
-            if (!draft.readIds.includes(id)) draft.readIds.push(id)
-            entry.item.last_read_at = now
-            entry.updatedAt = now
+            if (!draft.readIds.includes(id)) {
+              draft.readIds.push(id)
+              entry.updatedAt = now
+            }
+
+            if (!isItemRead(entry.item)) {
+              entry.item.last_read_at = now
+              entry.updatedAt = now
+            }
           } else {
-            if (draft.readIds.includes(id))
+            if (draft.readIds.includes(id)) {
               draft.readIds = draft.readIds.filter(_id => _id !== id)
-            entry.item.last_unread_at = now
+              entry.updatedAt = now
+            }
+
+            if (isItemRead(entry.item)) {
+              entry.item.last_unread_at = now
+              entry.updatedAt = now
+            }
+          }
+
+          draft.updatedAt = new Date().toISOString()
+        })
+      })
+
+    case 'MARK_EVERYTHING_AS_READ':
+      return immer(state, draft => {
+        const now = new Date().toISOString()
+
+        draft.allIds = draft.allIds || []
+        draft.byId = draft.byId || {}
+        draft.readIds = draft.readIds || []
+
+        draft.allIds.forEach(id => {
+          const entry = draft.byId[id]
+          if (!(entry && entry.item)) return
+
+          if (!draft.readIds.includes(id)) {
+            draft.readIds.push(id)
             entry.updatedAt = now
           }
 
-          entry.updatedAt = now
-
-          draft.updatedAt = new Date().toISOString()
+          if (!isItemRead(entry.item)) {
+            entry.item.last_read_at = now
+            entry.updatedAt = now
+          }
         })
       })
 
