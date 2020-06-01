@@ -62,7 +62,16 @@ export default function Header(props: HeaderProps) {
 
             <HeaderLink
               className={twClasses.headerLink__rightMargin}
-              href="https://twitter.com/devhub_app/"
+              href="https://github.com/devhubapp/devhub"
+              target="_blank"
+              rel="noopener"
+            >
+              GitHub ↗
+            </HeaderLink>
+
+            <HeaderLink
+              className={twClasses.headerLink__rightMargin}
+              href="https://twitter.com/devhub_app"
               target="_blank"
               rel="noopener"
             >
