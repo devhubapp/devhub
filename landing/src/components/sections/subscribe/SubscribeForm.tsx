@@ -3,6 +3,7 @@ import {
   formatPriceAndInterval,
   isPlanStatusValid,
   Plan,
+  trimNewLinesAndSpaces,
   UserPlan,
 } from '@devhub/core'
 import classNames from 'classnames'
@@ -450,7 +451,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             email:
               (authData.paddle && authData.paddle.email) ||
               authData.github.email,
-            message: localizedPlan.description,
+            message: trimNewLinesAndSpaces(localizedPlan.description),
             passthrough: JSON.stringify(passthrough),
             product: localizedPlan.paddleProductId,
             successCallback: (data: typeof result, err: any) => {
