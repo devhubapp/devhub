@@ -448,6 +448,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
             closeCallback: () => {
               reject(new Error('Cancelled'))
             },
+            displayModeTheme: theme.isDark ? 'dark' : 'light',
             email:
               (authData.paddle && authData.paddle.email) ||
               authData.github.email,
