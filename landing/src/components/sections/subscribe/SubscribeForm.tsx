@@ -828,7 +828,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                   }.`,
               !localizedPlan.stripeIds.length &&
                 localizedPlan.paddleProductId &&
-                localizedPlan.description,
+                trimNewLinesAndSpaces(localizedPlan.description),
             ]
               .filter(Boolean)
               .join('\n')}

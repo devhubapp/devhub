@@ -209,7 +209,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
           </div>
         ) : null}
 
-        <div className="p-6 text-center">
+        <div className="p-4 text-center">
           <div className="text-base leading-loose font-bold text-default">
             {localizedPlan.label}
           </div>
