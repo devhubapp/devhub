@@ -69,15 +69,11 @@ export function createWindow() {
     menu.updateMenu()
 
     screenId = screen.getDisplayFromWindow(win).id
-    tray.updateTrayHightlightMode()
     updateBrowserWindowOptions()
   })
 
   win.on('hide', () => {
     menu.updateMenu()
-
-    const _tray = tray.getTray()
-    if (_tray) _tray.setHighlightMode('selection')
   })
 
   win.on('close', e => {
@@ -205,7 +201,6 @@ export function getBrowserWindowOptions() {
 
 export function update() {
   menu.updateMenu()
-  tray.updateTrayHightlightMode()
   updateBrowserWindowOptions()
 }
 
@@ -241,7 +236,6 @@ function updateBrowserWindowOptions() {
     Math.floor(options.minHeight || 0),
   )
 
-  // TODO: Fix when hiding/showing dock, the maxwidth should change
   mainWindow.setMaximumSize(
     Math.ceil(options.maxWidth || screen.getDisplayFromCursor().size.width),
     Math.ceil(options.maxHeight || screen.getDisplayFromCursor().size.height),

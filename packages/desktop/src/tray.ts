@@ -84,21 +84,6 @@ export function showTrayContextPopup() {
   tray!.popUpContextMenu(menu.getTrayContextMenu())
 }
 
-export function updateTrayHightlightMode() {
-  if (!(tray && !tray.isDestroyed())) return
-
-  const mainWindow = window.getMainWindow()
-  tray.setHighlightMode(
-    config.store.get('isMenuBarMode') &&
-      mainWindow &&
-      mainWindow.isVisible() &&
-      mainWindow.isFocused() &&
-      !mainWindow.isFullScreen()
-      ? 'always'
-      : 'selection',
-  )
-}
-
 export function alignWindowWithTray(win: BrowserWindow) {
   if (!(tray && !tray.isDestroyed())) return
 

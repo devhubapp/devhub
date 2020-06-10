@@ -66,6 +66,7 @@ function init() {
         applicationVersion: app.getVersion(),
         copyright: 'Copyright 2019',
         credits: 'Bruno Lemos',
+        website: 'https://devhubapp.com/',
       })
     }
 
@@ -111,7 +112,6 @@ function init() {
   })
 
   app.addListener('web-contents-created', (_event, webContents) => {
-    webContents.removeAllListeners('new-window')
     webContents.addListener(
       'new-window',
       (event, uri, _frameName, _disposition, _options) => {
