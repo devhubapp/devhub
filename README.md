@@ -62,7 +62,7 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 - [x] **User stalking**: Follow user activities without using the `follow` button; see activities that GitHub doesn't show on your feed, like their issue comments and pushed commits;
 - [x] **Home/Dashboard**: See yours or other users' home screen (a.k.a. GitHub Dashboard), a great way to discover interesting repositories;
 - [x] **Save for later**: Save any activity or notification for later, so you don't forget to get back to them;
-- [x] **Keyboard shortcuts**: Do anything using only the keyboard ([see shortcuts below](#keyboard-shortcuts));
+- [x] **Keyboard shortcuts**: Do anything using only the keyboard (press Shift+? in the web or desktop app to see all available shortcuts);
 - [x] **Theme support**: Choose between 6 light or dark themes; Automatically detect system preference;
 - [x] **And more!**: Desktop apps, native mobile apps, open source, modern tech stack, ...
 
@@ -152,34 +152,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-<br/>
-<br/>
-
-
-## Keyboard shortcuts
-
-| Key       | Action                           | Implemented    | By      |
-| --------- | -------------------------------- | -------------- | ------- |
-| `Esc`     | Close currently open modal       | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `Esc`     | Exit full screen mode on desktop | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `Esc`     | Unselect currently selected item | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `n`       | Add a new column                 | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `p`       | Open preferences                 | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `1`...`9` | Go to the `nth` column           | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `0`       | Go to the last column            | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `Arrow`, `j`, `k` | Move down/up inside a column     | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
-| `Arrow`, `h`, `l` | Move left/right between columns  | ✅             | [@thefrontendwizard](https://github.com/thefrontendwizard) |
-| `Enter`   | Open link of selected item       | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `Space`   | Scroll to next page              | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `Shift+Space` | Scroll to previous page      | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `r`       | Mark item as read/unread         | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `s`       | Toggle save item for later       | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `Alt` + `Arrow` | Move currently selected column | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `Tab`     | Navigate between buttons and links   | ✅             | [@brunolemos](https://github.com/brunolemos) |
-| `?`       | Show keyboard shortcuts          | ✅             | [@brunolemos](https://github.com/brunolemos) |
-
-> **Tip:** To scroll horizontally on devices without horizontal scrolling (e.g. on Windows), hold `Shift` and scroll vertically
 
 <br/>
 <br/>
