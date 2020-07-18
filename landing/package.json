@@ -22,7 +22,7 @@
     "autoprefixer": "9.6.4",
     "classnames": "2.2.6",
     "isomorphic-unfetch": "3.0.0",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "next": "9.4.2",
     "next-transpile-modules": "3.3.0",
     "qs": "6.9.1",
