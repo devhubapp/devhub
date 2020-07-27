@@ -1,7 +1,7 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 import React from 'react'
 
-const shortDescriptionTitle = 'Unified view for GitHub activities'
+const shortDescriptionTitle = 'GitHub Notifications & Activities on your Desktop'
 const shortDescriptionContent =
   'Create columns with filters; Manage Notifications, Issues, Pull Requests and Repository Activities; Bookmark things for later; Enable Desktop Push Notifications.'
 const fullDescription = `${shortDescriptionTitle}. ${shortDescriptionContent}`

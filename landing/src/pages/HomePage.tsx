@@ -40,7 +40,7 @@ export default function HomePage(_props: HomePageProps) {
           <div className="mb-12 lg:mb-0">
             <div className="flex flex-col lg:w-9/12 items-center m-auto mb-8 text-center">
               <h1 className="text-4xl sm:text-5xl">
-                A unified view for GitHub activities
+                GitHub Notifications & Activities on your Desktop
               </h1>
 
               <h2
@@ -66,9 +66,9 @@ export default function HomePage(_props: HomePageProps) {
 
               <h2 className="w-full xl:w-9/12">
                 Create columns for the repositories and people that matters to
-                you; Manage Notifications, Issues, Pull Requests &amp;
-                Activities; Bookmark things for later; Enable Desktop Push
-                Notifications.
+                you; Receive Desktop Push Notifications; Manage Notifications,
+                Issues, Pull Requests &amp; Activities; Bookmark things for
+                later.
               </h2>
             </div>
             <CTAButtons center className="mb-2" />

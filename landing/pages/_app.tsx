@@ -46,7 +46,7 @@ export default class App extends NextApp {
             <ThemeProvider>
               <PlansProvider>
                 <Head>
-                  <title>DevHub | Unified view for GitHub activities</title>
+                  <title>DevHub | GitHub Notifications & Activities on your Desktop</title>
                 </Head>
 
                 <ThemeConsumer>

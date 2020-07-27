@@ -8,7 +8,7 @@
     "email": "bruno@devhubapp.com",
     "url": "https://twitter.com/brunolemos"
   },
-  "description": "Unified view for GitHub activities",
+  "description": "GitHub Notifications & Activities on your Desktop",
   "repository": "https://github.com/devhubapp/devhub",
   "scripts": {
     "build": "yarn build:base && yarn build:web && yarn build:web:post && yarn build:electron",
