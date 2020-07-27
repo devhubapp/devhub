@@ -44,13 +44,12 @@ export default function CTAButtons(props: CTAButtonsProps) {
             {os ? `Download for ${getSystemLabel(os)}` : 'Download'}
           </Button>
         </>
-      ) : os ? (
+      ) : (
         <>
-          {/*
           {paidPlans.length === 1 &&
           paidPlans[0] &&
-          !paidPlans[0].interval &&
-          paidPlans[0].amount ? (
+          paidPlans[0].amount &&
+          !paidPlans[0].interval ? (
             <Button
               className="mb-2 mr-2"
               href={
@@ -62,7 +61,8 @@ export default function CTAButtons(props: CTAButtonsProps) {
             >
               {`Purchase${priceLabel ? ` for ${priceLabel}` : ''}`}
             </Button>
-          ) : paidPlans.length === 1 && paidPlans[0] ? (
+          ) : paidPlans[0] &&
+            paidPlans.some(plan => !!(plan && plan.amount)) ? (
             <Button
               type="primary"
               href={`/${getPurchaseOrSubscribeRoute(plans)}`}
@@ -80,44 +80,12 @@ export default function CTAButtons(props: CTAButtonsProps) {
           ) : (
             <Button
               type="primary"
-              href="/pricing"
-              target="_top"
-              className="mb-2 mr-2"
-            >
-              {paidPlans[0] && paidPlans[0].trialPeriodDays
-                ? 'Start free trial'
-                : 'See pricing'}
-            </Button>
-          )}
-          */}
-
-          {!!(
-            (freeTrialDays || freePlan) &&
-            plans.some(plan => !!plan && !plan.amount)
-          ) && (
-            <Button
-              type="primary"
               href="/download?autostart"
               className="mb-2 mr-2"
             >
-              {`Download for ${getSystemLabel(os)}`}
+              {os ? `Download for ${getSystemLabel(os)}` : 'Download'}
             </Button>
           )}
-
-          <Button
-            type="neutral"
-            href={constants.APP_BASE_URL}
-            target="_top"
-            className="mb-2"
-          >
-            Use web version
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button type="primary" href="/download" className="mb-2">
-            Download the app
-          </Button>
 
           <Button
             type="neutral"
