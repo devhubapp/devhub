@@ -25,7 +25,7 @@
     "react-art": "16.13.1",
     "react-dom": "16.13.1",
     "react-native-web": "0.12.1",
-    "react-scripts": "3.2.0",
+    "react-scripts": "3.4.3",
     "react-stripe-elements": "5.0.1",
     "resize-observer-polyfill": "1.5.1",
     "smoothscroll-polyfill": "0.4.4"
