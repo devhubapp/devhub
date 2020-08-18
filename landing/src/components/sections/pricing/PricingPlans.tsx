@@ -127,10 +127,14 @@ export function PricingPlans(_props: PricingPlansProps) {
         )}
       </div>
 
-      <p className="block sm:hidden mb-4" />
-      <small className="block sm:hidden italic text-sm text-muted-65 text-center">
-        TIP: Scroll horizontally to see all plans
-      </small>
+      {pricingPlanComponents.length > 1 && (
+        <>
+          <p className="block sm:hidden mb-4" />
+          <small className="block sm:hidden italic text-sm text-muted-65 text-center">
+            TIP: Scroll horizontally to see all plans
+          </small>
+        </>
+      )}
 
       <p className="block mb-4" />
 
