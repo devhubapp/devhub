@@ -12,10 +12,13 @@ export function useLocalizedPlanDetails<P extends Plan | undefined>(
     const paddlePrice = getProductPrice(plan.paddleProductId, quantity)
 
     if (paddlePrice && paddlePrice.gross) {
+      const centsSeparator = paddlePrice.gross.match(/([.,])\d{2}$/)?.[1]
+
       return {
         ...plan,
         amount: Math.floor(
-          parseFloat(paddlePrice.gross.replace(/[^0-9]+/, '')) * 100,
+          parseFloat(paddlePrice.gross.replace(/[^0-9]+/g, '')) *
+            (centsSeparator ? 1 : 100),
         ),
         currency: paddlePrice.gross.match(/[^0-9]+/)![0],
         // interval: undefined, // TODO
