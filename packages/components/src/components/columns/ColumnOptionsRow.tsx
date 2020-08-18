@@ -85,7 +85,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     })
   }, [enableBackgroundHover])
 
-  const initialIsHovered = useHover(onToggle ? innerRef : null, isHovered => {
+  const initialIsHovered = useHover(onToggle ? innerRef : null, (isHovered) => {
     if (isHoveredRef.current === isHovered) return
     isHoveredRef.current = isHovered
     updateStyles()
@@ -105,7 +105,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
     >
       <ConditionalWrap
         condition={!!onToggle}
-        wrap={child =>
+        wrap={(child) =>
           onToggle ? (
             <TouchableOpacity
               ref={innerRef as any}
@@ -211,7 +211,7 @@ export function ColumnOptionsRow(props: ColumnOptionsRowProps) {
 
       <ConditionalWrap
         condition={!!onToggle}
-        wrap={c => <AccordionView isOpen={isOpen}>{c}</AccordionView>}
+        wrap={(c) => <AccordionView isOpen={isOpen}>{c}</AccordionView>}
       >
         <View
           style={[{ paddingBottom: contentPadding }, contentContainerStyle]}

@@ -108,7 +108,7 @@ export const IssueOrPullRequestCards = React.memo(
 
     const mainSubscription = useReduxState(
       useCallback(
-        state =>
+        (state) =>
           selectors.createColumnSubscriptionSelector()(state, columnId || ''),
         [columnId],
       ),
@@ -196,8 +196,9 @@ export const IssueOrPullRequestCards = React.memo(
                 <View>
                   <Button
                     analyticsLabel="try_fix_invalid_filter"
-                    children={`Add "owner:${loggedUsername ||
-                      'gaearon'}" filter`}
+                    children={`Add "owner:${
+                      loggedUsername || 'gaearon'
+                    }" filter`}
                     onPress={() =>
                       dispatch(
                         actions.setColumnOwnerFilter({
@@ -213,8 +214,9 @@ export const IssueOrPullRequestCards = React.memo(
 
                   <Button
                     analyticsLabel="try_fix_invalid_filter"
-                    children={`Add "involves:${loggedUsername ||
-                      'gaearon'}" filter`}
+                    children={`Add "involves:${
+                      loggedUsername || 'gaearon'
+                    }" filter`}
                     onPress={() =>
                       dispatch(
                         actions.setColumnInvolvesFilter({
@@ -229,8 +231,9 @@ export const IssueOrPullRequestCards = React.memo(
               }
               errorMessage={
                 emptyFilters
-                  ? `You need to add some filters for this search to work. \nExample: author:${loggedUsername ||
-                      'gaearon'}`
+                  ? `You need to add some filters for this search to work. \nExample: author:${
+                      loggedUsername || 'gaearon'
+                    }`
                   : `Something went wrong. Try changing your search query. \n${
                       messageHasMoreDetails
                         ? errorMessage

@@ -91,7 +91,7 @@ export const EventCards = React.memo((props: EventCardsProps) => {
 
   const mainSubscription = useReduxState(
     useCallback(
-      state =>
+      (state) =>
         selectors.createColumnSubscriptionSelector()(state, columnId || ''),
       [columnId],
     ),

@@ -58,9 +58,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
             size={28 * scaleFactor}
             username={username}
           />
-        ) : (
-          undefined
-        )
+        ) : undefined
       }
       showBackButton={showBackButton}
       title="Preferences"

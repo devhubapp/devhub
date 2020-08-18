@@ -40,7 +40,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
   }, [theme])
 
   useEffect(() => {
-    const listener = Appearance.addChangeListener(preferences => {
+    const listener = Appearance.addChangeListener((preferences) => {
       dispatch(actions.appearenceColorSchemeChanged(preferences.colorScheme))
     })
 
@@ -78,7 +78,7 @@ export function useThemeCallback(
   let initialTheme = useReduxStateCallback(
     selectors.themeSelector,
     useCallback(
-      t => {
+      (t) => {
         const theme = themeTransformer ? transformTheme(t, themeTransformer) : t
         callback(theme)
       },

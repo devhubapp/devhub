@@ -35,7 +35,7 @@ export function useDesktopOptions() {
 
     function handler(_e: any, payload?: { settings: string; value: boolean }) {
       if (!(payload && payload.settings)) return
-      setState(s => ({ ...s, [payload.settings]: payload.value }))
+      setState((s) => ({ ...s, [payload.settings]: payload.value }))
     }
 
     const listener = _emitter.addListener('update-settings', handler)

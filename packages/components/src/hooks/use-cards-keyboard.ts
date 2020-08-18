@@ -45,7 +45,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
   const selectedItemNodeIdOrIdRef = useRef<string | null | undefined>(undefined)
   const selectedItemIndexRef = useRef<number>(-1)
   selectedItemIndexRef.current = itemNodeIdOrIds.findIndex(
-    id => !!(id && id === selectedItemNodeIdOrIdRef.current),
+    (id) => !!(id && id === selectedItemNodeIdOrIdRef.current),
   )
 
   const hasVisibleItems = () =>
@@ -82,7 +82,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
 
   useEmitter(
     'FOCUS_ON_COLUMN',
-    payload => {
+    (payload) => {
       if (!(listRef && listRef.current)) return
       if (columnId !== payload.columnId) {
         isColumnFocusedRef.current = false
@@ -114,12 +114,12 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
 
   useEmitter(
     'FOCUS_ON_COLUMN_ITEM',
-    payload => {
+    (payload) => {
       if (columnId !== payload.columnId) return
 
       selectedItemNodeIdOrIdRef.current = payload.itemNodeIdOrId
       selectedItemIndexRef.current = itemNodeIdOrIds.findIndex(
-        id => !!(id && id === selectedItemNodeIdOrIdRef.current),
+        (id) => !!(id && id === selectedItemNodeIdOrIdRef.current),
       )
 
       if (
@@ -135,7 +135,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
   const firstItemNodeIdOrId = itemNodeIdOrIds && itemNodeIdOrIds[0]
   useEmitter(
     'SCROLL_TOP_COLUMN',
-    payload => {
+    (payload) => {
       if (payload.columnId !== columnId) return
 
       emitter.emit('FOCUS_ON_COLUMN_ITEM', {
@@ -248,7 +248,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
       const selectedItemNodeIdOrId =
         !!selectedItemNodeIdOrIdRef.current &&
         itemNodeIdOrIds.find(
-          id => id && id === selectedItemNodeIdOrIdRef.current,
+          (id) => id && id === selectedItemNodeIdOrIdRef.current,
         )
       if (!selectedItemNodeIdOrId) return
 
@@ -286,7 +286,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
       const selectedItemNodeIdOrId =
         !!selectedItemNodeIdOrIdRef.current &&
         itemNodeIdOrIds.find(
-          id => id && id === selectedItemNodeIdOrIdRef.current,
+          (id) => id && id === selectedItemNodeIdOrIdRef.current,
         )
       if (!selectedItemNodeIdOrId) return
 
@@ -310,7 +310,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
       const selectedItemNodeIdOrId =
         !!selectedItemNodeIdOrIdRef.current &&
         itemNodeIdOrIds.find(
-          id => id && id === selectedItemNodeIdOrIdRef.current,
+          (id) => id && id === selectedItemNodeIdOrIdRef.current,
         )
       if (!selectedItemNodeIdOrId) return
 
@@ -332,7 +332,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
     useCallback(() => {
       if (!isColumnFocusedRef.current) return
 
-      const hasOneUnreadItem = itemNodeIdOrIds.some(nodeIdOrId => {
+      const hasOneUnreadItem = itemNodeIdOrIds.some((nodeIdOrId) => {
         const item = getItemByNodeIdOrId(nodeIdOrId)
         if (!item) return
 
@@ -354,7 +354,7 @@ export function useCardsKeyboard<ItemT extends EnhancedItem>(
     useCallback(() => {
       if (!isColumnFocusedRef.current) return
 
-      const hasItemsToMarkAsDone = itemNodeIdOrIds.some(nodeIdOrId => {
+      const hasItemsToMarkAsDone = itemNodeIdOrIds.some((nodeIdOrId) => {
         const item = getItemByNodeIdOrId(nodeIdOrId)
         return !!(item && !isItemSaved(item)) /* && isItemRead(item) */
       })

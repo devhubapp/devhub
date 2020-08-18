@@ -61,7 +61,7 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       }
 
     case 'LOGIN_SUCCESS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.appToken = action.payload.appToken || state.appToken
         draft.error = null
         draft.isDeletingAccount = false
@@ -97,7 +97,7 @@ export const authReducer: Reducer<State> = (state = initialState, action) => {
       }
 
     case 'UPDATE_USER_DATA': {
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.user = draft.user || ({} as any)
 
         if (action.payload.plan) {

@@ -8,7 +8,7 @@ export function useItem<T extends EnhancedItem>(
   nodeIdOrId: string,
 ): T | undefined {
   const dataItem = useReduxState(
-    useCallback(state => selectors.dataByNodeIdOrId(state)[nodeIdOrId], [
+    useCallback((state) => selectors.dataByNodeIdOrId(state)[nodeIdOrId], [
       nodeIdOrId,
     ]),
   )

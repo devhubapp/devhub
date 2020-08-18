@@ -43,7 +43,7 @@ export const rootReducer = (state: any, action: any) => {
 function cleanupArchivedItemsReducer(
   state: ExtractStateFromReducer<typeof _rootReducer>,
 ) {
-  return immer(state, draft => {
+  return immer(state, (draft) => {
     draft.columns = draft.columns || {}
     draft.columns.byId = draft.columns.byId || {}
 
@@ -55,7 +55,7 @@ function cleanupArchivedItemsReducer(
     const itemsNodeIdsOrIdsToKeepSet = new Set<string>()
 
     const columnIds = Object.keys(draft.columns.byId)
-    columnIds.forEach(columnId => {
+    columnIds.forEach((columnId) => {
       const column = draft.columns.byId![columnId]
       if (!column) return
 
@@ -78,7 +78,7 @@ function cleanupArchivedItemsReducer(
             )
           : columnItems || []
 
-      itemsToKeep.forEach(item => {
+      itemsToKeep.forEach((item) => {
         const nodeIdOrId = getItemNodeIdOrId(item)
         if (!nodeIdOrId) return
 
@@ -87,7 +87,7 @@ function cleanupArchivedItemsReducer(
     })
 
     if (draft.data.savedIds) {
-      draft.data.savedIds.forEach(nodeIdOrId => {
+      draft.data.savedIds.forEach((nodeIdOrId) => {
         itemsNodeIdsOrIdsToKeepSet.add(nodeIdOrId)
       })
     }
@@ -103,9 +103,9 @@ function cleanupArchivedItemsReducer(
     draft.data.allIds = (draft.data.allIds || []).filter(keepFn)
     draft.data.idsBySubscriptionId = _.mapValues(
       draft.data.idsBySubscriptionId,
-      ids => (ids ? ids.filter(keepFn) : ids),
+      (ids) => (ids ? ids.filter(keepFn) : ids),
     )
-    draft.data.idsByType = _.mapValues(draft.data.idsByType, ids =>
+    draft.data.idsByType = _.mapValues(draft.data.idsByType, (ids) =>
       ids ? ids.filter(keepFn) : ids,
     )
     draft.data.readIds = (draft.data.readIds || []).filter(keepFn)

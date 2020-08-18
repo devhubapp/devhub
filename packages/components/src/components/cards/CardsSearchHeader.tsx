@@ -107,7 +107,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
     if (preserveExistingOwners) {
       filters.owners = filters.owners || {}
       Object.keys((column.filters && column.filters.owners) || {}).forEach(
-        existingOwner => {
+        (existingOwner) => {
           if (!filters.owners![existingOwner]) {
             filters.owners![existingOwner] = {
               value: undefined,

@@ -175,9 +175,11 @@ function* onSyncDown() {
     if (serverDataIsNewer) {
       yield put(
         actions.replaceColumnsAndSubscriptions({
-          columns: columns.allIds.map(id => columns.byId[id]!).filter(Boolean),
+          columns: columns.allIds
+            .map((id) => columns.byId[id]!)
+            .filter(Boolean),
           subscriptions: subscriptions.allIds
-            .map(id => ({
+            .map((id) => ({
               ...subscriptions.byId[id]!,
               data: {
                 ...(state.subscriptions.byId[id] &&
@@ -245,10 +247,12 @@ async function syncUp(state: RootState) {
           },
         }),
         variables: {
-          columns: columns.filter(Boolean).map(c => removeUndefinedFields(c!)),
+          columns: columns
+            .filter(Boolean)
+            .map((c) => removeUndefinedFields(c!)),
           subscriptions: subscriptions
             .filter(Boolean)
-            .map(s => _.omit(removeUndefinedFields(s!), 'data')),
+            .map((s) => _.omit(removeUndefinedFields(s!), 'data')),
         },
       },
       {
@@ -309,9 +313,11 @@ function* onLoginSuccess(
     if (serverDataIsNewer) {
       yield put(
         actions.replaceColumnsAndSubscriptions({
-          columns: columns.allIds.map(id => columns.byId[id]!).filter(Boolean),
+          columns: columns.allIds
+            .map((id) => columns.byId[id]!)
+            .filter(Boolean),
           subscriptions: subscriptions.allIds
-            .map(id => ({
+            .map((id) => ({
               ...subscriptions.byId[id]!,
               data: {
                 ...(state.subscriptions.byId[id] &&

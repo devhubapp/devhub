@@ -16,11 +16,11 @@ export interface LabelsViewProps
   enableScrollView?: boolean
   enableScrollViewOverlay?: boolean
   fragment?: boolean
-  labels: Array<{
+  labels: {
     key?: string
     name: GitHubLabel['name']
     color?: GitHubLabel['color']
-  }>
+  }[]
   startScrollAtEnd?: boolean
   style?: ViewProps['style']
 }
@@ -61,7 +61,7 @@ export const LabelsView = (props: LabelsViewProps) => {
   return (
     <ConditionalWrap
       condition
-      wrap={children =>
+      wrap={(children) =>
         fragment ? (
           <Fragment>{children}</Fragment>
         ) : (
@@ -81,7 +81,7 @@ export const LabelsView = (props: LabelsViewProps) => {
           >
             <ConditionalWrap
               condition={!!enableScrollView}
-              wrap={c =>
+              wrap={(c) =>
                 enableScrollViewOverlay ? (
                   <ScrollViewWithOverlay
                     ref={scrollViewRef}
@@ -115,7 +115,7 @@ export const LabelsView = (props: LabelsViewProps) => {
         )
       }
     >
-      {labels.map(label => (
+      {labels.map((label) => (
         <Label
           key={label.key || label.name}
           colorThemeColor={fixColorHexWithoutHash(label.color)}

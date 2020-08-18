@@ -41,7 +41,7 @@ const poweredByStripeLightBanner = require('@devhub/web/public/static/media/stri
 const poweredByStripeBannerAspectRatio = 357 / 78
 
 const SubscribeFormWithStripe = React.memo(
-  injectStripe<SubscribeFormProps>(props => {
+  injectStripe<SubscribeFormProps>((props) => {
     const { onSubscribe, planId, stripe } = props
 
     const { sizename } = useAppLayout()
@@ -301,7 +301,7 @@ const SubscribeFormWithStripe = React.memo(
       }
     }
 
-    const plan = planId && plans.find(p => p && p.id === planId)
+    const plan = planId && plans.find((p) => p && p.id === planId)
 
     return (
       <form onSubmit={handleSubmit}>
@@ -367,7 +367,7 @@ const SubscribeFormWithStripe = React.memo(
                 <CardElement
                   disabled={formState.isSubmiting}
                   onBlur={() => setIsCardFocused(false)}
-                  onChange={e => {
+                  onChange={(e) => {
                     if (e.complete !== isCardFilled) setIsCardFilled(e.complete)
                   }}
                   onFocus={() => setIsCardFocused(true)}
@@ -410,7 +410,7 @@ const SubscribeFormWithStripe = React.memo(
                   <ThemedTextInput
                     editable={!formState.isSubmiting}
                     multiline
-                    onChangeText={value => setReason(value)}
+                    onChangeText={(value) => setReason(value)}
                     placeholder="Let us know your main use case so we can make DevHub even better for you."
                     textInputKey="subscribe-reason-text-input"
                     value={reason}
@@ -433,7 +433,7 @@ const SubscribeFormWithStripe = React.memo(
               <ThemedTextInput
                 editable={!formState.isSubmiting}
                 multiline
-                onChangeText={value => setReason(value)}
+                onChangeText={(value) => setReason(value)}
                 placeholder={`Let us know the reason you are ${
                   freePlan && !freePlan.trialPeriodDays
                     ? 'downgrading'
@@ -450,7 +450,7 @@ const SubscribeFormWithStripe = React.memo(
                 disabled={formState.isSubmiting}
                 enableIndeterminateState={false}
                 label="I plan to keep using DevHub"
-                onChange={value => setUserPlansToKeepUsing(!!value)}
+                onChange={(value) => setUserPlansToKeepUsing(!!value)}
               />
 
               <Spacer height={contentPadding} />

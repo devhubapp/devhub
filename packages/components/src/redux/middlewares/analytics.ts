@@ -12,8 +12,8 @@ const strsToMatch = [
   'INSTALLATION',
 ]
 
-export const analyticsMiddleware: Middleware = () => next => action => {
-  if (action && strsToMatch.some(str => action.type.includes(str))) {
+export const analyticsMiddleware: Middleware = () => (next) => (action) => {
+  if (action && strsToMatch.some((str) => action.type.includes(str))) {
     setTimeout(() => {
       analytics.trackEvent('redux', 'dispatch', action.type)
     }, 0)

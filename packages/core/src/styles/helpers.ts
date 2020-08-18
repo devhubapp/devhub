@@ -128,7 +128,7 @@ export const themeColorFields: Array<keyof ThemeColors> = [
 export const pickThemeColors = (theme: Theme) => _.pick(theme, themeColorFields)
 
 const cssVariablesTheme = {} as Record<string, string>
-themeColorFields.forEach(field => {
+themeColorFields.forEach((field) => {
   cssVariablesTheme[field] = `var(--theme-${_.kebabCase(field)})`
   cssVariablesTheme[`inverted-${field}`] = `var(--theme-inverted-${_.kebabCase(
     field,

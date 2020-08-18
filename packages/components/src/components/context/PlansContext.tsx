@@ -16,8 +16,8 @@ export interface PlansState {
   freePlan: Plan | undefined
   freeTrialDays: number
   freeTrialPlan: Plan | undefined
-  paidPlans: Array<Plan | undefined>
-  plans: Array<Plan | undefined>
+  paidPlans: (Plan | undefined)[]
+  plans: (Plan | undefined)[]
   userPlanInfo: Plan | undefined
 }
 
@@ -61,7 +61,7 @@ export function PlansProvider(props: PlansProps) {
           cheapestPlanWithNotifications: data.plans
             .slice()
             .filter(
-              plan =>
+              (plan) =>
                 !!(
                   plan &&
                   plan.amount > 0 &&
@@ -72,7 +72,7 @@ export function PlansProvider(props: PlansProps) {
           freePlan: data.freePlan,
           freeTrialDays: data.freeTrialDays,
           freeTrialPlan: data.freeTrialPlan,
-          paidPlans: data.plans.filter(plan => !!(plan && plan.amount > 0)),
+          paidPlans: data.plans.filter((plan) => !!(plan && plan.amount > 0)),
           plans: data.plans,
           userPlanInfo: data.userPlanInfo,
         })

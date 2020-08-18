@@ -102,15 +102,15 @@ export const TextInput = React.forwardRef(
         numberOfLines={multiline ? undefined : 1}
         placeholderTextColor={placeholderTextColor}
         {...otherProps}
-        onBlur={e => {
+        onBlur={(e) => {
           setIsFocused(false)
           if (otherProps.onBlur) otherProps.onBlur(e)
         }}
-        onFocus={e => {
+        onFocus={(e) => {
           setIsFocused(true)
           if (otherProps.onFocus) otherProps.onFocus(e)
         }}
-        onKeyPress={e => {
+        onKeyPress={(e) => {
           if (!disableBlurOnEsc && e.nativeEvent.key === 'Escape') {
             if (ref && ref.current && ref.current.blur) ref.current.blur()
           }

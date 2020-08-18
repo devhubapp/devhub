@@ -30,7 +30,7 @@ export function Switch(props: SwitchProps) {
 
   const onValueChange: typeof _onValueChange =
     analyticsLabel && _onValueChange
-      ? e => {
+      ? (e) => {
           analytics.trackEvent(
             'switch',
             'toggle',

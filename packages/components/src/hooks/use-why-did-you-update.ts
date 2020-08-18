@@ -29,7 +29,7 @@ export function useWhyDidYouUpdate(
       string,
       { from: any; to: any; isDeepEqual: boolean; changedKeys?: string[] }
     > = {}
-    allKeys.forEach(key => {
+    allKeys.forEach((key) => {
       if (latestProps.current[key] !== props[key]) {
         changesObj[key] = {
           from: latestProps.current[key],
@@ -37,7 +37,7 @@ export function useWhyDidYouUpdate(
           changedKeys:
             props[key] && typeof props[key] === 'object'
               ? (Object.keys(latestProps.current[key])
-                  .map(k =>
+                  .map((k) =>
                     latestProps.current[key][k] === props[key][k] ? '' : k,
                   )
                   .filter(Boolean) as string[])

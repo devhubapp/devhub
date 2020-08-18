@@ -85,7 +85,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   const mainSubscription = useReduxState(
     useCallback(
-      state =>
+      (state) =>
         selectors.createColumnSubscriptionSelector()(state, columnId || ''),
       [columnId],
     ),
@@ -102,10 +102,13 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const isUserActivity =
     subtype === 'USER_EVENTS' || subtype === 'USER_PUBLIC_EVENTS'
 
-  const { allIncludedOwners, allIncludedRepos, allExistingOwners } = useMemo(
-    () => getOwnerAndRepoFormattedFilter(column && column.filters),
-    [column && column.filters && column.filters.owners],
-  )
+  const {
+    allIncludedOwners,
+    allIncludedRepos,
+    allExistingOwners,
+  } = useMemo(() => getOwnerAndRepoFormattedFilter(column && column.filters), [
+    column && column.filters && column.filters.owners,
+  ])
 
   const allUsernamesFromFilter =
     (column && getUsernamesFromFilter(type, column.filters).allUsernames) || []
@@ -173,7 +176,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const getItemSize = useCallback<
     NonNullable<OneListProps<DataItemT>['getItemSize']>
   >(
-    nodeIdOrId => {
+    (nodeIdOrId) => {
       const item = getItemByNodeIdOrId(nodeIdOrId)
       if (!item) return 0
 
@@ -373,7 +376,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                   analyticsCategory="plan_expired"
                   analyticsLabel="select_a_plan_button"
                   children={
-                    paidPlans.some(p => p && p.interval)
+                    paidPlans.some((p) => p && p.interval)
                       ? plan && plan.amount
                         ? 'Switch plan ↗'
                         : 'Select a plan ↗'
@@ -484,7 +487,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
                 analyticsLabel="select_a_plan_button"
                 analyticsCategory="invalid_plan"
                 children={
-                  paidPlans.some(p => p && p.interval)
+                  paidPlans.some((p) => p && p.interval)
                     ? plan && plan.amount
                       ? 'Switch plan ↗'
                       : 'Select a plan ↗'

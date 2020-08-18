@@ -17,7 +17,7 @@ export function ColumnsRenderer() {
   const { enableSharedFiltersView, inlineMode } = useColumnFilters()
 
   const hasColumns = useReduxState(
-    state => !!selectors.columnIdsSelector(state).length,
+    (state) => !!selectors.columnIdsSelector(state).length,
   )
 
   // if (appViewMode === 'single-column' && !focusedColumnId && columnIds.length) {

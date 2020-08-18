@@ -60,7 +60,7 @@ export function Screen(props: ScreenProps) {
   return (
     <ConditionalWrap
       condition
-      wrap={children =>
+      wrap={(children) =>
         Platform.select({
           ios: (
             <KeyboardAvoidingView behavior="padding" style={styles.wrapper}>

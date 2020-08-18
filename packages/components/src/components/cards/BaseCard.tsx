@@ -223,8 +223,9 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
     )
   if (link && link.includes('api.github.com'))
     console.error(
-      `Wrong link for ${type} card: ${nodeIdOrId}, ${title}, ${text &&
-        text.text}`,
+      `Wrong link for ${type} card: ${nodeIdOrId}, ${title}, ${
+        text && text.text
+      }`,
       link,
     )
 
@@ -416,7 +417,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                   columnId ? (
                     <ConditionalWrap
                       condition={Platform.OS !== 'web'}
-                      wrap={c => (
+                      wrap={(c) => (
                         <View
                           style={[sharedStyles.flex, sharedStyles.flexWrap]}
                         >

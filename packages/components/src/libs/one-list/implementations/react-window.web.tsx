@@ -170,18 +170,22 @@ const InnerElementType = React.forwardRef<
       (typeof safeAreaInsets.right === 'number' &&
         safeAreaInsets.right !== 0 &&
         (!_style.width || typeof _style.width !== 'string'))
-        ? `${parseFloat(`${_style.width || 0}`) +
+        ? `${
+            parseFloat(`${_style.width || 0}`) +
             (safeAreaInsets.left || 0) +
-            (safeAreaInsets.right || 0)}px`
+            (safeAreaInsets.right || 0)
+          }px`
         : _style.width,
     height:
       (typeof safeAreaInsets.top === 'number' && safeAreaInsets.top !== 0) ||
       (typeof safeAreaInsets.bottom === 'number' &&
         safeAreaInsets.bottom !== 0 &&
         (!_style.height || typeof _style.height !== 'string'))
-        ? `${parseFloat(`${_style.height || 0}`) +
+        ? `${
+            parseFloat(`${_style.height || 0}`) +
             (safeAreaInsets.top || 0) +
-            (safeAreaInsets.bottom || 0)}px`
+            (safeAreaInsets.bottom || 0)
+          }px`
         : _style.height,
   }
 
@@ -328,7 +332,7 @@ export const OneList = (React.memo(
     )
 
     const itemSize = useMemo<VariableSizeListProps['itemSize']>(() => {
-      return index => {
+      return (index) => {
         if (innerHeaderSize && index === 0) return innerHeaderSize
         if (innerFooterSize && index === itemCount - 1) return innerFooterSize
 
@@ -537,10 +541,10 @@ export const OneList = (React.memo(
       </View>
     )
   }),
-) as any) as ((<ItemT>(
+) as any) as (<ItemT>(
   props: OneListProps<ItemT> & React.RefAttributes<OneListInstance>,
 ) => React.ReactElement) & {
   displayName: string
-} & OneListInstance)
+} & OneListInstance
 
 OneList.displayName = 'OneList'

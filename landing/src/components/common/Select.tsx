@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import React, { ReactElement } from 'react'
 
 export interface SelectProps<T extends string> {
-  children: Array<ReactElement<SelectOptionProps<T>> | false>
+  children: (ReactElement<SelectOptionProps<T>> | false)[]
   onChange: (option: T) => void
   placeholder?: string
 }

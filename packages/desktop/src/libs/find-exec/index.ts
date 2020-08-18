@@ -9,7 +9,7 @@ export function findExec(...args: [string[]] | string[]) {
     : Array.prototype.slice.apply(args)
 
   let command = ''
-  commands.some(c => {
+  commands.some((c) => {
     if (isExec(findCommand(c))) {
       command = c
       return true

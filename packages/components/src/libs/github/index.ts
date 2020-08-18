@@ -34,7 +34,8 @@ const cache: Record<
 export async function getNotifications(
   params: (
     | Octokit.ActivityListNotificationsParams
-    | Octokit.ActivityListNotificationsForRepoParams) & { headers?: any } = {},
+    | Octokit.ActivityListNotificationsForRepoParams
+  ) & { headers?: any } = {},
   {
     githubToken,
     subscriptionId = '',

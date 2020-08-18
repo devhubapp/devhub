@@ -108,10 +108,10 @@ const SidebarHoverItemContext = React.createContext<
   },
 })
 
-const keyExtractor: FlatListProps<string>['keyExtractor'] = item =>
+const keyExtractor: FlatListProps<string>['keyExtractor'] = (item) =>
   `sidebar-column-${item}`
 
-const keyExtractorOverlay: FlatListProps<string>['keyExtractor'] = item =>
+const keyExtractorOverlay: FlatListProps<string>['keyExtractor'] = (item) =>
   `sidebar-column-${item}`
 
 const SidebarHoverItemContextProvider = React.memo(
@@ -180,7 +180,7 @@ export const SidebarOrBottomBar = React.memo(
     const small = sizename <= '2-medium'
 
     function isModalOpen(modalName: ModalPayload['name']) {
-      return !!modalStack && modalStack.some(m => m && m.name === modalName)
+      return !!modalStack && modalStack.some((m) => m && m.name === modalName)
     }
 
     const styles = horizontal ? horizontalStyles : verticalStyles
@@ -271,7 +271,7 @@ export const SidebarOrBottomBar = React.memo(
     const onLayout = useCallback<
       NonNullable<FlatListProps<string>['onLayout']>
     >(
-      e => {
+      (e) => {
         listContentDimensionsRef.current = {
           width: e.nativeEvent.layout.width,
           height: e.nativeEvent.layout.height,
@@ -284,7 +284,7 @@ export const SidebarOrBottomBar = React.memo(
     const onScroll = useCallback<
       NonNullable<FlatListProps<string>['onScroll']>
     >(
-      e => {
+      (e) => {
         if (hoverListRef.current && e) {
           hoverListRef.current.scrollToOffset({
             animated: false,
@@ -314,8 +314,8 @@ export const SidebarOrBottomBar = React.memo(
     >(() => {
       return ({ viewableItems }) => {
         const visibleIndexes = viewableItems
-          .filter(v => v.isViewable && typeof v.index === 'number')
-          .map(v => v.index!)
+          .filter((v) => v.isViewable && typeof v.index === 'number')
+          .map((v) => v.index!)
 
         visibleItemsRef.current = {
           fromIndex: Math.min(...visibleIndexes),
@@ -638,7 +638,7 @@ export const SidebarOrBottomBarColumnItem = React.memo(
         .platformSupports &&
       getColumnOption(column, 'enableInAppUnreadIndicator', { Platform, plan })
         .value
-        ? filteredItems.some(item => !isItemRead(item))
+        ? filteredItems.some((item) => !isItemRead(item))
         : false)
 
     const unreadIndicatorColor:
@@ -711,11 +711,13 @@ export type SidebarOrBottomBarItemProps = {
   unreadIndicatorColor?: keyof ThemeColors
 } & (
   | { columnId: string; onPress: () => void }
-  | { columnId?: string; onPress?: () => void }) &
+  | { columnId?: string; onPress?: () => void }
+) &
   (
-    | ({ children: React.ReactNode; icon?: undefined; avatar?: undefined })
-    | ({ children?: undefined; icon: IconProp; avatar?: undefined })
-    | ({ children?: undefined; avatar: string; icon?: undefined }))
+    | { children: React.ReactNode; icon?: undefined; avatar?: undefined }
+    | { children?: undefined; icon: IconProp; avatar?: undefined }
+    | { children?: undefined; avatar: string; icon?: undefined }
+  )
 
 export const SidebarOrBottomBarItem = React.memo(
   (props: SidebarOrBottomBarItemProps) => {
@@ -792,7 +794,7 @@ export const SidebarOrBottomBarItem = React.memo(
     useHover(
       innerViewRef,
       useCallback(
-        isHovered => {
+        (isHovered) => {
           hoverItemContext.setValue({
             hoveredColumnId: (!horizontal && isHovered && columnId) || null,
             HoverContent: isHovered && !horizontal ? HoverContent : null,
@@ -842,7 +844,7 @@ export const SidebarOrBottomBarItem = React.memo(
     return (
       <ConditionalWrap
         condition
-        wrap={c =>
+        wrap={(c) =>
           onPress ? (
             <ThemedTouchableOpacity
               key={`sidebar-or-bottom-bar-item-${columnId}-inner`}

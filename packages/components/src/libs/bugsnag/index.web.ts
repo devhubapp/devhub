@@ -31,7 +31,7 @@ export const bugsnag: BugnsagCrossPlatform = {
     if (__DEV__) console.debug('[BUGSNAG]', error, metadata) // tslint:disable-line no-console
 
     client.notify(error, {
-      beforeSend: r => {
+      beforeSend: (r) => {
         if (r.request.url) {
           r.request.url = hideTokenFromString(r.request.url)!
         }

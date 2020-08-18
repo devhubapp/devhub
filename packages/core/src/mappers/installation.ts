@@ -17,9 +17,9 @@ import {
 
 export function fromGitHubInstallation(
   installation:
-    | WebhookPayloadInstallationInstallation & {
+    | (WebhookPayloadInstallationInstallation & {
         permissions: any
-      }
+      })
     | undefined,
 ): CreatedInstallation | null {
   if (!(installation && installation.id)) return null
@@ -78,12 +78,12 @@ export function fromInstallationAccount(
 
 export function fromInstallationRepository(
   repo:
-    | WebhookPayloadInstallationRepositoriesItem & {
+    | (WebhookPayloadInstallationRepositoriesItem & {
         node_id?: string | undefined | null
         language?: string | undefined | null
         permissions?: any
         html_url?: string | undefined | null
-      }
+      })
     | undefined,
 ): InstallationRepository | null {
   if (!(repo && repo.id)) return null

@@ -9,11 +9,12 @@ export * from './fonts/octicons2/Octicons2'
 export type IconProp = {
   color?: keyof ThemeColors
 } & (
-  | ({
+  | {
       family: 'octicon'
       name: OcticonIconProps['name']
-    })
-  | ({
+    }
+  | {
       family: 'material'
       name: MaterialIconProps['name']
-    }))
+    }
+)

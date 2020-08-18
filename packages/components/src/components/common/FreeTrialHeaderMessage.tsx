@@ -18,7 +18,8 @@ export type FreeTrialHeaderMessageProps = {
   | {
       intervalRefresh: Omit<IntervalRefreshProps, 'children'>
       message: () => string
-    })
+    }
+)
 
 export function FreeTrialHeaderMessage(props: FreeTrialHeaderMessageProps) {
   const {

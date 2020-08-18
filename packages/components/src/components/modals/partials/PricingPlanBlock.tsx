@@ -133,7 +133,8 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     isMyPlan &&
     userPlan &&
     userPlan.status &&
-    (userPlan.status !== 'active' && userPlan.status !== 'trialing') &&
+    userPlan.status !== 'active' &&
+    userPlan.status !== 'trialing' &&
     showCurrentPlanDetails
   ) {
     footerText =

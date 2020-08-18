@@ -42,13 +42,13 @@ export const githubInstallationsReducer: Reducer<State> = (
 ) => {
   switch (action.type) {
     case 'REFRESH_INSTALLATIONS_REQUEST':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.lastFetchRequestAt = new Date().toISOString()
         draft.loadState = 'loading'
       })
 
     case 'REFRESH_INSTALLATIONS_SUCCESS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.error = null
         draft.lastFetchSuccessAt = new Date().toISOString()
         draft.loadState = 'loaded'
@@ -79,15 +79,16 @@ export const githubInstallationsReducer: Reducer<State> = (
       })
 
     case 'REFRESH_INSTALLATIONS_NOOP':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (draft.loadState === 'loading') draft.loadState = 'loaded'
       })
 
     case 'REFRESH_INSTALLATIONS_FAILURE':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.lastFetchFailureAt = new Date().toISOString()
-        draft.error = `${(action.error && action.error.message) ||
-          action.error}`
+        draft.error = `${
+          (action.error && action.error.message) || action.error
+        }`
         draft.loadState = 'error'
       })
 

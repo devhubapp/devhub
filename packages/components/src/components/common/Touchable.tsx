@@ -88,7 +88,7 @@ export const Touchable = React.forwardRef(
         : undefined)
 
     const onPressIn = useCallback<NonNullable<TouchableProps['onPressIn']>>(
-      e => {
+      (e) => {
         if (Platform.OS === 'web' && e.nativeEvent) {
           pressInPagePointRef.current = {
             x: e.nativeEvent.pageX,
@@ -102,7 +102,7 @@ export const Touchable = React.forwardRef(
     )
 
     const onPressOut = useCallback<NonNullable<TouchableProps['onPressOut']>>(
-      e => {
+      (e) => {
         if (_onPressOut) _onPressOut(e)
 
         if (Platform.OS === 'web' && e.nativeEvent) {
@@ -119,7 +119,7 @@ export const Touchable = React.forwardRef(
     )
 
     const onPress = useCallback<NonNullable<TouchableProps['onPress']>>(
-      e => {
+      (e) => {
         if (analyticsLabel) {
           analytics.trackEvent(
             analyticsCategory || 'button',
@@ -144,7 +144,7 @@ export const Touchable = React.forwardRef(
     const styleRef = useDynamicRef(props.style)
     useHover(
       hoverBackgroundThemeColor ? touchableRef : null,
-      useCallback(isHovered => {
+      useCallback((isHovered) => {
         if (
           !(
             touchableRef &&

@@ -236,7 +236,8 @@ export function getUserURLFromObject(
     | {
         url?: string
         html_url: string
-      }),
+      }
+  ),
 ): string | undefined {
   if (user.html_url) return user.html_url
 
@@ -276,8 +277,9 @@ export function getUserAvatarByUsername(
   if (!_username) return ''
 
   // Note: This doesn't work for bots
-  return `${baseURL ||
-    'https://github.com'}/${_username}.png?size=${getSteppedSize(
+  return `${
+    baseURL || 'https://github.com'
+  }/${_username}.png?size=${getSteppedSize(
     size,
     undefined,
     getPixelSizeForLayoutSizeFn,
@@ -487,7 +489,7 @@ export function getUniqueIdForSubscription(subscription: {
     }
 
     case 'issue_or_pr': {
-      if (!s.subtype || (s.subtype === 'ISSUES' || s.subtype === 'PULLS')) {
+      if (!s.subtype || s.subtype === 'ISSUES' || s.subtype === 'PULLS') {
         return `/search/issues?q=${getGitHubIssueSearchQuery(s.params)}`
       }
       throw new Error(
@@ -934,7 +936,7 @@ export function createSubscriptionObjectWithId<
 export function createSubscriptionObjectsWithId<
   S extends Array<Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>>
 >(subscriptions: S) {
-  return subscriptions.map(subscription => ({
+  return subscriptions.map((subscription) => ({
     ...subscription,
     id: getUniqueIdForSubscription(subscription),
   }))
@@ -963,10 +965,7 @@ export function getGitHubAPIHeadersFromHeader(headers: Record<string, any>) {
 export function getNameFromRef(ref: string | undefined) {
   if (!(ref && ref.startsWith('refs/'))) return ref || undefined
 
-  return ref
-    .split('/')
-    .slice(2)
-    .join('/')
+  return ref.split('/').slice(2).join('/')
 }
 export const issueOrPullRequestStateTypes: GitHubStateType[] = [
   'open',
@@ -1279,8 +1278,8 @@ export function getItemOwnersAndRepos(
 
   function mapToResult(map: Record<string, any>) {
     return Object.keys(map)
-      .map(repoFullName => getOwnerAndRepo(repoFullName))
-      .filter(or => !!(or.owner && or.repo)) as Array<{
+      .map((repoFullName) => getOwnerAndRepo(repoFullName))
+      .filter((or) => !!(or.owner && or.repo)) as Array<{
       owner: string
       repo: string
     }>
@@ -1316,7 +1315,7 @@ export function getItemOwnersAndRepos(
         ...(includeFork && forkee ? [forkee] : []),
       ]
 
-      _allRepos.forEach(r => {
+      _allRepos.forEach((r) => {
         if (!(r && r.name)) return false
 
         const { owner, repo } = getOwnerAndRepo(r.name)
@@ -1405,7 +1404,7 @@ export function getItemIsBot(
           'commits' in payload &&
           payload.commits &&
           payload.commits.every(
-            commit =>
+            (commit) =>
               !!(
                 getIsBot(
                   tryGetIdAndUsernameFromGitHubEmail(
@@ -1573,7 +1572,7 @@ export function getItemsFilterMetadata(
   },
 ): ItemsFilterMetadata {
   const result: ItemsFilterMetadata = getDefaultItemsFilterMetadata()
-  ;(items || []).filter(Boolean).forEach(item => {
+  ;(items || []).filter(Boolean).forEach((item) => {
     const event =
       type === 'activity' ? (item as EnhancedGitHubEvent) : undefined
     const notification =
@@ -1650,7 +1649,7 @@ export function getItemsFilterMetadata(
     }
 
     if (ownersAndRepos && ownersAndRepos.length) {
-      ownersAndRepos.forEach(or => {
+      ownersAndRepos.forEach((or) => {
         if (or.owner) {
           result.owners[or.owner] = result.owners[or.owner] || {
             metadata: getDefaultItemFilterCountMetadata(),
@@ -1671,7 +1670,7 @@ export function getItemsFilterMetadata(
   })
 
   if (forceIncludeTheseOwners && forceIncludeTheseOwners.length) {
-    forceIncludeTheseOwners.forEach(owner => {
+    forceIncludeTheseOwners.forEach((owner) => {
       result.owners[owner] = result.owners[owner] || {
         metadata: getDefaultItemFilterCountMetadata(),
         repos: {},
@@ -1683,14 +1682,14 @@ export function getItemsFilterMetadata(
     forceIncludeTheseWatchingUsernames &&
     forceIncludeTheseWatchingUsernames.length
   ) {
-    forceIncludeTheseWatchingUsernames.forEach(username => {
+    forceIncludeTheseWatchingUsernames.forEach((username) => {
       result.watching[username] =
         result.watching[username] || getDefaultItemFilterCountMetadata()
     })
   }
 
   if (forceIncludeTheseRepos && forceIncludeTheseRepos.length) {
-    forceIncludeTheseRepos.forEach(repoFullName => {
+    forceIncludeTheseRepos.forEach((repoFullName) => {
       const { owner, repo } = getOwnerAndRepo(repoFullName)
       if (!(owner && repo)) return
 
@@ -1734,7 +1733,7 @@ export function getItemSearchableStrings(
   strings.push(`${id || ''}`)
 
   if (ownersAndRepos && ownersAndRepos.length) {
-    ownersAndRepos.forEach(ownersAndRepo => {
+    ownersAndRepos.forEach((ownersAndRepo) => {
       strings.push(`${ownersAndRepo.owner}/${ownersAndRepo.repo}`)
     })
   }
@@ -1746,7 +1745,7 @@ export function getItemSearchableStrings(
     if (issueOrPullRequest.number) strings.push(`${issueOrPullRequest.number}`)
     if (issueOrPullRequest.number) strings.push(`#${issueOrPullRequest.number}`)
     if (issueOrPullRequest.labels && issueOrPullRequest.labels.length) {
-      issueOrPullRequest.labels.forEach(labelDetails => {
+      issueOrPullRequest.labels.forEach((labelDetails) => {
         const label = labelDetails && `${labelDetails.name || ''}`
         if (!label) return
 
@@ -1801,7 +1800,7 @@ export function getItemSearchableStrings(
     strings.push(`${(actor && actor.login) || ''}`)
     if (branchOrTagName) strings.push(branchOrTagName)
     if (commits) {
-      commits.forEach(commit => {
+      commits.forEach((commit) => {
         if (!commit) return
 
         const authorEmail = `${(commit.author && commit.author.email) || ''}`
@@ -1818,19 +1817,19 @@ export function getItemSearchableStrings(
     strings.push(createdAt)
     if (forkRepoFullName) strings.push(forkRepoFullName)
     if (mergedIds && mergedIds.length) {
-      mergedIds.forEach(mergedId => {
+      mergedIds.forEach((mergedId) => {
         strings.push(mergedId)
       })
     }
     if (pages && pages.length) {
-      pages.forEach(page => {
+      pages.forEach((page) => {
         strings.push(page.page_name)
         strings.push(page.sha)
         strings.push(page.title)
       })
     }
     if (users && users.length) {
-      users.forEach(user => {
+      users.forEach((user) => {
         strings.push(user.login)
       })
     }
@@ -1875,9 +1874,11 @@ export function getItemSearchableStrings(
       const authorEmail = `${(author && author.email) || ''}`
       const authorName = `${(author && author.name) || ''}`
       const message = `${(commit.commit && commit.commit.message) || ''}`
-      const sha = `${getCommitShaFromUrl(
-        (commit.commit && commit.commit.url) || commit.url,
-      ) || ''}`
+      const sha = `${
+        getCommitShaFromUrl(
+          (commit.commit && commit.commit.url) || commit.url,
+        ) || ''
+      }`
 
       if (authorLogin) strings.push(authorLogin)
       if (authorEmail) strings.push(authorEmail)
@@ -1907,7 +1908,7 @@ export function getItemSearchableStrings(
     strings.push(`${release.tag_name || ''}`)
   }
 
-  return strings.map(str => `${str || ''}`).filter(Boolean)
+  return strings.map((str) => `${str || ''}`).filter(Boolean)
 }
 
 export function getOlderOrNewerItemDate(

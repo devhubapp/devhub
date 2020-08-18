@@ -48,8 +48,9 @@ export function memoizeMultipleArgs<FN extends (...args: any[]) => any>(
 export function guid() {
   const str4 = () =>
     (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1) // tslint:disable-line
-  return `${str4() +
-    str4()}-${str4()}-${str4()}-${str4()}-${str4()}${str4()}${str4()}`
+  return `${
+    str4() + str4()
+  }-${str4()}-${str4()}-${str4()}-${str4()}${str4()}${str4()}`
 }
 
 export function isNight() {
@@ -185,7 +186,9 @@ export function isEventPrivate(event: EnhancedGitHubEvent) {
   return !!(
     event.public === false ||
     ('repo' in event && event.repo && event.repo.private) ||
-    ('repos' in event && event.repos && event.repos.some(repo => repo.private))
+    ('repos' in event &&
+      event.repos &&
+      event.repos.some((repo) => repo.private))
   )
 }
 
@@ -208,9 +211,11 @@ export function deepMapper<T extends object, R = T>(
 ): R {
   if (!(obj && _.isPlainObject(obj))) return obj as any
 
-  return mapper(_.mapValues(obj, v =>
-    _.isPlainObject(v) ? deepMapper(v as any, mapper) : v,
-  ) as any)
+  return mapper(
+    _.mapValues(obj, (v) =>
+      _.isPlainObject(v) ? deepMapper(v as any, mapper) : v,
+    ) as any,
+  )
 }
 
 const urlsToKeep = ['url', 'html_url', 'avatar_url', 'latest_comment_url']
@@ -218,10 +223,10 @@ export function removeUselessURLsFromResponseItem<
   T extends Record<string, any>
 >(item: T) {
   let hasChanged = false
-  const result = deepMapper(item, obj => {
+  const result = deepMapper(item, (obj) => {
     const keys = Object.keys(obj)
 
-    keys.forEach(key => {
+    keys.forEach((key) => {
       if (!(key && typeof key === 'string')) return
       if (
         !(key.includes('_url') || key.includes('_link') || key.includes('href'))
@@ -354,7 +359,7 @@ export function genericGitHubResponseMapper(
 ): Record<string, any> | undefined {
   if (!(response && _.isPlainObject(response))) return response
 
-  return _.mapValues(convertObjectKeysToCamelCase(response), obj => {
+  return _.mapValues(convertObjectKeysToCamelCase(response), (obj) => {
     if (_.isPlainObject(obj)) return genericGitHubResponseMapper(obj)
     return obj
   })
@@ -437,7 +442,7 @@ export function getSearchQueryFromFilter(
 
     const include: string[] = []
     const exclude: string[] = []
-    Object.entries(filterRecord).forEach(params => {
+    Object.entries(filterRecord).forEach((params) => {
       const [_item, value] = transform
         ? transform(params[0], params[1])
         : params
@@ -456,7 +461,7 @@ export function getSearchQueryFromFilter(
         queries.push(`-${queryKey}:${_.sortBy(exclude).join(',')}`)
     } else {
       const all = _.sortBy(_.uniq([...include, ...exclude])).filter(Boolean)
-      all.forEach(value =>
+      all.forEach((value) =>
         queries.push(
           `${exclude.includes(value) ? '-' : ''}${queryKey}:${value}`,
         ),
@@ -528,7 +533,7 @@ export function getSearchQueryFromFilter(
   const queryTerms = getSearchQueryTerms(query)
   let remainingQuery = ''
   const queryObj: Record<string, Record<string, boolean>> = {}
-  queryTerms.forEach(queryTerm => {
+  queryTerms.forEach((queryTerm) => {
     if (!queryTerm) return
 
     if (queryTerm.length === 2) {
@@ -556,7 +561,7 @@ export function getQueryStringFromQueryTerms(
   queryTerms: Array<[string, boolean] | [string, string, boolean]>,
 ) {
   let query = ''
-  queryTerms.forEach(queryTerm => {
+  queryTerms.forEach((queryTerm) => {
     if (!queryTerm) return
 
     if (queryTerm.length === 2) {
@@ -580,17 +585,17 @@ export function getSearchQueryTerms(
 
   const q = query.trim()
 
-    // TODO: Fix regex with backslash
-    // ;(q.match(/("-?([^\\][^"])+")/g) || []).forEach((str, index) => {
-    //   if (!str) return
-    //   q = q.replace(str, '')
-    //   strings.push(str.trim())
-    // })
+  // TODO: Fix regex with backslash
+  // ;(q.match(/("-?([^\\][^"])+")/g) || []).forEach((str, index) => {
+  //   if (!str) return
+  //   q = q.replace(str, '')
+  //   strings.push(str.trim())
+  // })
   ;(
     q.match(
       /((-|NOT )?[a-zA-Z]+:"[^"]+")|((-|NOT )?[a-zA-Z]+:[^ \n$]+)|((-|NOT )?"[^"]+")|(-|NOT )?([^ $]+)/gi,
     ) || []
-  ).forEach(_queryItem => {
+  ).forEach((_queryItem) => {
     if (!_queryItem) return
 
     const queryItem = _queryItem.replace(/^(^|\s)NOT(\s)/gi, '$1-')
@@ -606,11 +611,7 @@ export function getSearchQueryTerms(
       .trim()
       .toLowerCase()
       .slice(isNegated ? 1 : 0)
-    const value = _values
-      .join(':')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .toLowerCase()
+    const value = _values.join(':').replace(/\s+/g, ' ').trim().toLowerCase()
 
     function handleValue(v: string) {
       if (keyOrValue && !v) {
@@ -628,7 +629,7 @@ export function getSearchQueryTerms(
       !value.startsWith('"') &&
       value.split(',').length > 1
     ) {
-      value.split(',').map(subItem => subItem && handleValue(subItem.trim()))
+      value.split(',').map((subItem) => subItem && handleValue(subItem.trim()))
     } else {
       handleValue(value)
     }
@@ -653,7 +654,7 @@ export function getFilterFromSearchQuery(
   let unknownKeyValueQueries = ''
   filters.query = ''
 
-  searchTerms.forEach(searchTerm => {
+  searchTerms.forEach((searchTerm) => {
     if (Array.isArray(searchTerm) && searchTerm.length === 2) {
       const [_query, _isNegated] = searchTerm
       if (
@@ -813,12 +814,12 @@ export function getFilterFromSearchQuery(
 
             if (
               validSubjectTypes
-                .map(subjectType => subjectType.toLowerCase())
+                .map((subjectType) => subjectType.toLowerCase())
                 .includes(value)
             ) {
               filters.subjectTypes = filters.subjectTypes || {}
 
-              validSubjectTypes.forEach(subjectType => {
+              validSubjectTypes.forEach((subjectType) => {
                 if (subjectType.toLowerCase() === value) {
                   ;(filters.subjectTypes as Record<
                     GitHubItemSubjectType,
@@ -966,7 +967,7 @@ export function getValuesFromQueryKeysFilter(
 
   const filteredQueryTerms = (_.sortBy(
     queryTerms.filter(
-      queryTerm =>
+      (queryTerm) =>
         queryTerm &&
         queryTerm.length === 3 &&
         queryKeys.includes(queryTerm[0] as any),
@@ -974,7 +975,7 @@ export function getValuesFromQueryKeysFilter(
     ['0', '2'],
   ) as any) as Array<[string, string, boolean]>
   const usedQueryKeys = _.uniq(
-    filteredQueryTerms.map(queryTerm => queryTerm[0]),
+    filteredQueryTerms.map((queryTerm) => queryTerm[0]),
   )
 
   const filterObjs: Record<
@@ -984,7 +985,7 @@ export function getValuesFromQueryKeysFilter(
     including: {},
     excluding: {},
   }
-  filteredQueryTerms.forEach(queryTerm => {
+  filteredQueryTerms.forEach((queryTerm) => {
     const [key, value, isNegated] = queryTerm
 
     if (isNegated) {
@@ -1050,7 +1051,7 @@ export function getUsernamesFromFilter(
     ],
   }: { blacklist?: UsernameFilterKey[]; whitelist?: UsernameFilterKey[] } = {},
 ) {
-  const usernameFilterKeys = whitelist.filter(key => !blacklist.includes(key))
+  const usernameFilterKeys = whitelist.filter((key) => !blacklist.includes(key))
 
   const {
     all,
@@ -1077,7 +1078,7 @@ export function getItemsFromSubscriptions(
 
   if (!(subscriptions && subscriptions.length)) return result
 
-  subscriptions.forEach(subscription => {
+  subscriptions.forEach((subscription) => {
     if (
       !(
         subscription &&
@@ -1088,7 +1089,7 @@ export function getItemsFromSubscriptions(
     )
       return
 
-    subscription.data.itemNodeIdOrIds.forEach(_id => {
+    subscription.data.itemNodeIdOrIds.forEach((_id) => {
       const id = `${_id || ''}`
       if (!id) return
 

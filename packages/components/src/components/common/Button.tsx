@@ -49,7 +49,8 @@ export type ButtonProps = Omit<ThemedTouchableHighlightProps, 'children'> & {
           backgroundHoverThemeColor: keyof ThemeColors | undefined
           foregroundHoverThemeColor: keyof ThemeColors
         }
-      })
+      }
+  )
 
 export const defaultButtonSize = 40 * scaleFactor
 
@@ -90,7 +91,7 @@ export function Button(props: ButtonProps) {
   useHover(
     containerViewRef,
     useCallback(
-      isHovered => {
+      (isHovered) => {
         const theme = getTheme()
 
         const _backgroundThemeColor: keyof ThemeColors = isHovered

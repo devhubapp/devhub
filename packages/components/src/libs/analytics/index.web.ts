@@ -67,7 +67,7 @@ if (
     clientId: localStorage.getItem('ga:clientId'),
     storage: 'none',
   } as UniversalAnalytics.FieldsObject)
-  ga(tracker => {
+  ga((tracker) => {
     const clientId = tracker && tracker.get('clientId')
     if (clientId) localStorage.setItem('ga:clientId', clientId)
   })

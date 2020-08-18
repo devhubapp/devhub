@@ -18,7 +18,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
 
   const { os } = useSystem()
   const { authData } = useAuth()
-  const { freeTrialDays, freePlan, paidPlans, plans } = usePlans()
+  const { freeTrialDays, paidPlans, plans } = usePlans()
   const localizedPlan = useLocalizedPlanDetails(paidPlans[0])
   const priceLabel = localizedPlan ? formatPrice(localizedPlan) : ''
 

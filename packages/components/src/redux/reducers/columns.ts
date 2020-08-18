@@ -34,7 +34,7 @@ export const columnsReducer: Reducer<State> = (
 ) => {
   switch (action.type) {
     case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
@@ -63,7 +63,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'ADD_COLUMN_SUBSCRIPTION':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
@@ -86,7 +86,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'REMOVE_SUBSCRIPTION_FROM_COLUMN':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
@@ -97,17 +97,17 @@ export const columnsReducer: Reducer<State> = (
         if (!column) return
 
         column.subscriptionIds = column.subscriptionIds.filter(
-          id => id !== action.payload.subscriptionId,
+          (id) => id !== action.payload.subscriptionId,
         )
 
         draft.updatedAt = new Date().toISOString()
       })
 
     case 'DELETE_COLUMN':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (draft.allIds)
           draft.allIds = draft.allIds.filter(
-            id => id !== action.payload.columnId,
+            (id) => id !== action.payload.columnId,
           )
 
         if (draft.byId) delete draft.byId[action.payload.columnId]
@@ -116,15 +116,15 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'DELETE_COLUMN_SUBSCRIPTIONS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!(draft.allIds && draft.byId)) return
 
-        draft.allIds.forEach(columnId => {
+        draft.allIds.forEach((columnId) => {
           const column = draft.byId && draft.byId[columnId]
           if (!column) return
 
           column.subscriptionIds = column.subscriptionIds.filter(
-            id => !action.payload.includes(id),
+            (id) => !action.payload.includes(id),
           )
 
           draft.updatedAt = new Date().toISOString()
@@ -132,11 +132,11 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'MOVE_COLUMN':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.allIds) return
 
         const currentIndex = draft.allIds.findIndex(
-          id => id === action.payload.columnId,
+          (id) => id === action.payload.columnId,
         )
         if (!(currentIndex >= 0 && currentIndex < draft.allIds.length)) return
 
@@ -148,14 +148,14 @@ export const columnsReducer: Reducer<State> = (
 
         // move column inside array
         const columnId = draft.allIds[currentIndex]
-        draft.allIds = draft.allIds.filter(id => id !== columnId)
+        draft.allIds = draft.allIds.filter((id) => id !== columnId)
         draft.allIds.splice(newIndex, 0, columnId)
 
         draft.updatedAt = new Date().toISOString()
       })
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const normalized = normalizeColumns(
           action.payload.columns,
           action.payload.columnsUpdatedAt,
@@ -168,7 +168,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_OPTION': {
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -188,7 +188,7 @@ export const columnsReducer: Reducer<State> = (
     }
 
     case 'CLEAR_COLUMN_FILTERS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -231,7 +231,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'REPLACE_COLUMN_FILTERS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -243,7 +243,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_SAVED_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -262,7 +262,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_PARTICIPATING_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId] as NotificationColumn
@@ -277,7 +277,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_ACTIVITY_ACTION_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId] as ActivityColumn
@@ -302,7 +302,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_LABEL_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const {
           columnId,
           label: _label,
@@ -328,13 +328,13 @@ export const columnsReducer: Reducer<State> = (
 
         const queryTerms = getSearchQueryTerms(column.filters.query || '')
 
-        const isQueryTermOfLabelType = (qt: (typeof queryTerms)[0]) =>
+        const isQueryTermOfLabelType = (qt: typeof queryTerms[0]) =>
           !!(
             qt &&
             qt.length === 3 &&
             `${qt[0] || ''}`.toLowerCase() === 'label'
           )
-        const isQueryTermThisLabel = (qt: (typeof queryTerms)[0]) =>
+        const isQueryTermThisLabel = (qt: typeof queryTerms[0]) =>
           !!(
             isQueryTermOfLabelType(qt) &&
             `${qt[1] || ''}`.toLowerCase() === `${label || ''}`.toLowerCase()
@@ -344,7 +344,7 @@ export const columnsReducer: Reducer<State> = (
 
         if (removeOthers) {
           column.filters.query = getQueryStringFromQueryTerms(
-            queryTerms.filter(qt => !isQueryTermOfLabelType(qt)),
+            queryTerms.filter((qt) => !isQueryTermOfLabelType(qt)),
           )
         }
 
@@ -353,7 +353,7 @@ export const columnsReducer: Reducer<State> = (
           (removeIfAlreadySet && currentValue === value)
         ) {
           column.filters.query = getQueryStringFromQueryTerms(
-            queryTerms.filter(qt => !isQueryTermThisLabel(qt)),
+            queryTerms.filter((qt) => !isQueryTermThisLabel(qt)),
           )
         } else {
           column.filters.query = getQueryStringFromQueryTerms([
@@ -372,7 +372,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_REASON_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const {
           columnId,
           reason,
@@ -415,7 +415,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_STATE_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -444,7 +444,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_BOT_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -457,7 +457,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_DRAFT_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -470,7 +470,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_SUBJECT_TYPE_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -496,7 +496,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_INVOLVES_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const { columnId, value } = action.payload
 
         const user = `${action.payload.user || ''}`.toLowerCase()
@@ -522,7 +522,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'REPLACE_COLUMN_WATCHING_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const { columnId, owner: _owner } = action.payload
 
         const owner = `${_owner || ''}`.toLowerCase()
@@ -542,7 +542,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_WATCHING_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const { columnId, owner: _owner, value } = action.payload
 
         const owner = `${_owner || ''}`.toLowerCase()
@@ -566,7 +566,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'REPLACE_COLUMN_OWNER_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const { columnId, owner: _owner } = action.payload
 
         const owner = `${_owner || ''}`.toLowerCase()
@@ -579,7 +579,7 @@ export const columnsReducer: Reducer<State> = (
         column.filters = column.filters || {}
         column.filters.owners = column.filters.owners || {}
 
-        Object.keys(column.filters.owners).forEach(existingOwner => {
+        Object.keys(column.filters.owners).forEach((existingOwner) => {
           if (column.filters!.owners![existingOwner]) {
             column.filters!.owners![existingOwner]!.value = undefined
             column.filters!.owners![existingOwner]!.repos = undefined
@@ -597,7 +597,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_OWNER_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const { columnId, owner: _owner, value } = action.payload
 
         const owner = `${_owner || ''}`.toLowerCase()
@@ -631,7 +631,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_REPO_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const { columnId, value } = action.payload
 
         const owner = `${action.payload.owner || ''}`.toLowerCase()
@@ -662,7 +662,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_UNREAD_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId] as NotificationColumn
@@ -675,7 +675,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_PRIVACY_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -688,7 +688,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'SET_COLUMN_CLEARED_AT_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const column = draft.byId[action.payload.columnId]
@@ -706,14 +706,14 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'CLEAR_ALL_COLUMNS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         draft.allIds = draft.allIds || []
 
         const now = new Date().toISOString()
 
-        draft.allIds.forEach(columnId => {
+        draft.allIds.forEach((columnId) => {
           const column = draft.byId![columnId]
           if (!column) return
 
@@ -728,7 +728,7 @@ export const columnsReducer: Reducer<State> = (
       })
 
     case 'CHANGE_ISSUE_NUMBER_FILTER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.byId) return
 
         const {

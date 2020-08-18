@@ -6,7 +6,7 @@ import { CheckLabelProps } from './CheckLabel'
 export interface CheckLabelsProps {
   center?: boolean
   className?: string
-  children: Array<ReactElement<CheckLabelProps> | false>
+  children: (ReactElement<CheckLabelProps> | false)[]
 }
 
 export function CheckLabels(props: CheckLabelsProps) {

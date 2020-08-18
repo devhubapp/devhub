@@ -91,7 +91,7 @@ export const NotificationCards = React.memo((props: NotificationCardsProps) => {
 
   const mainSubscription = useReduxState(
     useCallback(
-      state =>
+      (state) =>
         selectors.createColumnSubscriptionSelector()(state, columnId || ''),
       [columnId],
     ),

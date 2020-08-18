@@ -13,7 +13,7 @@ export function useIsColumnFocused(columnId: string) {
   const isFocusedRef = useDynamicRef(isFocused)
   useEmitter(
     'FOCUS_ON_COLUMN',
-    payload => {
+    (payload) => {
       const newValue = payload.columnId === columnIdRef.current
       if (isFocusedRef.current === newValue) return
       setIsFocused(newValue)

@@ -16,7 +16,9 @@ export interface ActionWithError<
 
 export type ExtractPayloadFromActionCreator<AC> = AC extends () => any
   ? void
-  : (AC extends (payload: infer P) => any ? P : never)
+  : AC extends (payload: infer P) => any
+  ? P
+  : never
 
 export type ExtractDispatcherFromActionCreator<
   AC
@@ -26,11 +28,11 @@ export type ExtractDispatcherFromActionCreator<
 
 export type ExtractActionFromActionCreator<AC> = AC extends () => infer A
   ? A
-  : (AC extends (payload: any) => infer A
-      ? A
-      : AC extends (payload: any, error: any) => infer A
-      ? A
-      : never)
+  : AC extends (payload: any) => infer A
+  ? A
+  : AC extends (payload: any, error: any) => infer A
+  ? A
+  : never
 
 export type ExtractPropsFromConnector<
   Connector

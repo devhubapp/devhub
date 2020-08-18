@@ -76,7 +76,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   }, [plan && plan.id])
 
   const state = store.getState()
-  columns.forEach(column => {
+  columns.forEach((column) => {
     if (!column) return
 
     const enableAppIconUnreadIndicatorOption = getColumnOption(
@@ -109,8 +109,8 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     if (!(showAppIconUnreadIndicator || showDesktopPushNotifications)) return
 
     const columnSubscriptions = column.subscriptionIds
-      .map(subscriptionId =>
-        subscriptions.find(s => s && s.id && s.id === subscriptionId),
+      .map((subscriptionId) =>
+        subscriptions.find((s) => s && s.id && s.id === subscriptionId),
       )
       .filter(Boolean) as ColumnSubscription[]
 
@@ -118,8 +118,8 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       (columnSubscriptions[0] &&
         (columnSubscriptions[0].subtype === 'USER_RECEIVED_EVENTS' ||
           columnSubscriptions[0].subtype === 'USER_RECEIVED_PUBLIC_EVENTS') &&
-        (columnSubscriptions[0].params &&
-          columnSubscriptions[0].params.username)) ||
+        columnSubscriptions[0].params &&
+        columnSubscriptions[0].params.username) ||
       undefined
 
     const columnItems = subscriptionsDataSelector(state, column.subscriptionIds)
@@ -142,7 +142,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
       PixelRatio.getPixelSizeForLayoutSize,
     )
 
-    unreadColumnItems.forEach(item => {
+    unreadColumnItems.forEach((item) => {
       const itemNodeIdOrId = getItemNodeIdOrId(item)
       if (!itemNodeIdOrId) return
 
@@ -180,7 +180,7 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
         Array.from(pushNotifications)
           .slice(0, 10)
           .reverse()
-          .forEach(pushNotification => {
+          .forEach((pushNotification) => {
             window.ipc.send('show-notification', pushNotification)
           })
       } else {

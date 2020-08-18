@@ -22,16 +22,16 @@ export interface CardItemSeparatorProps {
 }
 
 export function CardItemSeparator(props: CardItemSeparatorProps) {
-  const { leadingItem, leftOffset, muted: _muted } = props
+  const { leftOffset } = props
 
   const theme = useTheme()
 
-  const muted =
-    typeof _muted === 'boolean'
-      ? _muted
-      : leadingItem
-      ? isItemRead(leadingItem)
-      : false
+  // const muted =
+  //   typeof _muted === 'boolean'
+  //     ? _muted
+  //     : leadingItem
+  //     ? isItemRead(leadingItem)
+  //     : false
 
   const cardItemSeparatorThemeColor = getCardItemSeparatorThemeColor({
     isDark: theme.isDark,

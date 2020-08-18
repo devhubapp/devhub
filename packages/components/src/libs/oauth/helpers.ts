@@ -86,7 +86,9 @@ export const listenForNextMessageData = (
           e &&
           e.data &&
           (e.data.oauth ||
-            (e.data.app_token || e.data.github_token || e.data.error))
+            e.data.app_token ||
+            e.data.github_token ||
+            e.data.error)
         )
       ) {
         return

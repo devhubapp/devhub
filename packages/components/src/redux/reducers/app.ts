@@ -25,14 +25,14 @@ export const appReducer: Reducer<State> = (state = initialState, action) => {
         banners: _.uniqBy(
           ((app && app.banners) || [])
             .concat(initialState.banners)
-            .map(banner => {
+            .map((banner) => {
               if (!(banner && banner.id)) return banner
               if (banner.id === 'join_our_slack') return
               if (banner.id === 'new_layout_mode') return
               if (banner.id === 'desktop_push_notifications') return
 
               const updatedBanner = initialState.banners.find(
-                b => b.id === banner.id,
+                (b) => b.id === banner.id,
               )
               if (updatedBanner) {
                 return {
@@ -50,10 +50,10 @@ export const appReducer: Reducer<State> = (state = initialState, action) => {
     }
 
     case 'CLOSE_BANNER_MESSAGE':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.banners = draft.banners || []
 
-        draft.banners.forEach(banner => {
+        draft.banners.forEach((banner) => {
           if (!(banner && banner.id === action.payload)) return
 
           banner.closedAt = new Date().toISOString()

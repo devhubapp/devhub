@@ -136,7 +136,8 @@ export const getRepoFullNameFromObject = (
 ): string | undefined =>
   (repo &&
     ((repo.name && repo.name.includes('/') ? repo.name : undefined) ||
-      (repo.full_name || getRepoFullNameFromUrl(repo.html_url || repo.url)))) ||
+      repo.full_name ||
+      getRepoFullNameFromUrl(repo.html_url || repo.url))) ||
   undefined
 
 export const getGitHubURLForUser = (
@@ -149,7 +150,7 @@ export const getGitHubURLForUser = (
 
 const objToQueryParams = (obj: { [key: string]: string | number }) =>
   Object.keys(obj)
-    .map(key => `${key}=${obj[key]}`)
+    .map((key) => `${key}=${obj[key]}`)
     .join('&')
 
 export const getGitHubSearchURL = (
@@ -213,7 +214,7 @@ export const getGitHubAvatarURLFromPayload = (
   if (!payload) return undefined
 
   const fields = Object.getOwnPropertyNames(payload)
-  const fieldWithAvatar = fields.find(field => {
+  const fieldWithAvatar = fields.find((field) => {
     const hasAvatar =
       payload[field] &&
       payload[field].user &&
@@ -282,8 +283,9 @@ export function githubHTMLUrlFromAPIUrl(
             issueOrPullRequestNumber &&
             (commentId || (restOfURL2[0] === 'comments' && restOfURL2[1]))
           ) {
-            return `${baseURL}/${repoFullName}/issues/${issueOrPullRequestNumber}#issuecomment-${commentId ||
-              restOfURL2[1]}`
+            return `${baseURL}/${repoFullName}/issues/${issueOrPullRequestNumber}#issuecomment-${
+              commentId || restOfURL2[1]
+            }`
           }
 
           return `${baseURL}/${repoFullName}/issues/${restOfURL2.join('/')}`

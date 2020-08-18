@@ -76,7 +76,7 @@ export const GenericOwnerFilterBar = React.memo(
 
     const stringifiedData = JSON.stringify(data)
 
-    const firstSelectedItem = data.find(item => item.value)
+    const firstSelectedItem = data.find((item) => item.value)
     useEffect(() => {
       if (
         listRef.current &&

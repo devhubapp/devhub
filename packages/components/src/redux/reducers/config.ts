@@ -23,7 +23,7 @@ export const configReducer: Reducer<State> = (state = initialState, action) => {
       return { ...state }
 
     case 'SET_THEME':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const theme = loadTheme(action.payload)
 
         if (theme.id && theme.id === action.payload.id) {
@@ -35,7 +35,7 @@ export const configReducer: Reducer<State> = (state = initialState, action) => {
       })
 
     case 'SET_PREFERRABLE_THEME':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const theme = loadTheme(action.payload)
 
         if (theme.isDark) draft.preferredDarkTheme = action.payload

@@ -35,11 +35,11 @@ export const subscriptionsReducer: Reducer<State> = (
         ? state
         : (payload && payload.subscriptions) || state
 
-      return immer(subscriptions, draft => {
+      return immer(subscriptions, (draft) => {
         const keys = Object.keys(draft.byId)
         if (!(keys && keys.length)) return
 
-        keys.forEach(id => {
+        keys.forEach((id) => {
           const subscription = draft.byId[id]
           if (!(subscription && subscription.data)) return
 
@@ -49,7 +49,7 @@ export const subscriptionsReducer: Reducer<State> = (
     }
 
     case 'ADD_COLUMN_AND_SUBSCRIPTIONS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
@@ -65,7 +65,7 @@ export const subscriptionsReducer: Reducer<State> = (
       })
 
     case 'ADD_COLUMN_SUBSCRIPTION':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
 
@@ -85,13 +85,15 @@ export const subscriptionsReducer: Reducer<State> = (
       })
 
     case 'DELETE_COLUMN_SUBSCRIPTIONS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (draft.allIds)
-          draft.allIds = draft.allIds.filter(id => !action.payload.includes(id))
+          draft.allIds = draft.allIds.filter(
+            (id) => !action.payload.includes(id),
+          )
 
         if (!draft.byId) return
 
-        action.payload.forEach(id => {
+        action.payload.forEach((id) => {
           delete draft.byId[id]
         })
 
@@ -99,7 +101,7 @@ export const subscriptionsReducer: Reducer<State> = (
       })
 
     case 'REPLACE_COLUMNS_AND_SUBSCRIPTIONS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const normalized = normalizeSubscriptions(
           action.payload.subscriptions,
           action.payload.subscriptionsUpdatedAt,
@@ -111,7 +113,7 @@ export const subscriptionsReducer: Reducer<State> = (
       })
 
     case 'FETCH_SUBSCRIPTION_REQUEST':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.allIds) return
         if (!draft.byId) return
 
@@ -136,7 +138,7 @@ export const subscriptionsReducer: Reducer<State> = (
       })
 
     case 'FETCH_SUBSCRIPTION_SUCCESS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.allIds) return
         if (!draft.byId) return
 
@@ -199,7 +201,7 @@ export const subscriptionsReducer: Reducer<State> = (
       })
 
     case 'FETCH_SUBSCRIPTION_FAILURE':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.allIds) return
         if (!draft.byId) return
 
@@ -225,7 +227,8 @@ export const subscriptionsReducer: Reducer<State> = (
           action.payload.replaceAllItems &&
           action.error &&
           action.error.status &&
-          (action.error.status >= 402 && action.error.status < 500)
+          action.error.status >= 402 &&
+          action.error.status < 500
         ) {
           subscription.data.itemNodeIdOrIds = []
         }

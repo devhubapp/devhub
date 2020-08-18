@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 
 export interface TabsProps<TabId extends string> {
   className?: string
-  children: Array<ReactElement<TabProps<TabId>> | false | null>
+  children: (ReactElement<TabProps<TabId>> | false | null)[]
   onTabChange: (id: TabId) => void
 }
 

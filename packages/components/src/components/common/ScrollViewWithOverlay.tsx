@@ -113,7 +113,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
       }
     }, 100)
 
-    const onScroll: ScrollViewProps['onScroll'] = e => {
+    const onScroll: ScrollViewProps['onScroll'] = (e) => {
       isScrollAtTheStartRef.current = horizontal
         ? e.nativeEvent.contentOffset.x < 1
         : e.nativeEvent.contentOffset.y < 1
@@ -143,7 +143,7 @@ export const ScrollViewWithOverlay = React.forwardRef(
       if (props.onContentSizeChange) props.onContentSizeChange(width, height)
     }
 
-    const onLayout: ScrollViewProps['onLayout'] = e => {
+    const onLayout: ScrollViewProps['onLayout'] = (e) => {
       const { width, height } = e.nativeEvent.layout
       layoutSizeRef.current = { width, height }
       updateOverlayVisibility()

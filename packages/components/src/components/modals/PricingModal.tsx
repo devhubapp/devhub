@@ -62,7 +62,7 @@ export function PricingModal(props: PricingModalProps) {
   const userPlanStillExist = !!(
     userPlan &&
     userPlan.id &&
-    plansToShow.find(p => p && p.id === userPlan.id)
+    plansToShow.find((p) => p && p.id === userPlan.id)
   )
 
   const showUserPlanAtTheTop = !!userPlanInfo
@@ -81,27 +81,27 @@ export function PricingModal(props: PricingModalProps) {
   )
   const selectedPlanId =
     _selectedPlanId ||
-    ((initialSelectedPlanId &&
-    plansToShow.find(p => p && p.id === initialSelectedPlanId)
+    (initialSelectedPlanId &&
+    plansToShow.find((p) => p && p.id === initialSelectedPlanId)
       ? initialSelectedPlanId
       : undefined) ||
-      (_highlightFeature &&
-      plansToShow.find(p => p && p.featureFlags[_highlightFeature] === true)
-        ? plansToShow.find(
-            p => p && p.featureFlags[_highlightFeature] === true,
-          )!.id
-        : undefined) ||
-      (userPlan && userPlanStillExist && userPlan.id) ||
-      undefined)
+    (_highlightFeature &&
+    plansToShow.find((p) => p && p.featureFlags[_highlightFeature] === true)
+      ? plansToShow.find(
+          (p) => p && p.featureFlags[_highlightFeature] === true,
+        )!.id
+      : undefined) ||
+    (userPlan && userPlanStillExist && userPlan.id) ||
+    undefined
 
   const selectedPlan =
-    selectedPlanId && plansToShow.find(p => p && p.id === selectedPlanId)
+    selectedPlanId && plansToShow.find((p) => p && p.id === selectedPlanId)
 
   const scrollToPlan = useCallback(
     (planId: PlanID | undefined) => {
       if (!flatListRef.current) return
 
-      const index = plansToShow.findIndex(p => p && p.id === planId)
+      const index = plansToShow.findIndex((p) => p && p.id === planId)
       if (!(index >= 0 && index < plansToShow.length)) return
 
       flatListRef.current.scrollToOffset({
@@ -354,7 +354,7 @@ export function PricingModal(props: PricingModalProps) {
             >
               {userPlan &&
               userPlan.amount &&
-              paidPlans.some(p => p && p.interval)
+              paidPlans.some((p) => p && p.interval)
                 ? 'Switch plan ↗'
                 : 'See available options ↗'}
             </ButtonLink>
@@ -459,7 +459,7 @@ export function PricingModal(props: PricingModalProps) {
 
 const onScrollToIndexFailed: NonNullable<
   FlatListProps<string>['onScrollToIndexFailed']
-> = info => {
+> = (info) => {
   console.error(info)
   bugsnag.notify({
     name: 'ScrollToIndexFailed',

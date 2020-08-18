@@ -111,7 +111,7 @@ function* init() {
     const subscriptionsToFetch = subscriptions
       .slice(0, constants.COLUMNS_LIMIT)
       .filter(
-        s =>
+        (s) =>
           s &&
           !(
             (s.data.loadState === 'loading' ||
@@ -129,7 +129,7 @@ function* init() {
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
     yield all(
-      subscriptionsToFetch.map(function*(subscription) {
+      subscriptionsToFetch.map(function* (subscription) {
         if (!subscription) return
 
         const lastFetchedAt = selectors.subscriptionLastFetchedAtSelector(
@@ -144,10 +144,10 @@ function* init() {
 
         if (
           !forceFetchAll &&
-          (subscription &&
-            subscription.data &&
-            subscription.data.loadState === 'error' &&
-            (!timeDiff || timeDiff < fiveMinutes))
+          subscription &&
+          subscription.data &&
+          subscription.data.loadState === 'error' &&
+          (!timeDiff || timeDiff < fiveMinutes)
         ) {
           if (__DEV__) {
             // tslint:disable-next-line no-console
@@ -282,7 +282,7 @@ function* onFetchColumnSubscriptions(
   if (!(columnSubscriptions && columnSubscriptions.length)) return
 
   yield all(
-    columnSubscriptions.map(function*(subscription) {
+    columnSubscriptions.map(function* (subscription) {
       if (!subscription) return
 
       return yield put(
@@ -564,14 +564,15 @@ function* onFetchRequest(
           : undefined
     } else {
       throw new Error(
-        `Unknown column subscription type: ${subscription &&
-          (subscription as any).type}`,
+        `Unknown column subscription type: ${
+          subscription && (subscription as any).type
+        }`,
       )
     }
 
     if (data && requestParams.since) {
       data = (data as EnhancedItem[]).filter(
-        item =>
+        (item) =>
           !!(
             item &&
             requestParams.since &&
@@ -665,7 +666,7 @@ function* onMarkItemsAsReadOrUnread(
   const octokit = github.getOctokitForToken(githubToken)
 
   const results = yield all(
-    itemNodeIdOrIds.map(function*(itemNodeIdOrId, index) {
+    itemNodeIdOrIds.map(function* (itemNodeIdOrId, index) {
       const threadId = itemNodeIdOrId && parseInt(`${itemNodeIdOrId}`, 10)
       if (!threadId) return
 
@@ -793,7 +794,7 @@ function* onMarkEverythingAsReadWithConfirmation(
     typeof actions.markEverythingAsReadWithConfirmation
   >,
 ) {
-  const confirmed = yield new Promise(resolve => {
+  const confirmed = yield new Promise((resolve) => {
     confirm(
       'Mark all as read?',
       'All your GitHub notifications and all columns will be marked as read. ' +
@@ -820,7 +821,7 @@ function* onClearAllColumnsWithConfirmation(
     typeof actions.clearAllColumnsWithConfirmation
   >,
 ) {
-  const confirmed = yield new Promise(resolve => {
+  const confirmed = yield new Promise((resolve) => {
     confirm(
       'Clear all columns?',
       'All columns will become empty. ' +

@@ -90,9 +90,9 @@ export function getOlderOrNewerEventDate(
 ): string | undefined {
   const now = Date.now()
   return sortEvents(items, 'created_at', order === 'newer' ? 'desc' : 'asc')
-    .map(item => item.created_at)
+    .map((item) => item.created_at)
     .filter(
-      date =>
+      (date) =>
         !!(date && ignoreFutureDates ? now > new Date(date).getTime() : true),
     )[0]
 }
@@ -291,8 +291,8 @@ export function getEventMetadata(
         const pagesText = count > 1 ? `${count} wiki pages` : 'a wiki page'
         switch (
           event.payload.pages &&
-            event.payload.pages[0] &&
-            event.payload.pages[0].action
+          event.payload.pages[0] &&
+          event.payload.pages[0].action
         ) {
           case 'created': {
             return {
@@ -632,7 +632,9 @@ function tryMerge(
   const isSameRepo =
     'repo' in eventA &&
     eventA.repo &&
-    ('repo' in eventB && eventB.repo && eventA.repo.id === eventB.repo.id)
+    'repo' in eventB &&
+    eventB.repo &&
+    eventA.repo.id === eventB.repo.id
 
   const createdAtMinutesDiff = moment(eventA.created_at).diff(
     moment(eventB.created_at),
@@ -668,12 +670,12 @@ function tryMerge(
     case 'WatchEvent:OneUserMultipleRepos': {
       const repoBId = 'repo' in eventB && eventB.repo && eventB.repo.id
       const alreadyMergedThisRepo = eventA.repos.find(
-        repo => repo.id === repoBId,
+        (repo) => repo.id === repoBId,
       )
       if (eventB.type === 'WatchEvent') {
         return {
           ...eventA,
-          repos: _.uniqBy([...eventA.repos, eventB.repo], repo => repo.id),
+          repos: _.uniqBy([...eventA.repos, eventB.repo], (repo) => repo.id),
           merged: alreadyMergedThisRepo
             ? _.uniq(eventA.merged)
             : _.uniq([...eventA.merged, eventB.id]),
@@ -696,7 +698,7 @@ export function mergeSimilarEvents(
 
   let enhancedEvent: EnhancedGitHubEvent | null = null
 
-  events.filter(Boolean).forEach(event => {
+  events.filter(Boolean).forEach((event) => {
     if (!enhancedEvent) {
       enhancedEvent = event
       return
@@ -742,10 +744,7 @@ export function sortEvents(
 ): EnhancedGitHubEvent[] {
   if (!(events && events.length)) return constants.EMPTY_ARRAY
 
-  return _(events)
-    .uniqBy('id')
-    .orderBy(field, order)
-    .value()
+  return _(events).uniqBy('id').orderBy(field, order).value()
 }
 
 export function getEventIconAndColor(
@@ -905,9 +904,9 @@ export function mergeEventsPreservingEnhancement(
     : _.concat(newItems || [], prevItems || [])
 
   return sortEvents(
-    _.uniqBy(allItems, 'id').map(item => {
-      const newItem = newItems.find(i => i.id === item.id)
-      const existingItem = prevItems.find(i => i.id === item.id)
+    _.uniqBy(allItems, 'id').map((item) => {
+      const newItem = newItems.find((i) => i.id === item.id)
+      const existingItem = prevItems.find((i) => i.id === item.id)
 
       return mergeEventPreservingEnhancement(newItem!, existingItem)
     }),
@@ -937,7 +936,7 @@ export function mergeEventPreservingEnhancement(
     ]),
   }
 
-  return immer(newItem, draft => {
+  return immer(newItem, (draft) => {
     Object.entries(enhancements).forEach(([key, value]) => {
       if (typeof value === 'undefined') return
       if (value === (draft as any)[key])
@@ -994,7 +993,7 @@ export function getGitHubEventSubItems(
 
   const commits: GitHubPushedCommit[] = (_commits || []).filter(Boolean)
 
-  const repos: GitHubRepo[] = (_repos || [_repo]).filter(r => {
+  const repos: GitHubRepo[] = (_repos || [_repo]).filter((r) => {
     if (!(r && r.name)) return false
 
     const or = getOwnerAndRepo(r.name)

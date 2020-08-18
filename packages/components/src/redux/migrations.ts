@@ -32,13 +32,13 @@ export default {
       if (!columns) return
 
       draft.columns.byId = {}
-      draft.columns.allIds = columns.map(column => {
+      draft.columns.allIds = columns.map((column) => {
         draft.columns.byId![column.id] = column
         return column.id
       })
     }),
   3: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       let columns = selectors
         .columnsArrSelector(state)
         .filter(Boolean) as Column[]
@@ -74,13 +74,13 @@ export default {
       })
 
       draft.columns.byId = {}
-      draft.columns.allIds = columns.map(column => {
+      draft.columns.allIds = columns.map((column) => {
         draft.columns.byId![column.id] = column
         return column.id
       })
     }),
   4: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       const oldAuth = (draft.auth as any) as {
         appToken: string | null
         githubScope: string[] | null
@@ -115,14 +115,14 @@ export default {
       } as any
     }),
   5: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.subscriptions = draft.subscriptions || {}
       draft.subscriptions.allIds = draft.subscriptions.allIds || []
       draft.subscriptions.byId = draft.subscriptions.byId || {}
 
       const byId: Record<string, ColumnSubscription | undefined> = {}
 
-      selectors.allSubscriptionsArrSelector(draft).forEach(subscription => {
+      selectors.allSubscriptionsArrSelector(draft).forEach((subscription) => {
         const {
           data: items,
           loadState,
@@ -149,12 +149,12 @@ export default {
       draft.subscriptions.byId = byId
     }),
   6: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.subscriptions = draft.subscriptions || {}
       draft.subscriptions.allIds = draft.subscriptions.allIds || []
       draft.subscriptions.byId = draft.subscriptions.byId || {}
 
-      selectors.allSubscriptionsArrSelector(draft).forEach(subscription => {
+      selectors.allSubscriptionsArrSelector(draft).forEach((subscription) => {
         if (
           !(
             subscription &&
@@ -170,14 +170,14 @@ export default {
       })
     }),
   7: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.columns = draft.columns || {}
       draft.columns.allIds = draft.columns.allIds || []
       draft.columns.byId = draft.columns.byId || {}
 
       const keys = Object.keys(draft.columns.byId)
 
-      keys.forEach(columnId => {
+      keys.forEach((columnId) => {
         const column = draft.columns.byId![columnId]
         const oldFilters = (column && column.filters) as any
         if (!(oldFilters && oldFilters.inbox)) return
@@ -187,7 +187,7 @@ export default {
       })
     }),
   8: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       delete (draft as any).app
 
       const githubAPIHeaders = (state as any).api && (state as any).api.github
@@ -239,7 +239,7 @@ export default {
       draft.github.auth.user = auth.user.github.user
     }),
   9: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.config = draft.config || {}
       ;(draft.config as any).appViewMode =
         (draft.config as any).appViewMode === 'single-column'
@@ -247,12 +247,12 @@ export default {
           : 'multi-column'
     }),
   10: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.columns = draft.columns || {}
       draft.columns.byId = draft.columns.byId || {}
 
       const columnIds = Object.keys(draft.columns.byId)
-      columnIds.forEach(columnId => {
+      columnIds.forEach((columnId) => {
         const column = draft.columns.byId![columnId] as ActivityColumn
 
         if (
@@ -268,9 +268,10 @@ export default {
         )
           return
 
-        const oldTypesFilter: Partial<
-          Record<GitHubEvent['type'], boolean>
-        > = (column.filters!.activity as any).types
+        const oldTypesFilter: Partial<Record<
+          GitHubEvent['type'],
+          boolean
+        >> = (column.filters!.activity as any).types
 
         column.filters.subjectTypes = column.filters.subjectTypes || {}
         column.filters.activity.actions = column.filters.activity.actions || {}
@@ -296,14 +297,14 @@ export default {
       })
     }),
   11: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.columns = draft.columns || {}
       draft.columns.byId = draft.columns.byId || {}
       draft.subscriptions = draft.subscriptions || {}
       draft.subscriptions.byId = draft.subscriptions.byId || {}
 
       const columnIds = Object.keys(draft.columns.byId)
-      columnIds.forEach(columnId => {
+      columnIds.forEach((columnId) => {
         const column = draft.columns.byId![columnId] as ActivityColumn
 
         // we only wanna change User Dashboard columns
@@ -342,12 +343,12 @@ export default {
       })
     }),
   12: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.subscriptions = draft.subscriptions || {}
       draft.subscriptions.byId = draft.subscriptions.byId || {}
 
       const subscriptionIds = Object.keys(draft.subscriptions.byId)
-      subscriptionIds.forEach(subscriptionId => {
+      subscriptionIds.forEach((subscriptionId) => {
         const subscription = draft.subscriptions.byId![subscriptionId]
 
         // we only wanna change Issues & PRs columns
@@ -356,7 +357,7 @@ export default {
         const s = subscription as IssueOrPullRequestColumnSubscription
         s.params = s.params || {}
 
-        const subscriptionParams = s.params as ({
+        const subscriptionParams = s.params as {
           repoFullName?: string
           owners?: Partial<
             Record<
@@ -367,7 +368,7 @@ export default {
               }
             >
           >
-        })
+        }
 
         if (!subscriptionParams.repoFullName) return
 
@@ -389,7 +390,7 @@ export default {
       })
     }),
   13: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.auth = draft.auth || {}
       draft.counters = draft.counters || {}
 
@@ -397,12 +398,12 @@ export default {
       draft.counters.loginSuccess = loginCount || 0
     }),
   14: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.subscriptions = draft.subscriptions || {}
       draft.subscriptions.byId = draft.subscriptions.byId || {}
 
       const subscriptionIds = Object.keys(draft.subscriptions.byId)
-      subscriptionIds.forEach(subscriptionId => {
+      subscriptionIds.forEach((subscriptionId) => {
         const subscription = draft.subscriptions.byId[subscriptionId]
         if (!(subscription && subscription.data)) return
 
@@ -423,7 +424,7 @@ export default {
         draft.data.savedIds = draft.data.savedIds || []
         draft.data.readIds = draft.data.readIds || []
 
-        items.forEach(item => {
+        items.forEach((item) => {
           if (!item) return
 
           const now = new Date().toISOString()
@@ -495,19 +496,19 @@ export default {
       })
     }),
   15: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.columns = draft.columns || {}
       draft.columns.byId = draft.columns.byId || {}
 
       const columnIds = Object.keys(draft.columns.byId)
-      columnIds.forEach(columnId => {
+      columnIds.forEach((columnId) => {
         const column = draft.columns.byId![columnId]
         if (!column) return
 
         column.subscriptionIds = column.subscriptionIds || []
         column.subscriptionIdsHistory = column.subscriptionIdsHistory || []
 
-        column.subscriptionIds.forEach(subscriptionId => {
+        column.subscriptionIds.forEach((subscriptionId) => {
           if (!subscriptionId) return
           if (!column.subscriptionIdsHistory.includes(subscriptionId)) {
             column.subscriptionIdsHistory.push(subscriptionId)
@@ -516,12 +517,12 @@ export default {
       })
     }),
   16: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.subscriptions = draft.subscriptions || {}
       draft.subscriptions.byId = draft.subscriptions.byId || {}
 
       const subscriptionIds = Object.keys(draft.subscriptions.byId)
-      subscriptionIds.forEach(subscriptionId => {
+      subscriptionIds.forEach((subscriptionId) => {
         const subscription = draft.subscriptions.byId![subscriptionId]
         if (!subscription) return
 
@@ -538,12 +539,12 @@ export default {
         .installations as any).lastFetchedSuccessfullyAt
     }),
   17: (state: RootState) =>
-    immer(state, draft => {
+    immer(state, (draft) => {
       draft.columns = draft.columns || {}
       draft.columns.byId = draft.columns.byId || {}
 
       const columnIds = Object.keys(draft.columns.byId)
-      columnIds.forEach(columnId => {
+      columnIds.forEach((columnId) => {
         const column = draft.columns.byId![columnId] as NotificationColumn
 
         if (!(column && column.type === 'notifications')) return

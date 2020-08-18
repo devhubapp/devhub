@@ -255,9 +255,9 @@ export function mergeNotificationsPreservingEnhancement(
     : _.concat(newItems || [], prevItems || [])
 
   return sortNotifications(
-    _.uniqBy(allItems, 'id').map(item => {
-      const newItem = newItems.find(i => i.id === item.id)
-      const existingItem = prevItems.find(i => i.id === item.id)
+    _.uniqBy(allItems, 'id').map((item) => {
+      const newItem = newItems.find((i) => i.id === item.id)
+      const existingItem = prevItems.find((i) => i.id === item.id)
 
       return mergeNotificationPreservingEnhancement(newItem!, existingItem)
     }),
@@ -306,7 +306,7 @@ export function mergeNotificationPreservingEnhancement(
     'updated_at',
   ])
 
-  return immer(newItem, draft => {
+  return immer(newItem, (draft) => {
     Object.entries(softEnhancements).forEach(([key, value]) => {
       if (typeof value === 'undefined') return
       if (value === (draft as any)[key]) return
@@ -340,7 +340,7 @@ export async function getNotificationsEnhancementMap(
 ): Promise<Record<string, NotificationPayloadEnhancement>> {
   const githubLogin = `${_githubLogin || ''}`.toLowerCase().trim()
 
-  const promises = notifications.map(async notification => {
+  const promises = notifications.map(async (notification) => {
     if (!(notification.repository && notification.repository.full_name)) return
 
     const { owner, repo } = getOwnerAndRepo(notification.repository.full_name)
@@ -480,7 +480,7 @@ export async function getNotificationsEnhancementMap(
     ) {
       if (!enhance.requestedMyReview) {
         enhance.requestedMyReview = !!enhance.pullRequest.requested_reviewers.find(
-          u => githubLogin === `${u.login || ''}`.toLowerCase().trim(),
+          (u) => githubLogin === `${u.login || ''}`.toLowerCase().trim(),
         )
       }
     }
@@ -520,8 +520,8 @@ export function enhanceNotifications(
 ) {
   if (!(notifications && notifications.length)) return constants.EMPTY_ARRAY
 
-  return notifications.map(item => {
-    const enhanced = currentEnhancedNotifications.find(n => n.id === item.id)
+  return notifications.map((item) => {
+    const enhanced = currentEnhancedNotifications.find((n) => n.id === item.id)
 
     const enhance = enhancementMap[item.id]
     if (!enhance) {
@@ -547,9 +547,9 @@ export function getOlderOrNewerNotificationDate(
     'updated_at',
     order === 'newer' ? 'desc' : 'asc',
   )
-    .map(item => item.updated_at)
+    .map((item) => item.updated_at)
     .filter(
-      date =>
+      (date) =>
         !!(date && ignoreFutureDates ? now > new Date(date).getTime() : true),
     )[0]
 }
@@ -568,7 +568,7 @@ export function createNotificationsCache(
     }
   }
 
-  notifications.forEach(n => {
+  notifications.forEach((n) => {
     if (n.comment) checkAndFix(n.comment, n.comment.url, n.comment.updated_at)
     if (n.commit)
       checkAndFix(n.commit, n.commit.url, n.commit.commit.committer.date)
@@ -588,10 +588,7 @@ export function sortNotifications(
 ) {
   if (!(notifications && notifications.length)) return constants.EMPTY_ARRAY
 
-  return _(notifications)
-    .uniqBy('id')
-    .orderBy(field, order)
-    .value()
+  return _(notifications).uniqBy('id').orderBy(field, order).value()
 }
 
 export function getGitHubNotificationSubItems(

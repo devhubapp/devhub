@@ -56,7 +56,7 @@ export const Columns = React.memo((props: ColumnsProps) => {
 
   useEmitter(
     'FOCUS_ON_COLUMN',
-    payload => {
+    (payload) => {
       if (!listRef.current) return
       if (!(columnIds && columnIds.length)) return
       if (!payload.columnId) return

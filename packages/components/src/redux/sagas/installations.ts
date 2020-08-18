@@ -48,7 +48,7 @@ function* init() {
 
     const installations = selectors.installationsArrSelector(state)
     const hasExpiredInstallationToken = installations.some(
-      installation =>
+      (installation) =>
         installation &&
         installation.tokenDetails &&
         installation.tokenDetails.expiresAt &&

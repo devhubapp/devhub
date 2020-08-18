@@ -90,7 +90,7 @@ export const DesktopPreferences = React.memo(() => {
             <Switch
               analyticsLabel="desktop_menubar_mode"
               disabled={!Platform.isElectron}
-              onValueChange={value =>
+              onValueChange={(value) =>
                 window.ipc.send('update-settings', {
                   settings: 'isMenuBarMode',
                   value,
@@ -114,7 +114,7 @@ export const DesktopPreferences = React.memo(() => {
               analyticsLabel="desktop_push_notifications"
               color={!hasAccessToPushNotifications ? 'red' : undefined}
               disabled={!Platform.isElectron}
-              onValueChange={value =>
+              onValueChange={(value) =>
                 window.ipc.send('update-settings', {
                   settings: 'enablePushNotifications',
                   value,
@@ -137,7 +137,7 @@ export const DesktopPreferences = React.memo(() => {
               analyticsLabel="desktop_push_notifications_sound"
               color={!hasAccessToPushNotifications ? 'red' : undefined}
               disabled={!Platform.isElectron || !enablePushNotifications}
-              onValueChange={value =>
+              onValueChange={(value) =>
                 window.ipc.send('update-settings', {
                   settings: 'enablePushNotificationsSound',
                   value,

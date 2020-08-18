@@ -114,7 +114,7 @@ export function IconButton(props: IconButtonProps) {
   useHover(
     touchableRef,
     useCallback(
-      isHovered => {
+      (isHovered) => {
         isHoveredRef.current = isHovered
         updateStyles()
       },
@@ -127,13 +127,13 @@ export function IconButton(props: IconButtonProps) {
       ref={touchableRef}
       {...touchableProps}
       disabled={disabledRef.current}
-      onPressIn={e => {
+      onPressIn={(e) => {
         isPressedRef.current = true
         updateStyles()
 
         if (onPressIn) onPressIn(e)
       }}
-      onPressOut={e => {
+      onPressOut={(e) => {
         isPressedRef.current = false
         updateStyles()
 

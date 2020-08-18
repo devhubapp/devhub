@@ -111,7 +111,7 @@ export function windowStateKeeper(options: WindowStateOptions): WindowState {
   }
 
   function ensureWindowVisibleOnSomeDisplay() {
-    const visible = screen.getAllDisplays().some(display => {
+    const visible = screen.getAllDisplays().some((display) => {
       return windowWithinBounds(display.bounds)
     })
 

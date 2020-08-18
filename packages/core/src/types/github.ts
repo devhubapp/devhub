@@ -29,7 +29,9 @@ export type GitHubExtractParamsFromMethod<F> = F extends (
 export type GitHubExtractResponseFromMethod<F> = F extends (
   params?: any,
 ) => infer R
-  ? (R extends Promise<infer RR> ? RR : R)
+  ? R extends Promise<infer RR>
+    ? RR
+    : R
   : F extends (params: any, callback: any) => infer R
   ? R extends Promise<infer RR>
     ? RR

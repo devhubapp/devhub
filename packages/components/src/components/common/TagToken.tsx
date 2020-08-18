@@ -29,7 +29,8 @@ export type TagTokenProps = {
   | {
       icon: IconProp
       label?: undefined
-    })
+    }
+)
 
 export const TagToken = React.memo((props: TagTokenProps) => {
   const {

@@ -56,7 +56,7 @@ export const ThemePreference = React.memo(() => {
         }}
         enableIndeterminateState={currentThemeId === 'auto'}
         label={theme.displayName}
-        onChange={checked => {
+        onChange={(checked) => {
           if (
             typeof checked === 'boolean' ||
             (currentThemeId === 'auto' && checked === null)
@@ -94,12 +94,12 @@ export const ThemePreference = React.memo(() => {
         <View style={sharedStyles.horizontal}>
           <View style={sharedStyles.flex}>
             <H3 withMargin>Light Theme</H3>
-            {lightThemesArr.map(t => renderThemeButton(t))}
+            {lightThemesArr.map((t) => renderThemeButton(t))}
           </View>
 
           <View style={sharedStyles.flex}>
             <H3 withMargin>Dark Theme</H3>
-            {darkThemesArr.map(t => renderThemeButton(t))}
+            {darkThemesArr.map((t) => renderThemeButton(t))}
           </View>
         </View>
 
@@ -115,7 +115,7 @@ export const ThemePreference = React.memo(() => {
           <H3>Auto detect system preference</H3>
           <Switch
             analyticsLabel="auto_theme"
-            onValueChange={enableAutoTheme =>
+            onValueChange={(enableAutoTheme) =>
               setTheme({
                 id: enableAutoTheme ? 'auto' : lastThemeId.current,
               })

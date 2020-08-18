@@ -11,7 +11,7 @@ export const Octicons = (React.forwardRef<
   const initialName = props.name || 'mark-github'
 
   const heights = props.size && props.size < 16 ? [16, 24] : [24, 16]
-  const existingHeight = heights.find(h =>
+  const existingHeight = heights.find((h) =>
     IconSet.hasIcon(`${initialName}-${h}` as any) ? h : undefined,
   )
 

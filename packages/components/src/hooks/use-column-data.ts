@@ -27,7 +27,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
   const dataByNodeIdOrId = useReduxState(selectors.dataByNodeIdOrId)
   const plan = useReduxState(selectors.currentUserPlanSelector)
 
-  const allItems = useReduxState(state => {
+  const allItems = useReduxState((state) => {
     if (!(column && column.id)) return EMPTY_ARRAY
     return columnDataSelector(state, column.id)
   }) as ItemT[]
@@ -69,7 +69,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
   const getItemByNodeIdOrIdChangeCountRef = useRef(0)
   useMemo(() => {
     const changed = filteredItemsIds.some(
-      id =>
+      (id) =>
         !previousDataByNodeIdOrIdRef.current ||
         previousDataByNodeIdOrIdRef.current[id] !== dataByNodeIdOrId[id],
     )

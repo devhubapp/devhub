@@ -30,7 +30,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
   const { freePlan, plans } = usePlans()
 
-  const plan = planId && plans.find(p => p && p.id === planId)
+  const plan = planId && plans.find((p) => p && p.id === planId)
 
   const trialDays = (plan && plan.trialPeriodDays) || 0
 
@@ -42,7 +42,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
 
   const onSubscribeOrDowngrade = useCallback<
     NonNullable<SubscribeFormProps['onSubscribe']>
-  >(_planId => {
+  >((_planId) => {
     dispatch(
       actions.replaceModal({
         name: 'SUBSCRIBED',
@@ -102,8 +102,10 @@ export function SubscribeModal(props: SubscribeModalProps) {
               >
                 <H3 children="Plan" />
                 <ThemedText color="foregroundColor">
-                  {`${(plan && plan.label) ||
-                    (plan && plan.amount ? 'Paid' : 'None')}`.toUpperCase()}
+                  {`${
+                    (plan && plan.label) ||
+                    (plan && plan.amount ? 'Paid' : 'None')
+                  }`.toUpperCase()}
                 </ThemedText>
               </View>
 

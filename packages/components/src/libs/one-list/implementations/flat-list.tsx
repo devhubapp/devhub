@@ -102,7 +102,7 @@ export const OneList = (React.memo(
       const lastIndex = data.length - 1
 
       const itemLayouts = data.reduce<
-        Array<ReturnType<NonNullable<FlatListProps<any>['getItemLayout']>>>
+        ReturnType<NonNullable<FlatListProps<any>['getItemLayout']>>[]
       >((result, item, index) => {
         const lastItemLayout = result[result.length - 1]
         const lastOffset = (lastItemLayout && lastItemLayout.offset) || 0
@@ -151,8 +151,8 @@ export const OneList = (React.memo(
         if (!onVisibleItemsChangedRef.current) return undefined
 
         const visibleIndexes = viewableItems
-          .filter(v => v.isViewable && typeof v.index === 'number')
-          .map(v => v.index!)
+          .filter((v) => v.isViewable && typeof v.index === 'number')
+          .map((v) => v.index!)
 
         if (!visibleIndexes.length) onVisibleItemsChangedRef.current(-1, -1)
 
@@ -239,7 +239,7 @@ export const OneList = (React.memo(
                     itemSeparator.Component
                       ? ({ leadingItem }) => {
                           const leadingIndex = leadingItem
-                            ? data.findIndex(item => item === leadingItem)
+                            ? data.findIndex((item) => item === leadingItem)
                             : -1
                           const trailingIndex =
                             leadingIndex >= 0 &&
@@ -357,17 +357,17 @@ export const OneList = (React.memo(
       </View>
     )
   }),
-) as any) as ((<ItemT>(
+) as any) as (<ItemT>(
   props: OneListProps<ItemT> & React.RefAttributes<OneListInstance>,
 ) => React.ReactElement) & {
   displayName: string
-} & OneListInstance)
+} & OneListInstance
 
 OneList.displayName = 'OneList'
 
 const onScrollToIndexFailed: NonNullable<
   FlatListProps<string>['onScrollToIndexFailed']
-> = info => {
+> = (info) => {
   console.error(info)
   bugsnag.notify({
     name: 'ScrollToIndexFailed',

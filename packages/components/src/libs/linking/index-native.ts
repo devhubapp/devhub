@@ -8,7 +8,7 @@ import { LinkingCrossPlatform } from './index'
 let currentURL: string = ''
 let initialURL: string = ''
 
-LinkingOriginal.getInitialURL().then(url => {
+LinkingOriginal.getInitialURL().then((url) => {
   if (typeof (url || '') !== 'string') {
     if (__DEV__) console.error('[Linking.getInitialURL] URL not a string', url)
     return
@@ -17,7 +17,7 @@ LinkingOriginal.getInitialURL().then(url => {
   initialURL = url || ''
 })
 
-LinkingOriginal.addEventListener('url', e => {
+LinkingOriginal.addEventListener('url', (e) => {
   if (!(e && typeof (e.url || '') === 'string')) {
     if (__DEV__)
       console.error('[Linking.addEventListener] e.url not a string', e.url)
@@ -29,7 +29,7 @@ LinkingOriginal.addEventListener('url', e => {
 
 export const Linking: LinkingCrossPlatform = {
   addEventListener: LinkingOriginal.addEventListener.bind(LinkingOriginal),
-  canOpenURL: async url => {
+  canOpenURL: async (url) => {
     if (url && url.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)) {
       return true
     }
@@ -43,7 +43,7 @@ export const Linking: LinkingCrossPlatform = {
   getCurrentURL:
     Platform.OS === 'web' ? () => window.location.href || '' : () => currentURL,
   getInitialURL: () => initialURL,
-  openURL: async url => {
+  openURL: async (url) => {
     if (url && url.startsWith(`${constants.APP_DEEP_LINK_SCHEMA}://`)) {
       emitter.emit('DEEP_LINK', { url })
       return

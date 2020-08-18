@@ -19,7 +19,7 @@ export function clearQueryStringFromURL(fields: string[]) {
   const query = window.location.search.replace(new RegExp(`^[?]?`), '')
   const params = qs.parse(query)
 
-  fields.forEach(field => {
+  fields.forEach((field) => {
     delete params[field]
   })
 

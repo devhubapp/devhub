@@ -22,14 +22,14 @@ export function normalizeColumns(
   const allIds = items.map((column: ColumnCreation) => {
     const id = column.id || guid()
 
-    byId[id] = immer(column, draft => {
+    byId[id] = immer(column, (draft) => {
       draft.id = id
       draft.subscriptionIds = column.subscriptionIds || []
       draft.subscriptionIdsHistory = column.subscriptionIdsHistory || []
       draft.createdAt = column.createdAt || new Date().toISOString()
       draft.updatedAt = column.updatedAt || new Date().toISOString()
 
-      draft.subscriptionIds.forEach(subscriptionId => {
+      draft.subscriptionIds.forEach((subscriptionId) => {
         if (!subscriptionId) return
         if (!draft.subscriptionIdsHistory.includes(subscriptionId)) {
           draft.subscriptionIdsHistory.push(subscriptionId)
@@ -55,7 +55,7 @@ export function normalizeSubscriptions(
   const byId: Record<string, ColumnSubscription | undefined> = {}
   const allIds = items.map((subscription: ColumnSubscriptionCreation) => {
     const id = subscription.id || getUniqueIdForSubscription(subscription)
-    byId[id] = immer(subscription as ColumnSubscription, draft => {
+    byId[id] = immer(subscription as ColumnSubscription, (draft) => {
       draft.id = id
       draft.data = subscription.data || {}
       draft.createdAt = subscription.createdAt || new Date().toISOString()
@@ -83,7 +83,7 @@ export function normalizeInstallations(
   const byOwnerName: Record<string, number> = {}
   // const byRepoFullName: Record<string, number> = {}
 
-  items.forEach(installation => {
+  items.forEach((installation) => {
     if (!(installation && installation.id)) return
 
     allIds.push(installation.id)

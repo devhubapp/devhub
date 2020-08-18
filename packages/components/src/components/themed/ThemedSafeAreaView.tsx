@@ -37,7 +37,7 @@ export const ThemedSafeAreaView = React.forwardRef<
   const initialTheme = useThemeCallback(
     { skipFirstCallback: true, themeTransformer },
     useCallback(
-      theme => {
+      (theme) => {
         updateStyle(
           ref,
           theme,

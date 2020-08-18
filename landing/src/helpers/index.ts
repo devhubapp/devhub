@@ -137,7 +137,7 @@ export function toKebabCase(str: string) {
 }
 
 export function getPurchaseOrSubscribeRoute(
-  activePlans: Array<Plan | undefined>,
+  activePlans: (Plan | undefined)[],
 ) {
   return activePlans.some(p => !!(p && p.amount > 0 && p.interval))
     ? 'subscribe'

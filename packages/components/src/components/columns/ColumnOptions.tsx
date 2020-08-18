@@ -98,7 +98,7 @@ export const ColumnOptions = React.memo(
           label={`Show unread indicator at ${
             appOrientation === 'portrait' ? 'bottom bar' : 'sidebar'
           }`}
-          onChange={value => {
+          onChange={(value) => {
             dispatch(
               actions.setColumnOption({
                 columnId,
@@ -134,7 +134,7 @@ export const ColumnOptions = React.memo(
                 ? 'page title'
                 : 'app icon'
             }`}
-            onChange={value => {
+            onChange={(value) => {
               dispatch(
                 actions.setColumnOption({
                   columnId,
@@ -173,7 +173,7 @@ export const ColumnOptions = React.memo(
             }
             enableIndeterminateState={false}
             label="Desktop push notifications"
-            onChange={value => {
+            onChange={(value) => {
               dispatch(
                 actions.setColumnOption({
                   columnId,
@@ -223,7 +223,8 @@ export const ColumnOptions = React.memo(
               UNLOCK
             </Link>
           ) : enableDesktopPushNotificationsOption.hasAccess === 'trial' &&
-            (plan && plan.amount > 0) ? (
+            plan &&
+            plan.amount > 0 ? (
             <Link
               analyticsLabel="column_option_desktop_push_notifications_on_trial_link"
               enableForegroundHover

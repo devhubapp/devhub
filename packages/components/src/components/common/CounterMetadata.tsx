@@ -88,7 +88,7 @@ export function CounterMetadata(props: CounterMetadataProps) {
         }
       : undefined
 
-  const numberNodesMetadata: Array<NumberMetadata | undefined> = [
+  const numberNodesMetadata: (NumberMetadata | undefined)[] = [
     firstNumberMetadata,
     total !== undefined &&
     total > 0 &&

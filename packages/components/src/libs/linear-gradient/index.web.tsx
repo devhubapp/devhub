@@ -11,7 +11,7 @@ type LinearGradientPoint =
 export interface LinearGradientProps
   extends Omit<OriginalLinearGradientProps, 'colors'> {
   animated?: boolean
-  colors: Array<string | any>
+  colors: (string | any)[]
   style?: StyleProp<ViewStyle>
 }
 

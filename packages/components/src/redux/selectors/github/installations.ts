@@ -32,7 +32,7 @@ export const installationsArrSelector = createSelector(
   (state: RootState) => s(state).byId,
   (ids, byId) =>
     (byId && ids
-      ? ids.map(id => byId[id]).filter(Boolean)
+      ? ids.map((id) => byId[id]).filter(Boolean)
       : EMPTY_ARRAY) as Installation[],
 )
 

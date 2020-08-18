@@ -143,7 +143,7 @@ export const AdvancedSettingsModal = React.memo(
         title="Advanced settings"
       >
         <DialogConsumer>
-          {Dialog => (
+          {(Dialog) => (
             <>
               {Platform.OS === 'web' && (
                 <SubHeader title="Keyboard shortcuts">

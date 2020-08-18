@@ -142,13 +142,13 @@ export const formItemsMetadata = {
 
 export const formInitialValues = _.mapValues(
   formItemsMetadata,
-  v => v.initialValue,
-) as { [key in FormItem]: (typeof formItemsMetadata)[key]['initialValue'] }
+  (v) => v.initialValue,
+) as { [key in FormItem]: typeof formItemsMetadata[key]['initialValue'] }
 
 export const formValidationSchema = _.mapValues(
   formItemsMetadata,
-  v => v.validationSchema,
-) as { [key in FormItem]: (typeof formItemsMetadata)[key]['validationSchema'] }
+  (v) => v.validationSchema,
+) as { [key in FormItem]: typeof formItemsMetadata[key]['validationSchema'] }
 
 export interface AddColumnDetailsModalProps extends AddColumnDetailsPayload {
   showBackButton: boolean
@@ -249,17 +249,17 @@ export const AddColumnDetailsModal = React.memo(
           validateField('owner')
         }
 
-        const optionFormItems = formItems.filter(i => !!i.endsWith('_option'))
+        const optionFormItems = formItems.filter((i) => !!i.endsWith('_option'))
         if (
-          !formItems.some(i => !i.endsWith('_option')) &&
-          !optionFormItems.some(i => values[i])
+          !formItems.some((i) => !i.endsWith('_option')) &&
+          !optionFormItems.some((i) => values[i])
         ) {
-          optionFormItems.forEach(optionFormItem =>
+          optionFormItems.forEach((optionFormItem) =>
             validateField(optionFormItem),
           )
 
-          if (!optionFormItems.some(i => errors[i])) {
-            optionFormItems.forEach(optionFormItem => {
+          if (!optionFormItems.some((i) => errors[i])) {
+            optionFormItems.forEach((optionFormItem) => {
               errors[optionFormItem] = CIRCLE_CHARACTER
             })
           }
@@ -294,7 +294,7 @@ export const AddColumnDetailsModal = React.memo(
         !(
           formikProps.touched[formItem] ||
           (formItem.endsWith('_option') &&
-            Object.keys(formikProps.touched).some(item =>
+            Object.keys(formikProps.touched).some((item) =>
               item.endsWith('_option'),
             )) ||
           formikProps.submitCount > 0
@@ -423,7 +423,7 @@ export const AddColumnDetailsModal = React.memo(
             }
             defaultValue={false}
             label={label}
-            onChange={value => {
+            onChange={(value) => {
               formikProps.setFieldTouched(formItemOption)
               formikProps.setFieldValue(formItemOption, value)
             }}
@@ -460,7 +460,7 @@ export const AddColumnDetailsModal = React.memo(
 
               <ColumnOptionsInboxContent
                 inbox={formikProps.values.inbox}
-                onChange={value => {
+                onChange={(value) => {
                   formikProps.setFieldTouched(formItem)
                   formikProps.setFieldValue(formItem, value)
                 }}
@@ -618,7 +618,7 @@ export const AddColumnDetailsModal = React.memo(
           onBlur={() => {
             formikProps.setFieldTouched(formItem)
           }}
-          onChangeText={value => {
+          onChangeText={(value) => {
             formikProps.setFieldValue(formItem, value)
           }}
           value={`${formikProps.values[formItem] || ''}`}
@@ -674,7 +674,7 @@ export const AddColumnDetailsModal = React.memo(
         title="Add Column"
       >
         <DialogConsumer>
-          {Dialog => {
+          {(Dialog) => {
             dialogRef.current = Dialog
 
             return (
@@ -802,8 +802,8 @@ function getNewColumnAndSubscriptions(
 ): ColumnAndSubscriptions | null {
   const formValues = { ..._formValues }
 
-  const optionFormItems = formItems.filter(i => !!i.endsWith('_option'))
-  optionFormItems.forEach(optionFormItem => {
+  const optionFormItems = formItems.filter((i) => !!i.endsWith('_option'))
+  optionFormItems.forEach((optionFormItem) => {
     if (formItems.includes(optionFormItem) && !formValues[optionFormItem]) {
       const formItem = optionFormItem.replace('_option', '') as FormItem
       delete formValues[formItem]

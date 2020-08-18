@@ -111,7 +111,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   const currentOpenedModal = useReduxState(selectors.currentOpenedModal)
   const previouslyOpenedModal = usePrevious(currentOpenedModal)
 
-  const isSettings = !!modalStack.find(m => m && m.name === 'SETTINGS')
+  const isSettings = !!modalStack.find((m) => m && m.name === 'SETTINGS')
   const wasSettings = usePrevious(isSettings)
 
   const closeAllModals = useReduxAction(actions.closeAllModals)
@@ -168,7 +168,7 @@ export function ModalRenderer(props: ModalRendererProps) {
   const modalTransitions = useTransition<
     ModalPayloadWithIndex | undefined,
     any
-  >(modalStack, item => `modal-stack-${item && item.name}`, {
+  >(modalStack, (item) => `modal-stack-${item && item.name}`, {
     reset: false,
     config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
     immediate,
@@ -218,7 +218,7 @@ export function ModalRenderer(props: ModalRendererProps) {
     renderSeparator && sizename !== '2-medium' && modalStack.length
       ? [(modalStack[0] && modalStack[0]!.name) || '']
       : [],
-    item => `modal-separator-${item}`,
+    (item) => `modal-separator-${item}`,
     {
       reset: false,
       unique: true,

@@ -399,10 +399,9 @@ function onDeleteAccountFailure(
   bugsnag.notify(action.error)
   Alert.alert(
     'Oops.',
-    `Failed to delete account. Please try again.\n\n${(action.error &&
-      action.error.message) ||
-      action.error ||
-      ''}`.trim(),
+    `Failed to delete account. Please try again.\n\n${
+      (action.error && action.error.message) || action.error || ''
+    }`.trim(),
   )
 }
 

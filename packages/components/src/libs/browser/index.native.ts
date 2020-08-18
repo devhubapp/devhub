@@ -56,10 +56,10 @@ export const Browser: BrowserCrossPlatform = {
   openURLOnNewTab: (...args) => {
     Browser.openURL(...args)
   },
-  setBackgroundColor: color => {
+  setBackgroundColor: (color) => {
     backgroundColor = color
   },
-  setForegroundColor: color => {
+  setForegroundColor: (color) => {
     foregroundColor = color
   },
 }

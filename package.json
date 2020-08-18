@@ -48,7 +48,7 @@
     "now": "18.0.0",
     "patch-package": "6.0.5",
     "postinstall-prepare": "1.0.1",
-    "prettier": "1.16.4",
+    "prettier": "2.0.5",
     "shx": "0.3.2",
     "tslint": "6.1.3",
     "tslint-config-prettier": "1.18.0",

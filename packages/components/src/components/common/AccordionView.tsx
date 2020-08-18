@@ -95,7 +95,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
   return (
     <>
       {transitions.map(
-        transition =>
+        (transition) =>
           !!(transition && transition.item && transition.props) && (
             <SpringAnimatedView
               key={transition.key}
@@ -111,23 +111,23 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
                     wasOpen === isOpen &&
                     hasCompletedAnimationRef.current
                       ? 'auto'
-                      : (transition.props.height.to as any)(
-                          (value: 'auto' | number) =>
-                            value === 'auto'
-                              ? value
-                              : value > 0
-                              ? Math.floor(value)
-                              : 0,
+                      : (transition.props.height
+                          .to as any)((value: 'auto' | number) =>
+                          value === 'auto'
+                            ? value
+                            : value > 0
+                            ? Math.floor(value)
+                            : 0,
                         ),
-                  opacity: (transition.props.height.to as any)(
-                    (value: 'auto' | number) =>
-                      value === 'auto' || value > 0 ? 1 : 0,
+                  opacity: (transition.props.height
+                    .to as any)((value: 'auto' | number) =>
+                    value === 'auto' || value > 0 ? 1 : 0,
                   ),
 
                   // [web] disable keyboard focus for this tree when accordion is collapsed
-                  ['visibility' as any]: (transition.props.height.to as any)(
-                    (value: 'auto' | number) =>
-                      value === 'auto' || value > 0 ? 'visible' : 'hidden',
+                  ['visibility' as any]: (transition.props.height
+                    .to as any)((value: 'auto' | number) =>
+                    value === 'auto' || value > 0 ? 'visible' : 'hidden',
                   ),
                   ['willChange' as any]: 'height',
                 },

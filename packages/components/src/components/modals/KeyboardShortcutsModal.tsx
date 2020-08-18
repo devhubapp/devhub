@@ -118,7 +118,7 @@ export function KeyboardShortcutsModal(props: KeyboardShortcutsModalProps) {
             <View style={sharedStyles.horizontal}>
               <View style={{ width: 70 }}>
                 <View style={[sharedStyles.horizontal, sharedStyles.flexWrap]}>
-                  {ks.keys.map(key => (
+                  {ks.keys.map((key) => (
                     <ThemedView
                       key={`keyboard-shortcut-label-${index}-${key}`}
                       backgroundColor="backgroundColorLess2"

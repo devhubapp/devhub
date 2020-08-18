@@ -62,7 +62,7 @@ export function AutoSizer(props: AutoSizerProps) {
   )
 
   const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
-    e => {
+    (e) => {
       onResize({
         width: e.nativeEvent.layout.width,
         height: e.nativeEvent.layout.height,

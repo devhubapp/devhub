@@ -27,11 +27,11 @@ export const createItemsBySubscriptionIdsSelector = () => {
 
       const itemIds: string[] = []
       const items: EnhancedItem[] = []
-      subscriptionIds.forEach(subscriptionId => {
+      subscriptionIds.forEach((subscriptionId) => {
         const ids = idsBySubscriptionId[subscriptionId]
         if (!(ids && ids.length)) return
 
-        ids.forEach(id => {
+        ids.forEach((id) => {
           if (!id) return
           if (itemIds.includes(id)) return
 

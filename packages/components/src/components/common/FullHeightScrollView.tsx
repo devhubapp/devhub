@@ -28,7 +28,7 @@ export const FullHeightScrollView = React.memo(
           if (onContentSizeChange) onContentSizeChange(w, h)
           if (h !== contentHeight) setContentHeight(h)
         }}
-        onLayout={e => {
+        onLayout={(e) => {
           if (onLayout) onLayout(e)
           if (e.nativeEvent.layout.height !== containerHeight)
             setContainerHeight(e.nativeEvent.layout.height)

@@ -52,7 +52,7 @@ export function IntervalRefresh(props: IntervalRefreshProps) {
     clearInterval(timerRef.current)
 
     timerRef.current = (setInterval(() => {
-      setUpdatedTimes(prevValue => prevValue + 1)
+      setUpdatedTimes((prevValue) => prevValue + 1)
     }, interval) as any) as number
 
     return () => clearInterval(timerRef.current)

@@ -15,7 +15,7 @@ export const bannerMessageSelector = (state: RootState) => {
   const { sizename } = getAppLayout()
 
   const filteredBanners = banners.filter(
-    banner =>
+    (banner) =>
       !!(
         banner &&
         banner.id &&

@@ -8,7 +8,7 @@ export { LinearGradient }
 
 export interface SpringAnimatedLinearGradientProps
   extends Omit<LinearGradientProps, 'colors'> {
-  colors: Array<string | any>
+  colors: (string | any)[]
 }
 
 export const SpringAnimatedLinearGradient = createSpringAnimatedComponent(

@@ -34,7 +34,7 @@ export const ThemedView = React.forwardRef<View, ThemedViewProps>(
     const initialTheme = useThemeCallback(
       { skipFirstCallback: true, themeTransformer },
       useCallback(
-        theme => {
+        (theme) => {
           updateStyle(
             ref,
             theme,

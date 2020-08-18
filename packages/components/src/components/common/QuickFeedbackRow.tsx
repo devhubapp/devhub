@@ -197,7 +197,7 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
       ) : (
         <ThemedTextInput
           textInputKey="quick-feedback-text-input"
-          onChangeText={text => {
+          onChangeText={(text) => {
             setFeedbackText(text)
           }}
           onSubmitEditing={handleSubmit}

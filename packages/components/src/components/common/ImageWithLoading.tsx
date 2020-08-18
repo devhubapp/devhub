@@ -95,7 +95,7 @@ export const ImageWithLoading = React.memo(
     }, [viewRef.current, tooltip])
 
     const handleLoad = useCallback(
-      e => {
+      (e) => {
         loadingStateRef.current = 'loaded'
 
         if (!viewRef.current || callbackRef.current.hasCalledOnLoad) return
@@ -137,7 +137,7 @@ export const ImageWithLoading = React.memo(
     }, [props.onLoadEnd])
 
     const handleError = useCallback(
-      e => {
+      (e) => {
         loadingStateRef.current = 'error'
 
         if (!viewRef.current || callbackRef.current.hasCalledOnError) return

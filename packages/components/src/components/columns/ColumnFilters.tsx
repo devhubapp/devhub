@@ -207,7 +207,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
   //   involvingUsers.length >= 1
   // )
 
-  const _allColumnOptionCategories: Array<ColumnFilterCategory | false> = [
+  const _allColumnOptionCategories: (ColumnFilterCategory | false)[] = [
     !!column && column.type === 'notifications' && 'inbox',
     'saved_for_later',
     'unread',
@@ -245,7 +245,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
   const toggleOpenedOptionCategory = useCallback(
     (optionCategory: ColumnFilterCategory) => {
-      setOpenedOptionCategories(_set => {
+      setOpenedOptionCategories((_set) => {
         const set = new Set(_set)
         const isOpen = set.has(optionCategory)
         if (allowOnlyOneCategoryToBeOpenedRef.current) set.clear()
@@ -319,7 +319,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
           column.type === 'notifications' && (
             <ColumnOptionsInbox
               enableBackgroundHover={allowToggleCategories}
-              getCheckboxPropsFor={i => ({
+              getCheckboxPropsFor={(i) => ({
                 containerStyle:
                   sharedColumnOptionsStyles.fullWidthCheckboxContainerWithPadding,
                 right:
@@ -333,7 +333,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
               })}
               inbox={inbox}
               isOpen={openedOptionCategories.has('inbox')}
-              onChange={i => {
+              onChange={(i) => {
                 vibrateHapticFeedback()
 
                 dispatch(
@@ -515,7 +515,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   }
                   enableIndeterminateState
                   label="Bookmarks"
-                  onChange={checked => {
+                  onChange={(checked) => {
                     vibrateHapticFeedback()
 
                     dispatch(
@@ -720,7 +720,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : ''
                 }
               >
-                {stateTypeOptions.map(item => {
+                {stateTypeOptions.map((item) => {
                   const checked =
                     filters && typeof filters[item.state] === 'boolean'
                       ? filters[item.state]
@@ -746,7 +746,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       }
                       enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
-                      onChange={value => {
+                      onChange={(value) => {
                         vibrateHapticFeedback()
 
                         dispatch(
@@ -827,7 +827,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   }
                   enableIndeterminateState
                   label="Draft"
-                  onChange={value => {
+                  onChange={(value) => {
                     vibrateHapticFeedback()
 
                     dispatch(
@@ -887,7 +887,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                   }
                   enableIndeterminateState
                   label="Bots"
-                  onChange={value => {
+                  onChange={(value) => {
                     vibrateHapticFeedback()
 
                     dispatch(
@@ -916,14 +916,14 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                 >
               >)
 
-            const subjectTypeOptions: Array<{
+            const subjectTypeOptions: {
               color?: keyof ThemeColors | undefined
               label: string
               subjectType:
                 | GitHubEventSubjectType
                 | GitHubIssueOrPullRequestSubjectType
                 | GitHubNotificationSubjectType
-            }> =
+            }[] =
               column.type === 'activity'
                 ? eventSubjectTypeOptions
                 : column.type === 'issue_or_pr'
@@ -976,7 +976,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : ''
                 }
               >
-                {subjectTypeOptions.map(item => {
+                {subjectTypeOptions.map((item) => {
                   const checked =
                     filters && typeof filters[item.subjectType] === 'boolean'
                       ? filters[item.subjectType]
@@ -1001,7 +1001,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       defaultValue={defaultBooleanValue}
                       enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
-                      onChange={value => {
+                      onChange={(value) => {
                         vibrateHapticFeedback()
 
                         dispatch(
@@ -1095,7 +1095,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : ''
                 }
               >
-                {notificationReasonOptions.map(item => {
+                {notificationReasonOptions.map((item) => {
                   const checked =
                     filters && typeof filters[item.reason] === 'boolean'
                       ? filters[item.reason]
@@ -1118,7 +1118,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       }
                       label={item.label}
                       labelTooltip={item.fullDescription}
-                      onChange={value => {
+                      onChange={(value) => {
                         vibrateHapticFeedback()
 
                         dispatch(
@@ -1212,7 +1212,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : ''
                 }
               >
-                {eventActionOptions.map(item => {
+                {eventActionOptions.map((item) => {
                   const checked =
                     filters && typeof filters[item.action] === 'boolean'
                       ? filters[item.action]
@@ -1233,7 +1233,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       defaultValue={defaultBooleanValue}
                       enableIndeterminateState={enableIndeterminateState}
                       label={item.label}
-                      onChange={value => {
+                      onChange={(value) => {
                         vibrateHapticFeedback()
 
                         dispatch(
@@ -1445,7 +1445,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                     : ''
                 }
               >
-                {owners.map(owner => {
+                {owners.map((owner) => {
                   const ownerItem =
                     ownerOrRepoFilteredItemsMetadata &&
                     ownerOrRepoFilteredItemsMetadata.owners[owner]
@@ -1510,7 +1510,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                             username={owner}
                           />
                         }
-                        onChange={value => {
+                        onChange={(value) => {
                           vibrateHapticFeedback()
 
                           dispatch(
@@ -1535,7 +1535,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                         }
                       />
 
-                      {repos.map(repo => {
+                      {repos.map((repo) => {
                         const repoFullName = `${owner}/${repo}`
 
                         const repoItem = ownerItem.repos[repo]
@@ -1572,7 +1572,7 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                             }
                             label={repo}
                             labelTooltip={repoFullName}
-                            onChange={value => {
+                            onChange={(value) => {
                               vibrateHapticFeedback()
 
                               dispatch(

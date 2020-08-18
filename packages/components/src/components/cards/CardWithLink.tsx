@@ -1,4 +1,4 @@
-import { Column, getItemNodeIdOrId, isItemSaved } from '@devhub/core'
+import { Column, getItemNodeIdOrId } from '@devhub/core'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { StyleSheet, TouchableHighlightProps, View } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -82,7 +82,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
   // const isReadRef = useDynamicRef(!!(cardProps && cardProps.isRead))
 
   const onPress = useCallback<NonNullable<LinkProps['onPress']>>(
-    e => {
+    (e) => {
       isHoveredRef.current = false
 
       if (e && e.isDefaultPrevented()) return
@@ -99,37 +99,40 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
     [type, columnId, getItemNodeIdOrId(item)!],
   )
 
-  const updateStyles = useCallback(() => {
-    if (ref.current) {
-      const theme = getTheme()
+  const updateStyles = useCallback(
+    () => {
+      if (ref.current) {
+        const theme = getTheme()
 
-      ref.current.setNativeProps({
-        style: {
-          backgroundColor:
-            theme[
-              getCardBackgroundThemeColor({
-                isDark: theme.isDark,
-                isMuted: false, // appViewMode === 'single-column' ? false : isReadRef.current,
-                isHovered: isHoveredRef.current,
-              })
-            ],
-        },
-      })
-    }
+        ref.current.setNativeProps({
+          style: {
+            backgroundColor:
+              theme[
+                getCardBackgroundThemeColor({
+                  isDark: theme.isDark,
+                  isMuted: false, // appViewMode === 'single-column' ? false : isReadRef.current,
+                  isHovered: isHoveredRef.current,
+                })
+              ],
+          },
+        })
+      }
 
-    if (focusIndicatorRef.current) {
-      focusIndicatorRef.current.setNativeProps({
-        style: {
-          opacity:
-            getLastUsedInputType() === 'keyboard' && isFocusedRef.current
-              ? 0.1
-              : 0,
-        },
-      })
-    }
-  }, [
-    /*appViewMode*/
-  ])
+      if (focusIndicatorRef.current) {
+        focusIndicatorRef.current.setNativeProps({
+          style: {
+            opacity:
+              getLastUsedInputType() === 'keyboard' && isFocusedRef.current
+                ? 0.1
+                : 0,
+          },
+        })
+      }
+    },
+    [
+      /*appViewMode*/
+    ],
+  )
 
   const handleFocusChange = useCallback(
     (value, disableDomFocus?: boolean) => {
@@ -150,7 +153,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
   useHover(
     ref,
     useCallback(
-      isHovered => {
+      (isHovered) => {
         if (isHoveredRef.current === isHovered) return
         isHoveredRef.current = isHovered
 
@@ -172,7 +175,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
 
   if (!(item && cardProps)) return null
 
-  const isSaved = isItemSaved(item)
+  // const isSaved = isItemSaved(item)
 
   return (
     <Link
@@ -180,7 +183,7 @@ export const CardWithLink = React.memo((props: CardWithLinkProps) => {
       TouchableComponent={
         isInsideSwipeable ? GestureHandlerCardTouchable : NormalCardTouchable
       }
-      backgroundThemeColor={theme =>
+      backgroundThemeColor={(theme) =>
         getCardBackgroundThemeColor({
           isDark: theme.isDark,
           isMuted: false, // appViewMode === 'single-column' ? false : cardProps.isRead,
@@ -302,7 +305,7 @@ const NormalCardTouchable = React.forwardRef<
         ref={ref}
         accessible={false}
         backgroundColor="transparent"
-        underlayColor={theme =>
+        underlayColor={(theme) =>
           theme[
             getCardBackgroundThemeColor({
               isDark: theme.isDark,

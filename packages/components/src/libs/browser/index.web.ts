@@ -26,7 +26,7 @@ export const Browser: BrowserCrossPlatform = {
     registerAppStateListenerOnce()
     return await Linking.openURL(url)
   },
-  openURLOnNewTab: url => {
+  openURLOnNewTab: (url) => {
     emitter.emit('onShow')
     registerAppStateListenerOnce()
     return window.open(url, '_blank')

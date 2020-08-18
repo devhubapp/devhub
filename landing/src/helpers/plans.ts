@@ -12,8 +12,8 @@ export interface PlansStateData {
   freePlan: Plan | undefined
   freeTrialDays: number
   freeTrialPlan: Plan | undefined
-  paidPlans: Array<Plan | undefined>
-  plans: Array<Plan | undefined>
+  paidPlans: (Plan | undefined)[]
+  plans: (Plan | undefined)[]
   userPlanInfo: Plan | undefined
 }
 

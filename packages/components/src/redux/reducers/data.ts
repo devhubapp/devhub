@@ -52,14 +52,14 @@ const initialState: State = {
 export const dataReducer: Reducer<State> = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_SUBSCRIPTION_SUCCESS':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!draft.allIds) return
         if (!draft.byId) return
 
         const items = action.payload.data || []
         if (!(items && items.length)) return
 
-        items.forEach(newItem => {
+        items.forEach((newItem) => {
           const nodeIdOrId = getItemNodeIdOrId(newItem)
           if (!nodeIdOrId) return
 
@@ -184,7 +184,9 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
               }
             } else {
               if (draft.readIds.includes(nodeIdOrId)) {
-                draft.readIds = draft.readIds.filter(_id => _id !== nodeIdOrId)
+                draft.readIds = draft.readIds.filter(
+                  (_id) => _id !== nodeIdOrId,
+                )
                 draft.updatedAt = now
               }
             }
@@ -199,7 +201,7 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
             } else {
               if (draft.savedIds.includes(nodeIdOrId)) {
                 draft.savedIds = draft.savedIds.filter(
-                  _id => _id !== nodeIdOrId,
+                  (_id) => _id !== nodeIdOrId,
                 )
                 draft.updatedAt = now
               }
@@ -210,7 +212,7 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
 
     case 'MARK_ITEMS_AS_READ_OR_UNREAD':
     case 'SAVE_ITEMS_FOR_LATER':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (
           !(
             action.payload.itemNodeIdOrIds &&
@@ -227,11 +229,11 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
         const stringIds =
           action.payload.itemNodeIdOrIds &&
           action.payload.itemNodeIdOrIds
-            .map(id => `${id || ''}`.trim())
+            .map((id) => `${id || ''}`.trim())
             .filter(Boolean)
         if (!(stringIds && stringIds.length)) return
 
-        stringIds.forEach(id => {
+        stringIds.forEach((id) => {
           const entry = draft.byId[id]
           if (!(entry && entry.item)) return
 
@@ -249,7 +251,7 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
               }
             } else {
               if (draft.readIds.includes(id)) {
-                draft.readIds = draft.readIds.filter(_id => _id !== id)
+                draft.readIds = draft.readIds.filter((_id) => _id !== id)
                 entry.updatedAt = now
               }
 
@@ -272,7 +274,7 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
               }
             } else {
               if (draft.savedIds.includes(id)) {
-                draft.savedIds = draft.savedIds.filter(_id => _id !== id)
+                draft.savedIds = draft.savedIds.filter((_id) => _id !== id)
                 entry.updatedAt = now
               }
 
@@ -287,13 +289,13 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
 
     case 'MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD':
     case 'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const keys = Object.keys(draft.byId)
         if (!(keys && keys.length)) return
 
         const now = new Date().toISOString()
 
-        keys.forEach(id => {
+        keys.forEach((id) => {
           const entry = draft.byId[id]
           if (!(entry && entry.type === 'notification' && entry.item)) return
 
@@ -328,7 +330,7 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
             }
           } else {
             if (draft.readIds.includes(id)) {
-              draft.readIds = draft.readIds.filter(_id => _id !== id)
+              draft.readIds = draft.readIds.filter((_id) => _id !== id)
               entry.updatedAt = now
             }
 
@@ -343,14 +345,14 @@ export const dataReducer: Reducer<State> = (state = initialState, action) => {
       })
 
     case 'MARK_EVERYTHING_AS_READ':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         const now = new Date().toISOString()
 
         draft.allIds = draft.allIds || []
         draft.byId = draft.byId || {}
         draft.readIds = draft.readIds || []
 
-        draft.allIds.forEach(id => {
+        draft.allIds.forEach((id) => {
           const entry = draft.byId[id]
           if (!(entry && entry.item)) return
 

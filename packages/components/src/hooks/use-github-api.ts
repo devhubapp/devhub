@@ -23,7 +23,7 @@ export function useGitHubAPI<M extends (params?: any, callback?: any) => any>(
     }
 
     ;(async () => {
-      setState(s => ({ ...s, loadingState: 'loading' }))
+      setState((s) => ({ ...s, loadingState: 'loading' }))
 
       try {
         const response = (await method(
@@ -32,9 +32,9 @@ export function useGitHubAPI<M extends (params?: any, callback?: any) => any>(
 
         const data = response && response.data
 
-        setState(s => ({ ...s, data, loadingState: 'loaded' }))
+        setState((s) => ({ ...s, data, loadingState: 'loaded' }))
       } catch (error) {
-        setState(s => ({
+        setState((s) => ({
           ...s,
           data: null,
           error: `${(error && error.message) || error || 'Error'}`,

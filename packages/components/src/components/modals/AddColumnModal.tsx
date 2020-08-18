@@ -37,16 +37,16 @@ export interface AddColumnModalProps {
   showBackButton: boolean
 }
 
-const columnTypes: Array<{
+const columnTypes: {
   title: string
   type: ColumnSubscription['type']
   icon: IconProp
-  items: Array<{
+  items: {
     payload: AddColumnDetailsPayload | null
-  }>
+  }[]
   soon?: boolean
   soonLink?: string
-}> = [
+}[] = [
   {
     title: 'Notifications',
     type: 'notifications',
@@ -177,7 +177,7 @@ function AddColumnModalItem({
   const theme = useTheme()
 
   const touchableRef = useRef(null)
-  const initialIsHovered = useHover(touchableRef, isHovered => {
+  const initialIsHovered = useHover(touchableRef, (isHovered) => {
     if (cacheRef.current.isHovered === isHovered) return
     cacheRef.current.isHovered = isHovered
     updateStyles()

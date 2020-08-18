@@ -114,7 +114,7 @@ export function Avatar(props: AvatarProps) {
   return (
     <ConditionalWrap
       condition
-      wrap={children =>
+      wrap={(children) =>
         linkUri ? (
           <Link hitSlop={hitSlop} href={linkUri}>
             {children}

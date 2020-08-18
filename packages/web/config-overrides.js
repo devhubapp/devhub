@@ -6,7 +6,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 const appDirectory = fs.realpathSync(process.cwd())
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath)
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath)
 
 const appIncludes = [
   resolveApp('src'),
@@ -24,7 +24,7 @@ module.exports = function override(config, env) {
 
   // allow importing from outside of src folder
   config.resolve.plugins = config.resolve.plugins.filter(
-    plugin => plugin.constructor.name !== 'ModuleScopePlugin',
+    (plugin) => plugin.constructor.name !== 'ModuleScopePlugin',
   )
 
   config.module.rules[0].include = appIncludes
@@ -38,9 +38,7 @@ module.exports = function override(config, env) {
 
   if (__DEV__) {
     // fast refresh
-    config.plugins.push(
-      new ReactRefreshWebpackPlugin({ forceEnable: true }),
-    )
+    config.plugins.push(new ReactRefreshWebpackPlugin({ forceEnable: true }))
     config.module.rules[2].oneOf[1].options.plugins.push(
       require.resolve('react-refresh/babel'),
     )

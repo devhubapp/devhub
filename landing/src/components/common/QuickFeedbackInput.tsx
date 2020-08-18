@@ -1,7 +1,7 @@
 import { constants } from '@devhub/core'
 import axios from 'axios'
 import classNames from 'classnames'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { unstable_batchedUpdates as batch } from 'react-dom'
 
 import { useAuth } from '../../context/AuthContext'

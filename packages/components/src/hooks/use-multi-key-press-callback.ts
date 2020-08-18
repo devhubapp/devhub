@@ -74,7 +74,9 @@ export default function useMultiKeyPressCallback(
           ) {
             if (
               getLastUsedInputType() !== 'keyboard' &&
-              keys.some(key => !['Alt', 'Ctrl', 'Meta', 'Shift'].includes(key))
+              keys.some(
+                (key) => !['Alt', 'Ctrl', 'Meta', 'Shift'].includes(key),
+              )
             ) {
               emitter.emit('SET_LAST_INPUT_TYPE', { type: 'keyboard' })
             }
@@ -111,7 +113,7 @@ export default function useMultiKeyPressCallback(
 
   useEmitter(
     targetKeys.length ? 'PRESSED_KEYBOARD_SHORTCUT' : undefined,
-    payload => {
+    (payload) => {
       if (
         payload.keys.length === 1 &&
         !['Alt', 'Ctrl', 'Meta', 'Shift'].includes(payload.keys[0])
@@ -130,13 +132,13 @@ function areKeysPressed(
 ) {
   if (keys.length !== pressedKeys.length) return false
 
-  const _keys = caseSensitive ? keys : keys.map(k => `${k}`.toUpperCase())
+  const _keys = caseSensitive ? keys : keys.map((k) => `${k}`.toUpperCase())
   const _pressedKeys = caseSensitive
     ? pressedKeys
-    : pressedKeys.map(k => `${k}`.toUpperCase())
+    : pressedKeys.map((k) => `${k}`.toUpperCase())
 
   const keysToCheck = new Set(_keys)
-  _pressedKeys.forEach(key => {
+  _pressedKeys.forEach((key) => {
     keysToCheck.delete(key)
   })
 

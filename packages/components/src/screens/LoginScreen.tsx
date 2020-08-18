@@ -227,7 +227,7 @@ export const LoginScreen = React.memo(() => {
       analytics.trackEvent('engagement', 'login')
 
       let redirected = false
-      const token = await new Promise(resolveToken => {
+      const token = await new Promise((resolveToken) => {
         Dialog.show(
           'Personal Access Token',
           'Paste your GitHub token here:',

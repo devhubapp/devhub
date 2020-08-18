@@ -30,7 +30,7 @@ export const allSubscriptionsArrSelector = createShallowEqualSelector(
     if (!(byId && subscriptionIds && subscriptionIds.length)) return EMPTY_ARRAY
 
     return subscriptionIds
-      .map(id => byId[id])
+      .map((id) => byId[id])
       .filter(Boolean) as ColumnSubscription[]
   },
 )
@@ -45,7 +45,7 @@ export const userSubscriptionsArrSelector = createShallowEqualSelector(
     const limit =
       (plan && plan.featureFlags.columnsLimit) || constants.COLUMNS_LIMIT
     const validColumns = columns
-      .filter(c => c.subscriptionIds && c.subscriptionIds.length)
+      .filter((c) => c.subscriptionIds && c.subscriptionIds.length)
       .slice(0, limit)
 
     const ids = _.uniq(
@@ -54,7 +54,7 @@ export const userSubscriptionsArrSelector = createShallowEqualSelector(
       }, []),
     )
 
-    return ids.map(id => byId[id]).filter(Boolean) as ColumnSubscription[]
+    return ids.map((id) => byId[id]).filter(Boolean) as ColumnSubscription[]
   },
 )
 
@@ -66,7 +66,7 @@ export const createSubscriptionsSelector = () =>
       subscriptionsByIdSelector(state),
     (subscriptionIds, byId) => {
       return subscriptionIds
-        .map(id => byId[id])
+        .map((id) => byId[id])
         .filter(Boolean) as ColumnSubscription[]
     },
   )
@@ -102,7 +102,7 @@ export const createSubscriptionsDataSelector = () => {
 export const subscriptionLastFetchedAtSelector = createSelector(
   (state: RootState, subscriptionId: string) =>
     subscriptionSelector(state, subscriptionId),
-  subscription => {
+  (subscription) => {
     if (!(subscription && subscription.data)) return
 
     return _.max([

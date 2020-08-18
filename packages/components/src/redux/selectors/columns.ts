@@ -35,7 +35,9 @@ export const columnsArrSelector = createShallowEqualSelector(
   (state: RootState) => columnIdsSelector(state),
   (byId, columnIds) => {
     if (!(byId && columnIds)) return EMPTY_ARRAY
-    return columnIds.map(columnId => byId[columnId]).filter(Boolean) as Column[]
+    return columnIds
+      .map((columnId) => byId[columnId])
+      .filter(Boolean) as Column[]
   },
 )
 
@@ -52,7 +54,7 @@ export const createColumnSubscriptionsSelector = () =>
     (state: RootState) => subscriptionsByIdSelector(state),
     (subscriptionIds, subscriptionsById) => {
       return subscriptionIds
-        .map(subscriptionId => subscriptionsById[subscriptionId])
+        .map((subscriptionId) => subscriptionsById[subscriptionId])
         .filter(Boolean) as ColumnSubscription[]
     },
   )

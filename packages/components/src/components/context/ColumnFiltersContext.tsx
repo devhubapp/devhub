@@ -69,10 +69,10 @@ export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {
 
   useEmitter(
     'TOGGLE_COLUMN_FILTERS',
-    payload => {
+    (payload) => {
       if (!enableSharedFiltersView) return
       setIsOpened(
-        typeof payload.isOpen === 'boolean' ? payload.isOpen : v => !v,
+        typeof payload.isOpen === 'boolean' ? payload.isOpen : (v) => !v,
       )
     },
     [enableSharedFiltersView],

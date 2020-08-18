@@ -142,7 +142,7 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
       ? containerRef
       : null,
     useCallback(
-      isHovered => {
+      (isHovered) => {
         if (cacheRef.current.isHovered === isHovered) return
         cacheRef.current.isHovered = isHovered
         updateStyles()

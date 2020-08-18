@@ -3,7 +3,6 @@ import qs from 'qs'
 import { ReactNode } from 'react'
 import { findDOMNode } from 'react-dom'
 
-import { PixelRatio } from 'react-native'
 import {
   AppLayoutProviderState,
   getAppLayout,
@@ -50,7 +49,7 @@ export function getGitHubAppInstallUri(
   options: {
     redirectUri?: string | undefined
     suggestedTargetId?: number | string | undefined
-    repositoryIds?: Array<number | string> | undefined
+    repositoryIds?: (number | string)[] | undefined
   } = {},
 ) {
   const query: Record<string, any> = {}
@@ -130,14 +129,11 @@ export function genericParseText<T extends string>(
   const matches = text.match(new RegExp(pattern, 'g')) as T[]
   if (!(matches && matches.length)) return [text].filter(Boolean)
 
-  return text.split(pattern).reduce(
-    (result, item, index) => {
-      if (!matches[index]) return result.concat([item].filter(Boolean))
+  return text.split(pattern).reduce((result, item, index) => {
+    if (!matches[index]) return result.concat([item].filter(Boolean))
 
-      return result.concat([item, fn(matches[index])].filter(Boolean))
-    },
-    [] as ReactNode[],
-  )
+    return result.concat([item, fn(matches[index])].filter(Boolean))
+  }, [] as ReactNode[])
 }
 
 export function isBigEnoughForMultiColumnView(

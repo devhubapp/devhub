@@ -16,10 +16,10 @@ export function isPlanStatusHandled(
 
   return (
     isPlanStatusValid(plan) ||
-    (plan.status === 'incomplete' ||
-      plan.status === 'incomplete_expired' ||
-      plan.status === 'past_due' ||
-      plan.status === 'unpaid')
+    plan.status === 'incomplete' ||
+    plan.status === 'incomplete_expired' ||
+    plan.status === 'past_due' ||
+    plan.status === 'unpaid'
   )
 }
 

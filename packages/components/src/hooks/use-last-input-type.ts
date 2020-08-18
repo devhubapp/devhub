@@ -8,7 +8,7 @@ export function useLastInputType() {
 
   useEmitter(
     'SET_LAST_INPUT_TYPE',
-    payload => {
+    (payload) => {
       lastInputType = payload.type
       setInputType(payload.type)
     },

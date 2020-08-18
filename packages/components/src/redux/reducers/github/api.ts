@@ -23,7 +23,7 @@ export const githubAPIReducer: Reducer<State> = (
   switch (action.type) {
     case 'FETCH_SUBSCRIPTION_SUCCESS':
     case 'FETCH_SUBSCRIPTION_FAILURE':
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         if (!action.payload.github) return
 
         draft.headers = {

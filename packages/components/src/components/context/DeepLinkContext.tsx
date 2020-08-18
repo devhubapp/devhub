@@ -25,7 +25,7 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    Linking.addEventListener('url', payload => {
+    Linking.addEventListener('url', (payload) => {
       if (!(payload && payload.url && typeof payload.url === 'string')) return
 
       const { url } = payload
@@ -55,7 +55,7 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
 
       const suffixMap = _.mapValues(
         constants.APP_DEEP_LINK_URLS,
-        _url =>
+        (_url) =>
           _url
             .replace(`${constants.APP_DEEP_LINK_SCHEMA}://`, '')
             .split('/')[0]

@@ -181,7 +181,7 @@ const DialogView = React.memo(
           <>
             <ThemedTouchableWithoutFeedback
               backgroundColor="backgroundColorDarker2"
-              onLayout={e => {
+              onLayout={(e) => {
                 setDimensions({
                   width: e.nativeEvent.layout.width,
                   height: e.nativeEvent.layout.height,
@@ -288,7 +288,7 @@ const DialogView = React.memo(
                         if (!inputValue) return
 
                         const submitButton = buttons.find(
-                          button =>
+                          (button) =>
                             button &&
                             button.onPress &&
                             (!button.style || button.style === 'default'),

@@ -264,7 +264,7 @@ function* onColumnSubscriptionFilterChange(
   if (!(subscriptions && subscriptions.length)) return
 
   yield all(
-    subscriptions.map(function*(subscription: ColumnSubscription) {
+    subscriptions.map(function* (subscription: ColumnSubscription) {
       if (!(subscription && subscription.id)) return
 
       let newSubscriptionParams

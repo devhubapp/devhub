@@ -59,9 +59,9 @@ export function mergeIssuesOrPullRequestsPreservingEnhancement(
     : _.concat(newItems || [], prevItems || [])
 
   return sortIssuesOrPullRequests(
-    _.uniqBy(allItems, 'id').map(item => {
-      const newItem = (newItems || []).find(i => i.id === item.id)
-      const existingItem = prevItems.find(i => i.id === item.id)
+    _.uniqBy(allItems, 'id').map((item) => {
+      const newItem = (newItems || []).find((i) => i.id === item.id)
+      const existingItem = prevItems.find((i) => i.id === item.id)
 
       return mergeIssueOrPullRequestPreservingEnhancement(
         newItem!,
@@ -99,7 +99,7 @@ export function mergeIssueOrPullRequestPreservingEnhancement(
     private: existingItem.private,
   }
 
-  return immer(newItem, draft => {
+  return immer(newItem, (draft) => {
     Object.entries(enhancements).forEach(([key, value]) => {
       if (typeof value === 'undefined') return
       if (value === (draft as any)[key])
@@ -128,7 +128,7 @@ export function getIssueOrPullRequestState(
   const isPR = isPullRequest(item)
 
   if (
-    (isPR && ('merged' in item && item.merged)) ||
+    (isPR && 'merged' in item && item.merged) ||
     ('merged_at' in item && item.merged_at)
   )
     return 'merged'
@@ -165,9 +165,9 @@ export function getOlderOrNewerIssueOrPullRequestDate(
     field,
     order === 'newer' ? 'desc' : 'asc',
   )
-    .map(item => item[field])
+    .map((item) => item[field])
     .filter(
-      date =>
+      (date) =>
         !!(date && ignoreFutureDates ? now > new Date(date).getTime() : true),
     )[0]
 }
@@ -186,7 +186,7 @@ export function createIssuesOrPullRequestsCache(
     }
   }
 
-  items.forEach(item => {
+  items.forEach((item) => {
     checkAndFix(item, item.url, item.updated_at)
   })
 
@@ -210,7 +210,7 @@ export async function getIssueOrPullRequestsEnhancementMap(
 ): Promise<Record<string, IssueOrPullRequestPayloadEnhancement>> {
   const repoMetas = _.uniqBy(
     items
-      .map(item => {
+      .map((item) => {
         const repoURL = getRepoUrlFromOtherUrl(
           item && (item.repository_url || item.url),
         )
@@ -226,7 +226,7 @@ export async function getIssueOrPullRequestsEnhancementMap(
         return { repoURL, repoAPIURL, owner, repo }
       })
       .filter(
-        meta =>
+        (meta) =>
           !!(
             meta &&
             meta.owner &&
@@ -263,7 +263,7 @@ export async function getIssueOrPullRequestsEnhancementMap(
 
   await Promise.all(repoPromises)
 
-  const promises = items.map(async item => {
+  const promises = items.map(async (item) => {
     const repoURL = getRepoUrlFromOtherUrl(
       item && (item.repository_url || item.url),
     )!
@@ -298,7 +298,7 @@ export async function getIssueOrPullRequestsEnhancementMap(
           headers: {
             Authorization: githubToken && `token ${githubToken}`,
           },
-          validateStatus: s => s === 204 || s === 404,
+          validateStatus: (s) => s === 204 || s === 404,
         })
 
         enhance.merged = status === 204
@@ -348,9 +348,9 @@ export function enhanceIssueOrPullRequests(
 ) {
   if (!(items && items.length)) return constants.EMPTY_ARRAY
 
-  return items.map(item => {
+  return items.map((item) => {
     const enhanced = currentEnhancedIssueOrPullRequests.find(
-      i => i.id === item.id,
+      (i) => i.id === item.id,
     )
 
     const enhance = enhancementMap[item.id]
@@ -373,10 +373,7 @@ export function sortIssuesOrPullRequests(
 ) {
   if (!(items && items.length)) return constants.EMPTY_ARRAY
 
-  return _(items)
-    .uniqBy('id')
-    .orderBy(field, order)
-    .value()
+  return _(items).uniqBy('id').orderBy(field, order).value()
 }
 
 export function getGitHubIssueSearchQuery(
@@ -391,7 +388,7 @@ export function getGitHubIssueSearchQuery(
     const termsToSearchFor = getSearchQueryTerms(query)
 
     const convertedQuery = termsToSearchFor
-      .map(queryTerm => {
+      .map((queryTerm) => {
         if (
           !(
             queryTerm &&
@@ -442,7 +439,9 @@ export function getGitHubIssueSearchQuery(
       if (ownerFilter.value === true && !reposToPush.length)
         queries.push(`user:${owner}`.toLowerCase())
 
-      reposToPush.forEach(repoFullName => queries.push(`repo:${repoFullName}`))
+      reposToPush.forEach((repoFullName) =>
+        queries.push(`repo:${repoFullName}`),
+      )
     })
   }
 
@@ -519,7 +518,7 @@ export function getGitHubIssueSearchQuery(
     const searchTerms = getSearchQueryTerms(query)
     if (
       !searchTerms.find(
-        searchTerm =>
+        (searchTerm) =>
           searchTerm &&
           Array.isArray(searchTerm) &&
           searchTerm.length === 3 &&

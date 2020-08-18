@@ -72,7 +72,7 @@ export const Column = React.memo(
     useEmitter(
       'FOCUS_ON_COLUMN',
       useCallback(
-        payload => {
+        (payload) => {
           if (!columnBorderRef.current) return
 
           if (!(payload.columnId && payload.columnId === columnId)) {
@@ -168,7 +168,9 @@ export const Column = React.memo(
 
 Column.displayName = 'Column'
 
-const ColumErrorFallbackComponent: ErrorBoundaryProps['FallbackComponent'] = props => {
+const ColumErrorFallbackComponent: ErrorBoundaryProps['FallbackComponent'] = (
+  props,
+) => {
   const { error, info } = props
 
   return (

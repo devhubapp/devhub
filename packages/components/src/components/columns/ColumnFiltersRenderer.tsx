@@ -85,7 +85,7 @@ export const ColumnFiltersRenderer = React.memo(
 
     useEmitter(
       'FOCUS_ON_COLUMN',
-      payload => {
+      (payload) => {
         if (_columnIdOrFocused === 'focused' && columnId !== payload.columnId)
           forceRerender()
       },
@@ -94,14 +94,14 @@ export const ColumnFiltersRenderer = React.memo(
 
     useEmitter(
       'TOGGLE_COLUMN_FILTERS',
-      payload => {
+      (payload) => {
         if (enableSharedFiltersView) return
         setIsLocalFiltersOpened(
           payload.columnId !== columnId
             ? false
             : typeof payload.isOpen === 'boolean'
             ? payload.isOpen
-            : v => !v,
+            : (v) => !v,
         )
       },
       [columnId, enableSharedFiltersView],
@@ -133,7 +133,9 @@ export const ColumnFiltersRenderer = React.memo(
       [true],
       [`column-options-renderer-${type === 'shared' ? 'shared' : columnId}`],
       enableAbsolutePositionAnimation &&
-        (!inlineMode && fixedPosition && fixedWidth)
+        !inlineMode &&
+        fixedPosition &&
+        fixedWidth
         ? {
             config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
             immediate: constants.DISABLE_ANIMATIONS,
@@ -187,9 +189,9 @@ export const ColumnFiltersRenderer = React.memo(
               fixedPosition &&
               fixedWidth
                 ? fixedPosition === 'left' || fixedPosition === 'right'
-                  ? absolutePositionTransition.props[fixedPosition].to(
-                      (value: number) => (fixedWidth + value <= 0 ? 0 : 1),
-                    )
+                  ? absolutePositionTransition.props[
+                      fixedPosition
+                    ].to((value: number) => (fixedWidth + value <= 0 ? 0 : 1))
                   : 1
                 : 1,
             visibility:
@@ -199,9 +201,10 @@ export const ColumnFiltersRenderer = React.memo(
               fixedPosition &&
               fixedWidth
                 ? fixedPosition === 'left' || fixedPosition === 'right'
-                  ? absolutePositionTransition.props[fixedPosition].to(
-                      (value: number) =>
-                        fixedWidth + value <= 0 ? 'hidden' : 'visible',
+                  ? absolutePositionTransition.props[
+                      fixedPosition
+                    ].to((value: number) =>
+                      fixedWidth + value <= 0 ? 'hidden' : 'visible',
                     )
                   : 'visible'
                 : 'visible',
@@ -218,9 +221,9 @@ export const ColumnFiltersRenderer = React.memo(
           absolutePositionTransition.props &&
           fixedPosition &&
           fixedWidth
-            ? absolutePositionTransition.props[fixedPosition].to(
-                (value: number) => (value < 0 ? 'none' : 'box-none'),
-              )
+            ? absolutePositionTransition.props[
+                fixedPosition
+              ].to((value: number) => (value < 0 ? 'none' : 'box-none'))
             : 'box-none'
         }
       >
@@ -307,7 +310,7 @@ export const ColumnFiltersRenderer = React.memo(
 
           <ConditionalWrap
             condition={!enableAbsolutePositionAnimation}
-            wrap={children => (
+            wrap={(children) => (
               <AccordionView isOpen={isOpen}>{children}</AccordionView>
             )}
           >

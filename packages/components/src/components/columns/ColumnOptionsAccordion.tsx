@@ -56,7 +56,7 @@ export const ColumnOptionsAccordion = React.memo(
           isOpened: () => !!isOpenRef.current,
           open: () => setIsOpen(true),
           close: () => setIsOpen(false),
-          toggle: () => setIsOpen(v => !v),
+          toggle: () => setIsOpen((v) => !v),
         }),
         [],
       )

@@ -4,7 +4,6 @@ import {
   PlataformSelectSpecificsEnhanced,
   PlatformName,
   PlatformRealOS,
-  PlatformSelectOptions,
 } from './index.shared'
 
 // From: https://github.com/cheton/is-electron

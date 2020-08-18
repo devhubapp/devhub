@@ -33,8 +33,8 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
   // force always having a valid column focused
   const fixedFocusedColumnIndex = columnIds.length
     ? valueRef.current.focusedColumnId &&
-      columnIds.findIndex(id => id === valueRef.current.focusedColumnId) >= 0
-      ? columnIds.findIndex(id => id === valueRef.current.focusedColumnId)
+      columnIds.findIndex((id) => id === valueRef.current.focusedColumnId) >= 0
+      ? columnIds.findIndex((id) => id === valueRef.current.focusedColumnId)
       : valueRef.current.focusedColumnIndex >= 0 &&
         valueRef.current.focusedColumnIndex < columnIds.length
       ? valueRef.current.focusedColumnIndex
@@ -69,11 +69,11 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 
   useEmitter(
     'FOCUS_ON_COLUMN',
-    payload => {
+    (payload) => {
       const focusedColumnId = payload.columnId || null
       const focusedColumnIndex =
         columnIds && focusedColumnId
-          ? columnIds.findIndex(id => id === focusedColumnId)
+          ? columnIds.findIndex((id) => id === focusedColumnId)
           : -1
 
       if (
@@ -90,7 +90,7 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 
   useEmitter(
     'FOCUS_ON_PREVIOUS_COLUMN',
-    payload => {
+    (payload) => {
       const previousColumnIndex = Math.max(
         0,
         Math.min(valueRef.current.focusedColumnIndex - 1, columnIds.length - 1),
@@ -107,7 +107,7 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 
   useEmitter(
     'FOCUS_ON_NEXT_COLUMN',
-    payload => {
+    (payload) => {
       const nextColumnIndex = Math.max(
         0,
         Math.min(valueRef.current.focusedColumnIndex + 1, columnIds.length - 1),
@@ -124,7 +124,7 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 
   useEmitter(
     'FOCUS_ON_COLUMN_ITEM',
-    payload => {
+    (payload) => {
       if (valueRef.current.focusedColumnId === (payload.columnId || null))
         return
 
@@ -141,7 +141,7 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 
   useEmitter(
     'SCROLL_TOP_COLUMN',
-    payload => {
+    (payload) => {
       if (valueRef.current.focusedColumnId === (payload.columnId || null))
         return
 
@@ -158,7 +158,7 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 
   useEmitter(
     'SCROLL_DOWN_COLUMN',
-    payload => {
+    (payload) => {
       if (
         valueRef.current.focusedColumnId === (payload.columnId || null) &&
         valueRef.current.focusedColumnIndex === payload.columnIndex
@@ -178,7 +178,7 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 
   useEmitter(
     'SCROLL_UP_COLUMN',
-    payload => {
+    (payload) => {
       if (
         valueRef.current.focusedColumnId === (payload.columnId || null) &&
         valueRef.current.focusedColumnIndex === payload.columnIndex

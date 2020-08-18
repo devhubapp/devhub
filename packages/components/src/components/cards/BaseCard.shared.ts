@@ -133,10 +133,10 @@ export interface BaseCardProps extends AdditionalCardProps {
   isRead: boolean
   isSaved: boolean
   labels:
-    | Array<{
+    | {
         name: string
         color?: string
-      }>
+      }[]
     | undefined
   link: string
   nodeIdOrId: string
@@ -147,7 +147,7 @@ export interface BaseCardProps extends AdditionalCardProps {
     tooltip?: string
   }
   showPrivateLock: boolean
-  subitems?: Array<{
+  subitems?: {
     avatar:
       | {
           imageURL: string
@@ -155,7 +155,7 @@ export interface BaseCardProps extends AdditionalCardProps {
         }
       | undefined
     text: string
-  }>
+  }[]
   subtitle?: string
   text?: {
     text: string
@@ -624,7 +624,7 @@ function _getCardPropsForItem(
               showPrivateLock: isPrivate,
               subitems: commits
                 .slice(0, sliceSize)
-                .map<NonNullable<BaseCardProps['subitems']>[0]>(commit => ({
+                .map<NonNullable<BaseCardProps['subitems']>[0]>((commit) => ({
                   avatar: {
                     imageURL: getUserAvatarByEmail(
                       commit.author.email,
@@ -670,7 +670,7 @@ function _getCardPropsForItem(
             (pages[0].title || pages[0]!.page_name)
           ) {
             const firstLink = pages
-              .map(p => fixURL(p.html_url))
+              .map((p) => fixURL(p.html_url))
               .filter(Boolean)[0]
 
             return {
@@ -783,7 +783,7 @@ function _getCardPropsForItem(
               ((subjectType === 'Repository' ||
                 subjectType === 'RepositoryVulnerabilityAlert') &&
                 repoURL) ||
-              (subjectType === 'User' && (users[0] && users[0].html_url)) ||
+              (subjectType === 'User' && users[0] && users[0].html_url) ||
               (branchOrTagName &&
                 ((isTagMainEvent &&
                   `${repoURL}/releases/tag/${branchOrTagName}`) ||
@@ -1353,7 +1353,7 @@ export function getCardPushNotificationItem(
           commits.length > 1 &&
           commits
             .map(
-              commit =>
+              (commit) =>
                 commit.message &&
                 commit &&
                 trimNewLinesAndSpaces(stripMarkdown(commit.message), 80),
@@ -1367,7 +1367,7 @@ export function getCardPushNotificationItem(
             80,
           ),
       ]
-        .map(text => (text && trimNewLinesAndSpaces(text, 80)) || '')
+        .map((text) => (text && trimNewLinesAndSpaces(text, 80)) || '')
         .filter(Boolean)
 
       const texts = _texts

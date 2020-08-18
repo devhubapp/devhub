@@ -30,7 +30,7 @@ export function prompt(
   }
 
   if (callbackOrButtons) {
-    callbackOrButtons.forEach(button => {
+    callbackOrButtons.forEach((button) => {
       if (!button.style || button.style === 'default') {
         if (button.onPress) button.onPress(result || '')
       }

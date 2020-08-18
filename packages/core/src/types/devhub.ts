@@ -185,7 +185,8 @@ export type ActivityColumnSubscription = {
       params: GitHubExtractParamsFromMethod<
         Octokit['activity']['listReceivedPublicEventsForUser']
       >
-    })
+    }
+)
 
 export interface IssueOrPullRequestColumnSubscription {
   id: string
@@ -226,7 +227,8 @@ export type NotificationColumnSubscription = {
       params: GitHubExtractParamsFromMethod<
         Octokit['activity']['listNotificationsForRepo']
       >
-    })
+    }
+)
 
 export interface BaseColumnFilters {
   bot?: boolean

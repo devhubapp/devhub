@@ -20,7 +20,7 @@ export function useIsItemFocused(
 
   useEmitter(
     'FOCUS_ON_COLUMN_ITEM',
-    payload => {
+    (payload) => {
       focusedColumnId = payload.columnId
       focusedItemNodeIdOrId = payload.itemNodeIdOrId
 

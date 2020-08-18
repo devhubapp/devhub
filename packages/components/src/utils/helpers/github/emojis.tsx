@@ -1573,7 +1573,7 @@ function parseTextWithEmojisToReactComponents_1(
 ) {
   const pattern = /:[a-z0-9_\+]+:/
 
-  return genericParseText(text, pattern, match => {
+  return genericParseText(text, pattern, (match) => {
     const emoji = match.slice(1, -1)
     const emojiImageURL = getEmojiImageURL(emoji as GitHubEmoji)
     return emojiImageURL
@@ -1588,7 +1588,7 @@ function parseTextWithEmojisToReactComponents_2(
 ) {
   const pattern = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?(?:\u200d(?:[^\ud800-\udfff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?)*/
 
-  return genericParseText(text, pattern, match => {
+  return genericParseText(text, pattern, (match) => {
     const codePoint1 = match.codePointAt(0)
     const codePoint2 =
       match.length > 2 ? match.codePointAt(match.length - 2) : undefined
@@ -1609,7 +1609,7 @@ export function parseTextWithEmojisToReactComponents(
   if (!(text && typeof text === 'string')) return [text].filter(Boolean)
 
   return _.flatMap(
-    parseTextWithEmojisToReactComponents_1(text, options).map(item => {
+    parseTextWithEmojisToReactComponents_1(text, options).map((item) => {
       if (typeof item !== 'string') return item
       return parseTextWithEmojisToReactComponents_2(item, options)
     }),
@@ -1618,7 +1618,7 @@ export function parseTextWithEmojisToReactComponents(
       ((item, index) => (
         <Fragment key={`${options.key}-${index}`}>{item}</Fragment>
       ))) ||
-      (item => item),
+      ((item) => item),
   )
 }
 

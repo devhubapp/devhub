@@ -11,12 +11,12 @@ export function betterMemoize<F extends Function>(
   equalityCheck = shallowEqual,
   cacheSize = 1,
 ): F {
-  let cacheArr: Array<{ args: unknown[]; result: unknown }> = []
+  let cacheArr: { args: unknown[]; result: unknown }[] = []
   const cacheMap: Map<string, { args: unknown[]; result: unknown }> = new Map()
 
   return (((...args: unknown[]) => {
     const allArgsArePrimitives = args.every(
-      arg =>
+      (arg) =>
         typeof arg === 'boolean' ||
         typeof arg === 'string' ||
         typeof arg === 'number' ||
@@ -27,7 +27,7 @@ export function betterMemoize<F extends Function>(
     const cachedValue = allArgsArePrimitives
       ? cacheMap.get(JSON.stringify(args))
       : cacheArr.find(
-          cache =>
+          (cache) =>
             !!(
               cache &&
               cache.args.length === args.length &&

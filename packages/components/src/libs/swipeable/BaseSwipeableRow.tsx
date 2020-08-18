@@ -19,8 +19,8 @@ export interface BaseSwipeableRowAction {
 export interface BaseSwipeableRowProps<IAction = BaseSwipeableRowAction>
   extends SwipeableProperties {
   children: ReactNode
-  leftActions: Array<BaseSwipeableRowAction & IAction> // tslint:disable-line prefer-array-literal
-  rightActions: Array<BaseSwipeableRowAction & IAction> // tslint:disable-line prefer-array-literal
+  leftActions: (BaseSwipeableRowAction & IAction)[] // tslint:disable-line prefer-array-literal
+  rightActions: (BaseSwipeableRowAction & IAction)[] // tslint:disable-line prefer-array-literal
 }
 
 export interface BaseSwipeableRowBaseState {}
@@ -65,8 +65,8 @@ export abstract class BaseSwipeableRow<
   ): React.ReactNode => {
     const { leftActions: actions } = this.props
 
-    const fullAction = actions.find(action => action.type === 'FULL')
-    const buttonActions = actions.filter(action => action.type !== 'FULL')
+    const fullAction = actions.find((action) => action.type === 'FULL')
+    const buttonActions = actions.filter((action) => action.type !== 'FULL')
 
     if (fullAction)
       return this.renderFullAction(fullAction, {
@@ -83,7 +83,7 @@ export abstract class BaseSwipeableRow<
 
     return (
       <View style={[sharedStyles.horizontal, { width }]}>
-        {buttonActions.map(action => {
+        {buttonActions.map((action) => {
           x += action.width || defaultWidth
           return this.renderButtonAction(action, {
             dragAnimatedValue,
@@ -102,8 +102,8 @@ export abstract class BaseSwipeableRow<
   ): React.ReactNode => {
     const { rightActions: actions } = this.props
 
-    const fullAction = actions.find(action => action.type === 'FULL')
-    const buttonActions = actions.filter(action => action.type !== 'FULL')
+    const fullAction = actions.find((action) => action.type === 'FULL')
+    const buttonActions = actions.filter((action) => action.type !== 'FULL')
 
     if (fullAction)
       return this.renderFullAction(fullAction, {
@@ -120,7 +120,7 @@ export abstract class BaseSwipeableRow<
 
     return (
       <View style={[sharedStyles.horizontal, { width }]}>
-        {buttonActions.map(action => {
+        {buttonActions.map((action) => {
           const component = this.renderButtonAction(action, {
             dragAnimatedValue,
             progressAnimatedValue,

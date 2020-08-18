@@ -44,7 +44,9 @@ export const filterRecordHasAnyForcedValue = (
   filtersRecord: Record<string, boolean | undefined> | undefined,
 ) => {
   if (!filtersRecord) return false
-  return Object.values(filtersRecord).some(value => typeof value === 'boolean')
+  return Object.values(filtersRecord).some(
+    (value) => typeof value === 'boolean',
+  )
 }
 
 export const filterRecordWithThisValueCount = (
@@ -135,14 +137,14 @@ export function getOwnerAndRepoFormattedFilter(
   const ownerFiltersWithRepos = (filters && filters.owners) || {}
   const ownerFilters = _.mapValues(
     ownerFiltersWithRepos,
-    obj => obj && obj.value,
+    (obj) => obj && obj.value,
   )
   const repoFilters: typeof ownerFilters = {}
 
   const allExistingOwners = Object.keys(ownerFiltersWithRepos)
 
   if (ownerFiltersWithRepos) {
-    allExistingOwners.forEach(owner => {
+    allExistingOwners.forEach((owner) => {
       if (
         !(ownerFiltersWithRepos[owner] && ownerFiltersWithRepos[owner]!.repos)
       )
@@ -168,14 +170,14 @@ export function getOwnerAndRepoFormattedFilter(
 
   const allForcedRepos = _.sortBy(
     Object.keys(repoFilters)
-      .filter(repoFullName => typeof repoFilters[repoFullName] === 'boolean')
-      .map(repoFullName => repoFullName.toLowerCase()),
+      .filter((repoFullName) => typeof repoFilters[repoFullName] === 'boolean')
+      .map((repoFullName) => repoFullName.toLowerCase()),
   )
 
   const allForcedOwners = _.sortBy(
     allExistingOwners
       .filter(
-        ownerFilterWithRepo =>
+        (ownerFilterWithRepo) =>
           !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
           (typeof ownerFiltersWithRepos[ownerFilterWithRepo]!.value ===
             'boolean' ||
@@ -183,19 +185,19 @@ export function getOwnerAndRepoFormattedFilter(
               ownerFiltersWithRepos[ownerFilterWithRepo]!.repos,
             )),
       )
-      .map(owner => owner.toLowerCase()),
+      .map((owner) => owner.toLowerCase()),
   )
 
   const allIncludedRepos = _.sortBy(
     Object.keys(repoFilters)
-      .filter(repoFullName => repoFilters[repoFullName] === true)
-      .map(repoFullName => repoFullName.toLowerCase()),
+      .filter((repoFullName) => repoFilters[repoFullName] === true)
+      .map((repoFullName) => repoFullName.toLowerCase()),
   )
 
   const allIncludedOwners = _.sortBy(
     allExistingOwners
       .filter(
-        ownerFilterWithRepo =>
+        (ownerFilterWithRepo) =>
           !!ownerFiltersWithRepos[ownerFilterWithRepo] &&
           (ownerFiltersWithRepos[ownerFilterWithRepo]!.value === true ||
             filterRecordWithThisValueCount(
@@ -203,7 +205,7 @@ export function getOwnerAndRepoFormattedFilter(
               true,
             )),
       )
-      .map(owner => owner.toLowerCase()),
+      .map((owner) => owner.toLowerCase()),
   )
 
   return {
@@ -240,7 +242,7 @@ export function itemPassesOwnerOrRepoFilter(
     ownerFilters &&
     ownerFiltersWithRepos &&
     repoFilters &&
-    !getItemOwnersAndRepos(type, item).every(or => {
+    !getItemOwnersAndRepos(type, item).every((or) => {
       const thisOwnerRepoFilters =
         ownerFiltersWithRepos &&
         ownerFiltersWithRepos[or.owner] &&
@@ -297,7 +299,7 @@ export function itemPassesStringSearchFilter(
   if (!(termsToSearchFor && termsToSearchFor.length)) return true
   if (!(itemStrings && itemStrings.length)) return true
 
-  return termsToSearchFor.every(termArr => {
+  return termsToSearchFor.every((termArr) => {
     if (
       !(
         termArr &&
@@ -320,10 +322,10 @@ export function itemPassesStringSearchFilter(
     const searchTerms = key
       ? [`${key}:${value}`, `${key}:"${value}"`]
       : [value, `"${value}"`]
-    const found = itemStrings.some(itemString => {
+    const found = itemStrings.some((itemString) => {
       if (!(itemString && typeof itemString === 'string')) return false
 
-      return searchTerms.some(searchTerm =>
+      return searchTerms.some((searchTerm) =>
         itemString.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     })
@@ -418,7 +420,7 @@ export function getFilteredIssueOrPullRequests(
   const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
 
   if (filters && columnHasAnyFilter('issue_or_pr', filters)) {
-    _items = _items.filter(item => {
+    _items = _items.filter((item) => {
       if (!item) return
 
       const subjectType = getIssueOrPullRequestSubjectType(item)
@@ -538,7 +540,7 @@ export function getFilteredNotifications(
   const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
 
   if (filters && columnHasAnyFilter('notifications', filters)) {
-    _notifications = _notifications.filter(item => {
+    _notifications = _notifications.filter((item) => {
       if (!item) return
 
       const subjectType = getNotificationSubjectType(item)
@@ -674,7 +676,7 @@ export function getFilteredEvents(
   const ownerAndRepoFormattedFilter = getOwnerAndRepoFormattedFilter(filters)
 
   if (filters && columnHasAnyFilter('activity', filters)) {
-    _events = _events.filter(item => {
+    _events = _events.filter((item) => {
       if (!item) return
 
       const subjectType = getEventMetadata(item).subjectType
@@ -693,8 +695,9 @@ export function getFilteredEvents(
       if (
         !itemPassesFilterRecord(
           filters.watching || {},
-          `${getEventWatchingOwner(item, { dashboardFromUsername }) ||
-            ''}`.toLowerCase(),
+          `${
+            getEventWatchingOwner(item, { dashboardFromUsername }) || ''
+          }`.toLowerCase(),
           true,
         )
       )
