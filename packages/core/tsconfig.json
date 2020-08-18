@@ -4,7 +4,6 @@
     "composite": true,
     "declaration": true,
     "isolatedModules": false,
-    "noEmit": false,
     "outDir": "dist/",
     "rootDir": "src",
     "typeRoots": [

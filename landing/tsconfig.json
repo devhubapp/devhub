@@ -12,7 +12,6 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "noEmit": true,

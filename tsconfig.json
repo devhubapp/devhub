@@ -7,7 +7,6 @@
       "dom.iterable",
       "esnext"
     ],
-    "noEmit": true,
     "module": "esnext"
   },
   "exclude": [
