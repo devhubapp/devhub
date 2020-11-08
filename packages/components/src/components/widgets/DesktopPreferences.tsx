@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 
 import { useDesktopOptions } from '../../hooks/use-desktop-options'
 import { useReduxState } from '../../hooks/use-redux-state'
+import { Browser } from '../../libs/browser'
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
@@ -16,10 +17,13 @@ import { sharedStyles } from '../../styles/shared'
 import { contentPadding, radius, scaleFactor } from '../../styles/variables'
 import { Button } from '../common/Button'
 import { ButtonLink } from '../common/ButtonLink'
+import { ConditionalWrap } from '../common/ConditionalWrap'
 import { H3 } from '../common/H3'
 import { Spacer } from '../common/Spacer'
 import { SubHeader } from '../common/SubHeader'
 import { Switch } from '../common/Switch'
+import { TouchableOpacity } from '../common/TouchableOpacity'
+import { useDialog } from '../context/DialogContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { usePlans } from '../context/PlansContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
@@ -43,6 +47,29 @@ export const DesktopPreferences = React.memo(() => {
     Platform,
     plan,
   }).enableDesktopPushNotifications.hasAccess
+
+  const Dialog = useDialog()
+
+  const DownloadConfirmationHandler = () => {
+    Dialog.show(
+      'Download Desktop App?',
+      'This option is only available for the Desktop App. Download it at devhubapp.com to have access to it.',
+      [
+        {
+          text: 'Download',
+          onPress: () => {
+            Browser.openURLOnNewTab(constants.DEVHUB_LINKS.DOWNLOAD_PAGE)
+          },
+          style: 'default',
+        },
+        {
+          text: 'Cancel',
+          onPress: () => undefined,
+          style: 'cancel',
+        },
+      ],
+    )
+  }
 
   return (
     <View>
@@ -87,17 +114,33 @@ export const DesktopPreferences = React.memo(() => {
             ]}
           >
             <H3>Menubar mode</H3>
-            <Switch
-              analyticsLabel="desktop_menubar_mode"
-              disabled={!Platform.isElectron}
-              onValueChange={(value) =>
-                window.ipc.send('update-settings', {
-                  settings: 'isMenuBarMode',
-                  value,
-                })
-              }
-              value={!!(Platform.isElectron && isMenuBarMode)}
-            />
+
+            <ConditionalWrap
+              condition={!Platform.isElectron}
+              wrap={(children) => (
+                <TouchableOpacity
+                  onPress={DownloadConfirmationHandler}
+                  style={
+                    Platform.OS === 'web' && ({ cursor: 'not-allowed' } as any)
+                  }
+                >
+                  {children}
+                </TouchableOpacity>
+              )}
+            >
+              <Switch
+                analyticsLabel="desktop_menubar_mode"
+                disabled={!Platform.isElectron}
+                onValueChange={(value) =>
+                  window.ipc.send('update-settings', {
+                    settings: 'isMenuBarMode',
+                    value,
+                  })
+                }
+                value={!!(Platform.isElectron && isMenuBarMode)}
+                pointerEvents={!Platform.isElectron ? 'none' : undefined}
+              />
+            </ConditionalWrap>
           </View>
 
           <Spacer height={contentPadding} />
@@ -110,18 +153,33 @@ export const DesktopPreferences = React.memo(() => {
             ]}
           >
             <H3>Push Notifications</H3>
-            <Switch
-              analyticsLabel="desktop_push_notifications"
-              color={!hasAccessToPushNotifications ? 'red' : undefined}
-              disabled={!Platform.isElectron}
-              onValueChange={(value) =>
-                window.ipc.send('update-settings', {
-                  settings: 'enablePushNotifications',
-                  value,
-                })
-              }
-              value={!!(Platform.isElectron && enablePushNotifications)}
-            />
+            <ConditionalWrap
+              condition={!Platform.isElectron}
+              wrap={(children) => (
+                <TouchableOpacity
+                  onPress={DownloadConfirmationHandler}
+                  style={
+                    Platform.OS === 'web' && ({ cursor: 'not-allowed' } as any)
+                  }
+                >
+                  {children}
+                </TouchableOpacity>
+              )}
+            >
+              <Switch
+                analyticsLabel="desktop_push_notifications"
+                color={!hasAccessToPushNotifications ? 'red' : undefined}
+                disabled={!Platform.isElectron}
+                onValueChange={(value) =>
+                  window.ipc.send('update-settings', {
+                    settings: 'enablePushNotifications',
+                    value,
+                  })
+                }
+                value={!!(Platform.isElectron && enablePushNotifications)}
+                pointerEvents={!Platform.isElectron ? 'none' : undefined}
+              />
+            </ConditionalWrap>
           </View>
 
           <Spacer height={contentPadding} />
@@ -133,25 +191,40 @@ export const DesktopPreferences = React.memo(() => {
             ]}
           >
             <H3>Push Notifications Sound</H3>
-            <Switch
-              analyticsLabel="desktop_push_notifications_sound"
-              color={!hasAccessToPushNotifications ? 'red' : undefined}
-              disabled={!Platform.isElectron || !enablePushNotifications}
-              onValueChange={(value) =>
-                window.ipc.send('update-settings', {
-                  settings: 'enablePushNotificationsSound',
-                  value,
-                })
-              }
-              value={
-                // hasAccessToPushNotifications &&
-                !!(
-                  Platform.isElectron &&
-                  enablePushNotifications &&
-                  enablePushNotificationsSound
-                )
-              }
-            />
+            <ConditionalWrap
+              condition={!Platform.isElectron}
+              wrap={(children) => (
+                <TouchableOpacity
+                  onPress={DownloadConfirmationHandler}
+                  style={
+                    Platform.OS === 'web' && ({ cursor: 'not-allowed' } as any)
+                  }
+                >
+                  {children}
+                </TouchableOpacity>
+              )}
+            >
+              <Switch
+                analyticsLabel="desktop_push_notifications_sound"
+                color={!hasAccessToPushNotifications ? 'red' : undefined}
+                disabled={!Platform.isElectron || !enablePushNotifications}
+                onValueChange={(value) =>
+                  window.ipc.send('update-settings', {
+                    settings: 'enablePushNotificationsSound',
+                    value,
+                  })
+                }
+                value={
+                  // hasAccessToPushNotifications &&
+                  !!(
+                    Platform.isElectron &&
+                    enablePushNotifications &&
+                    enablePushNotificationsSound
+                  )
+                }
+                pointerEvents={!Platform.isElectron ? 'none' : undefined}
+              />
+            </ConditionalWrap>
           </View>
 
           {!!(
