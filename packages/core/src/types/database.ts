@@ -68,13 +68,13 @@ export interface DatabaseUserFeedback {
 
 export interface DatabaseUser {
   _id: any
-  emails: Array<{
+  emails: {
     provider: 'github' | 'npm'
     email: string
     primary?: boolean
     verified?: boolean
     visibility?: 'public' | 'private' | null
-  }>
+  }[]
   columns?: {
     allIds: string[]
     byId: Record<string, Column | undefined>

@@ -157,7 +157,7 @@ export function getUpdaterMenuItem() {
 }
 
 export function getDeveloperMenuItems() {
-  const menuItems: Array<MenuItemConstructorOptions | undefined> = [
+  const menuItems: (MenuItemConstructorOptions | undefined)[] = [
     {
       label: 'Toggle Developer Tools',
       accelerator: __DEV__
@@ -264,7 +264,7 @@ export function getMainMenuItems() {
     _mainWindow && _mainWindow.isVisible() && !_mainWindow.isMinimized()
   const enabled = isCurrentWindow || !!config.store.get('isMenuBarMode')
 
-  const menuItems: Array<MenuItemConstructorOptions | undefined> = [
+  const menuItems: (MenuItemConstructorOptions | undefined)[] = [
     ...(process.platform === 'darwin'
       ? ([
           {

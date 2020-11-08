@@ -558,7 +558,7 @@ export function getSearchQueryFromFilter(
 }
 
 export function getQueryStringFromQueryTerms(
-  queryTerms: Array<[string, boolean] | [string, string, boolean]>,
+  queryTerms: ([string, boolean] | [string, string, boolean])[],
 ) {
   let query = ''
   queryTerms.forEach((queryTerm) => {
@@ -578,10 +578,10 @@ export function getQueryStringFromQueryTerms(
 
 export function getSearchQueryTerms(
   query: string | undefined,
-): Array<[string, boolean] | [string, string, boolean]> {
+): ([string, boolean] | [string, string, boolean])[] {
   if (!(query && typeof query === 'string')) return []
 
-  const result: Array<[string, boolean] | [string, string, boolean]> = []
+  const result: ([string, boolean] | [string, string, boolean])[] = []
 
   const q = query.trim()
 
@@ -973,7 +973,7 @@ export function getValuesFromQueryKeysFilter(
         queryKeys.includes(queryTerm[0] as any),
     ),
     ['0', '2'],
-  ) as any) as Array<[string, string, boolean]>
+  ) as any) as [string, string, boolean][]
   const usedQueryKeys = _.uniq(
     filteredQueryTerms.map((queryTerm) => queryTerm[0]),
   )

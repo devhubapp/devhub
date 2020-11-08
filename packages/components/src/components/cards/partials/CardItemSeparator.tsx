@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { isItemRead, ThemeColors } from '@devhub/core'
+import { ThemeColors } from '@devhub/core'
 import { Separator, separatorSize } from '../../common/Separator'
 import { useTheme } from '../../context/ThemeContext'
 

@@ -147,11 +147,11 @@ export interface GitHubCommit {
   html_url: string
   author?: GitHubUser
   committer: GitHubUser
-  parents: Array<{
+  parents: {
     sha: string
     url: string
     html_url: string
-  }>
+  }[]
   stats: {
     total: number
     additions: number

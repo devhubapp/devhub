@@ -35,9 +35,7 @@ import {
   getRepoFullNameFromObject,
 } from './url'
 
-export const notificationReasons: Array<
-  EnhancedGitHubNotification['reason']
-> = [
+export const notificationReasons: EnhancedGitHubNotification['reason'][] = [
   'assign',
   'author',
   'comment',
@@ -514,7 +512,7 @@ export async function getNotificationsEnhancementMap(
 }
 
 export function enhanceNotifications(
-  notifications: Array<GitHubNotification | EnhancedGitHubNotification>,
+  notifications: (GitHubNotification | EnhancedGitHubNotification)[],
   enhancementMap: Record<string, NotificationPayloadEnhancement>,
   currentEnhancedNotifications: EnhancedGitHubNotification[] = [],
 ) {

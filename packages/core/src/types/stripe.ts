@@ -36,10 +36,10 @@ export interface StripeSubscription {
   ended_at: number | null
   items: {
     [key: string]: any
-    data: Array<{
+    data: {
       [key: string]: any
       plan: StripePlan
-    }>
+    }[]
   }
   livemode: boolean
   metadata: object

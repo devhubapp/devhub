@@ -342,7 +342,7 @@ export async function getIssueOrPullRequestsEnhancementMap(
 }
 
 export function enhanceIssueOrPullRequests(
-  items: Array<GitHubIssueOrPullRequest | EnhancedGitHubIssueOrPullRequest>,
+  items: (GitHubIssueOrPullRequest | EnhancedGitHubIssueOrPullRequest)[],
   enhancementMap: Record<string, IssueOrPullRequestPayloadEnhancement>,
   currentEnhancedIssueOrPullRequests: EnhancedGitHubIssueOrPullRequest[] = [],
 ) {

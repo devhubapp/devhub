@@ -68,7 +68,7 @@ export function loadThemeBase(
 
 export const defaultTheme = loadThemeBase(constants.DEFAULT_THEME_PAIR)
 
-export const staticColorFields: Array<keyof StaticThemeColors> = [
+export const staticColorFields: (keyof StaticThemeColors)[] = [
   'black',
   'blue',
   'blueGray',
@@ -85,7 +85,7 @@ export const staticColorFields: Array<keyof StaticThemeColors> = [
   'yellow',
 ]
 
-export const themeColorFields: Array<keyof ThemeColors> = [
+export const themeColorFields: (keyof ThemeColors)[] = [
   'primaryBackgroundColor',
   'primaryForegroundColor',
 

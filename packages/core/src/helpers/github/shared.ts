@@ -934,7 +934,7 @@ export function createSubscriptionObjectWithId<
 }
 
 export function createSubscriptionObjectsWithId<
-  S extends Array<Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>>
+  S extends Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>[]
 >(subscriptions: S) {
   return subscriptions.map((subscription) => ({
     ...subscription,
@@ -1273,16 +1273,16 @@ export function getItemOwnersAndRepos(
   type: ColumnSubscription['type'],
   item: EnhancedItem | undefined,
   { includeFork }: { includeFork?: boolean } = {},
-): Array<{ owner: string; repo: string }> {
+): { owner: string; repo: string }[] {
   const mapResult: Record<string, any> = {}
 
   function mapToResult(map: Record<string, any>) {
     return Object.keys(map)
       .map((repoFullName) => getOwnerAndRepo(repoFullName))
-      .filter((or) => !!(or.owner && or.repo)) as Array<{
+      .filter((or) => !!(or.owner && or.repo)) as {
       owner: string
       repo: string
-    }>
+    }[]
   }
 
   function addOwnerAndRepo(

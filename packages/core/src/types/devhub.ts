@@ -393,7 +393,7 @@ export interface ColumnAndSubscriptions {
 }
 
 export interface ColumnsAndSubscriptions {
-  columns: Array<ColumnAndSubscriptions['column']>
+  columns: ColumnAndSubscriptions['column'][]
   subscriptions: ColumnAndSubscriptions['subscriptions']
   columnsUpdatedAt?: string
   subscriptionsUpdatedAt?: string
@@ -582,11 +582,11 @@ export interface Plan {
     round: 'up' | 'down'
   }
 
-  featureLabels: Array<{
+  featureLabels: {
     id: FeatureFlagId
     label: string
     available: boolean
-  }>
+  }[]
 
   featureFlags: {
     columnsLimit: number
