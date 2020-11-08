@@ -63,6 +63,7 @@ export default function Footer() {
           GitHub
         </a>
 
+        {/*
         <a
           className={twClasses.footerLink}
           href="https://slack.devhubapp.com/"
@@ -71,6 +72,7 @@ export default function Footer() {
         >
           Slack
         </a>
+        */}
       </div>
 
       {/* <div className="flex flex-col items-start w-1/2 sm:w-auto mb-4 sm:mr-3">

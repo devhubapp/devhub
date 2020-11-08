@@ -204,6 +204,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                 Twitter
               </Link>
 
+              {/*
               <ThemedText
                 color="foregroundColorMuted25"
                 style={{
@@ -231,6 +232,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
               >
                 Slack
               </Link>
+              */}
 
               <ThemedText
                 color="foregroundColorMuted25"

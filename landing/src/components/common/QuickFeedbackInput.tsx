@@ -110,6 +110,7 @@ export function QuickFeedbackInput(props: QuickFeedbackInputProps) {
               >
                 Twitter
               </a>{' '}
+              {/*
               or{' '}
               <a
                 className="text-muted-65"
@@ -118,6 +119,7 @@ export function QuickFeedbackInput(props: QuickFeedbackInputProps) {
               >
                 Slack
               </a>{' '}
+              */}
               to get a response.
             </p>,
           )

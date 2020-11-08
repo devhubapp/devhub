@@ -132,6 +132,7 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
               >
                 Send via Twitter
               </Link>
+              {/*
               <ThemedText color="foregroundColorMuted65">{' or '}</ThemedText>
               <Link
                 analyticsLabel="join_slack_after_feedback"
@@ -144,6 +145,7 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
               >
                 Slack
               </Link>
+              */}
               <ThemedText color="foregroundColorMuted65">
                 {' to get a response.'}
               </ThemedText>
