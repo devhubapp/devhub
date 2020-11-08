@@ -16,7 +16,7 @@
   "dependencies": {},
   "devDependencies": {
     "eslint": "5.9.0",
-    "now": "19.2.0"
+    "now": "20.1.2"
   },
   "engines": {
     "node": ">=12"

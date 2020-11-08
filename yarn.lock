@@ -3336,44 +3336,34 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@vercel/build-utils@2.4.2":
-  version "2.4.2"
-  resolved "https://registry.npmjs.org/@vercel/build-utils/-/build-utils-2.4.2.tgz#38604af38faa7d94e39ef98c9e579ad34579b0e9"
-  integrity sha512-9KymcPgUYkPxt4VK7HepM7yWN1ZUt3XzNKn5ECkGhHAHF31rmr9gEGlZZlq5KcXPsBps4A/BOuSBwK8EFOXP/w==
+"@vercel/build-utils@2.5.4":
+  version "2.5.4"
+  resolved "https://registry.npmjs.org/@vercel/build-utils/-/build-utils-2.5.4.tgz#ebf7b9afabaef57cb0a89cf0c98d61fc34830579"
+  integrity sha512-xPvYkxhpBXNIZQUrsmC3g58Heapaev4D8vrH3UcBgsvttU8uTQiuuISOOeTwZpufPxgZT5wgF0DRBybEulnCew==
 
-"@vercel/go@1.1.4":
-  version "1.1.4"
-  resolved "https://registry.npmjs.org/@vercel/go/-/go-1.1.4.tgz#7d5b0d5914d099d988f1b8f44248ca8e27e08e53"
-  integrity sha512-HAUFjs+K/MkPrRuUwK3/2TIDAJP582b1pBNHrq1DGp8mOft/xKYIiOVh6h9PHxOeFRPCdwB3bPaAovj6jSVCZw==
+"@vercel/go@1.1.6":
+  version "1.1.6"
+  resolved "https://registry.npmjs.org/@vercel/go/-/go-1.1.6.tgz#45ac3a6bd98a15b8bf1028b8c141a51fd971ac15"
+  integrity sha512-swA2crS08fkPmw4UkR9yjmoL8FOCzuNHLFDqj8oM1V9ni610ibJ7Xk57jI8uyS7bTecQVh8VUxihb+SF0GT+aw==
 
-"@vercel/next@2.6.13":
-  version "2.6.13"
-  resolved "https://registry.npmjs.org/@vercel/next/-/next-2.6.13.tgz#f0456abdc876bc7120ee348a16644a25486b0edd"
-  integrity sha512-ZF2+wy7J1okgF984AR3nBV/u0DqsDK+TFe2U5ucPUrM9pFlVdWi88FZY2OTrH0ke5dgGXanJQlfW28PvlOAUbA==
-
-"@vercel/node@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.npmjs.org/@vercel/node/-/node-1.7.3.tgz#55338b04b8f5559c45ba125966e3f46f38830bb9"
-  integrity sha512-bENPZRdmOSlHn4eZpfps1nZtwVuQbZj5vgt2FKa1gT/Uiy3zo5BPB+ANINNC+qcCXHxUdS50XKB2m4VvtVLY1w==
+"@vercel/node@1.8.4":
+  version "1.8.4"
+  resolved "https://registry.npmjs.org/@vercel/node/-/node-1.8.4.tgz#43bbc2e39f97979390e0f968952bba4ebfdcb22e"
+  integrity sha512-4bwJVqia4e/qDgBbdDWL2INZS5F/nouUDK+onJwi3xKGy7829cb8b9g2j7pMcqonv2U/xzOCUMyTr+uESx9hHQ==
   dependencies:
     "@types/node" "*"
     ts-node "8.9.1"
     typescript "3.9.3"
 
-"@vercel/python@1.2.2":
-  version "1.2.2"
-  resolved "https://registry.npmjs.org/@vercel/python/-/python-1.2.2.tgz#52e8e2a0d3a65153b8bd25a63db36b704aafde72"
-  integrity sha512-+rHfbjJaySdac59Oa11a7/nZzpXC98Kqw5tPh8DT1I5OG8YTfgJnwgfBoytZOAZZQBcggoJspnjAd+wGVCoVXw==
-
-"@vercel/ruby@1.2.3":
+"@vercel/python@1.2.3":
   version "1.2.3"
-  resolved "https://registry.npmjs.org/@vercel/ruby/-/ruby-1.2.3.tgz#008163246fa1191a05eca2065cab2b89619a36ff"
-  integrity sha512-WvtImWLdIo4bB0f2Pgc+P7KdgVVsPSMEVEtk4ZJnKkhU7IsCn/UnlovOsZeP6Qw/Bwqv84KrNm+nNRte648aew==
+  resolved "https://registry.npmjs.org/@vercel/python/-/python-1.2.3.tgz#23ebb71c753fe1cc75fe186c89fc0af04c950191"
+  integrity sha512-DJRvL6bmt4m0xrkzSKUbP8mK57YSDdTBWoo0JYyXq/o2golQrv/wQTalbNchd4P8NhVL3mZuk/1JNYuv5u1rKQ==
 
-"@vercel/static-build@0.17.6":
-  version "0.17.6"
-  resolved "https://registry.npmjs.org/@vercel/static-build/-/static-build-0.17.6.tgz#c3a84973ee22b5914e3a2a97f46a2e1d78b94a59"
-  integrity sha512-zSyNyXwH3RPd0owiwaS2yv+js3Rwi/0y6BOiWLr6mkqkDe7YRIYsYrX7GD08Hx5Na6f1RnmnHCneTyzBXpuuBg==
+"@vercel/ruby@1.2.4":
+  version "1.2.4"
+  resolved "https://registry.npmjs.org/@vercel/ruby/-/ruby-1.2.4.tgz#60e0a91d7a1a730a7ecdbc6e095acb95f28f24be"
+  integrity sha512-g19vrrmJ4MTJCRB/bvx8DahIsml1iPn7wsdHf5k3QVN6lT0dlDILSBwpERC4hqzndimaApsmWOfjYtY9/L6+tQ==
 
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
@@ -12278,18 +12268,16 @@ normalize-url@^4.1.0:
   resolved "https://registry.npmjs.org/normalize-url/-/normalize-url-4.5.0.tgz#453354087e6ca96957bd8f5baf753f5982142129"
   integrity sha512-2s47yzUxdexf1OhyRi4Em83iQk0aPvwTddtFz4hnSSw9dCEsLEGf6SwIO8ss/19S9iBb5sJaOuTvTGDeZI00BQ==
 
-now@19.2.0:
-  version "19.2.0"
-  resolved "https://registry.npmjs.org/now/-/now-19.2.0.tgz#7b3eea1355cbd90cd68b097c918486d893670520"
-  integrity sha512-YNdDQ7MEaRAiwPtdNFk1ACu0gnbnZFLoWX7f4fpwhp/Zsups64vncFpLWkXihKJpNnofQiviruJbv0AVZYJuuA==
+now@20.1.2:
+  version "20.1.2"
+  resolved "https://registry.npmjs.org/now/-/now-20.1.2.tgz#f3320d370542b53a1eacc83edd84db6859e9d604"
+  integrity sha512-uzc143R5l7pZBq9HqUmmALndTdwH+btaZlTW843qx9GTaLr+C/bgH7YCic2eBOSTKVBAfBExSaNE+yEYHn70qw==
   dependencies:
-    "@vercel/build-utils" "2.4.2"
-    "@vercel/go" "1.1.4"
-    "@vercel/next" "2.6.13"
-    "@vercel/node" "1.7.3"
-    "@vercel/python" "1.2.2"
-    "@vercel/ruby" "1.2.3"
-    "@vercel/static-build" "0.17.6"
+    "@vercel/build-utils" "2.5.4"
+    "@vercel/go" "1.1.6"
+    "@vercel/node" "1.8.4"
+    "@vercel/python" "1.2.3"
+    "@vercel/ruby" "1.2.4"
     update-notifier "4.1.0"
 
 npm-conf@^1.1.3:
