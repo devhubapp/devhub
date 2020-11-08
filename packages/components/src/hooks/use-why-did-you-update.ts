@@ -2,6 +2,24 @@ import flatted from 'flatted'
 import _ from 'lodash'
 import { useEffect, useRef } from 'react'
 
+/**
+ * Quickly see which prop changed
+ * and caused a re-render by adding a single line to the component.
+ *
+ * USAGE:
+ * function MyComponent(props) {
+ *   useWhyDidYouUpdate('MyComponent', props)
+ *
+ *   return <div ... />
+ * }
+ *
+ * OUTPUT:
+ * [why-did-you-update] MyComponent { myProp: { from 'oldvalue', to: 'newvalue' } }
+ *
+ * SHARE:
+ * This tip on Twitter: https://twitter.com/brunolemos/status/1090377532845801473
+ * Also follow @brunolemos: https://twitter.com/brunolemos
+ */
 export function useWhyDidYouUpdate(
   name: string,
   props: Record<string, any>,
