@@ -263,6 +263,32 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
           </SubHeader>
         </View>
 
+        <View style={{ minHeight: 32 * scaleFactor }}>
+          <SubHeader title="Follow me on Twitter">
+            <Spacer flex={1} />
+
+            <View style={sharedStyles.horizontal}>
+              <Link
+                analyticsCategory="preferences_link"
+                analyticsLabel="twitter"
+                enableForegroundHover
+                href="https://twitter.com/brunolemos"
+                openOnNewTab
+                textProps={{
+                  color: 'foregroundColor',
+                  style: {
+                    fontSize: normalTextSize,
+                    lineHeight: normalTextSize * 1.5,
+                    textAlign: 'center',
+                  },
+                }}
+              >
+                @brunolemos
+              </Link>
+            </View>
+          </SubHeader>
+        </View>
+
         <Spacer flex={1} minHeight={contentPadding} />
 
         <View style={sharedStyles.paddingHorizontal}>
