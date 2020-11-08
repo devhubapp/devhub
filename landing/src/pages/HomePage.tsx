@@ -73,15 +73,20 @@ export default function HomePage(_props: HomePageProps) {
             </div>
             <CTAButtons center className="mb-2" />
             <CheckLabels center className="mb-16">
-              {!!(freePlan && !freePlan.trialPeriodDays) && (
-                <CheckLabel label="Free version" />
-              )}
+              {!!(freePlan && !freePlan.trialPeriodDays) &&
+                (paidPlans.length ? (
+                  <CheckLabel label="Free version" />
+                ) : (
+                  <CheckLabel label="Free &amp; Open Source" />
+                ))}
               {!!freeTrialDays &&
-                !paidPlans.every(plan => !!plan && !plan.interval) && (
+                !paidPlans.every((plan) => !!plan && !plan.interval) && (
                   <CheckLabel label={`${freeTrialDays}-day free trial`} />
                 )}
               {!!(
-                paidPlans && paidPlans.every(plan => !!plan && !plan.interval)
+                paidPlans &&
+                paidPlans.some((plan) => !!plan?.amount) &&
+                paidPlans.every((plan) => !plan?.interval)
               ) && <CheckLabel label="One-time payment (no subscription)" />}
 
               {!constants.GITHUB_APP_HAS_CODE_ACCESS && (
