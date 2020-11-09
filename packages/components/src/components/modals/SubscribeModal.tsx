@@ -100,7 +100,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
                   sharedStyles.justifyContentSpaceBetween,
                 ]}
               >
-                <H3 children="Plan" />
+                <H3>Plan</H3>
                 <ThemedText color="foregroundColor">
                   {`${
                     (plan && plan.label) ||
@@ -118,7 +118,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
                   sharedStyles.justifyContentSpaceBetween,
                 ]}
               >
-                <H3 children="Currency" />
+                <H3>Currency</H3>
                 <ThemedText color="foregroundColor">
                   {(plan.currency || 'USD').toUpperCase()}
                 </ThemedText>
@@ -135,7 +135,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
                       sharedStyles.justifyContentSpaceBetween,
                     ]}
                   >
-                    <H3 children="Free trial" />
+                    <H3>Free trial</H3>
                     <ThemedText color="foregroundColor">
                       {(trialDays === 1
                         ? '1 day'
@@ -157,7 +157,7 @@ export function SubscribeModal(props: SubscribeModalProps) {
                   sharedStyles.justifyContentSpaceBetween,
                 ]}
               >
-                <H3 children="Cancellation policy" />
+                <H3>Cancellation policy</H3>
                 <ThemedText color="foregroundColor">
                   {'Cancel anytime'.toUpperCase()}
                 </ThemedText>

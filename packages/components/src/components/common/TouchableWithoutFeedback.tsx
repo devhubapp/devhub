@@ -7,8 +7,10 @@ import {
 import { sharedStyles } from '../../styles/shared'
 import { Touchable, TouchableProps } from './Touchable'
 
-export interface TouchableWithoutFeedbackProps
-  extends Omit<TouchableProps, 'TouchableComponent'> {}
+export type TouchableWithoutFeedbackProps = Omit<
+  TouchableProps,
+  'TouchableComponent'
+>
 
 export const TouchableWithoutFeedback = React.forwardRef<
   Touchable | View,

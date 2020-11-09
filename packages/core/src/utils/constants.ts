@@ -1,6 +1,6 @@
 import { ThemeName, ThemePair } from '../types'
 
-const pkg = require('../../package.json') // tslint:disable-line
+const pkg = require('../../package.json') // eslint-disable-line
 
 export const APP_VERSION = `${pkg.version || ''}`.replace(/\-\d+$/g, '')
 
@@ -33,10 +33,10 @@ export const FULL_ACCESS_GITHUB_OAUTH_SCOPES = [
   ...DEFAULT_GITHUB_OAUTH_SCOPES,
   'repo',
 ]
-export const GITHUB_APP_HAS_CODE_ACCESS: boolean = true
+export const GITHUB_APP_HAS_CODE_ACCESS = true
 
-export const SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON: boolean = false
-export const SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON: boolean = true
+export const SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON = false
+export const SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON = true
 
 export const APPSTORE_ID = '1191864199'
 export const GOOGLEPLAY_ID = 'com.devhubapp'

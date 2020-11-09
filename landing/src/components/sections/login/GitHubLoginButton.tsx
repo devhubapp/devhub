@@ -29,7 +29,7 @@ export default function GitHubLoginButton(props: GitHubLoginButtonProps) {
     if (!autologin) return
     if (!category || category === 'mobile') return
 
-    Router.replace(
+    void Router.replace(
       `${Router.pathname}${qs.stringify(
         { ...Router.query, autologin: undefined },
         { addQueryPrefix: true },

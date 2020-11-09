@@ -4,7 +4,7 @@ import { sharedStyles } from '../../styles/shared'
 import { GenericMessageWithButtonView } from '../cards/GenericMessageWithButtonView'
 import { Column, ColumnProps } from './Column'
 
-export interface NoColumnsProps extends Omit<ColumnProps, 'columnId'> {}
+export type NoColumnsProps = Omit<ColumnProps, 'columnId'>
 
 export function NoColumns(props: NoColumnsProps) {
   return (

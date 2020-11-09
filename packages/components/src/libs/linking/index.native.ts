@@ -1,3 +1,3 @@
 import { LinkingCrossPlatform } from './index'
 
-export const Linking: LinkingCrossPlatform = require('./index-native').Linking // tslint:disable-line no-var-requires
+export const Linking: LinkingCrossPlatform = require('./index-native').Linking // eslint-disable-line

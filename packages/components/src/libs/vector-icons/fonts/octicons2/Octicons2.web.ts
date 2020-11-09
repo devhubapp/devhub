@@ -4,6 +4,7 @@ import { IconProps } from 'react-native-vector-icons/Icon'
 import { Octicons as OcticonsLegacy } from '../octicons/Octicons'
 import IconSet from './generated/Octicons2'
 
+// eslint-disable-next-line
 // @ts-ignore
 import IconFontURL from './generated/Octicons2.ttf'
 

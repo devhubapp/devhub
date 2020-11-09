@@ -49,19 +49,24 @@ export default function HomePage(_props: HomePageProps) {
                   textShadow: 'rgba(0, 0, 0, 0.2) 1px 1px 5px',
                 }}
               >
-                <span title="Also Known As">AKA</span> "
+                <span title="Also Known As">AKA</span>
+                {' "'}
                 <a
                   href="https://www.google.com/search?q=tweetdeck+by+twitter&tbm=isch"
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                 >
                   TweetDeck
                 </a>{' '}
                 for{' '}
-                <a href="https://github.com" target="_blank" rel="noopener">
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   GitHub
                 </a>
-                "
+                {'"'}
               </h2>
 
               <h2 className="w-full xl:w-9/12">

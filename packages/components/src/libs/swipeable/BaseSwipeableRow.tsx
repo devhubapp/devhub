@@ -19,8 +19,8 @@ export interface BaseSwipeableRowAction {
 export interface BaseSwipeableRowProps<IAction = BaseSwipeableRowAction>
   extends SwipeableProperties {
   children: ReactNode
-  leftActions: (BaseSwipeableRowAction & IAction)[] // tslint:disable-line prefer-array-literal
-  rightActions: (BaseSwipeableRowAction & IAction)[] // tslint:disable-line prefer-array-literal
+  leftActions: (BaseSwipeableRowAction & IAction)[]
+  rightActions: (BaseSwipeableRowAction & IAction)[]
 }
 
 export interface BaseSwipeableRowBaseState {}
@@ -30,8 +30,8 @@ export type Placement = 'LEFT' | 'RIGHT'
 export const defaultWidth = 64
 
 export abstract class BaseSwipeableRow<
-  P = {},
-  S = {},
+  P = Record<string, unknown>,
+  S = Record<string, unknown>,
   IAction = BaseSwipeableRowAction
 > extends PureComponent<
   BaseSwipeableRowProps<IAction> & P,
@@ -135,7 +135,7 @@ export abstract class BaseSwipeableRow<
   }
 
   close = () => {
-    if (this.swipeableRef.current) this.swipeableRef.current!.close()
+    if (this.swipeableRef.current) this.swipeableRef.current.close()
   }
 
   abstract render(): ReactNode

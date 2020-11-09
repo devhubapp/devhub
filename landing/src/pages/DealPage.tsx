@@ -36,7 +36,7 @@ export default function DealPage(_props: DealPageProps) {
   function submit(_code: string | null) {
     trySetDealCode(_code)
       .then(() => {
-        setSubmitionResultCount(v => v + 1)
+        setSubmitionResultCount((v) => v + 1)
       })
       .catch(() => {
         //
@@ -51,7 +51,7 @@ export default function DealPage(_props: DealPageProps) {
     return (
       <form
         className="flex flex-col items-center w-full md:w-2/3 lg:w-150 m-auto text-center"
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault()
           submit(code)
         }}
@@ -69,7 +69,7 @@ export default function DealPage(_props: DealPageProps) {
         <TextInput
           autoFocus
           className="mb-4 w-full text-center text-2xl font-thin uppercase"
-          onChange={e => {
+          onChange={(e) => {
             setCode(e.target.value)
           }}
           placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"

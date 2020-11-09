@@ -40,8 +40,13 @@
   },
   "devDependencies": {
     "@primer/octicons-v2": "canary",
+    "@typescript-eslint/eslint-plugin": "4.6.1",
+    "@typescript-eslint/parser": "4.6.1",
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
+    "eslint": "7.13.0",
+    "eslint-config-prettier": "6.15.0",
+    "eslint-plugin-prettier": "3.1.4",
     "husky": "1.3.1",
     "jetifier": "1.6.4",
     "lint-staged": "10.5.1",
@@ -50,9 +55,6 @@
     "postinstall-prepare": "1.0.1",
     "prettier": "2.0.5",
     "shx": "0.3.2",
-    "tslint": "6.1.3",
-    "tslint-config-prettier": "1.18.0",
-    "tslint-react": "5.0.0",
     "typescript": "4.0.5"
   },
   "resolutions": {
@@ -65,7 +67,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "tslint --fix",
+      "eslint --fix --quiet",
       "prettier --write"
     ]
   }

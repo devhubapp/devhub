@@ -80,16 +80,11 @@ export function register() {
   })
 
   ipcMain.removeAllListeners('unread-counter')
-  ipcMain.addListener(
-    'unread-counter',
-    async (_e: any, unreadCount: number) => {
-      tray.updateUnreadState(unreadCount)
-
-      const dock = getDock()
-
-      if (dock) dock.setBadge(unreadCount > 0 ? `${unreadCount}` : '')
-    },
-  )
+  ipcMain.addListener('unread-counter', (_e: any, unreadCount: number) => {
+    tray.updateUnreadState(unreadCount)
+    const dock = getDock()
+    if (dock) dock.setBadge(unreadCount > 0 ? `${unreadCount}` : '')
+  })
 
   ipcMain.removeAllListeners('minimize')
   ipcMain.addListener('minimize', () => {
@@ -99,7 +94,7 @@ export function register() {
   })
 
   ipcMain.removeAllListeners('get-all-settings')
-  ipcMain.addListener('get-all-settings', async (e: any) => {
+  ipcMain.addListener('get-all-settings', (e: any) => {
     if (!e) return
 
     e.returnValue = {
@@ -116,7 +111,7 @@ export function register() {
   ipcMain.removeAllListeners('update-settings')
   ipcMain.addListener(
     'update-settings',
-    async (_e: any, payload: Parameters<typeof emit>[1]) => {
+    (_e: any, payload: Parameters<typeof emit>[1]) => {
       const settings = payload && payload.settings
       const value = payload && payload.value
 
@@ -174,7 +169,7 @@ export function register() {
 
         case 'openAtLogin': {
           const openAtLoginChangeCount =
-            ((config.store.get('openAtLoginChangeCount') as number) || 0) + 1
+            (config.store.get('openAtLoginChangeCount') || 0) + 1
 
           config.store.set('openAtLoginChangeCount', openAtLoginChangeCount)
 
@@ -193,55 +188,57 @@ export function register() {
   ipcMain.removeAllListeners('show-notification')
   ipcMain.addListener(
     'show-notification',
-    async (_e: any, payload: ItemPushNotification) => {
-      if (!payload) {
-        console.error('[show-notification] Invalid payload.', payload)
-        return
-      }
+    (_e: any, payload: ItemPushNotification) => {
+      void (async () => {
+        if (!payload) {
+          console.error('[show-notification] Invalid payload.', payload)
+          return
+        }
 
-      if (config.store.get('enablePushNotifications') === false) {
-        return
-      }
+        if (config.store.get('enablePushNotifications') === false) {
+          return
+        }
 
-      const { title, subtitle, body, imageURL } = payload
+        const { title, subtitle, body, imageURL } = payload
 
-      let icon
-      try {
-        if (imageURL) icon = await helpers.imageURLToNativeImage(imageURL)
-      } catch (error) {
-        console.error(error)
-        if (window.getMainWindow()) {
-          dialog.showMessageBox(window.getMainWindow()!, {
-            message: `${error}`,
+        let icon
+        try {
+          if (imageURL) icon = await helpers.imageURLToNativeImage(imageURL)
+        } catch (error) {
+          console.error(error)
+          if (window.getMainWindow()) {
+            dialog.showMessageBox(window.getMainWindow()!, {
+              message: `${error}`,
+            })
+          }
+        }
+
+        const notification = new Notification({
+          title,
+          subtitle,
+          body,
+          icon,
+          silent: true,
+        })
+
+        if (payload.onClickDispatchAction) {
+          notification.addListener('click', (e) => {
+            e.preventDefault()
+
+            if (window.getMainWindow()) {
+              window
+                .getMainWindow()!
+                .webContents.send('redux', payload.onClickDispatchAction)
+            }
           })
         }
-      }
 
-      const notification = new Notification({
-        title,
-        subtitle,
-        body,
-        icon,
-        silent: true,
-      })
+        notification.show()
 
-      if (payload.onClickDispatchAction) {
-        notification.addListener('click', e => {
-          e.preventDefault()
-
-          if (window.getMainWindow()) {
-            window
-              .getMainWindow()!
-              .webContents.send('redux', payload.onClickDispatchAction)
-          }
-        })
-      }
-
-      notification.show()
-
-      if (config.store.get('enablePushNotificationsSound') !== false) {
-        helpers.playNotificationSound()
-      }
+        if (config.store.get('enablePushNotificationsSound') !== false) {
+          helpers.playNotificationSound()
+        }
+      })()
     },
   )
 

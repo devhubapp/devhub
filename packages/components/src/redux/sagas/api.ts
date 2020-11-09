@@ -58,7 +58,7 @@ function* init() {
 // so we now use normal async/await in the sync functions
 function* onSyncUp() {
   const state: RootState = yield select()
-  debounceSyncUp(state)
+  void debounceSyncUp(state)
 }
 
 function* onSyncDown() {
@@ -247,12 +247,10 @@ async function syncUp(state: RootState) {
           },
         }),
         variables: {
-          columns: columns
-            .filter(Boolean)
-            .map((c) => removeUndefinedFields(c!)),
+          columns: columns.filter(Boolean).map((c) => removeUndefinedFields(c)),
           subscriptions: subscriptions
             .filter(Boolean)
-            .map((s) => _.omit(removeUndefinedFields(s!), 'data')),
+            .map((s) => _.omit(removeUndefinedFields(s), 'data')),
         },
       },
       {

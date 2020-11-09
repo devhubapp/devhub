@@ -22,7 +22,7 @@ export function StripeLoaderProvider(props: StripeLoaderProps) {
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
-      // tslint:disable-next-line no-console
+      // eslint-disable-next-line no-console
       console.warn('Stripe not loaded. No window or document global object.')
       return
     }

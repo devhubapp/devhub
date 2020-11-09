@@ -182,7 +182,6 @@ const ColumErrorFallbackComponent: ErrorBoundaryProps['FallbackComponent'] = (
           buttonView={
             <ButtonLink
               analyticsLabel="column_error_boundary_open_issue_github"
-              children="Open issue on GitHub"
               href={`https://github.com/devhubapp/devhub/issues/new?title=${url.format(
                 (error && error.message) || 'Column view crashed',
               )}&body=${url.format(
@@ -191,7 +190,9 @@ const ColumErrorFallbackComponent: ErrorBoundaryProps['FallbackComponent'] = (
                   '',
               )}`}
               openOnNewTab
-            />
+            >
+              Open issue on GitHub
+            </ButtonLink>
           }
           emoji="warning"
           subtitle="Please open an issue on GitHub."

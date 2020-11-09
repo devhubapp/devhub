@@ -14,5 +14,4 @@ export interface SpringAnimatedLinearGradientProps
 export const SpringAnimatedLinearGradient = createSpringAnimatedComponent(
   LinearGradient,
 )
-;(SpringAnimatedLinearGradient as any).displayName =
-  'SpringAnimatedLinearGradient'
+SpringAnimatedLinearGradient.displayName = 'SpringAnimatedLinearGradient'

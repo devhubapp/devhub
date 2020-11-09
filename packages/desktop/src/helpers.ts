@@ -68,7 +68,7 @@ export async function imageURLToNativeImage(imageURL: string | undefined) {
   } catch (error) {
     console.error(error)
     if (__DEV__ && getMainWindow()) {
-      dialog.showMessageBox(getMainWindow()!, { message: `${error}` })
+      void dialog.showMessageBox(getMainWindow()!, { message: `${error}` })
     }
   }
 }

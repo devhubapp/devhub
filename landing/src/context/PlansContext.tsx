@@ -52,7 +52,7 @@ export function PlansProvider(props: PlansProps) {
       const currentRequest = countRef.current
 
       try {
-        setState(v => ({
+        setState((v) => ({
           ...v,
           errorMessage: undefined,
           loadingState: 'loading',
@@ -64,20 +64,22 @@ export function PlansProvider(props: PlansProps) {
 
         if (currentRequest !== countRef.current) return
 
-        setState(v => ({
+        setState((v) => ({
           ...v,
           ...data,
           errorMessage: undefined,
           loadingState: 'loaded',
         }))
       } catch (error) {
-        setState(v => ({
+        setState((v) => ({
           ...v,
           errorMessage:
-            `${(error && error.response && error.response.message) ||
+            `${
+              (error && error.response && error.response.message) ||
               (error && error.message) ||
               error ||
-              ''}` || undefined,
+              ''
+            }` || undefined,
           loadingState: 'error',
         }))
         // if (dealCode) tryRefetchPlansForDealCode(null)

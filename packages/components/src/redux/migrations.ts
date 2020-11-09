@@ -39,9 +39,7 @@ export default {
     }),
   3: (state: RootState) =>
     immer(state, (draft) => {
-      let columns = selectors
-        .columnsArrSelector(state)
-        .filter(Boolean) as Column[]
+      let columns = selectors.columnsArrSelector(state).filter(Boolean)
       if (!columns) return
 
       draft.subscriptions = draft.subscriptions || {}
@@ -271,7 +269,7 @@ export default {
         const oldTypesFilter: Partial<Record<
           GitHubEvent['type'],
           boolean
-        >> = (column.filters!.activity as any).types
+        >> = (column.filters.activity as any).types
 
         column.filters.subjectTypes = column.filters.subjectTypes || {}
         column.filters.activity.actions = column.filters.activity.actions || {}
@@ -349,7 +347,7 @@ export default {
 
       const subscriptionIds = Object.keys(draft.subscriptions.byId)
       subscriptionIds.forEach((subscriptionId) => {
-        const subscription = draft.subscriptions.byId![subscriptionId]
+        const subscription = draft.subscriptions.byId[subscriptionId]
 
         // we only wanna change Issues & PRs columns
         if (!(subscription && subscription.type === 'issue_or_pr')) return
@@ -523,7 +521,7 @@ export default {
 
       const subscriptionIds = Object.keys(draft.subscriptions.byId)
       subscriptionIds.forEach((subscriptionId) => {
-        const subscription = draft.subscriptions.byId![subscriptionId]
+        const subscription = draft.subscriptions.byId[subscriptionId]
         if (!subscription) return
 
         subscription.data = subscription.data || {}

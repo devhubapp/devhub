@@ -6,8 +6,8 @@
   "scripts": {
     "compile": "tsc -b --incremental",
     "clean": "shx rm -f *.tsbuildinfo && shx rm -rf dist/*",
-    "format": "prettier --write '{.,src/**}/*.{js,jsx,ts,tsx}'",
-    "lint": "tslint -p .",
+    "format": "prettier --write '{.,src}/**.{js,jsx,ts,tsx}'",
+    "lint": "eslint src",
     "prepare": "cd .. && yarn patch-package"
   },
   "dependencies": {
@@ -66,10 +66,9 @@
     "react-native-typescript-transformer": "1.2.13",
     "reselect-tools": "0.0.7",
     "ts-jest": "26.0.0",
-    "tslint": "6.1.3",
-    "tslint-config-airbnb": "5.11.2",
-    "tslint-config-prettier": "1.18.0",
-    "tslint-react": "5.0.0",
     "typescript": "4.0.5"
+  },
+  "peerDependencies": {
+    "eslint": "*"
   }
 }

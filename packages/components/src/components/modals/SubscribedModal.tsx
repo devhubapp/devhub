@@ -21,7 +21,7 @@ import { Spacer } from '../common/Spacer'
 import { usePlans } from '../context/PlansContext'
 import { ThemedText } from '../themed/ThemedText'
 
-const logo = require('@devhub/web/public/static/media/logo.png') // tslint:disable-line no-var-requires
+const logo = require('@devhub/web/public/static/media/logo.png') // eslint-disable-line
 
 export interface SubscribedModalProps {
   planId: PlanID | undefined
@@ -104,7 +104,7 @@ export function SubscribedModal(props: SubscribedModalProps) {
           >
             {plan && plan.amount ? (
               <>
-                You've successfully subscribed to the{' '}
+                {"You've successfully subscribed to the "}
                 {!!plan.label && (
                   <>
                     <ThemedText style={{ fontWeight: 'bold' }}>
@@ -128,7 +128,7 @@ export function SubscribedModal(props: SubscribedModalProps) {
               </>
             ) : freePlan && !freePlan.trialPeriodDays && plan ? (
               <>
-                You've successfully downgraded to the{' '}
+                {"You've successfully downgraded to the "}
                 <ThemedText style={{ fontWeight: 'bold' }}>
                   {`${plan.label || 'Free'}`.toLowerCase()}
                 </ThemedText>{' '}
@@ -148,8 +148,9 @@ export function SubscribedModal(props: SubscribedModalProps) {
               </>
             ) : (
               <>
-                You've successfully scheduled your subscription for
-                cancellation.
+                {
+                  "You've successfully scheduled your subscription for cancellation."
+                }
               </>
             )}
           </ThemedText>

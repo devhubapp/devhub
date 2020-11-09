@@ -11,7 +11,7 @@
     "deploy:beta": "yarn build && cd ../../ && now --local-config ./now.beta.json --prod && cd -",
     "eject": "react-app-rewired eject",
     "format": "prettier --write '{.,src}/*.{js,jsx,ts,tsx}'",
-    "lint": "tslint -p .",
+    "lint": "eslint src --no-error-on-unmatched-pattern",
     "prepare": "cd .. && yarn patch-package",
     "serve": "serve dist",
     "start": "react-app-rewired start",
@@ -45,12 +45,11 @@
     "react-app-rewired": "2.1.3",
     "react-refresh": "0.8.3",
     "serve": "11.2.0",
-    "tslint": "6.1.3",
-    "tslint-config-airbnb": "5.11.2",
-    "tslint-config-prettier": "1.18.0",
-    "tslint-react": "5.0.0",
     "typescript": "4.0.5",
     "webpack-bundle-analyzer": "3.5.2"
+  },
+  "peerDependencies": {
+    "eslint": "*"
   },
   "eslintConfig": {
     "extends": "react-app"

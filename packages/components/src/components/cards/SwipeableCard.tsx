@@ -8,7 +8,7 @@ import * as actions from '../../redux/actions'
 import { useTheme } from '../context/ThemeContext'
 import { CardWithLink, CardWithLinkProps } from './CardWithLink'
 
-export interface SwipeableCardProps extends CardWithLinkProps {}
+export type SwipeableCardProps = CardWithLinkProps
 
 export function SwipeableCard(props: CardWithLinkProps) {
   const { columnId, nodeIdOrId, ownerIsKnown, repoIsKnown, type } = props

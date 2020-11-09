@@ -1,8 +1,7 @@
 import classNames from 'classnames'
 import React, { useState } from 'react'
 
-export interface TextInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement>
 
 export function TextInput(props: TextInputProps) {
   const {} = props
@@ -17,11 +16,11 @@ export function TextInput(props: TextInputProps) {
         isFocused ? ' shadow-md border-primary' : ' border-bg-less-3 shadow',
         props.className,
       )}
-      onBlur={e => {
+      onBlur={(e) => {
         setIsFocused(false)
         if (props.onBlur) props.onBlur(e)
       }}
-      onFocus={e => {
+      onFocus={(e) => {
         setIsFocused(true)
         if (props.onFocus) props.onFocus(e)
       }}

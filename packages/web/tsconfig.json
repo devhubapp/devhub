@@ -13,7 +13,7 @@
     "module": "esnext"
   },
   "include": [
-    "src/index.tsx"
+    "src/*"
   ],
   "exclude": [
     "src/setupProxy.js",

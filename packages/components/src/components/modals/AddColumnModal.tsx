@@ -292,16 +292,11 @@ export function AddColumnModal(props: AddColumnModalProps) {
                   analyticsLabel={`add-column-${group.title}-soon`}
                   href={group.soonLink}
                 >
-                  <H2
-                    muted
-                    withMargin={false}
-                    children={
-                      group.soonLink && group.soonLink.includes('beta')
-                        ? ' (beta)'
-                        : ' (soon)'
-                    }
-                    style={sharedStyles.flex}
-                  />
+                  <H2 muted withMargin={false} style={sharedStyles.flex}>
+                    {group.soonLink && group.soonLink.includes('beta')
+                      ? ' (beta)'
+                      : ' (soon)'}
+                  </H2>
                 </Link>
               )}
             </SubHeader>

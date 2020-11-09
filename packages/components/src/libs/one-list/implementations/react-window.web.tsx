@@ -192,6 +192,7 @@ const InnerElementType = React.forwardRef<
   return <div ref={ref} style={style} {...restProps} />
 })
 
+// eslint-disable-next-line react/display-name
 export const OneList = (React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
     const {
@@ -283,7 +284,7 @@ export const OneList = (React.memo(
 
     useEffect(() => {
       if (AppState.currentState === 'active') {
-        InteractionManager.runAfterInteractions(() => {
+        void InteractionManager.runAfterInteractions(() => {
           setIsInitialRender(false)
         })
       } else {

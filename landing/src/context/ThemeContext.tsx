@@ -40,7 +40,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
     () => ({
       theme,
       toggleTheme: () => {
-        setTheme(t => (t.isDark ? defaultLightTheme : defaultDarkTheme))
+        setTheme((t) => (t.isDark ? defaultLightTheme : defaultDarkTheme))
       },
     }),
     [theme.id],

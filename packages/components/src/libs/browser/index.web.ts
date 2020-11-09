@@ -17,7 +17,7 @@ export const Browser: BrowserCrossPlatform = {
       return emitter.addListener(e, handler)
     }
 
-    console.debug('[BROWSER] Unknown addListener event', e) // tslint:disable-line no-console
+    console.debug('[BROWSER] Unknown addListener event', e) // eslint-disable-line no-console
     return null
   },
   dismiss: () => undefined,

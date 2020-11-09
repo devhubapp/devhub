@@ -5,10 +5,10 @@ import { emitter } from '../emitter'
 import { Platform } from '../platform'
 import { LinkingCrossPlatform } from './index'
 
-let currentURL: string = ''
-let initialURL: string = ''
+let currentURL = ''
+let initialURL = ''
 
-LinkingOriginal.getInitialURL().then((url) => {
+void LinkingOriginal.getInitialURL().then((url) => {
   if (typeof (url || '') !== 'string') {
     if (__DEV__) console.error('[Linking.getInitialURL] URL not a string', url)
     return

@@ -65,8 +65,7 @@ export function LinearGradient(props: LinearGradientProps) {
   )
 }
 
-export interface SpringAnimatedLinearGradientProps
-  extends LinearGradientProps {}
+export type SpringAnimatedLinearGradientProps = LinearGradientProps
 
 export function SpringAnimatedLinearGradient(
   props: SpringAnimatedLinearGradientProps,

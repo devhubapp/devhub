@@ -28,7 +28,7 @@ function getPopupTarget() {
     : '_blank'
 }
 
-function popupWindow(uri: string, w: number = 500, h: number = 600) {
+function popupWindow(uri: string, w = 500, h = 600) {
   const left = (window.screen.width - w) / 2
   const top = (window.screen.height - h) / 2
 

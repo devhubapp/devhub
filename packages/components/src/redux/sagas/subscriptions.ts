@@ -150,7 +150,7 @@ function* init() {
           (!timeDiff || timeDiff < fiveMinutes)
         ) {
           if (__DEV__) {
-            // tslint:disable-next-line no-console
+            // eslint-disable-next-line no-console
             console.debug(
               'Ignoring subscription re-fetch due to recent fetch error.',
               subscription.id,

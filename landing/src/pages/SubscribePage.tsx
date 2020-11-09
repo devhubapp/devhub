@@ -28,7 +28,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
 
   const plans = useMemo(() => {
     if (!userPlanInfo || !userPlanInfo.amount) return paidPlans
-    if (paidPlans.find(p => p && p.id === userPlanInfo.id)) return paidPlans
+    if (paidPlans.find((p) => p && p.id === userPlanInfo.id)) return paidPlans
     return paidPlans.concat(userPlanInfo)
   }, [userPlanInfo, paidPlans])
 
@@ -36,7 +36,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
   const planFromQuery =
     (_planFromQuery === 'current' && userPlanInfo) ||
     (_planFromQuery &&
-      plans.find(p => p && p.cannonicalId === _planFromQuery)) ||
+      plans.find((p) => p && p.cannonicalId === _planFromQuery)) ||
     undefined
 
   const action = Router.query.action as SubscribeFormProps['action']
@@ -47,7 +47,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
     planFromQuery ||
     (userPlanInfo &&
       userPlanInfo.id &&
-      plans.find(p => p && p.id === userPlanInfo.id)) ||
+      plans.find((p) => p && p.id === userPlanInfo.id)) ||
     plans[0] ||
     undefined
 
@@ -110,6 +110,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
             className="text-muted-65"
             href={`https://github.com/${authData.github.login}`}
             target="_blank"
+            rel="noopener noreferrer"
           >
             {authData.github.login}
           </a>
@@ -165,7 +166,7 @@ export default function SubscribePage(_props: SubscribePageProps) {
                 {!!(plans.length > 1 || (plans[0] && plans[0].label)) && (
                   <>
                     <Select<Plan['cannonicalId']>
-                      onChange={option => {
+                      onChange={(option) => {
                         Router.replace(
                           `${Router.pathname}${qs.stringify(
                             {
@@ -179,14 +180,14 @@ export default function SubscribePage(_props: SubscribePageProps) {
                       placeholder="DevHub"
                     >
                       {plans.map(
-                        p =>
+                        (p) =>
                           !!(p && p.label) && (
                             <Select.Option
                               key={`subscribe-plan-option-${p.cannonicalId}`}
                               id={
                                 authData.plan &&
                                 authData.plan.id === p.id &&
-                                !paidPlans.find(_p => _p && _p.id === p.id)
+                                !paidPlans.find((_p) => _p && _p.id === p.id)
                                   ? 'current'
                                   : p.cannonicalId
                               }

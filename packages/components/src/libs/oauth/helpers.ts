@@ -117,7 +117,7 @@ export const listenForNextMessageData = (
     }, 120 * 1000)
 
     if (popup) {
-      const onClosePopup = async () => {
+      const onClosePopup = () => {
         // the close may be detected before the postMessage
         if (!(popup.closed && !finished)) return
 

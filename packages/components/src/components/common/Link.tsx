@@ -202,8 +202,9 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
 
             if (href) {
               if (!forceOpenOutsideApp && href.startsWith('http'))
-                Browser.openURL(href)
-              else if (!href.startsWith('javascript:')) Linking.openURL(href)
+                void Browser.openURL(href)
+              else if (!href.startsWith('javascript:'))
+                void Linking.openURL(href)
             }
 
             if (e) e.preventDefault()
@@ -217,7 +218,7 @@ export const Link = React.forwardRef<Touchable, LinkProps>((props, ref) => {
             if (e && e.isDefaultPrevented()) return
             if (onPress) onPress(e)
 
-            if (isDeepLink && href) Linking.openURL(href)
+            if (isDeepLink && href) void Linking.openURL(href)
 
             if (e && (!href || href.startsWith('javascript:')))
               e.preventDefault()

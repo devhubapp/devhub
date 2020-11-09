@@ -86,9 +86,9 @@ export default function DownloadPage(_props: DownloadPageProps) {
               <>
                 DevHub for{' '}
                 <Select<PlatformCategory>
-                  onChange={option => setCategory(option)}
+                  onChange={(option) => setCategory(option)}
                 >
-                  {categories.map(c => (
+                  {categories.map((c) => (
                     <Select.Option
                       key={`download-category-${c}`}
                       id={c}

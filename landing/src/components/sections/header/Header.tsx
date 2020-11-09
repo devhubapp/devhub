@@ -64,7 +64,7 @@ export default function Header(props: HeaderProps) {
               className={twClasses.headerLink__rightMargin}
               href="https://github.com/devhubapp/devhub"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
             >
               GitHub ↗
             </HeaderLink>
@@ -73,7 +73,7 @@ export default function Header(props: HeaderProps) {
               className={twClasses.headerLink__rightMargin}
               href="https://twitter.com/devhub_app"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
             >
               Twitter ↗
             </HeaderLink>
@@ -102,7 +102,7 @@ export default function Header(props: HeaderProps) {
             </HeaderLink> */}
 
             {!!(
-              (freeTrialDays && plans.some(plan => !!plan && !plan.amount)) ||
+              (freeTrialDays && plans.some((plan) => !!plan && !plan.amount)) ||
               (authData &&
                 authData.appToken &&
                 (freeTrialDays || (authData.plan && authData.plan.amount)))

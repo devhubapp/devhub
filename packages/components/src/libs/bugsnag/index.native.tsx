@@ -22,7 +22,7 @@ export const bugsnag: BugnsagCrossPlatform = {
   },
 
   notify(error, metadata) {
-    if (__DEV__) console.debug('[BUGSNAG]', error, metadata) // tslint:disable-line no-console
+    if (__DEV__) console.debug('[BUGSNAG]', error, metadata) // eslint-disable-line no-console
 
     client.notify(error, (r) => {
       r.metadata = Object.assign(r.metadata || {}, metadata, {

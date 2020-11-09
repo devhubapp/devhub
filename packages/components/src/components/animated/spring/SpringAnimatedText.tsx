@@ -1,9 +1,9 @@
 import { Text, TextProps } from '../../common/Text'
 import { createSpringAnimatedComponent } from './helpers'
 
-export interface SpringAnimatedTextProps extends TextProps {}
+export type SpringAnimatedTextProps = TextProps
 
 export const SpringAnimatedText = createSpringAnimatedComponent(Text)
-;(SpringAnimatedText as any).displayName = 'SpringAnimatedText'
+SpringAnimatedText.displayName = 'SpringAnimatedText'
 
 export type SpringAnimatedText = typeof SpringAnimatedText

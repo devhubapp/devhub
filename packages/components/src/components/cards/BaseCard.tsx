@@ -219,12 +219,12 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
   if (!link)
     console.error(
-      `No link for ${type} card: ${nodeIdOrId}, ${title}, ${text && text.text}`,
+      `No link for ${type} card: ${nodeIdOrId}, ${title}, ${text && text.text}`, // eslint-disable-line
     )
   if (link && link.includes('api.github.com'))
     console.error(
       `Wrong link for ${type} card: ${nodeIdOrId}, ${title}, ${
-        text && text.text
+        text && text.text // eslint-disable-line
       }`,
       link,
     )
@@ -323,7 +323,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
               {!!showPrivateLock && (
                 <>
-                  <Text children="  " />
+                  <Text>{'  '}</Text>
                   <ThemedIcon
                     family="octicon"
                     name="lock"
@@ -340,7 +340,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
                   return (
                     <>
-                      <Text children="  " />
+                      <Text>{'  '}</Text>
                       <ThemedText
                         color="foregroundColorMuted65"
                         numberOfLines={1}
@@ -358,7 +358,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
               {!!isSaved && (
                 <>
-                  <Text children="  " />
+                  <Text>{'  '}</Text>
                   <ThemedIcon
                     family="octicon"
                     name="bookmark"
@@ -370,7 +370,7 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
 
               {!isRead && (
                 <>
-                  <Text children="  " />
+                  <Text>{'  '}</Text>
                   <ThemedIcon
                     family="octicon"
                     name="dot-fill"
@@ -472,8 +472,8 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                             dispatch(
                               actions.setColumnRepoFilter({
                                 columnId,
-                                owner: text!.repo!.owner,
-                                repo: text!.repo!.name,
+                                owner: text.repo!.owner,
+                                repo: text.repo!.name,
                                 value: KeyboardKeyIsPressed.alt ? false : true,
                                 // removeIfAlreadySet,
                                 // removeOthers,

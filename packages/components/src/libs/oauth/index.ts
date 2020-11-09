@@ -24,9 +24,12 @@ export async function executeOAuth(
   })
 
   // console.log('[OAUTH] Opening browser...')
-  Browser.openURL(`${constants.API_BASE_URL}/github/oauth?${querystring}`, {
-    native: { modalEnabled: true },
-  })
+  void Browser.openURL(
+    `${constants.API_BASE_URL}/github/oauth?${querystring}`,
+    {
+      native: { modalEnabled: true },
+    },
+  )
 
   const url = await listenForNextUrl()
   // console.log('[OAUTH] Received URL:', url)

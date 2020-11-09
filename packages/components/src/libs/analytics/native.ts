@@ -9,20 +9,20 @@ import { sanitizeDimensions } from './helpers'
 
 export const analytics: Analytics = {
   setUser(userId) {
-    firebase.analytics().setUserId(userId || '')
+    void firebase.analytics().setUserId(userId || '')
   },
 
   setDimensions(dimensions) {
     _dimensions = { ..._dimensions, ...dimensions }
-    firebase.analytics().setUserProperties(sanitizeDimensions(_dimensions))
+    void firebase.analytics().setUserProperties(sanitizeDimensions(_dimensions))
   },
 
   trackEvent(category, action, label, value = 1) {
-    firebase
+    void firebase
       .analytics()
-      .logEvent(hideTokenFromString(action || '')!.replace(/\//g, '_'), {
+      .logEvent(hideTokenFromString(action || '').replace(/\//g, '_'), {
         event_category: hideTokenFromString(category),
-        event_label: hideTokenFromString(label || '')!.substr(0, 100),
+        event_label: hideTokenFromString(label || '').substr(0, 100),
         value,
       })
   },
@@ -32,11 +32,11 @@ export const analytics: Analytics = {
   },
 
   trackScreenView(screenName) {
-    firebase.analytics().setCurrentScreen(screenName)
+    void firebase.analytics().setCurrentScreen(screenName)
   },
 }
 
-firebase.analytics().setAnalyticsCollectionEnabled(true)
+void firebase.analytics().setAnalyticsCollectionEnabled(true)
 
 let _dimensions: Partial<DevHubAnalyticsCustomDimensions> = {
   is_beta: constants.IS_BETA,

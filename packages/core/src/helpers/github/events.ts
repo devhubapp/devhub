@@ -950,13 +950,7 @@ export function getGitHubEventSubItems(
   event: EnhancedGitHubEvent,
   { plan }: { plan: UserPlan | null | undefined },
 ) {
-  const {
-    actor,
-    payload,
-    id,
-    type,
-    created_at: createdAt,
-  } = event as EnhancedGitHubEvent
+  const { actor, payload, id, type, created_at: createdAt } = event
   const { merged: mergedIds } = event as GitHubEnhancedEventBase
   const { repo: _repo } = event as GitHubEvent
   const { repos: _repos } = event as MultipleStarEvent
@@ -985,7 +979,7 @@ export function getGitHubEventSubItems(
 
   const issueOrPullRequestNumber = issueOrPullRequest
     ? issueOrPullRequest.number ||
-      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest!.url)
+      getIssueOrPullRequestNumberFromUrl(issueOrPullRequest.url)
     : undefined
 
   const isRead = isItemRead(event)

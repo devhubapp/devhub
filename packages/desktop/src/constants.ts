@@ -19,4 +19,4 @@ export const FRAME_IS_DIFFERENT_BETWEEN_MODES = false
 // License: https://notificationsounds.com/notification-sounds/unsure-566
 export const notificationSoundPath = __DEV__
   ? path.join(__dirname, '../assets/sounds/notification.wav')
-  : path.join(process.resourcesPath!, 'assets/sounds/notification.wav')
+  : path.join(process.resourcesPath, 'assets/sounds/notification.wav')

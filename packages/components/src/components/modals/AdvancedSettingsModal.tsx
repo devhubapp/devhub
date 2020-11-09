@@ -196,7 +196,7 @@ export const AdvancedSettingsModal = React.memo(
                             disabled={isRemovingPersonalToken}
                             loading={isRemovingPersonalToken}
                             onPress={() => {
-                              removePersonalAccessToken()
+                              void removePersonalAccessToken()
                             }}
                             size={32 * scaleFactor}
                             type="danger"

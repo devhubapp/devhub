@@ -76,7 +76,7 @@ export function createWindow() {
     menu.updateMenu()
   })
 
-  win.on('close', e => {
+  win.on('close', (e) => {
     menu.updateMenu()
 
     if (process.platform === 'darwin' && !forceQuit) {

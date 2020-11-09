@@ -176,7 +176,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
     [],
   )
   const onSubmit = useCallback(() => {
-    formikProps.submitForm()
+    void formikProps.submitForm()
   }, [])
 
   const isPendingSave = !!(formikProps.dirty && formikProps.touched.query)
@@ -439,7 +439,7 @@ export const CardsSearchHeader = React.memo((props: CardsSearchHeaderProps) => {
               onPress={() => {
                 batch(() => {
                   if (showTextInput && isPendingSave) {
-                    formikProps.submitForm()
+                    void formikProps.submitForm()
                   }
 
                   if (forceShowTextInput) {

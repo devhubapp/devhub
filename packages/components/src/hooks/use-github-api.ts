@@ -22,7 +22,7 @@ export function useGitHubAPI<M extends (params?: any, callback?: any) => any>(
       return
     }
 
-    ;(async () => {
+    void (async () => {
       setState((s) => ({ ...s, loadingState: 'loading' }))
 
       try {

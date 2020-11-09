@@ -1621,7 +1621,6 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
         }}
       >
         <Button
-          children="Reset filters"
           disabled={
             !columnHasAnyFilter(column.type, {
               ...column.filters,
@@ -1642,7 +1641,9 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
 
             dispatch(actions.clearColumnFilters({ columnId: column.id }))
           }}
-        />
+        >
+          Reset filters
+        </Button>
       </View>
 
       <Separator horizontal />

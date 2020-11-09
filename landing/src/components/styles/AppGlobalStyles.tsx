@@ -16,11 +16,11 @@ function getStyles(params: { theme: Theme }) {
 
     body {
       ${themeColorFields
-        .map(field => `--theme-${toKebabCase(field)}:${t[field]};`)
+        .map((field) => `--theme-${toKebabCase(field)}:${t[field]};`)
         .join('\n')}
       ${themeColorFields
         .map(
-          field =>
+          (field) =>
             `--theme-inverted-${toKebabCase(field)}:${invertedTheme[field]};`,
         )
         .join('\n')}

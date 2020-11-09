@@ -3,8 +3,7 @@ import { TouchableOpacity as TouchableOpacityOriginal } from 'react-native'
 
 import { Touchable, TouchableProps } from './Touchable'
 
-export interface TouchableOpacityProps
-  extends Omit<TouchableProps, 'TouchableComponent'> {}
+export type TouchableOpacityProps = Omit<TouchableProps, 'TouchableComponent'>
 
 export const TouchableOpacity = React.forwardRef<
   Touchable,

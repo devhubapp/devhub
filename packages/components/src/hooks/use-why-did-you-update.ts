@@ -54,11 +54,11 @@ export function useWhyDidYouUpdate(
           to: props[key],
           changedKeys:
             props[key] && typeof props[key] === 'object'
-              ? (Object.keys(latestProps.current[key])
+              ? Object.keys(latestProps.current[key])
                   .map((k) =>
                     latestProps.current[key][k] === props[key][k] ? '' : k,
                   )
-                  .filter(Boolean) as string[])
+                  .filter(Boolean)
               : undefined,
           isDeepEqual: _.isEqual(latestProps.current[key], props[key]),
         }
@@ -69,7 +69,7 @@ export function useWhyDidYouUpdate(
       if (onChangeFound) {
         onChangeFound({ changesObj })
       } else {
-        // tslint:disable-next-line no-console
+        // eslint-disable-next-line no-console
         console.log('[why-did-you-update]', name, {
           changes: flatted.parse(flatted.stringify(changesObj)),
           props: { from: latestProps.current, to: props },

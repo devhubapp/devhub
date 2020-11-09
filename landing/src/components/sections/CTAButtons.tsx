@@ -62,7 +62,7 @@ export default function CTAButtons(props: CTAButtonsProps) {
               {`Purchase${priceLabel ? ` for ${priceLabel}` : ''}`}
             </Button>
           ) : paidPlans[0] &&
-            paidPlans.some(plan => !!(plan && plan.amount)) ? (
+            paidPlans.some((plan) => !!(plan && plan.amount)) ? (
             <Button
               type="primary"
               href={`/${getPurchaseOrSubscribeRoute(plans)}`}

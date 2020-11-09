@@ -61,7 +61,7 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
-      // tslint:disable-next-line no-console
+      // eslint-disable-next-line no-console
       console.warn('Paddle not loaded. No window or document global object.')
       return
     }
@@ -147,8 +147,8 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
 
         if (
           quantity > 1 &&
-          (cachedPricesByProductIdAndQuantityRef.current[productId][1] &&
-            cachedPricesByProductIdAndQuantityRef.current[productId][1]!.gross)
+          cachedPricesByProductIdAndQuantityRef.current[productId][1] &&
+          cachedPricesByProductIdAndQuantityRef.current[productId][1]!.gross
         ) {
           return {
             gross: estimatePriceForQuantity(

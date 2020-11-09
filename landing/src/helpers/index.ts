@@ -133,13 +133,11 @@ export function toKebabCase(str: string) {
   )
   if (!(matches && matches.length)) return str
 
-  return matches.map(s => s.toLowerCase()).join('-')
+  return matches.map((s) => s.toLowerCase()).join('-')
 }
 
-export function getPurchaseOrSubscribeRoute(
-  activePlans: (Plan | undefined)[],
-) {
-  return activePlans.some(p => !!(p && p.amount > 0 && p.interval))
+export function getPurchaseOrSubscribeRoute(activePlans: (Plan | undefined)[]) {
+  return activePlans.some((p) => !!(p && p.amount > 0 && p.interval))
     ? 'subscribe'
     : 'purchase'
 }

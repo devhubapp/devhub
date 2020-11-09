@@ -430,49 +430,49 @@ export function getUniqueIdForSubscription(subscription: {
         }
 
         case 'REPO_EVENTS': {
-          const { owner, repo } = s.params!
+          const { owner, repo } = s.params
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
           return `/repos/${owner}/${repo}/events`.toLowerCase()
         }
 
         case 'REPO_NETWORK_EVENTS': {
-          const { owner, repo } = s.params!
+          const { owner, repo } = s.params
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
           return `/networks/${owner}/${repo}/events`.toLowerCase()
         }
 
         case 'ORG_PUBLIC_EVENTS': {
-          const { org } = s.params!
+          const { org } = s.params
           if (!org) throw new Error('Required params: org')
           return `/orgs/${org}/events`.toLowerCase()
         }
 
         case 'USER_RECEIVED_EVENTS': {
-          const { username } = s.params!
+          const { username } = s.params
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/received_events`.toLowerCase()
         }
 
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
-          const { username } = s.params!
+          const { username } = s.params
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/received_events/public`.toLowerCase()
         }
 
         case 'USER_EVENTS': {
-          const { username } = s.params!
+          const { username } = s.params
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/events`.toLowerCase()
         }
 
         case 'USER_PUBLIC_EVENTS': {
-          const { username } = s.params!
+          const { username } = s.params
           if (!username) throw new Error('Required params: username')
           return `/users/${username}/events/public`.toLowerCase()
         }
 
         case 'USER_ORG_EVENTS': {
-          const { org, username } = s.params!
+          const { org, username } = s.params
           if (!(username && org))
             throw new Error('Required params: username, org')
           return `/users/${username}/events/orgs/${org}`.toLowerCase()
@@ -508,7 +508,7 @@ export function getUniqueIdForSubscription(subscription: {
 
       switch (s.subtype) {
         case 'REPO_NOTIFICATIONS': {
-          const { owner, repo } = s.params!
+          const { owner, repo } = s.params
           if (!(owner && repo)) throw new Error('Required params: owner, repo')
           return `/repos/${owner}/${repo}/notifications${querystring}`.toLowerCase()
         }
@@ -576,7 +576,7 @@ export function getColumnHeaderDetails(
                 { baseURL },
                 getPixelSizeForLayoutSizeFn,
               ),
-              linkURL: getUserURLFromLogin(s.params!.org!, { baseURL })!,
+              linkURL: getUserURLFromLogin(s.params!.org, { baseURL })!,
               type: 'org',
             },
             icon: { family: 'octicon', name: 'organization' },
@@ -682,7 +682,7 @@ export function getColumnHeaderDetails(
                 { baseURL },
                 getPixelSizeForLayoutSizeFn,
               ),
-              linkURL: getUserURLFromLogin(s.params!.org!, { baseURL })!,
+              linkURL: getUserURLFromLogin(s.params!.org, { baseURL })!,
               type: 'org',
             },
             icon: { family: 'octicon', name: 'organization' },
@@ -1659,10 +1659,10 @@ export function getItemsFilterMetadata(
           updateNestedCounter(result.owners[or.owner]!.metadata!)
 
           if (or.repo) {
-            result.owners[or.owner].repos![or.repo] =
-              result.owners[or.owner].repos![or.repo] ||
+            result.owners[or.owner].repos[or.repo] =
+              result.owners[or.owner].repos[or.repo] ||
               getDefaultItemFilterCountMetadata()
-            updateNestedCounter(result.owners[or.owner].repos![or.repo]!)
+            updateNestedCounter(result.owners[or.owner].repos[or.repo]!)
           }
         }
       })

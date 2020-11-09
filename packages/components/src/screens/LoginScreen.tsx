@@ -39,7 +39,7 @@ import {
   clearQueryStringFromURL,
 } from '../utils/helpers/auth'
 
-const logo = require('@devhub/components/assets/logo_circle.png') // tslint:disable-line
+const logo = require('@devhub/components/assets/logo_circle.png') // eslint-disable-line
 
 const styles = StyleSheet.create({
   container: {
@@ -130,32 +130,30 @@ export const LoginScreen = React.memo(() => {
   // handle oauth flow without popup
   // that passes the token via query string
   useEffect(() => {
-    ;(async () => {
-      const currentURL = await Linking.getCurrentURL()
-      const querystring = url.parse(currentURL).query || ''
-      const query = qs.parse(querystring)
+    const currentURL = Linking.getCurrentURL()
+    const querystring = url.parse(currentURL).query || ''
+    const query = qs.parse(querystring)
 
-      if (!query.oauth) return
+    if (!query.oauth) return
 
-      const params = getUrlParamsIfMatches(querystring, '')
-      if (!params) return
+    const params = getUrlParamsIfMatches(querystring, '')
+    if (!params) return
 
-      try {
-        const { appToken } = tryParseOAuthParams(params)
-        clearOAuthQueryParams()
-        if (!appToken) return
+    try {
+      const { appToken } = tryParseOAuthParams(params)
+      clearOAuthQueryParams()
+      if (!appToken) return
 
-        loginRequest({ appToken })
-      } catch (error) {
-        const description = 'OAuth execution failed'
-        console.error(description, error)
+      loginRequest({ appToken })
+    } catch (error) {
+      const description = 'OAuth execution failed'
+      console.error(description, error)
 
-        if (error.message === 'Canceled' || error.message === 'Timeout') return
-        bugsnag.notify(error, { description })
+      if (error.message === 'Canceled' || error.message === 'Timeout') return
+      bugsnag.notify(error, { description })
 
-        Dialog.show('Login failed', `${error || ''}`)
-      }
-    })()
+      Dialog.show('Login failed', `${error || ''}`)
+    }
   }, [])
 
   // auto start oauth flow after github app installation
@@ -167,7 +165,7 @@ export const LoginScreen = React.memo(() => {
       if (query.oauth) return
       if (!query.installation_id) return
 
-      loginWithGitHub()
+      void loginWithGitHub()
 
       setTimeout(() => {
         clearQueryStringFromURL(['installation_id', 'setup_action'])
@@ -267,7 +265,7 @@ export const LoginScreen = React.memo(() => {
       })
 
       if (redirected && !token) {
-        loginWithGitHubPersonalAccessToken()
+        void loginWithGitHubPersonalAccessToken()
         return
       }
 
@@ -353,7 +351,7 @@ export const LoginScreen = React.memo(() => {
               }
               onPress={() => {
                 fullAccessRef.current = false
-                loginWithGitHub()
+                void loginWithGitHub()
               }}
               // rightIcon={{ family: 'octicon', name: 'globe' }}
               style={styles.button}
@@ -380,7 +378,7 @@ export const LoginScreen = React.memo(() => {
                 }
                 onPress={() => {
                   fullAccessRef.current = true
-                  loginWithGitHub()
+                  void loginWithGitHub()
                 }}
                 // rightIcon={{ family: 'octicon', name: 'lock' }}
                 style={styles.button}
@@ -403,7 +401,7 @@ export const LoginScreen = React.memo(() => {
                 }
                 onPress={() => {
                   fullAccessRef.current = true
-                  loginWithGitHubPersonalAccessToken()
+                  void loginWithGitHubPersonalAccessToken()
                 }}
                 // rightIcon={{ family: 'octicon', name: 'key' }}
                 style={styles.button}

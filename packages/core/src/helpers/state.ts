@@ -74,7 +74,7 @@ export function normalizeInstallations(
   const items = _.orderBy((installations || []).filter(Boolean), [
     'account.login',
     'asc',
-  ]) as Installation[]
+  ])
 
   const allIds: number[] = []
   const allOwnerNames: string[] = []

@@ -5,7 +5,7 @@ import { createSelectorCreator } from 'reselect'
 // Better Memoize supports a custom equality check function and a custom cache size.
 // Is also re-runs the equality checks in the final result
 // to avoid changing the result reference when possible.
-// tslint:disable-next-line ban-types
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function betterMemoize<F extends Function>(
   func: F,
   equalityCheck = shallowEqual,

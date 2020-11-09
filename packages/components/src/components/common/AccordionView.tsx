@@ -66,7 +66,7 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
   useEffect(() => {
     if (isRenderEnabled) return
     if (AppState.currentState === 'active') {
-      InteractionManager.runAfterInteractions(() => {
+      void InteractionManager.runAfterInteractions(() => {
         setIsRenderEnabled(true)
       })
     } else {

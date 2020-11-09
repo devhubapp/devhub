@@ -33,7 +33,6 @@ export interface SubscribeFormProps {
 }
 
 export const SubscribeForm = injectStripe<SubscribeFormProps>(
-  // tslint:disable-next-line ter-prefer-arrow-callback no-shadowed-variable
   function SubscribeForm(props) {
     const { action, children, dealCode, onSuccess, plan, stripe } = props
 
@@ -64,7 +63,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         authData.plan.interval &&
         authData.plan.users &&
         authData.plan.users
-          .map(str => `${str || ''}`.replace(/[\s]/g, ''))
+          .map((str) => `${str || ''}`.replace(/[\s]/g, ''))
           .filter(Boolean)
           .join(', ')) ||
         '',
@@ -88,7 +87,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         ''
       )
         .split(',')
-        .map(str => `${str || ''}`.replace(/[\s]/g, ''))
+        .map((str) => `${str || ''}`.replace(/[\s]/g, ''))
         .filter(Boolean),
     )
 
@@ -149,7 +148,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           authData.plan &&
           authData.plan.users &&
           authData.plan.users
-            .map(str => `${str || ''}`.replace(/[\s]/g, ''))
+            .map((str) => `${str || ''}`.replace(/[\s]/g, ''))
             .filter(Boolean)
             .join(', ')) ||
           '',
@@ -546,7 +545,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
       return result
     })
 
-    const handleSubmitRef = useDynamicRef(async () => {
+    const handleSubmitRef = useDynamicRef(() => {
       if (localizedPlan.stripeIds && localizedPlan.stripeIds.length) {
         subscribeToStripePlanRef.current()
       } else if (localizedPlan.paddleProductId) {
@@ -564,7 +563,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
     return (
       <form
         className="flex flex-col items-center w-full md:w-2/3 lg:w-150 m-auto"
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault()
           handleSubmitRef.current()
         }}
@@ -576,7 +575,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         ) && (
           <Tabs
             className="mb-2"
-            onTabChange={value => {
+            onTabChange={(value) => {
               setShowQuantityForm(value === 'team')
             }}
           >
@@ -606,7 +605,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                 onClick={
                   quantity && quantity > minimumQuantity
                     ? () =>
-                        setQuantity(q =>
+                        setQuantity((q) =>
                           Math.max(
                             minimumQuantity,
                             (q || quantity) - quantityStep,
@@ -625,7 +624,9 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               </span>
               <span
                 className="px-4 text-default cursor-pointer select-none"
-                onClick={() => setQuantity(q => (q || quantity) + quantityStep)}
+                onClick={() =>
+                  setQuantity((q) => (q || quantity) + quantityStep)
+                }
                 style={{ touchAction: 'manipulation' }}
               >
                 ▲
@@ -649,14 +650,14 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                     .slice(0, 3)
                     .join(', ')})`}
                   value={usersStr || ''}
-                  onChange={e => {
+                  onChange={(e) => {
                     setUsersStr(`${e.target.value || ''}`)
                   }}
                   onBlur={() => {
-                    setUsersStr(_usersStr =>
+                    setUsersStr((_usersStr) =>
                       (_usersStr || '')
                         .split(',')
-                        .map(str => `${str || ''}`.replace(/[\s]/g, ''))
+                        .map((str) => `${str || ''}`.replace(/[\s]/g, ''))
                         .filter(Boolean)
                         .join(', '),
                     )
@@ -666,11 +667,12 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                 {!!(users && (users.length > 1 || showQuantityForm)) && (
                   <>
                     <div className="flex flex-row flex-wrap items-center justify-center">
-                      {users.map(username => (
+                      {users.map((username) => (
                         <a
                           key={username}
                           href={`https://github.com/${username}`}
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <img
                             alt=""
@@ -712,7 +714,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
         {!needsToFillTheCard && !!localizedPlan.stripeIds.length && (
           <Tabs<NonNullable<typeof creditCardTab>>
             className="mb-4"
-            onTabChange={tab => setCreditCardTab(tab)}
+            onTabChange={(tab) => setCreditCardTab(tab)}
           >
             <Tabs.Tab
               active={creditCardTab === 'current'}
@@ -747,7 +749,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
                 <CardElement
                   className="self-stretch py-4 px-4"
                   onBlur={() => setIsFocused(false)}
-                  onChange={e => {
+                  onChange={(e) => {
                     if (e.complete !== isCardFilled) setIsCardFilled(e.complete)
                   }}
                   onFocus={() => setIsFocused(true)}
@@ -769,7 +771,11 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
 
               <p className="mb-4 text-sm text-muted-65 italic">
                 🔒 Payment secured by{' '}
-                <a href="https://stripe.com/" target="_blank" rel="noopener">
+                <a
+                  href="https://stripe.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Stripe
                 </a>
                 {process.env.STRIPE_PUBLIC_KEY!.startsWith('pk_test') && (
@@ -788,7 +794,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
           className="mb-4"
           disabled={!canSubmitRef.current()}
           loading={formState.isSubmiting}
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             handleSubmitRef.current()
           }}

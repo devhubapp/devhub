@@ -50,7 +50,7 @@ export function QuickFeedbackRow(_props: QuickFeedbackRowProps) {
 
     if (!isMountedRef.current) return
 
-    const { data, status } = await response
+    const { data, status } = await response // eslint-disable-line
 
     if (status !== 200) {
       throw new Error(

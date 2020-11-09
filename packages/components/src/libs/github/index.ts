@@ -273,7 +273,6 @@ export function cleanupObject<T extends Record<string, any>>(obj: T): T {
       value === 'null' ||
       value === null
     ) {
-      // @ts-ignore
       delete result[key]
     }
   })

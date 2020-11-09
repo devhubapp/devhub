@@ -12,7 +12,7 @@ export function createWebFont(
 
   return {
     Component(props: IconProps) {
-      return React.createElement(OriginalFontComponent as any, {
+      return React.createElement(OriginalFontComponent, {
         ...props,
         style: [props.style, { userSelect: 'none' }],
       })

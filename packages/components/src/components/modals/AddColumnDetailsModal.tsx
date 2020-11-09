@@ -209,7 +209,7 @@ export const AddColumnDetailsModal = React.memo(
             loggedUsername,
             subscription,
           })
-          dialogRef.current!.show('Something went wrong.', errorMessage)
+          dialogRef.current?.show('Something went wrong.', errorMessage)
 
           return
         }
@@ -284,7 +284,7 @@ export const AddColumnDetailsModal = React.memo(
     })
 
     useEffect(() => {
-      formikProps.validateForm()
+      void formikProps.validateForm()
     }, [])
 
     function shouldShowError(formItem: FormItem) {
@@ -315,7 +315,7 @@ export const AddColumnDetailsModal = React.memo(
     }) {
       if (!shouldShowError(name)) return null
 
-      let error = formikProps.errors[name]!
+      let error = formikProps.errors[name]
       if (error === 'Required' && required === false) error = 'Empty'
 
       if (error === CIRCLE_CHARACTER) {
@@ -357,7 +357,7 @@ export const AddColumnDetailsModal = React.memo(
                     family="octicon"
                     name={isPrivateSupported ? 'lock' : 'globe'}
                     onPress={() => {
-                      dialogRef.current!.show(
+                      dialogRef.current?.show(
                         isPrivateSupported
                           ? 'Private support'
                           : 'No private support',
@@ -531,7 +531,7 @@ export const AddColumnDetailsModal = React.memo(
             <View key={`add-column-details-form-item-${formItem}`}>
               {renderFormItemHeader(formItem, 'Username', { required })}
               {renderUserFormField(required, {
-                placeholder: `E.g.: ${loggedUsername}`,
+                placeholder: `E.g.: ${loggedUsername || 'brunolemos'}`,
               })}
             </View>
           )
@@ -557,7 +557,7 @@ export const AddColumnDetailsModal = React.memo(
 
             if (!content) {
               if (__DEV__) {
-                // tslint:disable-next-line no-console
+                // eslint-disable-next-line no-console
                 console.warn(
                   `[AddColumnDetailsModal] No form defined for "${formItem}"`,
                 )
@@ -593,13 +593,13 @@ export const AddColumnDetailsModal = React.memo(
       blurOnSubmit: false,
       placeholder: '',
       onSubmitEditing: () => {
-        formikProps.submitForm()
+        void formikProps.submitForm()
       },
     }
 
     function renderGenericFormTextInput<F extends FormItem>(
       formItem: F,
-      required: boolean = true,
+      required = true,
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
       const errorColor = getErrorColor({ required })
@@ -621,7 +621,7 @@ export const AddColumnDetailsModal = React.memo(
           onChangeText={(value) => {
             formikProps.setFieldValue(formItem, value)
           }}
-          value={`${formikProps.values[formItem] || ''}`}
+          value={`${formikProps.values[formItem]?.toString() || ''}`}
           {...textInputProps}
         />
       )
@@ -642,7 +642,7 @@ export const AddColumnDetailsModal = React.memo(
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
       return renderGenericFormTextInput('owner', required, {
-        placeholder: `E.g.: ${loggedUsername}`,
+        placeholder: `E.g.: ${loggedUsername || 'brunolemos'}`,
         ...textInputProps,
       })
     }
@@ -662,7 +662,7 @@ export const AddColumnDetailsModal = React.memo(
       textInputProps: Partial<ThemedTextInputProps> = {},
     ) {
       return renderGenericFormTextInput('user', required, {
-        placeholder: `E.g.: ${loggedUsername}`,
+        placeholder: `E.g.: ${loggedUsername || 'brunolemos'}`,
         ...textInputProps,
       })
     }
@@ -845,7 +845,7 @@ function getNewColumnAndSubscriptions(
           })
           _newColumnFilters.notifications =
             _newColumnFilters.notifications || {}
-          _newColumnFilters.notifications!.participating =
+          _newColumnFilters.notifications.participating =
             newSubscription.params.participating
 
           break

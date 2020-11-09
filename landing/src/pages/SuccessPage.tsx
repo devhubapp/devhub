@@ -56,13 +56,12 @@ export default function SuccessPage(_props: SuccessPageProps) {
             <h2 className="mb-4 text-xl sm:text-2xl">
               {!authData.plan.amount ? (
                 <>
-                  You're currently on the{' '}
+                  {"You're currently on the "}
                   <strong>{authData.plan.label || 'Free'}</strong> plan
                 </>
               ) : authData.plan.interval ? (
                 <>
-                  {' '}
-                  You've successfully subscribed to the{' '}
+                  {" You've successfully subscribed to the "}
                   <strong>{authData.plan.label}</strong> plan
                   {authData.plan.quantity && authData.plan.quantity > 1
                     ? ` (${authData.plan.quantity} seats)`
@@ -70,8 +69,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
                 </>
               ) : (
                 <>
-                  {' '}
-                  You've successfully purchased{' '}
+                  {" You've successfully purchased "}
                   <strong>{authData.plan.label}</strong>
                   {authData.plan.quantity && authData.plan.quantity > 1
                     ? ` (${authData.plan.quantity} seats)`
@@ -81,8 +79,8 @@ export default function SuccessPage(_props: SuccessPageProps) {
             </h2>
           ) : (
             <h2 className="mb-4 text-xl sm:text-2xl">
-              You've subscribed to the <strong>{authData.plan.label}</strong>{' '}
-              plan
+              {"You've subscribed to the "}
+              <strong>{authData.plan.label}</strong> plan
               {authData.plan.quantity && authData.plan.quantity > 1
                 ? ` (${authData.plan.quantity} seats)`
                 : ''}
@@ -103,7 +101,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
               <p className="mb-8 text-default">
                 {authData.plan.users &&
                 authData.plan.users.filter(
-                  username =>
+                  (username) =>
                     `${username || ''}`.toLowerCase() !==
                     authData.github.login.toLowerCase(),
                 ).length ? (
@@ -118,6 +116,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
                             className="font-bold"
                             href={`https://github.com/${username}`}
                             target="_blank"
+                            rel="noopener noreferrer"
                           >
                             {username}
                           </a>
@@ -133,7 +132,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
                             plan:
                               authData.plan && authData.plan.id
                                 ? paidPlans.find(
-                                    _p => _p && _p.id === authData.plan!.id,
+                                    (_p) => _p && _p.id === authData.plan!.id,
                                   )
                                   ? userPlanInfo.cannonicalId
                                   : 'current'
@@ -153,11 +152,12 @@ export default function SuccessPage(_props: SuccessPageProps) {
 
                     {!!authData.plan.users.length && (
                       <div className="flex flex-row items-center justify-center mb-2">
-                        {authData.plan.users.map(username => (
+                        {authData.plan.users.map((username) => (
                           <>
                             <a
                               href={`https://github.com/${username}`}
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               <img
                                 alt=""
@@ -185,7 +185,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
                         plan:
                           authData.plan && authData.plan.id
                             ? paidPlans.find(
-                                _p => _p && _p.id === authData.plan!.id,
+                                (_p) => _p && _p.id === authData.plan!.id,
                               )
                               ? userPlanInfo.cannonicalId
                               : 'current'
@@ -231,6 +231,7 @@ export default function SuccessPage(_props: SuccessPageProps) {
                     } https://devhubapp.com/`,
                   )}`}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="mb-2 mr-2"
                 >
                   Tweet about it

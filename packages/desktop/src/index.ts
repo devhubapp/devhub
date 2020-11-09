@@ -15,7 +15,7 @@ function setupBrowserExtensions() {
     default: installExtension,
     REACT_DEVELOPER_TOOLS,
     REDUX_DEVTOOLS,
-  } = require('electron-devtools-installer') // tslint:disable-line no-var-requires
+  } = require('electron-devtools-installer') // eslint-disable-line
 
   installExtension(REACT_DEVELOPER_TOOLS).catch(console.error)
   installExtension(REDUX_DEVTOOLS).catch(console.error)
@@ -27,9 +27,7 @@ function init() {
   app.setName('DevHub')
   // app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
-  const openAtLoginChangeCount = config.store.get(
-    'openAtLoginChangeCount',
-  ) as number
+  const openAtLoginChangeCount = config.store.get('openAtLoginChangeCount')
   if (!(openAtLoginChangeCount >= 1)) {
     ipc.emit('update-settings', { settings: 'openAtLogin', value: true })
   }
@@ -50,10 +48,7 @@ function init() {
   })
 
   app.addListener('ready', () => {
-    config.store.set(
-      'launchCount',
-      (config.store.get('launchCount', 0) as number) + 1,
-    )
+    config.store.set('launchCount', config.store.get('launchCount', 0) + 1)
 
     helpers.registerAppSchema()
 
@@ -86,25 +81,27 @@ function init() {
     }
   })
 
-  app.addListener('before-quit', async () => {
+  app.addListener('before-quit', () => {
     forceQuit = true
   })
 
-  app.addListener('window-all-closed', async () => {
-    if (updater.getUpdateInfo().state === 'update-downloaded') {
-      try {
-        const mainWindow = window.getMainWindow()
-        if (mainWindow) await mainWindow.webContents.session.clearCache()
-      } catch (error) {
-        console.error(error)
+  app.addListener('window-all-closed', () => {
+    void (async () => {
+      if (updater.getUpdateInfo().state === 'update-downloaded') {
+        try {
+          const mainWindow = window.getMainWindow()
+          if (mainWindow) await mainWindow.webContents.session.clearCache()
+        } catch (error) {
+          console.error(error)
+        }
+        app.quit()
+        return
       }
-      app.quit()
-      return
-    }
 
-    if (process.platform !== 'darwin') {
-      app.quit()
-    }
+      if (process.platform !== 'darwin') {
+        app.quit()
+      }
+    })()
   })
 
   app.addListener('activate', () => {

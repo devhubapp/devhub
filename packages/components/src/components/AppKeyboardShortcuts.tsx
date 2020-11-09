@@ -70,10 +70,12 @@ export const AppKeyboardShortcuts = React.memo(() => {
       if (
         typeof document !== 'undefined' &&
         document &&
-        document.activeElement &&
-        (document.activeElement as any).blur
-      )
-        (document.activeElement as any).blur()
+        document?.activeElement &&
+        'blur' in document.activeElement &&
+        typeof (document.activeElement as any).blur === 'function'
+      ) {
+        ;(document.activeElement as any).blur() // eslint-disable-line
+      }
 
       if (keyboardShortcutsParamsRef.current.currentOpenedModal)
         dispatch(actions.popModal())

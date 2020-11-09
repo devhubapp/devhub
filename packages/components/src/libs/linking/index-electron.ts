@@ -22,7 +22,7 @@ export const Linking: LinkingCrossPlatform = {
     window.ipc.addListener('open-url', wrapHandler)
   },
   async canOpenURL(url: string) {
-    return window.ipc.sendSync('can-open-url', url)
+    return await window.ipc.sendSync('can-open-url', url)
   },
   clearCurrentURL() {
     //

@@ -1,6 +1,6 @@
 import { Link, LinkProps } from '../../common/Link'
 
-export interface SpringAnimatedLinkProps extends LinkProps {}
+export type SpringAnimatedLinkProps = LinkProps
 
 // Link internals already use spring animated components
 export const SpringAnimatedLink = Link

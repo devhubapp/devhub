@@ -2,7 +2,7 @@ import { Image, ImageProps } from 'react-native'
 
 import { createSpringAnimatedComponent } from './helpers'
 
-export interface SpringAnimatedImageProps extends ImageProps {}
+export type SpringAnimatedImageProps = ImageProps
 
 export const SpringAnimatedImage = createSpringAnimatedComponent(Image)
-;(SpringAnimatedImage as any).displayName = 'SpringAnimatedImage'
+SpringAnimatedImage.displayName = 'SpringAnimatedImage'

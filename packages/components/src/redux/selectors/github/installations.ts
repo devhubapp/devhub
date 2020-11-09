@@ -25,7 +25,7 @@ export const installationsLoadStateSelector = (state: RootState) =>
   s(state).loadState
 
 export const installationSelector = (state: RootState, id: number) =>
-  s(state).byId && s(state).byId![id]
+  s(state).byId && s(state).byId[id]
 
 export const installationsArrSelector = createSelector(
   (state: RootState) => installationIdsSelector(state),

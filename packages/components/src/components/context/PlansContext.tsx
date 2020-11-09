@@ -43,7 +43,7 @@ export function PlansProvider(props: PlansProps) {
   const userPlan = useReduxState(selectors.currentUserPlanSelector)
 
   useEffect(() => {
-    ;(async () => {
+    void (async () => {
       try {
         const response = await axios.get(`${constants.API_BASE_URL}/plans`, {
           headers: getDefaultDevHubHeaders({ appToken }),

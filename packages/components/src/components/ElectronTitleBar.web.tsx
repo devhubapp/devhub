@@ -93,13 +93,11 @@ export function ElectronTitleBar() {
           left: 0;
           right: 0;
           height: ${height}px;
-          background-color: ${getThemeColorOrItself(
-            theme,
-            'backgroundColorDarker1',
-            {
+          background-color: ${
+            getThemeColorOrItself(theme, 'backgroundColorDarker1', {
               enableCSSVariable: true,
-            },
-          )};
+            }) || ''
+          };
           -webkit-app-region: drag;
           z-index: 9999;
         }
@@ -125,11 +123,13 @@ export function ElectronTitleBar() {
         }
 
         #title-bar > .buttons > .button:hover {
-          background-color: ${getThemeColorOrItself(
-            theme,
-            theme.isDark ? 'backgroundColorLess1' : 'backgroundColorLess3',
-            { enableCSSVariable: true },
-          )};
+          background-color: ${
+            getThemeColorOrItself(
+              theme,
+              theme.isDark ? 'backgroundColorLess1' : 'backgroundColorLess3',
+              { enableCSSVariable: true },
+            ) || ''
+          };
         }
 
         #title-bar > .buttons > .button.close:hover {
@@ -139,9 +139,11 @@ export function ElectronTitleBar() {
         #title-bar > .buttons > .button > svg {
           max-width: 12px;
           height: 10px;
-          fill: ${getThemeColorOrItself(theme, 'foregroundColor', {
-            enableCSSVariable: true,
-          })};
+          fill: ${
+            getThemeColorOrItself(theme, 'foregroundColor', {
+              enableCSSVariable: true,
+            }) || ''
+          };
         }
 
         #title-bar > .buttons > .button.close:hover > svg {

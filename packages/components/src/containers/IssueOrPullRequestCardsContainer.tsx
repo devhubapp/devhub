@@ -60,7 +60,7 @@ export const IssueOrPullRequestCardsContainer = React.memo(
           selectors.createColumnSubscriptionSelector()(state, columnId),
         [columnId],
       ),
-    ) as IssueOrPullRequestColumnSubscription | undefined
+    )
 
     const data = mainSubscription && mainSubscription.data
 
@@ -173,7 +173,6 @@ export const IssueOrPullRequestCardsContainer = React.memo(
                 buttonView={
                   <ButtonLink
                     analyticsLabel="setup_github_app_from_column"
-                    children="Install GitHub App"
                     disabled={
                       mainSubscription.data.loadState === 'loading' ||
                       mainSubscription.data.loadState === 'loading_first'
@@ -187,7 +186,9 @@ export const IssueOrPullRequestCardsContainer = React.memo(
                       mainSubscription.data.loadState === 'loading_first'
                     }
                     openOnNewTab={false}
-                  />
+                  >
+                    Install GitHub App
+                  </ButtonLink>
                 }
                 emoji="lock"
                 subtitle="Install the GitHub App to unlock private access. No code permission required."

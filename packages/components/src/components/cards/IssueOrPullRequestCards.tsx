@@ -196,9 +196,6 @@ export const IssueOrPullRequestCards = React.memo(
                 <View>
                   <Button
                     analyticsLabel="try_fix_invalid_filter"
-                    children={`Add "owner:${
-                      loggedUsername || 'gaearon'
-                    }" filter`}
                     onPress={() =>
                       dispatch(
                         actions.setColumnOwnerFilter({
@@ -208,15 +205,14 @@ export const IssueOrPullRequestCards = React.memo(
                         }),
                       )
                     }
-                  />
+                  >{`Add "owner:${
+                    loggedUsername || 'gaearon'
+                  }" filter`}</Button>
 
                   <Spacer height={contentPadding / 2} />
 
                   <Button
                     analyticsLabel="try_fix_invalid_filter"
-                    children={`Add "involves:${
-                      loggedUsername || 'gaearon'
-                    }" filter`}
                     onPress={() =>
                       dispatch(
                         actions.setColumnInvolvesFilter({
@@ -226,7 +222,9 @@ export const IssueOrPullRequestCards = React.memo(
                         }),
                       )
                     }
-                  />
+                  >{`Add "involves:${
+                    loggedUsername || 'gaearon'
+                  }" filter`}</Button>
                 </View>
               }
               errorMessage={

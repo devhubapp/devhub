@@ -18,7 +18,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
 
   const childrenArr = React.Children.toArray(children)
   const selectedIndex = childrenArr.findIndex(
-    child =>
+    (child) =>
       typeof child === 'object' &&
       'props' in child &&
       child.props &&
@@ -57,7 +57,7 @@ export function Select<T extends string>(props: SelectProps<T>) {
               <span className="flex flex-col bg-default border border-bg-less-2 rounded-lg shadow overflow-hidden">
                 {React.Children.map(
                   children,
-                  child =>
+                  (child) =>
                     !!child && (
                       <span
                         className={classNames(

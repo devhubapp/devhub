@@ -4,11 +4,9 @@ import {
 } from '../../common/ImageWithLoading'
 import { createSpringAnimatedComponent } from './helpers'
 
-export interface SpringAnimatedImageWithLoadingProps
-  extends ImageWithLoadingProps {}
+export type SpringAnimatedImageWithLoadingProps = ImageWithLoadingProps
 
 export const SpringAnimatedImageWithLoading = createSpringAnimatedComponent(
   ImageWithLoading,
 )
-;(SpringAnimatedImageWithLoading as any).displayName =
-  'SpringAnimatedImageWithLoading'
+SpringAnimatedImageWithLoading.displayName = 'SpringAnimatedImageWithLoading'

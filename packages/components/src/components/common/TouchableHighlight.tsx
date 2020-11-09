@@ -3,8 +3,7 @@ import { TouchableHighlight as TouchableHighlightOriginal } from 'react-native'
 
 import { Touchable, TouchableProps } from './Touchable'
 
-export interface TouchableHighlightProps
-  extends Omit<TouchableProps, 'TouchableComponent'> {}
+export type TouchableHighlightProps = Omit<TouchableProps, 'TouchableComponent'>
 
 export const TouchableHighlight = React.forwardRef<
   Touchable,

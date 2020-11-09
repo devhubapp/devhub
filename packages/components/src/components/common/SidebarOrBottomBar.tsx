@@ -853,10 +853,11 @@ export const SidebarOrBottomBarItem = React.memo(
                   ? getColumnHeaderThemeColors().selected
                   : getColumnHeaderThemeColors().normal
               }
-              children={c}
               onPress={onPress}
               style={styles.itemContainer}
-            />
+            >
+              {c}
+            </ThemedTouchableOpacity>
           ) : (
             <ThemedView
               key={`sidebar-or-bottom-bar-item-${columnId}-inner`}
@@ -865,9 +866,10 @@ export const SidebarOrBottomBarItem = React.memo(
                   ? getColumnHeaderThemeColors().selected
                   : getColumnHeaderThemeColors().normal
               }
-              children={c}
               style={styles.itemContainer}
-            />
+            >
+              {c}
+            </ThemedView>
           )
         }
       >

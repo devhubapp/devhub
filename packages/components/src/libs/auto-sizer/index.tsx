@@ -77,7 +77,7 @@ export function AutoSizer(props: AutoSizerProps) {
   useLayoutEffect(() => {
     if (Platform.OS !== 'web') return
 
-    const autoSizer = findNode(ref.current) as any
+    const autoSizer = findNode(ref.current)
 
     if (
       autoSizer &&

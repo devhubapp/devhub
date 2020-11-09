@@ -52,7 +52,7 @@ export const NotificationCardsContainer = React.memo(
           selectors.createColumnSubscriptionSelector()(state, columnId),
         [columnId],
       ),
-    ) as NotificationColumnSubscription | undefined
+    )
 
     const data = mainSubscription && mainSubscription.data
 

@@ -8,7 +8,7 @@
     "compile": "tsc -b --incremental",
     "format": "prettier --write './*.{js,jsx,ts,tsx}'",
     "ios": "react-native run-ios",
-    "lint": "tslint -p .",
+    "lint": "eslint src --no-error-on-unmatched-pattern",
     "prepare": "cd .. && yarn patch-package",
     "start": "react-native start",
     "studio": "open -a /Applications/Android\\ Studio.app ./android/",
@@ -42,6 +42,9 @@
     "metro-react-native-babel-preset": "0.59.0",
     "react-test-renderer": "16.13.1",
     "ts-jest": "26.0.0"
+  },
+  "peerDependencies": {
+    "eslint": "*"
   },
   "jest": {
     "preset": "react-native"

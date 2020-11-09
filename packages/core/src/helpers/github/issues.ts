@@ -378,7 +378,7 @@ export function sortIssuesOrPullRequests(
 
 export function getGitHubIssueSearchQuery(
   params: IssueOrPullRequestColumnSubscription['params'],
-  includeDefaultSorting: boolean = true,
+  includeDefaultSorting = true,
 ) {
   const queries: string[] = []
 

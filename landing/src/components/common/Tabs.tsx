@@ -20,7 +20,7 @@ export function Tabs<TabId extends string>(props: TabsProps<TabId>) {
       >
         {React.Children.map(
           children,
-          child =>
+          (child) =>
             !!child && (
               <div
                 className="cursor-pointer"

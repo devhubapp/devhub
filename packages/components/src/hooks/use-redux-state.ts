@@ -7,5 +7,5 @@ export function useReduxState<
   S extends (state: any) => any,
   R extends Result<S>
 >(selector: S, equalityFn?: (left: R, right: R) => boolean) {
-  return useSelector(selector, equalityFn) as R
+  return useSelector(selector, equalityFn)
 }

@@ -42,7 +42,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   const userPlan = authData && authData.plan
   const userPlanIsActive =
-    userPlan && userPlan.id && plans.find(p => p && p.id === userPlan!.id)
+    userPlan && userPlan.id && plans.find((p) => p && p.id === userPlan.id)
   const isMyPlan = !!(userPlan && userPlan.id === localizedPlan.id)
 
   const banner = userPlanIsActive
@@ -108,7 +108,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       }${_roundedPriceLabelWithInterval}`
   } else if (
     forceShowAsMonthly &&
-    plans.find(p => p && p.interval && p.interval !== 'month')
+    plans.find((p) => p && p.interval && p.interval !== 'month')
   ) {
     footerText = `${footerText || ''} `
   }
@@ -122,7 +122,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   } else if (
     localizedPlan.amount &&
     plans.some(
-      p =>
+      (p) =>
         p &&
         (!p.type || p.type === 'individual') &&
         !p.amount &&
@@ -137,7 +137,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   } else if (
     localizedPlan.amount &&
     !localizedPlan.trialPeriodDays &&
-    plans.some(p => p && p.trialPeriodDays)
+    plans.some((p) => p && p.trialPeriodDays)
   ) {
     footerText = (footerText ? `${footerText}\n` : footerText) + 'No free trial'
   }
@@ -170,7 +170,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   if (
     !footerText &&
     forceShowAsMonthly &&
-    plans.find(p => p && p.interval !== 'month') &&
+    plans.find((p) => p && p.interval !== 'month') &&
     modifiedAmount === localizedPlan.amount
   ) {
     footerText = `${footerText || ' '}\n`

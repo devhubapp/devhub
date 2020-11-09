@@ -67,7 +67,7 @@ export function EnterpriseSetupModal(props: EnterpriseSetupModalProps) {
           analyticsCategory="enterprise"
           analyticsAction="copy_email"
           analyticsLabel={username}
-          onPress={async () => {
+          onPress={() => {
             Clipboard.setString(email)
             setCopied(true)
           }}

@@ -75,10 +75,11 @@ export const NoTokenView = React.memo((props: NoTokenViewProps) => {
           buttonView={
             <Button
               analyticsLabel={`relogin_with_github_${githubAppType}`}
-              children="Login with GitHub"
               loading={isLoggingIn || isExecutingOAuth}
               onPress={() => startOAuth()}
-            />
+            >
+              Login with GitHub
+            </Button>
           }
           emoji={emoji}
           subtitle={subtitle}

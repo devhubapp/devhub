@@ -70,7 +70,6 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
         >
           <Button
             analyticsLabel={loadState === 'error' ? 'try_again' : 'load_more'}
-            children={loadState === 'error' ? 'Oops. Try again' : 'Load more'}
             disabled={
               loadState === 'loading' ||
               loadState === 'loading_first' ||
@@ -79,7 +78,9 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
             loading={loadState === 'loading_more'}
             onPress={fetchNextPage}
             round={isEmpty}
-          />
+          >
+            {loadState === 'error' ? 'Oops. Try again' : 'Load more'}
+          </Button>
           {!isEmpty && <CardItemSeparator muted />}
         </View>
       ) : clearedAt ? (
@@ -91,7 +92,6 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
         >
           <Button
             analyticsLabel="show_cleared"
-            children="Show done items"
             onPress={() => {
               dispatch(
                 actions.setColumnClearedAtFilter({
@@ -100,10 +100,12 @@ export const CardsFooter = React.memo((props: CardsFooterProps) => {
                 }),
               )
 
-              if (refresh) refresh()
+              if (refresh) void refresh()
             }}
             round
-          />
+          >
+            Show done items
+          </Button>
         </View>
       ) : (
         <>

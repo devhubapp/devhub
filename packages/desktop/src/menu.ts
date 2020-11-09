@@ -80,7 +80,7 @@ export function getOpenAtLoginMenuItem() {
 }
 
 export function getUpdaterMenuItem() {
-  let enabled: boolean = !__DEV__
+  let enabled = !__DEV__
   let label: string
 
   const updateInfo = updater.getUpdateInfo()
@@ -467,7 +467,7 @@ export function getTrayMenuItems() {
       visible: !config.store.get('isMenuBarMode'),
     },
     ...getWindowMenuItems().filter(
-      item => item.label !== 'Close' && item.visible !== false,
+      (item) => item.label !== 'Close' && item.visible !== false,
     ),
     {
       type: 'separator',

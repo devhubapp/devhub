@@ -9,7 +9,7 @@ import { getDefaultDevHubHeaders } from '../../helpers'
 import { useIsMountedRef } from '../../hooks/use-is-mounted-ref'
 import { TextInput, TextInputProps } from './TextInput'
 
-export interface QuickFeedbackInputProps extends TextInputProps {}
+export type QuickFeedbackInputProps = TextInputProps
 
 export const quickFeedbackRowHeight = 42
 
@@ -36,7 +36,7 @@ export function QuickFeedbackInput(props: QuickFeedbackInputProps) {
 
     if (!isMountedRef.current) return
 
-    const { data, status } = await response
+    const { data, status } = await response //eslint-disable-line
 
     if (status !== 200) {
       throw new Error(
@@ -107,6 +107,7 @@ export function QuickFeedbackInput(props: QuickFeedbackInputProps) {
                   feedbackText,
                 )}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Twitter
               </a>{' '}
@@ -167,15 +168,15 @@ export function QuickFeedbackInput(props: QuickFeedbackInputProps) {
         )
       ) : (
         <form
-          onSubmit={e => {
-            handleSubmit()
+          onSubmit={(e) => {
+            void handleSubmit()
             e.preventDefault()
           }}
         >
           <TextInput
             {...props}
             className={classNames('text-center', props.className)}
-            onChange={e => {
+            onChange={(e) => {
               setFeedbackText(e.target.value)
               if (props.onChange) props.onChange(e)
             }}

@@ -9,7 +9,6 @@ import {
   getUsernamesFromFilter,
   isPlanStatusValid,
 } from '@devhub/core'
-import _ from 'lodash'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { Dimensions, View } from 'react-native'
 
@@ -242,27 +241,29 @@ export function useCardsProps<ItemT extends EnhancedItem>({
     return {
       size,
       sticky: false,
-      Component: () => (
-        <View style={[sharedStyles.fullWidth, { height: size }]}>
-          {!!column && (
-            <>
-              {!!renderOwnerFilterBar && (
-                <CardsOwnerFilterBar
-                  key={`cards-owner-filter-bar-column-${column.id}`}
-                  columnId={column.id}
-                />
-              )}
+      Component() {
+        return (
+          <View style={[sharedStyles.fullWidth, { height: size }]}>
+            {!!column && (
+              <>
+                {!!renderOwnerFilterBar && (
+                  <CardsOwnerFilterBar
+                    key={`cards-owner-filter-bar-column-${column.id}`}
+                    columnId={column.id}
+                  />
+                )}
 
-              {!!renderWatchingOwnerFilterBar && (
-                <CardsWatchingOwnerFilterBar
-                  key={`cards-watching-owner-filter-bar-column-${column.id}`}
-                  columnId={column.id}
-                />
-              )}
-            </>
-          )}
-        </View>
-      ),
+                {!!renderWatchingOwnerFilterBar && (
+                  <CardsWatchingOwnerFilterBar
+                    key={`cards-watching-owner-filter-bar-column-${column.id}`}
+                    columnId={column.id}
+                  />
+                )}
+              </>
+            )}
+          </View>
+        )
+      },
     }
   }, [
     column && column.id,
@@ -313,7 +314,9 @@ export function useCardsProps<ItemT extends EnhancedItem>({
         topSpacing: cardsFooterProps.topSpacing,
       }),
       sticky,
-      Component: () => <CardsFooter {...cardsFooterProps} />,
+      Component() {
+        return <CardsFooter {...cardsFooterProps} />
+      },
     }
   }, [
     (!data.length && header && header.size) || 0,
@@ -366,144 +369,162 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
     if (isPlanExpired && !(plan && plan.featureFlags.columnsLimit)) {
       return {
-        Component: () => (
-          <EmptyCards
-            columnId={column.id}
-            emoji="lock"
-            errorButtonView={
-              <View>
-                <ButtonLink
-                  analyticsCategory="plan_expired"
-                  analyticsLabel="select_a_plan_button"
-                  children={
-                    paidPlans.some((p) => p && p.interval)
+        Component() {
+          return (
+            <EmptyCards
+              columnId={column.id}
+              emoji="lock"
+              errorButtonView={
+                <View>
+                  <ButtonLink
+                    analyticsCategory="plan_expired"
+                    analyticsLabel="select_a_plan_button"
+                    href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${
+                      appToken || ''
+                    }`}
+                    openOnNewTab
+                  >
+                    {paidPlans.some((p) => p && p.interval)
                       ? plan && plan.amount
                         ? 'Switch plan ↗'
                         : 'Select a plan ↗'
-                      : 'See available options ↗'
-                  }
-                  href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
-                  openOnNewTab
-                />
-              </View>
-            }
-            errorMessage="You need a paid plan to keep using DevHub."
-            errorTitle="Free trial expired"
-            fetchNextPage={undefined}
-            footer={
-              <View style={sharedStyles.padding}>
-                <QuickFeedbackRow />
-              </View>
-            }
-            loadState="error"
-            refresh={undefined}
-          />
-        ),
+                      : 'See available options ↗'}
+                  </ButtonLink>
+                </View>
+              }
+              errorMessage="You need a paid plan to keep using DevHub."
+              errorTitle="Free trial expired"
+              fetchNextPage={undefined}
+              footer={
+                <View style={sharedStyles.padding}>
+                  <QuickFeedbackRow />
+                </View>
+              }
+              loadState="error"
+              refresh={undefined}
+            />
+          )
+        },
         overlay: false,
       }
     }
 
     if (isOverMaxColumnLimit) {
       return {
-        Component: () => (
-          <EmptyCards
-            columnId={column.id}
-            errorMessage={`You have reached the limit of ${constants.COLUMNS_LIMIT} columns. This is to maintain a healthy usage of the GitHub API.`}
-            errorTitle="Too many columns"
-            fetchNextPage={undefined}
-            loadState="error"
-            refresh={undefined}
-          />
-        ),
+        Component() {
+          return (
+            <EmptyCards
+              columnId={column.id}
+              errorMessage={`You have reached the limit of ${constants.COLUMNS_LIMIT} columns. This is to maintain a healthy usage of the GitHub API.`}
+              errorTitle="Too many columns"
+              fetchNextPage={undefined}
+              loadState="error"
+              refresh={undefined}
+            />
+          )
+        },
         overlay: false,
       }
     }
 
     if (isOverPlanColumnLimit && plan && plan.featureFlags.columnsLimit) {
       return {
-        Component: () => (
-          <EmptyCards
-            columnId={column.id}
-            emoji="rocket"
-            errorButtonView={
-              <ButtonLink
-                analyticsLabel="unlock_more_columns_button"
-                children="Unlock more columns ↗"
-                href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
-                openOnNewTab
-              />
-            }
-            errorMessage={`You have exceeded the limit of ${
-              plan.featureFlags.columnsLimit
-            }${plan.amount ? '' : ' free'} ${
-              plan.featureFlags.columnsLimit === 1 ? 'column' : 'columns'
-            }.`}
-            errorTitle="Limit exceeded"
-            fetchNextPage={undefined}
-            loadState="error"
-            refresh={undefined}
-          />
-        ),
+        Component() {
+          return (
+            <EmptyCards
+              columnId={column.id}
+              emoji="rocket"
+              errorButtonView={
+                <ButtonLink
+                  analyticsLabel="unlock_more_columns_button"
+                  href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${
+                    appToken || ''
+                  }`}
+                  openOnNewTab
+                >
+                  Unlock more columns ↗
+                </ButtonLink>
+              }
+              errorMessage={`You have exceeded the limit of ${
+                plan.featureFlags.columnsLimit
+              }${plan.amount ? '' : ' free'} ${
+                plan.featureFlags.columnsLimit === 1 ? 'column' : 'columns'
+              }.`}
+              errorTitle="Limit exceeded"
+              fetchNextPage={undefined}
+              loadState="error"
+              refresh={undefined}
+            />
+          )
+        },
         overlay: true,
       }
     }
 
     if (!isPlanStatusValid(plan)) {
       return {
-        Component: () => (
-          <EmptyCards
-            columnId={column.id}
-            emoji="warning"
-            errorButtonView={
-              <ButtonLink
-                analyticsLabel="select_a_plan_button"
-                analyticsCategory="invalid_plan"
-                children="Fix my subscription ↗"
-                href={`${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${appToken}`}
-                openOnNewTab
-              />
-            }
-            errorMessage={`Your current subscription status is ${
-              plan && plan.status ? `"${plan.status}"` : 'invalid'
-            }. This is usually fixed by updating your credit card.`}
-            errorTitle="Action needed"
-            fetchNextPage={undefined}
-            loadState="error"
-            refresh={undefined}
-          />
-        ),
+        Component() {
+          return (
+            <EmptyCards
+              columnId={column.id}
+              emoji="warning"
+              errorButtonView={
+                <ButtonLink
+                  analyticsLabel="select_a_plan_button"
+                  analyticsCategory="invalid_plan"
+                  href={`${constants.DEVHUB_LINKS.ACCOUNT_PAGE}?appToken=${
+                    appToken || ''
+                  }`}
+                  openOnNewTab
+                >
+                  Fix my subscription ↗
+                </ButtonLink>
+              }
+              errorMessage={`Your current subscription status is ${
+                plan && plan.status ? `"${plan.status}"` : 'invalid'
+              }. This is usually fixed by updating your credit card.`}
+              errorTitle="Action needed"
+              fetchNextPage={undefined}
+              loadState="error"
+              refresh={undefined}
+            />
+          )
+        },
         overlay: true,
       }
     }
 
     if (isOverPlanColumnLimit) {
       return {
-        Component: () => (
-          <EmptyCards
-            columnId={column.id}
-            emoji="lock"
-            errorButtonView={
-              <ButtonLink
-                analyticsLabel="select_a_plan_button"
-                analyticsCategory="invalid_plan"
-                children={
-                  paidPlans.some((p) => p && p.interval)
+        Component() {
+          return (
+            <EmptyCards
+              columnId={column.id}
+              emoji="lock"
+              errorButtonView={
+                <ButtonLink
+                  analyticsLabel="select_a_plan_button"
+                  analyticsCategory="invalid_plan"
+                  href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${
+                    appToken || ''
+                  }`}
+                  openOnNewTab
+                >
+                  {paidPlans.some((p) => p && p.interval)
                     ? plan && plan.amount
                       ? 'Switch plan ↗'
                       : 'Select a plan ↗'
-                    : 'See available options ↗'
-                }
-                href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appToken}`}
-                openOnNewTab
-              />
-            }
-            errorMessage="You need a paid plan to keep using DevHub."
-            errorTitle="Upgrade to a paid plan"
-            fetchNextPage={undefined}
-            loadState="error"
-            refresh={undefined}
-          />
-        ),
+                    : 'See available options ↗'}
+                </ButtonLink>
+              }
+              errorMessage="You need a paid plan to keep using DevHub."
+              errorTitle="Upgrade to a paid plan"
+              fetchNextPage={undefined}
+              loadState="error"
+              refresh={undefined}
+            />
+          )
+        },
         overlay: true,
       }
     }

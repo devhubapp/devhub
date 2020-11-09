@@ -28,14 +28,14 @@ export function getCachedPublicPlans(): PlansStateData | undefined {
   if (cachedPublicPlans) return cachedPublicPlans
 
   try {
-    cachedPublicPlans = require('../scripts/out/cached-public-plans.json') // tslint:disable-line no-var-requires
+    cachedPublicPlans = require('../scripts/out/cached-public-plans.json') // eslint-disable-line
     return cachedPublicPlans
   } catch (error) {
     //
   }
 }
 
-const _fetch = typeof fetch === 'function' ? fetch : require('node-fetch') // tslint:disable-line no-var-requires
+const _fetch = typeof fetch === 'function' ? fetch : require('node-fetch') // eslint-disable-line
 export async function fetchPlansState({
   appToken,
   dealCode,
@@ -64,7 +64,7 @@ export async function fetchPlansState({
     freePlan: data.freePlan,
     freeTrialDays: data.freeTrialDays,
     freeTrialPlan: data.freeTrialPlan,
-    paidPlans: data.plans.filter(plan => plan && plan.amount > 0),
+    paidPlans: data.plans.filter((plan) => plan && plan.amount > 0),
     plans: data.plans,
     userPlanInfo: data.userPlanInfo,
   }

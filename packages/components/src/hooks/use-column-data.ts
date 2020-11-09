@@ -30,7 +30,7 @@ export function useColumnData<ItemT extends EnhancedItem>(
   const allItems = useReduxState((state) => {
     if (!(column && column.id)) return EMPTY_ARRAY
     return columnDataSelector(state, column.id)
-  }) as ItemT[]
+  })
 
   const _allItemsIds = useMemo(
     () => allItems.map(getItemNodeIdOrId).filter(Boolean) as string[],

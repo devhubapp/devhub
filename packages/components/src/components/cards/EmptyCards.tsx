@@ -106,11 +106,12 @@ export const EmptyCards = React.memo((props: EmptyCardsProps) => {
             (!!refresh && (
               <Button
                 analyticsLabel="try_again"
-                children="Try again"
                 disabled={loadState !== 'error'}
                 loading={!disableLoadingIndicator && loadState === 'loading'}
                 onPress={() => refresh()}
-              />
+              >
+                Try again
+              </Button>
             ))
           }
           emoji={emoji}

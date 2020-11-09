@@ -36,8 +36,8 @@ import { ThemedTextInput } from '../../themed/ThemedTextInput'
 import { ThemedView } from '../../themed/ThemedView'
 import { SubscribeFormProps } from './SubscribeForm.shared'
 
-const poweredByStripeDarkBanner = require('@devhub/web/public/static/media/stripe/powered_by_stripe_outline_dark.png') // tslint:disable-line no-var-requires
-const poweredByStripeLightBanner = require('@devhub/web/public/static/media/stripe/powered_by_stripe_outline_light.png') // tslint:disable-line no-var-requires
+const poweredByStripeDarkBanner = require('@devhub/web/public/static/media/stripe/powered_by_stripe_outline_dark.png') // eslint-disable-line
+const poweredByStripeLightBanner = require('@devhub/web/public/static/media/stripe/powered_by_stripe_outline_light.png') // eslint-disable-line
 const poweredByStripeBannerAspectRatio = 357 / 78
 
 const SubscribeFormWithStripe = React.memo(
@@ -76,8 +76,8 @@ const SubscribeFormWithStripe = React.memo(
     }, [])
 
     async function handleSubmit() {
-      if (plan && plan.amount) subscribeToStripePlan()
-      else if (!(plan && plan.amount)) cancelSubscription()
+      if (plan && plan.amount) await subscribeToStripePlan()
+      else if (!(plan && plan.amount)) await cancelSubscription()
     }
 
     async function cancelSubscription() {
@@ -317,7 +317,7 @@ const SubscribeFormWithStripe = React.memo(
               <a
                 href="https://stripe.com/"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 style={{
                   width: 18 * poweredByStripeBannerAspectRatio * scaleFactor,
                   height: 18 * scaleFactor,
@@ -467,10 +467,9 @@ const SubscribeFormWithStripe = React.memo(
                     </ThemedText>
                   ) : (
                     <ThemedText color="foregroundColorMuted65">
-                      DevHub doesn't have a free plan anymore. The only way to
-                      keep using DevHub is by having a paid subscription. After
-                      cancelling, you can keep using it for the already paid
-                      period.
+                      {
+                        "DevHub doesn't have a free plan anymore. The only way to keep using DevHub is by having a paid subscription. After cancelling, you can keep using it for the already paid period."
+                      }
                     </ThemedText>
                   )}
 

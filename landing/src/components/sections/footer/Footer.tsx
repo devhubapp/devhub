@@ -49,7 +49,7 @@ export default function Footer() {
           className={twClasses.footerLink}
           href="https://twitter.com/devhub_app"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           Twitter
         </a>
@@ -58,7 +58,7 @@ export default function Footer() {
           className={twClasses.footerLink}
           href="https://github.com/devhubapp/devhub"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           GitHub
         </a>
@@ -68,7 +68,7 @@ export default function Footer() {
           className={twClasses.footerLink}
           href="https://slack.devhubapp.com/"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           Slack
         </a>
@@ -94,7 +94,7 @@ export default function Footer() {
           className={twClasses.footerLink}
           href="https://twitter.com/messages/compose?recipient_id=1013342195087224832"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           @devhub_app
         </a>
@@ -103,7 +103,7 @@ export default function Footer() {
           className={twClasses.footerLink}
           href="https://twitter.com/brunolemos"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           @brunolemos
         </a>

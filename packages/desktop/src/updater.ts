@@ -27,8 +27,8 @@ export async function init() {
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
 
-  checkForUpdatesAndNotify()
-  setInterval(checkForUpdatesAndNotify, 60 * 60 * 1000)
+  await checkForUpdatesAndNotify()
+  setInterval(() => void checkForUpdatesAndNotify(), 60 * 60 * 1000)
 }
 
 export function getUpdateInfo() {
@@ -77,7 +77,7 @@ function notify() {
     body: 'Restart the app to update it.',
   })
 
-  notification.on('click', e => {
+  notification.on('click', (e) => {
     autoUpdater.quitAndInstall()
   })
 
@@ -128,7 +128,7 @@ export function register() {
   })
 
   autoUpdater.removeAllListeners('download-progress')
-  autoUpdater.addListener('download-progress', e => {
+  autoUpdater.addListener('download-progress', (e) => {
     updateInfo = {
       ...updateInfo,
       state: 'downloading',
@@ -139,7 +139,7 @@ export function register() {
   })
 
   autoUpdater.removeAllListeners('update-downloaded')
-  autoUpdater.addListener('update-downloaded', info => {
+  autoUpdater.addListener('update-downloaded', (info) => {
     updateInfo = {
       ...updateInfo,
       state: 'update-downloaded',

@@ -43,15 +43,16 @@ export function PricingPlans(_props: PricingPlansProps) {
 
   const pricingPlanComponents = useMemo(() => {
     const filteredPlans = plans.filter(
-      plan =>
+      (plan) =>
         !!(
           plan &&
           ((!tab && !hasMultiplePlanTypes) ||
-            (plan.type === tab || (tab === 'individual' && !plan.type)))
+            plan.type === tab ||
+            (tab === 'individual' && !plan.type))
         ),
     )
 
-    return filteredPlans.map(plan =>
+    return filteredPlans.map((plan) =>
       plan && plan.amount > 0 ? (
         <PricingPlanBlock
           key={`pricing-plan-${plan.id}`}
@@ -93,7 +94,7 @@ export function PricingPlans(_props: PricingPlansProps) {
       {!!hasMultiplePlanTypes && (
         <Tabs<NonNullable<PlanType>>
           className="mb-6"
-          onTabChange={id => setTab(id)}
+          onTabChange={(id) => setTab(id)}
         >
           {!!planTypesCounters.individual && (
             <Tabs.Tab

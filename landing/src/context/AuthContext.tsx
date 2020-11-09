@@ -141,7 +141,7 @@ export function AuthProvider(props: AuthProviderProps) {
   const abortSubscriptionCancellation = useCallback(() => {
     if (typeof window === 'undefined' || typeof fetch !== 'function') return
     if (!authData.appToken) return
-    ;(async () => {
+    void (async () => {
       try {
         const response = await fetch(constants.GRAPHQL_ENDPOINT, {
           method: 'POST',
@@ -204,7 +204,7 @@ export function AuthProvider(props: AuthProviderProps) {
         if (!reason) return
       }
 
-      ;(async () => {
+      void (async () => {
         try {
           const response = await fetch(constants.GRAPHQL_ENDPOINT, {
             method: 'POST',
@@ -272,7 +272,7 @@ export function AuthProvider(props: AuthProviderProps) {
         if (!confirmed) return
       }
 
-      ;(async () => {
+      void (async () => {
         try {
           const response = await fetch(constants.GRAPHQL_ENDPOINT, {
             method: 'POST',
@@ -310,7 +310,7 @@ export function AuthProvider(props: AuthProviderProps) {
   const login = useCallback((appToken: string) => {
     if (typeof window === 'undefined' || typeof fetch !== 'function') return
     if (!appToken) return
-    ;(async () => {
+    void (async () => {
       try {
         setIsLoggingIn(true)
         const response = await fetch(constants.GRAPHQL_ENDPOINT, {
@@ -444,7 +444,7 @@ export function AuthProvider(props: AuthProviderProps) {
   }, [])
 
   const mergeAuthData = useCallback((mergeData: Partial<AuthData>) => {
-    setAuthData(v => ({ ...v, ...mergeData }))
+    setAuthData((v) => ({ ...v, ...mergeData }))
   }, [])
 
   const value: AuthProviderState = useMemo(

@@ -158,12 +158,12 @@ export default function AccountPage(_props: AccountPageProps) {
 
         {authData.plan && authData.plan.amount > 0 ? (
           <>
-            {paidPlans.some(p => !!p && !p.interval) &&
+            {paidPlans.some((p) => !!p && !p.interval) &&
               (!!(!freeTrialDays && authData.plan.interval) ? (
                 <Link
                   href={`/${getPurchaseOrSubscribeRoute(plans)}${qs.stringify(
                     {
-                      plan: paidPlans.find(p => !!p && !p.interval)!
+                      plan: paidPlans.find((p) => !!p && !p.interval)!
                         .cannonicalId,
                     },
                     { addQueryPrefix: true },
@@ -175,7 +175,7 @@ export default function AccountPage(_props: AccountPageProps) {
                 <Link
                   href={`/${getPurchaseOrSubscribeRoute(plans)}${qs.stringify(
                     {
-                      plan: paidPlans.find(p => !!p && !p.interval)!
+                      plan: paidPlans.find((p) => !!p && !p.interval)!
                         .cannonicalId,
                       action: 'update_seats',
                     },
@@ -196,7 +196,7 @@ export default function AccountPage(_props: AccountPageProps) {
 
             {!!(
               authData.plan.interval &&
-              paidPlans.some(plan => plan && plan.interval)
+              paidPlans.some((plan) => plan && plan.interval)
             ) && (
               <Link href="/pricing">
                 <a className="text-default">Switch plan</a>
@@ -218,10 +218,10 @@ export default function AccountPage(_props: AccountPageProps) {
                     plan:
                       authData.plan && authData.plan.id
                         ? paidPlans.find(
-                            _p => _p && _p.id === authData.plan!.id,
+                            (_p) => _p && _p.id === authData.plan!.id,
                           )
                           ? paidPlans.find(
-                              _p => _p && _p.id === authData.plan!.id,
+                              (_p) => _p && _p.id === authData.plan!.id,
                             )!.cannonicalId
                           : 'current'
                         : undefined,
@@ -241,10 +241,10 @@ export default function AccountPage(_props: AccountPageProps) {
                     plan:
                       authData.plan && authData.plan.id
                         ? paidPlans.find(
-                            _p => _p && _p.id === authData.plan!.id,
+                            (_p) => _p && _p.id === authData.plan!.id,
                           )
                           ? paidPlans.find(
-                              _p => _p && _p.id === authData.plan!.id,
+                              (_p) => _p && _p.id === authData.plan!.id,
                             )!.cannonicalId
                           : 'current'
                         : undefined,
@@ -287,7 +287,7 @@ export default function AccountPage(_props: AccountPageProps) {
             ) : (
               <Link href="/pricing">
                 <a className="text-default">
-                  {paidPlans.some(plan => plan && plan.interval)
+                  {paidPlans.some((plan) => plan && plan.interval)
                     ? 'Subscribe to a plan'
                     : 'See plans'}
                 </a>

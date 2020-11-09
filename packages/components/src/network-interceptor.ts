@@ -21,13 +21,13 @@ const debounceSetNetworkActivityIndicatorVisible = _.debounce(
 
 export function enableAxiosNetworkInterceptor() {
   axios.interceptors.request.use(
-    config => {
+    (config) => {
       axiosRequestsCount = axiosRequestsCount + 1
       updateActivityLoadingIndicator()
 
       return config
     },
-    error => {
+    (error) => {
       axiosRequestsCount = axiosRequestsCount - 1
       updateActivityLoadingIndicator()
 
@@ -36,13 +36,13 @@ export function enableAxiosNetworkInterceptor() {
   )
 
   axios.interceptors.response.use(
-    response => {
+    (response) => {
       axiosRequestsCount = axiosRequestsCount - 1
       updateActivityLoadingIndicator()
 
       return response
     },
-    error => {
+    (error) => {
       axiosRequestsCount = axiosRequestsCount - 1
       updateActivityLoadingIndicator()
 
@@ -62,7 +62,7 @@ export function enableOctokitNetworkInterceptor(octokit: Octokit) {
     updateActivityLoadingIndicator()
   })
 
-  octokit.hook.error('request', async error => {
+  octokit.hook.error('request', (error) => {
     octokitRequestsCount = octokitRequestsCount - 1
     updateActivityLoadingIndicator()
 

@@ -9,13 +9,12 @@
     "clean": "cd .",
     "compile": "cd .",
     "deploy": "now  --prod",
-    "format": "prettier --write '{.,src/**}/*.js'",
-    "lint": "eslint src",
+    "format": "prettier --write '{.,src}/**.js'",
+    "lint": "cd .",
     "prepare": "cd ."
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "5.9.0",
     "now": "20.1.2"
   },
   "engines": {
