@@ -206,7 +206,9 @@ export default function SuccessPage(_props: SuccessPageProps) {
                     <span className="text-primary">{dealCodeToShare}</span> 🙌
                     <br />
                     <small className="text-muted-65 italic">
-                      (This code won't show up again, feel free to copy it now)
+                      {
+                        "(This code won't show up again, feel free to copy it now)"
+                      }
                     </small>
                   </>
                 ) : (

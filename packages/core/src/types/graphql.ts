@@ -80,7 +80,7 @@ export interface GraphQLUser {
   lastLoginAt: DatabaseUser['lastLoginAt']
 }
 
-export interface User extends GraphQLUser {}
+export type User = GraphQLUser
 
 export interface GitHubPlan {
   name?: string | null

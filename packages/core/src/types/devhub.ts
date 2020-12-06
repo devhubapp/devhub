@@ -597,7 +597,7 @@ export interface Plan {
   }
 }
 
-export interface UserPlan extends GraphQLUserPlan {}
+export type UserPlan = GraphQLUserPlan
 
 export interface ItemPushNotification<
   A extends { type: string; payload: any } = { type: string; payload: any }

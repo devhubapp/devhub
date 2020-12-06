@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios'
 import { constants, Installation } from '..'
 import { DevHubHeaders } from './shared'
 
-export interface FetchInstallationsHeaders extends DevHubHeaders {}
+export type FetchInstallationsHeaders = DevHubHeaders
 
 export interface FetchInstallationsOptions {
   // includeInstallationRepositories: boolean
