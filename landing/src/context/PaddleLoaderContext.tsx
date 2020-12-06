@@ -185,7 +185,6 @@ export function PaddleLoaderProvider(props: PaddleLoaderProps) {
 }
 
 export const PaddleLoaderConsumer = PaddleLoaderContext.Consumer
-;(PaddleLoaderConsumer as any).displayName = 'PaddleLoaderConsumer'
 
 export function usePaddleLoader() {
   return useContext(PaddleLoaderContext)

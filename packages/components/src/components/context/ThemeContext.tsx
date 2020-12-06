@@ -57,7 +57,6 @@ export function ThemeProvider(props: ThemeProviderProps) {
 }
 
 export const ThemeConsumer = ThemeContext.Consumer
-;(ThemeConsumer as any).displayName = 'ThemeConsumer'
 
 export function useTheme({
   themeTransformer,

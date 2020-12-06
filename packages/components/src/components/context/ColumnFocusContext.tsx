@@ -206,7 +206,6 @@ export function ColumnFocusProvider(props: ColumnFocusProviderProps) {
 }
 
 export const ColumnFocusConsumer = ColumnFocusContext.Consumer
-;(ColumnFocusConsumer as any).displayName = 'ColumnFocusConsumer'
 
 export function useFocusedColumn() {
   return useContext(ColumnFocusContext)

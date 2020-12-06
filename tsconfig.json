@@ -13,11 +13,9 @@
     "node_modules"
   ],
   "include": [
-    "landing/next-env.d.ts"
-  ],
-  "references": [
-    {
-      "path": "packages/core"
-    }
-  ]
+    "@types",
+    "landing/next-env.d.ts",
+    "landing/src",
+    "packages"
+  ] 
 }

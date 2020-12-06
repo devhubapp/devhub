@@ -1,5 +1,7 @@
 import { Platform as _Platform, PlatformIOSStatic } from 'react-native'
 
+import isCatalyst from '../is-catalyst'
+
 import {
   PlataformSelectSpecificsEnhanced,
   PlatformName,
@@ -8,8 +10,8 @@ import {
 } from './index.shared'
 
 const isMacOS = !!(
-  (_Platform as any).constants &&
-  (_Platform as any).constants.systemName === 'Mac OS X'
+  isCatalyst ||
+  (_Platform as any).constants?.systemName?.toLowerCase().startsWith('mac')
 )
 
 export const Platform = {

@@ -124,7 +124,6 @@ export function PlansProvider(props: PlansProps) {
 }
 
 export const PlansConsumer = PlansContext.Consumer
-;(PlansConsumer as any).displayName = 'PlansConsumer'
 
 export function usePlans() {
   return useContext(PlansContext)

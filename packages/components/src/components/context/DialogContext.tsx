@@ -71,7 +71,6 @@ export function DialogProvider(props: DialogProviderProps) {
 }
 
 export const DialogConsumer = DialogContext.Consumer
-;(DialogConsumer as any).displayName = 'DialogConsumer'
 
 export function useDialog() {
   return useContext(DialogContext)

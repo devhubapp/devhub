@@ -32,7 +32,7 @@ export const analytics: Analytics = {
   },
 
   trackScreenView(screenName) {
-    void firebase.analytics().setCurrentScreen(screenName)
+    void firebase.analytics().logScreenView({ screen_name: screenName })
   },
 }
 

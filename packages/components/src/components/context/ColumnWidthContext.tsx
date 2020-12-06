@@ -30,7 +30,6 @@ export function ColumnWidthProvider(props: ColumnWidthProviderProps) {
 }
 
 export const ColumnWidthConsumer = ColumnWidthContext.Consumer
-;(ColumnWidthConsumer as any).displayName = 'ColumnWidthConsumer'
 
 export function calculateColumnWidth({
   windowWidth,

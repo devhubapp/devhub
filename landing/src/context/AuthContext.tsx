@@ -474,7 +474,6 @@ export function AuthProvider(props: AuthProviderProps) {
 }
 
 export const AuthConsumer = AuthContext.Consumer
-;(AuthConsumer as any).displayName = 'AuthConsumer'
 
 export function useAuth() {
   return useContext(AuthContext)

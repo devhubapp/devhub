@@ -3,7 +3,7 @@ import { Dimensions } from 'react-native'
 import { useDimensions } from '../../hooks/use-dimensions'
 
 export const APP_LAYOUT_BREAKPOINTS = {
-  SMALL: 420,
+  SMALL: 430,
   MEDIUM: 580,
   LARGE: 700,
   XLARGE: 1000,
@@ -49,14 +49,12 @@ export function AppLayoutProvider(props: AppLayoutProviderProps) {
 }
 
 export const AppLayoutConsumer = AppLayoutContext.Consumer
-;(AppLayoutConsumer as any).displayName = 'AppLayoutConsumer'
 
 export function getAppLayout(dimensions?: {
   width: number
   height: number
 }): AppLayoutProviderState {
   const { width, height } = dimensions || Dimensions.get('window')
-
   const sizename: AppLayoutProviderState['sizename'] =
     width <= APP_LAYOUT_BREAKPOINTS.SMALL
       ? '1-small'

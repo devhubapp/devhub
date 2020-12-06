@@ -1,10 +1,12 @@
-import { constants, tryParseOAuthParams } from '@devhub/core'
 import axios from 'axios'
 import _ from 'lodash'
 import qs from 'qs'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image, ScrollView, StyleSheet, View } from 'react-native'
 import url from 'url'
+
+import { constants, tryParseOAuthParams } from '@devhub/core'
+import logo from '@devhub/components/assets/logo_circle.png'
 
 import { getAppVersionLabel } from '../components/common/AppVersion'
 import { FullHeightScrollView } from '../components/common/FullHeightScrollView'
@@ -38,8 +40,6 @@ import {
   clearOAuthQueryParams,
   clearQueryStringFromURL,
 } from '../utils/helpers/auth'
-
-const logo = require('@devhub/components/assets/logo_circle.png').default // eslint-disable-line
 
 const styles = StyleSheet.create({
   container: {

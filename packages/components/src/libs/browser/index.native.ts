@@ -37,7 +37,6 @@ export const Browser: BrowserCrossPlatform = {
         preferredControlTintColor: foregroundColor,
         secondaryToolbarColor: foregroundColor,
         toolbarColor: backgroundColor,
-        waitForRedirectDelay: 500,
         ...(options && options.native),
       })
 

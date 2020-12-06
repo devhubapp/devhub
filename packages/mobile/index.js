@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler'
 
 import { AppRegistry } from 'react-native'
+import { name as appName } from './app.json'
 
 // Intl polyfill
 import areIntlLocalesSupported from 'intl-locales-supported'
@@ -23,3 +24,4 @@ if (!process.version) {
 const { App } = require('@devhub/components/src/components/App')
 
 AppRegistry.registerComponent('devhub', () => App)
+AppRegistry.registerComponent(appName, () => App)

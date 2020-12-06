@@ -213,7 +213,6 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
 }
 
 export const UnreadCountConsumer = UnreadCountContext.Consumer
-;(UnreadCountConsumer as any).displayName = 'UnreadCountConsumer'
 
 export function useUnreadCount() {
   return useContext(UnreadCountContext)

@@ -8,13 +8,18 @@ platform :ios, '10.0'
 target 'devhub' do
   config = use_native_modules!
 
-  use_react_native!(:path => config['reactNativePath'])
+  use_react_native!(:path => config[:reactNativePath])
 
-  def unsupported_pods
+  pre_install do |installer|
+    codegen_pre_install(installer, :path => config[:reactNativePath])
+  end
+
+  # Fix macOS Catalyst Support
+  def catalyst_unsupported_pods
       ['FlipperKit', 'Firebase', 'RNFBAnalytics', 'RNFBApp']
   end
 
-  def supported_pods
+  def catalyst_supported_pods
       ['React']
   end
 
@@ -22,38 +27,11 @@ target 'devhub' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
-  use_flipper!
+  use_flipper!('Flipper' => '0.68.0')
   post_install do |installer|
     flipper_post_install(installer)
-    # $verbose = true
-    installer.configure_support_catalyst(supported_pods, unsupported_pods)
-  end
-end
 
-# Post Install processing for Flipper
-# Fix Build Failed: Use of undeclared identifier 'client'
-# https://github.com/facebook/react-native/issues/28406#issuecomment-604792832
-# https://fbflipper.com/docs/getting-started/react-native-ios
-def flipper_post_install(installer)
-  installer.pods_project.targets.each do |target|
-    if target.name == 'YogaKit'
-      target.build_configurations.each do |config|
-        config.build_settings['SWIFT_VERSION'] = '4.1'
-      end
-    end
+    # $verbose = true
+    installer.configure_support_catalyst(catalyst_supported_pods, catalyst_unsupported_pods)
   end
-  file_name = Dir.glob('*.xcodeproj')[0]
-  app_project = Xcodeproj::Project.open(file_name)
-  app_project.native_targets.each do |target|
-    target.build_configurations.each do |config|
-      cflags = config.build_settings['OTHER_CFLAGS'] || '$(inherited) '
-      unless cflags.include? '-DFB_SONARKIT_ENABLED=1'
-        puts 'Adding -DFB_SONARKIT_ENABLED=1 in OTHER_CFLAGS...'
-        cflags << '-DFB_SONARKIT_ENABLED=1'
-      end
-      config.build_settings['OTHER_CFLAGS'] = cflags
-    end
-    app_project.save
-  end
-  installer.pods_project.save
 end

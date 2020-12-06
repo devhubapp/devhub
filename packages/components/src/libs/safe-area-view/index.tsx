@@ -1,15 +1,16 @@
 import React from 'react'
 import { View, ViewProps } from 'react-native'
 import {
-  SafeAreaConsumer,
-  SafeAreaContext,
+  SafeAreaInsetsContext,
   SafeAreaProvider,
-  useSafeArea as useSafeAreaOriginal,
+  useSafeAreaInsets as useSafeAreaOriginal,
 } from 'react-native-safe-area-context'
 import { getElectronTitleBarHeight } from '../../components/ElectronTitleBar'
 import { useDesktopOptions } from '../../hooks/use-desktop-options'
 
-export { SafeAreaConsumer, SafeAreaContext, SafeAreaProvider }
+export const SafeAreaContext = SafeAreaInsetsContext
+export const SafeAreaConsumer = SafeAreaInsetsContext.Consumer
+export { SafeAreaProvider }
 
 export const useSafeArea: typeof useSafeAreaOriginal = () => {
   const safeAreaInsets = useSafeAreaOriginal()

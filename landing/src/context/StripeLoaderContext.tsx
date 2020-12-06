@@ -49,7 +49,6 @@ export function StripeLoaderProvider(props: StripeLoaderProps) {
 }
 
 export const StripeLoaderConsumer = StripeLoaderContext.Consumer
-;(StripeLoaderConsumer as any).displayName = 'StripeLoaderConsumer'
 
 export function useStripeLoader() {
   return useContext(StripeLoaderContext)

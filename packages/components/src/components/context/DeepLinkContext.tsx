@@ -121,7 +121,6 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
 }
 
 export const DeepLinkConsumer = DeepLinkContext.Consumer
-;(DeepLinkConsumer as any).displayName = 'DeepLinkConsumer'
 
 function getQueryParams(url: string) {
   if (!(url && typeof url === 'string')) return {}
