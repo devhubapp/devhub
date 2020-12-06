@@ -60,8 +60,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  text-decoration: none;
+}
+
 a:hover, a:hover > * {
   cursor: pointer;
+  text-decoration: none;
 }
 
 input:focus {
