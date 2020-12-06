@@ -51,6 +51,7 @@
     "node-fetch": "2.6.0",
     "now": "21.0.1",
     "prettier": "2.2.1",
+    "shx": "0.3.3",
     "ts-node": "8.6.2",
     "typescript": "4.1.2"
   },

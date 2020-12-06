@@ -29,6 +29,7 @@
     "@types/qs": "6.9.0",
     "mkdirp": "0.5.1",
     "prettier": "2.2.1",
+    "shx": "0.3.3",
     "typescript": "4.1.2"
   },
   "peerDependencies": {
