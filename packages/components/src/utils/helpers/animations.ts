@@ -5,9 +5,7 @@ export function getDefaultReactSpringAnimationConfig(
 ): SpringConfig {
   return {
     clamp: true,
-    friction: 100,
-    tension: 1500,
-    velocity: 0.04,
+    frequency: 0.2,
     ...config,
   }
 }
