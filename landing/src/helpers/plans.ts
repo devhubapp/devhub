@@ -39,9 +39,10 @@ const _fetch = typeof fetch === 'function' ? fetch : require('node-fetch') // es
 export async function fetchPlansState({
   appToken,
   dealCode,
-}: { appToken?: string; dealCode?: string | null } = {}): Promise<
-  PlansStateData
-> {
+}: {
+  appToken?: string
+  dealCode?: string | null
+} = {}): Promise<PlansStateData> {
   const response = await _fetch(
     `${constants.API_BASE_URL}/plans${dealCode ? `?dealCode=${dealCode}` : ''}`,
     {
