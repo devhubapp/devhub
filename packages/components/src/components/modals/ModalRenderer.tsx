@@ -162,12 +162,18 @@ export function ModalRenderer(props: ModalRendererProps) {
   const modalTransition = useTransition(modalStack, {
     config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
     immediate,
+    unique: true,
+    keys: (item: ModalPayloadWithIndex | undefined) =>
+      `modal-stack-${item?.name}`,
     ...(appOrientation === 'portrait'
       ? {
           from: (item) =>
             (item?.index === 0 && modalStack.length) ||
             (item?.index && !modalStack.length)
-              ? { top: Dimensions.get('window').height, left: 0 }
+              ? {
+                  top: immediate ? 0 : Dimensions.get('window').height,
+                  left: 0,
+                }
               : { top: 0, left: size },
           enter: { top: 0, left: 0 },
           update: (item) =>
@@ -208,15 +214,14 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const separatorTransition = useTransition(
     renderSeparator && sizename !== '2-medium' && modalStack.length
-      ? [(modalStack[0] && modalStack[0]!.name) || '']
+      ? [modalStack[0]?.name]
       : [],
     {
-      keys: (item: ModalPayloadWithIndex | undefined) =>
-        `modal-separator-${item}`,
-      reset: false,
-      unique: true,
+      keys: (name: ModalPayloadWithIndex['name'] | undefined) =>
+        `modal-separator-${name}`,
       config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
       immediate,
+      unique: true,
       from: { right: size },
       enter: { right: 0 },
       update: { right: 0 },
@@ -255,9 +260,10 @@ export function ModalRenderer(props: ModalRendererProps) {
       )}
 
       {modalTransition(
-        (modalAnimatedStyle, modalItem) =>
+        (modalAnimatedStyle, modalItem, modalT) =>
           !!modalItem && (
             <View
+              key={modalT.key}
               collapsable={false}
               style={[
                 sharedStyles.absolute,
@@ -302,9 +308,10 @@ export function ModalRenderer(props: ModalRendererProps) {
               </View>
 
               {separatorTransition(
-                (separatorAnimatedStyle, separatorItem) =>
+                (separatorAnimatedStyle, separatorItem, separatorT) =>
                   !!separatorItem && (
                     <SpringAnimatedView
+                      key={separatorT.key}
                       collapsable={false}
                       style={[
                         sharedStyles.absolute,

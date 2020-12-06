@@ -111,6 +111,7 @@ export const ColumnFiltersRenderer = React.memo(
     const overlayTransition = useTransition(isOpen, {
       config: getDefaultReactSpringAnimationConfig({ precision: 0.01 }),
       immediate,
+      unique: true,
       from: { opacity: 0 },
       enter: { opacity: 0.75 },
       update: { opacity: isOpen ? 0.75 : 0 },
@@ -126,41 +127,35 @@ export const ColumnFiltersRenderer = React.memo(
     const absolutePositionTransitionKey = [
       `column-options-renderer-${type === 'shared' ? 'shared' : columnId}`,
     ]
-    const absolutePositionTransition = useTransition<
-      boolean,
-      { left: number; right: number }
-    >(
-      true,
-      enableAbsolutePositionAnimation &&
+    const absolutePositionTransition = useTransition(true, {
+      config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
+      immediate: constants.DISABLE_ANIMATIONS,
+      unique: true,
+      from: { left: 0, right: 0 },
+      leave: { left: 0, right: 0 },
+      enter: { left: 0, right: 0 },
+      update: { left: 0, right: 0 },
+      ...(!!(
+        enableAbsolutePositionAnimation &&
         !inlineMode &&
         fixedPosition &&
         fixedWidth
-        ? {
-            key: absolutePositionTransitionKey,
-            config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
-            immediate: constants.DISABLE_ANIMATIONS,
-            from: {
-              [fixedPosition]: -fixedWidth,
-            },
-            leave: {
-              [fixedPosition]: -fixedWidth,
-            },
-            enter: {
-              [fixedPosition]: isOpen ? 0 : -fixedWidth,
-            },
-            update: {
-              [fixedPosition]: isOpen ? 0 : -fixedWidth,
-            },
-          }
-        : {
-            config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
-            immediate: constants.DISABLE_ANIMATIONS,
-            from: { left: 0, right: 0 },
-            leave: { left: 0, right: 0 },
-            enter: { left: 0, right: 0 },
-            update: { left: 0, right: 0 },
+      ) &&
+        ({
+          from: {
+            [fixedPosition]: -fixedWidth,
           },
-    )
+          leave: {
+            [fixedPosition]: -fixedWidth,
+          },
+          enter: {
+            [fixedPosition]: isOpen ? 0 : -fixedWidth,
+          },
+          update: {
+            [fixedPosition]: isOpen ? 0 : -fixedWidth,
+          },
+        } as {})),
+    })
 
     if (!renderFilter) return null
     if (!columnId) return null
@@ -176,7 +171,7 @@ export const ColumnFiltersRenderer = React.memo(
 
         return (
           <SpringAnimatedView
-            key={`${absolutePositionT.key}-inner-container`}
+            key={absolutePositionT.key}
             style={[
               !inlineMode && sharedStyles.fullWidth,
               sharedStyles.fullHeight,
