@@ -15,7 +15,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "now": "20.1.2"
+    "now": "21.0.1"
   },
   "engines": {
     "node": ">=12"
