@@ -1,4 +1,3 @@
-+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 diff --git a/node_modules/react-native-vector-icons/fonts.gradle b/node_modules/react-native-vector-icons/fonts.gradle
 index 490756c..7a038c0 100644
 --- a/node_modules/react-native-vector-icons/fonts.gradle
@@ -38,26 +37,38 @@ index 490756c..7a038c0 100644
          }
  
 diff --git a/node_modules/react-native-vector-icons/lib/create-icon-set.js b/node_modules/react-native-vector-icons/lib/create-icon-set.js
-index 93a7418..ef1df18 100644
+index 93a7418..84ea680 100644
 --- a/node_modules/react-native-vector-icons/lib/create-icon-set.js
 +++ b/node_modules/react-native-vector-icons/lib/create-icon-set.js
-@@ -11,7 +11,7 @@ import {
+@@ -10,8 +10,8 @@ import {
+ 
  import ensureNativeModuleAvailable from './ensure-native-module-available';
  import createIconButtonComponent from './icon-button';
- import createTabBarItemIOSComponent from './tab-bar-item-ios';
+-import createTabBarItemIOSComponent from './tab-bar-item-ios';
 -import createToolbarAndroidComponent from './toolbar-android';
++// import createTabBarItemIOSComponent from './tab-bar-item-ios';
 +// import createToolbarAndroidComponent from './toolbar-android';
  
  export const NativeIconAPI =
    NativeModules.RNVectorIconsManager || NativeModules.RNVectorIconsModule;
-@@ -174,10 +174,10 @@ export default function createIconSet(
-     getImageSource
-   );
-   Icon.TabBarItemIOS = Icon.TabBarItem;
+@@ -169,15 +169,15 @@ export default function createIconSet(
+   }
+ 
+   Icon.Button = createIconButtonComponent(Icon);
+-  Icon.TabBarItem = createTabBarItemIOSComponent(
+-    IconNamePropType,
+-    getImageSource
+-  );
+-  Icon.TabBarItemIOS = Icon.TabBarItem;
 -  Icon.ToolbarAndroid = createToolbarAndroidComponent(
 -    IconNamePropType,
 -    getImageSource
 -  );
++  // Icon.TabBarItem = createTabBarItemIOSComponent(
++  //   IconNamePropType,
++  //   getImageSource
++  // );
++  // Icon.TabBarItemIOS = Icon.TabBarItem;
 +  // Icon.ToolbarAndroid = createToolbarAndroidComponent(
 +  //   IconNamePropType,
 +  //   getImageSource
