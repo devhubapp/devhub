@@ -130,8 +130,8 @@ export const listenForNextMessageData = (
       // reliable cross-browser way to check if popup was closed
       const timer = setInterval(() => {
         if (popup.closed) {
-          onClosePopup()
           clearInterval(timer)
+          setTimeout(onClosePopup, 500)
         } else if (finished) {
           clearInterval(timer)
         }
