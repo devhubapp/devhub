@@ -39,7 +39,7 @@ import {
   clearQueryStringFromURL,
 } from '../utils/helpers/auth'
 
-const logo = require('@devhub/components/assets/logo_circle.png') // eslint-disable-line
+const logo = require('@devhub/components/assets/logo_circle.png').default // eslint-disable-line
 
 const styles = StyleSheet.create({
   container: {

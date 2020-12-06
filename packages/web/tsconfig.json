@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "noEmit": true,
     "outDir": "dist",
     "rootDir": "src",
@@ -10,7 +10,8 @@
       "../../@types",
       "../../node_modules/@types"
     ],
-    "module": "esnext"
+    "module": "esnext",
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src/*"
