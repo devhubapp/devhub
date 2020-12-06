@@ -82,29 +82,29 @@
   },
   "dependencies": {
     "@devhub/core": "0.101.0",
-    "electron-fetch": "1.4.0",
-    "electron-store": "5.2.0",
-    "electron-updater": "4.3.1",
-    "jsonfile": "6.0.1",
+    "electron-fetch": "1.7.2",
+    "electron-store": "6.0.1",
+    "electron-updater": "4.3.5",
+    "jsonfile": "6.1.0",
     "mkdirp": "1.0.4",
-    "semver": "7.3.2"
+    "semver": "7.3.4"
   },
   "devDependencies": {
     "@types/electron-devtools-installer": "2.2.0",
     "@types/electron-store": "3.2.0",
     "@types/jsonfile": "6.0.0",
     "@types/mkdirp": "1.0.1",
-    "@types/semver": "7.2.0",
+    "@types/semver": "7.3.4",
     "dotenv": "8.2.0",
-    "electron": "9.0.3",
-    "electron-builder": "22.7.0",
-    "electron-devtools-installer": "3.0.0",
+    "electron": "11.0.3",
+    "electron-builder": "22.9.1",
+    "electron-devtools-installer": "3.1.1",
     "electron-notarize": "1.0.0",
     "electron-timber": "0.5.1",
-    "nodemon": "2.0.4",
+    "nodemon": "2.0.6",
     "shx": "0.3.3",
     "typescript": "4.1.2",
-    "wait-on": "3.3.0"
+    "wait-on": "5.2.0"
   },
   "peerDependencies": {
     "eslint": "*"

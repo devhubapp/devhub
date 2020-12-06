@@ -56,8 +56,8 @@ export function DialogProvider(props: DialogProviderProps) {
 
   const value = useMemo<DialogProviderState>(
     () => ({
-      show: (...params) => dialogRef.current!.show(params),
-      hide: () => dialogRef.current!.hide(),
+      show: (...params) => dialogRef.current?.show(params),
+      hide: () => dialogRef.current?.hide(),
     }),
     [],
   )
