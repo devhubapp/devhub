@@ -246,12 +246,12 @@ export const LoginScreen = React.memo(() => {
                 )
 
                 redirected = true
-                resolveToken()
+                resolveToken(undefined)
               },
             },
             {
               text: 'Cancel',
-              onPress: () => resolveToken(),
+              onPress: () => resolveToken(undefined),
               style: 'cancel',
             },
           ],

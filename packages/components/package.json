@@ -67,7 +67,7 @@
     "react-native-typescript-transformer": "1.2.13",
     "reselect-tools": "0.0.7",
     "ts-jest": "26.0.0",
-    "typescript": "4.0.5"
+    "typescript": "4.1.2"
   },
   "peerDependencies": {
     "eslint": "*"
