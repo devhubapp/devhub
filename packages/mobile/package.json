@@ -23,7 +23,7 @@
     "bugsnag-react-native": "2.23.2",
     "intl": "1.2.5",
     "intl-locales-supported": "1.6.0",
-    "react": "16.13.1",
+    "react": "17.0.1",
     "react-native": "0.63.0-rc.1",
     "react-native-gesture-handler": "1.6.1",
     "react-native-haptic-feedback": "1.10.0",
@@ -40,7 +40,7 @@
     "babel-jest": "26.0.1",
     "jest": "26.0.1",
     "metro-react-native-babel-preset": "0.59.0",
-    "react-test-renderer": "16.13.1",
+    "react-test-renderer": "17.0.1",
     "ts-jest": "26.0.0"
   },
   "peerDependencies": {
