@@ -49,7 +49,7 @@
     "husky": "4.3.4",
     "lint-staged": "10.5.3",
     "now": "21.0.1",
-    "patch-package": "6.0.5",
+    "patch-package": "6.2.2",
     "postinstall-prepare": "1.0.1",
     "prettier": "2.2.1",
     "shx": "0.3.2",
