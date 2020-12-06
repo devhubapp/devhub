@@ -30,7 +30,6 @@
     "format": "yarn workspaces run format",
     "lint": "yarn workspaces run lint",
     "patch-package": "patch-package",
-    "postinstall": "jetifier",
     "prepare": "yarn patch-package",
     "studio": "yarn workspace @devhub/mobile studio",
     "xcode": "yarn workspace @devhub/mobile xcode"
@@ -48,7 +47,6 @@
     "eslint-config-prettier": "7.0.0",
     "eslint-plugin-prettier": "3.2.0",
     "husky": "1.3.1",
-    "jetifier": "1.6.4",
     "lint-staged": "10.5.3",
     "now": "21.0.1",
     "patch-package": "6.0.5",
