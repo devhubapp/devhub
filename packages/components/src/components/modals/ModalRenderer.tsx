@@ -1,7 +1,7 @@
 import { constants, ModalPayloadWithIndex } from '@devhub/core'
 import React, { useEffect } from 'react'
 import { BackHandler, Dimensions, StyleSheet, View } from 'react-native'
-import { useTransition } from 'react-spring/native'
+import { useTransition } from '@react-spring/native'
 
 import { SettingsModal } from '../../components/modals/SettingsModal'
 import { usePrevious } from '../../hooks/use-previous'
@@ -151,61 +151,53 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   const size = columnWidth + (renderSeparator ? separatorThickSize : 0)
 
-  const overlayTransition = useTransition<boolean, any>(
-    currentOpenedModal ? [true] : [],
-    () => 'modal-overlay',
-    {
-      reset: false,
-      unique: true,
-      immediate: immediate || sizename <= '2-medium',
-      config: getDefaultReactSpringAnimationConfig({ precision: 0.01 }),
-      from: { opacity: 0 },
-      enter: { opacity: 0.75 },
-      leave: { opacity: 0 },
-    },
-  )[0]
+  const overlayTransition = useTransition(currentOpenedModal, {
+    immediate: immediate || sizename <= '2-medium',
+    config: getDefaultReactSpringAnimationConfig({ precision: 0.01 }),
+    from: { opacity: 0 },
+    enter: { opacity: 0.75 },
+    leave: { opacity: 0 },
+  })
 
-  const modalTransitions = useTransition<
-    ModalPayloadWithIndex | undefined,
-    any
-  >(modalStack, (item) => `modal-stack-${item && item.name}`, {
-    reset: false,
+  const modalTransition = useTransition(modalStack, {
     config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
     immediate,
     ...(appOrientation === 'portrait'
       ? {
-          from: (item: ModalPayloadWithIndex) =>
-            (item.index === 0 && modalStack.length) ||
-            (item.index > 0 && !modalStack.length)
+          from: (item) =>
+            (item?.index === 0 && modalStack.length) ||
+            (item?.index && !modalStack.length)
               ? { top: Dimensions.get('window').height, left: 0 }
               : { top: 0, left: size },
           enter: { top: 0, left: 0 },
-          update: (item: ModalPayloadWithIndex) =>
-            modalStack.length > 1 && item.index !== modalStack.length - 1
+          update: (item) =>
+            modalStack.length > 1 && item?.index !== modalStack.length - 1
               ? { top: 0, left: -50 }
               : { top: 0, left: 0 },
-          leave: (item: ModalPayloadWithIndex) =>
-            item.index === 0 || !modalStack.length
+          leave: (item) =>
+            item?.index === 0 || !modalStack.length
               ? { top: Dimensions.get('window').height, left: 0 }
               : { top: 0, left: size },
         }
       : {
-          from: (item: ModalPayloadWithIndex) =>
-            (item.index === 0 && modalStack.length && !previouslyOpenedModal) ||
-            (item.index > 0 && !modalStack.length)
+          from: (item) =>
+            (item?.index === 0 &&
+              modalStack.length &&
+              !previouslyOpenedModal) ||
+            (item?.index && !modalStack.length)
               ? { left: -size }
               : { left: size },
           enter: { left: 0 },
-          update: (item: ModalPayloadWithIndex) =>
-            item.index !== modalStack.length - 1
+          update: (item) =>
+            item?.index !== modalStack.length - 1
               ? { left: -size / 3 }
               : { left: 0 },
 
-          leave: (item: ModalPayloadWithIndex) =>
-            item.index >= modalStack.length &&
+          leave: (item) =>
+            (item?.index ?? -1) >= modalStack.length &&
             modalStack.length &&
             previouslyOpenedModal &&
-            previouslyOpenedModal.name === item.name &&
+            previouslyOpenedModal.name === item?.name &&
             previousModalStack &&
             previousModalStack[0] &&
             previousModalStack[0].name === (modalStack[0] && modalStack[0].name)
@@ -214,12 +206,13 @@ export function ModalRenderer(props: ModalRendererProps) {
         }),
   })
 
-  const separatorTransitions = useTransition<string, any>(
+  const separatorTransition = useTransition(
     renderSeparator && sizename !== '2-medium' && modalStack.length
       ? [(modalStack[0] && modalStack[0]!.name) || '']
       : [],
-    (item) => `modal-separator-${item}`,
     {
+      keys: (item: ModalPayloadWithIndex | undefined) =>
+        `modal-separator-${item}`,
       reset: false,
       unique: true,
       config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
@@ -233,102 +226,101 @@ export function ModalRenderer(props: ModalRendererProps) {
 
   return (
     <>
-      {!!overlayTransition && (
-        <SpringAnimatedView
-          collapsable={false}
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              ...overlayTransition.props,
-              zIndex: 500,
-            },
-          ]}
-        >
-          <ThemedTouchableOpacity
-            activeOpacity={1}
-            backgroundColor="backgroundColorMore1"
-            style={[
-              sharedStyles.fullWidth,
-              sharedStyles.fullHeight,
-              Platform.select({ web: { cursor: 'default' } as any }),
-            ]}
-            onPress={() => closeAllModals()}
-            tabIndex={-1}
-          />
-        </SpringAnimatedView>
+      {overlayTransition(
+        ({ opacity }, overlayItem) =>
+          !!overlayItem && (
+            <SpringAnimatedView
+              collapsable={false}
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  opacity,
+                  zIndex: 500,
+                },
+              ]}
+            >
+              <ThemedTouchableOpacity
+                activeOpacity={1}
+                backgroundColor="backgroundColorMore1"
+                style={[
+                  sharedStyles.fullWidth,
+                  sharedStyles.fullHeight,
+                  Platform.select({ web: { cursor: 'default' } as any }),
+                ]}
+                onPress={() => closeAllModals()}
+                tabIndex={-1}
+              />
+            </SpringAnimatedView>
+          ),
       )}
 
-      {!!modalTransitions.length && (
-        <View
-          collapsable={false}
-          style={[
-            sharedStyles.absolute,
-            sharedStyles.overflowHidden,
-            {
-              top: 0,
-              bottom: 0,
-              left: 0,
-              width: size,
-              zIndex: 900,
-            },
-          ]}
-        >
-          <View
-            collapsable={false}
-            style={[
-              sharedStyles.flex,
-              sharedStyles.fullHeight,
-              sharedStyles.overflowHidden,
-              {
-                width: columnWidth,
-                zIndex: 900,
-              },
-            ]}
-          >
-            {modalTransitions.map(
-              ({ key, item, props: { width, ...animatedStyle } }) =>
-                !!item && (
-                  <SpringAnimatedView
-                    key={key}
-                    collapsable={false}
-                    style={[
-                      sharedStyles.absolute,
-                      sharedStyles.horizontal,
-                      sharedStyles.overflowHidden,
-                      {
-                        top: 0,
-                        bottom: 0,
-                        ...animatedStyle,
-                        zIndex: 900 + item.index,
-                      },
-                    ]}
-                  >
-                    <DialogProvider>{renderModal(item)}</DialogProvider>
-                  </SpringAnimatedView>
-                ),
-            )}
-          </View>
-
-          {separatorTransitions.map(
-            ({ key, item, props: animatedStyle }) =>
-              !!item && (
+      {modalTransition(
+        (modalAnimatedStyle, modalItem) =>
+          !!modalItem && (
+            <View
+              collapsable={false}
+              style={[
+                sharedStyles.absolute,
+                sharedStyles.overflowHidden,
+                {
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  width: size,
+                  zIndex: 900,
+                },
+              ]}
+            >
+              <View
+                collapsable={false}
+                style={[
+                  sharedStyles.flex,
+                  sharedStyles.fullHeight,
+                  sharedStyles.overflowHidden,
+                  {
+                    width: columnWidth,
+                    zIndex: 900,
+                  },
+                ]}
+              >
                 <SpringAnimatedView
-                  key={key}
                   collapsable={false}
                   style={[
                     sharedStyles.absolute,
+                    sharedStyles.horizontal,
+                    sharedStyles.overflowHidden,
                     {
                       top: 0,
                       bottom: 0,
+                      ...modalAnimatedStyle,
+                      zIndex: 900 + modalItem.index,
                     },
-                    animatedStyle,
                   ]}
                 >
-                  <ColumnSeparator />
+                  <DialogProvider>{renderModal(modalItem)}</DialogProvider>
                 </SpringAnimatedView>
-              ),
-          )}
-        </View>
+              </View>
+
+              {separatorTransition(
+                (separatorAnimatedStyle, separatorItem) =>
+                  !!separatorItem && (
+                    <SpringAnimatedView
+                      collapsable={false}
+                      style={[
+                        sharedStyles.absolute,
+                        {
+                          top: 0,
+                          bottom: 0,
+                        },
+                        separatorAnimatedStyle,
+                      ]}
+                    >
+                      <ColumnSeparator />
+                    </SpringAnimatedView>
+                  ),
+              )}
+            </View>
+          ),
       )}
     </>
   )

@@ -6,7 +6,7 @@ import {
   ScrollView,
   View,
 } from 'react-native'
-import { useTransition } from 'react-spring/native'
+import { useTransition } from '@react-spring/native'
 
 import { constants } from '@devhub/core'
 import { usePrevious } from '../../hooks/use-previous'
@@ -31,25 +31,21 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
   const [isRenderEnabled, setIsRenderEnabled] = useState(isOpen)
 
   const immediate = constants.DISABLE_ANIMATIONS
-  const transitions = useTransition(
-    isOpen ? [true] : [],
-    isOpen ? ['accordion-view'] : [],
-    {
-      immediate,
-      config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
+  const transition = useTransition(isOpen, {
+    immediate,
+    config: getDefaultReactSpringAnimationConfig({ precision: 1 }),
 
-      from: { height: 0 },
-      enter: { height: isOpen ? size : 0 },
-      leave: { height: 0 },
-      update: { height: isOpen ? size : 0 },
-      // onStart: () => {
-      //   hasCompletedAnimationRef.current = false
-      // },
-      onRest: () => {
-        hasCompletedAnimationRef.current = !!isOpen
-      },
+    from: { height: 0 },
+    enter: { height: isOpen ? size : 0 },
+    leave: { height: 0 },
+    update: { height: isOpen ? size : 0 },
+    // onStart: () => {
+    //   hasCompletedAnimationRef.current = false
+    // },
+    onRest: () => {
+      hasCompletedAnimationRef.current = !!isOpen
     },
-  )
+  })
 
   const handleContentSizeChange = useCallback(
     (_width: number, height: number) => {
@@ -92,53 +88,44 @@ export const AccordionView = React.memo((props: AccordionViewProps) => {
     [onLayout, isRenderEnabled, children, handleContentSizeChange],
   )
 
-  return (
-    <>
-      {transitions.map(
-        (transition) =>
-          !!(transition && transition.item && transition.props) && (
-            <SpringAnimatedView
-              key={transition.key}
-              hidden={(transition.props.height.to as any)(
-                (value: 'auto' | number) =>
-                  (value === 'auto' || value > 0 ? false : true) as any,
-              )}
-              style={[
-                sharedStyles.overflowHidden,
-                {
-                  height:
-                    isOpen &&
-                    wasOpen === isOpen &&
-                    hasCompletedAnimationRef.current
-                      ? 'auto'
-                      : (transition.props.height
-                          .to as any)((value: 'auto' | number) =>
-                          value === 'auto'
-                            ? value
-                            : value > 0
-                            ? Math.floor(value)
-                            : 0,
-                        ),
-                  opacity: (transition.props.height
-                    .to as any)((value: 'auto' | number) =>
-                    value === 'auto' || value > 0 ? 1 : 0,
-                  ),
+  return transition(({ height }, item) => {
+    if (!item) return null
+    if (!height) return null
 
-                  // [web] disable keyboard focus for this tree when accordion is collapsed
-                  ['visibility' as any]: (transition.props.height
-                    .to as any)((value: 'auto' | number) =>
-                    value === 'auto' || value > 0 ? 'visible' : 'hidden',
+    return (
+      <SpringAnimatedView
+        hidden={height.to((value) =>
+          value === 'auto' || value > 0 ? false : true,
+        )}
+        style={[
+          sharedStyles.overflowHidden,
+          {
+            height:
+              isOpen && wasOpen === isOpen && hasCompletedAnimationRef.current
+                ? 'auto'
+                : height.to((value) =>
+                    value === 'auto'
+                      ? value
+                      : value > 0
+                      ? Math.floor(value)
+                      : 0,
                   ),
-                  ['willChange' as any]: 'height',
-                },
-              ]}
-            >
-              {Content}
-            </SpringAnimatedView>
-          ),
-      )}
-    </>
-  )
+            opacity: height.to((value) =>
+              value === 'auto' || value > 0 ? 1 : 0,
+            ),
+
+            // [web] disable keyboard focus for this tree when accordion is collapsed
+            ['visibility']: height.to((value) =>
+              value === 'auto' || value > 0 ? 'visible' : 'hidden',
+            ),
+            ['willChange']: 'height',
+          },
+        ]}
+      >
+        {Content}
+      </SpringAnimatedView>
+    )
+  })
 })
 
 AccordionView.displayName = 'AccordionView'

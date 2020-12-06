@@ -6,7 +6,7 @@ import {
 import { rgba } from 'polished'
 import React, { useCallback, useLayoutEffect, useRef } from 'react'
 import { View } from 'react-native'
-import { useSpring } from 'react-spring/native'
+import { useSpring } from '@react-spring/native'
 
 import { useHover } from '../../hooks/use-hover'
 import { useReduxAction } from '../../hooks/use-redux-action'

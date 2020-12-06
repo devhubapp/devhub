@@ -1,7 +1,7 @@
 import { ThemeColors } from '@devhub/core'
 import React, { useEffect, useRef } from 'react'
 import { AppState, InteractionManager, View } from 'react-native'
-import { useSpring } from 'react-spring/native'
+import { useSpring } from '@react-spring/native'
 
 import { sharedStyles } from '../../styles/shared'
 import { scaleFactor } from '../../styles/variables'
