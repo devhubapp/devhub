@@ -31,7 +31,7 @@
     "smoothscroll-polyfill": "0.4.4"
   },
   "devDependencies": {
-    "@types/jest": "25.2.3",
+    "@types/jest": "26.0.16",
     "@types/node": "14.0.5",
     "@types/react": "17.0.0",
     "@types/react-dom": "16.9.8",
