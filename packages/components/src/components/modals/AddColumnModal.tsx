@@ -238,7 +238,12 @@ function AddColumnModalItem({
           ? () =>
               pushModal({
                 name: 'ADD_COLUMN_DETAILS',
-                params: payload,
+                params: {
+                  ...payload,
+                  title: payload.title
+                    ?.replace(' (private)', '')
+                    .replace(' (public)', ''),
+                },
               })
           : undefined
       }
