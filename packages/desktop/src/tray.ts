@@ -107,7 +107,7 @@ export function alignWindowWithTray(win: BrowserWindow) {
 
   let x: number
   let y: number
-  const spacing = 8
+  const spacing = 0
 
   if (top) {
     y = Math.round(trayCenter.y)
