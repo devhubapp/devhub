@@ -30,17 +30,22 @@ export function findNode(ref: any) {
   }
 }
 
-export function tryFocus(ref: any) {
-  const node = findNode(ref)
+export function tryFocus(ref: any): boolean | null {
+  try {
+    const node = findNode(ref)
 
-  if (node && node.focus) {
-    if (!(node.tabIndex >= 0)) node.tabIndex = -1
+    if (node?.focus) {
+      if (!(node.tabIndex >= 0)) node.tabIndex = -1
 
-    node.focus({ preventScroll: true })
-    return node
+      node.focus({ preventScroll: true })
+      return true
+    }
+  } catch (error) {
+    console.error(error)
+    return false
   }
 
-  return false
+  return null
 }
 
 export function getGitHubAppInstallUri(
