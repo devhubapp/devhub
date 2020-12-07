@@ -36,7 +36,7 @@ static void InitializeFlipper(UIApplication *application) {
 {
 #if DEBUG && !TARGET_OS_MACCATALYST
 #ifdef FB_SONARKIT_ENABLED
-  InitializeFlipper(application);
+//  InitializeFlipper(application);
 #endif
 #endif
 
