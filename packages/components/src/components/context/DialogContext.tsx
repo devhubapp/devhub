@@ -339,7 +339,10 @@ const DialogView = React.memo(
                             >
                               <Button
                                 autoFocus={
-                                  buttonType === 'primary' && !disabled
+                                  Platform.OS === 'web' &&
+                                  !(renderInput && options) &&
+                                  buttonType === 'primary' &&
+                                  !disabled
                                 }
                                 disabled={disabled}
                                 onPress={() => {
