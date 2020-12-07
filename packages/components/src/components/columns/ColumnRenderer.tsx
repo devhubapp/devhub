@@ -35,8 +35,10 @@ import {
   FreeTrialHeaderMessage,
   FreeTrialHeaderMessageProps,
 } from '../common/FreeTrialHeaderMessage'
+import { HeaderMessage } from '../common/HeaderMessage'
 import { useColumnWidth } from '../context/ColumnWidthContext'
 import { useAppLayout } from '../context/LayoutContext'
+import { useLoginHelpers } from '../context/LoginHelpersContext'
 import { usePlans } from '../context/PlansContext'
 import { Column } from './Column'
 import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
@@ -130,10 +132,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
   })
   const { hasCrossedColumnsLimit, filteredItems } = columnData
 
-  const { cheapestPlanWithNotifications } = usePlans()
-  const columnsCount = useReduxState(selectors.columnCountSelector)
-  const plan = useReduxState(selectors.currentUserPlanSelector)
-  const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
   const dispatch = useDispatch()
   const store = useStore()
 
@@ -147,85 +145,6 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
       return !!(item && !isItemSaved(item)) /* && isItemRead(item) */
     },
   )
-
-  const showBannerForPaidFeature: FreeTrialHeaderMessageProps | undefined =
-    isPlanExpired && plan && plan.trialEndAt
-      ? {
-          backgroundColor: 'backgroundColorDarker1',
-          foregroundColor: 'foregroundColorMuted65',
-          intervalRefresh: { date: plan.trialEndAt },
-          message: () =>
-            `${plan.amount ? 'Trial' : 'Free trial'} ${getDateSmallText(
-              plan.trialEndAt,
-              {
-                pastPrefix: 'ended',
-                futurePrefix: '',
-                showPrefixOnFullDate: true,
-
-                pastSuffix: 'ago',
-                futureSuffix: 'left',
-                showSuffixOnFullDate: false,
-              },
-            )}`,
-        }
-      : plan &&
-        plan.featureFlags.columnsLimit >= 1 &&
-        columnIndex + 1 > plan.featureFlags.columnsLimit
-      ? columnIndex + 1 === plan.featureFlags.columnsLimit &&
-        columnIndex + 1 === columnsCount &&
-        columnIndex + 1 <= constants.COLUMNS_LIMIT
-        ? {
-            message: 'Columns limit reached. Tap for more.',
-            relatedFeature: 'columnsLimit',
-          }
-        : undefined
-      : (!(
-          plan &&
-          isPlanStatusValid(plan) &&
-          plan.featureFlags.enablePrivateRepositories
-        ) &&
-          (columnType === 'activity'
-            ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
-                isEventPrivate(item),
-              )
-            : columnType === 'notifications'
-            ? (filteredItems as any[]).some(
-                (item: EnhancedGitHubNotification) =>
-                  isNotificationPrivate(item) && !!item.enhanced,
-              )
-            : // TODO: Handle for IssueOrPullRequest Column
-              undefined) && {
-            message:
-              cheapestPlanWithNotifications &&
-              cheapestPlanWithNotifications.amount
-                ? `Unlock private repos for ${formatPriceAndInterval(
-                    cheapestPlanWithNotifications,
-                  )}`
-                : 'Tap to unlock Private Repositories',
-            relatedFeature: 'enablePrivateRepositories',
-          }) ||
-        (plan &&
-        plan.status === 'trialing' &&
-        plan.trialEndAt &&
-        new Date(plan.trialEndAt).valueOf() - Date.now() <
-          1000 * 60 * 60 * 24 * 14
-          ? {
-              intervalRefresh: { date: plan.trialEndAt },
-              message: () =>
-                `${plan.amount ? 'Trial' : 'Free trial'} (${getDateSmallText(
-                  plan.trialEndAt,
-                  {
-                    pastPrefix: 'ended',
-                    futurePrefix: '',
-                    showPrefixOnFullDate: true,
-
-                    pastSuffix: 'ago',
-                    futureSuffix: 'left',
-                    showSuffixOnFullDate: false,
-                  },
-                )})`,
-            }
-          : undefined)
 
   const refresh = useCallback(() => {
     dispatch(
@@ -432,11 +351,129 @@ export const ColumnRenderer = React.memo((props: ColumnRendererProps) => {
         type="local"
       />
 
-      {!!showBannerForPaidFeature && (
-        <FreeTrialHeaderMessage {...showBannerForPaidFeature} />
-      )}
+      <ColumnFooterHeaderMessage
+        columnData={columnData}
+        columnIndex={columnIndex}
+        columnType={columnType}
+      />
     </Column>
   )
 })
 
 ColumnRenderer.displayName = 'ColumnRenderer'
+
+function ColumnFooterHeaderMessage({
+  columnData,
+  columnIndex,
+  columnType,
+}: {
+  columnType: ColumnT['type']
+  columnIndex: number
+  columnData: ReturnType<typeof useColumnData>
+}) {
+  const { filteredItems } = columnData
+
+  const { addPersonalAccessToken } = useLoginHelpers()
+
+  const { cheapestPlanWithNotifications } = usePlans()
+  const columnsCount = useReduxState(selectors.columnCountSelector)
+  const plan = useReduxState(selectors.currentUserPlanSelector)
+  const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
+  const personalTokenDetails = useReduxState(
+    selectors.githubPersonalTokenDetailsSelector,
+  )
+
+  const showBannerForPaidFeature: FreeTrialHeaderMessageProps | undefined =
+    isPlanExpired && plan && plan.trialEndAt
+      ? {
+          backgroundColor: 'backgroundColorDarker1',
+          foregroundColor: 'foregroundColorMuted65',
+          intervalRefresh: { date: plan.trialEndAt },
+          message: () =>
+            `${plan.amount ? 'Trial' : 'Free trial'} ${getDateSmallText(
+              plan.trialEndAt,
+              {
+                pastPrefix: 'ended',
+                futurePrefix: '',
+                showPrefixOnFullDate: true,
+
+                pastSuffix: 'ago',
+                futureSuffix: 'left',
+                showSuffixOnFullDate: false,
+              },
+            )}`,
+        }
+      : plan &&
+        plan.featureFlags.columnsLimit >= 1 &&
+        columnIndex + 1 > plan.featureFlags.columnsLimit
+      ? columnIndex + 1 === plan.featureFlags.columnsLimit &&
+        columnIndex + 1 === columnsCount &&
+        columnIndex + 1 <= constants.COLUMNS_LIMIT
+        ? {
+            message: 'Columns limit reached. Tap for more.',
+            relatedFeature: 'columnsLimit',
+          }
+        : undefined
+      : (!(
+          plan &&
+          isPlanStatusValid(plan) &&
+          plan.featureFlags.enablePrivateRepositories
+        ) &&
+          (columnType === 'activity'
+            ? (filteredItems as any[]).some((item: EnhancedGitHubEvent) =>
+                isEventPrivate(item),
+              )
+            : columnType === 'notifications'
+            ? (filteredItems as any[]).some(
+                (item: EnhancedGitHubNotification) =>
+                  isNotificationPrivate(item) && !!item.enhanced,
+              )
+            : // TODO: Handle for IssueOrPullRequest Column
+              undefined) && {
+            message:
+              cheapestPlanWithNotifications &&
+              cheapestPlanWithNotifications.amount
+                ? `Unlock private repos for ${formatPriceAndInterval(
+                    cheapestPlanWithNotifications,
+                  )}`
+                : 'Tap to unlock Private Repositories',
+            relatedFeature: 'enablePrivateRepositories',
+          }) ||
+        (plan &&
+        plan.status === 'trialing' &&
+        plan.trialEndAt &&
+        new Date(plan.trialEndAt).valueOf() - Date.now() <
+          1000 * 60 * 60 * 24 * 14
+          ? {
+              intervalRefresh: { date: plan.trialEndAt },
+              message: () =>
+                `${plan.amount ? 'Trial' : 'Free trial'} (${getDateSmallText(
+                  plan.trialEndAt,
+                  {
+                    pastPrefix: 'ended',
+                    futurePrefix: '',
+                    showPrefixOnFullDate: true,
+
+                    pastSuffix: 'ago',
+                    futureSuffix: 'left',
+                    showSuffixOnFullDate: false,
+                  },
+                )})`,
+            }
+          : undefined)
+
+  return !!showBannerForPaidFeature ? (
+    <FreeTrialHeaderMessage {...showBannerForPaidFeature} />
+  ) : columnType === 'notifications' && !personalTokenDetails?.token ? (
+    <HeaderMessage
+      analyticsLabel="pat_notifications_column"
+      backgroundColor="backgroundColor"
+      color="foregroundColorMuted65"
+      onPress={() => {
+        void addPersonalAccessToken()
+      }}
+    >
+      Enable Private Repositories support
+    </HeaderMessage>
+  ) : null
+}
