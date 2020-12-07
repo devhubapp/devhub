@@ -324,6 +324,8 @@ PODS:
     - React-jsi (= 0.64.0-rc.1)
     - React-perflogger (= 0.64.0-rc.1)
   - React-jsinspector (0.64.0-rc.1)
+  - react-native-flipper (0.68.0):
+    - React
   - react-native-is-catalyst (1.0.0):
     - React
   - react-native-safe-area-context (3.1.9):
@@ -454,6 +456,7 @@ DEPENDENCIES:
   - React-jsi (from `../../../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../../../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../../../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-flipper (from `../../../node_modules/react-native-flipper`)
   - react-native-is-catalyst (from `../../../node_modules/react-native-is-catalyst`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../../../node_modules/react-native-splash-screen`)
@@ -538,6 +541,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../../../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-flipper:
+    :path: "../../../node_modules/react-native-flipper"
   react-native-is-catalyst:
     :path: "../../../node_modules/react-native-is-catalyst"
   react-native-safe-area-context:
@@ -624,6 +629,7 @@ SPEC CHECKSUMS:
   React-jsi: 2b2fa475a8b243212d411a607ae7e231ff3493b2
   React-jsiexecutor: 27558a1d43688cbb87b102cc9bef801408bbeacf
   React-jsinspector: c684d092816c36462779e0bb99837e60702c8f29
+  react-native-flipper: 7077153889f54d57e1f61c579da23426f0bb5e39
   react-native-is-catalyst: 52ee70e0123c82419dd4ce47dc4cc94b22467512
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
