@@ -69,26 +69,26 @@ import {
   getRepoUrlFromFullName,
 } from './url'
 
-const GITHUB_USERNAME_REGEX_PATTERN =
+export const GITHUB_USERNAME_REGEX_PATTERN =
   '[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}'
 export const GITHUB_USERNAME_REGEX = new RegExp(
   `^${GITHUB_USERNAME_REGEX_PATTERN}$`,
   '',
 )
 
-const GITHUB_REPO_NAME_REGEX_PATTERN = '[a-zA-Z\\d._-]+'
+export const GITHUB_REPO_NAME_REGEX_PATTERN = '[a-zA-Z\\d._-]+'
 export const GITHUB_REPO_NAME_REGEX = new RegExp(
   `^${GITHUB_REPO_NAME_REGEX_PATTERN}$`,
   '',
 )
 
-const GITHUB_REPO_FULL_NAME_FORMAT_REGEX_PATTERN = '([^/]+)\\/([^/]+)'
+export const GITHUB_REPO_FULL_NAME_FORMAT_REGEX_PATTERN = '([^/]+)\\/([^/]+)'
 export const GITHUB_REPO_FULL_NAME_FORMAT_REGEX = new RegExp(
   `^${GITHUB_REPO_FULL_NAME_FORMAT_REGEX_PATTERN}$`,
   '',
 )
 
-const GITHUB_REPO_FULL_NAME_REGEX_PATTERN = `(${GITHUB_USERNAME_REGEX_PATTERN})\\/(${GITHUB_REPO_NAME_REGEX_PATTERN})`
+export const GITHUB_REPO_FULL_NAME_REGEX_PATTERN = `(${GITHUB_USERNAME_REGEX_PATTERN})\\/(${GITHUB_REPO_NAME_REGEX_PATTERN})`
 export const GITHUB_REPO_FULL_NAME_REGEX = new RegExp(
   `^${GITHUB_REPO_FULL_NAME_REGEX_PATTERN}$`,
   '',

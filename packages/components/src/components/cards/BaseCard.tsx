@@ -1,7 +1,15 @@
-import { getDateSmallText, getFullDateText, Theme } from '@devhub/core'
 import React, { Fragment } from 'react'
 import { PixelRatio, ScrollView, StyleSheet, View } from 'react-native'
 import { useDispatch } from 'react-redux'
+
+import {
+  getDateSmallText,
+  getFullDateText,
+  Theme,
+  GITHUB_USERNAME_REGEX_PATTERN,
+  getUserURLFromLogin,
+  getBaseUrlFromOtherUrl,
+} from '@devhub/core'
 
 import { Platform } from '../../libs/platform'
 import * as actions from '../../redux/actions'
@@ -229,6 +237,8 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
       link,
     )
 
+  const baseURL = getBaseUrlFromOtherUrl(link)
+
   const isMuted = false // appViewMode === 'single-column' ? false : isRead
 
   const backgroundThemeColor = (theme: Theme) =>
@@ -275,7 +285,30 @@ export const BaseCard = React.memo((props: BaseCardProps) => {
                 numberOfLines={1}
                 style={styles.action}
               >
-                {action.text}
+                {action.text.match(
+                  new RegExp(`@${GITHUB_USERNAME_REGEX_PATTERN}`, 'i'),
+                )
+                  ? action.text.split(' ').map((str, index) => (
+                      <Fragment key={str}>
+                        {index > 0 && ' '}
+
+                        {str.match(
+                          new RegExp(`@${GITHUB_USERNAME_REGEX_PATTERN}`, 'i'),
+                        ) ? (
+                          <Link
+                            href={getUserURLFromLogin(str.replace('@', ''), {
+                              baseURL,
+                            })}
+                            openOnNewTab
+                          >
+                            <Text style={{ fontSize: undefined }}>{str}</Text>
+                          </Link>
+                        ) : (
+                          str
+                        )}
+                      </Fragment>
+                    ))
+                  : action.text}
               </ThemedText>
             </View>
 
