@@ -785,7 +785,9 @@ function _getCardPropsForItem(
               ((subjectType === 'Repository' ||
                 subjectType === 'RepositoryVulnerabilityAlert') &&
                 repoURL) ||
-              (subjectType === 'User' && users[0] && users[0].html_url) ||
+              (subjectType === 'User' && event.type === 'MemberEvent'
+                ? repoURL
+                : users?.[0]?.html_url) ||
               (branchOrTagName &&
                 ((isTagMainEvent &&
                   `${repoURL}/releases/tag/${branchOrTagName}`) ||
