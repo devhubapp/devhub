@@ -803,9 +803,11 @@ function _getCardPropsForItem(
                     ? branchOrTagName
                     : undefined,
                 issueOrPullRequestNumber: undefined,
-                ownerIsKnown: false,
+                ownerIsKnown:
+                  isBranchMainEvent || isTagMainEvent ? ownerIsKnown : false,
                 repoFullName: repoOwnerName,
-                repoIsKnown: false,
+                repoIsKnown:
+                  isBranchMainEvent || isTagMainEvent ? ownerIsKnown : false,
               })!,
               repo: { owner: repoOwnerName!, name: repoName!, url: repoURL },
             },
