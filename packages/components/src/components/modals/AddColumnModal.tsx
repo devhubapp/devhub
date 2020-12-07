@@ -146,12 +146,23 @@ const columnTypes: {
       {
         payload: {
           icon: { family: 'octicon', name: 'organization' },
-          title: 'Organization activity',
+          title: 'Organization activity (public)',
           subscription: {
             type: 'activity',
             subtype: 'ORG_PUBLIC_EVENTS',
           },
           isPrivateSupported: false,
+        },
+      },
+      {
+        payload: {
+          icon: { family: 'octicon', name: 'organization' },
+          title: 'Organization dashboard (private)',
+          subscription: {
+            type: 'activity',
+            subtype: 'USER_ORG_EVENTS',
+          },
+          isPrivateSupported: true,
         },
       },
     ],

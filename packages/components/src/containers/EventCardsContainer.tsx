@@ -47,7 +47,12 @@ export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { columnId, ...otherProps } = props
 
-    const { addPersonalAccessToken, patLoadingState } = useLoginHelpers()
+    const {
+      addPersonalAccessToken,
+      isExecutingOAuth,
+      isLoggingIn,
+      patLoadingState,
+    } = useLoginHelpers()
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -59,6 +64,13 @@ export const EventCardsContainer = React.memo(
       useCallback(
         (state) =>
           selectors.createColumnSubscriptionSelector()(state, columnId),
+        [columnId],
+      ),
+    )
+    const subscriptions = useReduxState(
+      useCallback(
+        (state) =>
+          selectors.createColumnSubscriptionsSelector()(state, columnId),
         [columnId],
       ),
     )
@@ -182,26 +194,32 @@ export const EventCardsContainer = React.memo(
               <GenericMessageWithButtonView
                 buttonView={
                   <>
-                    <ButtonLink
-                      analyticsLabel="setup_github_app_from_column"
-                      disabled={
-                        mainSubscription.data.loadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading_first'
-                      }
-                      href={getGitHubAppInstallUri({
-                        suggestedTargetId: ownerResponse.data.id,
-                      })}
-                      loading={
-                        installationsLoadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading_first'
-                      }
-                      openOnNewTab={false}
-                    >
-                      Install GitHub App
-                    </ButtonLink>
+                    {!subscriptions.find((s) =>
+                      ['USER_ORG_EVENTS'].includes(s.subtype || ''),
+                    ) && (
+                      <>
+                        <ButtonLink
+                          analyticsLabel="setup_github_app_from_column"
+                          disabled={
+                            mainSubscription.data.loadState === 'loading' ||
+                            mainSubscription.data.loadState === 'loading_first'
+                          }
+                          href={getGitHubAppInstallUri({
+                            suggestedTargetId: ownerResponse.data.id,
+                          })}
+                          loading={
+                            installationsLoadState === 'loading' ||
+                            mainSubscription.data.loadState === 'loading' ||
+                            mainSubscription.data.loadState === 'loading_first'
+                          }
+                          openOnNewTab={false}
+                        >
+                          Install GitHub App
+                        </ButtonLink>
 
-                    <Spacer height={contentPadding / 2} />
+                        <Spacer height={contentPadding / 2} />
+                      </>
+                    )}
 
                     <Button
                       analyticsLabel="setup_github_pat_from_column"
@@ -213,7 +231,9 @@ export const EventCardsContainer = React.memo(
                         installationsLoadState === 'loading' ||
                         mainSubscription.data.loadState === 'loading' ||
                         mainSubscription.data.loadState === 'loading_first' ||
-                        patLoadingState === 'adding'
+                        patLoadingState === 'adding' ||
+                        isLoggingIn ||
+                        isExecutingOAuth
                       }
                       onPress={() => {
                         void addPersonalAccessToken()
@@ -224,7 +244,13 @@ export const EventCardsContainer = React.memo(
                   </>
                 }
                 emoji="lock"
-                subtitle="Install the GitHub App to unlock private access. No code permission required."
+                subtitle={
+                  subscriptions.find((s) =>
+                    ['USER_ORG_EVENTS'].includes(s.subtype || ''),
+                  )
+                    ? 'Create a token with this permission:'
+                    : 'Install the GitHub App to unlock private access. No code permission required.'
+                }
                 title="Private repository?"
               />
             </View>

@@ -344,7 +344,10 @@ function* onFetchRequest(
     (subscription &&
       (subscription.type === 'activity' ||
         subscription.type === 'issue_or_pr') &&
-      privateToken) ||
+      (subscription.subtype === 'USER_ORG_EVENTS' &&
+      privateToken === installationToken
+        ? undefined
+        : privateToken)) ||
     githubOAuthOrPersonalToken ||
     (githubAppTokenDetails && githubAppTokenDetails.token)
 

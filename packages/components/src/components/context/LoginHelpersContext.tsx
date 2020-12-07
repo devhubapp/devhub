@@ -129,7 +129,7 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
     const token = await new Promise<string | undefined>((resolveToken) => {
       Dialog.show(
         'Personal Access Token',
-        'Paste your GitHub token here. To have private access, you need to include the "repo" scope.',
+        'To have private access, you need to include the "repo" scope. Paste your GitHub token here:',
         [
           {
             text: 'Continue',

@@ -689,7 +689,7 @@ export function getColumnHeaderDetails(
             owner: s.params!.org,
             ownerIsKnown: true,
             repoIsKnown: false,
-            subtitle: 'Activity',
+            subtitle: 'Dashboard',
             title: s.params!.org,
             mainSubscriptionSubtype: subscription.subtype,
           }
