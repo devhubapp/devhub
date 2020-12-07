@@ -46,7 +46,12 @@ export async function getNotifications(
     useCache?: boolean
   },
 ) {
-  const cacheKey = JSON.stringify(['NOTIFICATIONS', params, subscriptionId])
+  const cacheKey = JSON.stringify([
+    'NOTIFICATIONS',
+    params,
+    subscriptionId,
+    githubToken,
+  ])
   const cacheValue = cache[cacheKey]
 
   const _params = cleanupObject(params)
@@ -111,13 +116,14 @@ export async function getActivity<T extends GitHubActivityType>(
     useCache?: boolean
   },
 ) {
-  const cacheKey = JSON.stringify([type, params, subscriptionId])
+  const cacheKey = JSON.stringify([type, params, subscriptionId, githubToken])
   const cacheValue = cache[cacheKey]
 
   const _params = cleanupObject(params)
   _params.headers = _params.headers || {}
   _params.headers['If-None-Match'] = ''
-  _params.headers.Accept = 'application/vnd.github.shadow-cat-preview'
+  _params.headers.Accept =
+    'application/vnd.github.shadow-cat-preview,application/vnd.github.v3+json'
 
   if (useCache) {
     if (_params.since) {
@@ -204,6 +210,7 @@ export async function getIssuesOrPullRequests<
     type,
     { subscriptionParams, requestParams },
     subscriptionId,
+    githubToken,
   ])
   const cacheValue = cache[cacheKey]
 
@@ -211,7 +218,8 @@ export async function getIssuesOrPullRequests<
   _params.headers = {
     ..._params.headers,
     'If-None-Match': '',
-    Accept: 'application/vnd.github.shadow-cat-preview',
+    Accept:
+      'application/vnd.github.shadow-cat-preview,application/vnd.github.v3+json',
   }
 
   if (useCache) {
