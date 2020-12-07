@@ -1064,36 +1064,32 @@ export function getUsernamesFromFilter(
 export function getItemsFromSubscriptions(
   subscriptions: ColumnSubscription[],
   getItemByNodeIdOrId: (nodeIdOrId: string) => EnhancedItem | undefined,
+  savedIdsToInclude: string[],
 ): EnhancedItem[] {
   const itemNodeIdOrIds: string[] = []
   const result: EnhancedItem[] = []
 
-  if (!(subscriptions && subscriptions.length)) return result
+  if (!subscriptions?.length) return result
+
+  function processId(id: string) {
+    const idStr = `${id || ''}`
+    if (!idStr) return
+
+    if (itemNodeIdOrIds.includes(idStr)) return
+
+    const item = getItemByNodeIdOrId(idStr)
+    if (!item) return
+
+    itemNodeIdOrIds.push(idStr)
+    result.push(item)
+  }
 
   subscriptions.forEach((subscription) => {
-    if (
-      !(
-        subscription &&
-        subscription.data &&
-        subscription.data.itemNodeIdOrIds &&
-        subscription.data.itemNodeIdOrIds.length
-      )
-    )
-      return
-
-    subscription.data.itemNodeIdOrIds.forEach((_id) => {
-      const id = `${_id || ''}`
-      if (!id) return
-
-      if (itemNodeIdOrIds.includes(id)) return
-
-      const item = getItemByNodeIdOrId(id)
-      if (!item) return
-
-      itemNodeIdOrIds.push(id)
-      result.push(item)
-    })
+    if (!subscription?.data?.itemNodeIdOrIds?.length) return
+    subscription.data.itemNodeIdOrIds.forEach(processId)
   })
+
+  savedIdsToInclude?.forEach(processId)
 
   if (!result.length) return result
 

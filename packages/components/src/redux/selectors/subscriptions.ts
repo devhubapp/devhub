@@ -81,15 +81,26 @@ export const createSubscriptionsDataSelector = () => {
     (state: RootState, subscriptionIds: string[]) =>
       subscriptionsSelector(state, subscriptionIds),
     (state: RootState, _subscriptionIds: string[]) => state.data.byId,
-    (subscriptions, dataByNodeIdOrId) => {
+    (state: RootState, _subscriptionIds: string[]) =>
+      state.data.idsBySubscriptionId,
+    (state: RootState, _subscriptionIds: string[]) => state.data.savedIds,
+    (subscriptions, dataByNodeIdOrId, idsBySubscriptionId, savedIds) => {
       const getItemByNodeIdOrId = (nodeIdOrId: string) =>
-        dataByNodeIdOrId &&
-        dataByNodeIdOrId[nodeIdOrId] &&
-        dataByNodeIdOrId[nodeIdOrId]!.item
+        dataByNodeIdOrId?.[nodeIdOrId]?.item
+
+      const savedIdsToInclude = Object.entries(idsBySubscriptionId).reduce<
+        string[]
+      >((result, [subscriptionId, ids]) => {
+        if (!subscriptions.map((s) => s.id).includes(subscriptionId))
+          return result
+
+        return result.concat(ids.filter((id) => savedIds.includes(id)))
+      }, [])
 
       const result = memoizedGetItemsFromSubscriptions(
         subscriptions,
         getItemByNodeIdOrId,
+        savedIdsToInclude,
       )
 
       if (!(result && result.length)) return EMPTY_ARRAY
