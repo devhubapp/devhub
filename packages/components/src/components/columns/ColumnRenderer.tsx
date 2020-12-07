@@ -375,7 +375,7 @@ function ColumnFooterHeaderMessage({
 
   const { addPersonalAccessToken } = useLoginHelpers()
 
-  const { cheapestPlanWithNotifications } = usePlans()
+  const { cheapestPlanWithNotifications, paidPlans } = usePlans()
   const columnsCount = useReduxState(selectors.columnCountSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
@@ -384,7 +384,7 @@ function ColumnFooterHeaderMessage({
   )
 
   const showBannerForPaidFeature: FreeTrialHeaderMessageProps | undefined =
-    isPlanExpired && plan && plan.trialEndAt
+    isPlanExpired && plan && plan.trialEndAt && paidPlans.length
       ? {
           backgroundColor: 'backgroundColorDarker1',
           foregroundColor: 'foregroundColorMuted65',
@@ -442,6 +442,7 @@ function ColumnFooterHeaderMessage({
         (plan &&
         plan.status === 'trialing' &&
         plan.trialEndAt &&
+        !(plan.id === 'free' && !paidPlans.length) &&
         new Date(plan.trialEndAt).valueOf() - Date.now() <
           1000 * 60 * 60 * 24 * 14
           ? {

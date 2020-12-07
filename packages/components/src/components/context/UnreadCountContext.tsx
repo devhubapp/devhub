@@ -35,13 +35,14 @@ UnreadCountContext.displayName = 'UnreadCountContext'
 export function UnreadCountProvider(props: UnreadCountProviderProps) {
   const notificationsLastShowedAtRef = useRef<string | null>(null) // TODO: persist this value
 
+  const { freePlan, paidPlans } = usePlans()
+
   const store = useStore()
   const loggedUsername = useReduxState(selectors.currentGitHubUsernameSelector)!
   const _columns = useReduxState(selectors.columnsArrSelector)
   const subscriptions = useReduxState(selectors.userSubscriptionsArrSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
-  const { freePlan } = usePlans()
 
   // Re-render when changing the data
   useReduxState(selectors.dataNodeIdsOrIdsBySubscriptionId)
@@ -202,7 +203,9 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
     <UnreadCountContext.Provider
       value={
         unreadIds.size ||
-        (isPlanExpired && !(freePlan && freePlan.featureFlags.columnsLimit)
+        (isPlanExpired &&
+        !freePlan?.featureFlags?.columnsLimit &&
+        paidPlans.length
           ? 1
           : 0)
       }

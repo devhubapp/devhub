@@ -38,7 +38,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
   const { showBackButton } = props
 
   const { sizename } = useAppLayout()
-  const { freePlan } = usePlans()
+  const { freePlan, paidPlans } = usePlans()
 
   const dispatch = useDispatch()
   const appToken = useReduxState(selectors.appTokenSelector)
@@ -65,7 +65,8 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
     >
       <>
         {Platform.OS === 'web' &&
-          !(userPlan && userPlan.status === 'active' && !userPlan.interval) && (
+          !(userPlan?.status === 'active' && !userPlan.interval) &&
+          !(userPlan?.id === 'free' && !paidPlans.length) && (
             <View>
               <SubHeader title="Current plan">
                 <Spacer flex={1} />
@@ -87,7 +88,7 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                         ? userPlan.label || (userPlan.amount ? 'Paid' : 'Free')
                         : 'None'
                     }${
-                      isPlanExpired
+                      isPlanExpired && paidPlans.length
                         ? ' (expired)'
                         : userPlan && userPlan.status === 'trialing'
                         ? (userPlan.label || '').toLowerCase().includes('trial')
@@ -103,7 +104,8 @@ export const SettingsModal = React.memo((props: SettingsModalProps) => {
                     } ↗`}</ThemedText>
                     {!!(
                       (isPlanExpired &&
-                        !(freePlan && !freePlan.trialPeriodDays)) ||
+                        !(freePlan && !freePlan.trialPeriodDays) &&
+                        paidPlans.length) ||
                       (userPlan &&
                         userPlan.status === 'active' &&
                         userPlan.cancelAtPeriodEnd &&
