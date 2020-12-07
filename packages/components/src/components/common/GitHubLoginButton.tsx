@@ -16,7 +16,7 @@ import { ThemedText } from '../themed/ThemedText'
 import { Spacer } from './Spacer'
 
 export interface GitHubLoginButtonProps
-  extends Omit<ButtonProps, 'children' | 'colors' | 'onPress'> {
+  extends Omit<ButtonProps, 'children' | 'colors' | 'onPress' | 'textStyle'> {
   horizontal?: boolean
   leftIcon?: IconProp
   loading?: boolean
@@ -42,17 +42,17 @@ const styles = StyleSheet.create({
   },
 
   titleText: {
+    width: '100%',
     fontWeight: '600',
     fontSize: normalTextSize + 1 * scaleFactor,
     lineHeight: normalTextSize + 6 * scaleFactor,
-    textAlign: 'center',
   },
 
   subtitleText: {
+    width: '100%',
     fontWeight: '400',
     fontSize: smallerTextSize,
     lineHeight: smallerTextSize + 4 * scaleFactor,
-    textAlign: 'center',
   },
 })
 
@@ -90,7 +90,9 @@ export function GitHubLoginButton(props: GitHubLoginButtonProps) {
             </>
           )}
 
-          <View style={[sharedStyles.alignItemsFlexStart]}>
+          <View
+            style={[sharedStyles.flexGrow, sharedStyles.alignItemsFlexStart]}
+          >
             {!!title && (
               <ThemedText
                 color={foregroundThemeColor}

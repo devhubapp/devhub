@@ -12,6 +12,7 @@ import { ColumnFocusProvider } from './context/ColumnFocusContext'
 import { ColumnWidthProvider } from './context/ColumnWidthContext'
 import { DeepLinkProvider } from './context/DeepLinkContext'
 import { DialogProvider } from './context/DialogContext'
+import { LoginHelpersProvider } from './context/LoginHelpersContext'
 import { AppLayoutProvider } from './context/LayoutContext'
 // import { PlansProvider } from './context/PlansContext'
 import { ThemeProvider } from './context/ThemeContext'
@@ -27,28 +28,30 @@ export function AppProviders(props: AppProvidersProps) {
     <HelmetProvider>
       <ReduxProvider store={store as any}>
         <PersistGate loading={null} persistor={persistor}>
-          <DeepLinkProvider>
-            {/* <PlansProvider> */}
-            <AppLayoutProvider>
-              <ColumnFocusProvider>
-                <ColumnWidthProvider>
-                  <ColumnFiltersProvider>
-                    <AppearanceProvider>
-                      <ThemeProvider>
-                        <SafeAreaProvider>
-                          <DialogProvider>
-                            {props.children}
-                            <OverrideSystemDialog />
-                          </DialogProvider>
-                        </SafeAreaProvider>
-                      </ThemeProvider>
-                    </AppearanceProvider>
-                  </ColumnFiltersProvider>
-                </ColumnWidthProvider>
-              </ColumnFocusProvider>
-            </AppLayoutProvider>
-            {/* </PlansProvider> */}
-          </DeepLinkProvider>
+          <DialogProvider>
+            <DeepLinkProvider>
+              <LoginHelpersProvider>
+                {/* <PlansProvider> */}
+                <AppLayoutProvider>
+                  <ColumnFocusProvider>
+                    <ColumnWidthProvider>
+                      <ColumnFiltersProvider>
+                        <AppearanceProvider>
+                          <ThemeProvider>
+                            <SafeAreaProvider>
+                              {props.children}
+                              <OverrideSystemDialog />
+                            </SafeAreaProvider>
+                          </ThemeProvider>
+                        </AppearanceProvider>
+                      </ColumnFiltersProvider>
+                    </ColumnWidthProvider>
+                  </ColumnFocusProvider>
+                </AppLayoutProvider>
+                {/* </PlansProvider> */}
+              </LoginHelpersProvider>
+            </DeepLinkProvider>
+          </DialogProvider>
         </PersistGate>
       </ReduxProvider>
     </HelmetProvider>

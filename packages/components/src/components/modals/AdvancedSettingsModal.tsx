@@ -1,7 +1,5 @@
 import { constants, GitHubAppType, tryParseOAuthParams } from '@devhub/core'
-import axios from 'axios'
-import _ from 'lodash'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { Alert, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
@@ -13,7 +11,6 @@ import * as actions from '../../redux/actions'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
 import { contentPadding, scaleFactor } from '../../styles/variables'
-import { getDefaultDevHubHeaders } from '../../utils/api'
 import { clearOAuthQueryParams } from '../../utils/helpers/auth'
 import { ModalColumn } from '../columns/ModalColumn'
 import { Avatar } from '../common/Avatar'
@@ -25,6 +22,7 @@ import { DialogConsumer } from '../context/DialogContext'
 import { useAppLayout } from '../context/LayoutContext'
 import { ThemedIcon } from '../themed/ThemedIcon'
 import { ThemedText } from '../themed/ThemedText'
+import { PrivateAccessSettings } from '../widgets/PrivateAccessSettings'
 
 export interface AdvancedSettingsModalProps {
   showBackButton: boolean
@@ -39,17 +37,12 @@ export const AdvancedSettingsModal = React.memo(
     const [executingOAuth, setExecutingOAuth] = useState<GitHubAppType | null>(
       null,
     )
-    const [isRemovingPersonalToken, setIsRemovingPersonalToken] = useState(
-      false,
-    )
+    const [] = useState(false)
 
     const dispatch = useDispatch()
     const existingAppToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
     const githubToken = useReduxState(selectors.githubTokenSelector)
-    const githubPersonalTokenDetails = useReduxState(
-      selectors.githubPersonalTokenDetailsSelector,
-    )
     const installations = useReduxState(selectors.installationsArrSelector)
     const installationsLoadState = useReduxState(
       selectors.installationsLoadStateSelector,
@@ -86,53 +79,6 @@ export const AdvancedSettingsModal = React.memo(
       }
     }
 
-    const removePersonalAccessToken = useCallback(async () => {
-      try {
-        setIsRemovingPersonalToken(true)
-
-        const response = await axios.post(
-          constants.GRAPHQL_ENDPOINT,
-          {
-            query: `
-              mutation {
-                removeGitHubPersonalToken
-              }`,
-          },
-          { headers: getDefaultDevHubHeaders({ appToken: existingAppToken }) },
-        )
-
-        const { data, errors } = await response.data
-
-        if (errors && errors[0] && errors[0].message)
-          throw new Error(errors[0].message)
-
-        if (!(data && data.removeGitHubPersonalToken)) {
-          throw new Error('Not removed.')
-        }
-
-        setIsRemovingPersonalToken(false)
-
-        dispatch(
-          actions.replacePersonalTokenDetails({
-            tokenDetails: undefined,
-          }),
-        )
-
-        dispatch(actions.logout())
-
-        return true
-      } catch (error) {
-        console.error(error)
-        bugsnag.notify(error)
-
-        setIsRemovingPersonalToken(false)
-        Alert.alert(
-          `Failed to remove personal token. \nError: ${error.message}`,
-        )
-        return false
-      }
-    }, [existingAppToken])
-
     const { foregroundThemeColor } = getButtonColors()
 
     return (
@@ -145,94 +91,9 @@ export const AdvancedSettingsModal = React.memo(
         <DialogConsumer>
           {(Dialog) => (
             <>
-              {Platform.OS === 'web' && (
-                <SubHeader title="Keyboard shortcuts">
-                  <>
-                    <Spacer flex={1} />
-
-                    <Button
-                      analyticsLabel="show_keyboard_shortcuts"
-                      contentContainerStyle={{
-                        width: 52 * scaleFactor,
-                        paddingHorizontal: contentPadding,
-                      }}
-                      onPress={() =>
-                        dispatch(
-                          actions.pushModal({ name: 'KEYBOARD_SHORTCUTS' }),
-                        )
-                      }
-                      size={32 * scaleFactor}
-                    >
-                      <ThemedIcon
-                        family="octicon"
-                        name="keyboard"
-                        color={foregroundThemeColor}
-                        size={16 * scaleFactor}
-                      />
-                    </Button>
-                  </>
-                </SubHeader>
-              )}
+              <PrivateAccessSettings />
 
               <View>
-                {!!(
-                  githubPersonalTokenDetails && githubPersonalTokenDetails.token
-                ) && (
-                  <>
-                    <View>
-                      <SubHeader title="Personal Access Token">
-                        <Spacer flex={1} />
-
-                        {!!(
-                          githubPersonalTokenDetails &&
-                          githubPersonalTokenDetails.token
-                        ) && (
-                          <Button
-                            analyticsLabel="remove_personal_access_token"
-                            contentContainerStyle={{
-                              width: 52 * scaleFactor,
-                              paddingHorizontal: contentPadding,
-                            }}
-                            disabled={isRemovingPersonalToken}
-                            loading={isRemovingPersonalToken}
-                            onPress={() => {
-                              void removePersonalAccessToken()
-                            }}
-                            size={32 * scaleFactor}
-                            type="danger"
-                          >
-                            <ThemedIcon
-                              color={foregroundThemeColor}
-                              family="octicon"
-                              name="trashcan"
-                              size={16 * scaleFactor}
-                            />
-                          </Button>
-                        )}
-                      </SubHeader>
-
-                      <View
-                        style={[
-                          sharedStyles.horizontal,
-                          sharedStyles.alignItemsCenter,
-                          sharedStyles.paddingHorizontal,
-                        ]}
-                      >
-                        <ThemedText
-                          color="foregroundColorMuted65"
-                          style={sharedStyles.flex}
-                        >
-                          {new Array(githubPersonalTokenDetails.token.length)
-                            .fill('*')
-                            .join('')}
-                        </ThemedText>
-                      </View>
-                    </View>
-
-                    <Spacer height={contentPadding} />
-                  </>
-                )}
-
                 <View>
                   <SubHeader title="Manage OAuth access" />
 
@@ -473,6 +334,35 @@ export const AdvancedSettingsModal = React.memo(
                 )}
 
                 <Spacer height={contentPadding} />
+
+                {Platform.OS === 'web' && (
+                  <SubHeader title="Keyboard shortcuts">
+                    <>
+                      <Spacer flex={1} />
+
+                      <Button
+                        analyticsLabel="show_keyboard_shortcuts"
+                        contentContainerStyle={{
+                          width: 52 * scaleFactor,
+                          paddingHorizontal: contentPadding,
+                        }}
+                        onPress={() =>
+                          dispatch(
+                            actions.pushModal({ name: 'KEYBOARD_SHORTCUTS' }),
+                          )
+                        }
+                        size={32 * scaleFactor}
+                      >
+                        <ThemedIcon
+                          family="octicon"
+                          name="keyboard"
+                          color={foregroundThemeColor}
+                          size={16 * scaleFactor}
+                        />
+                      </Button>
+                    </>
+                  </SubHeader>
+                )}
               </View>
 
               <Spacer flex={1} minHeight={contentPadding} />

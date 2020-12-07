@@ -73,13 +73,16 @@ function* init() {
         'LOGOUT',
         'REFRESH_INSTALLATIONS_SUCCESS',
         'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
+        'REPLACE_PERSONAL_TOKEN_DETAILS',
       ]),
     })
 
     const forceFetchAll = !!(
       (_isFirstTime &&
         initialAction.type === 'REFRESH_INSTALLATIONS_SUCCESS') ||
-      (action && action.type === 'REFRESH_INSTALLATIONS_SUCCESS')
+      action?.type === 'LOGIN_SUCCESS' ||
+      action?.type === 'REFRESH_INSTALLATIONS_SUCCESS' ||
+      action?.type === 'REPLACE_PERSONAL_TOKEN_DETAILS'
     )
 
     const isFirstTime = _isFirstTime

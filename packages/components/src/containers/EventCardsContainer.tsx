@@ -1,5 +1,4 @@
 import {
-  ActivityColumnSubscription,
   EnhancedGitHubEvent,
   getDefaultPaginationPerPage,
   getOlderOrNewerItemDate,
@@ -14,16 +13,20 @@ import { EmptyCards } from '../components/cards/EmptyCards'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
 import { NoTokenView } from '../components/cards/NoTokenView'
+import { Button } from '../components/common/Button'
 import { ButtonLink } from '../components/common/ButtonLink'
+import { Spacer } from '../components/common/Spacer'
 import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxState } from '../hooks/use-redux-state'
+import { useLoginHelpers } from '../components/context/LoginHelpersContext'
 import * as github from '../libs/github'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
 import { getGitHubAppInstallUri } from '../utils/helpers/shared'
+import { contentPadding } from '../styles/variables'
 
 export interface EventCardsContainerProps
   extends Omit<
@@ -43,6 +46,8 @@ export interface EventCardsContainerProps
 export const EventCardsContainer = React.memo(
   (props: EventCardsContainerProps) => {
     const { columnId, ...otherProps } = props
+
+    const { addPersonalAccessToken, patLoadingState } = useLoginHelpers()
 
     const appToken = useReduxState(selectors.appTokenSelector)
     const githubAppToken = useReduxState(selectors.githubAppTokenSelector)
@@ -80,9 +85,11 @@ export const EventCardsContainer = React.memo(
       selectors.installationsLoadStateSelector,
     )
 
-    const { allItems, filteredItemsIds, getItemByNodeIdOrId } = useColumnData<
-      EnhancedGitHubEvent
-    >(columnId, { mergeSimilar: false })
+    const {
+      allItems,
+      filteredItemsIds,
+      getItemByNodeIdOrId,
+    } = useColumnData<EnhancedGitHubEvent>(columnId, { mergeSimilar: false })
 
     const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderOrNewerItemDate('activity', 'older', allItems)
@@ -174,24 +181,47 @@ export const EventCardsContainer = React.memo(
             >
               <GenericMessageWithButtonView
                 buttonView={
-                  <ButtonLink
-                    analyticsLabel="setup_github_app_from_column"
-                    disabled={
-                      mainSubscription.data.loadState === 'loading' ||
-                      mainSubscription.data.loadState === 'loading_first'
-                    }
-                    href={getGitHubAppInstallUri({
-                      suggestedTargetId: ownerResponse.data.id,
-                    })}
-                    loading={
-                      installationsLoadState === 'loading' ||
-                      mainSubscription.data.loadState === 'loading' ||
-                      mainSubscription.data.loadState === 'loading_first'
-                    }
-                    openOnNewTab={false}
-                  >
-                    Install GitHub App
-                  </ButtonLink>
+                  <>
+                    <ButtonLink
+                      analyticsLabel="setup_github_app_from_column"
+                      disabled={
+                        mainSubscription.data.loadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading_first'
+                      }
+                      href={getGitHubAppInstallUri({
+                        suggestedTargetId: ownerResponse.data.id,
+                      })}
+                      loading={
+                        installationsLoadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading_first'
+                      }
+                      openOnNewTab={false}
+                    >
+                      Install GitHub App
+                    </ButtonLink>
+
+                    <Spacer height={contentPadding / 2} />
+
+                    <Button
+                      analyticsLabel="setup_github_pat_from_column"
+                      disabled={
+                        mainSubscription.data.loadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading_first'
+                      }
+                      loading={
+                        installationsLoadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading_first' ||
+                        patLoadingState === 'adding'
+                      }
+                      onPress={() => {
+                        void addPersonalAccessToken()
+                      }}
+                    >
+                      Add Personal Access Token
+                    </Button>
+                  </>
                 }
                 emoji="lock"
                 subtitle="Install the GitHub App to unlock private access. No code permission required."

@@ -1,11 +1,8 @@
-import axios from 'axios'
 import _ from 'lodash'
-import qs from 'qs'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Image, ScrollView, StyleSheet, View } from 'react-native'
-import url from 'url'
 
-import { constants, tryParseOAuthParams } from '@devhub/core'
+import { constants } from '@devhub/core'
 import logo from '@devhub/components/assets/logo_circle.png'
 
 import { getAppVersionLabel } from '../components/common/AppVersion'
@@ -14,20 +11,11 @@ import { GitHubLoginButton } from '../components/common/GitHubLoginButton'
 import { Link } from '../components/common/Link'
 import { Screen } from '../components/common/Screen'
 import { Spacer } from '../components/common/Spacer'
-import { useDialog } from '../components/context/DialogContext'
 import { ThemedText } from '../components/themed/ThemedText'
 import { useDimensions } from '../hooks/use-dimensions'
-import { useReduxAction } from '../hooks/use-redux-action'
-import { useReduxState } from '../hooks/use-redux-state'
+import { useLoginHelpers } from '../components/context/LoginHelpersContext'
 import { analytics } from '../libs/analytics'
-import { Browser } from '../libs/browser'
-import { bugsnag } from '../libs/bugsnag'
-import { Linking } from '../libs/linking'
-import { executeOAuth } from '../libs/oauth'
-import { getUrlParamsIfMatches } from '../libs/oauth/helpers'
 import { Platform } from '../libs/platform'
-import * as actions from '../redux/actions'
-import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
 import {
   contentPadding,
@@ -35,11 +23,6 @@ import {
   scaleFactor,
   smallerTextSize,
 } from '../styles/variables'
-import { getDefaultDevHubHeaders } from '../utils/api'
-import {
-  clearOAuthQueryParams,
-  clearQueryStringFromURL,
-} from '../utils/helpers/auth'
 
 const styles = StyleSheet.create({
   container: {
@@ -113,191 +96,23 @@ const styles = StyleSheet.create({
 })
 
 export const LoginScreen = React.memo(() => {
-  const fullAccessRef = useRef(false)
-  const [isExecutingOAuth, setIsExecutingOAuth] = useState(false)
-
-  const Dialog = useDialog()
-  const isLoggingIn = useReduxState(selectors.isLoggingInSelector)
-  const error = useReduxState(selectors.authErrorSelector)
-  const initialErrorRef = useRef(error)
-  const loginRequest = useReduxAction(actions.loginRequest)
   const dimensions = useDimensions('width')
+
+  const {
+    loginWithGitHub,
+    loginWithGitHubPersonalAccessToken,
+    isLoggingIn,
+    fullAccessRef,
+    isExecutingOAuth,
+  } = useLoginHelpers()
 
   useEffect(() => {
     analytics.trackScreenView('LOGIN_SCREEN')
-  })
-
-  // handle oauth flow without popup
-  // that passes the token via query string
-  useEffect(() => {
-    const currentURL = Linking.getCurrentURL()
-    const querystring = url.parse(currentURL).query || ''
-    const query = qs.parse(querystring)
-
-    if (!query.oauth) return
-
-    const params = getUrlParamsIfMatches(querystring, '')
-    if (!params) return
-
-    try {
-      const { appToken } = tryParseOAuthParams(params)
-      clearOAuthQueryParams()
-      if (!appToken) return
-
-      loginRequest({ appToken })
-    } catch (error) {
-      const description = 'OAuth execution failed'
-      console.error(description, error)
-
-      if (error.message === 'Canceled' || error.message === 'Timeout') return
-      bugsnag.notify(error, { description })
-
-      Dialog.show('Login failed', `${error || ''}`)
-    }
   }, [])
 
-  // auto start oauth flow after github app installation
-  useEffect(() => {
-    const handler = ({ url: uri }: { url: string }) => {
-      const querystring = url.parse(uri).query || ''
-      const query = qs.parse(querystring)
-
-      if (query.oauth) return
-      if (!query.installation_id) return
-
-      void loginWithGitHub()
-
-      setTimeout(() => {
-        clearQueryStringFromURL(['installation_id', 'setup_action'])
-      }, 500)
-    }
-
-    Linking.addEventListener('url', handler)
-
-    handler({ url: Linking.getCurrentURL() })
-
-    return () => {
-      Linking.removeEventListener('url', handler)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!error || initialErrorRef.current === error) return
-
-    const message = error && error.message
-    Dialog.show(
-      'Login failed',
-      `Please try again. ${message ? ` \nError: ${message}` : ''}`,
-    )
-  }, [error])
-
-  async function loginWithGitHub() {
-    setIsExecutingOAuth(true)
-
-    try {
-      analytics.trackEvent('engagement', 'login')
-
-      const params = await executeOAuth('both', {
-        scope: fullAccessRef.current
-          ? [...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo']
-          : constants.DEFAULT_GITHUB_OAUTH_SCOPES,
-      })
-      const { appToken } = tryParseOAuthParams(params)
-      clearOAuthQueryParams()
-      if (!appToken) throw new Error('No app token')
-
-      loginRequest({ appToken })
-      setIsExecutingOAuth(false)
-    } catch (error) {
-      const description = 'OAuth execution failed'
-      console.error(description, error)
-      setIsExecutingOAuth(false)
-
-      if (error.message === 'Canceled' || error.message === 'Timeout') return
-      bugsnag.notify(error, { description })
-
-      Dialog.show('Login failed', `${error || ''}`)
-    }
-  }
-
-  async function loginWithGitHubPersonalAccessToken() {
-    try {
-      analytics.trackEvent('engagement', 'login')
-
-      let redirected = false
-      const token = await new Promise((resolveToken) => {
-        Dialog.show(
-          'Personal Access Token',
-          'Paste your GitHub token here:',
-          [
-            {
-              text: 'Continue',
-              onPress: (value: string) => resolveToken(value),
-              style: 'default',
-            },
-            {
-              text: 'Create new token',
-              onPress: () => {
-                Browser.openURLOnNewTab(
-                  `https://github.com/settings/tokens/new?description=DevHub&scopes=${(
-                    constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
-                    _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
-                  ).join(',')}`,
-                )
-
-                redirected = true
-                resolveToken(undefined)
-              },
-            },
-            {
-              text: 'Cancel',
-              onPress: () => resolveToken(undefined),
-              style: 'cancel',
-            },
-          ],
-          {
-            type: 'plain-text',
-            cancelable: true,
-            placeholder: 'Personal Access Token',
-            defaultValue: '',
-          },
-        )
-      })
-
-      if (redirected && !token) {
-        void loginWithGitHubPersonalAccessToken()
-        return
-      }
-
-      if (!token) throw new Error('Canceled')
-
-      setIsExecutingOAuth(true)
-
-      const response = await axios.post(
-        `${constants.API_BASE_URL}/github/personal/login`,
-        { token },
-        { headers: getDefaultDevHubHeaders({ appToken: undefined }) },
-      )
-
-      const appToken = response.data.appToken
-      clearOAuthQueryParams()
-
-      if (!appToken) throw new Error('No app token')
-
-      loginRequest({ appToken })
-      setIsExecutingOAuth(false)
-    } catch (error) {
-      setIsExecutingOAuth(false)
-      if (error.message === 'Canceled' || error.message === 'Timeout') return
-
-      const description = 'OAuth execution failed'
-      console.error(description, error)
-
-      bugsnag.notify(error, { description })
-
-      Dialog.show('Login failed', `${error || ''}`)
-    }
-  }
+  const hasMultipleLoginButtons =
+    constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
+    constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON
 
   return (
     <Screen>
@@ -342,29 +157,35 @@ export const LoginScreen = React.memo(() => {
 
           <Spacer height={contentPadding * 2} />
 
-          {!Platform.isMacOS && (
-            <GitHubLoginButton
-              analyticsLabel="github_login_public"
-              disabled={isLoggingIn || isExecutingOAuth}
-              loading={
-                !fullAccessRef.current && (isLoggingIn || isExecutingOAuth)
-              }
-              onPress={() => {
-                fullAccessRef.current = false
-                void loginWithGitHub()
-              }}
-              // rightIcon={{ family: 'octicon', name: 'globe' }}
-              style={styles.button}
-              subtitle={
-                constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
-                constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON ||
-                !constants.GITHUB_APP_HAS_CODE_ACCESS
-                  ? 'Granular permissions'
-                  : undefined
-              }
-              title="Sign in with GitHub"
-            />
-          )}
+          {!Platform.isMacOS &&
+            (() => {
+              const subtitle = hasMultipleLoginButtons
+                ? 'Granular permissions'
+                : undefined
+
+              return (
+                <GitHubLoginButton
+                  analyticsLabel="github_login_public"
+                  disabled={isLoggingIn || isExecutingOAuth}
+                  loading={
+                    !fullAccessRef.current && (isLoggingIn || isExecutingOAuth)
+                  }
+                  onPress={() => {
+                    void loginWithGitHub()
+                  }}
+                  // rightIcon={{ family: 'octicon', name: 'globe' }}
+                  style={styles.button}
+                  subtitle={subtitle}
+                  textProps={{
+                    style: {
+                      textAlign:
+                        hasMultipleLoginButtons || subtitle ? 'left' : 'center',
+                    },
+                  }}
+                  title="Sign in with GitHub"
+                />
+              )
+            })()}
 
           {!!constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON && (
             <>
@@ -374,22 +195,29 @@ export const LoginScreen = React.memo(() => {
                 analyticsLabel="github_login_private"
                 disabled={isLoggingIn || isExecutingOAuth}
                 loading={
-                  fullAccessRef.current && (isLoggingIn || isExecutingOAuth)
+                  !!(fullAccessRef.current && (isLoggingIn || isExecutingOAuth))
                 }
                 onPress={() => {
-                  fullAccessRef.current = true
-                  void loginWithGitHub()
+                  void loginWithGitHub({ fullAccess: true })
                 }}
                 // rightIcon={{ family: 'octicon', name: 'lock' }}
                 style={styles.button}
                 subtitle="Full access"
+                textProps={{
+                  style: {
+                    textAlign: hasMultipleLoginButtons ? 'left' : 'center',
+                  },
+                }}
                 title="Sign in with GitHub"
                 type="neutral"
               />
             </>
           )}
 
-          {!!constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON && (
+          {!!(
+            constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON ||
+            Platform.isMacOS
+          ) && (
             <>
               <Spacer height={contentPadding / 2} />
 
@@ -407,6 +235,11 @@ export const LoginScreen = React.memo(() => {
                 style={styles.button}
                 subtitle="Personal token"
                 title="Sign in with GitHub"
+                textProps={{
+                  style: {
+                    textAlign: hasMultipleLoginButtons ? 'left' : 'center',
+                  },
+                }}
                 type={Platform.isMacOS ? 'primary' : 'neutral'}
               />
             </>

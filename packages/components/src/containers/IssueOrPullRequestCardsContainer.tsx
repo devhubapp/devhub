@@ -3,7 +3,6 @@ import {
   getDefaultPaginationPerPage,
   getOlderOrNewerItemDate,
   getSubscriptionOwnerOrOrg,
-  IssueOrPullRequestColumnSubscription,
 } from '@devhub/core'
 import React, { useCallback } from 'react'
 import { View } from 'react-native'
@@ -17,16 +16,20 @@ import {
   IssueOrPullRequestCardsProps,
 } from '../components/cards/IssueOrPullRequestCards'
 import { NoTokenView } from '../components/cards/NoTokenView'
+import { Button } from '../components/common/Button'
 import { ButtonLink } from '../components/common/ButtonLink'
+import { Spacer } from '../components/common/Spacer'
 import { useColumn } from '../hooks/use-column'
 import { useColumnData } from '../hooks/use-column-data'
 import { useGitHubAPI } from '../hooks/use-github-api'
 import { useReduxState } from '../hooks/use-redux-state'
+import { useLoginHelpers } from '../components/context/LoginHelpersContext'
 import * as github from '../libs/github'
 import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
 import { getGitHubAppInstallUri } from '../utils/helpers/shared'
+import { contentPadding } from '../styles/variables'
 
 export interface IssueOrPullRequestCardsContainerProps
   extends Omit<
@@ -46,6 +49,8 @@ export interface IssueOrPullRequestCardsContainerProps
 export const IssueOrPullRequestCardsContainer = React.memo(
   (props: IssueOrPullRequestCardsContainerProps) => {
     const { columnId, ...otherProps } = props
+
+    const { addPersonalAccessToken, patLoadingState } = useLoginHelpers()
 
     const { column, hasCrossedColumnsLimit } = useColumn(columnId)
 
@@ -84,9 +89,13 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       selectors.installationsLoadStateSelector,
     )
 
-    const { allItems, filteredItemsIds, getItemByNodeIdOrId } = useColumnData<
-      EnhancedGitHubIssueOrPullRequest
-    >(columnId, { mergeSimilar: false })
+    const {
+      allItems,
+      filteredItemsIds,
+      getItemByNodeIdOrId,
+    } = useColumnData<EnhancedGitHubIssueOrPullRequest>(columnId, {
+      mergeSimilar: false,
+    })
 
     const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderOrNewerItemDate('issue_or_pr', 'older', allItems)
@@ -171,24 +180,47 @@ export const IssueOrPullRequestCardsContainer = React.memo(
             >
               <GenericMessageWithButtonView
                 buttonView={
-                  <ButtonLink
-                    analyticsLabel="setup_github_app_from_column"
-                    disabled={
-                      mainSubscription.data.loadState === 'loading' ||
-                      mainSubscription.data.loadState === 'loading_first'
-                    }
-                    href={getGitHubAppInstallUri({
-                      suggestedTargetId: ownerResponse.data.id,
-                    })}
-                    loading={
-                      installationsLoadState === 'loading' ||
-                      mainSubscription.data.loadState === 'loading' ||
-                      mainSubscription.data.loadState === 'loading_first'
-                    }
-                    openOnNewTab={false}
-                  >
-                    Install GitHub App
-                  </ButtonLink>
+                  <>
+                    <ButtonLink
+                      analyticsLabel="setup_github_app_from_column"
+                      disabled={
+                        mainSubscription.data.loadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading_first'
+                      }
+                      href={getGitHubAppInstallUri({
+                        suggestedTargetId: ownerResponse.data.id,
+                      })}
+                      loading={
+                        installationsLoadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading_first'
+                      }
+                      openOnNewTab={false}
+                    >
+                      Install GitHub App
+                    </ButtonLink>
+
+                    <Spacer height={contentPadding / 2} />
+
+                    <Button
+                      analyticsLabel="setup_github_pat_from_column"
+                      disabled={
+                        mainSubscription.data.loadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading_first'
+                      }
+                      loading={
+                        installationsLoadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading' ||
+                        mainSubscription.data.loadState === 'loading_first' ||
+                        patLoadingState === 'adding'
+                      }
+                      onPress={() => {
+                        void addPersonalAccessToken()
+                      }}
+                    >
+                      Add Personal Access Token
+                    </Button>
+                  </>
                 }
                 emoji="lock"
                 subtitle="Install the GitHub App to unlock private access. No code permission required."
