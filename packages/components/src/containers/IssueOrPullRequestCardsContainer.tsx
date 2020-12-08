@@ -8,6 +8,8 @@ import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
+import { constants } from '@devhub/core'
+
 import { CardsSearchHeader } from '../components/cards/CardsSearchHeader'
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { GenericMessageWithButtonView } from '../components/cards/GenericMessageWithButtonView'
@@ -223,7 +225,12 @@ export const IssueOrPullRequestCardsContainer = React.memo(
                   </>
                 }
                 emoji="lock"
-                subtitle="Install the GitHub App to unlock private access. No code permission required."
+                subtitle={
+                  'Install the GitHub App to unlock private access.' +
+                  (!constants.GITHUB_APP_HAS_CODE_ACCESS
+                    ? ' No code permission required.'
+                    : '')
+                }
                 title="Private repository?"
               />
             </View>

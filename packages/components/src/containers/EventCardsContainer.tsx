@@ -8,6 +8,8 @@ import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
+import { constants } from '@devhub/core'
+
 import { CardsSearchHeader } from '../components/cards/CardsSearchHeader'
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { EventCards, EventCardsProps } from '../components/cards/EventCards'
@@ -249,7 +251,10 @@ export const EventCardsContainer = React.memo(
                     ['USER_ORG_EVENTS'].includes(s.subtype || ''),
                   )
                     ? 'Create a token with this permission:'
-                    : 'Install the GitHub App to unlock private access. No code permission required.'
+                    : 'Install the GitHub App to unlock private access.' +
+                      (!constants.GITHUB_APP_HAS_CODE_ACCESS
+                        ? ' No code permission required.'
+                        : '')
                 }
                 title="Private repository?"
               />
