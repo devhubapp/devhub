@@ -266,10 +266,9 @@ export default {
         )
           return
 
-        const oldTypesFilter: Partial<Record<
-          GitHubEvent['type'],
-          boolean
-        >> = (column.filters.activity as any).types
+        const oldTypesFilter: Partial<
+          Record<GitHubEvent['type'], boolean>
+        > = (column.filters.activity as any).types
 
         column.filters.subjectTypes = column.filters.subjectTypes || {}
         column.filters.activity.actions = column.filters.activity.actions || {}

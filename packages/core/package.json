@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "shx rm -f *.tsbuildinfo && shx rm -rf dist && mkdirp dist",
     "compile": "tsc -b --incremental",
-    "format": "prettier --write '{.,src}/**.{js,jsx,ts,tsx}'",
+    "format": "prettier --write '{.,src}/**/*.{js,jsx,ts,tsx,json}'",
     "lint": "eslint src",
     "prepare": "cd .. && yarn patch-package",
     "prepublish": "yarn compile"

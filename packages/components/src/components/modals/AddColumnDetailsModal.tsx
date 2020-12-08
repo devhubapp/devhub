@@ -825,24 +825,24 @@ function getNewColumnAndSubscriptions(
       switch (subtype) {
         case 'REPO_NOTIFICATIONS':
         default: {
-          newSubscription = createSubscriptionObjectWithId<
-            NotificationColumnSubscriptionCreation
-          >({
-            params: {
-              ...(defaultParams as any),
-              all: true,
-              participating: formValues.inbox === 'participating',
-              ...(!!(repoOwnerAndRepo.owner && repoOwnerAndRepo.repo) && {
-                owner: repoOwnerAndRepo.owner,
-                repo: repoOwnerAndRepo.repo,
-              }),
+          newSubscription = createSubscriptionObjectWithId<NotificationColumnSubscriptionCreation>(
+            {
+              params: {
+                ...(defaultParams as any),
+                all: true,
+                participating: formValues.inbox === 'participating',
+                ...(!!(repoOwnerAndRepo.owner && repoOwnerAndRepo.repo) && {
+                  owner: repoOwnerAndRepo.owner,
+                  repo: repoOwnerAndRepo.repo,
+                }),
+              },
+              type,
+              subtype:
+                repoOwnerAndRepo.owner && repoOwnerAndRepo.repo
+                  ? 'REPO_NOTIFICATIONS'
+                  : undefined,
             },
-            type,
-            subtype:
-              repoOwnerAndRepo.owner && repoOwnerAndRepo.repo
-                ? 'REPO_NOTIFICATIONS'
-                : undefined,
-          })
+          )
           _newColumnFilters.notifications =
             _newColumnFilters.notifications || {}
           _newColumnFilters.notifications.participating =
@@ -865,44 +865,44 @@ function getNewColumnAndSubscriptions(
         case 'ISSUES':
         case 'PULLS':
         default: {
-          newSubscription = createSubscriptionObjectWithId<
-            IssueOrPullRequestColumnSubscriptionCreation
-          >({
-            params: {
-              ...(defaultParams as any),
-              owners: {
-                ...(!!formValues.owner && {
-                  [formValues.owner]: {
-                    value: true,
-                    repos: {},
-                  },
-                }),
-
-                ...(!!repoOwnerAndRepo.owner &&
-                  !!repoOwnerAndRepo.repo && {
-                    [repoOwnerAndRepo.owner]: {
+          newSubscription = createSubscriptionObjectWithId<IssueOrPullRequestColumnSubscriptionCreation>(
+            {
+              params: {
+                ...(defaultParams as any),
+                owners: {
+                  ...(!!formValues.owner && {
+                    [formValues.owner]: {
                       value: true,
-                      repos: {
-                        [repoOwnerAndRepo.repo]: true,
-                      },
+                      repos: {},
                     },
                   }),
-              },
-              involves: formValues.user
-                ? {
-                    [formValues.user]: true,
-                  }
-                : undefined,
-              subjectType:
-                subtype === 'ISSUES'
-                  ? 'Issue'
-                  : subtype === 'PULLS'
-                  ? 'PullRequest'
+
+                  ...(!!repoOwnerAndRepo.owner &&
+                    !!repoOwnerAndRepo.repo && {
+                      [repoOwnerAndRepo.owner]: {
+                        value: true,
+                        repos: {
+                          [repoOwnerAndRepo.repo]: true,
+                        },
+                      },
+                    }),
+                },
+                involves: formValues.user
+                  ? {
+                      [formValues.user]: true,
+                    }
                   : undefined,
+                subjectType:
+                  subtype === 'ISSUES'
+                    ? 'Issue'
+                    : subtype === 'PULLS'
+                    ? 'PullRequest'
+                    : undefined,
+              },
+              type,
+              subtype,
             },
-            type,
-            subtype,
-          })
+          )
 
           _newColumnFilters.involves = newSubscription.params.involves
           _newColumnFilters.subjectTypes = newSubscription.params.subjectType
@@ -936,32 +936,32 @@ function getNewColumnAndSubscriptions(
       switch (subtype) {
         case 'ORG_PUBLIC_EVENTS':
         case 'USER_ORG_EVENTS': {
-          newSubscription = createSubscriptionObjectWithId<
-            ActivityColumnSubscriptionCreation
-          >({
-            params: {
-              ...(defaultParams as any),
-              org: formValues.org,
-              username: subtype === 'USER_ORG_EVENTS' ? loggedUsername : '',
+          newSubscription = createSubscriptionObjectWithId<ActivityColumnSubscriptionCreation>(
+            {
+              params: {
+                ...(defaultParams as any),
+                org: formValues.org,
+                username: subtype === 'USER_ORG_EVENTS' ? loggedUsername : '',
+              },
+              type,
+              subtype,
             },
-            type,
-            subtype,
-          })
+          )
           filterBotsForksAndStarsOut()
 
           break
         }
 
         case 'PUBLIC_EVENTS': {
-          newSubscription = createSubscriptionObjectWithId<
-            ActivityColumnSubscriptionCreation
-          >({
-            params: {
-              ...(defaultParams as any),
+          newSubscription = createSubscriptionObjectWithId<ActivityColumnSubscriptionCreation>(
+            {
+              params: {
+                ...(defaultParams as any),
+              },
+              type,
+              subtype,
             },
-            type,
-            subtype,
-          })
+          )
           filterBotsForksAndStarsOut()
 
           break
@@ -971,17 +971,17 @@ function getNewColumnAndSubscriptions(
         case 'REPO_NETWORK_EVENTS': {
           if (!(repoOwnerAndRepo.owner && repoOwnerAndRepo.repo)) return null
 
-          newSubscription = createSubscriptionObjectWithId<
-            ActivityColumnSubscriptionCreation
-          >({
-            params: {
-              ...(defaultParams as any),
-              owner: repoOwnerAndRepo.owner,
-              repo: repoOwnerAndRepo.repo,
+          newSubscription = createSubscriptionObjectWithId<ActivityColumnSubscriptionCreation>(
+            {
+              params: {
+                ...(defaultParams as any),
+                owner: repoOwnerAndRepo.owner,
+                repo: repoOwnerAndRepo.repo,
+              },
+              type,
+              subtype,
             },
-            type,
-            subtype,
-          })
+          )
           filterBotsForksAndStarsOut()
 
           break
@@ -993,16 +993,16 @@ function getNewColumnAndSubscriptions(
         case 'USER_RECEIVED_PUBLIC_EVENTS': {
           if (!formValues.user) return null
 
-          newSubscription = createSubscriptionObjectWithId<
-            ActivityColumnSubscriptionCreation
-          >({
-            params: {
-              ...(defaultParams as any),
-              username: formValues.user,
+          newSubscription = createSubscriptionObjectWithId<ActivityColumnSubscriptionCreation>(
+            {
+              params: {
+                ...(defaultParams as any),
+                username: formValues.user,
+              },
+              type,
+              subtype,
             },
-            type,
-            subtype,
-          })
+          )
 
           if (subtype === 'USER_RECEIVED_EVENTS') {
             newColumnFilters.subjectTypes = newColumnFilters.subjectTypes || {

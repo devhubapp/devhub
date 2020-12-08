@@ -8,7 +8,7 @@
     "compile": "cd .",
     "deploy": "yarn compile && yarn now",
     "export": "yarn run-scripts && next build && next export",
-    "format": "prettier --write '{.,src/**,pages/**}/*.{js,jsx,ts,tsx}'",
+    "format": "prettier --write '{.,src,pages}/**/*.{js,jsx,ts,tsx,json}'",
     "lint": "eslint src",
     "now": "now",
     "postinstall": "yarn run-scripts",

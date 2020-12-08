@@ -10,7 +10,7 @@
     "deploy": "yarn build && cd ../../ && now --local-config ./now.app.json --prod && cd -",
     "deploy:beta": "yarn build && cd ../../ && now --local-config ./now.beta.json --prod && cd -",
     "eject": "react-app-rewired eject",
-    "format": "prettier --write '{.,src}/*.{js,jsx,ts,tsx}'",
+    "format": "prettier --write '{.,src}/**/*.{js,jsx,ts,tsx,json}'",
     "lint": "eslint src --no-error-on-unmatched-pattern",
     "prepare": "cd .. && yarn patch-package",
     "serve": "serve dist",

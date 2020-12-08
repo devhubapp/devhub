@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "clean": "cd .",
     "compile": "tsc -b --incremental",
-    "format": "prettier --write './*.{js,jsx,ts,tsx}'",
+    "format": "prettier --write './*.{js,jsx,ts,tsx,json}'",
     "ios": "react-native run-ios",
     "lint": "eslint src --no-error-on-unmatched-pattern",
     "prepare": "cd .. && yarn patch-package",

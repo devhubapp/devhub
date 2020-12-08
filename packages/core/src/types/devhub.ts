@@ -337,12 +337,8 @@ export type GenericColumnCreation<
 }
 
 export type ActivityColumnCreation = GenericColumnCreation<ActivityColumn>
-export type IssueOrPullRequestColumnCreation = GenericColumnCreation<
-  IssueOrPullRequestColumn
->
-export type NotificationColumnCreation = GenericColumnCreation<
-  NotificationColumn
->
+export type IssueOrPullRequestColumnCreation = GenericColumnCreation<IssueOrPullRequestColumn>
+export type NotificationColumnCreation = GenericColumnCreation<NotificationColumn>
 
 export type ColumnCreation =
   | ActivityColumnCreation
@@ -361,15 +357,9 @@ export type GenericColumnSubscriptionCreation<
   updatedAt?: string | undefined
 }
 
-export type ActivityColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
-  ActivityColumnSubscription
->
-export type IssueOrPullRequestColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
-  IssueOrPullRequestColumnSubscription
->
-export type NotificationColumnSubscriptionCreation = GenericColumnSubscriptionCreation<
-  NotificationColumnSubscription
->
+export type ActivityColumnSubscriptionCreation = GenericColumnSubscriptionCreation<ActivityColumnSubscription>
+export type IssueOrPullRequestColumnSubscriptionCreation = GenericColumnSubscriptionCreation<IssueOrPullRequestColumnSubscription>
+export type NotificationColumnSubscriptionCreation = GenericColumnSubscriptionCreation<NotificationColumnSubscription>
 
 export type ColumnSubscriptionCreation =
   | ActivityColumnSubscriptionCreation

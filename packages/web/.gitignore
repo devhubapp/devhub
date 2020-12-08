@@ -3,6 +3,7 @@
 .env.local
 .env.production.local
 .env.test.local
+.eslintcache
 .history
 .jest
 .vscode

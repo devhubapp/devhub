@@ -40,47 +40,47 @@ export function getDefaultColumns(username: string): ColumnsAndSubscriptions {
     },
   }) as NotificationColumnSubscription
 
-  const userReceivedEventsSubscription = createSubscriptionObjectWithId<
-    ActivityColumnSubscriptionCreation
-  >({
-    type: 'activity',
-    subtype: 'USER_RECEIVED_EVENTS',
-    params: {
-      username,
+  const userReceivedEventsSubscription = createSubscriptionObjectWithId<ActivityColumnSubscriptionCreation>(
+    {
+      type: 'activity',
+      subtype: 'USER_RECEIVED_EVENTS',
+      params: {
+        username,
+      },
     },
-  })
+  )
 
-  const involvedIssuesAndPRsSubscription = createSubscriptionObjectWithId<
-    IssueOrPullRequestColumnSubscriptionCreation
-  >({
-    type: 'issue_or_pr',
-    subtype: undefined,
-    params: {
-      involves: { [username.toLowerCase()]: true },
-      subjectType: undefined,
+  const involvedIssuesAndPRsSubscription = createSubscriptionObjectWithId<IssueOrPullRequestColumnSubscriptionCreation>(
+    {
+      type: 'issue_or_pr',
+      subtype: undefined,
+      params: {
+        involves: { [username.toLowerCase()]: true },
+        subjectType: undefined,
+      },
     },
-  })
+  )
 
-  const myReposIssuesAndPRsSubscription = createSubscriptionObjectWithId<
-    IssueOrPullRequestColumnSubscriptionCreation
-  >({
-    type: 'issue_or_pr',
-    subtype: undefined,
-    params: {
-      owners: { [username.toLowerCase()]: { value: true, repos: {} } },
-      subjectType: undefined,
+  const myReposIssuesAndPRsSubscription = createSubscriptionObjectWithId<IssueOrPullRequestColumnSubscriptionCreation>(
+    {
+      type: 'issue_or_pr',
+      subtype: undefined,
+      params: {
+        owners: { [username.toLowerCase()]: { value: true, repos: {} } },
+        subjectType: undefined,
+      },
     },
-  })
+  )
 
-  const userEventsSubscription = createSubscriptionObjectWithId<
-    ActivityColumnSubscriptionCreation
-  >({
-    type: 'activity',
-    subtype: 'USER_EVENTS',
-    params: {
-      username,
+  const userEventsSubscription = createSubscriptionObjectWithId<ActivityColumnSubscriptionCreation>(
+    {
+      type: 'activity',
+      subtype: 'USER_EVENTS',
+      params: {
+        username,
+      },
     },
-  })
+  )
 
   const result: ColumnsAndSubscriptions = {
     columns: [
