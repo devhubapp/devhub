@@ -3,11 +3,7 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["esnext", "dom", "dom.iterable"],
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -21,10 +17,6 @@
     "sourceMap": true,
     "strict": true
   },
-  "include": [
-    "src", "pages"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src", "pages", "next.config.js"],
+  "exclude": ["node_modules"]
 }
