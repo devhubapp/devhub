@@ -29,9 +29,6 @@ export const githubTokenDetailsSelector = (state: RootState) => {
   const githubOAuthTokenDetails = githubOAuthTokenDetailsSelector(state)
   if (githubOAuthTokenDetails?.token) return githubOAuthTokenDetails
 
-  const githubAppTokenDetails = githubAppTokenDetailsSelector(state)
-  if (githubAppTokenDetails?.token) return githubAppTokenDetails
-
   return undefined
 }
 
