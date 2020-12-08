@@ -1,5 +1,5 @@
 import immer from 'immer'
-import _ from 'lodash'
+import { REHYDRATE } from 'redux-persist'
 
 import { Installation, LoadState, normalizeInstallations } from '@devhub/core'
 import { Reducer } from '../../types'
@@ -41,6 +41,13 @@ export const githubInstallationsReducer: Reducer<State> = (
   action,
 ) => {
   switch (action.type) {
+    case REHYDRATE as any: {
+      return {
+        ...initialState,
+        ...(action as any).payload?.github?.installations,
+      }
+    }
+
     case 'REFRESH_INSTALLATIONS_REQUEST':
       return immer(state, (draft) => {
         draft.lastFetchRequestAt = new Date().toISOString()

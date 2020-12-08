@@ -91,26 +91,28 @@ export const PrivateAccessSettings = React.memo<PrivateAccessSettingsProps>(
             sharedStyles.paddingHorizontal,
           ]}
         >
-          {githubPersonalTokenDetails?.token ? (
-            <ThemedText
-              color="foregroundColorMuted65"
-              style={sharedStyles.flex}
-            >
-              {new Array(githubPersonalTokenDetails.token.length)
-                .fill('*')
-                .join('')}
-            </ThemedText>
-          ) : (
-            <ThemedText
-              color="foregroundColorMuted65"
-              style={[sharedStyles.flex, { fontStyle: 'italic' }]}
-            >
-              Useful to get private repo support
-            </ThemedText>
-          )}
+          {
+            githubPersonalTokenDetails?.token ? (
+              <ThemedText
+                color="foregroundColorMuted65"
+                style={sharedStyles.flex}
+              >
+                {new Array(githubPersonalTokenDetails.token.length)
+                  .fill('*')
+                  .join('')}
+              </ThemedText>
+            ) : null
+            // <>
+            //   <ThemedText
+            //     color="foregroundColorMuted65"
+            //     style={[sharedStyles.flex, { fontStyle: 'italic' }]}
+            //   >
+            //     Useful to get private repo support
+            //   </ThemedText>
+            //   <Spacer height={contentPadding} />
+            // </>
+          }
         </View>
-
-        <Spacer height={contentPadding} />
       </View>
     )
   },

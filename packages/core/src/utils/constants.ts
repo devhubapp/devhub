@@ -43,6 +43,8 @@ export const ENABLE_GITHUB_OAUTH_SUPPORT = true
 export const ENABLE_GITHUB_APP_SUPPORT = true
 export const ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT = true
 
+export const LOCAL_ONLY_PERSONAL_ACCESS_TOKEN = true
+
 export const APPSTORE_ID = '1191864199'
 export const GOOGLEPLAY_ID = 'com.devhubapp'
 

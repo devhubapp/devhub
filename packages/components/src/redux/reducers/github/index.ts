@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { combineReducers } from 'redux'
 
 import { githubAPIReducer } from './api'
