@@ -66,7 +66,7 @@ function init() {
     }
 
     if (__DEV__) {
-      setupBrowserExtensions()
+      // setupBrowserExtensions()
     } else {
       updater.init()
 
