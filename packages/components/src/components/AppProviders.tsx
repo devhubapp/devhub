@@ -28,30 +28,30 @@ export function AppProviders(props: AppProvidersProps) {
     <HelmetProvider>
       <ReduxProvider store={store as any}>
         <PersistGate loading={null} persistor={persistor}>
-          <DialogProvider>
-            <DeepLinkProvider>
-              <LoginHelpersProvider>
-                {/* <PlansProvider> */}
-                <AppLayoutProvider>
-                  <ColumnFocusProvider>
-                    <ColumnWidthProvider>
-                      <ColumnFiltersProvider>
-                        <AppearanceProvider>
-                          <ThemeProvider>
-                            <SafeAreaProvider>
+          <AppearanceProvider>
+            <ThemeProvider>
+              <SafeAreaProvider>
+                <DialogProvider>
+                  <DeepLinkProvider>
+                    {/* <PlansProvider> */}
+                    <AppLayoutProvider>
+                      <ColumnFocusProvider>
+                        <ColumnWidthProvider>
+                          <ColumnFiltersProvider>
+                            <LoginHelpersProvider>
                               {props.children}
-                              <OverrideSystemDialog />
-                            </SafeAreaProvider>
-                          </ThemeProvider>
-                        </AppearanceProvider>
-                      </ColumnFiltersProvider>
-                    </ColumnWidthProvider>
-                  </ColumnFocusProvider>
-                </AppLayoutProvider>
-                {/* </PlansProvider> */}
-              </LoginHelpersProvider>
-            </DeepLinkProvider>
-          </DialogProvider>
+                            </LoginHelpersProvider>
+                            <OverrideSystemDialog />
+                          </ColumnFiltersProvider>
+                        </ColumnWidthProvider>
+                      </ColumnFocusProvider>
+                    </AppLayoutProvider>
+                    {/* </PlansProvider> */}
+                  </DeepLinkProvider>
+                </DialogProvider>
+              </SafeAreaProvider>
+            </ThemeProvider>
+          </AppearanceProvider>
         </PersistGate>
       </ReduxProvider>
     </HelmetProvider>
