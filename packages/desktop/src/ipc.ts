@@ -56,27 +56,30 @@ export function register() {
     mainWindow.setFullScreen(false)
   })
 
+  ipcMain.removeAllListeners('minimize')
+  ipcMain.addListener('minimize', () => {
+    const mainWindow = window.getMainWindow()
+    if (!mainWindow) return
+    mainWindow.minimize()
+  })
+
+  ipcMain.removeAllListeners('get-is-maximized')
+  ipcMain.addListener('get-is-maximized', (e: any) => {
+    if (!e) return
+
+    e.returnValue = window.getMainWindow()?.isMaximized()
+  })
+
   ipcMain.removeAllListeners('toggle-maximize')
   ipcMain.addListener('toggle-maximize', () => {
     const mainWindow = window.getMainWindow()
     if (!mainWindow) return
 
     if (mainWindow.isMaximized()) {
-      const { width, height } = mainWindow.getBounds()
-      const lockOnCenter = config.store.get('lockOnCenter')
-
-      config.store.set('lockOnCenter', true)
-      mainWindow.setSize(
-        Math.round(width * 0.9),
-        Math.round(height * 0.9),
-        true,
-      )
-      config.store.set('lockOnCenter', lockOnCenter)
-
-      return
+      mainWindow.unmaximize()
+    } else {
+      mainWindow.maximize()
     }
-
-    mainWindow.maximize()
   })
 
   ipcMain.removeAllListeners('unread-counter')
@@ -84,13 +87,6 @@ export function register() {
     tray.updateUnreadState(unreadCount)
     const dock = getDock()
     if (dock) dock.setBadge(unreadCount > 0 ? `${unreadCount}` : '')
-  })
-
-  ipcMain.removeAllListeners('minimize')
-  ipcMain.addListener('minimize', () => {
-    const mainWindow = window.getMainWindow()
-    if (!mainWindow) return
-    mainWindow.minimize()
   })
 
   ipcMain.removeAllListeners('get-all-settings')
@@ -109,81 +105,78 @@ export function register() {
   })
 
   ipcMain.removeAllListeners('update-settings')
-  ipcMain.addListener(
-    'update-settings',
-    (_e: any, payload: Parameters<typeof emit>[1]) => {
-      const settings = payload && payload.settings
-      const value = payload && payload.value
+  ipcMain.addListener('update-settings', (_e: any, payload) => {
+    const settings = payload && payload.settings
+    const value = payload && payload.value
 
-      const mainWindow = window.getMainWindow()
+    const mainWindow = window.getMainWindow()
 
-      switch (settings) {
-        case 'enablePushNotifications': {
-          config.store.set('enablePushNotifications', value)
-          if (value && config.store.get('enablePushNotificationsSound'))
-            helpers.playNotificationSound()
-          break
-        }
-
-        case 'enablePushNotificationsSound': {
-          config.store.set('enablePushNotificationsSound', value)
-
-          if (value) helpers.playNotificationSound()
-
-          break
-        }
-
-        case 'isMenuBarMode': {
-          config.store.set('isMenuBarMode', !!value)
-          config.store.set('isMenuBarModeChangedAt', Date.now())
-
-          if (mainWindow && mainWindow.isFullScreen()) {
-            mainWindow.setFullScreen(false)
-            setTimeout(window.updateOrRecreateWindow, 1000)
-          } else {
-            window.updateOrRecreateWindow()
-          }
-          break
-        }
-
-        case 'lockOnCenter': {
-          config.store.set('lockOnCenter', value)
-
-          if (!mainWindow) return
-
-          if (value) {
-            if (!config.store.get('isMenuBarMode')) {
-              mainWindow.setMovable(false)
-            }
-
-            window.center(mainWindow)
-          } else {
-            if (!config.store.get('isMenuBarMode')) {
-              mainWindow.setMovable(
-                window.getBrowserWindowOptions().movable !== false,
-              )
-            }
-          }
-          break
-        }
-
-        case 'openAtLogin': {
-          const openAtLoginChangeCount =
-            (config.store.get('openAtLoginChangeCount') || 0) + 1
-
-          config.store.set('openAtLoginChangeCount', openAtLoginChangeCount)
-
-          app.setLoginItemSettings({
-            openAtLogin: value,
-            openAsHidden: openAtLoginChangeCount > 1,
-          })
-          break
-        }
+    switch (settings) {
+      case 'enablePushNotifications': {
+        config.store.set('enablePushNotifications', value)
+        if (value && config.store.get('enablePushNotificationsSound'))
+          helpers.playNotificationSound()
+        break
       }
 
-      if (mainWindow) mainWindow.webContents.send('update-settings', payload)
-    },
-  )
+      case 'enablePushNotificationsSound': {
+        config.store.set('enablePushNotificationsSound', value)
+
+        if (value) helpers.playNotificationSound()
+
+        break
+      }
+
+      case 'isMenuBarMode': {
+        config.store.set('isMenuBarMode', !!value)
+        config.store.set('isMenuBarModeChangedAt', Date.now())
+
+        if (mainWindow && mainWindow.isFullScreen()) {
+          mainWindow.setFullScreen(false)
+          setTimeout(window.updateOrRecreateWindow, 1000)
+        } else {
+          window.updateOrRecreateWindow()
+        }
+        break
+      }
+
+      case 'lockOnCenter': {
+        config.store.set('lockOnCenter', value)
+
+        if (!mainWindow) return
+
+        if (value) {
+          if (!config.store.get('isMenuBarMode')) {
+            mainWindow.setMovable(false)
+          }
+
+          window.center(mainWindow)
+        } else {
+          if (!config.store.get('isMenuBarMode')) {
+            mainWindow.setMovable(
+              window.getBrowserWindowOptions().movable !== false,
+            )
+          }
+        }
+        break
+      }
+
+      case 'openAtLogin': {
+        const openAtLoginChangeCount =
+          (config.store.get('openAtLoginChangeCount') || 0) + 1
+
+        config.store.set('openAtLoginChangeCount', openAtLoginChangeCount)
+
+        app.setLoginItemSettings({
+          openAtLogin: value,
+          openAsHidden: openAtLoginChangeCount > 1,
+        })
+        break
+      }
+    }
+
+    mainWindow?.webContents.send('update-settings', payload)
+  })
 
   ipcMain.removeAllListeners('show-notification')
   ipcMain.addListener(
@@ -260,6 +253,11 @@ export function emit(
     value: boolean
   },
 ): void
+export function emit(event: 'fullscreen-change', payload: boolean): void
+export function emit(event: 'is-maximized-change', payload: boolean): void
 export function emit(event: string, payload: any): void {
   ipcMain.emit(event, null, payload)
+
+  const mainWindow = window.getMainWindow()
+  if (mainWindow) mainWindow.webContents.send(event, payload)
 }

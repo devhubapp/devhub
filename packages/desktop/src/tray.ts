@@ -87,18 +87,26 @@ export function showTrayContextPopup() {
 export function alignWindowWithTray(win: BrowserWindow) {
   if (!(tray && !tray.isDestroyed())) return
 
-  const trayBounds = tray.getBounds()
+  const xSpacing = 10
+  const ySpacing = 0
+
+  const workArea = screen.getDisplayFromCursor().workArea
+  const screenSize = screen.getDisplayFromCursor().size
+
+  let trayBounds = tray.getBounds()
   if (
     !(trayBounds.width && trayBounds.height && (trayBounds.x || trayBounds.y))
   ) {
-    window.center(win)
-    return
+    trayBounds = {
+      x: trayBounds.x || screenSize.width - xSpacing,
+      y: trayBounds.y || 0,
+      width: trayBounds.width || 0,
+      height: trayBounds.height || 0,
+    }
   }
 
-  const screenSize = screen.getDisplayFromCursor().size
-  const workArea = screen.getDisplayFromCursor().workArea
   const windowBounds = win.getBounds()
-  const trayCenter = helpers.getCenterPosition(tray)
+  const trayCenter = helpers.getCenterPosition({ getBounds: () => trayBounds })
 
   const top = trayBounds.y < screenSize.height / 3
   const bottom = screenSize.height - trayBounds.y < screenSize.height / 3
@@ -107,7 +115,6 @@ export function alignWindowWithTray(win: BrowserWindow) {
 
   let x: number
   let y: number
-  const spacing = 0
 
   if (top) {
     y = Math.round(trayCenter.y)
@@ -126,12 +133,12 @@ export function alignWindowWithTray(win: BrowserWindow) {
   }
 
   const fixedX = Math.max(
-    workArea.x + spacing,
-    Math.min(x, workArea.x + workArea.width - windowBounds.width - spacing),
+    workArea.x + xSpacing,
+    Math.min(x, workArea.x + workArea.width - windowBounds.width - xSpacing),
   )
   const fixedY = Math.max(
-    workArea.y + spacing,
-    Math.min(y, workArea.y + workArea.height - windowBounds.height - spacing),
+    workArea.y + ySpacing,
+    Math.min(y, workArea.y + workArea.height - windowBounds.height - ySpacing),
   )
 
   win.setPosition(fixedX, fixedY)

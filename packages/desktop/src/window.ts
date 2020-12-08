@@ -1,9 +1,4 @@
-import {
-  app,
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
-  ipcMain,
-} from 'electron'
+import { app, BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
 import path from 'path'
 
 import { forceQuit } from '.'
@@ -11,6 +6,7 @@ import * as config from './config'
 import * as constants from './constants'
 import * as dock from './dock'
 import * as helpers from './helpers'
+import * as ipc from './ipc'
 import { __DEV__ } from './libs/electron-is-dev'
 import { WindowState, windowStateKeeper } from './libs/electron-window-state'
 import * as menu from './menu'
@@ -125,14 +121,22 @@ export function createWindow() {
     }, 200)
   })
 
+  win.on('maximize', () => {
+    ipc.emit('is-maximized-change', true)
+  })
+
+  win.on('unmaximize', () => {
+    ipc.emit('is-maximized-change', false)
+  })
+
   win.on('enter-full-screen', () => {
-    ipcMain.emit('fullscreenchange', null, true)
+    ipc.emit('fullscreen-change', true)
     const _dock = dock.getDock()
     if (_dock) _dock.show()
   })
 
   win.on('leave-full-screen', () => {
-    ipcMain.emit('fullscreenchange', null, false)
+    ipc.emit('fullscreen-change', false)
     if (!(mainWindow && mainWindow.isFocused())) return
     update()
   })
@@ -215,19 +219,27 @@ export function updateOrRecreateWindow() {
   helpers.showWindow(mainWindow)
 }
 
+let isFirstTime = true
 function updateBrowserWindowOptions() {
   if (!mainWindow) return
 
   const options = getBrowserWindowOptions()
+
+  if (config.store.get('isMenuBarMode')) {
+    mainWindowState.unmanage()
+    menubarWindowState.manage(mainWindow)
+  } else {
+    menubarWindowState.unmanage()
+    mainWindowState.manage(mainWindow)
+  }
 
   if (mainWindow.setWindowButtonVisibility)
     mainWindow.setWindowButtonVisibility(options.titleBarStyle === 'hidden')
 
   const maximize =
     !config.store.get('isMenuBarMode') &&
-    (mainWindow.isMaximized() ||
-      mainWindowState.isMaximized ||
-      config.store.get('launchCount') === 1)
+    (mainWindow.isMaximized() || (isFirstTime && mainWindowState.isMaximized))
+  isFirstTime = false
 
   mainWindow.setAlwaysOnTop(options.alwaysOnTop === true)
 
@@ -266,6 +278,8 @@ function updateBrowserWindowOptions() {
       )
     }
   } else {
+    if (mainWindow.isMaximized() || config.store.get('isMenuBarMode'))
+      mainWindow.unmaximize()
     mainWindow.setSize(options.width || 500, options.height || 500, false)
   }
 
@@ -278,23 +292,11 @@ function updateBrowserWindowOptions() {
     }
   }
 
-  mainWindowState.unmanage()
-  menubarWindowState.unmanage()
-  if (config.store.get('isMenuBarMode')) {
-    menubarWindowState.manage(mainWindow)
-  } else {
-    mainWindowState.manage(mainWindow)
-  }
-
   if (config.store.get('isMenuBarMode')) {
     tray.alignWindowWithTray(mainWindow)
   } else {
     if (config.store.get('lockOnCenter')) {
       center(mainWindow)
-    }
-
-    if (maximize) {
-      mainWindow.maximize()
     }
   }
 }

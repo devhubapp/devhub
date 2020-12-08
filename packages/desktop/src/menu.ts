@@ -190,12 +190,6 @@ export function getRestartMenuItem() {
 
 export function getModeMenuItems() {
   const _mainWindow = window.getMainWindow()
-  const _tray = tray.getTray()
-  if (
-    !(_tray && _tray.getBounds().width && _tray.getBounds().height) &&
-    !config.store.get('isMenuBarMode')
-  )
-    return []
 
   const isCurrentWindow =
     _mainWindow && _mainWindow.isVisible() && !_mainWindow.isMinimized()

@@ -48,7 +48,9 @@ export function showWindow(win: BrowserWindow) {
   win.show()
 }
 
-export function getCenterPosition(obj: BrowserWindow | Tray) {
+export function getCenterPosition(
+  obj: Pick<BrowserWindow | Tray, 'getBounds'>,
+) {
   const bounds = obj.getBounds()
 
   const x = Math.round(bounds.x + bounds.width / 2)

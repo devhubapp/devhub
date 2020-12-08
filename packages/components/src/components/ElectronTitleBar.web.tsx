@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions } from 'react-native'
 
 import { useDesktopOptions } from '../hooks/use-desktop-options'
-import { useDimensions } from '../hooks/use-dimensions'
 import { Platform } from '../libs/platform'
 import { useTheme } from './context/ThemeContext'
 import { getThemeColorOrItself } from './themed/helpers'
@@ -11,21 +9,32 @@ export function ElectronTitleBar() {
   const theme = useTheme()
 
   const [isFullScreen, setIsFullScreen] = useState(false)
+  const [isMaximized, setIsMaximized] = useState(() =>
+    window.ipc.sendSync('get-is-maximized'),
+  )
   const { isMenuBarMode } = useDesktopOptions()
-  const windowDimensions = useDimensions()
-
-  const isMaximized = windowDimensions.width === Dimensions.get('screen').width
 
   useEffect(() => {
     const handler = (_e: any, value: boolean | unknown) => {
       setIsFullScreen(value === true)
     }
 
-    // TODO: Fix. Not working.
-    window.ipc.addListener('fullscreenchange', handler)
+    window.ipc.addListener('fullscreen-change', handler)
 
     return () => {
-      window.ipc.removeListener('fullscreenchange', handler)
+      window.ipc.removeListener('fullscreen-change', handler)
+    }
+  }, [])
+
+  useEffect(() => {
+    const handler = (_e: any, value: boolean | unknown) => {
+      setIsMaximized(value === true)
+    }
+
+    window.ipc.addListener('is-maximized-change', handler)
+
+    return () => {
+      window.ipc.removeListener('is-maximized-change', handler)
     }
   }, [])
 
