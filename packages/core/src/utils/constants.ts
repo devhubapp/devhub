@@ -35,10 +35,13 @@ export const FULL_ACCESS_GITHUB_OAUTH_SCOPES = DEFAULT_GITHUB_OAUTH_SCOPES.inclu
   ? DEFAULT_GITHUB_OAUTH_SCOPES
   : [...DEFAULT_GITHUB_OAUTH_SCOPES, 'repo']
 
+// unfortunately github permissions are still not granular enough.
+// code permission is required to support some events, e.g. commits
 export const GITHUB_APP_HAS_CODE_ACCESS = true
 
-export const SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON = false
-export const SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON = false
+export const ENABLE_GITHUB_OAUTH_SUPPORT = true
+export const ENABLE_GITHUB_APP_SUPPORT = true
+export const ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT = true
 
 export const APPSTORE_ID = '1191864199'
 export const GOOGLEPLAY_ID = 'com.devhubapp'

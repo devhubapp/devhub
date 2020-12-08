@@ -1,6 +1,8 @@
 import React from 'react'
 import { View } from 'react-native'
 
+import { constants } from '@devhub/core'
+
 import { useReduxState } from '../../hooks/use-redux-state'
 import * as selectors from '../../redux/selectors'
 import { sharedStyles } from '../../styles/shared'
@@ -28,6 +30,8 @@ export const PrivateAccessSettings = React.memo<PrivateAccessSettingsProps>(
     )
 
     const { foregroundThemeColor } = getButtonColors()
+
+    if (!constants.ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT) return null
 
     return (
       <View>

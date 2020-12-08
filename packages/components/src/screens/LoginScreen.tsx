@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, { useEffect } from 'react'
 import { Image, ScrollView, StyleSheet, View } from 'react-native'
 
@@ -23,6 +22,12 @@ import {
   scaleFactor,
   smallerTextSize,
 } from '../styles/variables'
+
+const SHOW_GITHUB_GRANULAR_OAUTH_LOGIN_BUTTON =
+  constants.ENABLE_GITHUB_OAUTH_SUPPORT && !Platform.isMacOS
+const SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON = false
+const SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON =
+  constants.ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT && Platform.isMacOS
 
 const styles = StyleSheet.create({
   container: {
@@ -111,8 +116,8 @@ export const LoginScreen = React.memo(() => {
   }, [])
 
   const hasMultipleLoginButtons =
-    constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
-    constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON
+    SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
+    SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON
 
   return (
     <Screen>
@@ -157,7 +162,7 @@ export const LoginScreen = React.memo(() => {
 
           <Spacer height={contentPadding * 2} />
 
-          {!Platform.isMacOS &&
+          {SHOW_GITHUB_GRANULAR_OAUTH_LOGIN_BUTTON &&
             (() => {
               const subtitle = hasMultipleLoginButtons
                 ? 'Granular permissions'
@@ -187,7 +192,7 @@ export const LoginScreen = React.memo(() => {
               )
             })()}
 
-          {!!constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON && (
+          {SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON && (
             <>
               <Spacer height={contentPadding / 2} />
 
@@ -214,10 +219,7 @@ export const LoginScreen = React.memo(() => {
             </>
           )}
 
-          {!!(
-            constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON ||
-            Platform.isMacOS
-          ) && (
+          {SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON && (
             <>
               <Spacer height={contentPadding / 2} />
 
@@ -245,34 +247,29 @@ export const LoginScreen = React.memo(() => {
             </>
           )}
 
-          {!Platform.isMacOS &&
-            !!(
-              constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
-              constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON
-            ) && (
-              <>
-                <Spacer height={contentPadding} />
+          {(SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON ||
+            SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON) && (
+            <>
+              <Spacer height={contentPadding} />
 
-                <ThemedText
-                  color="foregroundColorMuted65"
-                  style={[
-                    sharedStyles.textCenter,
-                    { fontSize: smallerTextSize, fontStyle: 'italic' },
-                  ]}
-                >
-                  {`"Granular permissions" is recommended, but feel free to use the ${[
-                    constants.SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON &&
-                      '"Full access"',
-                    constants.SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON &&
-                      '"Personal token"',
-                  ]
-                    .filter(Boolean)
-                    .join(
-                      ' or ',
-                    )} option to easily get access to all private repositories you have access.`}
-                </ThemedText>
-              </>
-            )}
+              <ThemedText
+                color="foregroundColorMuted65"
+                style={[
+                  sharedStyles.textCenter,
+                  { fontSize: smallerTextSize, fontStyle: 'italic' },
+                ]}
+              >
+                {`"Granular permissions" is recommended, but feel free to use the ${[
+                  SHOW_GITHUB_FULL_ACCESS_LOGIN_BUTTON && '"Full access"',
+                  SHOW_GITHUB_PERSONAL_TOKEN_LOGIN_BUTTON && '"Personal token"',
+                ]
+                  .filter(Boolean)
+                  .join(
+                    ' or ',
+                  )} option to easily get access to all private repositories you have access.`}
+              </ThemedText>
+            </>
+          )}
         </View>
 
         <Spacer height={contentPadding} />

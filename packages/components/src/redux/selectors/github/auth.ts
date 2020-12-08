@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { constants } from '@devhub/core'
 
 import { EMPTY_OBJ } from '../../../utils/constants'
 import { RootState } from '../../types'
@@ -6,12 +6,8 @@ import { installationTokenByOwnerSelector } from './installations'
 
 const s = (state: RootState) => (state.github && state.github.auth) || EMPTY_OBJ
 
-export const githubAppTokenDetailsSelector = (state: RootState) => s(state).app
-
-export const githubAppScopeSelector = (state: RootState) => {
-  const tokenDetails = githubAppTokenDetailsSelector(state)
-  return (tokenDetails && tokenDetails.scope) || undefined
-}
+export const githubAppTokenDetailsSelector = (state: RootState) =>
+  (constants.ENABLE_GITHUB_APP_SUPPORT && s(state).app) || undefined
 
 export const githubAppTokenSelector = (state: RootState) => {
   const tokenDetails = githubAppTokenDetailsSelector(state)
@@ -19,23 +15,24 @@ export const githubAppTokenSelector = (state: RootState) => {
 }
 
 export const githubOAuthTokenDetailsSelector = (state: RootState) =>
-  s(state).oauth
+  (constants.ENABLE_GITHUB_OAUTH_SUPPORT && s(state).oauth) || undefined
 
 export const githubPersonalTokenDetailsSelector = (state: RootState) =>
-  s(state).personal
+  (constants.ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT &&
+    s(state).personal) ||
+  undefined
 
 export const githubTokenDetailsSelector = (state: RootState) => {
   const githubPersonalTokenDetails = githubPersonalTokenDetailsSelector(state)
-  if (githubPersonalTokenDetails && githubPersonalTokenDetails.token)
-    return githubPersonalTokenDetails
+  if (githubPersonalTokenDetails?.token) return githubPersonalTokenDetails
 
   const githubOAuthTokenDetails = githubOAuthTokenDetailsSelector(state)
-  return githubOAuthTokenDetails
-}
+  if (githubOAuthTokenDetails?.token) return githubOAuthTokenDetails
 
-export const githubOAuthScopeSelector = (state: RootState) => {
-  const tokenDetails = githubTokenDetailsSelector(state)
-  return (tokenDetails && tokenDetails.scope) || undefined
+  const githubAppTokenDetails = githubAppTokenDetailsSelector(state)
+  if (githubAppTokenDetails?.token) return githubAppTokenDetails
+
+  return undefined
 }
 
 export const githubTokenSelector = (state: RootState) => {
@@ -58,12 +55,7 @@ export const getPrivateTokenByOwnerSelector = (
   ownerName: string | undefined,
 ) => {
   const tokenDetails = githubTokenDetailsSelector(state)
-  if (
-    tokenDetails &&
-    tokenDetails.token &&
-    tokenDetails.scope &&
-    tokenDetails.scope.includes('repo')
-  )
+  if (tokenDetails?.token && tokenDetails.scope?.includes('repo'))
     return tokenDetails.token
 
   const installationToken = installationTokenByOwnerSelector(state, ownerName)

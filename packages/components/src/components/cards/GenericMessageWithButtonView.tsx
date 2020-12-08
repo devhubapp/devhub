@@ -18,6 +18,7 @@ import { ThemedText } from '../themed/ThemedText'
 export interface GenericMessageWithButtonViewProps {
   buttonView: React.ReactNode
   emoji: GitHubEmoji | null
+  footer?: React.ReactNode
   fullCenter?: boolean
   style?: ViewProps['style']
   subtitle: string | undefined | null
@@ -26,85 +27,98 @@ export interface GenericMessageWithButtonViewProps {
 
 export const GenericMessageWithButtonView = React.memo(
   (props: GenericMessageWithButtonViewProps) => {
-    const { buttonView, emoji, fullCenter, style, subtitle, title } = props
+    const {
+      buttonView,
+      emoji,
+      footer,
+      fullCenter,
+      style,
+      subtitle,
+      title,
+    } = props
 
     const emojiImageURL = emoji ? getEmojiImageURL(emoji) : null
 
     return (
-      <View
-        style={[
-          fullCenter && {
-            flex: 1,
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-          {
-            width: '100%',
-            padding: contentPadding,
-          },
-          style,
-        ]}
-        pointerEvents="box-none"
-      >
-        {!!emojiImageURL && (
-          <>
-            <Image
-              source={{ uri: emojiImageURL }}
-              style={[
-                sharedStyles.alignSelfCenter,
-                {
-                  width: normalTextSize * 2,
-                  height: normalTextSize * 2,
-                  marginBottom: contentPadding / 4,
-                },
-              ]}
-            />
-
-            {!!(title || subtitle) && <Spacer height={contentPadding / 2} />}
-          </>
-        )}
-
-        <ThemedText
-          color="foregroundColorMuted65"
+      <>
+        <View
           style={[
-            sharedStyles.textCenter,
             {
-              lineHeight: normalTextSize + (4 + 2) * scaleFactor,
-              fontSize: normalTextSize + 4 * scaleFactor,
-              fontWeight: '600',
+              flex: 1,
+              justifyContent: 'center',
+              width: '100%',
+              padding: contentPadding,
             },
+            fullCenter && {
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+            style,
           ]}
+          pointerEvents="box-none"
         >
-          {title}
-        </ThemedText>
+          {!!emojiImageURL && (
+            <>
+              <Image
+                source={{ uri: emojiImageURL }}
+                style={[
+                  sharedStyles.alignSelfCenter,
+                  {
+                    width: normalTextSize * 2,
+                    height: normalTextSize * 2,
+                    marginBottom: contentPadding / 4,
+                  },
+                ]}
+              />
 
-        {!!subtitle && (
-          <>
-            {!!title && <Spacer height={contentPadding / 2} />}
+              {!!(title || subtitle) && <Spacer height={contentPadding / 2} />}
+            </>
+          )}
 
-            <ThemedText
-              color="foregroundColorMuted65"
-              style={[
-                sharedStyles.textCenter,
-                {
-                  lineHeight: smallTextSize + 3 * scaleFactor,
-                  fontSize: smallTextSize,
-                  fontWeight: '300',
-                },
-              ]}
-            >
-              {subtitle}
-            </ThemedText>
-          </>
-        )}
+          <ThemedText
+            color="foregroundColorMuted65"
+            style={[
+              sharedStyles.textCenter,
+              {
+                lineHeight: normalTextSize + (4 + 2) * scaleFactor,
+                fontSize: normalTextSize + 4 * scaleFactor,
+                fontWeight: '600',
+              },
+            ]}
+          >
+            {title}
+          </ThemedText>
 
-        <Spacer height={contentPadding / 2} />
+          {!!subtitle && (
+            <>
+              {!!title && <Spacer height={contentPadding / 2} />}
 
-        {!!buttonView && (
-          <View style={{ padding: contentPadding }}>{buttonView}</View>
-        )}
-      </View>
+              <ThemedText
+                color="foregroundColorMuted65"
+                style={[
+                  sharedStyles.textCenter,
+                  {
+                    lineHeight: smallTextSize + 3 * scaleFactor,
+                    fontSize: smallTextSize,
+                    fontWeight: '300',
+                  },
+                ]}
+              >
+                {subtitle}
+              </ThemedText>
+            </>
+          )}
+
+          <Spacer height={contentPadding / 2} />
+
+          {!!buttonView && (
+            <View style={{ padding: contentPadding }}>{buttonView}</View>
+          )}
+        </View>
+
+        {footer}
+      </>
     )
   },
 )

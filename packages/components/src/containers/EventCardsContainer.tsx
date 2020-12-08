@@ -1,4 +1,6 @@
 import {
+  capitalizeFirstLetter,
+  constants,
   EnhancedGitHubEvent,
   getDefaultPaginationPerPage,
   getOlderOrNewerItemDate,
@@ -27,6 +29,7 @@ import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
 import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 import { contentPadding } from '../styles/variables'
+import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
 
 export interface EventCardsContainerProps
   extends Omit<
@@ -158,6 +161,12 @@ export const EventCardsContainer = React.memo(
 
     if (!mainSubscription) return null
 
+    const ENABLE_GITHUB_APP_SUPPORT =
+      constants.ENABLE_GITHUB_APP_SUPPORT &&
+      !subscriptions.find((s) => ['USER_ORG_EVENTS'].includes(s.subtype || ''))
+    const ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT =
+      constants.ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT
+
     if (!(appToken && githubToken)) {
       return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
     }
@@ -189,67 +198,77 @@ export const EventCardsContainer = React.memo(
                 sharedStyles.flex,
                 sharedStyles.center,
                 sharedStyles.padding,
+                { paddingBottom: contentPadding / 2 },
               ]}
             >
               <GenericMessageWithButtonView
                 buttonView={
                   <>
-                    {!subscriptions.find((s) =>
-                      ['USER_ORG_EVENTS'].includes(s.subtype || ''),
-                    ) && (
-                      <>
-                        <ButtonLink
-                          analyticsLabel="setup_github_app_from_column"
-                          disabled={
-                            mainSubscription.data.loadState === 'loading' ||
-                            mainSubscription.data.loadState === 'loading_first'
-                          }
-                          href={getGitHubAppInstallUri({
-                            suggestedTargetId: ownerResponse.data.id,
-                          })}
-                          loading={
-                            installationsLoadState === 'loading' ||
-                            mainSubscription.data.loadState === 'loading' ||
-                            mainSubscription.data.loadState === 'loading_first'
-                          }
-                          openOnNewTab={false}
-                        >
-                          Install GitHub App
-                        </ButtonLink>
-
-                        <Spacer height={contentPadding / 2} />
-                      </>
+                    {ENABLE_GITHUB_APP_SUPPORT && (
+                      <ButtonLink
+                        analyticsLabel="setup_github_app_from_column"
+                        disabled={
+                          mainSubscription.data.loadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading_first'
+                        }
+                        href={getGitHubAppInstallUri({
+                          suggestedTargetId: ownerResponse.data.id,
+                        })}
+                        loading={
+                          installationsLoadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading_first'
+                        }
+                        openOnNewTab={false}
+                      >
+                        Install GitHub App
+                      </ButtonLink>
                     )}
 
-                    <Button
-                      analyticsLabel="setup_github_pat_from_column"
-                      disabled={
-                        mainSubscription.data.loadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading_first'
-                      }
-                      loading={
-                        installationsLoadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading_first' ||
-                        patLoadingState === 'adding' ||
-                        isLoggingIn ||
-                        isExecutingOAuth
-                      }
-                      onPress={() => {
-                        void addPersonalAccessToken()
-                      }}
-                    >
-                      Add Personal Access Token
-                    </Button>
+                    {ENABLE_GITHUB_APP_SUPPORT &&
+                      ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT && (
+                        <Spacer height={contentPadding / 2} />
+                      )}
+
+                    {ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT && (
+                      <Button
+                        analyticsLabel="setup_github_pat_from_column"
+                        disabled={
+                          mainSubscription.data.loadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading_first'
+                        }
+                        loading={
+                          installationsLoadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading_first' ||
+                          patLoadingState === 'adding' ||
+                          isLoggingIn ||
+                          isExecutingOAuth
+                        }
+                        onPress={() => {
+                          void addPersonalAccessToken()
+                        }}
+                      >
+                        Add Personal Access Token
+                      </Button>
+                    )}
                   </>
                 }
                 emoji="lock"
+                footer={<QuickFeedbackRow />}
                 subtitle={
-                  subscriptions.find((s) =>
-                    ['USER_ORG_EVENTS'].includes(s.subtype || ''),
-                  )
-                    ? 'Create a token with this permission:'
-                    : 'Install the GitHub App or add a Personal Access Token to unlock private access.'
+                  ENABLE_GITHUB_APP_SUPPORT ||
+                  ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT
+                    ? `${capitalizeFirstLetter(
+                        [
+                          ENABLE_GITHUB_APP_SUPPORT && 'install the GitHub App',
+                          ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT &&
+                            'add a Personal Access Token',
+                        ]
+                          .filter(Boolean)
+                          .join(' or '),
+                      )} to unlock private access.`
+                    : 'You may need the "repo" permission scope. Please try logging in again or contact us if this persists.'
                 }
                 title="Private repository?"
               />

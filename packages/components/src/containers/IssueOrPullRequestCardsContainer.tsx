@@ -1,4 +1,6 @@
 import {
+  capitalizeFirstLetter,
+  constants,
   EnhancedGitHubIssueOrPullRequest,
   getDefaultPaginationPerPage,
   getOlderOrNewerItemDate,
@@ -30,6 +32,7 @@ import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
 import { getGitHubAppInstallUri } from '../utils/helpers/shared'
 import { contentPadding } from '../styles/variables'
+import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
 
 export interface IssueOrPullRequestCardsContainerProps
   extends Omit<
@@ -145,6 +148,10 @@ export const IssueOrPullRequestCardsContainer = React.memo(
 
     if (!mainSubscription) return null
 
+    const ENABLE_GITHUB_APP_SUPPORT = constants.ENABLE_GITHUB_APP_SUPPORT
+    const ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT =
+      constants.ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT
+
     if (!(appToken && githubToken)) {
       return <NoTokenView githubAppType={githubAppToken ? 'oauth' : 'both'} />
     }
@@ -176,55 +183,75 @@ export const IssueOrPullRequestCardsContainer = React.memo(
                 sharedStyles.flex,
                 sharedStyles.center,
                 sharedStyles.padding,
+                { paddingBottom: contentPadding / 2 },
               ]}
             >
               <GenericMessageWithButtonView
                 buttonView={
                   <>
-                    <ButtonLink
-                      analyticsLabel="setup_github_app_from_column"
-                      disabled={
-                        mainSubscription.data.loadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading_first'
-                      }
-                      href={getGitHubAppInstallUri({
-                        suggestedTargetId: ownerResponse.data.id,
-                      })}
-                      loading={
-                        installationsLoadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading_first'
-                      }
-                      openOnNewTab={false}
-                    >
-                      Install GitHub App
-                    </ButtonLink>
+                    {ENABLE_GITHUB_APP_SUPPORT && (
+                      <ButtonLink
+                        analyticsLabel="setup_github_app_from_column"
+                        disabled={
+                          mainSubscription.data.loadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading_first'
+                        }
+                        href={getGitHubAppInstallUri({
+                          suggestedTargetId: ownerResponse.data.id,
+                        })}
+                        loading={
+                          installationsLoadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading_first'
+                        }
+                        openOnNewTab={false}
+                      >
+                        Install GitHub App
+                      </ButtonLink>
+                    )}
 
-                    <Spacer height={contentPadding / 2} />
+                    {ENABLE_GITHUB_APP_SUPPORT &&
+                      ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT && (
+                        <Spacer height={contentPadding / 2} />
+                      )}
 
-                    <Button
-                      analyticsLabel="setup_github_pat_from_column"
-                      disabled={
-                        mainSubscription.data.loadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading_first'
-                      }
-                      loading={
-                        installationsLoadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading' ||
-                        mainSubscription.data.loadState === 'loading_first' ||
-                        patLoadingState === 'adding'
-                      }
-                      onPress={() => {
-                        void addPersonalAccessToken()
-                      }}
-                    >
-                      Add Personal Access Token
-                    </Button>
+                    {ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT && (
+                      <Button
+                        analyticsLabel="setup_github_pat_from_column"
+                        disabled={
+                          mainSubscription.data.loadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading_first'
+                        }
+                        loading={
+                          installationsLoadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading' ||
+                          mainSubscription.data.loadState === 'loading_first' ||
+                          patLoadingState === 'adding'
+                        }
+                        onPress={() => {
+                          void addPersonalAccessToken()
+                        }}
+                      >
+                        Add Personal Access Token
+                      </Button>
+                    )}
                   </>
                 }
                 emoji="lock"
+                footer={<QuickFeedbackRow />}
                 subtitle={
-                  'Install the GitHub App or add a Personal Access Token to unlock private access.'
+                  ENABLE_GITHUB_APP_SUPPORT ||
+                  ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT
+                    ? `${capitalizeFirstLetter(
+                        [
+                          ENABLE_GITHUB_APP_SUPPORT && 'install the GitHub App',
+                          ENABLE_GITHUB_PERSONAL_ACCESS_TOKEN_SUPPORT &&
+                            'add a Personal Access Token',
+                        ]
+                          .filter(Boolean)
+                          .join(' or '),
+                      )} to unlock private access.`
+                    : 'You may need the "repo" permission scope. Please try logging in again or contact us if this persists.'
                 }
                 title="Private repository?"
               />

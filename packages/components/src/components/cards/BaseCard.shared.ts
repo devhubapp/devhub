@@ -1031,7 +1031,9 @@ function _getCardPropsForItem(
         title: trimNewLinesAndSpaces(subject.title, 120),
         type,
         githubApp:
-          isPrivate && !notification.enhanced
+          constants.ENABLE_GITHUB_APP_SUPPORT &&
+          isPrivate &&
+          !notification.enhanced
             ? {
                 ownerId: repo.owner && repo.owner.id,
                 repoId: repo.id,

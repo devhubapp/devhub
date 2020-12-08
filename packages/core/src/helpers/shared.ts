@@ -39,6 +39,10 @@ export function capitalize(str: string) {
   return str.toLowerCase().replace(/^.| ./g, _.toUpper)
 }
 
+export function capitalizeFirstLetter(str: string) {
+  return `${str.charAt(0).toUpperCase()}${str.slice(1)}`
+}
+
 export function memoizeMultipleArgs<FN extends (...args: any[]) => any>(
   fn: FN,
 ): FN {
