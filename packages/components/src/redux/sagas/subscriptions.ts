@@ -116,11 +116,6 @@ function* init() {
       .filter(
         (s) =>
           s &&
-          !(
-            (s.data.loadState === 'loading' ||
-              s.data.loadState === 'loading_first') &&
-            !minimumRefetchTimeHasPassed(s, 1 * 60 * 1000)
-          ) &&
           (forceFetchAll ||
             minimumRefetchTimeHasPassed(
               s,
