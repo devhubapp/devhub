@@ -34,6 +34,9 @@
     "studio": "yarn workspace @devhub/mobile studio",
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
+  "dependencies": {
+    "react-native": "*"
+  },
   "devDependencies": {
     "@primer/octicons-v2": "canary",
     "@typescript-eslint/eslint-plugin": "4.9.0",
