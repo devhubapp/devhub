@@ -29,6 +29,7 @@ import {
   clearOAuthQueryParams,
   clearQueryStringFromURL,
 } from '../../utils/helpers/auth'
+import { Platform } from '../../libs/platform'
 
 export interface LoginHelpersProviderProps {
   children?: React.ReactNode
@@ -145,8 +146,22 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
           {
             text: 'Create new token',
             onPress: () => {
+              const description = Platform.isMacOS
+                ? 'DevHub (macOS native)'
+                : Platform.isElectron
+                ? `DevHub (${Platform.realOS})`
+                : Platform.isDesktop
+                ? `DevHub (${Platform.realOS})`
+                : Platform.isPad
+                ? 'DevHub (iPad)'
+                : Platform.OS === 'ios'
+                ? 'DevHub (iOS)'
+                : `DevHub (${Platform.OS})`
+
               Browser.openURLOnNewTab(
-                `https://github.com/settings/tokens/new?description=DevHub&scopes=${(
+                `https://github.com/settings/tokens/new?description=${encodeURIComponent(
+                  description,
+                )}&scopes=${(
                   constants.FULL_ACCESS_GITHUB_OAUTH_SCOPES ||
                   _.uniq([...constants.DEFAULT_GITHUB_OAUTH_SCOPES, 'repo'])
                 ).join(',')}`,
