@@ -1,0 +1,13 @@
+diff --git a/node_modules/@react-spring/shared/package.json b/node_modules/@react-spring/shared/package.json
+index 93be66f..0ef7fd7 100644
+--- a/node_modules/@react-spring/shared/package.json
++++ b/node_modules/@react-spring/shared/package.json
+@@ -11,7 +11,7 @@
+   "contributors": [
+     "Alec Larson (https://github.com/aleclarson)"
+   ],
+-  "sideEffects": false,
++  "sideEffects": true,
+   "main": "cjs/index.js",
+   "module": "esm/index.js",
+   "dependencies": {
