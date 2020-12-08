@@ -190,6 +190,9 @@ const DialogView = React.memo(
                 options && options.cancelable === false
                   ? undefined
                   : () => {
+                      buttons
+                        ?.find((button) => button?.style === 'cancel')
+                        ?.onPress?.('')
                       hide()
                     }
               }
