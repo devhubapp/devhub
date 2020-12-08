@@ -1,6 +1,6 @@
 {
   "name": "@devhub/desktop",
-  "version": "0.101.0",
+  "version": "0.102.0",
   "private": false,
   "main": "dist/index.js",
   "author": {
@@ -81,7 +81,7 @@
     }
   },
   "dependencies": {
-    "@devhub/core": "0.101.0",
+    "@devhub/core": "0.102.0",
     "electron-fetch": "1.7.2",
     "electron-store": "6.0.1",
     "electron-updater": "4.3.5",

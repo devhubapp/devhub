@@ -64,8 +64,8 @@ export default function DownloadPage(_props: DownloadPageProps) {
   const category = _category || system.category || 'web'
   const { os } = system
 
-  const version = '0.101.0'
-  const releaseDate = '2020-06-01'
+  const version = '0.102.0'
+  const releaseDate = '2020-12-08'
 
   return (
     <LandingLayout>
