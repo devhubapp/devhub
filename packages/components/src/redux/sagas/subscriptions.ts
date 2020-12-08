@@ -331,7 +331,7 @@ function* onFetchRequest(
 
   const owner = getSubscriptionOwnerOrOrg(subscription)
 
-  const privateToken = selectors.getPrivateTokenByOwnerSelector(state, owner)
+  const privateTokenDetails = selectors.githubPrivateTokenDetailsSelector(state)
   const installationToken = selectors.installationTokenByOwnerSelector(
     state,
     owner,
@@ -340,16 +340,11 @@ function* onFetchRequest(
   const githubAppTokenDetails = selectors.githubAppTokenDetailsSelector(state)
   const loggedUsername = selectors.currentGitHubUsernameSelector(state)!
 
-  const githubToken =
-    (subscription &&
-      (subscription.type === 'activity' ||
-        subscription.type === 'issue_or_pr') &&
-      (subscription.subtype === 'USER_ORG_EVENTS' &&
-      privateToken === installationToken
-        ? undefined
-        : privateToken)) ||
+  const githubToken: string =
+    privateTokenDetails?.token ||
     githubOAuthOrPersonalToken ||
-    (githubAppTokenDetails && githubAppTokenDetails.token)
+    (subscription?.type === 'issue_or_pr' && githubAppTokenDetails?.token) ||
+    ''
 
   const appTokenType: GitHubAppTokenType =
     (githubToken === installationToken && 'app-installation') ||

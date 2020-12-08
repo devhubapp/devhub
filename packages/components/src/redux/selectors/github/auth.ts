@@ -47,13 +47,30 @@ export const githubTokenCreatedAtSelector = (state: RootState) => {
   return (tokenDetails && tokenDetails.tokenCreatedAt) || undefined
 }
 
+export const githubPrivateTokenDetailsSelector = (state: RootState) => {
+  const githubPersonalTokenDetails = githubPersonalTokenDetailsSelector(state)
+  if (
+    githubPersonalTokenDetails?.token &&
+    githubPersonalTokenDetails.scope?.includes('repo')
+  )
+    return githubPersonalTokenDetails
+
+  const githubOAuthTokenDetails = githubOAuthTokenDetailsSelector(state)
+  if (
+    githubOAuthTokenDetails?.token &&
+    githubOAuthTokenDetails.scope?.includes('repo')
+  )
+    return githubOAuthTokenDetails
+
+  return undefined
+}
+
 export const getPrivateTokenByOwnerSelector = (
   state: RootState,
   ownerName: string | undefined,
 ) => {
-  const tokenDetails = githubTokenDetailsSelector(state)
-  if (tokenDetails?.token && tokenDetails.scope?.includes('repo'))
-    return tokenDetails.token
+  const privateTokenDetails = githubPrivateTokenDetailsSelector(state)
+  if (privateTokenDetails?.token) return privateTokenDetails.token
 
   const installationToken = installationTokenByOwnerSelector(state, ownerName)
   return installationToken || undefined
