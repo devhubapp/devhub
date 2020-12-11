@@ -12,10 +12,16 @@ export const AppearanceProvider = Fragment
 
 export const Appearance: Appearence = {
   addChangeListener(listener) {
-    return AppearanceOriginal.addChangeListener((preferences) => {
+    AppearanceOriginal.addChangeListener((preferences) => {
       const _colorScheme = preferences && preferences.colorScheme
       listener({ colorScheme: normalizeColorScheme(_colorScheme) })
     })
+
+    return {
+      remove: () => {
+        AppearanceOriginal.removeChangeListener(listener as any)
+      },
+    }
   },
   getColorScheme() {
     return normalizeColorScheme(AppearanceOriginal.getColorScheme())
