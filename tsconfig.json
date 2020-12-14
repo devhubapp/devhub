@@ -5,5 +5,5 @@
     "module": "esnext"
   },
   "exclude": ["node_modules"],
-  "include": ["@types", "landing", "packages"]
+  "include": ["@types", "landing", "packages", ".eslintrc.js"]
 }

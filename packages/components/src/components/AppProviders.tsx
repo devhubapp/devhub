@@ -16,6 +16,7 @@ import { LoginHelpersProvider } from './context/LoginHelpersContext'
 import { AppLayoutProvider } from './context/LayoutContext'
 import { PlansProvider } from './context/PlansContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { Compose } from './common/Compose'
 
 const { persistor, store } = configureStore()
 
@@ -25,35 +26,30 @@ export interface AppProvidersProps {
 
 export function AppProviders(props: AppProvidersProps) {
   return (
-    <HelmetProvider>
-      <ReduxProvider store={store as any}>
-        <PersistGate loading={null} persistor={persistor}>
-          <AppearanceProvider>
-            <ThemeProvider>
-              <SafeAreaProvider>
-                <DialogProvider>
-                  <DeepLinkProvider>
-                    <PlansProvider>
-                      <AppLayoutProvider>
-                        <ColumnFocusProvider>
-                          <ColumnWidthProvider>
-                            <ColumnFiltersProvider>
-                              <LoginHelpersProvider>
-                                {props.children}
-                              </LoginHelpersProvider>
-                              <OverrideSystemDialog />
-                            </ColumnFiltersProvider>
-                          </ColumnWidthProvider>
-                        </ColumnFocusProvider>
-                      </AppLayoutProvider>
-                    </PlansProvider>
-                  </DeepLinkProvider>
-                </DialogProvider>
-              </SafeAreaProvider>
-            </ThemeProvider>
-          </AppearanceProvider>
-        </PersistGate>
-      </ReduxProvider>
-    </HelmetProvider>
+    <Compose
+      components={[
+        (child) => <HelmetProvider children={child} />,
+        (child) => <ReduxProvider children={child} store={store} />,
+        (child) => (
+          <PersistGate children={child} loading={null} persistor={persistor} />
+        ),
+        (child) => <AppearanceProvider children={child} />,
+        (child) => <ThemeProvider children={child} />,
+        (child) => <SafeAreaProvider children={child} />,
+        (child) => <DialogProvider children={child} />,
+        (child) => <DeepLinkProvider children={child} />,
+        (child) => <PlansProvider children={child} />,
+        (child) => <AppLayoutProvider children={child} />,
+        (child) => <ColumnFocusProvider children={child} />,
+        (child) => <ColumnWidthProvider children={child} />,
+        (child) => <ColumnFiltersProvider children={child} />,
+        (child) => <LoginHelpersProvider children={child} />,
+      ]}
+    >
+      <>
+        {props.children}
+        <OverrideSystemDialog />
+      </>
+    </Compose>
   )
 }
