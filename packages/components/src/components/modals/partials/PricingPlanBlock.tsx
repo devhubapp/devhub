@@ -60,7 +60,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
     isMyPlan && totalNumberOfVisiblePlans > 1
       ? plan.interval
         ? 'Current plan'
-        : 'You bought this'
+        : plan.amount
+        ? 'You bought this'
+        : 'You have this'
       : _banner
 
   const estimatedMonthlyPrice =
@@ -190,7 +192,11 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
             style={[
               sharedStyles.paddingHorizontal,
               sharedStyles.textCenter,
-              { paddingVertical: contentPadding / 3, fontWeight: '600' },
+              {
+                fontSize: undefined,
+                paddingVertical: contentPadding / 3,
+                fontWeight: '600',
+              },
             ]}
           >
             {' '}
@@ -264,7 +270,9 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
               },
             ]}
           >
-            <Text>{`${priceLabelWithoutCents}`}</Text>
+            <Text
+              style={{ fontSize: undefined }}
+            >{`${priceLabelWithoutCents}`}</Text>
             {!!priceLabelCents && (
               <Text style={{ fontSize: normalTextSize }}>
                 {priceLabelCents}

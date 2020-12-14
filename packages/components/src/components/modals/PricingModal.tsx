@@ -122,7 +122,9 @@ export function PricingModal(props: PricingModalProps) {
 
     dispatch(actions.closeAllModals())
     Browser.openURLOnNewTab(
-      `${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${appTokenRef.current}&hideFreePlan`,
+      `${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${
+        appTokenRef.current || ''
+      }`,
     )
   }, [])
 

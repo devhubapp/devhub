@@ -48,8 +48,10 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
   const banner = userPlanIsActive
     ? isMyPlan
       ? localizedPlan && localizedPlan.interval
-        ? 'Current localizedPlan'
-        : 'You bought this'
+        ? 'Current plan'
+        : localizedPlan.amount
+        ? 'You bought this'
+        : 'You have this'
       : _banner || true
     : _banner
 

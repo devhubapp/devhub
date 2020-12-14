@@ -828,7 +828,7 @@ export const SubscribeForm = injectStripe<SubscribeFormProps>(
               localizedPlan.stripeIds.length
                 ? 'Your card will be charged any difference immediately.'
                 : `Your card will be charged immediately${
-                    localizedPlan.trialPeriodDays
+                    localizedPlan.trialPeriodDays || !localizedPlan.interval
                       ? ''
                       : ' (this plan has no free trial)'
                   }.`,

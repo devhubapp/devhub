@@ -277,11 +277,7 @@ export default function AccountPage(_props: AccountPageProps) {
             {paidPlans.length === 1 && paidPlans[0] ? (
               <Link href={`/${getPurchaseOrSubscribeRoute(plans)}`}>
                 <a className="text-default">
-                  {freeTrialDays
-                    ? 'Start free trial'
-                    : paidPlans[0].interval
-                    ? 'Subscribe'
-                    : 'Purchase'}
+                  {paidPlans[0].interval ? 'Subscribe' : 'Purchase'}
                 </a>
               </Link>
             ) : (
