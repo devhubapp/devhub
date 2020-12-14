@@ -14,7 +14,7 @@ import { DeepLinkProvider } from './context/DeepLinkContext'
 import { DialogProvider } from './context/DialogContext'
 import { LoginHelpersProvider } from './context/LoginHelpersContext'
 import { AppLayoutProvider } from './context/LayoutContext'
-// import { PlansProvider } from './context/PlansContext'
+import { PlansProvider } from './context/PlansContext'
 import { ThemeProvider } from './context/ThemeContext'
 
 const { persistor, store } = configureStore()
@@ -33,20 +33,20 @@ export function AppProviders(props: AppProvidersProps) {
               <SafeAreaProvider>
                 <DialogProvider>
                   <DeepLinkProvider>
-                    {/* <PlansProvider> */}
-                    <AppLayoutProvider>
-                      <ColumnFocusProvider>
-                        <ColumnWidthProvider>
-                          <ColumnFiltersProvider>
-                            <LoginHelpersProvider>
-                              {props.children}
-                            </LoginHelpersProvider>
-                            <OverrideSystemDialog />
-                          </ColumnFiltersProvider>
-                        </ColumnWidthProvider>
-                      </ColumnFocusProvider>
-                    </AppLayoutProvider>
-                    {/* </PlansProvider> */}
+                    <PlansProvider>
+                      <AppLayoutProvider>
+                        <ColumnFocusProvider>
+                          <ColumnWidthProvider>
+                            <ColumnFiltersProvider>
+                              <LoginHelpersProvider>
+                                {props.children}
+                              </LoginHelpersProvider>
+                              <OverrideSystemDialog />
+                            </ColumnFiltersProvider>
+                          </ColumnWidthProvider>
+                        </ColumnFocusProvider>
+                      </AppLayoutProvider>
+                    </PlansProvider>
                   </DeepLinkProvider>
                 </DialogProvider>
               </SafeAreaProvider>
