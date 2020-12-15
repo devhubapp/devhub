@@ -90,6 +90,7 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
           const { initialSelectedPlanId, highlightFeature } = getQueryParams(
             querystring,
           )
+
           dispatch(
             actions.pushModal({
               name: 'PRICING',

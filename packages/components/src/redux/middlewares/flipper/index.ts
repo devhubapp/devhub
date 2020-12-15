@@ -1,6 +1,6 @@
 import { Middleware } from '../../types'
 
-export function flipperMiddleware(): Middleware {
+export function createFlipperMiddleware(): Middleware {
   return (_store) => (next) => (action) => {
     next(action)
   }

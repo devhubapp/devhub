@@ -11,6 +11,7 @@ import {
 } from '@devhub/core'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { Dimensions, View } from 'react-native'
+import { useDispatch } from 'react-redux'
 
 import {
   getCardPropsForItem,
@@ -33,6 +34,7 @@ import {
 import { EmptyCards } from '../components/cards/EmptyCards'
 import { columnHeaderHeight } from '../components/columns/ColumnHeader'
 import { ColumnLoadingIndicator } from '../components/columns/ColumnLoadingIndicator'
+import { Button } from '../components/common/Button'
 import { ButtonLink } from '../components/common/ButtonLink'
 import { QuickFeedbackRow } from '../components/common/QuickFeedbackRow'
 import { RefreshControl } from '../components/common/RefreshControl'
@@ -40,6 +42,7 @@ import { useAppLayout } from '../components/context/LayoutContext'
 import { usePlans } from '../components/context/PlansContext'
 import { OneListProps } from '../libs/one-list'
 import { useSafeArea } from '../libs/safe-area-view'
+import * as actions from '../redux/actions'
 import * as selectors from '../redux/selectors'
 import { sharedStyles } from '../styles/shared'
 import { useColumn } from './use-column'
@@ -78,6 +81,7 @@ export function useCardsProps<ItemT extends EnhancedItem>({
 
   const { paidPlans } = usePlans()
 
+  const dispatch = useDispatch()
   const appToken = useReduxState(selectors.appTokenSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const isPlanExpired = useReduxState(selectors.isPlanExpiredSelector)
@@ -376,20 +380,26 @@ export function useCardsProps<ItemT extends EnhancedItem>({
               emoji="lock"
               errorButtonView={
                 <View>
-                  <ButtonLink
+                  <Button
                     analyticsCategory="plan_expired"
                     analyticsLabel="select_a_plan_button"
-                    href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${
-                      appToken || ''
-                    }`}
-                    openOnNewTab
+                    onPress={() => {
+                      dispatch(
+                        actions.pushModal({
+                          name: 'PRICING',
+                          params: {
+                            highlightFeature: 'columnsLimit',
+                          },
+                        }),
+                      )
+                    }}
                   >
                     {paidPlans.some((p) => p && p.interval)
                       ? plan && plan.amount
                         ? 'Switch plan ↗'
                         : 'Select a plan ↗'
                       : 'See available options ↗'}
-                  </ButtonLink>
+                  </Button>
                 </View>
               }
               errorMessage="You need a paid plan to keep using DevHub."
@@ -435,15 +445,21 @@ export function useCardsProps<ItemT extends EnhancedItem>({
               columnId={column.id}
               emoji="rocket"
               errorButtonView={
-                <ButtonLink
+                <Button
                   analyticsLabel="unlock_more_columns_button"
-                  href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${
-                    appToken || ''
-                  }`}
-                  openOnNewTab
+                  onPress={() => {
+                    dispatch(
+                      actions.pushModal({
+                        name: 'PRICING',
+                        params: {
+                          highlightFeature: 'columnsLimit',
+                        },
+                      }),
+                    )
+                  }}
                 >
                   Unlock more columns ↗
-                </ButtonLink>
+                </Button>
               }
               errorMessage={`You have exceeded the limit of ${
                 plan.featureFlags.columnsLimit
@@ -502,20 +518,24 @@ export function useCardsProps<ItemT extends EnhancedItem>({
               columnId={column.id}
               emoji="lock"
               errorButtonView={
-                <ButtonLink
+                <Button
                   analyticsLabel="select_a_plan_button"
                   analyticsCategory="invalid_plan"
-                  href={`${constants.DEVHUB_LINKS.PRICING_PAGE}?appToken=${
-                    appToken || ''
-                  }`}
-                  openOnNewTab
+                  onPress={() => {
+                    dispatch(
+                      actions.pushModal({
+                        name: 'PRICING',
+                        params: {},
+                      }),
+                    )
+                  }}
                 >
                   {paidPlans.some((p) => p && p.interval)
                     ? plan && plan.amount
                       ? 'Switch plan ↗'
                       : 'Select a plan ↗'
                     : 'See available options ↗'}
-                </ButtonLink>
+                </Button>
               }
               errorMessage="You need a paid plan to keep using DevHub."
               errorTitle="Upgrade to a paid plan"

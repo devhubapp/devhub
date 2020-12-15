@@ -13,8 +13,9 @@ import { registerSelectors } from 'reselect-tools'
 
 import { Platform } from '../libs/platform'
 import { analyticsMiddleware } from './middlewares/analytics'
+import { devhubMiddleware } from './middlewares/devhub'
 import { electronMiddleware } from './middlewares/electron'
-import { flipperMiddleware } from './middlewares/flipper'
+import { createFlipperMiddleware } from './middlewares/flipper'
 import migrations from './migrations'
 import { rootReducer } from './reducers'
 import { rootSaga } from './sagas'
@@ -80,6 +81,7 @@ export function configureStore(key = 'root') {
   */
 
   const sagaMiddleware = createSagaMiddleware()
+  const flipperMiddleware = createFlipperMiddleware()
 
   const store = createStore(
     persistedReducer,
@@ -88,7 +90,8 @@ export function configureStore(key = 'root') {
         analyticsMiddleware,
         sagaMiddleware,
         electronMiddleware,
-        flipperMiddleware(),
+        flipperMiddleware,
+        devhubMiddleware,
       ),
     ),
   )

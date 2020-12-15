@@ -31,7 +31,7 @@ export interface PricingModalProps {
   showBackButton: boolean
 }
 
-const allowChangePlansOnThisApp = false
+export const allowChangePlansOnThisApp = false
 
 export function PricingModal(props: PricingModalProps) {
   const {

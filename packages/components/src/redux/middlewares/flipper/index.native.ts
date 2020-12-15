@@ -1,3 +1,3 @@
-import flipperMiddleware from 'redux-flipper'
+import createFlipperMiddleware from 'redux-flipper'
 
-export { flipperMiddleware }
+export { createFlipperMiddleware }
