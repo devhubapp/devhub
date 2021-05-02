@@ -46,7 +46,7 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
   - Homebrew (macOS alternative):
     ```
       brew tap devhubapp/devhub
-      brew cask install devhub
+      brew install --cask devhub
     ```
 
 <br/>
