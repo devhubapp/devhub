@@ -17,11 +17,13 @@ If the feature is big, open an issue first for discussion.
 
 > **Note:** On Windows, you might need to install Bash commands (e.g. via [git-scm](https://git-scm.com/downloads) or via [linux bash shell](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/))
 
+**Note:** On Mac, if you have previously installed Apache Hadoop, there may be a preexisting shell command for yarn.  You may need to try one of the yarn aliases.  Also, if you run into issues with the yarn install command, try running `sudo gem update xcodeproj`
+
 ### How to run
 
-- `git clone git@github.com:devhubapp/devhub.git`
-- `yarn`
-- `cd packages/mobile/ios && pod install && cd -`
+- `git clone https://github.com/devhubapp/devhub.git`
+- `yarn install`
+- `cd packages/mobile/ios && pod install && cd ../..`
 - `yarn dev`
 
 That's it. It will start three workers: `TypeScript compilation watcher`, `Web server` (create-react-app) and the `Mobile server` (react-native packager). The browser will open automatically.
@@ -44,3 +46,4 @@ Alternatively, you can contribute using Gitpod, a free online dev environment fo
 > Disclaimer: Gitpod is a third party service and is not affiliated with GitHub neither DevHub.
 
 > When using a third party service, your tokens may be less secured.
+
