@@ -6,6 +6,7 @@ require_relative '../../../node_modules/@react-native-community/cli-platform-ios
 platform :ios, '10.0'
 
 target 'devhub' do
+  pod 'React-RCTPushNotification', :path => '../node_modules/react-native/Libraries/PushNotificationIOS'
   config = use_native_modules!
 
   use_react_native!(:path => config[:reactNativePath])
