@@ -22,9 +22,8 @@ function* onThemeChange() {
   const state = yield* select()
 
   const preferredDarkThemePair = selectors.preferredDarkThemePairSelector(state)
-  const preferredLightThemePair = selectors.preferredLightThemePairSelector(
-    state,
-  )
+  const preferredLightThemePair =
+    selectors.preferredLightThemePairSelector(state)
   const themePair = selectors.themePairSelector(state)
 
   analytics.setDimensions({

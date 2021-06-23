@@ -16,13 +16,8 @@ export interface ThemedTextProps extends Omit<TextProps, 'style'> {
 
 export const ThemedText = React.forwardRef<Text, ThemedTextProps>(
   (props, ref) => {
-    const {
-      backgroundColor,
-      color,
-      style,
-      themeTransformer,
-      ...otherProps
-    } = props
+    const { backgroundColor, color, style, themeTransformer, ...otherProps } =
+      props
 
     const theme = useTheme({ themeTransformer })
 

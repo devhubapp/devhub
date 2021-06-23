@@ -40,13 +40,10 @@ export function SwipeableCard(props: CardWithLinkProps) {
     )
   }
 
-  const Content = useMemo(() => <CardWithLink {...props} isInsideSwipeable />, [
-    columnId,
-    item,
-    ownerIsKnown,
-    repoIsKnown,
-    type,
-  ])
+  const Content = useMemo(
+    () => <CardWithLink {...props} isInsideSwipeable />,
+    [columnId, item, ownerIsKnown, repoIsKnown, type],
+  )
 
   return (
     <SwipeableRow

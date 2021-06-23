@@ -6,7 +6,6 @@ import { createSpringAnimatedComponent } from './helpers'
 
 export type SpringAnimatedImageWithLoadingProps = ImageWithLoadingProps
 
-export const SpringAnimatedImageWithLoading = createSpringAnimatedComponent(
-  ImageWithLoading,
-)
+export const SpringAnimatedImageWithLoading =
+  createSpringAnimatedComponent(ImageWithLoading)
 SpringAnimatedImageWithLoading.displayName = 'SpringAnimatedImageWithLoading'

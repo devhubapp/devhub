@@ -338,9 +338,10 @@ export function getUserAvatarFromObject(
   )
 }
 
-export function tryGetIdAndUsernameFromGitHubEmail(
-  email?: string,
-): { id: string | undefined; username: string | undefined } {
+export function tryGetIdAndUsernameFromGitHubEmail(email?: string): {
+  id: string | undefined
+  username: string | undefined
+} {
   if (!email) return { id: undefined, username: undefined }
 
   const emailSplit = email.split('@')
@@ -400,9 +401,10 @@ export function isPullRequest(issue: {
   )
 }
 
-export function getOwnerAndRepo(
-  repoFullName: string | undefined,
-): { owner: string | undefined; repo: string | undefined } {
+export function getOwnerAndRepo(repoFullName: string | undefined): {
+  owner: string | undefined
+  repo: string | undefined
+} {
   if (!repoFullName) return { owner: '', repo: '' }
 
   const repoSplitedNames = (repoFullName || '')
@@ -770,10 +772,8 @@ export function getColumnHeaderDetails(
     case 'issue_or_pr': {
       const s = subscription as Partial<IssueOrPullRequestColumnSubscription>
 
-      const {
-        allIncludedOwners,
-        allIncludedRepos,
-      } = getOwnerAndRepoFormattedFilter(column.filters)
+      const { allIncludedOwners, allIncludedRepos } =
+        getOwnerAndRepoFormattedFilter(column.filters)
 
       const owner =
         allIncludedOwners.length === 1 ? allIncludedOwners[0] : undefined
@@ -783,13 +783,10 @@ export function getColumnHeaderDetails(
           ? getOwnerAndRepo(allIncludedRepos[0])
           : { owner: undefined, repo: undefined }
 
-      const {
-        includedUsernames,
-        excludedUsernames,
-        usedUsernameFilterKeys,
-      } = getUsernamesFromFilter('issue_or_pr', column.filters, {
-        blacklist: ['owner'],
-      })
+      const { includedUsernames, excludedUsernames, usedUsernameFilterKeys } =
+        getUsernamesFromFilter('issue_or_pr', column.filters, {
+          blacklist: ['owner'],
+        })
 
       const usernames =
         (includedUsernames && includedUsernames.length
@@ -926,7 +923,7 @@ export function getColumnHeaderDetails(
 }
 
 export function createSubscriptionObjectWithId<
-  S extends Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>
+  S extends Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>,
 >(subscription: S) {
   return {
     ...subscription,
@@ -935,7 +932,7 @@ export function createSubscriptionObjectWithId<
 }
 
 export function createSubscriptionObjectsWithId<
-  S extends Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>[]
+  S extends Pick<ColumnSubscription, 'type' | 'subtype' | 'params'>[],
 >(subscriptions: S) {
   return subscriptions.map((subscription) => ({
     ...subscription,
@@ -1098,7 +1095,7 @@ export function getStateTypeMetadata<T extends GitHubStateType>(
   label: string
   state: T
 } {
-  switch (state as GitHubStateType) {
+  switch (state) {
     case 'open': {
       return {
         color: 'green',
@@ -1140,7 +1137,7 @@ export function getSubjectTypeMetadata<T extends GitHubItemSubjectType>(
   label: string
   subjectType: T
 } {
-  switch (subjectType as GitHubItemSubjectType) {
+  switch (subjectType) {
     case 'PullRequestReview': {
       return {
         label: 'Pull Request Review',
@@ -1625,9 +1622,8 @@ export function getItemsFilterMetadata(
 
     if (subscriptionReason) {
       if (!result.subscriptionReason[subscriptionReason])
-        result.subscriptionReason[
-          subscriptionReason
-        ] = getDefaultItemFilterCountMetadata()
+        result.subscriptionReason[subscriptionReason] =
+          getDefaultItemFilterCountMetadata()
       updateNestedCounter(result.subscriptionReason[subscriptionReason]!)
     }
 

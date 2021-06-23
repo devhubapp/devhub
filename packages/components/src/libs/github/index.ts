@@ -188,7 +188,7 @@ export async function getActivity<T extends GitHubActivityType>(
 }
 
 export async function getIssuesOrPullRequests<
-  T extends IssueOrPullRequestColumnSubscription['subtype']
+  T extends IssueOrPullRequestColumnSubscription['subtype'],
 >(
   type: T,
   subscriptionParams: IssueOrPullRequestColumnSubscription['params'],

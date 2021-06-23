@@ -4,7 +4,7 @@ import { IconProps } from 'react-native-vector-icons/Icon'
 import * as OcticonsLegacy from '../octicons/Octicons'
 import IconSet from './generated/Octicons2'
 
-export const Octicons = (React.forwardRef<
+export const Octicons = React.forwardRef<
   OcticonsLegacy.Octicons,
   OcticonIconProps
 >((props, ref) => {
@@ -22,7 +22,7 @@ export const Octicons = (React.forwardRef<
   const fixedName = `${initialName}-${existingHeight}`
 
   return React.createElement(IconSet as any, { ...props, ref, name: fixedName })
-}) as any) as typeof OcticonsLegacy.Octicons
+}) as any as typeof OcticonsLegacy.Octicons
 export type Octicons = OcticonsLegacy.Octicons
 
 export interface OcticonIconProps

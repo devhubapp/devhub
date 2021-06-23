@@ -92,13 +92,10 @@ export const IssueOrPullRequestCardsContainer = React.memo(
       selectors.installationsLoadStateSelector,
     )
 
-    const {
-      allItems,
-      filteredItemsIds,
-      getItemByNodeIdOrId,
-    } = useColumnData<EnhancedGitHubIssueOrPullRequest>(columnId, {
-      mergeSimilar: false,
-    })
+    const { allItems, filteredItemsIds, getItemByNodeIdOrId } =
+      useColumnData<EnhancedGitHubIssueOrPullRequest>(columnId, {
+        mergeSimilar: false,
+      })
 
     const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderOrNewerItemDate('issue_or_pr', 'older', allItems)

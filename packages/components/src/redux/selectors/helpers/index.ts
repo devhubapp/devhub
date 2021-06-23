@@ -14,7 +14,7 @@ export function betterMemoize<F extends Function>(
   let cacheArr: { args: unknown[]; result: unknown }[] = []
   const cacheMap: Map<string, { args: unknown[]; result: unknown }> = new Map()
 
-  return (((...args: unknown[]) => {
+  return ((...args: unknown[]) => {
     const allArgsArePrimitives = args.every(
       (arg) =>
         typeof arg === 'boolean' ||
@@ -58,7 +58,7 @@ export function betterMemoize<F extends Function>(
     }
 
     return result
-  }) as any) as F
+  }) as any as F
 }
 
 export const createShallowEqualSelector = createSelectorCreator(betterMemoize)

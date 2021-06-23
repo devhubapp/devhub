@@ -178,9 +178,7 @@ export function IconButton(props: IconButtonProps) {
   )
 }
 
-export function getIconButtonColors(
-  type?: IconButtonProps['type'],
-): {
+export function getIconButtonColors(type?: IconButtonProps['type']): {
   foregroundThemeColor: keyof ThemeColors
   tintBackgroundHoveredOpacity: number
   tintBackgroundPressedOpacity: number

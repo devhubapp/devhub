@@ -105,13 +105,10 @@ export function useCardsProps<ItemT extends EnhancedItem>({
   const isUserActivity =
     subtype === 'USER_EVENTS' || subtype === 'USER_PUBLIC_EVENTS'
 
-  const {
-    allIncludedOwners,
-    allIncludedRepos,
-    allExistingOwners,
-  } = useMemo(() => getOwnerAndRepoFormattedFilter(column && column.filters), [
-    column && column.filters && column.filters.owners,
-  ])
+  const { allIncludedOwners, allIncludedRepos, allExistingOwners } = useMemo(
+    () => getOwnerAndRepoFormattedFilter(column && column.filters),
+    [column && column.filters && column.filters.owners],
+  )
 
   const allUsernamesFromFilter =
     (column && getUsernamesFromFilter(type, column.filters).allUsernames) || []

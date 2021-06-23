@@ -61,8 +61,8 @@ const renderScrollComponent = Platform.select<
   () => FlatListProps<any>['renderScrollComponent']
 >({
   android: () => {
-    const GestureHandlerScrollView = require('react-native-gesture-handler')
-      .ScrollView
+    const GestureHandlerScrollView =
+      require('react-native-gesture-handler').ScrollView
     return (p: any) => <GestureHandlerScrollView {...p} nestedScrollEnabled />
   },
   default: () => undefined,

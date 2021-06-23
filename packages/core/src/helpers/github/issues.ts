@@ -35,10 +35,8 @@ import {
   getRepoUrlFromOtherUrl,
 } from './url'
 
-export const issueOrPullRequestSubjectTypes: GitHubIssueOrPullRequestSubjectType[] = [
-  'Issue',
-  'PullRequest',
-]
+export const issueOrPullRequestSubjectTypes: GitHubIssueOrPullRequestSubjectType[] =
+  ['Issue', 'PullRequest']
 
 export function getIssueOrPullRequestIconAndColor(
   type: GitHubIssueOrPullRequestSubjectType,

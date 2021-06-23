@@ -7,9 +7,10 @@ export function useReduxAction<AC extends ActionCreator>(actionCreator: AC) {
   const dispatch = useDispatch()
 
   return useMemo(
-    () => (...args: AC extends (...args: infer Args) => any ? Args : any[]) => {
-      dispatch(actionCreator(...(args as any[])))
-    },
+    () =>
+      (...args: AC extends (...args: infer Args) => any ? Args : any[]) => {
+        dispatch(actionCreator(...(args as any[])))
+      },
     [actionCreator],
   )
 }

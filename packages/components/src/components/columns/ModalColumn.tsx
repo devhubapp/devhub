@@ -133,10 +133,9 @@ export const ModalColumn = React.memo((props: ModalColumnProps) => {
         >
           <View style={sharedStyles.flex}>{children}</View>
 
-          {!([
-            'ADD_COLUMN',
-            'ADD_COLUMN_DETAILS',
-          ] as ModalPayload['name'][]).includes(name) && (
+          {!(
+            ['ADD_COLUMN', 'ADD_COLUMN_DETAILS'] as ModalPayload['name'][]
+          ).includes(name) && (
             <View
               style={[
                 sharedStyles.fullWidth,

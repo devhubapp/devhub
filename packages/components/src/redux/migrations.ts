@@ -79,7 +79,7 @@ export default {
     }),
   4: (state: RootState) =>
     immer(state, (draft) => {
-      const oldAuth = (draft.auth as any) as {
+      const oldAuth = draft.auth as any as {
         appToken: string | null
         githubScope: string[] | null
         githubToken: string | null
@@ -266,9 +266,9 @@ export default {
         )
           return
 
-        const oldTypesFilter: Partial<
-          Record<GitHubEvent['type'], boolean>
-        > = (column.filters.activity as any).types
+        const oldTypesFilter: Partial<Record<GitHubEvent['type'], boolean>> = (
+          column.filters.activity as any
+        ).types
 
         column.filters.subjectTypes = column.filters.subjectTypes || {}
         column.filters.activity.actions = column.filters.activity.actions || {}
@@ -280,9 +280,9 @@ export default {
             const { action } = getEventMetadata({ type, payload: {} } as any)
             if (!action) return
 
-            column.filters!.activity!.actions![
-              action
-            ] = (oldTypesFilter as any)[type]
+            column.filters!.activity!.actions![action] = (
+              oldTypesFilter as any
+            )[type]
           } catch (error) {
             //
           }
@@ -524,16 +524,22 @@ export default {
         if (!subscription) return
 
         subscription.data = subscription.data || {}
-        subscription.data.lastFetchRequestAt = (subscription.data as any).lastFetchedAt
-        subscription.data.lastFetchSuccessAt = (subscription.data as any).lastFetchedSuccessfullyAt
+        subscription.data.lastFetchRequestAt = (
+          subscription.data as any
+        ).lastFetchedAt
+        subscription.data.lastFetchSuccessAt = (
+          subscription.data as any
+        ).lastFetchedSuccessfullyAt
       })
 
       draft.github = draft.github || {}
       draft.github.installations = draft.github.installations || {}
-      draft.github.installations.lastFetchRequestAt = (draft.github
-        .installations as any).lastFetchedAt
-      draft.github.installations.lastFetchSuccessAt = (draft.github
-        .installations as any).lastFetchedSuccessfullyAt
+      draft.github.installations.lastFetchRequestAt = (
+        draft.github.installations as any
+      ).lastFetchedAt
+      draft.github.installations.lastFetchSuccessAt = (
+        draft.github.installations as any
+      ).lastFetchedSuccessfullyAt
     }),
   17: (state: RootState) =>
     immer(state, (draft) => {

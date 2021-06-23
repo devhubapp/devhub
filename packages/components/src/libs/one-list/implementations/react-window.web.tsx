@@ -193,7 +193,7 @@ const InnerElementType = React.forwardRef<
 })
 
 // eslint-disable-next-line react/display-name
-export const OneList = (React.memo(
+export const OneList = React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
     const {
       ListEmptyComponent,
@@ -276,9 +276,8 @@ export const OneList = (React.memo(
     )
 
     const variableSizeListRef = useRef<VariableSizeList>(null)
-    const variableSizeListInnerRef = useRef<
-      React.HTMLAttributes<React.ReactHTMLElement<HTMLDivElement>>
-    >(null)
+    const variableSizeListInnerRef =
+      useRef<React.HTMLAttributes<React.ReactHTMLElement<HTMLDivElement>>>(null)
 
     const [isInitialRender, setIsInitialRender] = useState(true)
 
@@ -542,7 +541,7 @@ export const OneList = (React.memo(
       </View>
     )
   }),
-) as any) as (<ItemT>(
+) as any as (<ItemT>(
   props: OneListProps<ItemT> & React.RefAttributes<OneListInstance>,
 ) => React.ReactElement) & {
   displayName: string

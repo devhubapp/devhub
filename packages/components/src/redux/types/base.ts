@@ -10,7 +10,7 @@ export interface Action<T extends string, P> extends ReduxAction<T> {
 export interface ActionWithError<
   T extends string,
   P,
-  E extends object = Record<string, any>
+  E extends object = Record<string, any>,
 > extends Action<T, P> {
   payload: P
   error: E
@@ -22,11 +22,10 @@ export type ExtractPayloadFromActionCreator<AC> = AC extends () => any
   ? P
   : never
 
-export type ExtractDispatcherFromActionCreator<
-  AC
-> = ExtractPayloadFromActionCreator<AC> extends void
-  ? () => void
-  : (payload: ExtractPayloadFromActionCreator<AC>) => void
+export type ExtractDispatcherFromActionCreator<AC> =
+  ExtractPayloadFromActionCreator<AC> extends void
+    ? () => void
+    : (payload: ExtractPayloadFromActionCreator<AC>) => void
 
 export type ExtractActionFromActionCreator<AC> = AC extends () => infer A
   ? A
@@ -36,10 +35,9 @@ export type ExtractActionFromActionCreator<AC> = AC extends () => infer A
   ? A
   : never
 
-export type ExtractPropsFromConnector<
-  Connector
-> = Connector extends InferableComponentEnhancerWithProps<infer T, any>
-  ? T
-  : never
+export type ExtractPropsFromConnector<Connector> =
+  Connector extends InferableComponentEnhancerWithProps<infer T, any>
+    ? T
+    : never
 
 export type ExtractStateFromReducer<R> = R extends Reducer<infer S> ? S : never

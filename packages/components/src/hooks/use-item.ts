@@ -8,9 +8,10 @@ export function useItem<T extends EnhancedItem>(
   nodeIdOrId: string,
 ): T | undefined {
   const dataItem = useReduxState(
-    useCallback((state) => selectors.dataByNodeIdOrId(state)[nodeIdOrId], [
-      nodeIdOrId,
-    ]),
+    useCallback(
+      (state) => selectors.dataByNodeIdOrId(state)[nodeIdOrId],
+      [nodeIdOrId],
+    ),
   )
   if (!(dataItem && dataItem.item)) return undefined
 

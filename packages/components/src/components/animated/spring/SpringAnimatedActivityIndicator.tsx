@@ -4,7 +4,6 @@ import { createSpringAnimatedComponent } from './helpers'
 
 export type SpringAnimatedActivityIndicatorProps = ActivityIndicatorProps
 
-export const SpringAnimatedActivityIndicator = createSpringAnimatedComponent(
-  ActivityIndicator,
-)
+export const SpringAnimatedActivityIndicator =
+  createSpringAnimatedComponent(ActivityIndicator)
 SpringAnimatedActivityIndicator.displayName = 'SpringAnimatedActivityIndicator'

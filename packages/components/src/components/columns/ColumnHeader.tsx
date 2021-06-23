@@ -93,9 +93,8 @@ export function ColumnHeader(props: ColumnHeaderProps) {
   const bannerMessage = useReduxState(selectors.bannerMessageSelector)
   const plan = useReduxState(selectors.currentUserPlanSelector)
   const { column } = useColumn(columnId || '')
-  const {
-    enablePushNotifications: enableDesktopPushNotifications,
-  } = useDesktopOptions()
+  const { enablePushNotifications: enableDesktopPushNotifications } =
+    useDesktopOptions()
 
   const enableDesktopPushNotificationsOption = getColumnOption(
     column,

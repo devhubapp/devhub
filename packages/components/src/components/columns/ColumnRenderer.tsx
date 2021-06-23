@@ -45,11 +45,7 @@ import { ColumnFiltersRenderer } from './ColumnFiltersRenderer'
 import { ColumnHeader } from './ColumnHeader'
 import { ColumnOptionsAccordion } from './ColumnOptionsAccordion'
 
-export function getColumnCardThemeColors({
-  isDark,
-}: {
-  isDark: boolean
-}): {
+export function getColumnCardThemeColors({ isDark }: { isDark: boolean }): {
   column: keyof ThemeColors
   card: keyof ThemeColors
   card__hover: keyof ThemeColors

@@ -218,7 +218,8 @@ export const subscriptionsReducer: Reducer<State> = (
             .join(' ')
 
           if (errors) {
-            subscription.data.errorMessage = `${subscription.data.errorMessage}: ${errors}`.trim()
+            subscription.data.errorMessage =
+              `${subscription.data.errorMessage}: ${errors}`.trim()
           }
         }
         subscription.data.loadState = 'error'

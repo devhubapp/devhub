@@ -27,9 +27,8 @@ export interface UnreadCountProviderProps {
 
 export type UnreadCountProviderState = number
 
-export const UnreadCountContext = React.createContext<UnreadCountProviderState>(
-  0,
-)
+export const UnreadCountContext =
+  React.createContext<UnreadCountProviderState>(0)
 UnreadCountContext.displayName = 'UnreadCountContext'
 
 export function UnreadCountProvider(props: UnreadCountProviderProps) {
@@ -48,9 +47,8 @@ export function UnreadCountProvider(props: UnreadCountProviderProps) {
   useReduxState(selectors.dataNodeIdsOrIdsBySubscriptionId)
   useReduxState(selectors.dataReadIds)
 
-  const {
-    enablePushNotifications: enableDesktopPushNotifications,
-  } = useDesktopOptions()
+  const { enablePushNotifications: enableDesktopPushNotifications } =
+    useDesktopOptions()
 
   // TODO: memoize for each column id
   const subscriptionsDataSelector = useMemo(

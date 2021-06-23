@@ -48,12 +48,13 @@ export interface LoginHelpersProviderState {
   removePersonalAccessToken: () => Promise<void>
 }
 
-export const LoginHelpersContext = React.createContext<LoginHelpersProviderState>(
-  {
+export const LoginHelpersContext =
+  React.createContext<LoginHelpersProviderState>({
     addPersonalAccessToken() {
       throw new Error('Not implemented')
     },
-    fullAccessRef: React.createRef<boolean>() as React.MutableRefObject<boolean>,
+    fullAccessRef:
+      React.createRef<boolean>() as React.MutableRefObject<boolean>,
     isExecutingOAuth: false,
     isLoggingIn: false,
     loginWithGitHub() {
@@ -66,8 +67,7 @@ export const LoginHelpersContext = React.createContext<LoginHelpersProviderState
     removePersonalAccessToken() {
       throw new Error('Not implemented')
     },
-  },
-)
+  })
 LoginHelpersContext.displayName = 'LoginHelpersContext'
 
 export function LoginHelpersProvider(props: LoginHelpersProviderProps) {

@@ -1,8 +1,9 @@
 import { GitHubTokenDetails, OAuthResponseData } from '../types'
 
-export function tryParseOAuthParams(
-  params: OAuthResponseData,
-): { appToken?: string; tokenDetails?: GitHubTokenDetails } {
+export function tryParseOAuthParams(params: OAuthResponseData): {
+  appToken?: string
+  tokenDetails?: GitHubTokenDetails
+} {
   try {
     if (!(params && params.app_token && params.github_token))
       throw new Error('No token received.')

@@ -261,7 +261,8 @@ export const SidebarOrBottomBar = React.memo(
           bottomOrRightOverlayThemeColor
       ) {
         overlayThemeColorsRef.current.topOrLeft = topOrLeftOverlayThemeColor
-        overlayThemeColorsRef.current.bottomOrRight = bottomOrRightOverlayThemeColor
+        overlayThemeColorsRef.current.bottomOrRight =
+          bottomOrRightOverlayThemeColor
         forceRerender()
       }
     }, [columnIds.length])
@@ -563,12 +564,8 @@ export interface SidebarOrBottomBarColumnItemProps {
 
 export const SidebarOrBottomBarColumnItem = React.memo(
   (props: SidebarOrBottomBarColumnItemProps) => {
-    const {
-      columnId,
-      columnIndexUnreadMapperRef,
-      horizontal,
-      hoverListRef,
-    } = props
+    const { columnId, columnIndexUnreadMapperRef, horizontal, hoverListRef } =
+      props
 
     const { sizename } = useAppLayout()
 
@@ -578,12 +575,8 @@ export const SidebarOrBottomBarColumnItem = React.memo(
 
     const small = sizename <= '2-medium'
 
-    const {
-      column,
-      columnIndex,
-      hasCrossedColumnsLimit,
-      headerDetails,
-    } = useColumn(columnId)
+    const { column, columnIndex, hasCrossedColumnsLimit, headerDetails } =
+      useColumn(columnId)
 
     const { filteredItems } = useColumnData(columnId, {
       mergeSimilar: false,
@@ -643,37 +636,36 @@ export const SidebarOrBottomBarColumnItem = React.memo(
         ? filteredItems.some((item) => !isItemRead(item))
         : false)
 
-    const unreadIndicatorColor:
-      | keyof ThemeColors
-      | undefined = hasCrossedColumnsLimit
-      ? 'foregroundColorMuted65'
-      : column &&
-        ((getColumnOption(column, 'enableAppIconUnreadIndicator', {
-          Platform,
-          plan,
-        }).hasAccess &&
-          getColumnOption(column, 'enableAppIconUnreadIndicator', {
-            Platform,
-            plan,
-          }).platformSupports &&
-          getColumnOption(column, 'enableAppIconUnreadIndicator', {
-            Platform,
-            plan,
-          }).value) ||
-          (getColumnOption(column, 'enableDesktopPushNotifications', {
+    const unreadIndicatorColor: keyof ThemeColors | undefined =
+      hasCrossedColumnsLimit
+        ? 'foregroundColorMuted65'
+        : column &&
+          ((getColumnOption(column, 'enableAppIconUnreadIndicator', {
             Platform,
             plan,
           }).hasAccess &&
-            getColumnOption(column, 'enableDesktopPushNotifications', {
+            getColumnOption(column, 'enableAppIconUnreadIndicator', {
               Platform,
               plan,
             }).platformSupports &&
-            getColumnOption(column, 'enableDesktopPushNotifications', {
+            getColumnOption(column, 'enableAppIconUnreadIndicator', {
               Platform,
               plan,
-            }).value))
-      ? 'lightRed'
-      : undefined
+            }).value) ||
+            (getColumnOption(column, 'enableDesktopPushNotifications', {
+              Platform,
+              plan,
+            }).hasAccess &&
+              getColumnOption(column, 'enableDesktopPushNotifications', {
+                Platform,
+                plan,
+              }).platformSupports &&
+              getColumnOption(column, 'enableDesktopPushNotifications', {
+                Platform,
+                plan,
+              }).value))
+        ? 'lightRed'
+        : undefined
 
     useEffect(() => {
       columnIndexUnreadMapperRef.current.set(columnIndex, showUnreadIndicator)

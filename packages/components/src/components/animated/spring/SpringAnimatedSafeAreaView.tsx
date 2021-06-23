@@ -5,9 +5,8 @@ import { createSpringAnimatedComponent } from './helpers'
 
 export type SpringAnimatedSafeAreaViewProps = ViewProps
 
-export const SpringAnimatedSafeAreaView = createSpringAnimatedComponent(
-  SafeAreaView,
-)
+export const SpringAnimatedSafeAreaView =
+  createSpringAnimatedComponent(SafeAreaView)
 SpringAnimatedSafeAreaView.displayName = 'SpringAnimatedSafeAreaView'
 
 export type SpringAnimatedSafeAreaView = SafeAreaView

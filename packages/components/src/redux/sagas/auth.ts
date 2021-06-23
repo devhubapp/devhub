@@ -293,9 +293,8 @@ function* updateLoggedUserOnTools() {
   const state = yield* select()
 
   const preferredDarkThemePair = selectors.preferredDarkThemePairSelector(state)
-  const preferredLightThemePair = selectors.preferredLightThemePairSelector(
-    state,
-  )
+  const preferredLightThemePair =
+    selectors.preferredLightThemePairSelector(state)
   const themePair = selectors.themePairSelector(state)
   const user = selectors.currentUserSelector(state)
 

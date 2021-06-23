@@ -32,7 +32,7 @@ export const defaultWidth = 64
 export abstract class BaseSwipeableRow<
   P = Record<string, unknown>,
   S = Record<string, unknown>,
-  IAction = BaseSwipeableRowAction
+  IAction = BaseSwipeableRowAction,
 > extends PureComponent<
   BaseSwipeableRowProps<IAction> & P,
   BaseSwipeableRowBaseState & S

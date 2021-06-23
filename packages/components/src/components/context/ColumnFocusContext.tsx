@@ -19,9 +19,8 @@ const defaultValue: ColumnFocusProviderState = {
   focusedColumnId: null,
   focusedColumnIndex: -1,
 }
-export const ColumnFocusContext = React.createContext<ColumnFocusProviderState>(
-  defaultValue,
-)
+export const ColumnFocusContext =
+  React.createContext<ColumnFocusProviderState>(defaultValue)
 ColumnFocusContext.displayName = 'ColumnFocusContext'
 
 let _focusedColumnId: string | null

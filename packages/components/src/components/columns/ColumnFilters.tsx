@@ -133,9 +133,10 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
     ownerFilters,
     ownerFiltersWithRepos,
     repoFilters,
-  } = useMemo(() => getOwnerAndRepoFormattedFilter(column && column.filters), [
-    column && column.filters,
-  ])
+  } = useMemo(
+    () => getOwnerAndRepoFormattedFilter(column && column.filters),
+    [column && column.filters],
+  )
 
   const ownerOrRepoFilteredItemsMetadata = useMemo(
     () =>
@@ -1401,12 +1402,10 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
             const isRepoFilterStrict =
               filterRecordWithThisValueCount(repoFilters, true) >= 1
 
-            const ownerFilterHasForcedValue = filterRecordHasAnyForcedValue(
-              ownerFilters,
-            )
-            const repoFilterHasForcedValue = filterRecordHasAnyForcedValue(
-              repoFilters,
-            )
+            const ownerFilterHasForcedValue =
+              filterRecordHasAnyForcedValue(ownerFilters)
+            const repoFilterHasForcedValue =
+              filterRecordHasAnyForcedValue(repoFilters)
 
             const owners = _.sortBy(
               Object.keys(
@@ -1473,9 +1472,8 @@ export const ColumnFilters = React.memo((props: ColumnFiltersProps) => {
                       defaultBooleanValue,
                     ) >= 1
 
-                  const thisOwnerRepoFilterHasForcedValue = filterRecordHasAnyForcedValue(
-                    thisOwnerRepoFilters,
-                  )
+                  const thisOwnerRepoFilterHasForcedValue =
+                    filterRecordHasAnyForcedValue(thisOwnerRepoFilters)
 
                   return (
                     <Fragment key={`owner-option-fragment-${owner}`}>

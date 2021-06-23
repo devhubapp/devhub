@@ -100,11 +100,8 @@ export const EventCardsContainer = React.memo(
       selectors.installationsLoadStateSelector,
     )
 
-    const {
-      allItems,
-      filteredItemsIds,
-      getItemByNodeIdOrId,
-    } = useColumnData<EnhancedGitHubEvent>(columnId, { mergeSimilar: false })
+    const { allItems, filteredItemsIds, getItemByNodeIdOrId } =
+      useColumnData<EnhancedGitHubEvent>(columnId, { mergeSimilar: false })
 
     const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderOrNewerItemDate('activity', 'older', allItems)

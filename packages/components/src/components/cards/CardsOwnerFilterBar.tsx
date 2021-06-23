@@ -31,7 +31,8 @@ export interface CardsOwnerFilterBarProps {
 const ownersCacheByColumnId = new Map<string, Set<string>>()
 const lastUsernameCacheByColumnId = new Map<string, string | undefined>()
 
-export const cardsOwnerFilterBarTotalHeight = cardsGenericOwnerFilterBarTotalHeight
+export const cardsOwnerFilterBarTotalHeight =
+  cardsGenericOwnerFilterBarTotalHeight
 
 export const CardsOwnerFilterBar = React.memo(
   (props: CardsOwnerFilterBarProps) => {

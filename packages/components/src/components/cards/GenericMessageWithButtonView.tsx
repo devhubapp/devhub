@@ -27,15 +27,8 @@ export interface GenericMessageWithButtonViewProps {
 
 export const GenericMessageWithButtonView = React.memo(
   (props: GenericMessageWithButtonViewProps) => {
-    const {
-      buttonView,
-      emoji,
-      footer,
-      fullCenter,
-      style,
-      subtitle,
-      title,
-    } = props
+    const { buttonView, emoji, footer, fullCenter, style, subtitle, title } =
+      props
 
     const emojiImageURL = emoji ? getEmojiImageURL(emoji) : null
 

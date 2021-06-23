@@ -55,8 +55,8 @@ const ScrollViewComponent = Platform.select<
   () => ScrollViewWithOverlayProps['ScrollViewComponent']
 >({
   android: () => {
-    const GestureHandlerScrollView = require('react-native-gesture-handler')
-      .ScrollView
+    const GestureHandlerScrollView =
+      require('react-native-gesture-handler').ScrollView
     return (p: ScrollViewProps) => (
       <GestureHandlerScrollView {...p} nestedScrollEnabled />
     )

@@ -23,7 +23,8 @@ export interface AppleSwipeableRowAction extends BaseSwipeableRowAction {
   label: string
 }
 
-export type AppleSwipeableRowProps = BaseSwipeableRowProps<AppleSwipeableRowAction>
+export type AppleSwipeableRowProps =
+  BaseSwipeableRowProps<AppleSwipeableRowAction>
 
 export class AppleSwipeableRow extends BaseSwipeableRow<
   AppleSwipeableRowProps,

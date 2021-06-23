@@ -29,11 +29,10 @@ export const DEFAULT_THEME_PAIR: ThemePair = {
 }
 
 export const DEFAULT_GITHUB_OAUTH_SCOPES = ['notifications', 'user:email']
-export const FULL_ACCESS_GITHUB_OAUTH_SCOPES = DEFAULT_GITHUB_OAUTH_SCOPES.includes(
-  'repo',
-)
-  ? DEFAULT_GITHUB_OAUTH_SCOPES
-  : [...DEFAULT_GITHUB_OAUTH_SCOPES, 'repo']
+export const FULL_ACCESS_GITHUB_OAUTH_SCOPES =
+  DEFAULT_GITHUB_OAUTH_SCOPES.includes('repo')
+    ? DEFAULT_GITHUB_OAUTH_SCOPES
+    : [...DEFAULT_GITHUB_OAUTH_SCOPES, 'repo']
 
 // unfortunately github permissions are still not granular enough.
 // code permission is required to support some events, e.g. commits

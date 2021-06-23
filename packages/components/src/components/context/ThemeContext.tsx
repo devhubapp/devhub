@@ -21,9 +21,8 @@ export interface ThemeProviderProps {
 
 export type ThemeProviderState = Theme
 
-export const ThemeContext = React.createContext<ThemeProviderState>(
-  defaultTheme,
-)
+export const ThemeContext =
+  React.createContext<ThemeProviderState>(defaultTheme)
 ThemeContext.displayName = 'ThemeContext'
 
 let _theme: Theme = defaultTheme

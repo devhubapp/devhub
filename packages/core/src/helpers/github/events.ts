@@ -955,18 +955,17 @@ export function getGitHubEventSubItems(
   const { repo: _repo } = event as GitHubEvent
   const { repos: _repos } = event as MultipleStarEvent
 
-  const comment:
-    | GitHubComment
-    | undefined = (payload as GitHubCommitCommentEvent['payload']).comment
+  const comment: GitHubComment | undefined = (
+    payload as GitHubCommitCommentEvent['payload']
+  ).comment
   const { commits: _commits } = payload as GitHubPushEvent['payload']
   const forkee: GitHubRepo | undefined = (payload as GitHubForkEvent['payload'])
     .forkee
   const { member: _member } = payload as GitHubMemberEvent['payload']
   const { release } = payload as GitHubReleaseEvent['payload']
   const { pages: _pages } = payload as GitHubGollumEvent['payload']
-  const {
-    pull_request: pullRequest,
-  } = payload as GitHubPullRequestEvent['payload']
+  const { pull_request: pullRequest } =
+    payload as GitHubPullRequestEvent['payload']
   const { issue } = payload as GitHubIssuesEvent['payload']
   const { ref: branchOrTagRef } = payload as GitHubPushEvent['payload']
 

@@ -224,7 +224,7 @@ export function deepMapper<T extends object, R = T>(
 
 const urlsToKeep = ['url', 'html_url', 'avatar_url', 'latest_comment_url']
 export function removeUselessURLsFromResponseItem<
-  T extends Record<string, any>
+  T extends Record<string, any>,
 >(item: T) {
   let hasChanged = false
   const result = deepMapper(item, (obj) => {
@@ -386,14 +386,12 @@ export function getSubscriptionOwnerOrOrg(
   if ('org' in subscription.params && subscription.params.org)
     return subscription.params.org
 
-  const {
-    allIncludedOwners,
-    allIncludedRepos,
-  } = getOwnerAndRepoFormattedFilter(
-    'owners' in subscription.params
-      ? { owners: subscription.params.owners }
-      : undefined,
-  )
+  const { allIncludedOwners, allIncludedRepos } =
+    getOwnerAndRepoFormattedFilter(
+      'owners' in subscription.params
+        ? { owners: subscription.params.owners }
+        : undefined,
+    )
 
   const _org = allIncludedOwners.length === 1 ? allIncludedOwners[0] : undefined
   const _ownerAndRepo =
@@ -799,10 +797,9 @@ export function getFilterFromSearchQuery(
 
           case 'pr': {
             filters.subjectTypes = filters.subjectTypes || {}
-            ;(filters.subjectTypes as Record<
-              GitHubItemSubjectType,
-              boolean
-            >).PullRequest = !isNegated
+            ;(
+              filters.subjectTypes as Record<GitHubItemSubjectType, boolean>
+            ).PullRequest = !isNegated
             break
           }
 
@@ -825,10 +822,12 @@ export function getFilterFromSearchQuery(
 
               validSubjectTypes.forEach((subjectType) => {
                 if (subjectType.toLowerCase() === value) {
-                  ;(filters.subjectTypes as Record<
-                    GitHubItemSubjectType,
-                    boolean
-                  >)[subjectType] = !isNegated
+                  ;(
+                    filters.subjectTypes as Record<
+                      GitHubItemSubjectType,
+                      boolean
+                    >
+                  )[subjectType] = !isNegated
                 }
               })
               break
@@ -859,9 +858,8 @@ export function getFilterFromSearchQuery(
         // invalid
         if (!eventActions.includes(action as GitHubEventAction)) return
 
-        activityFilters.activity.actions[
-          action as GitHubEventAction
-        ] = !isNegated
+        activityFilters.activity.actions[action as GitHubEventAction] =
+          !isNegated
         break
       }
 
@@ -916,9 +914,8 @@ export function getFilterFromSearchQuery(
         )
           return
 
-        reasonsFilter[
-          reason as EnhancedGitHubNotification['reason']
-        ] = !isNegated
+        reasonsFilter[reason as EnhancedGitHubNotification['reason']] =
+          !isNegated
         break
       }
 
@@ -961,7 +958,7 @@ export function getValuesFromQueryKeysFilter(
     }) || undefined
   const queryTerms = getSearchQueryTerms(filtersQuery)
 
-  const filteredQueryTerms = (_.sortBy(
+  const filteredQueryTerms = _.sortBy(
     queryTerms.filter(
       (queryTerm) =>
         queryTerm &&
@@ -969,7 +966,7 @@ export function getValuesFromQueryKeysFilter(
         queryKeys.includes(queryTerm[0] as any),
     ),
     ['0', '2'],
-  ) as any) as [string, string, boolean][]
+  ) as any as [string, string, boolean][]
   const usedQueryKeys = _.uniq(
     filteredQueryTerms.map((queryTerm) => queryTerm[0]),
   )
@@ -1049,12 +1046,8 @@ export function getUsernamesFromFilter(
 ) {
   const usernameFilterKeys = whitelist.filter((key) => !blacklist.includes(key))
 
-  const {
-    all,
-    excluded,
-    included,
-    usedQueryKeys,
-  } = getValuesFromQueryKeysFilter(type, usernameFilterKeys, filters)
+  const { all, excluded, included, usedQueryKeys } =
+    getValuesFromQueryKeysFilter(type, usernameFilterKeys, filters)
 
   return {
     allUsernames: all,

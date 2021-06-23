@@ -89,7 +89,7 @@ export function setColumnParticipatingFilter(payload: {
 }
 
 export function setColumnActivityActionFilter<
-  T extends GitHubEventAction
+  T extends GitHubEventAction,
 >(payload: { columnId: string; type: T; value: boolean | null }) {
   return createAction('SET_COLUMN_ACTIVITY_ACTION_FILTER', payload)
 }
@@ -105,7 +105,7 @@ export function setColumnLabelFilter(payload: {
 }
 
 export function setColumnReasonFilter<
-  T extends EnhancedGitHubNotification['reason']
+  T extends EnhancedGitHubNotification['reason'],
 >(payload: {
   columnId: string
   reason: T
@@ -143,7 +143,7 @@ export function setColummSubjectTypeFilter<
   T extends
     | GitHubEventSubjectType
     | GitHubNotificationSubjectType
-    | GitHubIssueOrPullRequestSubjectType
+    | GitHubIssueOrPullRequestSubjectType,
 >(payload: { columnId: string; subjectType: T; value: boolean | null }) {
   return createAction('SET_COLUMN_SUBJECT_TYPE_FILTER', payload)
 }

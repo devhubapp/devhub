@@ -36,10 +36,10 @@ import { ThemedTextInput } from '../../themed/ThemedTextInput'
 import { ThemedView } from '../../themed/ThemedView'
 import { SubscribeFormProps } from './SubscribeForm.shared'
 
-const poweredByStripeDarkBanner = require('@devhub/web/public/static/media/stripe/powered_by_stripe_outline_dark.png')
-  .default // eslint-disable-line
-const poweredByStripeLightBanner = require('@devhub/web/public/static/media/stripe/powered_by_stripe_outline_light.png')
-  .default // eslint-disable-line
+const poweredByStripeDarkBanner =
+  require('@devhub/web/public/static/media/stripe/powered_by_stripe_outline_dark.png').default // eslint-disable-line
+const poweredByStripeLightBanner =
+  require('@devhub/web/public/static/media/stripe/powered_by_stripe_outline_light.png').default // eslint-disable-line
 const poweredByStripeBannerAspectRatio = 357 / 78
 
 const SubscribeFormWithStripe = React.memo(

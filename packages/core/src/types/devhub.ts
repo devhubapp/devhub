@@ -330,15 +330,17 @@ export type GenericColumnCreation<
   ColumnType extends
     | ActivityColumn
     | IssueOrPullRequestColumn
-    | NotificationColumn
+    | NotificationColumn,
 > = Omit<ColumnType, 'createdAt' | 'updatedAt'> & {
   createdAt?: string
   updatedAt?: string
 }
 
 export type ActivityColumnCreation = GenericColumnCreation<ActivityColumn>
-export type IssueOrPullRequestColumnCreation = GenericColumnCreation<IssueOrPullRequestColumn>
-export type NotificationColumnCreation = GenericColumnCreation<NotificationColumn>
+export type IssueOrPullRequestColumnCreation =
+  GenericColumnCreation<IssueOrPullRequestColumn>
+export type NotificationColumnCreation =
+  GenericColumnCreation<NotificationColumn>
 
 export type ColumnCreation =
   | ActivityColumnCreation
@@ -349,7 +351,7 @@ export type GenericColumnSubscriptionCreation<
   ColumnSubscriptionType extends
     | ActivityColumnSubscription
     | IssueOrPullRequestColumnSubscription
-    | NotificationColumnSubscription
+    | NotificationColumnSubscription,
 > = Omit<ColumnSubscriptionType, 'id' | 'data' | 'createdAt' | 'updatedAt'> & {
   id?: string | undefined
   data?: ColumnSubscriptionType['data'] | undefined
@@ -357,9 +359,12 @@ export type GenericColumnSubscriptionCreation<
   updatedAt?: string | undefined
 }
 
-export type ActivityColumnSubscriptionCreation = GenericColumnSubscriptionCreation<ActivityColumnSubscription>
-export type IssueOrPullRequestColumnSubscriptionCreation = GenericColumnSubscriptionCreation<IssueOrPullRequestColumnSubscription>
-export type NotificationColumnSubscriptionCreation = GenericColumnSubscriptionCreation<NotificationColumnSubscription>
+export type ActivityColumnSubscriptionCreation =
+  GenericColumnSubscriptionCreation<ActivityColumnSubscription>
+export type IssueOrPullRequestColumnSubscriptionCreation =
+  GenericColumnSubscriptionCreation<IssueOrPullRequestColumnSubscription>
+export type NotificationColumnSubscriptionCreation =
+  GenericColumnSubscriptionCreation<NotificationColumnSubscription>
 
 export type ColumnSubscriptionCreation =
   | ActivityColumnSubscriptionCreation
@@ -590,7 +595,7 @@ export interface Plan {
 export type UserPlan = GraphQLUserPlan
 
 export interface ItemPushNotification<
-  A extends { type: string; payload: any } = { type: string; payload: any }
+  A extends { type: string; payload: any } = { type: string; payload: any },
 > {
   title: string
   subtitle?: string

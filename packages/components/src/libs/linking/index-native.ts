@@ -52,7 +52,6 @@ export const Linking: LinkingCrossPlatform = {
     const openURL = LinkingOriginal.openURL.bind(LinkingOriginal)
     return openURL(url)
   },
-  removeEventListener: LinkingOriginal.removeEventListener.bind(
-    LinkingOriginal,
-  ),
+  removeEventListener:
+    LinkingOriginal.removeEventListener.bind(LinkingOriginal),
 }

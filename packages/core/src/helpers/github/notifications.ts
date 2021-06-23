@@ -111,7 +111,7 @@ export function getNotificationIconAndColor(
 }
 
 export function getNotificationReasonMetadata<
-  T extends EnhancedGitHubNotification['reason']
+  T extends EnhancedGitHubNotification['reason'],
 >(
   reason: T,
 ): {
@@ -477,9 +477,10 @@ export async function getNotificationsEnhancementMap(
       enhance.pullRequest.requested_reviewers
     ) {
       if (!enhance.requestedMyReview) {
-        enhance.requestedMyReview = !!enhance.pullRequest.requested_reviewers.find(
-          (u) => githubLogin === `${u.login || ''}`.toLowerCase().trim(),
-        )
+        enhance.requestedMyReview =
+          !!enhance.pullRequest.requested_reviewers.find(
+            (u) => githubLogin === `${u.login || ''}`.toLowerCase().trim(),
+          )
       }
     }
 

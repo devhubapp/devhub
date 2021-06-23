@@ -10,9 +10,10 @@ export function useColumn(columnId: string) {
   const { freeTrialDays } = usePlans()
 
   const column = useReduxState(
-    useCallback((state) => selectors.columnSelector(state, columnId), [
-      columnId,
-    ]),
+    useCallback(
+      (state) => selectors.columnSelector(state, columnId),
+      [columnId],
+    ),
   )
 
   const columnIndex = useReduxState(selectors.columnIdsSelector).indexOf(
@@ -27,10 +28,10 @@ export function useColumn(columnId: string) {
   )
 
   const headerDetails = useReduxState(
-    useCallback((state) => columnHeaderDetailsSelector(state, columnId), [
-      columnHeaderDetailsSelector,
-      columnId,
-    ]),
+    useCallback(
+      (state) => columnHeaderDetailsSelector(state, columnId),
+      [columnHeaderDetailsSelector, columnId],
+    ),
   )
 
   const isOverPlanColumnLimit = !!(

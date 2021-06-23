@@ -51,9 +51,9 @@ export function IntervalRefresh(props: IntervalRefreshProps) {
   useEffect(() => {
     clearInterval(timerRef.current)
 
-    timerRef.current = (setInterval(() => {
+    timerRef.current = setInterval(() => {
       setUpdatedTimes((prevValue) => prevValue + 1)
-    }, interval) as any) as number
+    }, interval) as any as number
 
     return () => clearInterval(timerRef.current)
   }, [interval])

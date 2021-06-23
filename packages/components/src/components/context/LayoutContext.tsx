@@ -35,11 +35,14 @@ export function AppLayoutProvider(props: AppLayoutProviderProps) {
   const dimensions = useDimensions()
 
   const _appLayout = getAppLayout(dimensions)
-  const appLayout = useMemo(() => getAppLayout(dimensions), [
-    _appLayout.appOrientation,
-    _appLayout.deviceOrientation,
-    _appLayout.sizename,
-  ])
+  const appLayout = useMemo(
+    () => getAppLayout(dimensions),
+    [
+      _appLayout.appOrientation,
+      _appLayout.deviceOrientation,
+      _appLayout.sizename,
+    ],
+  )
 
   return (
     <AppLayoutContext.Provider value={appLayout}>

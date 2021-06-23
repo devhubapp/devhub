@@ -20,9 +20,8 @@ export function useColumnData<ItemT extends EnhancedItem>(
     columnId,
   ])
 
-  const { column, dashboardFromUsername, hasCrossedColumnsLimit } = useColumn(
-    columnId,
-  )
+  const { column, dashboardFromUsername, hasCrossedColumnsLimit } =
+    useColumn(columnId)
 
   const dataByNodeIdOrId = useReduxState(selectors.dataByNodeIdOrId)
   const plan = useReduxState(selectors.currentUserPlanSelector)
@@ -61,9 +60,10 @@ export function useColumnData<ItemT extends EnhancedItem>(
     () => filteredItems.map(getItemNodeIdOrId).filter(Boolean) as string[],
     [filteredItems],
   )
-  const filteredItemsIds = useMemo(() => _filteredItemsIds, [
-    _filteredItemsIds.join(','),
-  ])
+  const filteredItemsIds = useMemo(
+    () => _filteredItemsIds,
+    [_filteredItemsIds.join(',')],
+  )
 
   const previousDataByNodeIdOrIdRef = usePreviousRef(dataByNodeIdOrId)
   const getItemByNodeIdOrIdChangeCountRef = useRef(0)

@@ -13,14 +13,14 @@ const renderScrollComponent = Platform.select<
   () => FlatListProps<any>['renderScrollComponent']
 >({
   android: () => {
-    const GestureHandlerScrollView = require('react-native-gesture-handler')
-      .ScrollView
+    const GestureHandlerScrollView =
+      require('react-native-gesture-handler').ScrollView
     return (p: any) => <GestureHandlerScrollView {...p} nestedScrollEnabled />
   },
   default: () => undefined,
 })()
 
-export const OneList = (React.memo(
+export const OneList = React.memo(
   React.forwardRef<OneListInstance, OneListProps<any>>((props, ref) => {
     React.useImperativeHandle(
       ref,
@@ -357,7 +357,7 @@ export const OneList = (React.memo(
       </View>
     )
   }),
-) as any) as (<ItemT>(
+) as any as (<ItemT>(
   props: OneListProps<ItemT> & React.RefAttributes<OneListInstance>,
 ) => React.ReactElement) & {
   displayName: string

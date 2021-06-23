@@ -59,13 +59,10 @@ export const NotificationCardsContainer = React.memo(
 
     const data = mainSubscription && mainSubscription.data
 
-    const {
-      allItems,
-      filteredItemsIds,
-      getItemByNodeIdOrId,
-    } = useColumnData<EnhancedGitHubNotification>(columnId, {
-      mergeSimilar: false,
-    })
+    const { allItems, filteredItemsIds, getItemByNodeIdOrId } =
+      useColumnData<EnhancedGitHubNotification>(columnId, {
+        mergeSimilar: false,
+      })
 
     const clearedAt = column && column.filters && column.filters.clearedAt
     const olderDate = getOlderOrNewerItemDate(

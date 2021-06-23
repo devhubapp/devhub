@@ -50,7 +50,8 @@ function cleanupArchivedItemsReducer(
     draft.subscriptions = draft.subscriptions || {}
     draft.subscriptions.byId = draft.subscriptions.byId || {}
 
-    const subscriptionsDataSelector = selectors.createSubscriptionsDataSelector()
+    const subscriptionsDataSelector =
+      selectors.createSubscriptionsDataSelector()
 
     const itemsNodeIdsOrIdsToKeepSet = new Set<string>()
 

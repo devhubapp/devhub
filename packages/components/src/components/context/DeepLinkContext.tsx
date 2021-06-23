@@ -16,9 +16,8 @@ export interface DeepLinkProviderProps {
 
 export type DeepLinkProviderState = undefined
 
-export const DeepLinkContext = React.createContext<DeepLinkProviderState>(
-  undefined,
-)
+export const DeepLinkContext =
+  React.createContext<DeepLinkProviderState>(undefined)
 DeepLinkContext.displayName = 'DeepLinkContext'
 
 export function DeepLinkProvider(props: DeepLinkProviderProps) {
@@ -87,9 +86,8 @@ export function DeepLinkProvider(props: DeepLinkProviderProps) {
         }
 
         case suffixMap.pricing: {
-          const { initialSelectedPlanId, highlightFeature } = getQueryParams(
-            querystring,
-          )
+          const { initialSelectedPlanId, highlightFeature } =
+            getQueryParams(querystring)
 
           dispatch(
             actions.pushModal({

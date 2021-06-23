@@ -147,8 +147,8 @@ export function isBigEnoughForMultiColumnView(
 
 export function vibrateHapticFeedback() {
   if (Platform.OS === 'ios' || Platform.OS === 'android') {
-    const ReactNativeHapticFeedback = require('react-native-haptic-feedback')
-      .default
+    const ReactNativeHapticFeedback =
+      require('react-native-haptic-feedback').default
 
     ReactNativeHapticFeedback.trigger('selection', {
       enableVibrateFallback: true,

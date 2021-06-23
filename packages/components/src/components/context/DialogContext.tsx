@@ -46,9 +46,8 @@ const defaultValue: DialogProviderState = {
   },
 }
 
-export const DialogContext = React.createContext<DialogProviderState>(
-  defaultValue,
-)
+export const DialogContext =
+  React.createContext<DialogProviderState>(defaultValue)
 DialogContext.displayName = 'DialogContext'
 
 export function DialogProvider(props: DialogProviderProps) {

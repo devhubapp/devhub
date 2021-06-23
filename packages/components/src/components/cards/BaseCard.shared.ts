@@ -948,9 +948,8 @@ function _getCardPropsForItem(
       })()
 
       const repoURL = repo.html_url || getRepoUrlFromOtherUrl(repo.url)
-      const { owner: repoOwnerName, repo: repoName } = getOwnerAndRepo(
-        repoFullName,
-      )
+      const { owner: repoOwnerName, repo: repoName } =
+        getOwnerAndRepo(repoFullName)
 
       const reasonMetadata = getNotificationReasonMetadata(notification.reason)
 
@@ -1159,18 +1158,19 @@ function _getCardPropsForItem(
 }
 
 const _memoizedGetCardPropsForItemFnByColumnId = betterMemoize(
-  (_columnId: string) => (
-    type: ColumnSubscription['type'],
-    item: EnhancedItem,
-    ownerIsKnown: boolean,
-    plan: UserPlan | null | undefined,
-    repoIsKnown: boolean,
-  ) =>
-    _getCardPropsForItem(type, item, {
-      ownerIsKnown,
-      plan,
-      repoIsKnown,
-    }),
+  (_columnId: string) =>
+    (
+      type: ColumnSubscription['type'],
+      item: EnhancedItem,
+      ownerIsKnown: boolean,
+      plan: UserPlan | null | undefined,
+      repoIsKnown: boolean,
+    ) =>
+      _getCardPropsForItem(type, item, {
+        ownerIsKnown,
+        plan,
+        repoIsKnown,
+      }),
   undefined,
   10,
 )

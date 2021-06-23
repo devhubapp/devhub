@@ -23,10 +23,9 @@ BlurView.isBlurSupported = () => {
   )
 }
 
-function getBlurStyle({
-  intensity = 50,
-  tint = 'default',
-}: BlurProps): { [key: string]: string } {
+function getBlurStyle({ intensity = 50, tint = 'default' }: BlurProps): {
+  [key: string]: string
+} {
   if (BlurView.isBlurSupported()) {
     let backdropFilter = `blur(${intensity * 0.25}px)`
 

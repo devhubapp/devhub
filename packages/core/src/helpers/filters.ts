@@ -62,7 +62,7 @@ export const filterRecordWithThisValueCount = (
 }
 
 export function itemPassesFilterRecord<
-  F extends Record<string, boolean | undefined>
+  F extends Record<string, boolean | undefined>,
 >(filtersRecord: F, value: keyof F, defaultValue: boolean) {
   if (!(filtersRecord && value)) return defaultValue
 

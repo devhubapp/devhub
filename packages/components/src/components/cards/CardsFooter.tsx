@@ -27,14 +27,8 @@ export interface CardsFooterProps {
 }
 
 export const CardsFooter = React.memo((props: CardsFooterProps) => {
-  const {
-    clearedAt,
-    columnId,
-    fetchNextPage,
-    isEmpty,
-    refresh,
-    topSpacing,
-  } = props
+  const { clearedAt, columnId, fetchNextPage, isEmpty, refresh, topSpacing } =
+    props
 
   const dispatch = useDispatch()
   const { sizename } = useAppLayout()

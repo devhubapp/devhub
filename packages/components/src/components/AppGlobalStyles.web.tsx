@@ -35,9 +35,10 @@ export const AppGlobalStyles = React.memo(() => {
 
   const styles = getStyles({ theme })
 
-  return useMemo(() => <style key="app-global-styles-inner">{styles}</style>, [
-    styles,
-  ])
+  return useMemo(
+    () => <style key="app-global-styles-inner">{styles}</style>,
+    [styles],
+  )
 })
 
 AppGlobalStyles.displayName = 'AppGlobalStyles'

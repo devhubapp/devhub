@@ -28,7 +28,8 @@ export interface CardsWatchingOwnerFilterBarProps {
   key: string
 }
 
-export const cardsWatchingOwnerFilterBarTotalHeight = cardsGenericOwnerFilterBarTotalHeight
+export const cardsWatchingOwnerFilterBarTotalHeight =
+  cardsGenericOwnerFilterBarTotalHeight
 
 export const CardsWatchingOwnerFilterBar = React.memo(
   (props: CardsWatchingOwnerFilterBarProps) => {

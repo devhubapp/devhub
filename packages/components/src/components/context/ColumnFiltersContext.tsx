@@ -27,9 +27,8 @@ const defaultValue: ColumnFiltersProviderState = {
   inlineMode: false,
   isSharedFiltersOpened: false,
 }
-export const ColumnFiltersContext = React.createContext<ColumnFiltersProviderState>(
-  defaultValue,
-)
+export const ColumnFiltersContext =
+  React.createContext<ColumnFiltersProviderState>(defaultValue)
 ColumnFiltersContext.displayName = 'ColumnFiltersContext'
 
 export function ColumnFiltersProvider(props: ColumnFiltersProviderProps) {

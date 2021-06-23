@@ -373,13 +373,8 @@ export const columnsReducer: Reducer<State> = (
 
     case 'SET_COLUMN_REASON_FILTER':
       return immer(state, (draft) => {
-        const {
-          columnId,
-          reason,
-          removeIfAlreadySet,
-          removeOthers,
-          value,
-        } = action.payload
+        const { columnId, reason, removeIfAlreadySet, removeOthers, value } =
+          action.payload
 
         if (!draft.byId) return
 
