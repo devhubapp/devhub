@@ -17,15 +17,15 @@
     "xcode": "open ios/devhub.xcworkspace"
   },
   "dependencies": {
-    "@devhub/core": "0.102.0",
     "@devhub/components": "0.102.0",
+    "@devhub/core": "0.102.0",
     "@react-native-firebase/analytics": "10.1.1",
     "@react-native-firebase/app": "10.1.0",
     "bugsnag-react-native": "2.23.10",
     "intl": "1.2.5",
     "intl-locales-supported": "1.8.12",
     "react": "17.0.1",
-    "react-native": "0.64.0-rc.1",
+    "react-native": "0.64.2",
     "react-native-gesture-handler": "1.9.0",
     "react-native-haptic-feedback": "1.11.0",
     "react-native-inappbrowser-reborn": "3.5.1",
@@ -40,11 +40,9 @@
   "devDependencies": {
     "babel-jest": "26.6.3",
     "jest": "26.6.3",
-    "metro-react-native-babel-preset": "0.64.0",
-    "react-native-codegen": "0.0.6",
-    "react-native-flipper": "0.68.0",
-    "react-test-renderer": "17.0.1",
-    "redux-flipper": "1.4.2"
+    "metro-react-native-babel-preset": "0.66.0",
+    "react-native-flipper": "0.75.1",
+    "react-test-renderer": "17.0.1"
   },
   "jest": {
     "preset": "react-native"

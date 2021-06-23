@@ -35,7 +35,7 @@
     "xcode": "yarn workspace @devhub/mobile xcode"
   },
   "dependencies": {
-    "react-native": "*"
+    "react-native": "0.64.2"
   },
   "devDependencies": {
     "@primer/octicons-v2": "canary",

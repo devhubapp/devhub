@@ -80,6 +80,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
+    cliPath: "../../../../"
 ]
 
 apply from: "../../../../node_modules/react-native/react.gradle"
