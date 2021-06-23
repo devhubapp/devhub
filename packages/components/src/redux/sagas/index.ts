@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { all, fork } from 'redux-saga/effects'
 
 import { apiSagas } from './api'

@@ -1111,7 +1111,9 @@ export function getItemsFromSubscriptions(
     return sortNotifications(result as EnhancedGitHubNotification[])
   }
 
-  console.error(`Unhandled subscription type: ${subscriptions[0]!.type}`)
+  console.error(
+    `Unhandled subscription type: ${((subscriptions[0] as any) || {}).type}`,
+  )
   return result
 }
 

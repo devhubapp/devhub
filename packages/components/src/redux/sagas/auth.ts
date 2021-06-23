@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { constants, User } from '@devhub/core'
 import axios, { AxiosResponse } from 'axios'
 import * as StoreReview from 'react-native-store-review'

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { AppState, InteractionManager } from 'react-native'
 import {
   all,

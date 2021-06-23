@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import axios, { AxiosResponse } from 'axios'
 import _ from 'lodash'
 import { all, fork, put, select, take, takeLatest } from 'redux-saga/effects'
