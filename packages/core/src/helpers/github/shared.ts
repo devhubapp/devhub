@@ -311,6 +311,7 @@ export function getUserAvatarFromObject(
   { size }: { size?: number } = {},
   getPixelSizeForLayoutSizeFn: ((size: number) => number) | undefined,
 ) {
+  if (!user) return undefined
   if (!(user.avatar_url || user.id || user.login)) return undefined
 
   const baseURL =
