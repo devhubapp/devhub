@@ -142,7 +142,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 - [React Native Web](https://github.com/necolas/react-native-web)
 - [Redux](https://github.com/reduxjs/react-redux)
 - [Redux Persist](https://github.com/rt2zz/redux-persist)
-- [Redux Saga](https://github.com/redux-saga/redux-saga/)
+- [Redux Saga](https://github.com/redux-saga/redux-saga/) ([typed-redux-saga](https://github.com/agiledigital/typed-redux-saga))
 - [Reselect](https://github.com/reduxjs/reselect)
 - [GraphQL](https://github.com/facebook/graphql)
 - [Electron](https://github.com/electron/electron)

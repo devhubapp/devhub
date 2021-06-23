@@ -30,7 +30,6 @@ module.exports = {
     },
   },
   rules: {
-    '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/ban-types': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-empty-interface': 'warn',

@@ -1,6 +1,3 @@
-// @ts-nocheck
-
-import _ from 'lodash'
 import qs from 'qs'
 import {
   all,
@@ -11,7 +8,7 @@ import {
   select,
   take,
   takeEvery,
-} from 'redux-saga/effects'
+} from 'typed-redux-saga'
 import url from 'url'
 
 import {
@@ -36,7 +33,7 @@ function* init() {
       action: take(['LOGIN_SUCCESS', 'LOGIN_FAILURE', 'LOGOUT']),
     })
 
-    const state = yield select()
+    const state = yield* select()
 
     const isLogged = selectors.isLoggedSelector(state)
     if (!isLogged) continue
@@ -105,7 +102,7 @@ function* onRefreshInstallationsRequest(
   >,
 ) {
   try {
-    const state = yield select()
+    const state = yield* select()
 
     const appToken = selectors.appTokenSelector(state)
     if (!appToken) throw new Error('Not logged')
@@ -139,9 +136,9 @@ function* onRefreshInstallationsRequest(
 }
 
 export function* installationSagas() {
-  yield all([
-    yield fork(init),
-    yield takeEvery(
+  yield* all([
+    yield* fork(init),
+    yield* takeEvery(
       'REFRESH_INSTALLATIONS_REQUEST',
       onRefreshInstallationsRequest,
     ),

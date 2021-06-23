@@ -1,8 +1,6 @@
-// @ts-nocheck
-
 import axios, { AxiosResponse } from 'axios'
 import _ from 'lodash'
-import { all, fork, put, select, take, takeLatest } from 'redux-saga/effects'
+import { all, fork, put, select, take, takeLatest } from 'typed-redux-saga'
 
 import {
   constants,
@@ -29,7 +27,7 @@ function* init() {
   while (true) {
     yield take('*')
 
-    const state: RootState = yield select()
+    const state: RootState = yield* select()
 
     const appToken = selectors.appTokenSelector(state)
     if (!appToken) continue
@@ -59,12 +57,12 @@ function* init() {
 // Note: Lodash debounce was not working as expected with generators
 // so we now use normal async/await in the sync functions
 function* onSyncUp() {
-  const state: RootState = yield select()
+  const state: RootState = yield* select()
   void debounceSyncUp(state)
 }
 
 function* onSyncDown() {
-  let state: RootState = yield select()
+  let state: RootState = yield* select()
 
   const appToken = selectors.appTokenSelector(state)
   if (!appToken) return
@@ -152,7 +150,7 @@ function* onSyncDown() {
       },
     )
 
-    state = yield select()
+    state = yield* select()
 
     const { data, errors } = response.data
 
@@ -279,7 +277,7 @@ const debounceSyncUp = _.debounce(syncUp, 5000, {
 function* onLoginSuccess(
   action: ExtractActionFromActionCreator<typeof actions.loginSuccess>,
 ) {
-  const state: RootState = yield select()
+  const state: RootState = yield* select()
 
   const { columns, subscriptions } = action.payload.user
   const username = action.payload.user.github.user.login
@@ -335,7 +333,7 @@ function* onLoginSuccess(
       yield put(actions.syncUp())
     }
   } else {
-    const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
+    const hasCreatedColumn = yield* select(selectors.hasCreatedColumnSelector)
     if (!hasCreatedColumn) {
       yield put(
         actions.replaceColumnsAndSubscriptions(getDefaultColumns(username)),
@@ -347,10 +345,10 @@ function* onLoginSuccess(
 }
 
 export function* apiSagas() {
-  yield all([
-    yield fork(init),
-    yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
-    yield takeLatest('SYNC_DOWN', onSyncDown),
-    yield takeLatest('SYNC_UP', onSyncUp),
+  yield* all([
+    yield* fork(init),
+    yield* takeLatest('LOGIN_SUCCESS', onLoginSuccess),
+    yield* takeLatest('SYNC_DOWN', onSyncDown),
+    yield* takeLatest('SYNC_UP', onSyncUp),
   ])
 }

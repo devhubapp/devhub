@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   Column,
   ColumnSubscription,
@@ -44,7 +42,7 @@ import {
   take,
   takeEvery,
   takeLatest,
-} from 'redux-saga/effects'
+} from 'typed-redux-saga'
 
 import { Browser } from '../../libs/browser'
 import { bugsnag } from '../../libs/bugsnag'
@@ -59,7 +57,7 @@ let issuesOrPullRequestsCache: EnhancementCache
 let notificationsCache: EnhancementCache
 
 function* init() {
-  const initialAction = yield take([
+  const initialAction = yield* take([
     'REFRESH_INSTALLATIONS_SUCCESS',
     'REFRESH_INSTALLATIONS_FAILURE',
     'REFRESH_INSTALLATIONS_NOOP',
@@ -90,10 +88,10 @@ function* init() {
     const isFirstTime = _isFirstTime
     _isFirstTime = false
 
-    const state = yield select()
+    const state = yield* select()
 
     if (isFirstTime) {
-      const hasCreatedColumn = yield select(selectors.hasCreatedColumnSelector)
+      const hasCreatedColumn = yield* select(selectors.hasCreatedColumnSelector)
       if (!hasCreatedColumn)
         yield take([
           'ADD_COLUMN_AND_SUBSCRIPTIONS',
@@ -128,7 +126,7 @@ function* init() {
       )
     if (!(subscriptionsToFetch && subscriptionsToFetch.length)) continue
 
-    yield all(
+    yield* all(
       subscriptionsToFetch.map(function* (subscription) {
         if (!subscription) return
 
@@ -185,14 +183,14 @@ function* init() {
 
 function* cleanupSubscriptions() {
   if (AppState.currentState === 'active')
-    yield call(InteractionManager.runAfterInteractions)
+    yield* call(InteractionManager.runAfterInteractions)
 
-  const allSubscriptionIds: string[] = yield select(
+  const allSubscriptionIds: string[] = yield* select(
     selectors.subscriptionIdsSelector,
   )
   if (!(allSubscriptionIds && allSubscriptionIds.length)) return
 
-  const columns: Column[] | null = yield select(selectors.columnsArrSelector)
+  const columns: Column[] | null = yield* select(selectors.columnsArrSelector)
   if (!(columns && columns.length)) return
 
   const usedSubscriptionIds = _.uniq(
@@ -219,7 +217,7 @@ function* handleOpenItem(
   if (action.payload.link) Browser.openURLOnNewTab(action.payload.link)
 
   if (AppState.currentState === 'active')
-    yield call(InteractionManager.runAfterInteractions)
+    yield* call(InteractionManager.runAfterInteractions)
 
   if (action.payload.itemNodeIdOrId) {
     yield put(
@@ -252,9 +250,9 @@ function* onAddColumn(
   >,
 ) {
   if (AppState.currentState === 'active')
-    yield call(InteractionManager.runAfterInteractions)
+    yield* call(InteractionManager.runAfterInteractions)
 
-  const state = yield select()
+  const state = yield* select()
 
   const column = selectors.columnSelector(state, action.payload.column.id)
   if (!column) return
@@ -273,7 +271,7 @@ function* onFetchColumnSubscriptions(
     typeof actions.fetchColumnSubscriptionRequest
   >,
 ) {
-  const state = yield select()
+  const state = yield* select()
 
   const columnSubscriptions = selectors.createColumnSubscriptionsSelector()(
     state,
@@ -281,7 +279,7 @@ function* onFetchColumnSubscriptions(
   )
   if (!(columnSubscriptions && columnSubscriptions.length)) return
 
-  yield all(
+  yield* all(
     columnSubscriptions.map(function* (subscription) {
       if (!subscription) return
 
@@ -298,12 +296,12 @@ function* onFetchColumnSubscriptions(
 }
 
 function* watchFetchRequests() {
-  const channel = yield actionChannel('FETCH_SUBSCRIPTION_REQUEST')
+  const channel = yield* actionChannel('FETCH_SUBSCRIPTION_REQUEST')
 
   while (true) {
-    const action = yield take(channel)
+    const action = yield* take(channel)
 
-    yield fork(onFetchRequest, action)
+    yield fork(onFetchRequest, action as any)
     yield delay(300)
   }
 }
@@ -313,7 +311,7 @@ function* onFetchRequest(
     typeof actions.fetchSubscriptionRequest
   >,
 ) {
-  const state = yield select()
+  const state = yield* select()
 
   const {
     params: payloadParams,
@@ -377,7 +375,7 @@ function* onFetchRequest(
     let canFetchMore: boolean | undefined
     let headers
     if (subscription && subscription.type === 'notifications') {
-      const response = yield call(
+      const response = yield* call(
         github.getNotifications,
         { ...requestParams, ...subscriptionParams },
         { githubToken, subscriptionId },
@@ -409,7 +407,7 @@ function* onFetchRequest(
         notificationsCache = createNotificationsCache(prevItems)
       }
 
-      const enhancementMap = yield call(
+      const enhancementMap = yield* call(
         getNotificationsEnhancementMap,
         mergedItems,
         {
@@ -446,7 +444,7 @@ function* onFetchRequest(
           ? false
           : undefined
     } else if (subscription && subscription.type === 'activity') {
-      const response = yield call(
+      const response = yield* call(
         github.getActivity,
         subscription.subtype,
         { ...requestParams, ...subscriptionParams },
@@ -491,7 +489,7 @@ function* onFetchRequest(
           ? false
           : undefined
     } else if (subscription && subscription.type === 'issue_or_pr') {
-      const response = yield call(
+      const response = yield* call(
         github.getIssuesOrPullRequests,
         subscription.subtype,
         subscriptionParams as IssueOrPullRequestColumnSubscription['params'],
@@ -525,7 +523,7 @@ function* onFetchRequest(
         issuesOrPullRequestsCache = createIssuesOrPullRequestsCache(prevItems)
       }
 
-      const enhancementMap = yield call(
+      const enhancementMap = yield* call(
         getIssueOrPullRequestsEnhancementMap,
         mergedItems,
         {
@@ -583,7 +581,7 @@ function* onFetchRequest(
     const githubAPIHeaders = getGitHubAPIHeadersFromHeader(headers)
 
     if (AppState.currentState === 'active')
-      yield call(InteractionManager.runAfterInteractions)
+      yield* call(InteractionManager.runAfterInteractions)
 
     yield put(
       actions.fetchSubscriptionSuccess({
@@ -657,13 +655,13 @@ function* onMarkItemsAsReadOrUnread(
   if (type !== 'notifications') return
   if (!(itemNodeIdOrIds && itemNodeIdOrIds.length)) return
 
-  const state = yield select()
+  const state = yield* select()
   const githubToken = selectors.githubTokenSelector(state)
   if (!githubToken) return
 
   const octokit = github.getOctokitForToken(githubToken)
 
-  const results = yield all(
+  const results = yield* all(
     itemNodeIdOrIds.map(function* (itemNodeIdOrId, index) {
       const threadId = itemNodeIdOrId && parseInt(`${itemNodeIdOrId}`, 10)
       if (!threadId) return
@@ -685,7 +683,7 @@ function* onMarkItemsAsReadOrUnread(
     .map((result: Octokit.AnyResponse, index: number) =>
       result &&
       ((result.status >= 200 && result.status < 400) || result.status === 404)
-        ? undefined
+        ? ''
         : action.payload.itemNodeIdOrIds[index],
     )
     .filter(Boolean)
@@ -709,7 +707,7 @@ function* _markAllGitHubNotificationsAsReadOrUnread({
   // @see https://github.com/octokit/rest.js/issues/1232
   if (unread) return
 
-  const state = yield select()
+  const state = yield* select()
   const githubToken = selectors.githubTokenSelector(state)
   if (!githubToken) return
 
@@ -759,7 +757,7 @@ function* onMarkRepoNotificationsAsReadOrUnread(
   // @see https://github.com/octokit/rest.js/issues/1232
   if (unread) return
 
-  const state = yield select()
+  const state = yield* select()
   const githubToken = selectors.githubTokenSelector(state)
   if (!githubToken) return
 
@@ -792,7 +790,7 @@ function* onMarkEverythingAsReadWithConfirmation(
     typeof actions.markEverythingAsReadWithConfirmation
   >,
 ) {
-  const confirmed = yield new Promise((resolve) => {
+  const confirmed: boolean = yield new Promise((resolve) => {
     confirm(
       'Mark all as read?',
       'All your GitHub notifications and all columns will be marked as read. ' +
@@ -819,7 +817,7 @@ function* onClearAllColumnsWithConfirmation(
     typeof actions.clearAllColumnsWithConfirmation
   >,
 ) {
-  const confirmed = yield new Promise((resolve) => {
+  const confirmed: boolean = yield new Promise((resolve) => {
     confirm(
       'Clear all columns?',
       'All columns will become empty. ' +
@@ -842,32 +840,35 @@ function* onClearAllColumnsWithConfirmation(
 }
 
 export function* subscriptionsSagas() {
-  yield all([
-    yield fork(init),
-    yield fork(watchFetchRequests),
-    yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', cleanupSubscriptions),
-    yield takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
-    yield takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
-    yield takeEvery('DELETE_COLUMN', cleanupSubscriptions),
-    yield takeEvery('OPEN_ITEM', handleOpenItem),
-    yield takeLatest('REMOVE_SUBSCRIPTION_FROM_COLUMN', cleanupSubscriptions),
-    yield takeLatest('REPLACE_COLUMNS_AND_SUBSCRIPTIONS', cleanupSubscriptions),
-    yield takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
-    yield takeEvery('FETCH_SUBSCRIPTION_FAILURE', onFetchFailed),
-    yield takeEvery('MARK_ITEMS_AS_READ_OR_UNREAD', onMarkItemsAsReadOrUnread),
-    yield takeEvery(
+  yield* all([
+    yield* fork(init),
+    yield* fork(watchFetchRequests),
+    yield* takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', cleanupSubscriptions),
+    yield* takeEvery('ADD_COLUMN_AND_SUBSCRIPTIONS', onAddColumn),
+    yield* takeLatest(['LOGOUT', 'LOGIN_FAILURE'], onLogout),
+    yield* takeEvery('DELETE_COLUMN', cleanupSubscriptions),
+    yield* takeEvery('OPEN_ITEM', handleOpenItem),
+    yield* takeLatest('REMOVE_SUBSCRIPTION_FROM_COLUMN', cleanupSubscriptions),
+    yield* takeLatest(
+      'REPLACE_COLUMNS_AND_SUBSCRIPTIONS',
+      cleanupSubscriptions,
+    ),
+    yield* takeEvery('FETCH_COLUMN_SUBSCRIPTIONS', onFetchColumnSubscriptions),
+    yield* takeEvery('FETCH_SUBSCRIPTION_FAILURE', onFetchFailed),
+    yield* takeEvery('MARK_ITEMS_AS_READ_OR_UNREAD', onMarkItemsAsReadOrUnread),
+    yield* takeEvery(
       'MARK_ALL_NOTIFICATIONS_AS_READ_OR_UNREAD',
       onMarkAllNotificationsAsReadOrUnread,
     ),
-    yield takeEvery(
+    yield* takeEvery(
       'MARK_REPO_NOTIFICATIONS_AS_READ_OR_UNREAD',
       onMarkRepoNotificationsAsReadOrUnread,
     ),
-    yield takeLatest(
+    yield* takeLatest(
       'MARK_EVERYTHING_AS_READ_WITH_CONFIRMATION',
       onMarkEverythingAsReadWithConfirmation,
     ),
-    yield takeLatest(
+    yield* takeLatest(
       'CLEAR_ALL_COLUMNS_WITH_CONFIRMATION',
       onClearAllColumnsWithConfirmation,
     ),

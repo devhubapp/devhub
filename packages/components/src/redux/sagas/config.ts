@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-import { all, delay, fork, put, select, takeLatest } from 'redux-saga/effects'
+import { all, delay, fork, put, select, takeLatest } from 'typed-redux-saga'
 
 import { isNight } from '@devhub/core'
 import { analytics } from '../../libs/analytics'
@@ -21,7 +19,7 @@ function* init() {
 }
 
 function* onThemeChange() {
-  const state = yield select()
+  const state = yield* select()
 
   const preferredDarkThemePair = selectors.preferredDarkThemePairSelector(state)
   const preferredLightThemePair = selectors.preferredLightThemePairSelector(
@@ -37,8 +35,8 @@ function* onThemeChange() {
 }
 
 export function* configSagas() {
-  yield all([
-    yield fork(init),
-    yield takeLatest(['SET_THEME', 'SET_PREFERRABLE_THEME'], onThemeChange),
+  yield* all([
+    yield* fork(init),
+    yield* takeLatest(['SET_THEME', 'SET_PREFERRABLE_THEME'], onThemeChange),
   ])
 }

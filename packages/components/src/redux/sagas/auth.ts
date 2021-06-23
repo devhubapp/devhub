@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { constants, User } from '@devhub/core'
 import axios, { AxiosResponse } from 'axios'
 import * as StoreReview from 'react-native-store-review'
@@ -12,7 +10,7 @@ import {
   select,
   take,
   takeLatest,
-} from 'redux-saga/effects'
+} from 'typed-redux-saga'
 
 import { Alert } from 'react-native'
 import { analytics } from '../../libs/analytics'
@@ -29,7 +27,7 @@ function* init() {
   yield take('LOGIN_SUCCESS')
 
   while (true) {
-    const state = yield select()
+    const state = yield* select()
 
     const appToken = selectors.appTokenSelector(state)
     const isLogged = selectors.isLoggedSelector(state)
@@ -84,7 +82,7 @@ function* init() {
 }
 
 function* onRehydrate() {
-  const appToken = yield select(selectors.appTokenSelector)
+  const appToken = yield* select(selectors.appTokenSelector)
   if (!appToken) return
 
   yield put(actions.loginRequest({ appToken }))
@@ -280,7 +278,7 @@ function* onLoginSuccess(
   clearOAuthQueryParams()
 
   if (StoreReview.isAvailable && !__DEV__) {
-    const state = yield select()
+    const state = yield* select()
     const { loginSuccess: loginCount } = selectors.countersSelector(state)
 
     if (loginCount >= 5 && loginCount % 5 === 0) {
@@ -292,7 +290,7 @@ function* onLoginSuccess(
 }
 
 function* updateLoggedUserOnTools() {
-  const state = yield select()
+  const state = yield* select()
 
   const preferredDarkThemePair = selectors.preferredDarkThemePairSelector(state)
   const preferredLightThemePair = selectors.preferredLightThemePairSelector(
@@ -343,7 +341,7 @@ function onLogout() {
 }
 
 function* onDeleteAccountRequest() {
-  const appToken = yield select(selectors.appTokenSelector)
+  const appToken = yield* select(selectors.appTokenSelector)
 
   try {
     const response: AxiosResponse<{
@@ -412,19 +410,19 @@ function* onDeleteAccountSuccess() {
 }
 
 export function* authSagas() {
-  yield all([
-    yield fork(init),
-    yield takeLatest(REHYDRATE, onRehydrate),
-    yield takeLatest(
+  yield* all([
+    yield* fork(init),
+    yield* takeLatest(REHYDRATE, onRehydrate),
+    yield* takeLatest(
       [REHYDRATE, 'LOGIN_SUCCESS', 'LOGOUT', 'UPDATE_USER_DATA'],
       updateLoggedUserOnTools,
     ),
-    yield takeLatest('LOGIN_REQUEST', onLoginRequest),
-    yield takeLatest('LOGIN_FAILURE', onLoginFailure),
-    yield takeLatest('LOGIN_SUCCESS', onLoginSuccess),
-    yield takeLatest('DELETE_ACCOUNT_REQUEST', onDeleteAccountRequest),
-    yield takeLatest('DELETE_ACCOUNT_FAILURE', onDeleteAccountFailure),
-    yield takeLatest('DELETE_ACCOUNT_SUCCESS', onDeleteAccountSuccess),
-    yield takeLatest('LOGOUT', onLogout),
+    yield* takeLatest('LOGIN_REQUEST', onLoginRequest),
+    yield* takeLatest('LOGIN_FAILURE', onLoginFailure),
+    yield* takeLatest('LOGIN_SUCCESS', onLoginSuccess),
+    yield* takeLatest('DELETE_ACCOUNT_REQUEST', onDeleteAccountRequest),
+    yield* takeLatest('DELETE_ACCOUNT_FAILURE', onDeleteAccountFailure),
+    yield* takeLatest('DELETE_ACCOUNT_SUCCESS', onDeleteAccountSuccess),
+    yield* takeLatest('LOGOUT', onLogout),
   ])
 }
