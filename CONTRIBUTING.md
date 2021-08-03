@@ -16,7 +16,7 @@ If the feature is big, open an issue first for discussion.
 - [Yarn](https://yarnpkg.com/)
 
 > **Note:** On Windows, you might need to install Bash commands (e.g. via [git-scm](https://git-scm.com/downloads) or via [linux bash shell](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/))
-
+ 
 ### How to run
 
 - `git clone git@github.com:devhubapp/devhub.git`
