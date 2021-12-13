@@ -57,7 +57,14 @@
       "entitlementsInherit": "build/entitlements.mac.plist",
       "gatekeeperAssess": false,
       "hardenedRuntime": true,
-      "icon": "icons/icon.png"
+      "icon": "icons/icon.png",
+      "target": {
+        "target": "default",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      }
     },
     "win": {
       "icon": "icons/icon.ico",
@@ -97,7 +104,7 @@
     "@types/semver": "7.3.4",
     "dotenv": "8.2.0",
     "electron": "11.0.3",
-    "electron-builder": "22.9.1",
+    "electron-builder": "22.14.5",
     "electron-devtools-installer": "3.1.1",
     "electron-notarize": "1.0.0",
     "electron-timber": "0.5.1",
