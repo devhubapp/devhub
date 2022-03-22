@@ -364,7 +364,7 @@ export async function getNotificationsEnhancementMap(
     const commentCache = cache.get(notification.subject.latest_comment_url)
 
     const subjectField = (notification.subject.type[0].toLowerCase() +
-      notification.subject.type.substr(
+      notification.subject.type.slice(
         1,
       )) as keyof NotificationPayloadEnhancement
 

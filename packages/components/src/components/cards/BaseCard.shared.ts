@@ -311,8 +311,8 @@ function _getCardPropsForItem(
         actionTextOptions,
       )
       const actionText = `${_actionText
-        .substr(0, 1)
-        .toLowerCase()}${_actionText.substr(1)}`
+        .slice(0, 1)
+        .toLowerCase()}${_actionText.slice(1)}`
 
       const iconDetails = getEventIconAndColor(event)
       const icon = iconDetails as IconProp
@@ -1330,8 +1330,8 @@ export function getCardPushNotificationItem(
       } = getEventMetadata(event, actionTextOptions)
 
       const actionText = `${_actionText
-        .substr(0, 1)
-        .toLowerCase()}${_actionText.substr(1)}`
+        .slice(0, 1)
+        .toLowerCase()}${_actionText.slice(1)}`
 
       const actorUsername = actor.display_login || actor.login
 

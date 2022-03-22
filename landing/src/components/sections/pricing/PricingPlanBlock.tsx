@@ -83,7 +83,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
 
   const priceLabelCents =
     _priceLabel[_priceLabel.length - 3] === '.'
-      ? _priceLabel.substr(-3)
+      ? _priceLabel.slice(-3)
       : undefined
   const priceLabelWithoutCents =
     priceLabelCents && _priceLabel.endsWith(priceLabelCents)

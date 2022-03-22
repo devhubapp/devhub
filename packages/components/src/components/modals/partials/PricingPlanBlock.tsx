@@ -98,7 +98,7 @@ export function PricingPlanBlock(props: PricingPlanBlockProps) {
       : _priceLabel
   const priceLabelCents =
     _cents && _priceLabel.endsWith(_cents.toString())
-      ? _priceLabel.substr(-3)
+      ? _priceLabel.slice(-3)
       : ''
 
   let footerText = ''
