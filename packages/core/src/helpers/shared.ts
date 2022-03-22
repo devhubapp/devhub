@@ -179,7 +179,7 @@ export function trimNewLinesAndSpaces(text?: string, maxLength = 120) {
 
   let newText = text.replace(/\s+/g, ' ').trim()
   if (maxLength > 0 && newText.length > maxLength) {
-    newText = `${newText.substr(0, maxLength).trim()}...`
+    newText = `${newText.slice(0, maxLength).trim()}...`
   }
 
   return newText

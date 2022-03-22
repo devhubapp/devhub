@@ -22,7 +22,7 @@ export const analytics: Analytics = {
       .analytics()
       .logEvent(hideTokenFromString(action || '').replace(/\//g, '_'), {
         event_category: hideTokenFromString(category),
-        event_label: hideTokenFromString(label || '').substr(0, 100),
+        event_label: hideTokenFromString(label || '').slice(0, 100),
         value,
       })
   },
