@@ -19,7 +19,7 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 
 ### Desktop
 
-![DevHub Desktop](https://user-images.githubusercontent.com/619186/65840754-13491e00-e2f3-11e9-9c4b-70c29df181c9.jpg))
+![DevHub Desktop](https://user-images.githubusercontent.com/619186/65840754-13491e00-e2f3-11e9-9c4b-70c29df181c9.jpg)
 
 
 #### Menubar
@@ -160,11 +160,11 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 ## Community
 
 <div>
-<img height="20" src="https://user-images.githubusercontent.com/619186/60049645-1c4ba300-96a5-11e9-9fc5-eb1e833a2d86.png" /> 
+<img height="20" src="https://user-images.githubusercontent.com/619186/60049645-1c4ba300-96a5-11e9-9fc5-eb1e833a2d86.png" />
 Twitter: <a href="https://twitter.com/devhub_app">@devhub_app</a>
 <br/>
 
-<img height="20" src="https://user-images.githubusercontent.com/619186/60049613-04741f00-96a5-11e9-8d29-07b904bd7808.png" /> 
+<img height="20" src="https://user-images.githubusercontent.com/619186/60049613-04741f00-96a5-11e9-8d29-07b904bd7808.png" />
 Slack: <a href="https://slack.devhubapp.com/">Slack Invitation</a>
 </div>
 
