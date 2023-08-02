@@ -135,7 +135,7 @@ function redirectToPH() {
         clearInterval(ti)
         ref && !ref.includes('?ref=producthunt')
           ? (window.location.href = ref)
-          : (window.location.href = 'https://github.com/devhubapp/devhub')
+          : (window.location.href = 'https://github.com/Aishagojo/devhub')
       }
     }, 1000)
     return t
