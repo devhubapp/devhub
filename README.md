@@ -9,7 +9,7 @@
 </p>
 
 
-## Why
+## Why DevHub
 
 DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications** and stay on top of **repository activities**. Save **custom searches**, apply **filters** and don't miss anything important.
 
