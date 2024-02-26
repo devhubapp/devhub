@@ -79,6 +79,10 @@ export function createWindow() {
       e.preventDefault()
       win.hide()
       return
+    } else {
+      // For other platforms, allow the window to be closed
+      mainWindow = undefined; // Set the reference to mainWindow to undefined
+      win.destroy() // Quit the application
     }
   })
 
