@@ -31,7 +31,7 @@ export function getCachedPublicPlans(): PlansStateData | undefined {
     cachedPublicPlans = require('../scripts/out/cached-public-plans.json') // eslint-disable-line
     return cachedPublicPlans
   } catch (error) {
-    //
+    
   }
 }
 
