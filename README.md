@@ -29,9 +29,9 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 ### Mobile
 
 <p align="center">
-  <img alt="DevHub Mobile - Notifications" height="620" src="landing/public/static/screenshots/iphone-notifications-dark.jpg" />
-  <img alt="DevHub Mobile - Notification Filters" height="620" src="landing/public/static/screenshots/iphone-notifications-filters-dark.jpg" />
-  <img alt="DevHub Mobile - Repository activity" height="620" src="landing/public/static/screenshots/iphone-events-dark.jpg" />
+  <img alt="DevHub Mobile - Notifications" width="260" src="landing/public/static/screenshots/iphone-notifications-dark.jpg" style="margin-right:10px" />
+  <img alt="DevHub Mobile - Notification Filters" width="260" src="landing/public/static/screenshots/iphone-notifications-filters-dark.jpg" style="margin-right:10px" />
+  <img alt="DevHub Mobile - Repository activity" width="260" src="landing/public/static/screenshots/iphone-events-dark.jpg" />
 </p>
 
 <br/>
@@ -97,7 +97,6 @@ DevHub is a **mobile and desktop** app to help you **manage GitHub Notifications
 DevHub plans to be a sustainable open source project. It's not made by a huge company like Facebook, it is made by a single developer that could be making $200k+ on Facebook, but instead makes $0 working on this full time. If you want the project to live and be actively maintained, understand that it will need a revenue and consider donating or subscribing to the paid plan once it launches.
 
 > [Join the discussion](https://github.com/devhubapp/devhub/issues/106)!
--->
 
 <br/>
 
@@ -122,13 +121,13 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/devhub/sponsor/8/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/devhub/sponsor/9/website" target="_blank"><img src="https://opencollective.com/devhub/sponsor/9/avatar.svg"></a>
 
-
 ## Donate
 
 - [DevHub - OpenCollective](https://opencollective.com/devhub)
 - [DevHub - Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53)
 - [@brunolemos - Patreon](https://www.patreon.com/brunolemos)
 - [@brunolemos - Crypto](https://commerce.coinbase.com/checkout/f314f3d3-2310-43ad-a2d0-c0c6462e792c)
+-->
 
 <br/>
 
@@ -149,7 +148,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 <br/>
 
-## Contributing
+## Running locally & Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
@@ -161,7 +160,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 <div>
 <img height="20" src="https://user-images.githubusercontent.com/619186/60049645-1c4ba300-96a5-11e9-9fc5-eb1e833a2d86.png" /> 
-Twitter: <a href="https://twitter.com/devhub_app">@devhub_app</a>
+X/Twitter: <a href="https://x/devhub_app">@devhub_app</a>
 <br/>
 
 <img height="20" src="https://user-images.githubusercontent.com/619186/60049613-04741f00-96a5-11e9-8d29-07b904bd7808.png" /> 
@@ -172,11 +171,12 @@ Slack: <a href="https://slack.devhubapp.com/">Slack Invitation</a>
 
 ## Author
 
-Follow me on Twitter: [@brunolemos](https://twitter.com/brunolemos)
+Follow me on Instagram: [@brunolemos](https://instagram.com/brunolemos)
+<br/>Follow me on X/Twitter: [@brunolemos](https://x.com/brunolemos)
 <br/>Donate to me: [Patreon](https://www.patreon.com/brunolemos) | [Crypto](https://commerce.coinbase.com/checkout/f314f3d3-2310-43ad-a2d0-c0c6462e792c)
 <br/>Donate to DevHub: [OpenCollective](https://opencollective.com/devhub) | [Crypto](https://commerce.coinbase.com/checkout/49be60bc-5bc0-45a9-9438-a1eabc81fe53)
 
-<a href="https://twitter.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=200" height="100" /></a>
+<a href="https://x.com/brunolemos" target="_blank"><img src="https://github.com/brunolemos.png?size=200" height="100" /></a>
 
 <br/>
 
