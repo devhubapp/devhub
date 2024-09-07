@@ -34,6 +34,7 @@ To open the mobile projects, use:
 - `yarn studio`
 <br />
 
+<!--
 ## Running it online
 
 Alternatively, you can contribute using Gitpod, a free online dev environment for GitHub:
@@ -44,3 +45,4 @@ Alternatively, you can contribute using Gitpod, a free online dev environment fo
 > Disclaimer: Gitpod is a third party service and is not affiliated with GitHub neither DevHub.
 
 > When using a third party service, your tokens may be less secured.
+-->
