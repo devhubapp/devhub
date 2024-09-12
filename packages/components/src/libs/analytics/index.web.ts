@@ -25,7 +25,7 @@ export const analytics: Analytics = {
     ga('send', 'event', {
       eventCategory: hideTokenFromString(category),
       eventAction: hideTokenFromString(action),
-      eventLabel: hideTokenFromString(label || '')!.substr(0, 100),
+      eventLabel: hideTokenFromString(label || '')!.slice(0, 100),
       eventValue: value,
     })
   },

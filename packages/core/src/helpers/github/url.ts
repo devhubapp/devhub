@@ -51,7 +51,7 @@ export function getCommitCompareUrlFromUrls(
   const sha2 = getCommitShaFromUrl(commit2URL)
   if (!(sha1 && sha2)) return
 
-  return `${repo1URL}/compare/${sha1.substr(0, 7)}...${sha2.substr(0, 7)}`
+  return `${repo1URL}/compare/${sha1.slice(0, 7)}...${sha2.slice(0, 7)}`
 }
 
 export function getCommitCompareUrlFromRefs(
@@ -61,7 +61,7 @@ export function getCommitCompareUrlFromRefs(
 ): string | undefined {
   if (!(before && head && repoURL)) return
 
-  return `${repoURL}/compare/${before.substr(0, 7)}...${head.substr(0, 7)}`
+  return `${repoURL}/compare/${before.slice(0, 7)}...${head.slice(0, 7)}`
 }
 
 export function getIssueOrPullRequestNumberFromUrl(
