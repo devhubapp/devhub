@@ -11,6 +11,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#header::-webkit-scrollbar{
+  display:none;
+}
+
 .loaded, .loaded * {
   transition: all 0.2s ease-out;
   transition-property: background-color, border-color, color, opacity, top, bottom, left, right, width, height, margin, padding, transform;
