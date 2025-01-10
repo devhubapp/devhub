@@ -70,6 +70,24 @@ export const LoginHelpersContext =
   })
 LoginHelpersContext.displayName = 'LoginHelpersContext'
 
+function handleAuthError(
+  error: unknown,
+  description = 'Authentication failed',
+  dialog: ReturnType<typeof useDialog>,
+): void {
+  console.error(description)
+  if (error) console.error(error)
+
+  const err =
+    error instanceof Error
+      ? error
+      : new Error(typeof error === 'string' ? error : 'Unknown error')
+  bugsnag.notify(err, { description })
+
+  if (err.message === 'Canceled' || err.message === 'Timeout') return
+  dialog.show('Login failed', err.message)
+}
+
 export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
   const [isExecutingOAuth, setIsExecutingOAuth] = useState(false)
   const [patLoadingState, setPATLoadingState] = useState<
@@ -91,7 +109,7 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
     (state) => !!selectors.githubTokenSelector(state),
   )
 
-  const Dialog = useDialog()
+  const dialog = useDialog()
 
   const fullAccessRef = useRef(false)
   const initialErrorRef = useRef(error)
@@ -116,14 +134,8 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
       dispatch(actions.loginRequest({ appToken }))
       setIsExecutingOAuth(false)
     } catch (error) {
-      const description = 'OAuth execution failed'
-      console.error(description, error)
+      handleAuthError(error, 'OAuth execution failed', dialog)
       setIsExecutingOAuth(false)
-
-      if (error.message === 'Canceled' || error.message === 'Timeout') return
-      bugsnag.notify(error, { description })
-
-      Dialog.show('Login failed', `${error || ''}`)
     }
   }
 
@@ -132,7 +144,7 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
   > => {
     let redirected = false
     const token = await new Promise<string | undefined>((resolveToken) => {
-      Dialog.show(
+      dialog.show(
         'Personal Access Token',
         constants.LOCAL_ONLY_PERSONAL_ACCESS_TOKEN
           ? 'It will be stored safely on your local device and only be sent directly to GitHub.'
@@ -191,7 +203,7 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
     }
 
     return token
-  }, [])
+  }, [dialog])
 
   const loginWithGitHubPersonalAccessToken = useCallback(async () => {
     try {
@@ -200,47 +212,49 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
       const token = await promptForPersonalAcessToken()
       if (!token) throw new Error('Canceled')
 
+      setIsExecutingOAuth(true)
+      setPATLoadingState('adding')
+
+      // Validate token with GitHub API
+      const response = await axios.get(`${githubBaseApiUrl}/user`, {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      })
+
+      if (!(response?.data?.id && response.data.login)) {
+        throw new Error('Invalid response from GitHub API')
+      }
+
+      if (
+        loggedGitHubUserId &&
+        `${response.data.id}` !== `${loggedGitHubUserId}`
+      ) {
+        const details =
+          response.data.login !== loggedGitHubUsername
+            ? ` (${response.data.login} instead of ${loggedGitHubUsername})`
+            : ` (ID ${response.data.id} instead of ${loggedGitHubUserId})`
+
+        throw new Error(
+          `This Personal Access Token seems to be from a different user${details}.`,
+        )
+      }
+
+      const scope = `${response.headers['x-oauth-scopes'] || ''}`
+        .replace(/\s+/g, '')
+        .split(',')
+        .filter(Boolean)
+
+      if (scope.length && !scope.includes('repo')) {
+        throw new Error(
+          'You didn\'t include the "repo" permission scope,' +
+            ' which is required to have access to private repositories.' +
+            " Your token will be safe on your device, and will never be sent to DevHub's server.",
+        )
+      }
+
+      // In local-only mode, store the token and use it directly
       if (constants.LOCAL_ONLY_PERSONAL_ACCESS_TOKEN) {
-        setIsExecutingOAuth(true)
-        setPATLoadingState('adding')
-        const response = await axios.get(`${githubBaseApiUrl}/user`, {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        })
-        setIsExecutingOAuth(false)
-        setPATLoadingState(undefined)
-
-        if (!(response?.data?.id && response.data.login))
-          throw new Error('Invalid response')
-
-        if (
-          loggedGitHubUserId &&
-          `${response.data.id}` !== `${loggedGitHubUserId}`
-        ) {
-          const details =
-            response.data.login !== loggedGitHubUsername
-              ? ` (${response.data.login} instead of ${loggedGitHubUsername})`
-              : ` (ID ${response.data.id} instead of ${loggedGitHubUserId})`
-
-          throw new Error(
-            `This Personal Access Token seems to be from a different user${details}.`,
-          )
-        }
-
-        const scope = `${response.headers['x-oauth-scopes'] || ''}`
-          .replace(/\s+/g, '')
-          .split(',')
-          .filter(Boolean)
-
-        if (scope.length && !scope.includes('repo')) {
-          throw new Error(
-            'You didn\'t include the "repo" permission scope,' +
-              ' which is required to have access to private repositories.' +
-              " Your token will be safe on your device, and will never be sent to DevHub's server.",
-          )
-        }
-
         dispatch(
           actions.replacePersonalTokenDetails({
             tokenDetails: {
@@ -248,168 +262,78 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
               token,
               tokenCreatedAt: new Date().toISOString(),
               scope,
-              tokenType: undefined,
             },
           }),
         )
+
+        // Use the personal access token as the app token
+        dispatch(actions.loginRequest({ appToken: token }))
       } else {
-        setIsExecutingOAuth(true)
-        setPATLoadingState('adding')
-        const response = await axios.post(
-          `${constants.API_BASE_URL}/github/personal/login`,
-          { token },
-          { headers: getDefaultDevHubHeaders({ appToken: existingAppToken }) },
-        )
-        setIsExecutingOAuth(false)
-        setPATLoadingState(undefined)
-
-        const appToken = response.data.appToken
-        clearOAuthQueryParams()
-
-        if (!appToken) throw new Error('No app token')
-
-        dispatch(actions.loginRequest({ appToken }))
-      }
-    } catch (error) {
-      setIsExecutingOAuth(false)
-      setPATLoadingState(undefined)
-
-      if (error.message === 'Canceled' || error.message === 'Timeout') return
-
-      const description = 'Authentication failed'
-      console.error(description, error)
-
-      bugsnag.notify(error, { description })
-
-      Dialog.show('Login failed', `${error || ''}`)
-    }
-  }, [existingAppToken, loggedGitHubUserId, loggedGitHubUsername])
-
-  const addPersonalAccessToken = useCallback(async () => {
-    await loginWithGitHubPersonalAccessToken()
-  }, [loginWithGitHubPersonalAccessToken])
-
-  const removePersonalAccessToken = useCallback(async () => {
-    if (constants.LOCAL_ONLY_PERSONAL_ACCESS_TOKEN) {
-      dispatch(
-        actions.replacePersonalTokenDetails({
-          tokenDetails: undefined,
-        }),
-      )
-    } else {
-      try {
-        setPATLoadingState('removing')
-
-        const response = await axios.post(
+        // In server mode, exchange the token for an app token
+        const loginResponse = await axios.post(
           constants.GRAPHQL_ENDPOINT,
           {
             query: `
               mutation {
-                removeGitHubPersonalToken
-              }`,
+                loginWithPersonalAccessToken(input: { token: "${token}" }) {
+                  appToken
+                }
+              }
+            `,
           },
-          { headers: getDefaultDevHubHeaders({ appToken: existingAppToken }) },
+          {
+            headers: getDefaultDevHubHeaders({ appToken: existingAppToken }),
+          },
         )
 
-        const { data, errors } = await response.data
+        const { data, errors } = loginResponse.data
 
-        if (errors?.[0]?.message) throw new Error(errors[0].message)
-
-        if (!data?.removeGitHubPersonalToken) {
-          throw new Error('Not removed.')
+        if (errors && errors.length) {
+          throw new Error(errors[0].message || 'GraphQL Error')
         }
 
-        setPATLoadingState(undefined)
+        if (!data?.loginWithPersonalAccessToken?.appToken) {
+          throw new Error('Invalid response')
+        }
 
-        // this is only necessary because we are not re-generating the appToken after removing the personal token,
-        // which causes the personal token to being added back after a page refresh
-        dispatch(actions.logout())
-      } catch (error) {
-        console.error(error)
-        bugsnag.notify(error)
-
-        setPATLoadingState(undefined)
-        Dialog.show(
-          'Failed to remove personal token',
-          `Error: ${error?.message}`,
+        dispatch(
+          actions.loginRequest({
+            appToken: data.loginWithPersonalAccessToken.appToken,
+          }),
         )
       }
-    }
-  }, [existingAppToken])
 
-  // handle oauth flow without popup
-  // that passes the token via query string
-  useEffect(() => {
-    const currentURL = Linking.getCurrentURL()
-    const querystring = url.parse(currentURL).query || ''
-    const query = qs.parse(querystring)
-
-    if (!query.oauth) return
-
-    const params = getUrlParamsIfMatches(querystring, '')
-    if (!params) return
-
-    try {
-      const { appToken } = tryParseOAuthParams(params)
-      clearOAuthQueryParams()
-      if (!appToken) return
-
-      dispatch(actions.loginRequest({ appToken }))
+      setIsExecutingOAuth(false)
+      setPATLoadingState(undefined)
     } catch (error) {
-      const description = 'OAuth execution failed'
-      console.error(description, error)
-
-      if (error.message === 'Canceled' || error.message === 'Timeout') return
-      bugsnag.notify(error, { description })
-
-      Dialog.show('Login failed', `Error: ${error?.message}`)
+      handleAuthError(error, 'Personal access token login failed', dialog)
+      setIsExecutingOAuth(false)
+      setPATLoadingState(undefined)
     }
-  }, [])
+  }, [
+    dialog,
+    dispatch,
+    githubBaseApiUrl,
+    loggedGitHubUserId,
+    loggedGitHubUsername,
+    promptForPersonalAcessToken,
+  ])
 
-  // auto start oauth flow after github app installation
-  useEffect(() => {
-    const handler = ({ url: uri }: { url: string }) => {
-      const querystring = url.parse(uri).query || ''
-      const query = qs.parse(querystring)
-
-      if (query.oauth) return
-      if (!query.installation_id) return
-
-      void loginWithGitHub()
-
-      setTimeout(() => {
-        clearQueryStringFromURL(['installation_id', 'setup_action'])
-      }, 500)
+  const removePersonalAccessToken = useCallback(async () => {
+    try {
+      setPATLoadingState('removing')
+      dispatch(actions.replacePersonalTokenDetails({ tokenDetails: undefined }))
+      await Promise.resolve()
+      setPATLoadingState(undefined)
+    } catch (error) {
+      handleAuthError(error, 'Failed to remove personal access token', dialog)
+      setPATLoadingState(undefined)
     }
+  }, [dialog, dispatch])
 
-    Linking.addEventListener('url', handler)
-
-    handler({ url: Linking.getCurrentURL() })
-
-    return () => {
-      Linking.removeEventListener('url', handler)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!error || initialErrorRef.current === error) return
-
-    const message = error && error.message
-    Dialog.show(
-      'Login failed',
-      `Please try again. ${message ? ` \nError: ${message}` : ''}`,
-    )
-  }, [error])
-
-  useEffect(() => {
-    if (!hasGitHubToken && !!existingAppToken && !isLoggingIn) {
-      dispatch(actions.logout())
-    }
-  }, [!hasGitHubToken && !!existingAppToken && !isLoggingIn])
-
-  const value = useMemo(
+  const value = useMemo<LoginHelpersProviderState>(
     () => ({
-      addPersonalAccessToken,
+      addPersonalAccessToken: loginWithGitHubPersonalAccessToken,
       fullAccessRef,
       isExecutingOAuth,
       isLoggingIn,
@@ -419,12 +343,10 @@ export function LoginHelpersProvider(props: LoginHelpersProviderProps) {
       removePersonalAccessToken,
     }),
     [
-      addPersonalAccessToken,
-      fullAccessRef,
+      loginWithGitHubPersonalAccessToken,
       isExecutingOAuth,
       isLoggingIn,
       loginWithGitHub,
-      loginWithGitHubPersonalAccessToken,
       patLoadingState,
       removePersonalAccessToken,
     ],

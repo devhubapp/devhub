@@ -1,5 +1,5 @@
-import { constants, User } from '@devhub/core'
-import axios, { AxiosResponse } from 'axios'
+import { constants, User, GitHubTokenDetails } from '@devhub/core'
+import axios, { AxiosResponse, AxiosError } from 'axios'
 import * as StoreReview from 'react-native-store-review'
 import { REHYDRATE } from 'redux-persist'
 import {
@@ -22,6 +22,66 @@ import * as actions from '../actions'
 import * as selectors from '../selectors'
 import { RootState } from '../types'
 import { ExtractActionFromActionCreator } from '../types/base'
+import { AuthError } from '../reducers/auth'
+
+interface GraphQLErrorResponse extends Error {
+  response: {
+    data: {
+      errors: Array<{
+        message: string
+      }>
+    }
+    status: number
+  }
+}
+
+interface GraphQLResponse<T = any> {
+  data: T
+  status: number
+  errors?: Array<{
+    message: string
+  }>
+}
+
+interface GraphQLErrorObject {
+  response: {
+    data: {
+      errors: Array<{
+        message: string
+      }>
+    }
+    status: number
+  }
+}
+
+function createGraphQLError(
+  message: string,
+  response: GraphQLResponse,
+): GraphQLErrorResponse {
+  const error = new Error(message) as GraphQLErrorResponse
+  error.response = {
+    data: {
+      errors: response.errors || [{ message: 'Unknown GraphQL error' }],
+    },
+    status: response.status,
+  }
+  return error
+}
+
+function isGraphQLErrorResponse(error: unknown): error is GraphQLErrorResponse {
+  if (!error || typeof error !== 'object') return false
+
+  const errorObj = error as GraphQLErrorObject
+  return !!(
+    errorObj.response &&
+    typeof errorObj.response === 'object' &&
+    errorObj.response.data &&
+    typeof errorObj.response.data === 'object' &&
+    errorObj.response.data.errors &&
+    Array.isArray(errorObj.response.data.errors) &&
+    typeof errorObj.response.status === 'number'
+  )
+}
 
 function* init() {
   yield take('LOGIN_SUCCESS')
@@ -90,11 +150,81 @@ function* onRehydrate() {
 
 function* onLoginRequest(
   action: ExtractActionFromActionCreator<typeof actions.loginRequest>,
-) {
+): Generator<any, void, any> {
   const { appToken } = action.payload
 
   try {
-    // TODO: Auto generate these typings
+    if (constants.LOCAL_ONLY_PERSONAL_ACCESS_TOKEN) {
+      // For local-only mode, we'll use the GitHub API directly
+      const octokit = github.getOctokitForToken(appToken)
+      const response = yield octokit.users.getAuthenticated()
+
+      if (!response.data) {
+        throw new Error('Invalid response from GitHub API')
+      }
+
+      const user: User = {
+        _id: `github_${response.data.id}`,
+        github: {
+          personal: {
+            token: appToken,
+            scope: ['repo'],
+            tokenType: 'bearer',
+            tokenCreatedAt: new Date().toISOString(),
+            login: response.data.login,
+          } as GitHubTokenDetails,
+          user: {
+            id: response.data.id,
+            nodeId: response.data.node_id,
+            login: response.data.login,
+            name: response.data.name || response.data.login,
+            avatarUrl: response.data.avatar_url,
+            createdAt: response.data.created_at,
+            updatedAt: response.data.updated_at,
+          },
+        },
+        plan: {
+          id: 'free',
+          source: 'none' as const,
+          type: undefined,
+          status: 'active',
+          amount: 0,
+          currency: 'usd',
+          trialPeriodDays: 0,
+          intervalCount: 0,
+          label: 'Free',
+          interval: undefined,
+          quantity: undefined,
+          startAt: new Date().toISOString(),
+          cancelAt: undefined,
+          cancelAtPeriodEnd: false,
+          trialStartAt: undefined,
+          trialEndAt: undefined,
+          currentPeriodStartAt: new Date().toISOString(),
+          currentPeriodEndAt: undefined,
+          last4: undefined,
+          reason: undefined,
+          users: undefined,
+          featureFlags: {
+            columnsLimit: constants.LOCAL_ONLY_PERSONAL_ACCESS_TOKEN ? 999 : -1,
+            enableFilters: true,
+            enableSync: false,
+            enablePrivateRepositories: true,
+            enablePushNotifications: false,
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+      }
+
+      yield put(actions.loginSuccess({ appToken, user }))
+      return
+    }
+
+    // Original code for non-local mode
     const response: AxiosResponse<{
       data: {
         login: {
@@ -162,18 +292,13 @@ function* onLoginRequest(
                   avatarUrl
                 }
               }
-              freeTrialStartAt
-              freeTrialEndAt
               plan {
                 id
                 source
                 type
-
                 stripeIds
                 paddleProductId
-                
                 banner
-
                 amount
                 currency
                 trialPeriodDays
@@ -186,25 +311,18 @@ function* onLoginRequest(
                 }
                 quantity
                 coupon
-
                 dealCode
-
                 status
-
                 startAt
                 cancelAt
                 cancelAtPeriodEnd
-
                 trialStartAt
                 trialEndAt
-
                 currentPeriodStartAt
                 currentPeriodEndAt
-
                 last4
                 reason
                 users
-
                 featureFlags {
                   columnsLimit
                   enableFilters
@@ -212,7 +330,6 @@ function* onLoginRequest(
                   enablePrivateRepositories
                   enablePushNotifications
                 }
-
                 createdAt
                 updatedAt
               }
@@ -231,7 +348,11 @@ function* onLoginRequest(
     const { data, errors } = response.data
 
     if (errors && errors.length) {
-      throw Object.assign(new Error('GraphQL Error'), { response })
+      throw createGraphQLError('GraphQL Error', {
+        data: response.data,
+        status: response.status,
+        errors: errors,
+      })
     }
 
     if (
@@ -249,26 +370,20 @@ function* onLoginRequest(
       throw new Error('Invalid response')
     }
 
-    yield put(
-      actions.loginSuccess({
-        appToken: data.login.appToken,
-        user: data.login.user,
-      }),
-    )
+    yield put(actions.loginSuccess({ appToken, user: data.login.user }))
   } catch (error) {
-    const description = 'Login failed'
-    bugsnag.notify(error, { description })
-    console.error(description, error)
+    console.error('Login failed', error)
+    const err = error instanceof Error ? error : new Error('Unknown error')
+    bugsnag.notify(err)
 
-    yield put(
-      actions.loginFailure(
-        error &&
-          error.response &&
-          error.response.data &&
-          error.response.data.errors &&
-          error.response.data.errors[0],
-      ),
-    )
+    const authError: AuthError = {
+      name: err.name,
+      message: err.message,
+      status: isGraphQLErrorResponse(error) ? error.response.status : undefined,
+      response: isGraphQLErrorResponse(error) ? error.response.data : undefined,
+    }
+
+    yield put(actions.loginFailure(authError))
   }
 }
 
@@ -363,7 +478,11 @@ function* onDeleteAccountRequest() {
     const { data, errors } = response.data
 
     if (errors && errors.length) {
-      throw Object.assign(new Error('GraphQL Error'), { response })
+      throw createGraphQLError('GraphQL Error', {
+        data: response.data,
+        status: response.status,
+        errors: errors,
+      })
     }
 
     if (!(data && typeof data.deleteAccount === 'boolean')) {
@@ -376,19 +495,15 @@ function* onDeleteAccountRequest() {
 
     yield put(actions.deleteAccountSuccess())
   } catch (error) {
-    const description = 'Delete account failed'
-    bugsnag.notify(error, { description })
-    console.error(description, error)
+    console.error('Delete account failed', error)
+    const err = error instanceof Error ? error : new Error('Unknown error')
+    bugsnag.notify(err)
 
-    yield put(
-      actions.deleteAccountFailure(
-        error &&
-          error.response &&
-          error.response.data &&
-          error.response.data.errors &&
-          error.response.data.errors[0],
-      ),
-    )
+    const deleteError = isGraphQLErrorResponse(error)
+      ? error
+      : new Error(err.message)
+
+    yield put(actions.deleteAccountFailure(deleteError))
   }
 }
 
@@ -410,18 +525,18 @@ function* onDeleteAccountSuccess() {
 
 export function* authSagas() {
   yield* all([
-    yield* fork(init),
-    yield* takeLatest(REHYDRATE, onRehydrate),
+    yield* takeLatest('LOGIN_REQUEST', onLoginRequest),
+    yield* takeLatest('LOGIN_SUCCESS', onLoginSuccess),
+    yield* takeLatest('LOGIN_FAILURE', onLoginFailure),
+    yield* takeLatest('DELETE_ACCOUNT_REQUEST', onDeleteAccountRequest),
+    yield* takeLatest('DELETE_ACCOUNT_SUCCESS', onDeleteAccountSuccess),
+    yield* takeLatest('DELETE_ACCOUNT_FAILURE', onDeleteAccountFailure),
+    yield* takeLatest('LOGOUT', onLogout),
+    yield* takeLatest(REHYDRATE as any, onRehydrate),
     yield* takeLatest(
       [REHYDRATE, 'LOGIN_SUCCESS', 'LOGOUT', 'UPDATE_USER_DATA'],
       updateLoggedUserOnTools,
     ),
-    yield* takeLatest('LOGIN_REQUEST', onLoginRequest),
-    yield* takeLatest('LOGIN_FAILURE', onLoginFailure),
-    yield* takeLatest('LOGIN_SUCCESS', onLoginSuccess),
-    yield* takeLatest('DELETE_ACCOUNT_REQUEST', onDeleteAccountRequest),
-    yield* takeLatest('DELETE_ACCOUNT_FAILURE', onDeleteAccountFailure),
-    yield* takeLatest('DELETE_ACCOUNT_SUCCESS', onDeleteAccountSuccess),
-    yield* takeLatest('LOGOUT', onLogout),
+    yield* fork(init),
   ])
 }
