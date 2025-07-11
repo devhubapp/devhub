@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bonadicks Aluminium Limited</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HERO SECTION -->
+  <header class="hero">
+    <h1>Bonadicks Aluminium Limited</h1>
+    <p>Quality Aluminium Products You Can Trust</p>
+    <p class="tagline">Roofing sheets, Gerard, gutters & installation — serving Maiduguri and beyond.</p>
+    <a href="#contact" class="btn">Get a Quote</a>
+    <a href="#contact" class="btn">Contact Us</a>
+  </header>
+
+  <!-- ABOUT US -->
+  <section class="about">
+    <h2>About Us</h2>
+    <p>Bonadicks Aluminium Limited is a trusted name in premium aluminium roofing sheets, Gerard tiles, gutters, and professional installation services. Located in Maiduguri, we deliver durable solutions that stand the test of time.</p>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services">
+    <h2>Our Products & Services</h2>
+    <ul>
+      <li>Aluminium Roofing Sheets</li>
+      <li>Gerard Roofing Tiles</li>
+      <li>Gutters & Downpipes</li>
+      <li>Installation Services</li>
+      <li>Corrugation Machines</li>
+    </ul>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <h2>What Our Clients Say</h2>
+    <blockquote>“Excellent quality roofing sheets and fast installation. Highly recommended!” — Abdullahi M.</blockquote>
+    <blockquote>“Professional service and affordable prices. Thank you, Bonadicks!” — Fatima A.</blockquote>
+  </section>
+
+  <!-- CALL TO ACTION -->
+  <section class="cta">
+    <h2>Ready to upgrade your roofing?</h2>
+    <p>Contact Bonadicks Aluminium Limited today!</p>
+    <a href="#contact" class="btn">Call Now</a>
+    <a href="https://wa.me/2347046152224" class="btn">WhatsApp Us</a>
+    <a href="mailto:bonadicksalminium@gmail.com" class="btn">Send Email</a>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <h2>Contact Us</h2>
+    <p><strong>Address:</strong> Songhai Street, Baga Road, Maiduguri, Borno State, 600002</p>
+    <p><strong>Phone:</strong> +234 70461 522 24</p>
+    <p><strong>Email:</strong> bonadicksalminium@gmail.com</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Bonadicks Aluminium Limited. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
